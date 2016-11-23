@@ -1,0 +1,28 @@
+load_paths:
+  - lib/assets/javascripts
+  - test/javascript/src
+  - test/javascript/vendor
+
+logical_paths:
+  - sinon-1.17.5.js
+  - sinon-qunit-1.0.0.js
+  - relax.js
+  - test.js
+
+build:
+  logical_paths:
+    - relax.js
+  path: dist
+  js_compressor: uglifier
+
+plugins:
+  sprockets_override_accept:
+  sauce_labs:
+    tunnel_args:
+      - "--verbose"     # Turn on verbose logging.
+      - "--vm-version"  # Use the varnish VM for WebSockets support.
+      - "dev-varnish"
+    browsers:
+      Google Chrome:
+        os: Mac
+        version: -1

@@ -1,0 +1,109 @@
+test_renders_a_partial_with_locals_and_caches:
+  rails42:
+    - fbf68bd43dba9d0054ad02b65b7bb4aa
+  rails50:
+    - 58bf2c600f6d5c6669f7d1cacf3001a5
+
+test_render_array_of_partials_without_an_:as_to_a_member_and_cache:
+  rails42:
+    - 0d6be77bebdef3fee771f21b49d51806
+    - c88c9332e539d4f3740f3c44575a1ebc
+  rails50:
+    - 151398b5317b9b71fce436f9f7b37437
+    - f7229a5ee560bbe5712d6afa47170d37
+
+test_caching_a_value_at_a_node:
+  rails42:
+    - 420dd59aa351baf103b4184869dfe516
+  rails50:
+    - 420dd59aa351baf103b4184869dfe516
+
+test_caching_elements_in_a_list:
+  rails42:
+    - 31a0b2d69da777bb2dcf027350566f1d
+    - e9b9b9b98dafc029c4e814b091e90a7a
+  rails50:
+    - 31a0b2d69da777bb2dcf027350566f1d
+    - e9b9b9b98dafc029c4e814b091e90a7a
+
+test_list_elements_(cached_and_non_cached)_merges_in_the_same_scope:
+  rails42:
+    - 31a0b2d69da777bb2dcf027350566f1d
+    - e9b9b9b98dafc029c4e814b091e90a7a
+    - 4237e6f58bfe464b27ee270b55c12e84
+    - 34cfb415aba6256e9aaf661a8697248c
+  rails50:
+    - 31a0b2d69da777bb2dcf027350566f1d
+    - e9b9b9b98dafc029c4e814b091e90a7a
+    - 4237e6f58bfe464b27ee270b55c12e84
+    - 34cfb415aba6256e9aaf661a8697248c
+
+test_nested_caching_generates_a_depth-first_list_of_cache_nodes:
+  rails42:
+    - 527312c467060937453434d11496f10f
+    - 423c34f3270addc1369ee6d95d662c04
+    - 64af83f0566cd020f44ca0b25121fc58
+  rails50:
+    - 527312c467060937453434d11496f10f
+    - 423c34f3270addc1369ee6d95d662c04
+    - 64af83f0566cd020f44ca0b25121fc58
+
+test_child!_accepts_cache_options:
+  rails42:
+    - 423c34f3270addc1369ee6d95d662c04
+  rails50:
+    - 423c34f3270addc1369ee6d95d662c04
+
+test_fragment_caching:
+  rails42:
+    - c6eb1da804069b92da0553e647a6770a
+  rails50:
+    - c6eb1da804069b92da0553e647a6770a
+
+test_fragment_caching_deserializes_an_array:
+  rails42:
+    - c6eb1da804069b92da0553e647a6770a
+  rails50:
+    - c6eb1da804069b92da0553e647a6770a
+
+test_invokes_templates_via_params_via_set!_and_caches:
+  rails42:
+    - fedd00e5759ffda2b4ac1aeb6f2a7dde
+  rails50:
+    - ea4a3f21745e71fa239014364c2af5e9
+
+test_shares_partial_caches_(via_the_partial's_digest)_across_multiple_templates:
+  rails42:
+    - fedd00e5759ffda2b4ac1aeb6f2a7dde
+  rails50:
+    - ea4a3f21745e71fa239014364c2af5e9
+
+test_render_array_of_partials_and_caches:
+  rails42:
+    - 0d6be77bebdef3fee771f21b49d51806
+    - c88c9332e539d4f3740f3c44575a1ebc
+    - f693f9f35d5cd7fa1df4d6cb05f0dd64
+    - 306d22c07d0ed0080656222b634a23fd
+    - 599510241b78966805152d3f10379bdc
+    - 37741607162f895d17d45ec9ff75d4dc
+    - 65e8f91af9ffe9989cb759345dcb7d26
+    - ca627b17e0fe8b9560ec1e0911099762
+    - 63543700a921958662967cc003f0dc06
+    - 277a88c729950f01f14013d13dedf37d
+  rails50:
+    - fc15ad5fd5ddc823e91f54ebddd0242c
+    - 410a5401d9e39a73c36f91aa23f31d37
+    - 9a26e40720fa11c92cb59d9a546c1249
+    - 2ccdda317063080c098ee9b79c6e7af8
+    - d7a4bfa335934cf5d1b4a613ccc8f1cf
+    - af049a35d029a005fee6bd2f6f3f9528
+    - b8d5df0903e6719cf2999aa6776340f4
+    - 8c71b1677e2a813dc8cdfdba95029eed
+    - aad53c5d3c210d5062caa85eda247da7
+    - c7813316082ac80d3f40e421dbb9ac53
+
+test_filtering_a_cached_node_returns_just_that:
+  rails42:
+    - 219dfba9f552f91402a22cf67c633582
+  rails50:
+    - 219dfba9f552f91402a22cf67c633582

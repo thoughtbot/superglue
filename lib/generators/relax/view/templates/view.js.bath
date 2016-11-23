@@ -1,0 +1,15 @@
+# Example:
+#
+# json.notice notice
+#
+# json.posts do
+#   json.array! @posts do |post|
+#     json.id post.id
+#     json.title post.title
+#     json.body post.body
+#
+#     json.show_url post_path(post)
+#     json.edit_url edit_post_path(post)
+#     json.delete_url post_path(post)
+#   end
+# end

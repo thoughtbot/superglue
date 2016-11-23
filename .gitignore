@@ -1,0 +1,8 @@
+*.lock
+node_modules
+pkg/
+vendor/bundle
+test/log/
+tmp/
+.byebug_history
+log

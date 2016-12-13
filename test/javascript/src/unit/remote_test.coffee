@@ -252,3 +252,12 @@ testWithSession "ajax errors fire starting with the element", (assert) ->
     assert.ok true
     done()
   target.click()
+
+testWithSession "#isValid returns false with a invalid link (missing data-rx-remote)", (assert) ->
+  html = """
+    <a href="/test" data-rx-remote data-rx-push-state=false></a>
+  """
+  target = createTarget(html)
+  remote = new @Relax.Remote(target)
+  assert.notOk remote.pushState
+

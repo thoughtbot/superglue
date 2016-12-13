@@ -9,6 +9,7 @@ class Relax.Remote
     @contentType = null
     @setRequestType(target)
     @async =  @getRXAttribute(target, 'rx-remote-async') || false
+    @pushState =  !(@getRXAttribute(target, 'rx-push-state') == 'false')
     @httpUrl = target.getAttribute('href') || target.getAttribute('action')
     @silent = @getRXAttribute(target, 'rx-silent') || false
     @setPayload(target)

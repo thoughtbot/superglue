@@ -36,6 +36,7 @@ remoteHandler = (ev) ->
     silent: remote.silent
     target: remote.target
     async: remote.async
+    pushState: remote.pushState
 
 browserSupportsCustomEvents =
   document.addEventListener and document.createEvent

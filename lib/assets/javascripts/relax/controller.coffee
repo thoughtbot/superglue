@@ -27,7 +27,7 @@ class Relax.Controller
       pushState: true
 
     url = new Relax.ComponentUrl url
-    return if @pageChangePrevented(url.absolute)
+    return if @pageChangePrevented(url.absolute, options.target)
 
     if url.crossOrigin()
       document.location.href = url.absolute
@@ -46,13 +46,13 @@ class Relax.Controller
     options.cacheRequest ?= @requestCachingEnabled
     options.showProgressBar ?= true
 
-    Relax.Utils.triggerEvent Relax.EVENTS.FETCH, url: url.absolute
+    Relax.Utils.triggerEvent Relax.EVENTS.FETCH, url: url.absolute, options.target
 
     if options.async
       options.showProgressBar = false
       req = @createRequest(url, options)
       req.onError = ->
-        Relax.Utils.triggetEvent Relax.EVENTS.ERROR, null, options.target
+        Relax.Utils.triggerEvent Relax.EVENTS.ERROR, null, options.target
       @pq.push(req)
       req.send(options.payload)
     else
@@ -88,8 +88,8 @@ class Relax.Controller
     if redirect? and crossOrigin
       redirect
 
-  pageChangePrevented: (url) =>
-    !Relax.Utils.triggerEvent Relax.EVENTS.BEFORE_CHANGE, url: url
+  pageChangePrevented: (url, target) =>
+    !Relax.Utils.triggerEvent Relax.EVENTS.BEFORE_CHANGE, url: url, target
 
   cache: (key, value) =>
     return @atomCache[key] if value == null
@@ -99,7 +99,7 @@ class Relax.Controller
   onLoadEnd: => @http = null
 
   onLoad: (xhr, url, options) =>
-    Relax.Utils.triggerEvent Relax.EVENTS.RECEIVE, url: url.absolute
+    Relax.Utils.triggerEvent Relax.EVENTS.RECEIVE, url: url.absolute, options.target
     nextPage =  @processResponse(xhr)
     if xhr.status == 0
       return

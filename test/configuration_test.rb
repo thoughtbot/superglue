@@ -1,4 +1,4 @@
-require_relative 'test_helper'
+require 'test_helper'
 
 class ConfigurationTest < ActiveSupport::TestCase
   def restore_default_config

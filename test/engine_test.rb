@@ -1,4 +1,4 @@
-require_relative 'test_helper'
+require 'test_helper'
 
 class EngineTest < ActiveSupport::TestCase
   test "does not include itself in action controller base when relax auto include is false" do

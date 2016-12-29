@@ -1,6 +1,6 @@
 # taken from jbuilder's jbuilder_dependency_tracker_test.rb
 
-require_relative 'test_helper'
+require 'test_helper'
 require 'bath/dependency_tracker'
 
 

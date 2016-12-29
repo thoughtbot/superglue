@@ -760,6 +760,37 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "filtering for a node of a AR relation in a subtree via an appended where clause" do
+    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.id=1')
+      post = Post.create
+      post.comments.create title: 'first'
+      post.comments.create title: 'second'
+
+      post.comments.expects(:where).once().with('id'=>1).returns([{id: 1, title: 'first'}])
+
+      json.hit do
+        json.hit2 do
+          json.array! post.comments do |x|
+            raise 'this should be be called' if x[:title] == 'second'
+            json.title x[:title]
+          end
+        end
+      end
+    JBUILDER
+
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.id=1"}
+        );
+      })()
+    JS
+    assert_equal expected, result
+  end
+
+
   test "filtering for a node in an array of a tree" do
     result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.id=1')
       json.hit do
@@ -863,7 +894,6 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-
   test "rendering with node array deferment" do
     req = action_controller_test_request
     req.path = '/some_url'
@@ -947,6 +977,5 @@ class BathTemplateTest < ActionView::TestCase
     JS
 
     assert_equal expected, result
-
   end
 end

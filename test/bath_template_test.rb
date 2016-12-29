@@ -346,16 +346,6 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  # test "render collection as collections" do
-  #   #keep
-  #   result = jbuild(<<-JBUILDER)
-  #     json.collection collection: BLOG_POST_COLLECTION, partial: "collection", as: :collection
-  #   JBUILDER
-  #   expected = "Relax.replace([{\"id\":1,\"body\":\"post body 1\",\"author\":{\"first_name\":\"David\",\"last_name\":\"Heinemeier Hansson\"}},{\"id\":2,\"body\":\"post body 2\",\"author\":{\"first_name\":\"Pavel\",\"last_name\":\"Pravosud\"}},{\"id\":3,\"body\":\"post body 3\",\"author\":{\"first_name\":\"David\",\"last_name\":\"Heinemeier Hansson\"}},{\"id\":4,\"body\":\"post body 4\",\"author\":{\"first_name\":\"Pavel\",\"last_name\":\"Pravosud\"}},{\"id\":5,\"body\":\"post body 5\",\"author\":{\"first_name\":\"David\",\"last_name\":\"Heinemeier Hansson\"}},{\"id\":6,\"body\":\"post body 6\",\"author\":{\"first_name\":\"Pavel\",\"last_name\":\"Pravosud\"}},{\"id\":7,\"body\":\"post body 7\",\"author\":{\"first_name\":\"David\",\"last_name\":\"Heinemeier Hansson\"}},{\"id\":8,\"body\":\"post body 8\",\"author\":{\"first_name\":\"Pavel\",\"last_name\":\"Pravosud\"}},{\"id\":9,\"body\":\"post body 9\",\"author\":{\"first_name\":\"David\",\"last_name\":\"Heinemeier Hansson\"}},{\"id\":10,\"body\":\"post body 10\",\"author\":{\"first_name\":\"Pavel\",\"last_name\":\"Pravosud\"}}]);"
-  #   assert_equal expected, result
-  # end
-  #
-
   test "render array of partials" do
     result = jbuild(<<-JBUILDER)
       json.array! BLOG_POST_COLLECTION, partial: "blog_post", as: :blog_post

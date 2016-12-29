@@ -132,6 +132,26 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "rendering with duplicate sets" do
+    result = jbuild(<<-JBUILDER)
+      json.content do
+        json.greeting 'miss'
+      end
+
+      json.content do
+        json.greeting 'hit'
+      end
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return ({"data":{"content":{"greeting":"hit"}}});
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
   test "render with asset tracking" do
     Relax.configuration.track_assets = ['test.js', 'test.css']
 

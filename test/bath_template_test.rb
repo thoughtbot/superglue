@@ -1,11 +1,8 @@
 require "test_helper"
 require "mocha/setup"
-require "active_model"
 require "action_view"
 require "action_view/testing/resolvers"
-require "active_support/cache"
 require "bath"
-require "rails/version"
 
 BLOG_POST_PARTIAL = <<-JBUILDER
   json.extract! blog_post, :id, :body

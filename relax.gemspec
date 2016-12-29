@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'actionpack', '>= 4.0'
 
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'mocha'
 end

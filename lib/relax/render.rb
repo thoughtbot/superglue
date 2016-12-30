@@ -1,5 +1,13 @@
 module Relax
   module Render
+    def default_render(*args)
+      if @_use_relax_html
+        render(*args)
+      else
+        super
+      end
+    end
+
     def render(*args, &block)
       render_options = args.extract_options!
       relax = render_options.delete(:relax)

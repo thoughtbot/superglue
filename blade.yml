@@ -24,5 +24,6 @@ plugins:
       - "dev-varnish"
     browsers:
       Google Chrome:
-        os: Mac
-        version: -1
+        version: -2
+      Firefox:
+        version: -2

@@ -136,19 +136,35 @@ class RelaxIntegrationTest < ActionDispatch::IntegrationTest
     get response.location
     assert_nil response.headers['X-XHR-Redirected-To']
 
-    get '/redirect_hash', headers: { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
+    if Rails.version >= '5.0'
+      get '/redirect_hash', headers: { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
+    else
+      get '/redirect_hash', nil, { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
+    end
     assert_response :redirect
     assert_nil response.headers['X-XHR-Redirected-To']
 
-    get response.location, headers: { 'HTTP_X_XHR_REFERER' => nil }
+    if Rails.version >= '5.0'
+      get response.location, headers: { 'HTTP_X_XHR_REFERER' => nil }
+    else
+      get response.location, nil, { 'HTTP_X_XHR_REFERER' => nil }
+    end
     assert_equal 'http://www.example.com/relax/simple_action', response.headers['X-XHR-Redirected-To']
     assert_response :ok
 
-    get '/redirect_path', headers: { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
+    if Rails.version >= '5.0'
+      get '/redirect_path', headers: { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
+    else
+      get '/redirect_path', nil, { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
+    end
     assert_response :redirect
     assert_nil response.headers['X-XHR-Redirected-To']
 
-    get response.location, headers: { 'HTTP_X_XHR_REFERER' => nil }
+    if Rails.version >= '5.0'
+      get response.location, headers: { 'HTTP_X_XHR_REFERER' => nil }
+    else
+      get response.location, nil, { 'HTTP_X_XHR_REFERER' => nil }
+    end
     assert_equal 'http://www.example.com/relax/simple_action', response.headers['X-XHR-Redirected-To']
     assert_response :ok
   end

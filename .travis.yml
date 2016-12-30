@@ -1,9 +1,7 @@
 language: ruby
 
 rvm:
-  - 2.0.0
-  - 2.1.7
-  - 2.2.3
+  - 2.2.4
 
 sudo: false
 cache: bundler
@@ -14,10 +12,4 @@ script:
 
 gemfile:
   - Gemfile.rails50
-
-matrix:
-  exclude:
-    - gemfile: Gemfile.rails50
-      rvm: 2.0.0
-    - gemfile: Gemfile.rails50
-      rvm: 2.1.7
+  - Gemfile.rails42

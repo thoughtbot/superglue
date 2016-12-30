@@ -759,62 +759,7 @@ class BathTemplateTest < ActionView::TestCase
 
     assert_equal expected, result
   end
-
-  test "filtering for a node of a AR relation in a subtree via an appended where clause" do
-    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.id=1')
-      post = Post.create
-      post.comments.create title: 'first'
-      post.comments.create title: 'second'
-
-      post.comments.expects(:where).once().with('id'=>1).returns([{id: 1, title: 'first'}])
-
-      json.hit do
-        json.hit2 do
-          json.array! post.comments do |x|
-            raise 'this should be be called' if x[:title] == 'second'
-            json.title x[:title]
-          end
-        end
-      end
-    JBUILDER
-
-    Rails.cache.clear
-
-    expected = strip_format(<<-JS)
-      (function(){
-        return (
-          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.id=1"}
-        );
-      })()
-    JS
-    assert_equal expected, result
-  end
-
-
-  test "filtering for a node in an array of a tree" do
-    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.id=1')
-      json.hit do
-        json.hit2 do
-          json.array! [{id: 1, name: 'hit' }, {id:2, name: 'miss'}] do |x|
-            raise 'this should be be called' if x[:name] == 'miss'
-            json.name x[:name]
-          end
-        end
-      end
-    JBUILDER
-    Rails.cache.clear
-
-    expected = strip_format(<<-JS)
-      (function(){
-        return (
-          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.id=1"}
-        );
-      })()
-    JS
-
-    assert_equal expected, result
-  end
-
+  
   test "filtering for a node in the tree via relax_filter helper" do
     result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2')
       json.hit do
@@ -866,6 +811,115 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "filtering for a node of a AR relation in a tree by id via an appended where clause" do
+    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.id=1')
+      post = Post.create
+      post.comments.create title: 'first'
+      post.comments.create title: 'second'
+
+      post.comments.expects(:where).once().with('id'=>1).returns([{id: 1, title: 'first'}])
+
+      json.hit do
+        json.hit2 do
+          json.array! post.comments do |x|
+            raise 'this should be be called' if x[:title] == 'second'
+            json.title x[:title]
+          end
+        end
+      end
+    JBUILDER
+
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.id=1"}
+        );
+      })()
+    JS
+    assert_equal expected, result
+  end
+
+
+  test "filtering for a node of a AR relation in a tree by index via an appended where clause" do
+    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.0')
+      post = Post.create
+      post.comments.create title: 'first'
+      post.comments.create title: 'second'
+
+      offset = post.comments.offset(0)
+      post.comments.expects(:offset).once().with(0).returns(offset)
+
+      json.hit do
+        json.hit2 do
+          json.array! post.comments do |x|
+            raise 'this should be be called' if x[:title] == 'second'
+            json.title x[:title]
+          end
+        end
+      end
+    JBUILDER
+
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.0"}
+        );
+      })()
+    JS
+    assert_equal expected, result
+  end
+
+  test "filtering for a node in an array of a tree by id" do
+    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.id=1')
+      json.hit do
+        json.hit2 do
+          json.array! [{id: 1, name: 'hit' }, {id:2, name: 'miss'}] do |x|
+            raise 'this should be be called' if x[:name] == 'miss'
+            json.name x[:name]
+          end
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.id=1"}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "filtering for a node in an array of a tree by index" do
+    result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2.0')
+      json.hit do
+        json.hit2 do
+          json.array! [{id: 1, name: 'hit' }, {id:2, name: 'miss'}] do |x|
+            raise 'this should be be called' if x[:name] == 'miss'
+            json.name x[:name]
+          end
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.0"}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
 
   test "rendering with node deferement" do
     req = action_controller_test_request

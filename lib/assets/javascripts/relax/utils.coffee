@@ -114,16 +114,26 @@ graftByKeypath = (path, leaf, obj, opts={}) ->
 
   else if isArray(obj)
     [attr, id] = head.split('=')
-    id = parseInt(id) || 0
-    copy = []
     found = false
-    for child in obj
-      if child[attr] == id
-        node = graftByKeypath(remaining, leaf, child, opts)
-        found = true unless child is node
-        copy.push node
-      else
-        copy.push child
+    if id == undefined
+      index = parseInt(attr)
+      child = obj[index]
+      node = graftByKeypath(remaining, leaf, child, opts)
+      found = true unless child is node
+
+      copy = obj.slice(0, index)
+      copy.push(node)
+      copy = copy.concat(obj.slice(index + 1, obj.length))
+    else
+      id = parseInt(id) || 0
+      copy = []
+      for child in obj
+        if child[attr] == id
+          node = graftByKeypath(remaining, leaf, child, opts)
+          found = true unless child is node
+          copy.push node
+        else
+          copy.push child
 
     return if found then copy else obj
   else

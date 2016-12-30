@@ -24,14 +24,26 @@ module Bath
     def _prepare_collection_for_map(collection)
       if @search_path && !@search_path.empty?
         id_name, id_val = @search_path.first.split('=')
-        id_val = id_val.to_i
+
+        @search_path = @search_path[1..-1]
 
         if (defined? ::ActiveRecord) && collection.is_a?(::ActiveRecord::Relation)
-          @search_path = @search_path[1..-1]
-          collection = collection.where(::Hash[id_name, id_val])
+          if id_val
+            id_val = id_val.to_i
+            collection = collection.where(::Hash[id_name, id_val])
+          else
+            index = id_name.to_i
+            collection = collection.offset(index).limit(1)
+          end
         else
-          found = collection.find do |ele|
-            ele[id_name] == id_val || ele[id_name.to_sym] == id_val
+          if id_val
+            id_val = id_val.to_i
+            found = collection.find do |ele|
+              ele[id_name] == id_val || ele[id_name.to_sym] == id_val
+            end
+          else
+            index = id_name.to_i
+            found = collection[index]
           end
 
           collection = [found]

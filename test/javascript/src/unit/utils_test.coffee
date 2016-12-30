@@ -58,7 +58,7 @@ testWithSession "objects in arrays can be referenced using an id attribute", (as
     {id: 3}
   ]
 
-testWithSession "objects in arrays can be referenced using an id attribute", (assert) ->
+testWithSession "objects can be added using to an array an id attribute", (assert) ->
   page = a: b: [
     {id: 1},
     {id: 2},
@@ -77,3 +77,19 @@ testWithSession "objects in arrays can be referenced using an id attribute", (as
     {id: 4}
   ]
 
+testWithSession "objects in arrays can be referenced using an index", (assert) ->
+  page = a: b: [
+    {id: 1},
+    {id: 2},
+    {id: 3}
+  ]
+
+  clone = @Relax.Utils.graftByKeypath('a.b.1', {id:2, foo: 'bar'}, page)
+  assert.notStrictEqual page, clone
+  assert.strictEqual page.a.b[0], clone.a.b[0]
+  assert.strictEqual page.a.b[2], clone.a.b[2]
+  assert.propEqual clone,  a: b: [
+    {id: 1},
+    {id: 2, foo: 'bar'},
+    {id: 3}
+  ]

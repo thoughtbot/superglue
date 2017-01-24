@@ -137,6 +137,14 @@ module Bath
     end
 
     private
+      def _merge_values(current_value, updates)
+        # Always use the new values. This is because cached values
+        # are no longer a Ruby object. They are JS values and can't
+        # be merged.
+
+        updates
+      end
+
       def _prepare_collection_for_map(collection)
         collection
       end

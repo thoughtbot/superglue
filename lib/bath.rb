@@ -6,7 +6,7 @@ require 'bath/handler'
 require 'bath/partial_extension'
 require 'bath/deferment_extension'
 require 'bath/search_extension'
-
+require 'byebug'
 module Bath
   class Template < ::Jbuilder
     include PartialDigestor
@@ -81,7 +81,6 @@ module Bath
     def set!(key, value = BLANK, *args)
       options = args.first || {}
       options = _normalize_options(options)
-
       return super if !_cache_options?(options) && !_deferment_options?(options)
 
       result = if ::Kernel.block_given?
@@ -270,7 +269,6 @@ module Bath
         raise NullError.build(key) if current_value.nil?
       end
 
-
       def _normalize_options(options)
         options = options.dup
         key = options[:cache]
@@ -297,7 +295,6 @@ module Bath
         options[:cache] = [key, opts]
         options
       end
-
 
       def _fragment_name_with_digest(key, options)
         if @context.respond_to?(:cache_fragment_name)

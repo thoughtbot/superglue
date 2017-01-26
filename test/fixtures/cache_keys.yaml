@@ -26,18 +26,6 @@ test_caching_elements_in_a_list:
     - 31a0b2d69da777bb2dcf027350566f1d
     - e9b9b9b98dafc029c4e814b091e90a7a
 
-test_list_elements_(cached_and_non_cached)_merges_in_the_same_scope:
-  rails42:
-    - 31a0b2d69da777bb2dcf027350566f1d
-    - e9b9b9b98dafc029c4e814b091e90a7a
-    - 4237e6f58bfe464b27ee270b55c12e84
-    - 34cfb415aba6256e9aaf661a8697248c
-  rails50:
-    - 31a0b2d69da777bb2dcf027350566f1d
-    - e9b9b9b98dafc029c4e814b091e90a7a
-    - 4237e6f58bfe464b27ee270b55c12e84
-    - 34cfb415aba6256e9aaf661a8697248c
-
 test_nested_caching_generates_a_depth-first_list_of_cache_nodes:
   rails42:
     - 527312c467060937453434d11496f10f

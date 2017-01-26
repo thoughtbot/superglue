@@ -129,20 +129,38 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "rendering with duplicate sets" do
+  test "when rendering with duplicate keys, the last one wins" do
     result = jbuild(<<-JBUILDER)
       json.content do
-        json.greeting 'miss'
+        json.miss 123
       end
 
       json.content do
-        json.greeting 'hit'
+        json.hit 123
+      end
+    JBUILDER
+
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return ({"data":{"content":{"hit":123}}});
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "when rendering with duplicate array values, the last one wins" do
+    result = jbuild(<<-JBUILDER)
+      json.content do
+        json.array! [1,2]
+        json.array! [3,4]
       end
     JBUILDER
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":{"greeting":"hit"}}});
+        return ({\"data\":{\"content\":[3,4]}});
       })()
     JS
 
@@ -459,34 +477,6 @@ class BathTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "list elements (cached and non cached) merges in the same scope" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    result = jbuild(<<-JBUILDER)
-      json.hello do
-        json.array! [4,5], cache: ->(i){ ['a', i] } do |x|
-          json.top 'hello'
-        end
-        json.array! [3,4]
-        json.array! [1,2], cache: ->(i){ ['a', i] } do |x|
-          json.bottom 'hello'
-        end
-      end
-    JBUILDER
-
-    expected = strip_format(<<-JS)
-      (function(){
-        Relax.cache("#{cache_keys[0]}", {"top":"hello"});
-        Relax.cache("#{cache_keys[1]}", {"top":"hello"});
-        Relax.cache("#{cache_keys[2]}", {"bottom":"hello"});
-        Relax.cache("#{cache_keys[3]}", {"bottom":"hello"});
-        return ({"data":{"hello":[Relax.cache("#{cache_keys[0]}"),Relax.cache("#{cache_keys[1]}"),3,4,Relax.cache("#{cache_keys[2]}"),Relax.cache("#{cache_keys[3]}")]}});
-      })()
-    JS
-
-    assert_equal expected, result
-  end
-
   test "nested caching generates a depth-first list of cache nodes" do
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
 
@@ -759,7 +749,7 @@ class BathTemplateTest < ActionView::TestCase
 
     assert_equal expected, result
   end
-  
+
   test "filtering for a node in the tree via relax_filter helper" do
     result = jbuild(<<-JBUILDER, relax_filter: 'hit.hit2')
       json.hit do

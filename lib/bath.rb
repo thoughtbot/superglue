@@ -6,7 +6,7 @@ require 'bath/handler'
 require 'bath/partial_extension'
 require 'bath/deferment_extension'
 require 'bath/search_extension'
-require 'byebug'
+
 module Bath
   class Template < ::Jbuilder
     include PartialDigestor

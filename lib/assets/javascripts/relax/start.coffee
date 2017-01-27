@@ -28,15 +28,7 @@ remoteHandler = (ev) ->
   remote = new Relax.Remote(target)
   return unless remote.isValid()
   ev.preventDefault()
-
-  controller.request remote.httpUrl,
-    requestMethod: remote.actualRequestType
-    payload: remote.payload
-    contentType: remote.contentType
-    silent: remote.silent
-    target: remote.target
-    async: remote.async
-    pushState: remote.pushState
+  controller.request remote.httpUrl, remote.toOptions()
 
 browserSupportsCustomEvents =
   document.addEventListener and document.createEvent

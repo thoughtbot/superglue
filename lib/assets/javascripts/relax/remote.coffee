@@ -14,6 +14,15 @@ class Relax.Remote
     @silent = @getRXAttribute(target, 'rx-silent') || false
     @setPayload(target)
 
+  toOptions: =>
+    requestMethod: @actualRequestType
+    payload: @payload
+    contentType: @contentType
+    silent: @silent
+    target: @target
+    async: @async
+    pushState: @pushState
+
   setRequestType: (target)=>
     if target.tagName == 'A'
       @httpRequestType = @getRXAttribute(target, 'rx-remote')

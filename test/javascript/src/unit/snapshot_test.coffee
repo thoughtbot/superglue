@@ -32,6 +32,18 @@ testWithSession "with same URL, skips transition cache", (assert) ->
   @Relax.enableTransitionCache()
   @Relax.visit('session')
 
+testWithSession "transition cache can be disabled with an override", (assert) ->
+  done = assert.async()
+  restoreCalled = false
+  @document.addEventListener 'relax:restore', =>
+    restoreCalled = true
+  @document.addEventListener 'relax:load', =>
+    assert.notOk restoreCalled
+    done()
+  @Relax.enableTransitionCache()
+  @Relax.visit('success_with_transition_cache_override')
+
+
 testWithSession "history.back() cache hit", (assert) ->
   done = assert.async()
   change = 0

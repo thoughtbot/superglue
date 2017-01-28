@@ -38,7 +38,7 @@ class Relax.Controller
       @progressBar?.start()
     restorePoint = @history.transitionCacheFor(url.absolute)
 
-    if @transitionCacheEnabled and restorePoint
+    if @transitionCacheEnabled and restorePoint and restorePoint.transition_cache
       @history.reflectNewUrl(url)
       @restore(restorePoint)
       options.showProgressBar = false

@@ -6,7 +6,7 @@ class Relax.Snapshot
   constructor: (@controller) ->
     @pageCache = {}
     @currentBrowserState = null
-    @pageCacheSize = 20
+    @pageCacheSize = 10
     @currentPage = null
     @loadedAssets= null
 
@@ -50,6 +50,7 @@ class Relax.Snapshot
       positionX: window.pageXOffset
       url: currentUrl.relative
       pathname: currentUrl.pathname
+      transition_cache: true
 
     @pageCache[currentUrl.absolute] = @currentPage
 

@@ -57,4 +57,4 @@ Relax.disableRequestCaching = controller.disableRequestCaching
 Relax.ProgressBar = ProgressBarAPI
 Relax.supported = Relax.Utils.browserSupportsRelax()
 Relax.EVENTS = Relax.Utils.clone(EVENTS)
-
+Relax.currentPage = controller.currentPage

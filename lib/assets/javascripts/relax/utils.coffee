@@ -79,70 +79,89 @@ isObject = (val) ->
 isArray = (val) ->
   Object.prototype.toString.call(val) is '[object Array]'
 
-graftByKeypath = (path, leaf, obj, opts={}) ->
-  if typeof path is "string"
-    path = path.split('.')
-    return graftByKeypath(path, leaf, obj, opts)
+class Relax.Grafter
+  constructor: ->
+    @current_path = []
 
-  head = path[0]
-  child = obj[head] if obj?
-  remaining = path.slice(1)
+  graftByKeypath: (path, leaf, obj, opts={}) ->
+    if typeof path is "string"
+      path = path.split('.')
+      return @graftByKeypath(path, leaf, obj, opts)
 
-  if path.length is 0
-    if opts.type == 'add' and isArray(obj)
-      copy = []
-      for child in obj
-        copy.push child
+    head = path[0]
+    @current_path.push(head)
+    child = obj[head] if obj?
+    remaining = path.slice(1)
 
-      copy.push leaf
-      return copy
-    else
-      return leaf
-
-  if isObject(obj)
-    copy = {}
-    found = false
-    for key, value of obj
-      if key is head
-        node = graftByKeypath(remaining, leaf, child, opts)
-        found = true unless child is node
-        copy[key] = node
-      else
-        copy[key] = value
-
-    return if found then copy else obj
-
-  else if isArray(obj)
-    [attr, id] = head.split('=')
-    found = false
-    if id == undefined
-      index = parseInt(attr)
-      child = obj[index]
-      node = graftByKeypath(remaining, leaf, child, opts)
-      found = true unless child is node
-
-      copy = obj.slice(0, index)
-      copy.push(node)
-      copy = copy.concat(obj.slice(index + 1, obj.length))
-    else
-      id = parseInt(id) || 0
-      copy = []
-      for child in obj
-        if child[attr] == id
-          node = graftByKeypath(remaining, leaf, child, opts)
-          found = true unless child is node
-          copy.push node
-        else
+    if path.length is 0
+      if opts.type == 'add' and isArray(obj)
+        copy = []
+        for child in obj
           copy.push child
 
-    return if found then copy else obj
-  else
-    obj
+        copy.push leaf
+        return copy
+      else
+        return leaf
+
+    if isObject(obj)
+      copy = {}
+      found = false
+      for key, value of obj
+        if key is head
+          node = @graftByKeypath(remaining, leaf, child, opts)
+          found = true unless child is node
+          copy[key] = node
+        else
+          copy[key] = value
+
+      return if found
+        @current_path.pop()
+        copy
+      else
+        Relax.Utils.warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
+        obj
+
+    else if isArray(obj)
+      [attr, id] = head.split('=')
+      found = false
+      if id == undefined
+        index = parseInt(attr)
+        child = obj[index]
+        node = @graftByKeypath(remaining, leaf, child, opts)
+        found = true unless child is node
+
+        copy = obj.slice(0, index)
+        copy.push(node)
+        copy = copy.concat(obj.slice(index + 1, obj.length))
+      else
+        id = parseInt(id) || 0
+        copy = []
+        for child in obj
+          if child[attr] == id
+            node = @graftByKeypath(remaining, leaf, child, opts)
+            found = true unless child is node
+            copy.push node
+          else
+            copy.push child
+
+      return if found
+        @current_path.pop()
+        copy
+      else
+        Relax.Utils.warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
+        obj
+    else
+      obj
 
 
 
 @Relax.Utils =
-  graftByKeypath: graftByKeypath
+  warn: ->
+    console.warn.apply(@, arguments)
+  graftByKeypath:  ->
+    grafter = new  Relax.Grafter
+    grafter.graftByKeypath.apply(grafter, arguments)
   documentListenerForLinks: documentListenerForLinks
   reverseMerge: reverseMerge
   merge: merge

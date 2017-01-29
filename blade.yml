@@ -27,3 +27,7 @@ plugins:
         version: -2
       Firefox:
         version: -2
+      Safari:
+        version: -2
+      Microsoft Edge:
+        version: -2

@@ -1,21 +1,22 @@
 # Relax
 Relax makes it easy (even boring) to create single-page, multi-page, and sometimes-single-page applications with ReactJS and classic Rails.
 
-### Write and maintain less, get more.
-Relax takes a page from Turbolinks (also a hard fork) to give you the benefits of a single-page application using the Rails workflow you already know. Combined with ReactJS and BathTemplates, which produces Server Generated Javascript Responses, Relax brings you functionality normally seen with heavier frontend client libaries such as:
-
-1. Page to page transitions without reloading
-2. Cache aware JS content with structural sharing that makes implementing `shouldComponentUpdate` as easy as extending ReactJS's `PureComponent`
-3. Defered rendering of slow loading parts of your page without the need to create API endpoints
-4. SPA pagination, again without the need to create an API endpoint
-
 **WARNING!!!!** this has not been officially released yet. There's still a bit of work left. If this library sounds interesting and you are interested in helping, feel free to reach out! Please don't submit to Hacker News.
 
+## What you can do:
+
+1. Page to page transitions without reloading
+2. Russian Doll cache aware JS content with structural sharing that makes implementing `shouldComponentUpdate` as easy as extending ReactJS's `PureComponent`
+3. Defered rendering of slow loading parts of your page without API endpoints (e.g. dashboards that load later on direct visits)
+4. Async actions that load different parts of your page without API endpoints (e.g. pagination, infinite scroll)
+
+
+Relax is the lovechild of Turbolinks (also a hard fork), Server Generated Javascript Responses (created with BathTemplates), and ReactJS that bring you all of the above features while keeping complexity low.
+
+Unlike Turbolink's view-over-the-wire approach, a Relax app is content-over-the-wire to your ReactJS frontend. Each controller gets two views, one for your content that you write using the included BathTemplates, and the other for your markup which you write in ReactJS. Relax features are achieved with `XMLHTTPRequest`s for the next page's content (or a branch of it via key paths) before firing a `relax:load` event that you can use with `ReactDOM.render`.
 
 ## Quick Peek
-Relax is like Turbolinks, but instead of view-over-the-wire, a Relax app is content-over-the-wire to your ReactJS frontend.
-
-Starting with a Rails project with Relax [installed](#installation), ReactJS in your asset pipeline, and [something](https://github.com/reactjs/react-rails) to transform JSX to JS.
+Starting with a Rails project with Relax [installed](#installation), ReactJS in your asset pipeline, and [something](https://github.com/reactjs/react-rails) [to](https://github.com/Shopify/sprockets-commoner) transform JSX to JS.
 
 Add a route and controller as you normally would.
 ```
@@ -37,7 +38,7 @@ class PostsController < ApplicationController
 end
 ```
 
-Each controller action gets 2 views, one for content and the other for markup. Use the included BathTemplates to create your content.
+Use the included BathTemplates to create your content.
 
 ```
 #app/views/posts/index.js.bath
@@ -83,13 +84,6 @@ App.Views.PostsIndex = function(json) {
   )
 }
 ```
-
-
-
-Relax makes a seperation of content and markup. Content is created using BathTemplates and rendered when requested with a `.js` content type. `.html` requests are handled by Relax and initially looks blank, but a `relax:load` event has been fired on the frontend and its up to you to feed that content to ReactJS to create the markup.
-
-
-
 
 ## Installation
 Relax does not include ReactJS, you'll have to download it seperately and include it in your path. Or just include [react-rails](https://github.com/reactjs/react-rails).
@@ -183,8 +177,36 @@ Relax.replace({data, title, csrf_token, assets})
 ```
 Replaces the current page content and triggers a `reload:load`. Normally used to inject content to Relax on a direct visit. Relax's generators will set this up for you.
 
+## Ruby Helpers
 
-## Bath Templates
+
+### use_relax_html
+Usage:
+```
+  class PostController < ApplicationController
+    before_action :use_relax_html
+  end
+```
+
+On direct visits, Relax will render an empty page. If you used the installation generator, Relax will also inject your content view created by BathTemplates into a script header, then fire a `relax:load` event that you can use with `ReactDOM.render`.
+
+### relax_silient?
+Usage:
+
+```
+class PostController < ApplicationController
+  def create
+  ...
+    if relax_silent?
+      ...
+    end
+  end
+end
+```
+
+Used in conjuction with `data-rx-silent` for `204` responses. Great for when you want to run a job and don't want to render anything back to the client.
+
+## Bath Templates, your content view
 BathTemplates is a sibling of JBuilderTemplates, both inheriting from the same [parent](https://github.com/rails/jbuilder/blob/master/lib/jbuilder.rb). Unlike Jbuilder, BathTemplate generates Server Generated Javascript and has a few differences listed below.
 
 ###Partials
@@ -262,7 +284,7 @@ end
 ```
 
 #### Working with arrays
-If you want to defer elements in an array, you must should add a key as an option on `array!` to help relax generate a more specific keypath, otherwise it'll just use the index.
+If you want to defer elements in an array, you should add a key as an option on `array!` to help relax generate a more specific keypath, otherwise it'll just use the index.
 
 ```
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]

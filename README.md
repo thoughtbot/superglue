@@ -19,7 +19,7 @@ Unlike Turbolink's view-over-the-wire approach, a Relax app is content-over-the-
 Starting with a Rails project with Relax [installed](#installation), ReactJS in your asset pipeline, and [something](https://github.com/reactjs/react-rails) [to](https://github.com/Shopify/sprockets-commoner) transform JSX to JS.
 
 Add a route and controller as you normally would.
-```
+```ruby
 # config/routes.rb
 resources :posts
 
@@ -40,7 +40,7 @@ end
 
 Use the included BathTemplates to create your content.
 
-```
+```ruby
 #app/views/posts/index.js.bath
 
 json.heading @greeting
@@ -62,7 +62,7 @@ json.footer 'something'
 
 Then write your remaining view in JSX. The content you wrote earlier gets passed here.
 
-```
+```ruby
 # app/assets/javascripts/views/PostIndex.js.jsx
 
 App.Views.PostsIndex = function(json) {
@@ -107,7 +107,7 @@ Relax intercepts all clicks on `<a>` and all submits on `<form>` elements enable
 
 Once the response loads, a `relax:load` event will be fired with the JS object that you created with BathTemplates. If you used the installation generator, the event will be set for you in the `<head>` element of your layout:
 
-```
+```javascript
 document.addEventListener('relax:load', function(event){
   var props = {
     view: event.data.view,
@@ -142,7 +142,7 @@ Event                 | Argument `originalEvent.data`  | Notes
 ### Relax.visit
 
 Usage:
-```
+```javascript
 Relax.visit(location)
 Relax.visit(location, { pushState, silent, async })
 ```
@@ -156,7 +156,7 @@ Performs an Application Visit to the given _location_ (a string containing a URL
 ### Relax.graftByKeypath
 
 Usage:
-```
+```javascript
 Relax.graftByKeypath(keyPath, object, {type});
 ```
 Place a new object at the specified keypath of Relax's content tree on the current page and across other pages in its cache. Parent objects are clone and `relax:load` is finally called.
@@ -172,7 +172,7 @@ If type is specified as `add`. Relax will push the object at the keyPath (assumi
 
 ### Relax.replace
 Usage:
-```
+```javascript
 Relax.replace({data, title, csrf_token, assets})
 ```
 Replaces the current page content and triggers a `reload:load`. Normally used to inject content to Relax on a direct visit. Relax's generators will set this up for you.
@@ -182,7 +182,7 @@ Replaces the current page content and triggers a `reload:load`. Normally used to
 
 ### use_relax_html
 Usage:
-```
+```ruby
   class PostController < ApplicationController
     before_action :use_relax_html
   end
@@ -213,7 +213,7 @@ BathTemplates is a sibling of JBuilderTemplates, both inheriting from the same [
 Partials are only supported as an option on attribute or array! `set!`s.
 Usage:
 
-```
+```ruby
 # We use a `nil` because of the last argument hash. The contents of the partial is what becomes the value.
 json.post nil, partial: "blog_post"
 
@@ -237,7 +237,7 @@ Caching is only available as an option on an attribute and can be used in tandem
 
 Usage:
 
-```
+```ruby
 json.author(cache: ["some_cache_key"]) do
   json.first_name "tommy"
 end
@@ -256,7 +256,7 @@ json.profile nil, cache: "cachekey", partial: "profile", locals: {email: "test@t
 Unlike Jbuilder, BathTemplates will not merge duplicate `set!`s. Instead, the last duplicate will override the first.
 
 Usage:
-```
+```ruby
 json.address do
   json.street '123 road'
 end
@@ -268,7 +268,7 @@ end
 
 would become
 
-```
+```json
 {address: {zip:10002}}
 ```
 
@@ -276,7 +276,7 @@ would become
 You can defer rendering of expensive content using the `defer: true` option available in blocks. Behind the scenes BathTemplates will no-op the block entirely, replace the value with a `null` as a standin, and append a `Relax.visit(/somepath?_relax_filter=keypath.to.node)` to the response. When the client recieves the payload, `relax:load` will be fired, then the appended `Relax.visit` will be called to fetch and graft the missing node before firing `relax:load` a second time.
 
 Usage:
-```
+```ruby
 json.dashboard(defer: true) do
   sleep 10
   json.some_fancy_metric 42
@@ -286,7 +286,7 @@ end
 #### Working with arrays
 If you want to defer elements in an array, you should add a key as an option on `array!` to help relax generate a more specific keypath, otherwise it'll just use the index.
 
-```
+```ruby
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
 json.array! data, key: :id do
@@ -301,7 +301,7 @@ As seen previously, Relax can filter your content tree for a specific node. This
 
 For example, to create seamless ajaxy pagination for a specific part of your page, just create a link like the following:
 
-```
+```html
   <a href="posts?page_num=2&_relax_filter=key.path.to.posts" data-rx-remote> Next Page </a>
 ```
 

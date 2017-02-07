@@ -46,9 +46,10 @@ Use the included BathTemplates to create your content.
 json.heading @greeting
 
 # `defer: true` will no-op the following block on a direct
-# visit and append additional javascript in the response to
-# fetch only this content node (no-oping other sibiling blocks)
-# and graft it in the right place on the client side.
+# visit, use null as a standin value, and append additional
+# javascript in the response to fetch only this content node
+# (no-oping other sibiling blocks) and graft it in the right
+# place on the client side.
 json.dashboard(defer: true) do
   sleep 10
   json.num_of_views 100

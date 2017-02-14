@@ -21,7 +21,7 @@ module Relax
     end
 
     def relax_filter
-      request.params[:_relax_filter] || session[:relax_filter]
+      request.params[:_relax_filter] || (session && session[:relax_filter])
     end
   end
 end

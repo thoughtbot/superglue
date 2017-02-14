@@ -109,7 +109,7 @@ class Relax.Controller
 
         unless options.ignoreSamePathConstraint
           @progressBar?.done()
-          console.warn("Async response path is different from current page path")
+          Relax.Utils.warn("Async response path is different from current page path")
           return
 
       if options.pushState

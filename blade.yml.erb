@@ -5,7 +5,6 @@ load_paths:
 
 logical_paths:
   - sinon-1.17.5.js
-  - sinon-qunit-1.0.0.js
   - relax.js
   - test.js
 
@@ -14,6 +13,9 @@ build:
     - relax.js
   path: dist
   js_compressor: uglifier
+
+require:
+  - <%= File.join(File.expand_path(File.dirname(__FILE__)), "test/blade_helper.rb") %>
 
 plugins:
   sprockets_override_accept:
@@ -24,10 +26,5 @@ plugins:
       - "dev-varnish"
     browsers:
       Google Chrome:
-        version: -2
-      Firefox:
-        version: -2
-      Safari:
-        version: -2
-      Microsoft Edge:
+        os: Mac
         version: -2

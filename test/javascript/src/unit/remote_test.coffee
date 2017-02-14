@@ -100,10 +100,10 @@ testWithSession "#payload will contain a _method when data-rx-remote on a form i
     </form>
   """
   target = createTarget(html)
+  appendSpy = sinon.spy(@window.FormData.prototype, 'append')
   remote = new @Relax.Remote(target)
-  payload = Array.from(remote.payload.keys())
-  assert.equal remote.actualRequestType, 'POST'
-  assert.ok "_method" in payload
+
+  assert.ok appendSpy.calledWith('_method', 'PUT')
 
 testWithSession "#contentType returns null", (assert) ->
   html = """
@@ -213,17 +213,19 @@ testWithSession "#isValid returns true with rx-remote (sans data-)", (assert) ->
   remote = new @Relax.Remote(target)
   assert.ok remote.isValid()
 
-testWithSession "#payload returns captured input fields", (assert) ->
+testWithSession "#payload captures input fields", (assert) ->
   html = """
     <form data-rx-remote method='post' action='/'>
       <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
     </form>
   """
   target = createTarget(html)
+  appendSpy = sinon.spy(@window.FormData.prototype, 'append')
   remote = new @Relax.Remote(target)
   payload = remote.payload
   assert.ok (payload instanceof @window.FormData)
-  assert.equal payload.get('bar'), 'fizzbuzz'
+
+  assert.ok appendSpy.calledWith('bar', 'fizzbuzz')
   assert.equal remote.httpUrl, '/'
 
 testWithSession "#payload won't include form inputs with rx-remote-noserialize", (assert) ->
@@ -232,11 +234,14 @@ testWithSession "#payload won't include form inputs with rx-remote-noserialize",
       <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz' rx-remote-noserialize>
     </form>
   """
+
   target = createTarget(html)
+  appendSpy = sinon.spy(@window.FormData.prototype, 'append')
   remote = new @Relax.Remote(target)
+  assert.ok appendSpy.neverCalledWith('bar', 'fizzbuzz');
+
   payload = remote.payload
   assert.ok (payload instanceof @window.FormData)
-  assert.propEqual Array.from(payload.keys()), []
   assert.equal remote.httpUrl, '/'
 
 testWithSession "ajax errors fire starting with the element", (assert) ->

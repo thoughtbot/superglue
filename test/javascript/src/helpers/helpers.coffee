@@ -4,9 +4,9 @@
     iframe = document.getElementById('pl-session')
     iframe.setAttribute('scrolling', 'yes')
     iframe.setAttribute('style', 'visibility: hidden;')
-    iframe.setAttribute('src', "fixtures/session")
+    iframe.setAttribute('src', "/app/session")
     document.body.appendChild(iframe)
-    stop()
+    done = assert.async()
 
     iframe.onload = =>
       iframe.onload = null
@@ -19,7 +19,7 @@
       @Relax.disableRequestCaching()
       @$ = (selector) => @document.querySelector(selector)
 
-      start()
       callback.call(@, assert)
+      done()
 
 

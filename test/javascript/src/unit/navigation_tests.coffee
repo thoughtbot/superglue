@@ -12,7 +12,7 @@ testWithSession "a successful visit", (assert) ->
     requestStared = true
 
   @document.addEventListener 'relax:request-end', =>
-    state = relax: true, url: "#{location.protocol}//#{location.host}/fixtures/session"
+    state = relax: true, url: "#{location.protocol}//#{location.host}/app/session"
     assert.propEqual @history.state, state
     assert.ok relaxClickFired
     assert.ok requestStared
@@ -21,20 +21,20 @@ testWithSession "a successful visit", (assert) ->
   @document.addEventListener 'relax:load', (event) =>
     assert.ok requestFinished
     assert.propEqual event.data.data, { heading: "Some heading 2" }
-    state = relax: true, url: "#{location.protocol}//#{location.host}/fixtures/success"
+    state = relax: true, url: "#{location.protocol}//#{location.host}/app/success"
     assert.propEqual @history.state, state
     assert.equal @location.href, state.url
     assert.equal @$('meta[name="csrf-token"]').getAttribute('content'), 'token'
     done()
 
-  @Relax.visit('success')
+  @Relax.visit('/app/success')
 
 testWithSession "asset refresh", (assert) ->
   done = assert.async()
   @window.addEventListener 'unload', =>
     assert.ok true
     done()
-  @Relax.visit('success_with_new_assets')
+  @Relax.visit('/app/success_with_new_assets')
 
 testWithSession "error fallback", (assert) ->
   done = assert.async()
@@ -44,12 +44,12 @@ testWithSession "error fallback", (assert) ->
     unloadFired = true
     setTimeout =>
       try
-        assert.equal @window.location.href, "#{@window.location.protocol}//#{@window.location.host}/does_not_exist"
+        assert.equal @window.location.href, "#{@window.location.protocol}//#{@window.location.host}/app/does_not_exist"
       catch e
         throw e unless /denied/.test(e.message) # IE
       done()
     , 0
-  @Relax.visit('/does_not_exist')
+  @Relax.visit('/app/does_not_exist')
 
 
 testWithSession "with different-origin URL, forces a normal redirection", (assert) ->
@@ -68,7 +68,7 @@ testWithSession "calling preventDefault on the before-change event cancels the v
   @document.addEventListener 'relax:request-start', =>
     done new Error("visit wasn't cancelled")
     done = null
-  @Relax.visit('success')
+  @Relax.visit('/app/success')
 
 testWithSession "doesn't pushState when URL is the same", (assert) ->
   done = assert.async()
@@ -80,14 +80,14 @@ testWithSession "doesn't pushState when URL is the same", (assert) ->
     load += 1
     if load is 1
       assert.equal @history.length, @originalHistoryLength
-      setTimeout (=> @Relax.visit('session#test')), 0
+      setTimeout (=> @Relax.visit('/app/session#test')), 0
     else if load is 2
       setTimeout (=>
         assert.equal @history.length, @originalHistoryLength + 1
         done()
       ), 0
   @originalHistoryLength = @history.length
-  @Relax.visit('session')
+  @Relax.visit('/app/session')
 
 testWithSession "with #anchor and history.back()", (assert) ->
   done = assert.async()
@@ -105,7 +105,7 @@ testWithSession "with #anchor and history.back()", (assert) ->
     assert.equal hashchange, 1
     done()
   @location.href = "#{@location.href}#change"
-  setTimeout (=> @Relax.visit('success#permanent')), 0
+  setTimeout (=> @Relax.visit('/app/success#permanent')), 0
 
 testWithSession "js responses with Relax.cache caches correctly", (assert) ->
   done = assert.async()
@@ -113,7 +113,7 @@ testWithSession "js responses with Relax.cache caches correctly", (assert) ->
     assert.equal(event.data.data.footer, 'some cached content')
     assert.equal(@Relax.cache('cachekey'), 'some cached content')
     done()
-  @Relax.visit('success_with_russian_doll')
+  @Relax.visit('/app/success_with_russian_doll')
 
 testWithSession "the async option allows request to run seperate from the main XHR", (assert) ->
   done = assert.async()
@@ -121,7 +121,7 @@ testWithSession "the async option allows request to run seperate from the main X
     assert.equal @Relax.controller.http, null
     done()
 
-  @Relax.visit('session', async: true)
+  @Relax.visit('/app/session', async: true)
 
 testWithSession "the async options will use a parallel queue that onloads in order", (assert) ->
   done = assert.async()
@@ -142,8 +142,8 @@ testWithSession "the async options will use a parallel queue that onloads in ord
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Relax.visit('/', async: true)
-  @Relax.visit('/', async: true)
+  @Relax.visit('/app', async: true)
+  @Relax.visit('/app', async: true)
   assert.equal @Relax.controller.pq.dll.length, 2
   requests[1].respond(200, { "Content-Type": "application/javascript" }, response)
 
@@ -171,8 +171,8 @@ testWithSession "the async options will use a parallel queue that onloads in ord
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Relax.visit('/', async: true)
-  @Relax.visit('/', async: true)
+  @Relax.visit('/app', async: true)
+  @Relax.visit('/app', async: true)
   assert.equal @Relax.controller.pq.dll.length, 2
   requests[0].respond(200, { "Content-Type": "application/javascript" }, response)
 
@@ -191,7 +191,7 @@ testWithSession "relax grafting", (assert) ->
       heading: "Some heading"
 
     done()
-  @Relax.visit('success_with_graft')
+  @Relax.visit('/app/success_with_graft')
 
 testWithSession "relax async renders", (assert) ->
   done = assert.async()
@@ -209,4 +209,4 @@ testWithSession "relax async renders", (assert) ->
           zip: 91210
         heading: "Some heading 2"
       done()
-  @Relax.visit('success_with_async_render')
+  @Relax.visit('/app/success_with_async_render')

@@ -9,17 +9,17 @@ testWithSession "without transition cache", (assert) ->
     if load is 1
       assert.equal @document.title, 'title 2'
       setTimeout (=>
-        @Relax.visit('session')), 0
+        @Relax.visit('/app/session')), 0
     else if load is 2
       assert.notOk restoreCalled
       assert.equal @document.title, 'title'
       location = @window.location
-      state = relax: true, url: "#{location.protocol}//#{location.host}/fixtures/session"
+      state = relax: true, url: "#{location.protocol}//#{location.host}/app/session"
       assert.propEqual @history.state, state
       done()
   @document.addEventListener 'relax:restore', =>
     restoreCalled = true
-  @Relax.visit('success')
+  @Relax.visit('/app/success')
 
 testWithSession "with same URL, skips transition cache", (assert) ->
   done = assert.async()
@@ -30,7 +30,7 @@ testWithSession "with same URL, skips transition cache", (assert) ->
     assert.notOk restoreCalled
     done()
   @Relax.enableTransitionCache()
-  @Relax.visit('session')
+  @Relax.visit('/app/session')
 
 testWithSession "transition cache can be disabled with an override", (assert) ->
   done = assert.async()
@@ -41,7 +41,7 @@ testWithSession "transition cache can be disabled with an override", (assert) ->
     assert.notOk restoreCalled
     done()
   @Relax.enableTransitionCache()
-  @Relax.visit('success_with_transition_cache_override')
+  @Relax.visit('/app/success_with_transition_cache_override')
 
 
 testWithSession "history.back() cache hit", (assert) ->
@@ -60,7 +60,7 @@ testWithSession "history.back() cache hit", (assert) ->
       assert.notOk fetchCalled
       assert.equal @document.title, 'title'
       done()
-  @Relax.visit('success')
+  @Relax.visit('/app/success')
 
 testWithSession "history.back() cache miss", (assert) ->
   done = assert.async()
@@ -82,4 +82,4 @@ testWithSession "history.back() cache miss", (assert) ->
       assert.equal restoreCalled, false
       done()
   @Relax.pagesCached(0)
-  @Relax.visit('success')
+  @Relax.visit('/app/success')

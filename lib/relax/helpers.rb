@@ -8,7 +8,8 @@ module Relax
 
     def relax_snippet
       if defined?(@relax) && @relax
-        "Relax.replace(#{@relax});".html_safe
+        snippet = @relax.gsub(/\;$/, '')
+        "Relax.replace(#{snippet});".html_safe
       end
     end
 

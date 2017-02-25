@@ -31,7 +31,7 @@ module Bath
             json.path relax_filter
           end
 
-          if defined?(session)
+          if defined?(session) && session
             session.delete(:relax_filter)
           end
 

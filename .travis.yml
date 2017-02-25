@@ -5,6 +5,8 @@ rvm:
 
 sudo: false
 cache: bundler
+before_script:
+  - bundle exec rake generate_blade_yml
 
 script:
  - bundle exec rake test

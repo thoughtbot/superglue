@@ -52,7 +52,7 @@ class Relax.Remote
         @contentType = "application/x-www-form-urlencoded; charset=UTF-8"
         @payload = @formAppend(@payload, "_method", @httpRequestType)
     else
-      if '_method' not in Array.from(@payload.keys()) && @httpRequestType not in ['GET', 'POST']
+      if !target.querySelector('[name=_method]') && @httpRequestType not in ['GET', 'POST']
         @payload.append("_method", @httpRequestType)
 
   isValid: =>

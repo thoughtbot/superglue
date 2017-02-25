@@ -5,7 +5,6 @@ load_paths:
 
 logical_paths:
   - sinon-1.17.5.js
-  - sinon-qunit-1.0.0.js
   - relax.js
   - test.js
 
@@ -15,19 +14,23 @@ build:
   path: dist
   js_compressor: uglifier
 
+require:
+  - <%= File.join(File.expand_path(File.dirname(__FILE__)), "test/blade_helper.rb") %>
+
 plugins:
-  sprockets_override_accept:
   sauce_labs:
     tunnel_args:
       - "--verbose"     # Turn on verbose logging.
       - "--vm-version"  # Use the varnish VM for WebSockets support.
       - "dev-varnish"
+      - "--no-proxy-caching"
     browsers:
-      Google Chrome:
+      IE: 11
+      Chrome:
         version: -2
       Firefox:
         version: -2
-      Safari:
-        version: -2
       Microsoft Edge:
+        version: -2
+      Safari:
         version: -2

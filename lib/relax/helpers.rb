@@ -8,7 +8,8 @@ module Relax
 
     def relax_snippet
       if defined?(@relax) && @relax
-        "Relax.replace(#{@relax});".html_safe
+        snippet = @relax.gsub(/\;$/, '')
+        "Relax.replace(#{snippet});".html_safe
       end
     end
 
@@ -21,7 +22,7 @@ module Relax
     end
 
     def relax_filter
-      request.params[:_relax_filter] || session[:relax_filter]
+      request.params[:_relax_filter] || (session && session[:relax_filter])
     end
   end
 end

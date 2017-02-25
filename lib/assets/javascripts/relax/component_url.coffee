@@ -43,6 +43,16 @@ class Relax.ComponentUrl
   _parse: ->
     (@link ?= document.createElement 'a').href = @original
     { @href, @protocol, @host, @hostname, @port, @pathname, @search, @hash } = @link
+
+    if @protocol == ''
+      @protocol = document.location.protocol
+    if @port == ''
+      @port = document.location.port
+    if @hostname == ''
+      @hostname = document.location.hostname
+    if @pathname == ''
+      @pathname = '/'
+
     @origin = [@protocol, '//', @hostname].join ''
     @origin += ":#{@port}" unless @port.length is 0
     @relative = [@pathname, @search, @hash].join ''

@@ -24,5 +24,9 @@ class ApplicationController < ActionController::Base
 
   def success_with_transition_cache_override
   end
+
+  def does_not_exist
+    head 404
+  end
 end
 

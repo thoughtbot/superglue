@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   get '/success_with_new_assets', to: 'application#success_with_new_assets'
   get '/success_with_russian_doll', to: 'application#success_with_russian_doll'
   get '/success_with_transition_cache_override', to: 'application#success_with_transition_cache_override'
+  get '/does_not_exist', to: 'application#does_not_exist'
 end

@@ -26,7 +26,9 @@ class ApplicationController < ActionController::Base
   end
 
   def does_not_exist
-    head 404
+    # IE 10 will show friendly messages if payload under 512bytes
+    # causing cors issue
+    render text: 'T' * 1000, status: 404
   end
 end
 

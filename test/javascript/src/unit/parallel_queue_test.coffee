@@ -2,7 +2,7 @@
 QUnit.module "ParallelQueue"
 
 testWithSession "#push will add an XHR to the q", (assert) ->
-  xhr = sinon.useFakeXMLHttpRequest()
+  xhr = new sinon.FakeXMLHttpRequest()
   xhr.onload = ->{}
 
   q = new @Relax.ParallelQueue

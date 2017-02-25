@@ -2,6 +2,7 @@
 QUnit.module "Utils"
 
 testWithSession "when the path parts are greater than avail", (assert) ->
+  sinon.stub(@Relax.Utils, 'warn', ->{})
   page = {}
   clone = (new @Relax.Grafter).graftByKeypath('a.b.c', 0 ,page)
   assert.strictEqual page, clone
@@ -13,6 +14,7 @@ testWithSession "when its not a tree like structure", (assert) ->
   assert.strictEqual page, clone
 
 testWithSession "when the path does not exist", (assert) ->
+  sinon.stub(@Relax.Utils, 'warn', ->{})
   page = a: b: c: d: 5
   clone = (new @Relax.Grafter).graftByKeypath('a.b.z', foo: 'bar', page)
 

@@ -124,6 +124,7 @@ testWithSession "the async option allows request to run seperate from the main X
   @Relax.visit('/app/session', async: true)
 
 testWithSession "the async options will use a parallel queue that onloads in order", (assert) ->
+  sinon.stub(@Relax.Utils, 'warn', ->{})
   done = assert.async()
 
   response = '''
@@ -151,9 +152,11 @@ testWithSession "the async options will use a parallel queue that onloads in ord
   requests[0].respond(200, { "Content-Type": "application/javascript" }, response)
 
   assert.equal @Relax.controller.pq.dll.length, 0
+  xhr.restore()
   done()
 
 testWithSession "the async options will use a parallel queue that onloads in order 2", (assert) ->
+  sinon.stub(@Relax.Utils, 'warn', ->{})
   done = assert.async()
   response = '''
     (function() {
@@ -180,6 +183,7 @@ testWithSession "the async options will use a parallel queue that onloads in ord
   requests[1].respond(200, { "Content-Type": "application/javascript" }, response)
 
   assert.equal @Relax.controller.pq.dll.length, 0
+  xhr.restore()
   done()
 
 testWithSession "relax grafting", (assert) ->

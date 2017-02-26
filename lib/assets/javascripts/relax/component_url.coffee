@@ -44,6 +44,8 @@ class Relax.ComponentUrl
     (@link ?= document.createElement 'a').href = @original
     { @href, @protocol, @host, @hostname, @port, @pathname, @search, @hash } = @link
 
+    if @protocol == ':'
+      @protocol = document.location.protocol
     if @protocol == ''
       @protocol = document.location.protocol
     if @port == ''

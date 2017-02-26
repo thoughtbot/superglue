@@ -1,11 +1,11 @@
-QUnit.module "Component URL test"
+QUnit.module "Component URL"
 
 createTarget = (html) ->
   testDiv = @document.createElement('div')
   testDiv.innerHTML = html
   return testDiv.firstChild
 
-testWithSession "new parses an http url", (assert) ->
+testWithSession "#new parses an http url", (assert) ->
   url = 'https://www.example.com:3000?q=foobar#section'
   component_url = new @Relax.ComponentUrl(url)
   assert.equal component_url.href, 'https://www.example.com:3000/?q=foobar#section'

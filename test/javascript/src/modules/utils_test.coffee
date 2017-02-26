@@ -1,4 +1,3 @@
-
 QUnit.module "Utils"
 
 testWithSession "when the path parts are greater than avail", (assert) ->
@@ -6,7 +5,6 @@ testWithSession "when the path parts are greater than avail", (assert) ->
   page = {}
   clone = (new @Relax.Grafter).graftByKeypath('a.b.c', 0 ,page)
   assert.strictEqual page, clone
-
 
 testWithSession "when its not a tree like structure", (assert) ->
   page = null

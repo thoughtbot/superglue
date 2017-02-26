@@ -29,14 +29,14 @@ testWithSession "a successful visit", (assert) ->
 
   @Relax.visit('/app/success')
 
-testWithSession "asset refresh", (assert) ->
+testWithSession "visits to content with new assets generates a refresh", (assert) ->
   done = assert.async()
   @window.addEventListener 'unload', =>
     assert.ok true
     done()
   @Relax.visit('/app/success_with_new_assets')
 
-testWithSession "error fallback", (assert) ->
+testWithSession "visits with an error response would redirect to that same errorpage", (assert) ->
   done = assert.async()
 
   unloadFired = false
@@ -52,7 +52,7 @@ testWithSession "error fallback", (assert) ->
   @Relax.visit('/app/does_not_exist')
 
 
-testWithSession "with different-origin URL, forces a normal redirection", (assert) ->
+testWithSession "visits with different-origin URL, forces a normal redirection", (assert) ->
   done = assert.async()
   @window.addEventListener 'unload', =>
     assert.ok true
@@ -70,7 +70,7 @@ testWithSession "calling preventDefault on the before-change event cancels the v
     done = null
   @Relax.visit('/app/success')
 
-testWithSession "doesn't pushState when URL is the same", (assert) ->
+testWithSession "visits do not pushState when URL is the same", (assert) ->
   done = assert.async()
   # Get rid of history.back() sideeffect
   @history.pushState({}, "", "session");
@@ -90,6 +90,7 @@ testWithSession "doesn't pushState when URL is the same", (assert) ->
   @Relax.visit('/app/session')
 
 testWithSession "with #anchor and history.back()", (assert) ->
+  #todo: revisit this test
   done = assert.async()
   hashchange = 0
   load = 0
@@ -107,7 +108,7 @@ testWithSession "with #anchor and history.back()", (assert) ->
   @location.href = "#{@location.href}#change"
   setTimeout (=> @Relax.visit('/app/success#permanent')), 0
 
-testWithSession "js responses with Relax.cache caches correctly", (assert) ->
+testWithSession "visits to content with Relax.cache stores caches correctly", (assert) ->
   done = assert.async()
   @window.addEventListener 'relax:load', (event) =>
     assert.equal(event.data.data.footer, 'some cached content')
@@ -115,7 +116,7 @@ testWithSession "js responses with Relax.cache caches correctly", (assert) ->
     done()
   @Relax.visit('/app/success_with_russian_doll')
 
-testWithSession "the async option allows request to run seperate from the main XHR", (assert) ->
+testWithSession "visits with the async option allows request to run seperate from the main XHR", (assert) ->
   done = assert.async()
   @document.addEventListener 'relax:load', =>
     assert.equal @Relax.controller.http, null
@@ -123,7 +124,7 @@ testWithSession "the async option allows request to run seperate from the main X
 
   @Relax.visit('/app/session', async: true)
 
-testWithSession "the async options will use a parallel queue that onloads in order", (assert) ->
+testWithSession "multiple remote visits with async will use a parallel queue and block onLoads until the xhr ahead of it finishes first", (assert) ->
   sinon.stub(@Relax.Utils, 'warn', ->{})
   done = assert.async()
 
@@ -155,7 +156,7 @@ testWithSession "the async options will use a parallel queue that onloads in ord
   xhr.restore()
   done()
 
-testWithSession "the async options will use a parallel queue that onloads in order 2", (assert) ->
+testWithSession "multiple remote visits with async options will use a parallel queue that onLoads in order", (assert) ->
   sinon.stub(@Relax.Utils, 'warn', ->{})
   done = assert.async()
   response = '''
@@ -186,7 +187,7 @@ testWithSession "the async options will use a parallel queue that onloads in ord
   xhr.restore()
   done()
 
-testWithSession "relax grafting", (assert) ->
+testWithSession "visits to content with a Relax.graft response will graft data appropriately", (assert) ->
   done = assert.async()
   @window.addEventListener 'relax:load', (event) =>
     assert.propEqual event.data.data,
@@ -197,7 +198,7 @@ testWithSession "relax grafting", (assert) ->
     done()
   @Relax.visit('/app/success_with_graft')
 
-testWithSession "relax async renders", (assert) ->
+testWithSession "visits to content with an async Relax.visit will kick off an async request for new content", (assert) ->
   done = assert.async()
   load = 0
 

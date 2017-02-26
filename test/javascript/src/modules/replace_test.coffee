@@ -45,7 +45,7 @@ testWithSession "with :title set to false doesn't replace the title", (assert) -
     done()
   @Relax.replace(doc, title: false)
 
-testWithSession "with different assets refreshes the page", (assert) ->
+testWithSession "replace with content with different assets refreshes the page", (assert) ->
   done = assert.async()
   doc =
     data: { heading: 'some data' }

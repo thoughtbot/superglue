@@ -1,11 +1,11 @@
-QUnit.module "CSRF Token test"
+QUnit.module "CSRF Token"
 
 createTarget = (html) ->
   testDiv = @document.createElement('div')
   testDiv.innerHTML = html
   return testDiv.firstChild
 
-testWithSession "#get return the current CSRF token", (assert) ->
+testWithSession "#get returns the current CSRF token", (assert) ->
   tokenTag = @document.querySelector 'meta[name="csrf-token"]'
   tokenTag.setAttribute 'content', 'someToken123'
 

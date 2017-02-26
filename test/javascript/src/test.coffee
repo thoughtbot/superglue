@@ -1,4 +1,4 @@
 #= require_tree ./helpers
-#= require_tree ./unit
+#= require_tree ./modules
 
 QUnit.config.hidepassed = true

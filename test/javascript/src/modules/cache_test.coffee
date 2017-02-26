@@ -1,6 +1,6 @@
 QUnit.module "Cache"
 
-testWithSession "cache can only be set the first time", (assert) ->
+testWithSession "cache can only be set once", (assert) ->
   @Relax.cache('cachekey','hit')
   assert.equal(@Relax.cache('cachekey'), 'hit')
 

@@ -1,4 +1,4 @@
-QUnit.module "Replace test"
+QUnit.module "Grafting API"
 
 testWithSession "updating content node and rendering", (assert) ->
   done = assert.async()

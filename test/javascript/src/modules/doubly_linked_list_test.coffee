@@ -1,10 +1,10 @@
 QUnit.module "DoublyLinkedList"
 
-testWithSession "a new ddl starts off with 0 element", (assert) ->
+testWithSession "#new starts off with 0 element", (assert) ->
   ddl = new @Relax.DoublyLinkedList
   assert.equal ddl.length, 0
 
-testWithSession "push inserts an element", (assert) ->
+testWithSession "#push inserts an element", (assert) ->
   ddl = new @Relax.DoublyLinkedList
   element = {}
   ddl.push(element)
@@ -18,7 +18,7 @@ testWithSession "push inserts an element", (assert) ->
   assert.equal ddl.tail.element, element2
   assert.equal ddl.head.element, element
 
-testWithSession "unshift inserts an element in the beginning", (assert) ->
+testWithSession "#unshift inserts an element in the beginning", (assert) ->
   ddl = new @Relax.DoublyLinkedList
   element = {}
   ddl.unshift(element)
@@ -32,7 +32,7 @@ testWithSession "unshift inserts an element in the beginning", (assert) ->
   assert.equal ddl.tail.element, element
   assert.equal ddl.head.element, element2
 
-testWithSession "pop removes the last element", (assert) ->
+testWithSession "#pop removes the last element", (assert) ->
   ddl = new @Relax.DoublyLinkedList
   element = {}
   element2 = {}
@@ -48,7 +48,7 @@ testWithSession "pop removes the last element", (assert) ->
   assert.equal poppedElement, element2
   assert.equal ddl.tail.element, element
 
-testWithSession "array shift removes the first element", (assert) ->
+testWithSession "#shift removes the first element", (assert) ->
   ddl = new @Relax.DoublyLinkedList
   element = {}
   element2 = {}

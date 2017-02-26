@@ -44,7 +44,7 @@ testWithSession "transition cache can be disabled with an override", (assert) ->
   @Relax.visit('/app/success_with_transition_cache_override')
 
 
-testWithSession "history.back() cache hit", (assert) ->
+testWithSession "history.back() will use the cache if avail", (assert) ->
   done = assert.async()
   change = 0
   fetchCalled = false
@@ -62,7 +62,7 @@ testWithSession "history.back() cache hit", (assert) ->
       done()
   @Relax.visit('/app/success')
 
-testWithSession "history.back() cache miss", (assert) ->
+testWithSession "history.back() will miss the cache if there's no cache", (assert) ->
   done = assert.async()
   change = 0
   restoreCalled = false

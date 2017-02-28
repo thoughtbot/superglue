@@ -11,9 +11,9 @@ Gem::Specification.new do |s|
   s.files    = Dir["lib/assets/javascripts/*.coffee", "lib/relax.rb", "lib/relax/*.rb", "README.md", "MIT-LICENSE", "test/*"]
   s.test_files = Dir["test/*"]
 
-  s.add_dependency 'coffee-rails'
-  s.add_dependency 'jbuilder'
-  s.add_dependency 'actionpack', '>= 4.0'
+  s.add_dependency 'coffee-rails', '~> 4.0'
+  s.add_dependency 'jbuilder', '< 3.0', '>= 1.5'
+  s.add_dependency 'actionpack', '< 6.0', '>= 4.0'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'mocha'

@@ -1,7 +1,6 @@
 # Relax
 Relax makes it easy (even boring) to create single-page, multi-page, and sometimes-single-page applications with ReactJS and classic Rails.
 
-**WARNING!!!!** this has not been officially released yet. There's still a bit of work left. If this library sounds interesting and you are interested in helping, feel free to reach out! Please don't submit to Hacker News.
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/jho406-bensonhurst.svg)](https://saucelabs.com/u/jho406-bensonhurst)
 
 ## What you can do:

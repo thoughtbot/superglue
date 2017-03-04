@@ -1,11 +1,11 @@
 QUnit.module "DoublyLinkedList"
 
 testWithSession "#new starts off with 0 element", (assert) ->
-  ddl = new @Relax.DoublyLinkedList
+  ddl = new @Breezy.DoublyLinkedList
   assert.equal ddl.length, 0
 
 testWithSession "#push inserts an element", (assert) ->
-  ddl = new @Relax.DoublyLinkedList
+  ddl = new @Breezy.DoublyLinkedList
   element = {}
   ddl.push(element)
   assert.equal ddl.length, 1
@@ -19,7 +19,7 @@ testWithSession "#push inserts an element", (assert) ->
   assert.equal ddl.head.element, element
 
 testWithSession "#unshift inserts an element in the beginning", (assert) ->
-  ddl = new @Relax.DoublyLinkedList
+  ddl = new @Breezy.DoublyLinkedList
   element = {}
   ddl.unshift(element)
   assert.equal ddl.length, 1
@@ -33,7 +33,7 @@ testWithSession "#unshift inserts an element in the beginning", (assert) ->
   assert.equal ddl.head.element, element2
 
 testWithSession "#pop removes the last element", (assert) ->
-  ddl = new @Relax.DoublyLinkedList
+  ddl = new @Breezy.DoublyLinkedList
   element = {}
   element2 = {}
 
@@ -49,7 +49,7 @@ testWithSession "#pop removes the last element", (assert) ->
   assert.equal ddl.tail.element, element
 
 testWithSession "#shift removes the first element", (assert) ->
-  ddl = new @Relax.DoublyLinkedList
+  ddl = new @Breezy.DoublyLinkedList
   element = {}
   element2 = {}
 

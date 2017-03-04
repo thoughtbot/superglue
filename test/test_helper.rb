@@ -2,7 +2,7 @@ require 'rails'
 require 'abstract_controller'
 require 'abstract_controller/railties/routes_helpers'
 require 'action_controller'
-require 'relax'
+require 'breezy'
 require "active_support"
 require 'active_record'
 require 'active_support/testing/autorun' if Rails.version >= '4'

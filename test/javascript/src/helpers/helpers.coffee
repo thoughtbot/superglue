@@ -13,10 +13,10 @@
 
       @window = iframe.contentWindow
       @document = @window.document
-      @Relax = @window.Relax
+      @Breezy = @window.Breezy
       @location = @window.location
       @history = @window.history
-      @Relax.disableRequestCaching()
+      @Breezy.disableRequestCaching()
       @$ = (selector) => @document.querySelector(selector)
 
       callback.call(@, assert)

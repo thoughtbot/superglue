@@ -1,5 +1,5 @@
 require "rails/all"
-require "relax"
+require "breezy"
 
 module Dummy
   APP_ROOT = File.expand_path("..", __FILE__).freeze

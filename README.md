@@ -90,7 +90,7 @@ App.Views.PostsIndex = function(json) {
 Breezy does not include ReactJS, you'll have to download it seperately and include it in your path. Or just include [react-rails](https://github.com/reactjs/react-rails).
 
 ```
-gem 'breezy', git: 'https://github.com/jho406/Breezy.git'
+gem 'breezy'
 ```
 
 Then use the provided installation generator:

@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :use_relax_html
+  before_action :use_breezy_html
 
   def session
   end

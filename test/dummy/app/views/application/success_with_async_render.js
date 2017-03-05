@@ -1,5 +1,5 @@
 (function() {
-  Relax.visit('success_with_async_render2', {async: true, ignoreSamePathConstraint: true})
+  Breezy.visit('success_with_async_render2', {async: true, ignoreSamePathConstraint: true})
   return {
     data: { heading: 'Some heading 2' , address: {}},
     title: 'title 2',

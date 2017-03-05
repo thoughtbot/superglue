@@ -1,7 +1,7 @@
 # taken from jbuilder's jbuilder_dependency_tracker_test.rb
 
 require 'test_helper'
-require 'bath/dependency_tracker'
+require 'breezy_template/dependency_tracker'
 
 
 class FakeTemplate
@@ -12,14 +12,14 @@ class FakeTemplate
 end
 
 
-class BathDependencyTrackerTest < ActiveSupport::TestCase
+class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   def make_tracker(name, source)
     template = FakeTemplate.new(source)
-    Bath::DependencyTracker.new(name, template)
+    BreezyTemplate::DependencyTracker.new(name, template)
   end
 
   def track_dependencies(source)
-    make_tracker('bath_template', source).dependencies
+    make_tracker('breezy_template', source).dependencies
   end
 
   test 'jbuilder direct partial! feature are not allowed' do

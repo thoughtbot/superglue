@@ -9,17 +9,17 @@ testWithSession "#get returns the current CSRF token", (assert) ->
   tokenTag = @document.querySelector 'meta[name="csrf-token"]'
   tokenTag.setAttribute 'content', 'someToken123'
 
-  token = @Relax.CSRFToken.get(@document).token
+  token = @Breezy.CSRFToken.get(@document).token
   assert.equal token, 'someToken123'
 
 testWithSession "#update sets a new CSRF token on the page", (assert) ->
   tokenTag = @document.querySelector 'meta[name="csrf-token"]'
   tokenTag.setAttribute 'content', 'someToken123'
 
-  csrf = new @Relax.CSRFToken
-  token = @Relax.CSRFToken.get(@document).token
+  csrf = new @Breezy.CSRFToken
+  token = @Breezy.CSRFToken.get(@document).token
   assert.equal token, 'someToken123'
 
-  @Relax.CSRFToken.update('newToken123')
-  token = @Relax.CSRFToken.get(@document).token
+  @Breezy.CSRFToken.update('newToken123')
+  token = @Breezy.CSRFToken.get(@document).token
   assert.equal token, 'newToken123'

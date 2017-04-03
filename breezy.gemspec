@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.license  = 'MIT'
   s.homepage = 'https://github.com/jho406/breezy/'
   s.summary  = 'Turbolinks for react and rails'
-  s.files    = Dir["lib/assets/javascripts/*.coffee", "lib/breezy.rb", "lib/breezy/*.rb", "README.md", "MIT-LICENSE", "test/*"]
+  s.files    = Dir["lib/assets/javascripts/*.coffee", "lib/breezy.rb", "lib/breezy_template.rb", "lib/breezy/*.rb", "README.md", "MIT-LICENSE", "test/*"]
   s.test_files = Dir["test/*"]
 
   s.add_dependency 'coffee-rails', '~> 4.0'

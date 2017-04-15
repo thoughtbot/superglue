@@ -45,12 +45,12 @@ Use the included BreezyTemplates to create your content.
 
 json.heading @greeting
 
-# `defer: true` will no-op the following block on a direct
+# `defer: :auto` will no-op the following block on a direct
 # visit, use null as a standin value, and append additional
 # javascript in the response to fetch only this content node
 # (no-oping other sibiling blocks) and graft it in the right
 # place on the client side.
-json.dashboard(defer: true) do
+json.dashboard(defer: :auto) do
   sleep 10
   json.num_of_views 100
 end
@@ -274,15 +274,27 @@ would become
 ```
 
 ### Deferment
-You can defer rendering of expensive content using the `defer: true` option available in blocks. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with a `null` as a standin, and append a `Breezy.visit(/somepath?_breezy_filter=keypath.to.node)` to the response. When the client recieves the payload, `breezy:load` will be fired, then the appended `Breezy.visit` will be called to fetch and graft the missing node before firing `breezy:load` a second time.
+You can defer rendering of expensive content using the `defer: :auto` option available in blocks. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with a `null` as a standin, and append a `Breezy.visit(/somepath?_breezy_filter=keypath.to.node)` to the response. When the client recieves the payload, `breezy:load` will be fired, then the appended `Breezy.visit` will be called to fetch and graft the missing node before firing `breezy:load` a second time.
 
 Usage:
 ```ruby
-json.dashboard(defer: true) do
+json.dashboard(defer: :auto) do
   sleep 10
   json.some_fancy_metric 42
 end
 ```
+
+A manual option is also available:
+
+```ruby
+json.dashboard(defer: :manual) do
+  sleep 10
+  json.some_fancy_metric 42
+end
+```
+If `:manual` is used, Breezy will no-op the block and not append `Breezy.visit` to the payload. Its up to you to use [node filtering](#filtering_nodes) to fetch the node seperately. A common usecase would be tab content that does not load until you click the tab.
+
+
 
 #### Working with arrays
 If you want to defer elements in an array, you should add a key as an option on `array!` to help breezy generate a more specific keypath, otherwise it'll just use the index.
@@ -291,7 +303,7 @@ If you want to defer elements in an array, you should add a key as an option on 
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
 json.array! data, key: :id do
-  json.greeting defer: true do
+  json.greeting defer: :auto do
     json.greet 'hi'
   end
 end

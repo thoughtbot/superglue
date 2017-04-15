@@ -917,7 +917,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     result = jbuild(<<-JBUILDER, request: req)
       json.hit do
-        json.hit2 defer: true do
+        json.hit2 defer: :auto do
           json.hit3 do
             json.greeting 'hello world'
           end
@@ -938,6 +938,32 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "rendering with manual node deferement" do
+    req = action_controller_test_request
+    req.path = '/some_url'
+
+    result = jbuild(<<-JBUILDER, request: req)
+      json.hit do
+        json.hit2 defer: :manual do
+          json.hit3 do
+            json.greeting 'hello world'
+          end
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":{"hit":{"hit2":null}}}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
   test "rendering with node array deferment" do
     req = action_controller_test_request
     req.path = '/some_url'
@@ -947,7 +973,7 @@ class BreezyTemplateTest < ActionView::TestCase
         json.hit2 do
           data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
           json.array! data, key: :id do
-            json.greeting defer: true do
+            json.greeting defer: :auto do
               json.gree 'hi'
             end
           end
@@ -973,7 +999,7 @@ class BreezyTemplateTest < ActionView::TestCase
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
 
     result = jbuild(<<-JBUILDER)
-      json.hello(32, defer: true)
+      json.hello(32, defer: :auto)
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -988,7 +1014,7 @@ class BreezyTemplateTest < ActionView::TestCase
   test 'deferment is disabled when filtering by keypath' do
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
     result = jbuild(<<-JBUILDER, breezy_filter: 'hello.world')
-      json.hello defer: true do
+      json.hello defer: :auto do
         json.world 32
       end
     JBUILDER
@@ -1006,8 +1032,8 @@ class BreezyTemplateTest < ActionView::TestCase
   test 'deferment is enabled at the end of a keypath when filtering' do
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
     result = jbuild(<<-JBUILDER, breezy_filter: 'hello')
-      json.hello defer: true do
-        json.content defer: true do
+      json.hello defer: :auto do
+        json.content defer: :auto do
           json.world 32
         end
       end

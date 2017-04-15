@@ -1,18 +1,26 @@
 module BreezyTemplate
   module DefermentExtension
+    ACTIVE_MODES = [:auto, :manual].freeze
+
     def set!(key, value = BLANK, *args)
       options = args.first || {}
       options = _normalize_options(options)
       if ::Kernel.block_given? && _deferment_enabled?(options)
-        @js.push(_breezy_visit_current(@path))
+        if _deferment_auto?(options)
+          @js.push(_breezy_visit_current(@path))
+        end
         return _set_value key, nil
       else
         super
       end
     end
 
+    def _deferment_auto?(options)
+      options[:defer] == :auto
+    end
+
     def _deferment_enabled?(options)
-      options[:defer] && (@search_path.nil? || @search_path.size == 0)
+      ACTIVE_MODES.include?(options[:defer]) && (@search_path.nil? || @search_path.size == 0)
     end
 
     def _set_request_url(request_path)

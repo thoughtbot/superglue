@@ -7,13 +7,6 @@ module BreezyTemplate
       found
     end
 
-    def array!(collection = [], *attributes)
-      original_search_path = @search_path
-      super
-    ensure
-      @search_path = original_search_path
-    end
-
     def _filter_by_path(search_path)
       if search_path.is_a? ::String
         return _filter_by_path(search_path.split('.'))
@@ -21,11 +14,26 @@ module BreezyTemplate
       @search_path = search_path
     end
 
+    def _mapping_element(element, options)
+      if @search_path && !@search_path.empty?
+        original_search_path = @search_path
+        @search_path = original_search_path[1..-1]
+        if @search_path.size == 0
+          @found = super
+        else
+          yield element
+        end
+
+        @search_path = original_search_path
+      else
+        super
+      end
+    end
+
     def _prepare_collection_for_map(collection)
       if @search_path && !@search_path.empty?
         id_name, id_val = @search_path.first.split('=')
 
-        @search_path = @search_path[1..-1]
 
         if (defined? ::ActiveRecord) && collection.is_a?(::ActiveRecord::Relation)
           if id_val
@@ -46,7 +54,11 @@ module BreezyTemplate
             found = collection[index]
           end
 
-          collection = [found]
+          if found
+            collection = [found]
+          else
+            collection = []
+          end
         end
       else
         super
@@ -54,6 +66,7 @@ module BreezyTemplate
     end
 
     def set!(key, value = BLANK, *args)
+      return if @found
       options = args.first || {}
       options = _normalize_options(options)
 

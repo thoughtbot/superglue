@@ -70,18 +70,30 @@ module BreezyTemplate
       options = args.first || {}
       options = _normalize_options(options)
 
-      if ::Kernel.block_given? && @search_path && !@search_path.empty?
+      if @search_path && !@search_path.empty?
         if key.to_s == @search_path.first
           original_search_path = @search_path
           @search_path = original_search_path[1..-1]
           if @search_path.size == 0
-            @found = if _cache_options?(options)
-              _cache(*options[:cache]) { _scope { yield self } }
+            if ::Kernel.block_given?
+              @found = if _cache_options?(options)
+                _cache(*options[:cache]) { _scope { yield self } }
+              else
+                _scope { yield self }
+              end
+            elsif _partial_options?(options)
+              super
             else
-              _scope { yield self }
+              @found = value
             end
           else
-            yield self
+            if ::Kernel.block_given?
+              yield self
+            elsif _partial_options?(options)
+              super
+            else
+              ::Kernel.raise 'can not'
+            end
           end
 
           @search_path = original_search_path

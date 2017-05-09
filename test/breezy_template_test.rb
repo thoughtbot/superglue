@@ -3,6 +3,7 @@ require "mocha/setup"
 require "action_view"
 require "action_view/testing/resolvers"
 require "breezy_template"
+require 'byebug'
 
 BLOG_POST_PARTIAL = <<-JBUILDER
   json.extract! blog_post, :id, :body
@@ -750,6 +751,49 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "filtering for a raw value is also possble" do
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+      json.hit do
+        json.hit2 23
+      end
+
+      json.miss do
+        json.miss2 do
+          raise 'this should not be called'
+          json.greeting 'missed call'
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":23,"action":"graft","path":"hit.hit2"}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "filter with partial" do
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+      json.hit do
+        json.hit2 partial: "footer"
+      end
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":"You agree","action":"graft","path":"hit.hit2.terms"}
+        );
+      })()
+    JS
+    assert_equal expected, result
+  end
+
   test "filtering for a node in the tree via breezy_filter helper" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
       json.hit do
@@ -824,7 +868,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.id=1"}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=1"}
         );
       })()
     JS
@@ -856,7 +900,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.0"}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.0"}
         );
       })()
     JS
@@ -879,7 +923,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.id=1"}
+          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.id=1"}
         );
       })()
     JS
@@ -903,7 +947,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.0"}
+          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.0"}
         );
       })()
     JS
@@ -1021,7 +1065,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"world":32},"action":"graft","path":"hello.world"});
+        return ({"data":32,"action":"graft","path":"hello.world"});
       })()
     JS
 

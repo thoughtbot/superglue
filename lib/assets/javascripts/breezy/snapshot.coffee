@@ -58,10 +58,19 @@ class Breezy.Snapshot
     window.history.replaceState { breezy: true, url: document.location.href }, '', document.location.href
     @currentBrowserState = window.history.state
 
+  removeParamFromUrl: (url, parameter) =>
+    return url
+      .replace(new RegExp('^([^#]*\?)(([^#]*)&)?' + parameter + '(\=[^&#]*)?(&|#|$)' ), '$1$3$5')
+      .replace(/^([^#]*)((\?)&|\?(#|$))/,'$1$3$4')
+
   reflectNewUrl: (url) =>
     if (url = new Breezy.ComponentUrl url).absolute != document.location.href
       preservedHash = if url.hasNoHash() then document.location.hash else ''
-      window.history.pushState { breezy: true, url: url.absolute + preservedHash }, '', url.absolute
+      fullUrl = url.absolute + preservedHash
+      fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
+      fullUrl = @removeParamFromUrl(fullUrl, '__')
+
+      window.history.pushState { breezy: true, url: url.absolute + preservedHash }, '', fullUrl
 
   updateCurrentBrowserState: =>
     @currentBrowserState = window.history.state

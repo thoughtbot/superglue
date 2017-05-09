@@ -104,7 +104,7 @@ rails g breezy:view Posts new index
 ```
 
 # Navigation and Forms
-Breezy intercepts all clicks on `<a>` and all submits on `<form>` elements enabled with `data-bz-remote`. Breezy will `preventDefault` then make the same request using XMLHttpRequest with a content type of `.js`. If there's an existing request, Breezy will cancel it unless the `data-bz-async` option is used.
+Breezy intercepts all clicks on `<a>` and all submits on `<form>` elements enabled with `data-bz-remote`. Breezy will `preventDefault` then make the same request using XMLHttpRequest with a content type of `.js`. If there's an existing request, Breezy will cancel it unless the `data-bz-remote-async` option is used.
 
 Once the response loads, a `breezy:load` event will be fired with the JS object that you created with BreezyTemplates. If you used the installation generator, the event will be set for you in the `<head>` element of your layout:
 
@@ -123,8 +123,8 @@ document.addEventListener('breezy:load', function(event){
 Attribute          | default value            | description
 -------------------|--------------------------|------------
 `data-bz-remote`   | For `<a>` the default is `get`. For forms, the default is `post` if a method is not specified. | Use this to create seamless page to page transitions. Works for both links and forms. You can specify the request method by giving it a value, e.g `<a href='foobar' data-bz-remote=post>`. For forms, the request method of the form is used. `<form action=foobar method='post' data-bz-remote>`.
-`data-bz-async`      | `false`                  | Fires off an async request. Responses are pushed into a queue will be evaluated in order of click or submit.
-`data-bz-push-state` | `true`                   | Captures the element's URL in the browsers history. Normally used with `data-bz-async`.
+`data-bz-remote-async`      | `false`                  | Fires off an async request. Responses are pushed into a queue will be evaluated in order of click or submit.
+`data-bz-push-state` | `true`                   | Captures the element's URL in the browsers history. Normally used with `data-bz-remote-async`.
 `data-bz-silent`     | false                    | To be used with the `breezy_silent?` ruby helper. Useful if you don't want to perform a redirect or render. Just return a 204, and Breezy will not fire a `breezy:load` event.
 
 

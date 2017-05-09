@@ -3,6 +3,7 @@ require "mocha/setup"
 require "action_view"
 require "action_view/testing/resolvers"
 require "breezy_template"
+require 'byebug'
 
 BLOG_POST_PARTIAL = <<-JBUILDER
   json.extract! blog_post, :id, :body
@@ -743,6 +744,32 @@ class BreezyTemplateTest < ActionView::TestCase
       (function(){
         return (
           {"data":{"greeting":"hello world"}}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "filtering for a raw value is also possble" do
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+      json.hit do
+        json.hit2 23
+      end
+
+      json.miss do
+        json.miss2 do
+          raise 'this should not be called'
+          json.greeting 'missed call'
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":23,"action":"graft","path":"hit.hit2"}
         );
       })()
     JS

@@ -750,6 +750,23 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "filter with partial" do
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+      json.hit do
+        json.hit2 partial: "footer"
+      end
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        return (
+          {"data":"You agree","action":"graft","path":"hit.hit2.terms"}
+        );
+      })()
+    JS
+    assert_equal expected, result
+  end
+
   test "filtering for a node in the tree via breezy_filter helper" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
       json.hit do
@@ -824,7 +841,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.id=1"}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=1"}
         );
       })()
     JS
@@ -856,7 +873,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"title":"first"}],"action":"graft","path":"hit.hit2.0"}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.0"}
         );
       })()
     JS
@@ -879,7 +896,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.id=1"}
+          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.id=1"}
         );
       })()
     JS
@@ -903,7 +920,7 @@ class BreezyTemplateTest < ActionView::TestCase
     expected = strip_format(<<-JS)
       (function(){
         return (
-          {"data":[{"name":"hit"}],"action":"graft","path":"hit.hit2.0"}
+          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.0"}
         );
       })()
     JS
@@ -1021,7 +1038,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"world":32},"action":"graft","path":"hello.world"});
+        return ({"data":32,"action":"graft","path":"hello.world"});
       })()
     JS
 

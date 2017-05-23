@@ -13,7 +13,7 @@ Breezy makes it easy (even boring) to create single-page, multi-page, and someti
 ## How does it work
 Building SPAs usually involves defining REST-ful APIs, hand-writing AJAX, writing serializers, and adding unit tests all of the aforementioned. With Breezy, we don't do any of this.
 
-Instead, the focus is on defining your page's content-tree with `BreezyTemplates (a fork of JBuilder)` and using keypaths and `data-bz-*` attributes to fetch and graft content nodes on the client version of the same tree. For example:
+Instead, the focus is on defining your page's content-tree with `BreezyTemplates (a fork of JBuilder)`, and using keypaths and `data-bz-*` attributes to fetch and graft content nodes on the client version of the same tree. For example:
 
 ```html
 <a href='?_breezy_filter=header.metrics.shopping_cart_count' data-bz-remote data-bz-remote-async> Click to update my cart count without loading the page</a>

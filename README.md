@@ -21,7 +21,7 @@ Instead, the focus is on defining your page's content-tree with `BreezyTemplates
 </a>
 ```
 
-The keypath in `_breezy_filter`, will instruct BreezyTemplates to traverse the tree to fetch the `shopping cart_count` node and graft it on the client side at the same keypath.
+The keypath in `_breezy_filter`, will instruct `BreezyTemplates` to traverse the tree to fetch the `shopping_cart_count` node and graft it on the client side at the same keypath.
 
 
 ## Quick Peek

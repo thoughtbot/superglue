@@ -16,7 +16,9 @@ Building SPAs usually involves defining REST-ful APIs, hand-writing AJAX, writin
 Instead, the focus is on defining your page's content-tree with `BreezyTemplates (a fork of JBuilder)`, and using keypaths and `data-bz-*` attributes to fetch and graft content nodes on the client version of the same tree. For example:
 
 ```html
-<a href='?_breezy_filter=header.metrics.shopping_cart_count' data-bz-remote data-bz-remote-async> Click to update my cart count without loading the page</a>
+<a href='?_breezy_filter=header.metrics.shopping_cart_count' data-bz-remote data-bz-remote-async> 
+  Click to update my cart count without loading the page
+</a>
 ```
 
 The keypath in `_breezy_filter`, will instruct BreezyTemplates to traverse the tree to fetch the `shopping cart_count` node and graft it on the client side at the same keypath.

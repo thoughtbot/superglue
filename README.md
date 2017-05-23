@@ -11,7 +11,7 @@ Breezy makes it easy (even boring) to create single-page, multi-page, and someti
 4. Async actions that load different parts of your page without API endpoints (e.g. pagination, infinite scroll)
 
 ## How does it work
-Building SPAs usually involves defining REST-ful APIs, hand-writing AJAX, writing serializers, and adding unit tests all of the aforementioned. With Breezy, we don't do any of this.
+Building SPAs usually involves defining REST-ful APIs, handwriting AJAX, writing serializers, and adding unit tests all of the aforementioned. With Breezy, we don't do any of this.
 
 Instead, the focus is on defining your page's content-tree with `BreezyTemplates (a fork of JBuilder)`, and using keypaths and `data-bz-*` attributes to fetch and graft content nodes on the client version of the same tree. For example:
 

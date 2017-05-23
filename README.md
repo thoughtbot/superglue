@@ -10,10 +10,17 @@ Breezy makes it easy (even boring) to create single-page, multi-page, and someti
 3. Defered rendering of slow loading parts of your page without API endpoints (e.g. dashboards that load later on direct visits)
 4. Async actions that load different parts of your page without API endpoints (e.g. pagination, infinite scroll)
 
+## How does it work
+Building SPAs usually involves defining REST-ful APIs, hand-writing AJAX, writing serializers, and testing all of the aforementioned. With Breezy, we don't do any of this.
 
-Breezy is the lovechild of Turbolinks (also a hard fork), Server Generated Javascript Responses (created with BreezyTemplates), and ReactJS that bring you all of the above features while keeping complexity low.
+Instead, the focus is on defining your page's content-tree with BreezyTemplates (a fork of JBuilder) and using keypaths and data-bz-* attributes to fetch and graft content nodes on the client version of the same tree. For example:
 
-Unlike Turbolink's view-over-the-wire approach, a Breezy app is content-over-the-wire to your ReactJS frontend. Each controller gets two views, one for your content that you write using the included BreezyTemplates, and the other for your markup which you write in ReactJS. Breezy features are achieved with `XMLHTTPRequest`s for the next page's content (or a branch of it via key paths) before firing a `breezy:load` event that you can use with `ReactDOM.render`.
+```html
+<a href='?_breezy_filter=header.metrics.shopping_cart_count' data-bz-remote data-bz-remote-async> Click to update my cart count without loading the page</a>
+```
+
+The keypath in `_breezy_filter`, will instruct BreezyTemplates to traverse the tree to fetch the `shopping cart_count` node and graft it on the client side at the same keypath.
+
 
 ## Quick Peek
 Starting with a Rails project with Breezy [installed](#installation), ReactJS in your asset pipeline, and [something](https://github.com/reactjs/react-rails) [to](https://github.com/Shopify/sprockets-commoner) transform JSX to JS.
@@ -321,7 +328,7 @@ For example, to create seamless ajaxy pagination for a specific part of your pag
 Filtering works off your existing route and content tree, so no additional API necessary.
 
 
-##Running the tests
+## Running the tests
 
 Ruby:
 

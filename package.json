@@ -1,0 +1,31 @@
+{
+  "name": "breezy",
+  "version": "0.1.4",
+  "description": "Develop ReactJS apps the Rails Way",
+  "main": "dist/breezy.js",
+  "files": [
+    "dist",
+    "lib/assets/javascripts"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "bin/blade runner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jho406/breezy.git"
+  },
+  "keywords": [
+    "turbolinks",
+    "browser",
+    "pushstate"
+  ],
+  "author": "jho406",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jho406/breezy/issues"
+  },
+  "homepage": "https://github.com/jho406/breezy#readme"
+}

@@ -1,5 +1,5 @@
 {
-  "name": "breezy",
+  "name": "@jho406/breezy",
   "version": "0.1.4",
   "description": "Develop ReactJS apps the Rails Way",
   "main": "dist/breezy.js",

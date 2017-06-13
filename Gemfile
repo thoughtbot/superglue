@@ -5,6 +5,8 @@ gem "mocha", :require => false
 
 gem 'rake'
 gem 'sprockets'
+gem 'sprockets-export'
+
 gem 'coffee-script'
 gem 'coffee-script-source', '~> 1.9.1'
 gem 'eco'

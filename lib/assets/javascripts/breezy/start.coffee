@@ -10,7 +10,7 @@ EVENTS =
   LOAD:           'breezy:load'
   RESTORE:        'breezy:restore'
 
-controller = new Breezy.Controller
+controller = new Breezy.Controller(window.history)
 progressBar = controller.progressBar
 
 ProgressBarAPI =

@@ -3,7 +3,7 @@
 #= require breezy/utils
 
 class Breezy.Snapshot
-  constructor: (@controller) ->
+  constructor: (@controller, @history) ->
     @pageCache = {}
     @currentBrowserState = null
     @pageCacheSize = 10
@@ -55,8 +55,8 @@ class Breezy.Snapshot
     @pageCache[currentUrl.absolute] = @currentPage
 
   rememberCurrentUrlAndState: =>
-    window.history.replaceState { breezy: true, url: document.location.href }, '', document.location.href
-    @currentBrowserState = window.history.state
+    @history.replaceState { breezy: true, url: document.location.href }, '', document.location.href
+    @currentBrowserState = @history.state
 
   removeParamFromUrl: (url, parameter) =>
     return url
@@ -70,10 +70,10 @@ class Breezy.Snapshot
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
       fullUrl = @removeParamFromUrl(fullUrl, '__')
 
-      window.history.pushState { breezy: true, url: url.absolute + preservedHash }, '', fullUrl
+      @history.pushState { breezy: true, url: url.absolute + preservedHash }, '', fullUrl
 
   updateCurrentBrowserState: =>
-    @currentBrowserState = window.history.state
+    @currentBrowserState = @history.state
 
   changePage: (nextPage, options) =>
     if @currentPage and @assetsChanged(nextPage)

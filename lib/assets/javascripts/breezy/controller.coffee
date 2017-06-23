@@ -30,7 +30,7 @@ class Breezy.Controller
     return if @pageChangePrevented(url.absolute, options.target)
 
     if url.crossOrigin()
-      document.location.href = url.absolute
+      @onCrossOriginRequest(url)
       return
 
     @history.cacheCurrentPage()
@@ -81,13 +81,6 @@ class Breezy.Controller
     @history.changePage(nextPage, options)
     Breezy.Utils.triggerEvent Breezy.EVENTS.LOAD, @currentPage()
 
-  crossOriginRedirect: =>
-    redirect = @http.getResponseHeader('Location')
-    crossOrigin = (new Breezy.ComponentUrl(redirect)).crossOrigin()
-
-    if redirect? and crossOrigin
-      redirect
-
   pageChangePrevented: (url, target) =>
     !Breezy.Utils.triggerEvent Breezy.EVENTS.BEFORE_CHANGE, url: url, target
 
@@ -129,16 +122,32 @@ class Breezy.Controller
       @history.constrainPageCacheTo()
     else
       if options.async
-        Breezy.Utils.triggerEvent Breezy.EVENTS.ERROR, xhr, options.target
+        @onAsyncError(xhr, url, options)
       else
         @progressBar?.done()
-        document.location.href = @crossOriginRedirect() or url.absolute
+        @onSyncError(xhr, url, options)
 
   onProgress: (event) =>
     @progressBar.advanceFromEvent(event)
 
-  onError: (url) =>
+  onAsyncError: (xhr, url, options) =>
+    Breezy.Utils.triggerEvent Breezy.EVENTS.ERROR, xhr, options.target
+
+  onSyncError: (xhr, url, options) =>
+    crossOriginRedirectUrl = (xhr) ->
+      redirect = xhr.getResponseHeader('Location')
+      crossOrigin = (new Breezy.ComponentUrl(redirect)).crossOrigin()
+
+      if redirect? and crossOrigin
+        redirect
+
+    document.location.href = crossOriginRedirectUrl(xhr) or url.absolute
+
+  onCrossOriginRequest: (url) =>
     document.location.href = url.absolute
+
+  getRefererUrl: =>
+    document.location.href
 
   createRequest: (url, opts)=>
     jsAccept = 'text/javascript, application/x-javascript, application/javascript'
@@ -147,7 +156,7 @@ class Breezy.Controller
     xhr = new XMLHttpRequest
     xhr.open requestMethod, url.formatForXHR(cache: opts.cacheRequest), true
     xhr.setRequestHeader 'Accept', jsAccept
-    xhr.setRequestHeader 'X-XHR-Referer', document.location.href
+    xhr.setRequestHeader 'X-XHR-Referer', @getRefererUrl() 
     xhr.setRequestHeader 'X-Silent', opts.silent if opts.silent
     xhr.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
     xhr.setRequestHeader 'Content-Type', opts.contentType if opts.contentType
@@ -168,7 +177,7 @@ class Breezy.Controller
     xhr.onprogress = @onProgress if @progressBar and opts.showProgressBar
     xhr.onloadend = @onLoadEnd
     xhr.onerror = =>
-      @onError(url)
+      @onSyncError(xhr, url, options)
     xhr
 
   processResponse: (xhr) ->

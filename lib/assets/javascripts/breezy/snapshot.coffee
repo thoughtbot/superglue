@@ -55,7 +55,7 @@ class Breezy.Snapshot
     @pageCache[currentUrl.absolute] = @currentPage
 
   rememberCurrentUrlAndState: =>
-    @history.replaceState { breezy: true, url: document.location.href }, '', document.location.href
+    @history.replaceState { breezy: true, url: @currentComponentUrl().href }, '', @currentComponentUrl().href
     @currentBrowserState = @history.state
 
   removeParamFromUrl: (url, parameter) =>
@@ -63,9 +63,12 @@ class Breezy.Snapshot
       .replace(new RegExp('^([^#]*\?)(([^#]*)&)?' + parameter + '(\=[^&#]*)?(&|#|$)' ), '$1$3$5')
       .replace(/^([^#]*)((\?)&|\?(#|$))/,'$1$3$4')
 
+  currentComponentUrl: =>
+    new Breezy.ComponentUrl
+
   reflectNewUrl: (url) =>
-    if (url = new Breezy.ComponentUrl url).absolute != document.location.href
-      preservedHash = if url.hasNoHash() then document.location.hash else ''
+    if (url = new Breezy.ComponentUrl url).absolute != @currentComponentUrl().href
+      preservedHash = if url.hasNoHash() then @currentComponentUrl().hash else ''
       fullUrl = url.absolute + preservedHash
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
       fullUrl = @removeParamFromUrl(fullUrl, '__')
@@ -75,14 +78,20 @@ class Breezy.Snapshot
   updateCurrentBrowserState: =>
     @currentBrowserState = @history.state
 
+  updateBrowserTitle: =>
+    document.title = @currentPage.title if @currentPage.title isnt false
+
+  refreshBrowserForNewAssets: =>
+    document.location.reload()
+
   changePage: (nextPage, options) =>
     if @currentPage and @assetsChanged(nextPage)
-      document.location.reload()
+      @refreshBrowserForNewAssets()
       return
 
     @currentPage = nextPage
     @currentPage.title = options.title ? @currentPage.title
-    document.title = @currentPage.title if @currentPage.title isnt false
+    @updateBrowserTitle()
 
     Breezy.CSRFToken.update @currentPage.csrf_token if @currentPage.csrf_token?
     @updateCurrentBrowserState()

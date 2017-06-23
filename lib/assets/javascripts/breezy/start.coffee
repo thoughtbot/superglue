@@ -12,6 +12,21 @@ EVENTS =
 
 controller = new Breezy.Controller(window.history)
 progressBar = controller.progressBar
+controller.onSyncError = (xhr, url, options) ->
+  crossOriginRedirectUrl = (xhr) ->
+    redirect = xhr.getResponseHeader('Location')
+    crossOrigin = (new Breezy.ComponentUrl(redirect)).crossOrigin()
+
+    if redirect? and crossOrigin
+      redirect
+  document.location.href = crossOriginRedirectUrl(xhr) or url.absolute
+
+controller.onCrossOriginRequest = (url) ->
+  document.location.href = url.absolute
+
+controller.getRefererUrl = ->
+  document.location.href
+
 
 ProgressBarAPI =
   enable: ->

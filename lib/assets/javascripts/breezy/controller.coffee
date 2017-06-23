@@ -133,22 +133,6 @@ class Breezy.Controller
   onAsyncError: (xhr, url, options) =>
     Breezy.Utils.triggerEvent Breezy.EVENTS.ERROR, xhr, options.target
 
-  onSyncError: (xhr, url, options) =>
-    crossOriginRedirectUrl = (xhr) ->
-      redirect = xhr.getResponseHeader('Location')
-      crossOrigin = (new Breezy.ComponentUrl(redirect)).crossOrigin()
-
-      if redirect? and crossOrigin
-        redirect
-
-    document.location.href = crossOriginRedirectUrl(xhr) or url.absolute
-
-  onCrossOriginRequest: (url) =>
-    document.location.href = url.absolute
-
-  getRefererUrl: =>
-    document.location.href
-
   createRequest: (url, opts)=>
     jsAccept = 'text/javascript, application/x-javascript, application/javascript'
     requestMethod = opts.requestMethod || 'GET'

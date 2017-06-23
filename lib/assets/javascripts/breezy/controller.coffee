@@ -7,7 +7,7 @@
 PAGE_CACHE_SIZE = 20
 
 class Breezy.Controller
-  constructor: (history = window.history)->
+  constructor: (history)->
     @atomCache = {}
     @history = new Breezy.Snapshot(this, history)
     @transitionCacheEnabled = false

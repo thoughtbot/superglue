@@ -1,4 +1,4 @@
-class Breezy.ProgressBar
+class ProgressBar
   className = 'breezy-progress-bar'
   # Setting the opacity to a value < 1 fixes a display issue in Safari 6 and
   # iOS 6 where the progress bar would fill the entire page.
@@ -137,3 +137,5 @@ class Breezy.ProgressBar
       transform: translate3d(0,0,0);
     }
     """
+
+module.exports = ProgressBar

@@ -1,14 +1,10 @@
-# The ComponentUrl class converts a basic URL string into an object
-# that behaves similarly to document.location.
-#
-# If an instance is created from a relative URL, the current document
-# is used to fill in the missing attributes (protocol, host, port).
+
 uniqueId = ->
   new Date().getTime().toString(36)
 
-class Breezy.ComponentUrl
+class ComponentUrl
   constructor: (@original = document.location.href) ->
-    return @original if @original.constructor is Breezy.ComponentUrl
+    return @original if @original.constructor is ComponentUrl
     @_parse()
 
   withoutHash: -> @href.replace(@hash, '').replace('#', '')
@@ -19,25 +15,25 @@ class Breezy.ComponentUrl
   hasNoHash: -> @hash.length is 0
 
   crossOrigin: ->
-    @origin isnt (new Breezy.ComponentUrl).origin
+    @origin isnt (new ComponentUrl).origin
 
   formatForXHR: (options = {}) ->
     (if options.cache then @withMimeBust() else @withAntiCacheParam()).withoutHashForIE10compatibility()
 
   withMimeBust: ->
-    new Breezy.ComponentUrl(
+    new ComponentUrl(
       if /([?&])__=[^&]*/.test @absolute
         @absolute
       else
-        new Breezy.ComponentUrl(@withoutHash() + (if /\?/.test(@absolute) then "&" else "?") + "__=0" + @hash)
+        new ComponentUrl(@withoutHash() + (if /\?/.test(@absolute) then "&" else "?") + "__=0" + @hash)
     )
 
   withAntiCacheParam: ->
-    new Breezy.ComponentUrl(
+    new ComponentUrl(
       if /([?&])_=[^&]*/.test @absolute
         @absolute.replace /([?&])_=[^&]*/, "$1_=#{uniqueId()}"
       else
-        new Breezy.ComponentUrl(@withoutHash() + (if /\?/.test(@absolute) then "&" else "?") + "_=#{uniqueId()}" + @hash)
+        new ComponentUrl(@withoutHash() + (if /\?/.test(@absolute) then "&" else "?") + "_=#{uniqueId()}" + @hash)
     )
 
   _parse: ->
@@ -59,3 +55,5 @@ class Breezy.ComponentUrl
     @origin += ":#{@port}" unless @port.length is 0
     @relative = [@pathname, @search, @hash].join ''
     @absolute = @href
+
+module.exports = ComponentUrl

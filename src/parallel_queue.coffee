@@ -1,8 +1,8 @@
-#= require breezy/doubly_linked_list
+DoublyLinkedList = require('./doubly_linked_list.coffee')
 
-class Breezy.ParallelQueue
+class ParallelQueue
   constructor: ->
-    @dll = new Breezy.DoublyLinkedList
+    @dll = new DoublyLinkedList
     @active = true
 
   push:(xhr)->
@@ -30,6 +30,8 @@ class Breezy.ParallelQueue
       qxhr.abort()
       qxhr._isDone = true
       node = node.next
-    @dll = new Breezy.DoublyLinkedList
+    @dll = new DoublyLinkedList
     @active = true
+
+module.exports = ParallelQueue
 

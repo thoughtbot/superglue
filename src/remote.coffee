@@ -1,4 +1,4 @@
-class Breezy.Remote
+class Remote
   SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
   FALLBACK_LINK_METHOD = 'GET'
   FALLBACK_FORM_METHOD = 'POST'
@@ -134,3 +134,5 @@ class Breezy.Remote
   hasBZAttribute: (node, attr) ->
     bzAttr = @bzAttribute(attr)
     node.getAttribute(bzAttr)? || node.getAttribute(attr)?
+
+module.exports = Remote

@@ -1,20 +1,22 @@
-#= require breezy/doubly_linked_list
-#= require breezy/snapshot
-#= require breezy/progress_bar
-#= require breezy/parallel_queue
-#= require breezy/component_url
-
+ParallelQueue = require('./parallel_queue.coffee')
+ComponentUrl = require('./component_url.coffee')
+ProgressBar = require('./progress_bar.coffee')
+Snapshot = require('./snapshot.coffee')
+DoublyLinkedList = require('./doubly_linked_list.coffee')
+Utils = require('./utils.coffee')
+CSRFToken = require('./csrf_token.coffee')
+EVENTS = require('./events.coffee')
 PAGE_CACHE_SIZE = 20
 
-class Breezy.Controller
+class Controller
   constructor: (history)->
     @atomCache = {}
-    @history = new Breezy.Snapshot(this, history)
+    @history = new Snapshot(this, history)
     @transitionCacheEnabled = false
     @requestCachingEnabled = true
 
-    @progressBar = new Breezy.ProgressBar 'html'
-    @pq = new Breezy.ParallelQueue
+    @progressBar = new ProgressBar 'html'
+    @pq = new ParallelQueue
     @http = null
 
     @history.rememberCurrentUrlAndState()
@@ -23,10 +25,10 @@ class Breezy.Controller
     @history.currentPage
 
   request: (url, options = {}) =>
-    options = Breezy.Utils.reverseMerge options,
+    options = Utils.reverseMerge options,
       pushState: true
 
-    url = new Breezy.ComponentUrl url
+    url = new ComponentUrl url
     return if @pageChangePrevented(url.absolute, options.target)
 
     if url.crossOrigin()
@@ -46,13 +48,13 @@ class Breezy.Controller
     options.cacheRequest ?= @requestCachingEnabled
     options.showProgressBar ?= true
 
-    Breezy.Utils.triggerEvent Breezy.EVENTS.FETCH, url: url.absolute, options.target
+    Utils.triggerEvent EVENTS.FETCH, url: url.absolute, options.target
 
     if options.async
       options.showProgressBar = false
       req = @createRequest(url, options)
       req.onError = ->
-        Breezy.Utils.triggerEvent Breezy.EVENTS.ERROR, null, options.target
+        Utils.triggerEvent EVENTS.ERROR, null, options.target
       @pq.push(req)
       req.send(options.payload)
     else
@@ -73,16 +75,16 @@ class Breezy.Controller
     @history.changePage(cachedPage, options)
 
     @progressBar?.done()
-    Breezy.Utils.triggerEvent Breezy.EVENTS.RESTORE
-    Breezy.Utils.triggerEvent Breezy.EVENTS.LOAD, cachedPage
+    Utils.triggerEvent EVENTS.RESTORE
+    Utils.triggerEvent EVENTS.LOAD, cachedPage
 
   replace: (nextPage, options = {}) =>
-    Breezy.Utils.withDefaults(nextPage, @history.currentBrowserState)
+    Utils.withDefaults(nextPage, @history.currentBrowserState)
     @history.changePage(nextPage, options)
-    Breezy.Utils.triggerEvent Breezy.EVENTS.LOAD, @currentPage()
+    Utils.triggerEvent EVENTS.LOAD, @currentPage()
 
   pageChangePrevented: (url, target) =>
-    !Breezy.Utils.triggerEvent Breezy.EVENTS.BEFORE_CHANGE, url: url, target
+    !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
 
   cache: (key, value) =>
     return @atomCache[key] if value == null
@@ -92,7 +94,7 @@ class Breezy.Controller
   onLoadEnd: => @http = null
 
   onLoad: (xhr, url, options) =>
-    Breezy.Utils.triggerEvent Breezy.EVENTS.RECEIVE, url: url.absolute, options.target
+    Utils.triggerEvent EVENTS.RECEIVE, url: url.absolute, options.target
     nextPage =  @processResponse(xhr)
     if xhr.status == 0
       return
@@ -102,17 +104,17 @@ class Breezy.Controller
 
         unless options.ignoreSamePathConstraint
           @progressBar?.done()
-          Breezy.Utils.warn("Async response path is different from current page path")
+          Utils.warn("Async response path is different from current page path")
           return
 
       if options.pushState
         @history.reflectNewUrl url
 
-      Breezy.Utils.withDefaults(nextPage, @history.currentBrowserState)
+      Utils.withDefaults(nextPage, @history.currentBrowserState)
 
       if nextPage.action != 'graft'
         @history.changePage(nextPage, options)
-        Breezy.Utils.triggerEvent Breezy.EVENTS.LOAD, @currentPage()
+        Utils.triggerEvent EVENTS.LOAD, @currentPage()
       else
         ##clean this up
         @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)
@@ -131,7 +133,7 @@ class Breezy.Controller
     @progressBar.advanceFromEvent(event)
 
   onAsyncError: (xhr, url, options) =>
-    Breezy.Utils.triggerEvent Breezy.EVENTS.ERROR, xhr, options.target
+    Utils.triggerEvent EVENTS.ERROR, xhr, options.target
 
   createRequest: (url, opts)=>
     jsAccept = 'text/javascript, application/x-javascript, application/javascript'
@@ -140,12 +142,12 @@ class Breezy.Controller
     xhr = new XMLHttpRequest
     xhr.open requestMethod, url.formatForXHR(cache: opts.cacheRequest), true
     xhr.setRequestHeader 'Accept', jsAccept
-    xhr.setRequestHeader 'X-XHR-Referer', @getRefererUrl() 
+    xhr.setRequestHeader 'X-XHR-Referer', @getRefererUrl()
     xhr.setRequestHeader 'X-Silent', opts.silent if opts.silent
     xhr.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
     xhr.setRequestHeader 'Content-Type', opts.contentType if opts.contentType
 
-    csrfToken = Breezy.CSRFToken.get().token
+    csrfToken = CSRFToken.get().token
     xhr.setRequestHeader('X-CSRF-Token', csrfToken) if csrfToken
 
     if !opts.silent
@@ -188,3 +190,4 @@ class Breezy.Controller
       disposition.match /^attachment/
 
 
+module.exports = Controller

@@ -1,8 +1,9 @@
-#= require breezy/component_url
-#= require breezy/csrf_token
-#= require breezy/utils
+ComponentUrl = require('./component_url.coffee')
+CSRFToken = require('./csrf_token.coffee')
+Utils = require('./utils.coffee')
+EVENTS = require('./events.coffee')
 
-class Breezy.Snapshot
+class Snapshot
   constructor: (@controller, @history) ->
     @pageCache = {}
     @currentBrowserState = null
@@ -12,8 +13,8 @@ class Breezy.Snapshot
 
   onHistoryChange: (event) =>
     if event.state?.breezy && event.state.url != @currentBrowserState.url
-      previousUrl = new Breezy.ComponentUrl(@currentBrowserState.url)
-      newUrl = new Breezy.ComponentUrl(event.state.url)
+      previousUrl = new ComponentUrl(@currentBrowserState.url)
+      newUrl = new ComponentUrl(event.state.url)
 
       if restorePoint = @pageCache[newUrl.absolute]
         @cacheCurrentPage()
@@ -42,9 +43,9 @@ class Breezy.Snapshot
 
   cacheCurrentPage: =>
     return unless @currentPage
-    currentUrl = new Breezy.ComponentUrl @currentBrowserState.url
+    currentUrl = new ComponentUrl @currentBrowserState.url
 
-    Breezy.Utils.merge @currentPage,
+    Utils.merge @currentPage,
       cachedAt: new Date().getTime()
       positionY: window.pageYOffset
       positionX: window.pageXOffset
@@ -64,10 +65,10 @@ class Breezy.Snapshot
       .replace(/^([^#]*)((\?)&|\?(#|$))/,'$1$3$4')
 
   currentComponentUrl: =>
-    new Breezy.ComponentUrl
+    new ComponentUrl
 
   reflectNewUrl: (url) =>
-    if (url = new Breezy.ComponentUrl url).absolute != @currentComponentUrl().href
+    if (url = new ComponentUrl url).absolute != @currentComponentUrl().href
       preservedHash = if url.hasNoHash() then @currentComponentUrl().hash else ''
       fullUrl = url.absolute + preservedHash
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
@@ -93,17 +94,19 @@ class Breezy.Snapshot
     @currentPage.title = options.title ? @currentPage.title
     @updateBrowserTitle()
 
-    Breezy.CSRFToken.update @currentPage.csrf_token if @currentPage.csrf_token?
+    CSRFToken.update @currentPage.csrf_token if @currentPage.csrf_token?
     @updateCurrentBrowserState()
 
   assetsChanged: (nextPage) =>
     @loadedAssets ||= @currentPage.assets
     fetchedAssets = nextPage.assets
-    fetchedAssets.length isnt @loadedAssets.length or Breezy.Utils.intersection(fetchedAssets, @loadedAssets).length isnt @loadedAssets.length
+    fetchedAssets.length isnt @loadedAssets.length or Utils.intersection(fetchedAssets, @loadedAssets).length isnt @loadedAssets.length
 
   graftByKeypath: (keypath, node, opts={})=>
     for k, v in @pageCache
-      @history.pageCache[k] = Breezy.Utils.graftByKeypath(keypath, node, v, opts)
+      @history.pageCache[k] = Utils.graftByKeypath(keypath, node, v, opts)
 
-    @currentPage = Breezy.Utils.graftByKeypath(keypath, node, @currentPage, opts)
-    Breezy.Utils.triggerEvent Breezy.EVENTS.LOAD, @currentPage
+    @currentPage = Utils.graftByKeypath(keypath, node, @currentPage, opts)
+    Utils.triggerEvent EVENTS.LOAD, @currentPage
+
+module.exports = Snapshot

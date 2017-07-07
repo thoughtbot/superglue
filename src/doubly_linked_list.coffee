@@ -1,4 +1,4 @@
-class Breezy.DoublyLinkedList
+class DoublyLinkedList
   constructor: ->
     @head = @tail = null
     @length = 0
@@ -55,3 +55,5 @@ class Breezy.DoublyLinkedList
     else
       @head = @tail = @createNode(obj)
       @length += 1
+
+module.exports = DoublyLinkedList

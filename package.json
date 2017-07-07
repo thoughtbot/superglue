@@ -11,7 +11,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "bin/blade runner"
+    "test": "bundle exec blade runner",
+    "build:rails": "browserify src/index.coffee -o lib/assets/javascripts/breezy.js -t coffeeify"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,16 @@
   "bugs": {
     "url": "https://github.com/jho406/breezy/issues"
   },
-  "homepage": "https://github.com/jho406/breezy#readme"
+  "homepage": "https://github.com/jho406/breezy#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "browserify": "^14.4.0",
+    "coffeeify": "^2.1.0",
+    "eventemitter3": "^2.0.3",
+    "history": "^4.6.3"
+  }, 
+  "bundledDependencies": [
+    "history",
+    "eventemitter3"
+  ]
 }

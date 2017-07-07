@@ -1,3 +1,8 @@
+ComponentUrl = require('./component_url.coffee')
+
+warn = ->
+  console.warn.apply(@, arguments)
+
 reverseMerge = (dest, obj) ->
   for k, v of obj
     dest[k] = v if !dest.hasOwnProperty(k)
@@ -15,7 +20,7 @@ clone = (original) ->
   copy
 
 withDefaults = (page, state) =>
-    currentUrl = new Breezy.ComponentUrl state.url
+    currentUrl = new ComponentUrl state.url
 
     reverseMerge page,
       url: currentUrl.relative
@@ -79,7 +84,7 @@ isObject = (val) ->
 isArray = (val) ->
   Object.prototype.toString.call(val) is '[object Array]'
 
-class Breezy.Grafter
+class Grafter
   constructor: ->
     @current_path = []
 
@@ -119,7 +124,7 @@ class Breezy.Grafter
         @current_path.pop()
         copy
       else
-        Breezy.Utils.warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
+        warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
         obj
 
     else if isArray(obj)
@@ -149,18 +154,17 @@ class Breezy.Grafter
         @current_path.pop()
         copy
       else
-        Breezy.Utils.warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
+        warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
         obj
     else
       obj
 
 
 
-@Breezy.Utils =
-  warn: ->
-    console.warn.apply(@, arguments)
+module.exports =
+  warn: warn
   graftByKeypath:  ->
-    grafter = new  Breezy.Grafter
+    grafter = new Grafter
     grafter.graftByKeypath.apply(grafter, arguments)
   documentListenerForLinks: documentListenerForLinks
   reverseMerge: reverseMerge
@@ -170,5 +174,6 @@ class Breezy.Grafter
   browserSupportsBreezy: browserSupportsBreezy
   intersection: intersection
   triggerEvent: triggerEvent
+  Grafter: Grafter #todo: extract me!
 
 

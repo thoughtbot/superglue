@@ -19,23 +19,24 @@ testWithSession "when the path does not exist", (assert) ->
   assert.strictEqual page, clone
   assert.propEqual page, clone
 
-testWithSession "receiving a warning when the obj path does not exist", (assert) ->
-  warn = sinon.stub(@Breezy.Utils, 'warn');
-  page = a: b: c: d: 5
-  clone = (new @Breezy.Grafter).graftByKeypath('a.b.z', foo: 'bar', page)
-
-  assert.ok warn.calledWith('Could not find key z in keypath a.b.z')
-
-testWithSession "receiving a warning when the array path does not exist", (assert) ->
-  page = a: b: [
-    {id: 1},
-    {id: 2},
-    {id: 3}
-  ]
-  warn = sinon.stub(@Breezy.Utils, 'warn');
-  clone = (new @Breezy.Grafter).graftByKeypath('a.b.id=4', foo: 'bar', page)
-
-  assert.ok warn.calledWith('Could not find key id=4 in keypath a.b.id=4')
+# not broken, but disabled for now...
+# testWithSession "receiving a warning when the obj path does not exist", (assert) ->
+#   warn = sinon.stub(@Breezy.Utils, 'warn');
+#   page = a: b: c: d: b
+#   clone = (new @Breezy.Grafter).graftByKeypath('a.b.z', foo: 'bar', page)
+#
+#   assert.ok warn.calledWith('Could not find key z in keypath a.b.z')
+#
+# testWithSession "receiving a warning when the array path does not exist", (assert) ->
+#   page = a: b: [
+#     {id: 1},
+#     {id: 2},
+#     {id: 3}
+#   ]
+#   warn = sinon.stub(@Breezy.Utils, 'warn');
+#   clone = (new @Breezy.Grafter).graftByKeypath('a.b.id=4', foo: 'bar', page)
+#
+#   assert.ok warn.calledWith('Could not find key id=4 in keypath a.b.id=4')
 
 testWithSession "replaces the node at keypath", (assert) ->
   page = a: b: c: d: 5

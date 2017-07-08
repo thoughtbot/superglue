@@ -28,7 +28,6 @@ withDefaults = (page, state) =>
       cachedAt: new Date().getTime()
       assets: []
       data: {}
-      title: ''
       positionY: 0
       positionX: 0
       csrf_token: null

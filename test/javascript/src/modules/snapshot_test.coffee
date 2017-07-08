@@ -7,12 +7,10 @@ testWithSession "without transition cache", (assert) ->
   @document.addEventListener 'breezy:load', =>
     load += 1
     if load is 1
-      assert.equal @document.title, 'title 2'
       setTimeout (=>
         @Breezy.visit('/app/session')), 0
     else if load is 2
       assert.notOk restoreCalled
-      assert.equal @document.title, 'title'
       location = @window.location
       state = breezy: true, url: "#{location.protocol}//#{location.host}/app/session"
       assert.propEqual @history.state.state, state
@@ -53,13 +51,11 @@ testWithSession "history.back() will use the cache if avail", (assert) ->
     change += 1
     if change is 1
       @document.addEventListener 'breezy:request-start', -> fetchCalled = true
-      assert.equal @document.title, 'title 2'
       setTimeout =>
         @history.back()
       , 0
     else if change is 2
       assert.notOk fetchCalled
-      assert.equal @document.title, 'title'
       done()
   @Breezy.visit('/app/success')
 
@@ -74,12 +70,10 @@ testWithSession "history.back() will miss the cache if there's no cache", (asser
   @document.addEventListener 'breezy:load', =>
     change += 1
     if change is 1
-      assert.equal @document.title, 'title 2'
       setTimeout =>
         @history.back()
       , 0
     else if change is 2
-      assert.equal @document.title, 'title'
       assert.equal restoreCalled, false
       done()
   @Breezy.pagesCached(0)

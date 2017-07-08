@@ -137,7 +137,6 @@ testWithSession "multiple remote visits with async will use a parallel queue and
     (function() {
       return {
         data: { heading: 'Some heading' },
-        title: 'title',
         csrf_token: 'token',
         assets: ['application-123.js', 'application-123.js']
       };
@@ -168,7 +167,6 @@ testWithSession "multiple remote visits with async options will use a parallel q
     (function() {
       return {
         data: { heading: 'Some heading' },
-        title: 'title',
         csrf_token: 'token',
         assets: ['application-123.js', 'application-123.js']
       };

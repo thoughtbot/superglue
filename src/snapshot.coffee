@@ -80,9 +80,6 @@ class Snapshot
   updateCurrentBrowserState: =>
     @currentBrowserState = @history.location.state
 
-  updateBrowserTitle: =>
-    document.title = @currentPage.title if @currentPage.title isnt false
-
   refreshBrowserForNewAssets: =>
     document.location.reload()
 
@@ -92,8 +89,6 @@ class Snapshot
       return
 
     @currentPage = nextPage
-    @currentPage.title = options.title ? @currentPage.title
-    @updateBrowserTitle()
 
     CSRFToken.update @currentPage.csrf_token if @currentPage.csrf_token?
     @updateCurrentBrowserState()

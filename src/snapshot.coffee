@@ -11,17 +11,17 @@ class Snapshot
     @currentPage = null
     @loadedAssets= null
 
-  onHistoryChange: (event) =>
-    if event.state?.breezy && event.state.url != @currentBrowserState.url
+  onHistoryChange: (location, action) =>
+    if action == 'POP' && location.state?.breezy && location.state.url!= @currentBrowserState.url
       previousUrl = new ComponentUrl(@currentBrowserState.url)
-      newUrl = new ComponentUrl(event.state.url)
+      newUrl = new ComponentUrl(location.state.url)
 
       if restorePoint = @pageCache[newUrl.absolute]
         @cacheCurrentPage()
         @currentPage = restorePoint
         @controller.restore(@currentPage)
       else
-        @controller.request event.target.location.href
+        @controller.request location.state.url
 
   constrainPageCacheTo: (limit = @pageCacheSize) =>
     pageCacheKeys = Object.keys @pageCache
@@ -56,8 +56,8 @@ class Snapshot
     @pageCache[currentUrl.absolute] = @currentPage
 
   rememberCurrentUrlAndState: =>
-    @history.replaceState { breezy: true, url: @currentComponentUrl().href }, '', @currentComponentUrl().href
-    @currentBrowserState = @history.state
+    @history.replace @currentComponentUrl().pathname, { breezy: true, url: @currentComponentUrl().href }
+    @currentBrowserState = @history.location.state
 
   removeParamFromUrl: (url, parameter) =>
     return url
@@ -70,14 +70,14 @@ class Snapshot
   reflectNewUrl: (url) =>
     if (url = new ComponentUrl url).absolute != @currentComponentUrl().href
       preservedHash = if url.hasNoHash() then @currentComponentUrl().hash else ''
-      fullUrl = url.absolute + preservedHash
+      fullUrl = url.pathname + preservedHash
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
       fullUrl = @removeParamFromUrl(fullUrl, '__')
 
-      @history.pushState { breezy: true, url: url.absolute + preservedHash }, '', fullUrl
+      @history.push(fullUrl, { breezy: true, url: url.absolute + preservedHash })
 
   updateCurrentBrowserState: =>
-    @currentBrowserState = @history.state
+    @currentBrowserState = @history.location.state
 
   updateBrowserTitle: =>
     document.title = @currentPage.title if @currentPage.title isnt false

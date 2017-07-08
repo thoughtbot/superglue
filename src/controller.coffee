@@ -25,6 +25,7 @@ class Controller
     @history.currentPage
 
   request: (url, options = {}) =>
+    debugger
     options = Utils.reverseMerge options,
       pushState: true
 

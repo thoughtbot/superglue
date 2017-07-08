@@ -49,8 +49,8 @@ class Snapshot
       cachedAt: new Date().getTime()
       positionY: window.pageYOffset
       positionX: window.pageXOffset
-      url: currentUrl.relative
-      pathname: currentUrl.pathname
+      url: currentUrl.pathToHash
+      pathname: currentUrl.pathToHash
       transition_cache: true
 
     @pageCache[currentUrl.absolute] = @currentPage
@@ -65,7 +65,8 @@ class Snapshot
       .replace(/^([^#]*)((\?)&|\?(#|$))/,'$1$3$4')
 
   currentComponentUrl: =>
-    new ComponentUrl
+    if window?
+      new ComponentUrl(document.location.href)
 
   reflectNewUrl: (url) =>
     if (url = new ComponentUrl url).absolute != @currentComponentUrl().href

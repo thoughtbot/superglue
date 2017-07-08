@@ -23,7 +23,7 @@ withDefaults = (page, state) =>
     currentUrl = new ComponentUrl state.url
 
     reverseMerge page,
-      url: currentUrl.relative
+      url: currentUrl.pathToHash
       pathname: currentUrl.pathname
       cachedAt: new Date().getTime()
       assets: []

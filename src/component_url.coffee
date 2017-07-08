@@ -1,10 +1,11 @@
+parse = require('url-parse')
 
 uniqueId = ->
   new Date().getTime().toString(36)
 
 class ComponentUrl
-  constructor: (@original = document.location.href) ->
-    return @original if @original.constructor is ComponentUrl
+  constructor: (@original) ->
+    return @original if @original?.constructor is ComponentUrl
     @_parse()
 
   withoutHash: -> @href.replace(@hash, '').replace('#', '')
@@ -15,7 +16,10 @@ class ComponentUrl
   hasNoHash: -> @hash.length is 0
 
   crossOrigin: ->
-    @origin isnt (new ComponentUrl).origin
+    if window?
+      @origin isnt (new ComponentUrl(document.location.href)).origin
+    else
+      false
 
   formatForXHR: (options = {}) ->
     (if options.cache then @withMimeBust() else @withAntiCacheParam()).withoutHashForIE10compatibility()
@@ -37,23 +41,11 @@ class ComponentUrl
     )
 
   _parse: ->
-    (@link ?= document.createElement 'a').href = @original
-    { @href, @protocol, @host, @hostname, @port, @pathname, @search, @hash } = @link
-
-    if @protocol == ':'
-      @protocol = document.location.protocol
-    if @protocol == ''
-      @protocol = document.location.protocol
-    if @port == ''
-      @port = document.location.port
-    if @hostname == ''
-      @hostname = document.location.hostname
-    if @pathname == ''
-      @pathname = '/'
+    { @href, @protocol, @host, @hostname, @port, @pathname, @query, @hash } = parse(@original)
 
     @origin = [@protocol, '//', @hostname].join ''
     @origin += ":#{@port}" unless @port.length is 0
-    @relative = [@pathname, @search, @hash].join ''
+    @pathToHash = [@pathname, @query, @hash].join ''
     @absolute = @href
 
 module.exports = ComponentUrl

@@ -1,7 +1,17 @@
 QUnit.module "Navigation"
 
+createTarget = (html) ->
+  testDiv = @document.createElement('div')
+  testDiv.innerHTML = html
+  return testDiv.firstChild
+
 testWithSession "a successful visit", (assert) ->
   done = assert.async()
+  html = """
+    <a href="/app/success" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
 
   breezyClickFired = requestFinished = requestStared = false
   @document.addEventListener 'breezy:click', =>
@@ -32,7 +42,7 @@ testWithSession "a successful visit", (assert) ->
     console.log('calling done')
     done()
   console.log('starting visit to /app/success')
-  @Breezy.visit('/app/success')
+  target.click()
 
 testWithSession "visits to content with new assets generates a refresh", (assert) ->
   done = assert.async()

@@ -76,6 +76,11 @@ testWithSession "visits with different-origin URL, forces a normal redirection",
 
 testWithSession "calling preventDefault on the before-change event cancels the visit", (assert) ->
   done = assert.async()
+  html = """
+    <a href="/app/success" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
   @document.addEventListener 'breezy:click', (event) ->
     event.preventDefault()
     assert.ok true
@@ -83,7 +88,7 @@ testWithSession "calling preventDefault on the before-change event cancels the v
   @document.addEventListener 'breezy:request-start', =>
     done new Error("visit wasn't cancelled")
     done = null
-  @Breezy.visit('/app/success')
+  target.click()
 
 testWithSession "visits do not pushState when URL is the same", (assert) ->
   done = assert.async()

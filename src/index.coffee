@@ -42,12 +42,17 @@ ProgressBarAPI =
   advanceTo: (value) -> progressBar.advanceTo(value)
   done: -> progressBar.done()
 
+pageChangePrevented = (url, target) ->
+  !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
+
 remoteHandler = (ev) ->
   target = ev.target
   remote = new Remote(target)
   return unless remote.isValid()
   ev.preventDefault()
-  controller.request remote.httpUrl, remote.toOptions()
+  options = remote.toOptions()
+  return if pageChangePrevented(remote.httpUrl.absolute, options.target)
+  controller.request remote.httpUrl, options
 
 browserSupportsCustomEvents =
   document.addEventListener and document.createEvent

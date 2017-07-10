@@ -25,12 +25,10 @@ class Controller
     @history.currentPage
 
   request: (url, options = {}) =>
-    debugger
     options = Utils.reverseMerge options,
       pushState: true
 
     url = new ComponentUrl url
-    return if @pageChangePrevented(url.absolute, options.target)
 
     if url.crossOrigin()
       @onCrossOriginRequest(url)
@@ -84,8 +82,6 @@ class Controller
     @history.changePage(nextPage, options)
     Utils.triggerEvent EVENTS.LOAD, @currentPage()
 
-  pageChangePrevented: (url, target) =>
-    !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
 
   cache: (key, value) =>
     return @atomCache[key] if value == null

@@ -90,7 +90,7 @@ class Controller
   onLoadEnd: => @http = null
 
   onLoad: (xhr, url, options) =>
-    Utils.triggerEvent EVENTS.RECEIVE, url: url.absolute, options.target
+    options.onRequestEnd?(url.absolute)
     nextPage =  @processResponse(xhr)
     if xhr.status == 0
       return

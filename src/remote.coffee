@@ -26,9 +26,13 @@ class Remote
     async: @async
     pushState: @pushState
     onRequestStart: @onRequestStart
+    onRequestEnd: @onRequestEnd
 
   onRequestStart:(url) =>
-    Utils.triggerEvent EVENTS.FETCH, url: url.absolute, @target
+    Utils.triggerEvent EVENTS.FETCH, url: url, @target
+
+  onRequestEnd:(url) =>
+    Utils.triggerEvent EVENTS.RECEIVE, url: url, @target
 
   setRequestType: (target)=>
     if target.tagName == 'A'

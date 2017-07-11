@@ -46,8 +46,7 @@ class Controller
 
     options.cacheRequest ?= @requestCachingEnabled
     options.showProgressBar ?= true
-
-    Utils.triggerEvent EVENTS.FETCH, url: url.absolute, options.target
+    options.onRequestStart?(url.absolute)
 
     if options.async
       options.showProgressBar = false

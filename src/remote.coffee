@@ -1,3 +1,6 @@
+Utils = require('./utils.coffee')
+EVENTS = require('./events.coffee')
+
 class Remote
   SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
   FALLBACK_LINK_METHOD = 'GET'
@@ -22,6 +25,10 @@ class Remote
     target: @target
     async: @async
     pushState: @pushState
+    onRequestStart: @onRequestStart
+
+  onRequestStart:(url) =>
+    Utils.triggerEvent EVENTS.FETCH, url: url.absolute, @target
 
   setRequestType: (target)=>
     if target.tagName == 'A'

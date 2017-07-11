@@ -22,7 +22,6 @@ class Remote
     payload: @payload
     contentType: @contentType
     silent: @silent
-    target: @target
     async: @async
     pushState: @pushState
     onRequestStart: @onRequestStart

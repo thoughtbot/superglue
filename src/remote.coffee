@@ -27,6 +27,10 @@ class Remote
     pushState: @pushState
     onRequestStart: @onRequestStart
     onRequestEnd: @onRequestEnd
+    onRequestError: @onRequestError
+
+  onRequestError:(xhr) =>
+    Utils.triggerEvent EVENTS.ERROR, xhr, @target
 
   onRequestStart:(url) =>
     Utils.triggerEvent EVENTS.FETCH, url: url, @target

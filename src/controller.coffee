@@ -52,7 +52,7 @@ class Controller
       options.showProgressBar = false
       req = @createRequest(url, options)
       req.onError = ->
-        Utils.triggerEvent EVENTS.ERROR, null, options.target
+        options.onRequestError?(null)
       @pq.push(req)
       req.send(options.payload)
     else
@@ -120,16 +120,13 @@ class Controller
       @history.constrainPageCacheTo()
     else
       if options.async
-        @onAsyncError(xhr, url, options)
+        options.onRequestError(xhr)
       else
         @progressBar?.done()
         @onSyncError(xhr, url, options)
 
   onProgress: (event) =>
     @progressBar.advanceFromEvent(event)
-
-  onAsyncError: (xhr, url, options) =>
-    Utils.triggerEvent EVENTS.ERROR, xhr, options.target
 
   createRequest: (url, opts)=>
     jsAccept = 'text/javascript, application/x-javascript, application/javascript'

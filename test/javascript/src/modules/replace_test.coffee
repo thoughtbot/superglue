@@ -9,9 +9,9 @@ testWithSession "replacing current state", (assert) ->
     assets: ['application-123.js', 'application-123.js']
 
   assert.equal @$('meta[name="csrf-token"]').getAttribute('content'), 'token'
-  @document.addEventListener 'breezy:load', (event) =>
+  @Breezy.on 'breezy:load', (data) =>
     assert.equal @$('meta[name="csrf-token"]').getAttribute('content'), 'new-token'
-    assert.propEqual event.data.data, { heading: "some data" } # body is replaced
+    assert.propEqual data.data, { heading: "some data" } # body is replaced
     done()
   @Breezy.replace(doc)
 

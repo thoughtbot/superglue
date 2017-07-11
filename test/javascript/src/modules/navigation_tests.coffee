@@ -30,10 +30,10 @@ testWithSession "a successful visit", (assert) ->
     assert.ok requestStared
     requestFinished = true
 
-  @document.addEventListener 'breezy:load', (event) =>
+  @Breezy.on 'breezy:load', (data) =>
     console.log 'breezy:load'
     assert.ok requestFinished
-    assert.propEqual event.data.data, { heading: "Some heading 2" }
+    assert.propEqual data.data, { heading: "Some heading 2" }
     state = breezy: true, url: "#{location.protocol}//#{location.host}/app/success"
     assert.propEqual @history.state.state, state
     console.log(@location.href)
@@ -96,7 +96,7 @@ testWithSession "visits do not pushState when URL is the same", (assert) ->
   @history.pushState({}, "", "session");
 
   load = 0
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     load += 1
     if load is 1
       assert.equal @history.length, @originalHistoryLength
@@ -130,15 +130,15 @@ testWithSession "visits do not pushState when URL is the same", (assert) ->
 #
 testWithSession "visits to content with Breezy.cache stores caches correctly", (assert) ->
   done = assert.async()
-  @window.addEventListener 'breezy:load', (event) =>
-    assert.equal(event.data.data.footer, 'some cached content')
+  @Breezy.on 'breezy:load', (data) =>
+    assert.equal(data.data.footer, 'some cached content')
     assert.equal(@Breezy.cache('cachekey'), 'some cached content')
     done()
   @Breezy.visit('/app/success_with_russian_doll')
 
 testWithSession "visits with the async option allows request to run seperate from the main XHR", (assert) ->
   done = assert.async()
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     assert.equal @Breezy.controller.http, null
     done()
 
@@ -207,29 +207,40 @@ testWithSession "multiple remote visits with async options will use a parallel q
 
 testWithSession "visits to content with a Breezy.graft response will graft data appropriately", (assert) ->
   done = assert.async()
-  @window.addEventListener 'breezy:load', (event) =>
-    assert.propEqual event.data.data,
+  html = """
+    <a href="/app/success_with_graft" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
+  @Breezy.on 'breezy:load', (data) =>
+    assert.propEqual data.data,
       address:
         zip: 91210
       heading: "Some heading"
 
     done()
-  @Breezy.visit('/app/success_with_graft')
+  target.click()
 
 testWithSession "visits to content with an async Breezy.visit will kick off an async request for new content", (assert) ->
   done = assert.async()
   load = 0
+  html = """
+    <a href="/app/success_with_async_render" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
 
-  @window.addEventListener 'breezy:load', (event) =>
+  @Breezy.on 'breezy:load', (data) =>
     if load == 0
-      assert.propEqual event.data.data,
+      assert.propEqual data.data,
         address: {}
         heading: "Some heading 2"
       load += 1
     else if load == 1
-      assert.propEqual event.data.data,
+      assert.propEqual data.data,
         address:
           zip: 91210
         heading: "Some heading 2"
       done()
-  @Breezy.visit('/app/success_with_async_render')
+
+  target.click()

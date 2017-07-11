@@ -73,13 +73,13 @@ class Controller
     @history.changePage(cachedPage, options)
 
     @progressBar?.done()
-    Utils.triggerEvent EVENTS.RESTORE
-    Utils.triggerEvent EVENTS.LOAD, cachedPage
+    Utils.emitter.emit EVENTS.RESTORE
+    Utils.emitter.emit EVENTS.LOAD, cachedPage
 
   replace: (nextPage, options = {}) =>
     Utils.withDefaults(nextPage, @history.currentBrowserState)
     @history.changePage(nextPage, options)
-    Utils.triggerEvent EVENTS.LOAD, @currentPage()
+    Utils.emitter.emit EVENTS.LOAD, @currentPage()
 
 
   cache: (key, value) =>
@@ -110,7 +110,7 @@ class Controller
 
       if nextPage.action != 'graft'
         @history.changePage(nextPage, options)
-        Utils.triggerEvent EVENTS.LOAD, @currentPage()
+        Utils.emitter.emit EVENTS.LOAD, @currentPage()
       else
         ##clean this up
         @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)

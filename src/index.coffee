@@ -90,6 +90,8 @@ setup = (obj) ->
   obj.Remote = Remote
   obj.Snapshot = Snapshot
   obj.Utils = Utils
+  obj.on = Utils.emitter.on.bind(Utils.emitter)
+  obj.emitter = Utils.emitter
   obj.Grafter = Utils.Grafter
   obj.CSRFToken = CSRFToken
   obj

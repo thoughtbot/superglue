@@ -103,6 +103,6 @@ class Snapshot
       @history.pageCache[k] = Utils.graftByKeypath(keypath, node, v, opts)
 
     @currentPage = Utils.graftByKeypath(keypath, node, @currentPage, opts)
-    Utils.triggerEvent EVENTS.LOAD, @currentPage
+    Utils.emitter.emit EVENTS.LOAD, @currentPage
 
 module.exports = Snapshot

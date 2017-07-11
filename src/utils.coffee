@@ -1,4 +1,7 @@
 ComponentUrl = require('./component_url.coffee')
+EventEmitter = require('eventemitter3').EventEmitter
+
+emitter = new EventEmitter
 
 warn = ->
   console.warn.apply(@, arguments)
@@ -168,6 +171,9 @@ module.exports =
   documentListenerForLinks: documentListenerForLinks
   reverseMerge: reverseMerge
   merge: merge
+  emit: emitter.emit
+  on: emitter.on.bind(emitter)
+  emitter: emitter
   clone: clone
   withDefaults: withDefaults
   browserSupportsBreezy: browserSupportsBreezy

@@ -4,7 +4,7 @@ testWithSession "without transition cache", (assert) ->
   done = assert.async()
   load = 0
   restoreCalled = false
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     load += 1
     if load is 1
       setTimeout (=>
@@ -15,16 +15,16 @@ testWithSession "without transition cache", (assert) ->
       state = breezy: true, url: "#{location.protocol}//#{location.host}/app/session"
       assert.propEqual @history.state.state, state
       done()
-  @document.addEventListener 'breezy:restore', =>
+  @Breezy.on 'breezy:restore', =>
     restoreCalled = true
   @Breezy.visit('/app/success')
 
 testWithSession "with same URL, skips transition cache", (assert) ->
   done = assert.async()
   restoreCalled = false
-  @document.addEventListener 'breezy:restore', =>
+  @Breezy.on 'breezy:restore', =>
     restoreCalled = true
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     assert.notOk restoreCalled
     done()
   @Breezy.enableTransitionCache()
@@ -33,9 +33,9 @@ testWithSession "with same URL, skips transition cache", (assert) ->
 testWithSession "transition cache can be disabled with an override", (assert) ->
   done = assert.async()
   restoreCalled = false
-  @document.addEventListener 'breezy:restore', =>
+  @Breezy.on 'breezy:restore', =>
     restoreCalled = true
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     assert.notOk restoreCalled
     done()
   @Breezy.enableTransitionCache()
@@ -46,7 +46,7 @@ testWithSession "history.back() will use the cache if avail", (assert) ->
   done = assert.async()
   change = 0
   fetchCalled = false
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     console.log('breezy load')
     change += 1
     if change is 1
@@ -64,10 +64,10 @@ testWithSession "history.back() will miss the cache if there's no cache", (asser
   change = 0
   restoreCalled = false
 
-  @document.addEventListener 'breezy:restore', =>
+  @Breezy.on 'breezy:restore', =>
     restoreCalled = true
 
-  @document.addEventListener 'breezy:load', =>
+  @Breezy.on 'breezy:load', =>
     change += 1
     if change is 1
       setTimeout =>

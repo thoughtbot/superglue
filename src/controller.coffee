@@ -1,30 +1,31 @@
-ParallelQueue = require('./parallel_queue.coffee')
 ComponentUrl = require('./component_url.coffee')
-ProgressBar = require('./progress_bar.coffee')
 Snapshot = require('./snapshot.coffee')
 DoublyLinkedList = require('./doubly_linked_list.coffee')
 Utils = require('./utils.coffee')
 CSRFToken = require('./csrf_token.coffee')
 EVENTS = require('./events.coffee')
 PAGE_CACHE_SIZE = 20
+Config = require('./config.coffee')
 
 class Controller
   constructor: (history)->
     @atomCache = {}
+    @queues = {}
     @history = new Snapshot(this, history)
     @transitionCacheEnabled = false
     @requestCachingEnabled = true
 
-    @progressBar = new ProgressBar 'html'
-    @pq = new ParallelQueue
-    @http = null
-
-    @history.rememberCurrentUrlAndState()
+  setInitialUrl: (url) =>
+    @history.setInitialUrl(url)
 
   currentPage: =>
     @history.currentPage
 
+  fetchQueue:(name) =>
+    @queues[name] ?= new (Config.fetchQueue(name))(@)
+
   request: (url, options = {}) =>
+    queue = @queue = @fetchQueue(options.queue || 'sync')
     options = Utils.reverseMerge options,
       pushState: true
 
@@ -35,31 +36,16 @@ class Controller
       return
 
     @history.cacheCurrentPage()
-    if @progressBar? and !options.async
-      @progressBar?.start()
     restorePoint = @history.transitionCacheFor(url.absolute)
 
     if @transitionCacheEnabled and restorePoint and restorePoint.transition_cache
       @history.reflectNewUrl(url)
       @restore(restorePoint)
-      options.showProgressBar = false
 
     options.cacheRequest ?= @requestCachingEnabled
-    options.showProgressBar ?= true
     options.onRequestStart?(url.absolute)
 
-    if options.async
-      options.showProgressBar = false
-      req = @createRequest(url, options)
-      req.onError = ->
-        options.onRequestError?(null)
-      @pq.push(req)
-      req.send(options.payload)
-    else
-      @pq.drain()
-      @http?.abort()
-      @http = @createRequest(url, options)
-      @http.send(options.payload)
+    queue.push(url, options)
 
   enableTransitionCache: (enable = true) =>
     @transitionCacheEnabled = enable
@@ -72,7 +58,6 @@ class Controller
     @http?.abort()
     @history.changePage(cachedPage, options)
 
-    @progressBar?.done()
     Utils.emitter.emit EVENTS.RESTORE
     Utils.emitter.emit EVENTS.LOAD, cachedPage
 
@@ -80,7 +65,6 @@ class Controller
     Utils.withDefaults(nextPage, @history.currentBrowserState)
     @history.changePage(nextPage, options)
     Utils.emitter.emit EVENTS.LOAD, @currentPage()
-
 
   cache: (key, value) =>
     return @atomCache[key] if value == null
@@ -99,7 +83,6 @@ class Controller
       if options.async && url.pathname != @currentPage().pathname
 
         unless options.ignoreSamePathConstraint
-          @progressBar?.done()
           Utils.warn("Async response path is different from current page path")
           return
 
@@ -115,49 +98,15 @@ class Controller
         ##clean this up
         @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)
 
-      if options.showProgressBar
-        @progressBar?.done()
       @history.constrainPageCacheTo()
     else
-      if options.async
+      if options.queue == 'async'
         options.onRequestError(xhr)
       else
-        @progressBar?.done()
         @onSyncError(xhr, url, options)
 
-  onProgress: (event) =>
-    @progressBar.advanceFromEvent(event)
-
   createRequest: (url, opts)=>
-    jsAccept = 'text/javascript, application/x-javascript, application/javascript'
-    requestMethod = opts.requestMethod || 'GET'
-
-    xhr = new XMLHttpRequest
-    xhr.open requestMethod, url.formatForXHR(cache: opts.cacheRequest), true
-    xhr.setRequestHeader 'Accept', jsAccept
-    xhr.setRequestHeader 'X-XHR-Referer', @getRefererUrl()
-    xhr.setRequestHeader 'X-Silent', opts.silent if opts.silent
-    xhr.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
-    xhr.setRequestHeader 'Content-Type', opts.contentType if opts.contentType
-
-    csrfToken = CSRFToken.get().token
-    xhr.setRequestHeader('X-CSRF-Token', csrfToken) if csrfToken
-
-    if !opts.silent
-      xhr.onload = =>
-        self = ` this `
-        redirectedUrl = self.getResponseHeader 'X-XHR-Redirected-To'
-        actualUrl = redirectedUrl || url
-        @onLoad(self, actualUrl, opts)
-    else
-      xhr.onload = =>
-        @progressBar?.done()
-
-    xhr.onprogress = @onProgress if @progressBar and opts.showProgressBar
-    xhr.onloadend = @onLoadEnd
-    xhr.onerror = =>
-      @onSyncError(xhr, url, options)
-    xhr
+    Utils.createRequest(@, url, opts)
 
   processResponse: (xhr) ->
     if @hasValidResponse(xhr)

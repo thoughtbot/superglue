@@ -55,8 +55,9 @@ class Snapshot
 
     @pageCache[currentUrl.absolute] = @currentPage
 
-  rememberCurrentUrlAndState: =>
-    @history.replace @currentComponentUrl().pathname, { breezy: true, url: @currentComponentUrl().href }
+  setInitialUrl: (href) =>
+    url = new ComponentUrl(href)
+    @history.replace url.pathname, { breezy: true, url: url.href }
     @currentBrowserState = @history.location.state
 
   removeParamFromUrl: (url, parameter) =>
@@ -64,13 +65,11 @@ class Snapshot
       .replace(new RegExp('^([^#]*\?)(([^#]*)&)?' + parameter + '(\=[^&#]*)?(&|#|$)' ), '$1$3$5')
       .replace(/^([^#]*)((\?)&|\?(#|$))/,'$1$3$4')
 
-  currentComponentUrl: =>
-    if window?
-      new ComponentUrl(document.location.href)
-
   reflectNewUrl: (url) =>
-    if (url = new ComponentUrl url).absolute != @currentComponentUrl().href
-      preservedHash = if url.hasNoHash() then @currentComponentUrl().hash else ''
+    currentComponentUrl = new ComponentUrl(@currentBrowserState.url)
+
+    if (url = new ComponentUrl url).absolute != currentComponentUrl.href
+      preservedHash = if url.hasNoHash() then currentComponentUrl.hash else ''
       fullUrl = url.pathname + preservedHash
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
       fullUrl = @removeParamFromUrl(fullUrl, '__')

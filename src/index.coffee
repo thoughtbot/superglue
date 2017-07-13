@@ -8,6 +8,12 @@ Snapshot = require('./snapshot.coffee')
 Utils = require('./utils.coffee')
 EVENTS = require('./events.coffee')
 History = require('history')
+Config = require('./config.coffee')
+Async = require('./queue/async.coffee')
+Sync = require('./queue/sync.coffee')
+
+Config.addQueue 'sync', Sync
+Config.addQueue 'async', Async
 
 if window?
   history = History.createBrowserHistory()
@@ -16,6 +22,8 @@ else
 
 
 controller = new Controller(history)
+controller.setInitialUrl(document.location.href)
+
 progressBar = controller.progressBar
 controller.onSyncError = (xhr, url, options) ->
   crossOriginRedirectUrl = (xhr) ->
@@ -32,15 +40,7 @@ controller.onCrossOriginRequest = (url) ->
 controller.getRefererUrl = ->
   document.location.href
 
-ProgressBarAPI =
-  enable: ->
-    progressBar.install()
-  disable: ->
-    progressBar.uninstall()
-  setDelay: (value) -> progressBar.setDelay(value)
-  start: (options) -> progressBar.start(options)
-  advanceTo: (value) -> progressBar.advanceTo(value)
-  done: -> progressBar.done()
+ProgressBarAPI = {}
 
 pageChangePrevented = (url, target) ->
   !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
@@ -58,7 +58,6 @@ browserSupportsCustomEvents =
   document.addEventListener and document.createEvent
 
 initializeBreezy = ->
-  ProgressBarAPI.enable()
   history.listen(controller.history.onHistoryChange)
 
   Utils.documentListenerForLinks 'click', remoteHandler

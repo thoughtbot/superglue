@@ -1,13 +1,17 @@
-DoublyLinkedList = require('./doubly_linked_list.coffee')
-Utils = require('./utils.coffee')
+DoublyLinkedList = require('../doubly_linked_list.coffee')
+Utils = require('../utils.coffee')
 
-class ParallelQueue
-  constructor: ->
+class Async
+  constructor: (@delegate) ->
     @dll = new DoublyLinkedList
     @active = true
     Utils.on 'breezy:visit', => @drain()
 
-  push:(xhr)->
+  push:(url, options)->
+    xhr = Utils.createRequest(@delegate, url, options)
+    xhr.onError = ->
+      options.onRequestError?(null)
+
     @dll.push(xhr)
     xhr._originalOnLoad = xhr.onload.bind(xhr)
 
@@ -24,6 +28,8 @@ class ParallelQueue
             @dll.shift()
             qxhr._originalOnLoad()
 
+    xhr.send(options.payload)
+
   drain: ->
     @active = false
     node = @dll.head
@@ -35,5 +41,6 @@ class ParallelQueue
     @dll = new DoublyLinkedList
     @active = true
 
-module.exports = ParallelQueue
+module.exports = Async
+
 

@@ -11,7 +11,7 @@ class Remote
     @payload = ''
     @contentType = null
     @setRequestType(target)
-    @async =  @getBZAttribute(target, 'bz-remote-async') || false
+    @q =  @getBZAttribute(target, 'bz-remote-q') || 'sync'
     @pushState =  !(@getBZAttribute(target, 'bz-push-state') == 'false')
     @httpUrl = target.getAttribute('href') || target.getAttribute('action')
     @silent = @getBZAttribute(target, 'bz-silent') || false
@@ -22,7 +22,7 @@ class Remote
     payload: @payload
     contentType: @contentType
     silent: @silent
-    async: @async
+    queue: @q
     pushState: @pushState
     onRequestStart: @onRequestStart
     onRequestEnd: @onRequestEnd

@@ -142,7 +142,7 @@ testWithSession "visits with the async option allows request to run seperate fro
     assert.equal @Breezy.controller.http, null
     done()
 
-  @Breezy.visit('/app/session', async: true)
+  @Breezy.visit('/app/session', queue: 'async')
 
 testWithSession "multiple remote visits with async will use a parallel queue and block onLoads until the xhr ahead of it finishes first", (assert) ->
   sinon.stub(@Breezy.Utils, 'warn', ->{})
@@ -163,15 +163,15 @@ testWithSession "multiple remote visits with async will use a parallel queue and
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Breezy.visit('/app', async: true)
-  @Breezy.visit('/app', async: true)
-  assert.equal @Breezy.controller.pq.dll.length, 2
+  @Breezy.visit('/app', queue: 'async')
+  @Breezy.visit('/app', queue: 'async')
+  assert.equal @Breezy.controller.queue.dll.length, 2
   requests[1].respond(200, { "Content-Type": "application/javascript" }, response)
 
-  assert.equal @Breezy.controller.pq.dll.length, 2
+  assert.equal @Breezy.controller.queue.dll.length, 2
   requests[0].respond(200, { "Content-Type": "application/javascript" }, response)
 
-  assert.equal @Breezy.controller.pq.dll.length, 0
+  assert.equal @Breezy.controller.queue.dll.length, 0
   xhr.restore()
   done()
 
@@ -193,15 +193,15 @@ testWithSession "multiple remote visits with async options will use a parallel q
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Breezy.visit('/app', async: true)
-  @Breezy.visit('/app', async: true)
-  assert.equal @Breezy.controller.pq.dll.length, 2
+  @Breezy.visit('/app', queue: 'async')
+  @Breezy.visit('/app', queue: 'async')
+  assert.equal @Breezy.controller.queue.dll.length, 2
   requests[0].respond(200, { "Content-Type": "application/javascript" }, response)
 
-  assert.equal @Breezy.controller.pq.dll.length, 1
+  assert.equal @Breezy.controller.queue.dll.length, 1
   requests[1].respond(200, { "Content-Type": "application/javascript" }, response)
 
-  assert.equal @Breezy.controller.pq.dll.length, 0
+  assert.equal @Breezy.controller.queue.dll.length, 0
   xhr.restore()
   done()
 

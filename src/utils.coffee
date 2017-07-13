@@ -1,5 +1,6 @@
 ComponentUrl = require('./component_url.coffee')
 EventEmitter = require('eventemitter3').EventEmitter
+CSRFToken = require('./csrf_token.coffee')
 
 emitter = new EventEmitter
 
@@ -162,6 +163,36 @@ class Grafter
       obj
 
 
+createRequest = (controller, url, opts)=>
+  jsAccept = 'text/javascript, application/x-javascript, application/javascript'
+  requestMethod = opts.requestMethod || 'GET'
+
+  xhr = new XMLHttpRequest
+  xhr.open requestMethod, url.formatForXHR(cache: opts.cacheRequest), true
+  xhr.setRequestHeader 'Accept', jsAccept
+  xhr.setRequestHeader 'X-XHR-Referer', controller.getRefererUrl()
+  xhr.setRequestHeader 'X-Silent', opts.silent if opts.silent
+  xhr.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
+  xhr.setRequestHeader 'Content-Type', opts.contentType if opts.contentType
+  csrfToken = CSRFToken.get().token
+  xhr.setRequestHeader('X-CSRF-Token', csrfToken) if csrfToken
+
+  if !opts.silent
+    xhr.onload = =>
+      self = ` this `
+      redirectedUrl = self.getResponseHeader 'X-XHR-Redirected-To'
+      actualUrl = redirectedUrl || url
+      controller.onLoad(self, actualUrl, opts)
+  else
+    xhr.onload = =>
+      controller.progressBar?.done()
+
+  xhr.onprogress = controller.onProgress if controller.progressBar and opts.showProgressBar
+  xhr.onloadend = controller.handleResponse
+  xhr.onerror = =>
+    controller.onSyncError(xhr, url, options)
+
+  xhr
 
 module.exports =
   warn: warn
@@ -179,6 +210,7 @@ module.exports =
   browserSupportsBreezy: browserSupportsBreezy
   intersection: intersection
   triggerEvent: triggerEvent
+  createRequest: createRequest
   Grafter: Grafter #todo: extract me!
 
 

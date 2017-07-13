@@ -57,7 +57,7 @@ module BreezyTemplate
       uri = ::URI.parse(@request_path)
       qry = ::URI.decode_www_form(uri.query || '') << ["_breezy_filter", path.join('.')]
       uri.query = ::URI.encode_www_form(qry)
-      "Breezy.visit('#{uri}', {async: true, pushState: false});"
+      "Breezy.visit('#{uri}', {queue: 'async', pushState: false});"
     end
 
     def _blank

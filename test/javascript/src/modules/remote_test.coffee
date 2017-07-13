@@ -247,7 +247,7 @@ testWithSession "#payload won't include form inputs with bz-remote-noserialize",
 testWithSession "ajax errors fire starting with the element", (assert) ->
   done = assert.async()
   html = """
-    <a href="/does-not-exist" data-bz-remote data-bz-remote-async=true></a>
+    <a href="/does-not-exist" data-bz-remote data-bz-remote-q='async'></a>
   """
   target = createTarget(html)
   @$('body').appendChild(target)

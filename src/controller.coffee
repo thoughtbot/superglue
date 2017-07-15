@@ -100,10 +100,7 @@ class Controller
 
       @history.constrainPageCacheTo()
     else
-      if options.queue == 'async'
-        options.onRequestError(xhr)
-      else
-        @onSyncError(xhr, url, options)
+      options.onRequestError(xhr)
 
   createRequest: (url, opts)=>
     Utils.createRequest(@, url, opts)

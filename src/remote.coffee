@@ -1,5 +1,6 @@
 Utils = require('./utils.coffee')
 EVENTS = require('./events.coffee')
+ComponentUrl = require('./component_url.coffee')
 
 class Remote
   SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
@@ -29,7 +30,19 @@ class Remote
     onRequestError: @onRequestError
 
   onRequestError:(xhr) =>
-    Utils.triggerEvent EVENTS.ERROR, xhr, @target
+    if @q is'sync'
+      @goToErrorPage(xhr)
+    else
+      Utils.triggerEvent EVENTS.ERROR, xhr, @target
+
+  goToErrorPage: (xhr) ->
+    crossOriginRedirectUrl = (xhr) ->
+      redirect = xhr.getResponseHeader('Location')
+      crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
+
+      if redirect? and crossOrigin
+        redirect
+    document.location.href = crossOriginRedirectUrl(xhr) or @httpUrl
 
   onRequestStart:(url) =>
     Utils.triggerEvent EVENTS.FETCH, url: url, @target

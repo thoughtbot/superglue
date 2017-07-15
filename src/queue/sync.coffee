@@ -9,6 +9,10 @@ class Sync
     Utils.emitter.emit('breezy:visit')
     @http?.abort()
     @http = Utils.createRequest(@delegate, url, options)
+    @http.onloadend = =>
+      @http = null
+    @http.onerror = =>
+      options.onRequestError(@http, url, options)
     @http.send(options.payload)
 
 module.exports = Sync

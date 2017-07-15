@@ -25,14 +25,6 @@ controller = new Controller(history)
 controller.setInitialUrl(document.location.href)
 
 progressBar = controller.progressBar
-controller.onSyncError = (xhr, url, options) ->
-  crossOriginRedirectUrl = (xhr) ->
-    redirect = xhr.getResponseHeader('Location')
-    crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
-
-    if redirect? and crossOrigin
-      redirect
-  document.location.href = crossOriginRedirectUrl(xhr) or url.absolute
 
 controller.onCrossOriginRequest = (url) ->
   document.location.href = url.absolute

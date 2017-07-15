@@ -188,10 +188,6 @@ createRequest = (controller, url, opts)=>
       controller.progressBar?.done()
 
   xhr.onprogress = controller.onProgress if controller.progressBar and opts.showProgressBar
-  xhr.onloadend = controller.handleResponse
-  xhr.onerror = =>
-    controller.onSyncError(xhr, url, options)
-
   xhr
 
 module.exports =

@@ -53,6 +53,11 @@ testWithSession "visits to content with new assets generates a refresh", (assert
 
 testWithSession "visits with an error response would redirect to that same errorpage", (assert) ->
   done = assert.async()
+  html = """
+    <a href="/app/does_not_exist" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
 
   unloadFired = false
   @window.addEventListener 'unload', =>
@@ -64,8 +69,7 @@ testWithSession "visits with an error response would redirect to that same error
         throw e unless /denied/.test(e.message) # IE
       done()
     , 0
-  @Breezy.visit('/app/does_not_exist')
-
+  target.click()
 
 testWithSession "visits with different-origin URL, forces a normal redirection", (assert) ->
   done = assert.async()

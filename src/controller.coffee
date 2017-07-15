@@ -25,10 +25,11 @@ class Controller
     @queues[name] ?= new (Config.fetchQueue(name))(@)
 
   request: (url, options = {}) =>
-    queue = @queue = @fetchQueue(options.queue || 'sync')
     options = Utils.reverseMerge options,
       pushState: true
+      queue: 'sync'
 
+    queue = @queue = @fetchQueue(options.queue)
     url = new ComponentUrl url
 
     if url.crossOrigin()
@@ -69,9 +70,6 @@ class Controller
   cache: (key, value) =>
     return @atomCache[key] if value == null
     @atomCache[key] ||= value
-
-  # Events
-  onLoadEnd: => @http = null
 
   onLoad: (xhr, url, options) =>
     options.onRequestEnd?(url.absolute)

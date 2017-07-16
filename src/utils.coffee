@@ -1,6 +1,7 @@
 ComponentUrl = require('./component_url.coffee')
 EventEmitter = require('eventemitter3').EventEmitter
 CSRFToken = require('./csrf_token.coffee')
+request = require('superagent')
 
 emitter = new EventEmitter
 
@@ -162,33 +163,15 @@ class Grafter
     else
       obj
 
-
-createRequest = (controller, url, opts)=>
+createRequest = (opts)=>
   jsAccept = 'text/javascript, application/x-javascript, application/javascript'
   requestMethod = opts.requestMethod || 'GET'
+  url = opts.url.formatForXHR(cache: opts.cacheRequest)
 
-  xhr = new XMLHttpRequest
-  xhr.open requestMethod, url.formatForXHR(cache: opts.cacheRequest), true
-  xhr.setRequestHeader 'Accept', jsAccept
-  xhr.setRequestHeader 'X-XHR-Referer', controller.getRefererUrl()
-  xhr.setRequestHeader 'X-Silent', opts.silent if opts.silent
-  xhr.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
-  xhr.setRequestHeader 'Content-Type', opts.contentType if opts.contentType
-  csrfToken = CSRFToken.get().token
-  xhr.setRequestHeader('X-CSRF-Token', csrfToken) if csrfToken
-
-  if !opts.silent
-    xhr.onload = =>
-      self = ` this `
-      redirectedUrl = self.getResponseHeader 'X-XHR-Redirected-To'
-      actualUrl = redirectedUrl || url
-      controller.onLoad(self, actualUrl, opts)
-  else
-    xhr.onload = =>
-      controller.progressBar?.done()
-
-  xhr.onprogress = controller.onProgress if controller.progressBar and opts.showProgressBar
-  xhr
+  req = request(requestMethod, url)
+  for header, value of opts.header
+    req.set(header, value)
+  req
 
 module.exports =
   warn: warn

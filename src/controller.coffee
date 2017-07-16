@@ -7,6 +7,34 @@ EVENTS = require('./events.coffee')
 PAGE_CACHE_SIZE = 20
 Config = require('./config.coffee')
 
+class Response
+  constructor: ({@url, @ignoreSamePathConstraint, @onRequestError, @onRequestEnd, @pushState})->
+
+class Request
+  constructor: ({@controller, @url,
+    @header,
+    @payload,
+    @method,
+    @onRequestError,
+    @onRequestEnd,
+    @pushState,
+    @cacheRequest,
+    @ignoreSamePathConstraint
+  }) ->
+      @response = new Response
+        onRequestError: @onRequestError
+        url: @url
+        onRequestEnd: @onRequestEnd
+        pushState: @pushState
+        ignoreSamePathConstraint: @ignoreSamePathConstraint
+
+  respond: ({status, header, body})->
+    @response.url = @url
+    @response.status = status
+    @response.header = header
+    @response.body = body
+    @controller.onLoad(@response)
+
 class Controller
   constructor: (history)->
     @atomCache = {}
@@ -22,7 +50,7 @@ class Controller
     @history.currentPage
 
   fetchQueue:(name) =>
-    @queues[name] ?= new (Config.fetchQueue(name))(@)
+    @queues[name] ?= new (Config.fetchQueue(name))
 
   request: (url, options = {}) =>
     options = Utils.reverseMerge options,
@@ -46,7 +74,36 @@ class Controller
     options.cacheRequest ?= @requestCachingEnabled
     options.onRequestStart?(url.absolute)
 
-    queue.push(url, options)
+    queue.push(@createRequest(url, options))
+
+  createRequest: (url, options)=>
+    jsAccept = 'text/javascript, application/x-javascript, application/javascript'
+    csrfToken = CSRFToken.get().token
+
+    req =
+      controller: @
+      url: url
+      header:
+        'accept': jsAccept
+        'x-xhr-referer': @getRefererUrl()
+        'x-requested-with': 'XMLHttpRequest'
+      payload: options.payload
+      method: options.requestMethod || 'GET'
+      onRequestError: options.onRequestError
+      onRequestEnd: options.onRequestEnd
+      cacheRequest: options.cacheRequest
+      pushState: options.pushState
+
+    if options.silent?
+      req.header['x-silent'] =  options.silent
+
+    if options.contentType?
+      req.header['content-type'] =  options.contentType
+
+    if csrfToken?
+      req.header['x-csrf-token'] = csrfToken
+
+    new Request req
 
   enableTransitionCache: (enable = true) =>
     @transitionCacheEnabled = enable
@@ -71,26 +128,30 @@ class Controller
     return @atomCache[key] if value == null
     @atomCache[key] ||= value
 
-  onLoad: (xhr, url, options) =>
-    options.onRequestEnd?(url.absolute)
-    nextPage =  @processResponse(xhr)
-    if xhr.status == 0
+  onLoad: (rsp) =>
+    #react-native might not need the following line.
+    redirectedUrl = rsp.header['x-xhr-redirected-to']
+    url = new ComponentUrl(redirectedUrl || rsp.url)
+
+    rsp.onRequestEnd?(url.absolute)
+    nextPage =  @processResponse(rsp)
+    if rsp.status == 0 || rsp.status == 204
       return
 
     if nextPage
-      if options.async && url.pathname != @currentPage().pathname
+      if rsp.async && url.pathname != @currentPage().pathname # fix rsp.async
 
-        unless options.ignoreSamePathConstraint
+        unless rsp.ignoreSamePathConstraint
           Utils.warn("Async response path is different from current page path")
           return
 
-      if options.pushState
+      if rsp.pushState
         @history.reflectNewUrl url
 
       Utils.withDefaults(nextPage, @history.currentBrowserState)
 
       if nextPage.action != 'graft'
-        @history.changePage(nextPage, options)
+        @history.changePage(nextPage)
         Utils.emitter.emit EVENTS.LOAD, @currentPage()
       else
         ##clean this up
@@ -98,32 +159,29 @@ class Controller
 
       @history.constrainPageCacheTo()
     else
-      options.onRequestError(xhr)
+      rsp.onRequestError(rsp) # unify this
 
-  createRequest: (url, opts)=>
-    Utils.createRequest(@, url, opts)
-
-  processResponse: (xhr) ->
-    if @hasValidResponse(xhr)
-      return @responseContent(xhr)
+  processResponse: (rsp) ->
+    if @hasValidResponse(rsp)
+      return @responseContent(rsp.body)
 
   hasValidResponse: (xhr) ->
     not @clientOrServerError(xhr) and @validContent(xhr) and not @downloadingFile(xhr)
 
-  responseContent: (xhr) ->
-    new Function("'use strict'; return " + xhr.responseText )()
+  responseContent: (body) ->
+    new Function("'use strict'; return " + body)()
 
   clientOrServerError: (xhr) ->
     400 <= xhr.status < 600
 
-  validContent: (xhr) ->
-    contentType = xhr.getResponseHeader('Content-Type')
+  validContent: (rsp) ->
+    contentType = rsp.header['content-type']
     jsContent = /^(?:text\/javascript|application\/x-javascript|application\/javascript)(?:;|$)/
 
     contentType? and contentType.match jsContent
 
   downloadingFile: (xhr) ->
-    (disposition = xhr.getResponseHeader('Content-Disposition'))? and
+    (disposition = xhr.header['content-disposition'])? and
       disposition.match /^attachment/
 
 

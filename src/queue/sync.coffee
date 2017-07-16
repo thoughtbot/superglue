@@ -1,18 +1,25 @@
 Utils = require('../utils.coffee')
 
 class Sync
-  constructor: (delegate)->
-    @delegate = delegate
+  constructor: ->
     @http = null
 
-  push: (url, options) ->
+  push: (req) ->
     Utils.emitter.emit('breezy:visit')
     @http?.abort()
-    @http = Utils.createRequest(@delegate, url, options)
-    @http.onloadend = =>
+    @http = Utils.createRequest(req)
+    @http.send(req.payload)
+    @http.end (err, rsp) =>
       @http = null
-    @http.onerror = =>
-      options.onRequestError(@http, url, options)
-    @http.send(options.payload)
+
+      if err || !rsp.ok
+        req.onRequestError(rsp, req.url, req)
+      else
+        req.respond(@optsForRespond(rsp))
+
+  optsForRespond: (rsp) ->
+    status: rsp.status
+    header: rsp.header
+    body: rsp.text
 
 module.exports = Sync

@@ -35,11 +35,13 @@
     "coffeeify": "^2.1.0",
     "eventemitter3": "^2.0.3",
     "history": "^4.6.3",
+    "superagent": "^3.5.2",
     "url-parse": "^1.1.9"
   },
   "bundledDependencies": [
     "history",
     "url-parse",
-    "eventemitter3"
+    "eventemitter3",
+    "superagent"
   ]
 }

@@ -2,44 +2,63 @@ DoublyLinkedList = require('../doubly_linked_list.coffee')
 Utils = require('../utils.coffee')
 
 class Async
-  constructor: (@delegate) ->
+  constructor: ->
     @dll = new DoublyLinkedList
     @active = true
+
     Utils.on 'breezy:visit', => @drain()
 
-  push:(url, options)->
-    xhr = Utils.createRequest(@delegate, url, options)
-    xhr.onError = ->
-      options.onRequestError?(null)
+  push:(req)->
+    http = Utils.createRequest(req)
 
-    @dll.push(xhr)
-    xhr._originalOnLoad = xhr.onload.bind(xhr)
+    element =
+      http: http
+      onload: (err, rsp) =>
+        if err || !rsp.ok
+          req.onRequestError?(rsp.xhr, req.url, req)
+        else
+          req.respond(@optsForRespond(rsp))
+      isDone: false
 
-    xhr.onload = =>
+    @dll.push(element)
+
+    http.send(req.payload)
+    http.end (err, rsp) =>
       if @active
-        xhr._isDone = true
-        node = @dll.head
-        while(node)
-          qxhr = node.element
-          if !qxhr._isDone
-            node = null
-          else
-            node = node.next
-            @dll.shift()
-            qxhr._originalOnLoad()
+        element.isDone = true
+        element.rsp = rsp
+        element.err = err
+        @attemptToProcess()
 
-    xhr.send(options.payload)
+  attemptToProcess: =>
+    node = @dll.head
+    while(node)
+      traversingElement = node.element
+      if !traversingElement.isDone
+        node = null
+      else
+        node = node.next
+        @dll.shift()
+        err = traversingElement.err
+        rsp = traversingElement.rsp
+        traversingElement.onload(err, rsp)
 
   drain: ->
     @active = false
     node = @dll.head
     while(node)
-      qxhr = node.element
-      qxhr.abort()
-      qxhr._isDone = true
+      traversingElement = node.element
+      traversingElement.http.abort()
+      traversingElement.isDone = true
       node = node.next
     @dll = new DoublyLinkedList
     @active = true
+
+  optsForRespond: (rsp) ->
+    status: rsp.status
+    header: rsp.header
+    body: rsp.text
+
 
 module.exports = Async
 

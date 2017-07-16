@@ -37,7 +37,7 @@ class Remote
 
   goToErrorPage: (xhr) ->
     crossOriginRedirectUrl = (xhr) ->
-      redirect = xhr.getResponseHeader('Location')
+      redirect = xhr.header['location']
       crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
 
       if redirect? and crossOrigin

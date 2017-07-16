@@ -82,7 +82,7 @@ class Snapshot
   refreshBrowserForNewAssets: =>
     document.location.reload()
 
-  changePage: (nextPage, options) =>
+  changePage: (nextPage) =>
     if @currentPage and @assetsChanged(nextPage)
       @refreshBrowserForNewAssets()
       return

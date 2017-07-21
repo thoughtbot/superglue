@@ -1,8 +1,6 @@
 ComponentUrl = require('./component_url.coffee')
 Controller = require('./controller.coffee')
 CSRFToken = require('./csrf_token.coffee')
-DoublyLinkedList = require('./doubly_linked_list.coffee')
-ParallelQueue = require('./parallel_queue.coffee')
 Remote = require('./remote.coffee')
 Snapshot = require('./snapshot.coffee')
 Utils = require('./utils.coffee')
@@ -74,16 +72,8 @@ setup = (obj) ->
   obj.supported = Utils.browserSupportsBreezy()
   obj.EVENTS = Utils.clone(EVENTS)
   obj.currentPage = controller.currentPage
-  obj.ComponentUrl = ComponentUrl
-  obj.Controller = Controller
-  obj.DoublyLinkedList = DoublyLinkedList
-  obj.ParallelQueue = ParallelQueue
-  obj.Remote = Remote
-  obj.Snapshot = Snapshot
-  obj.Utils = Utils
   obj.on = Utils.emitter.on.bind(Utils.emitter)
   obj.emitter = Utils.emitter
-  obj.Grafter = Utils.Grafter
   obj.CSRFToken = CSRFToken
   obj
 

@@ -1,7 +1,8 @@
+ajax = require('superagent')
 
-@testWithSession = (desc, callback) ->
+testWithSession = (desc, callback) ->
   QUnit.test desc, (assert)->
-    iframe = document.getElementById('pl-session')
+    iframe = document.getElementById('session')
     iframe.setAttribute('scrolling', 'yes')
     iframe.setAttribute('style', 'visibility: hidden;')
     iframe.setAttribute('src', "/app/session")
@@ -20,6 +21,12 @@
       @$ = (selector) => @document.querySelector(selector)
 
       callback.call(@, assert)
+      ajax.post('/__zuul/coverage/client')
+        .send(@window.__coverage__)
+        .end (err, res) ->
+          if (err)
+            console.log('error in coverage reports')
+            console.log(err)
       done()
 
-
+module.exports = testWithSession

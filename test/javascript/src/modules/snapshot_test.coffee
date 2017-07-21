@@ -1,3 +1,4 @@
+testWithSession = require('../helpers/helpers.coffee')
 QUnit.module "Snapshot"
 
 testWithSession "without transition cache", (assert) ->

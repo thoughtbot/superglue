@@ -1,3 +1,4 @@
+testWithSession = require('../helpers/helpers.coffee')
 QUnit.module "Cache"
 
 testWithSession "cache can only be set once", (assert) ->

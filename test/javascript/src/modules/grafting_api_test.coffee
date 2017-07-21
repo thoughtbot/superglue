@@ -1,3 +1,4 @@
+testWithSession = require('../helpers/helpers.coffee')
 QUnit.module "Grafting API"
 
 testWithSession "updating content node and rendering", (assert) ->

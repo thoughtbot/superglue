@@ -4,15 +4,18 @@
   "description": "Develop ReactJS apps the Rails Way",
   "main": "dist/breezy.js",
   "files": [
-    "dist",
     "lib/assets/javascripts"
   ],
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "bundle exec blade runner",
-    "build:rails": "browserify src/index.coffee -o lib/assets/javascripts/breezy.js -t coffeeify"
+    "test": "npm run build:test && bundle exec blade runner",
+    "blade": "bundle exec blade runner",
+    "build:test": "npm run build:test:src && npm run build:test:breezy ",
+    "build:test:src": "browserify test/javascript/src/test.coffee -o test/javascript/build/test.js -t coffeeify",
+    "build:test:breezy": "browserify src/index.coffee -o test/javascript/build/breezy.js -t coffeeify",
+    "build:rails": "browserify src/index.coffee -o lib/assets/javascript/breezy.js -t coffeeify"
   },
   "repository": {
     "type": "git",
@@ -30,18 +33,17 @@
   },
   "homepage": "https://github.com/jho406/breezy#readme",
   "dependencies": {
-    "babel": "^6.23.0",
-    "browserify": "^14.4.0",
-    "coffeeify": "^2.1.0",
     "eventemitter3": "^2.0.3",
     "history": "^4.6.3",
     "superagent": "^3.5.2",
     "url-parse": "^1.1.9"
   },
-  "bundledDependencies": [
-    "history",
-    "url-parse",
-    "eventemitter3",
-    "superagent"
-  ]
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "browserify": "^14.4.0",
+    "browserify-istanbul": "^2.0.0",
+    "coffeeify": "^2.1.0",
+    "istanbul": "^0.4.5",
+    "sinon": "^1.17.7"
+  }
 }

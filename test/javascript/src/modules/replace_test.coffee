@@ -1,4 +1,5 @@
 
+testWithSession = require('../helpers/helpers.coffee')
 QUnit.module "Replace test"
 
 testWithSession "replacing current state", (assert) ->

@@ -1,3 +1,5 @@
+testWithSession = require('../helpers/helpers.coffee')
+sinon = require('sinon')
 QUnit.module "Remote Attribute"
 
 createTarget = (html) ->

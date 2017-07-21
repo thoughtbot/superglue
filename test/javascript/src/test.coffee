@@ -1,4 +1,13 @@
-#= require_tree ./helpers
-#= require_tree ./modules
+require('./modules/cache_test.coffee')
+require('./modules/cache_test.coffee')
+require('./modules/component_url_test.coffee')
+require('./modules/csrf_token_test.coffee')
+require('./modules/doubly_linked_list_test.coffee')
+require('./modules/grafting_api_test.coffee')
+require('./modules/navigation_tests.coffee')
+require('./modules/parallel_queue_test.coffee')
+require('./modules/remote_test.coffee')
+require('./modules/replace_test.coffee')
+require('./modules/snapshot_test.coffee')
+require('./modules/utils_test.coffee')
 
-QUnit.config.hidepassed = true

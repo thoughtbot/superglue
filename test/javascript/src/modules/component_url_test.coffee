@@ -1,3 +1,5 @@
+testWithSession = require('../helpers/helpers.coffee')
+ComponentUrl = require('../../../../src/component_url.coffee')
 QUnit.module "Component URL"
 
 createTarget = (html) ->
@@ -7,7 +9,7 @@ createTarget = (html) ->
 
 testWithSession "#new parses an http url", (assert) ->
   url = 'https://www.example.com:3000/test?q=foobar#section'
-  component_url = new @Breezy.ComponentUrl(url)
+  component_url = new ComponentUrl(url)
   assert.equal component_url.href, 'https://www.example.com:3000/test?q=foobar#section'
   assert.equal component_url.protocol, 'https:'
   assert.equal component_url.host, 'www.example.com:3000'
@@ -22,10 +24,10 @@ testWithSession "#new parses an http url", (assert) ->
 
 testWithSession "#formatForXHR returns a url without a hash and without cache", (assert) ->
   url = 'https://www.example.com:3000/test?q=foobar#section'
-  component_url = new @Breezy.ComponentUrl(url)
+  component_url = new ComponentUrl(url)
   assert.equal component_url.formatForXHR().indexOf('https://www.example.com:3000/test?q=foobar&_='), 0
 
 testWithSession "#formatForXHR returns a cachable url with a mime buster when passed a cache true", (assert) ->
   url = 'https://www.example.com:3000/test?q=foobar#section'
-  component_url = new @Breezy.ComponentUrl(url)
+  component_url = new ComponentUrl(url)
   assert.equal component_url.formatForXHR(cache: true), 'https://www.example.com:3000/test?q=foobar&__=0'

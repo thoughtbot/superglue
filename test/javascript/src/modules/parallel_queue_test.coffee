@@ -1,3 +1,6 @@
+sinon = require('sinon')
+testWithSession = require('../helpers/helpers.coffee')
+ParallelQueue = require('../../../../src/parallel_queue.coffee')
 
 QUnit.module "ParallelQueue"
 
@@ -5,7 +8,7 @@ testWithSession "#push will add an XHR to the q", (assert) ->
   xhr = new sinon.FakeXMLHttpRequest()
   xhr.onload = ->{}
 
-  q = new @Breezy.ParallelQueue
+  q = new ParallelQueue
   q.push xhr
 
   assert.equal q.dll.length, 1
@@ -17,7 +20,7 @@ testWithSession "#push, when a pushed xhr finishes, it will attempt to process X
   xhr2 = {}
   xhr2.onload = -> {}
 
-  q = new @Breezy.ParallelQueue
+  q = new ParallelQueue
   q.push xhr1
   q.push xhr2
 
@@ -34,7 +37,7 @@ testWithSession "#push, when a pushed xhr finishes, it will attempt to process X
   xhr2 = {}
   xhr2.onload = -> {}
 
-  q = new @Breezy.ParallelQueue
+  q = new ParallelQueue
   q.push xhr1
   q.push xhr2
 
@@ -50,7 +53,7 @@ testWithSession "#drain resets the queue and any existing XHRs will not onload",
   xhr1.abort = ->
     xhr1.status = 0
 
-  q = new @Breezy.ParallelQueue
+  q = new ParallelQueue
   q.push xhr1
 
   assert.equal q.dll.length, 1

@@ -1,3 +1,4 @@
+testWithSession = require('../helpers/helpers.coffee')
 QUnit.module "CSRF Token"
 
 createTarget = (html) ->

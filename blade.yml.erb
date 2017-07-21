@@ -1,22 +1,13 @@
 load_paths:
-  - lib/assets/javascripts
-  - test/javascript/src
-  - test/javascript/vendor
+  - test/javascript/build
+  - test/javascript/static
 
 logical_paths:
-  - sinon-1.17.5.js
   - breezy.js
   - test.js
 
-build:
-  logical_paths:
-    - breezy.js
-  path: dist
-  js_compressor: uglifier
-
 require:
   - <%= File.join(File.expand_path(File.dirname(__FILE__)), "test/blade_helper.rb") %>
-  - sprockets/export
 
 plugins:
   sauce_labs:

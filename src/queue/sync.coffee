@@ -9,6 +9,7 @@ class Sync
     @http?.abort()
     @http = Utils.createRequest(req)
     @http.send(req.payload)
+    @http.on('progress', req.onProgress)
     @http.end (err, rsp) =>
       @http = null
 

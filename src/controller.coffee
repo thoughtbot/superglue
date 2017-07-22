@@ -6,6 +6,7 @@ CSRFToken = require('./csrf_token.coffee')
 EVENTS = require('./events.coffee')
 PAGE_CACHE_SIZE = 20
 Config = require('./config.coffee')
+ProgressBar = require('./progress_bar.coffee')
 
 class Response
   constructor: ({@url, @ignoreSamePathConstraint, @onRequestError, @onRequestEnd, @pushState})->
@@ -15,6 +16,7 @@ class Request
     @header,
     @payload,
     @method,
+    @onProgress,
     @onRequestError,
     @onRequestEnd,
     @pushState,
@@ -42,6 +44,7 @@ class Controller
     @history = new Snapshot(this, history)
     @transitionCacheEnabled = false
     @requestCachingEnabled = true
+    @progressBar = new ProgressBar
 
   setInitialUrl: (url) =>
     @history.setInitialUrl(url)
@@ -65,6 +68,8 @@ class Controller
       return
 
     @history.cacheCurrentPage()
+    if options.queue == 'sync'
+      @progressBar.start()
     restorePoint = @history.transitionCacheFor(url.absolute)
 
     if @transitionCacheEnabled and restorePoint and restorePoint.transition_cache
@@ -113,7 +118,7 @@ class Controller
     disable
 
   restore: (cachedPage, options = {}) =>
-    @http?.abort()
+    @progressBar.done()
     @history.changePage(cachedPage, options)
 
     Utils.emitter.emit EVENTS.RESTORE
@@ -127,6 +132,9 @@ class Controller
   cache: (key, value) =>
     return @atomCache[key] if value == null
     @atomCache[key] ||= value
+
+  onProgress: (event)=>
+    @progressBar.advanceFromEvent(event)
 
   onLoad: (rsp) =>
     #react-native might not need the following line.
@@ -142,6 +150,7 @@ class Controller
       if rsp.async && url.pathname != @currentPage().pathname # fix rsp.async
 
         unless rsp.ignoreSamePathConstraint
+          @progressBar.done()
           Utils.warn("Async response path is different from current page path")
           return
 
@@ -157,6 +166,7 @@ class Controller
         ##clean this up
         @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)
 
+      @progressBar.done()
       @history.constrainPageCacheTo()
     else
       rsp.onRequestError(rsp) # unify this

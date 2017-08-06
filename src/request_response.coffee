@@ -1,6 +1,6 @@
 
 class Response
-  constructor: ({@url, @ignoreSamePathConstraint, @onRequestError, @onRequestEnd, @pushState})->
+  constructor: ({@url, @ignoreSamePathConstraint, @onRequestError, @onRequestEnd, @pushState, @queue})->
 
 class Request
   constructor: ({@controller, @url,
@@ -13,6 +13,7 @@ class Request
     @pushState,
     @cacheRequest,
     @ignoreSamePathConstraint
+    @queue
   }) ->
       @response = new Response
         onRequestError: @onRequestError
@@ -20,6 +21,7 @@ class Request
         onRequestEnd: @onRequestEnd
         pushState: @pushState
         ignoreSamePathConstraint: @ignoreSamePathConstraint
+        queue: @queue
 
   respond: ({status, header, body})->
     @response.url = @url

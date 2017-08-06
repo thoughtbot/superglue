@@ -13,7 +13,8 @@ class Sync
     @http.end (err, rsp) =>
       @http = null
       if err || !rsp.ok
-        req.onRequestError(rsp, req.url, req)
+        Utils.warn("The response had an error:' #{err.message}")
+        req.onRequestError(@optsForRespond(rsp))
       else
         req.respond(@optsForRespond(rsp))
 

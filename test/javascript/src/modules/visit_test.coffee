@@ -18,8 +18,8 @@ if window?
 test "#visit, a successful visit", (assert) ->
   done = assert.async()
   breezyClickFired = requestFinished = requestStarted = false
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
-  @Breezy.setInitialState('/', initialState)
 
   options =
     onRequestStart: ->
@@ -62,8 +62,8 @@ test "#visit, error responses should call the error callback", (assert) ->
   done = assert.async()
   breezyClickFired = requestFinished = requestStarted = false
 
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
-  @Breezy.setInitialState('/', initialState)
 
   options =
     onRequestStart: ->
@@ -95,25 +95,25 @@ test "#visit, error responses should call the error callback", (assert) ->
 test "#visits do not pushState when URL is the same", (assert) ->
   done = assert.async()
   #todo, add a some logging to requests in the queue if error
-  @Breezy.setInitialState('/app/session', initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   history = @Breezy.controller.history.history
   load = 0
   @Breezy.on 'breezy:load', =>
     load += 1
     if load is 1
-      assert.equal history.length, originalHistoryLength
+      assert.equal history.length, originalHistoryLength + 1
       setTimeout (=> @Breezy.visit('/app/session#test')), 0
     else if load is 2
       setTimeout (=>
-        assert.equal history.length, originalHistoryLength
+        assert.equal history.length, originalHistoryLength + 1
         done()
       ), 0
   originalHistoryLength = history.length
   @Breezy.visit('/app/session')
 
 test "visits to content with Breezy.cache stores caches correctly", (assert) ->
-  @Breezy.setInitialState('/', initialState)
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
   done = assert.async()
   @Breezy.on 'breezy:load', (data) =>
@@ -129,7 +129,7 @@ test "visits to content with Breezy.cache stores caches correctly", (assert) ->
   @Breezy.visit('/app/success_with_russian_doll', options)
 
 test "visits to content with a Breezy.graft response will graft data appropriately", (assert) ->
-  @Breezy.setInitialState('/', initialState)
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
 
   done = assert.async()
@@ -148,7 +148,7 @@ test "visits to content with a Breezy.graft response will graft data appropriate
   @Breezy.visit('/app/success_with_graft', options)
 
 test "visits to content with an async Breezy.visit will kick off an async request for new content", (assert) ->
-  @Breezy.setInitialState('/', initialState)
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
   done = assert.async()
   load = 0
@@ -170,7 +170,7 @@ test "visits to content with an async Breezy.visit will kick off an async reques
 
 
 test "visits", (assert) ->
-  @Breezy.setInitialState('/', initialState)
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
   done = assert.async()
 
@@ -182,7 +182,7 @@ test "visits", (assert) ->
   @Breezy.visit('app/success')
 
 test "visits", (assert) ->
-  @Breezy.setInitialState('/', initialState)
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
   done = assert.async()
 
@@ -194,7 +194,7 @@ test "visits", (assert) ->
   @Breezy.visit('/app/success')
 
 test "visits", (assert) ->
-  @Breezy.setInitialState('/', initialState)
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
   done = assert.async()
 
@@ -217,8 +217,8 @@ test "visits", (assert) ->
 # #   Breezy.visit('http://localhost:9876/success')
 #
 test "#visits using an absolute URL are successful", (assert) ->
+  @Breezy.setInitialState(pathname: '/', state: initialState)
   @Breezy.config.setBaseUrl('http://localhost:9876')
-  @Breezy.setInitialState('/', initialState)
   done = assert.async()
 
   @Breezy.on 'breezy:load', (data) ->

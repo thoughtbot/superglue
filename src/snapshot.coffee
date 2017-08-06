@@ -22,8 +22,7 @@ class Snapshot
       previousUrl = new ComponentUrl(@currentBrowserState.url)
       newUrl = new ComponentUrl(location.state.url)
 
-      # is this really absolute???
-      if restorePoint = @pageCache[newUrl.absolute]
+      if restorePoint = @pageCache[newUrl.pathname]
         @cacheCurrentPage()
         @currentPage = restorePoint
         @controller.restore(@currentPage)

@@ -18,24 +18,24 @@ QUnit.module "Controller", ->
 
   QUnit.module "request", (hooks) ->
     hooks.afterEach ->
-      this.controller.reset()
+      @controller.reset()
       Config.removeQueue('fake')
       Breezy.reset()
 
     hooks.beforeEach ->
       Config.addQueue('fake', FakeQueue)
-      this.history = history = History.createMemoryHistory()
-      this.controller = controller = new Controller(history)
+      @history = history = History.createMemoryHistory()
+      @controller = controller = new Controller(history)
       controller.history.setInitialUrl('/')
       controller.history.currentPage =
         data: {}
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
-      this.snapshot = controller.history
+      @snapshot = controller.history
 
     test 'pushes a request object into a specified queue', (assert) ->
-      controller = this.controller
+      controller = @controller
       controller.request('/foo', queue: 'fake')
       assert.equal controller.queues['fake'].items.length, 1
 
@@ -52,7 +52,7 @@ QUnit.module "Controller", ->
 
     test 'with enableTransitionCache, restores a page if there is a restorepoint available', (assert) ->
       #todo: check here for refactor opportunity. esp history.reflectnewurl
-      this.controller.enableTransitionCache()
+      @controller.enableTransitionCache()
       cache =
         data:
           heading: 'Some heading'
@@ -61,23 +61,23 @@ QUnit.module "Controller", ->
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
-      this.snapshot.pageCache['/foo'] = cache
+      @snapshot.pageCache['/foo'] = cache
 
-      spy = sinon.spy(this.controller, 'restore')
-      this.controller.request('/foo', queue: 'fake')
+      spy = sinon.spy(@controller, 'restore')
+      @controller.request('/foo', queue: 'fake')
       assert.ok spy.calledWith(cache)
-      assert.equal this.history.location.pathname, '/foo'
+      assert.equal @history.location.pathname, '/foo'
 
     test 'with disableTransitionCache, will not restore a page even if there is a restorepoint available', (assert) ->
       #todo: check here for refactor opportunity. esp history.reflectnewurl
-      this.controller.disableRequestCaching()
+      @controller.disableRequestCaching()
       cache = {}
-      this.snapshot.pageCache['/foo'] = cache
+      @snapshot.pageCache['/foo'] = cache
 
-      spy = sinon.spy(this.controller, 'restore')
-      this.controller.request('/foo', queue: 'fake')
+      spy = sinon.spy(@controller, 'restore')
+      @controller.request('/foo', queue: 'fake')
       assert.notOk spy.calledWith(cache)
-      assert.equal this.history.location.pathname, '/'
+      assert.equal @history.location.pathname, '/'
 
 # test 'request calls oncrossoriginrequest when url is cross origin', (assert) ->
 #   Config.addQueue('fake', FakeQueue)
@@ -128,8 +128,8 @@ QUnit.module "Controller", ->
   QUnit.module "replace", (hooks) ->
     hooks.beforeEach ->
       Config.addQueue('fake', FakeQueue)
-      this.history = history = History.createMemoryHistory()
-      this.controller = controller = new Controller(history)
+      @history = history = History.createMemoryHistory()
+      @controller = controller = new Controller(history)
       controller.enableTransitionCache()
       controller.history.setInitialUrl('/')
       controller.history.currentPage =
@@ -156,11 +156,11 @@ QUnit.module "Controller", ->
 
       Utils.on 'breezy:load', =>
         assert.ok true
-        assert.equal this.history.location.pathname, '/', 'does not change the url'
-        assert.equal this.controller.currentPage(), nextPage
+        assert.equal @history.location.pathname, '/', 'does not change the url'
+        assert.equal @controller.currentPage(), nextPage
         done()
 
-      this.controller.replace(nextPage)
+      @controller.replace(nextPage)
 
   QUnit.module "restore", (hooks) ->
     hooks.afterEach ->
@@ -168,8 +168,8 @@ QUnit.module "Controller", ->
 
     hooks.beforeEach ->
       Config.addQueue('fake', FakeQueue)
-      this.history = history = History.createMemoryHistory()
-      this.controller = controller = new Controller(history)
+      @history = history = History.createMemoryHistory()
+      @controller = controller = new Controller(history)
       controller.enableTransitionCache()
       controller.history.setInitialUrl('/')
       controller.history.currentPage =
@@ -197,11 +197,11 @@ QUnit.module "Controller", ->
 
       Utils.on 'breezy:load', =>
         assert.equal calls, 1
-        assert.equal this.history.location.pathname, '/', 'does not change the url'
-        assert.equal this.controller.currentPage(), nextPage
+        assert.equal @history.location.pathname, '/', 'does not change the url'
+        assert.equal @controller.currentPage(), nextPage
         done()
 
-      this.controller.restore(nextPage)
+      @controller.restore(nextPage)
 
   QUnit.module "onLoad", (hooks) ->
     hooks.afterEach ->
@@ -210,8 +210,8 @@ QUnit.module "Controller", ->
     hooks.beforeEach ->
       Config.addQueue('fake', FakeQueue)
       requestEndCalled = requestErrorCalled = false
-      this.history = history = History.createMemoryHistory()
-      this.controller = controller = new Controller(history)
+      @history = history = History.createMemoryHistory()
+      @controller = controller = new Controller(history)
       controller.enableTransitionCache()
       controller.history.setInitialUrl('/')
       controller.history.currentPage =
@@ -220,7 +220,7 @@ QUnit.module "Controller", ->
         transition_cache: true
         assets: ['application-123.js']
 
-      this.response = ->
+      @response = ->
         status: 200
         header:
           'content-type': 'text/javascript'
@@ -235,62 +235,77 @@ QUnit.module "Controller", ->
           })();
         """
         ignoreSamePathContraint: false
+        queue: 'sync'
         pushState: true
         onRequestEnd: ->{}
         onRequestError: ->{}
 
     test 'calls the passed callbacks on success from the server', (assert) ->
       requestEndCalled = requestErrorCalled = false
-      rsp = this.response()
+      rsp = @response()
       rsp.onRequestEnd = -> requestEndCalled = true
       rsp.onRequestError = -> requestErrorCalled = true
 
-      this.controller.onLoad(rsp)
+      @controller.onLoad(rsp)
       assert.ok requestEndCalled
       assert.notOk requestErrorCalled
 
     test 'calls on error callback on server errors', (assert) ->
       requestEndCalled = requestErrorCalled = false
-      rsp = this.response()
+      rsp = @response()
       rsp.onRequestEnd = -> requestEndCalled = true
       rsp.onRequestError = -> requestErrorCalled = true
 
       rsp.status = 400
-      this.controller.onLoad(rsp)
+      @controller.onLoad(rsp)
       assert.ok requestEndCalled
       assert.ok requestErrorCalled
 
     test 'does nothing on a rsp status of 0 or 204', (assert) ->
       requestEndCalled = requestErrorCalled = false
-      rsp = this.response()
+      rsp = @response()
       rsp.onRequestEnd = -> requestEndCalled = true
       rsp.onRequestError = -> requestErrorCalled = true
 
       rsp.status = 204
-      this.controller.onLoad(rsp)
+      @controller.onLoad(rsp)
       assert.notOk requestEndCalled
       assert.notOk requestErrorCalled
 
     test 'pushes state when pushstate is true', (assert) ->
       requestEndCalled = requestErrorCalled = false
-      rsp = this.response()
+      rsp = @response()
       rsp.onRequestEnd = -> requestEndCalled = true
       rsp.onRequestError = -> requestErrorCalled = true
 
       rsp.url = '/foobar'
       rsp.pushState = true
 
-      this.controller.onLoad(rsp)
-      assert.equal this.history.location.pathname, '/foobar'
+      @controller.onLoad(rsp)
+      assert.equal @history.location.pathname, '/foobar'
 
     test 'does not pushes state when pushstate is false', (assert) ->
       requestEndCalled = requestErrorCalled = false
-      rsp = this.response()
+      rsp = @response()
       rsp.onRequestEnd = -> requestEndCalled = true
       rsp.onRequestError = -> requestErrorCalled = true
 
       rsp.url = '/foobar'
       rsp.pushState = false
 
-      this.controller.onLoad(rsp)
-      assert.equal this.history.location.pathname, '/'
+      @controller.onLoad(rsp)
+      assert.equal @history.location.pathname, '/'
+
+    test 'warns if the async path is different from he current path', (assert) ->
+      spy = sinon.spy(Utils, 'warn')
+      requestEndCalled = requestErrorCalled = false
+      rsp = @response()
+      rsp.onRequestEnd = -> requestEndCalled = true
+      rsp.onRequestError = -> requestErrorCalled = true
+      rsp.queue = 'async'
+
+      rsp.url = '/foobar'
+      rsp.pushState = false
+
+      @controller.onLoad(rsp)
+      assert.ok spy.calledWith('Async response path is different from current page path')

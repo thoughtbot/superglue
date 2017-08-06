@@ -12,7 +12,7 @@ test "updating content node and rendering", (assert) ->
     address:
       zip: 10002
 
-  Breezy.setInitialState('/', initialState)
+  Breezy.setInitialState(pathname: '/', state: initialState)
 
   done = assert.async()
   load = 0

@@ -10,7 +10,7 @@ Request = require('./request_response').request
 
 class Controller
   constructor: (history, onCrossOriginRequest = ->{})->
-    @atomCache = {} #rename me....
+    @atomCache = {} #todo rename me....
     @queues = {}
     @history = new Snapshot(this, history)
     @unlisten = history.listen(@history.onHistoryChange)
@@ -30,8 +30,9 @@ class Controller
   setInitialUrl: (url) =>
     @history.setInitialUrl(url)
 
-  setInitialState: (url, state) =>
-    @setInitialUrl(url)
+  setInitialState: ({pathname, state }) =>
+    @setInitialUrl(pathname)
+    @history.setInitialUrl(pathname)
     @setCSRFToken(state.csrf_token)
     @replace(state)
 
@@ -92,6 +93,7 @@ class Controller
       onRequestEnd: options.onRequestEnd
       cacheRequest: options.cacheRequest
       pushState: options.pushState
+      queue: options.queue
 
     if options.silent?
       req.header['x-silent'] =  options.silent
@@ -138,20 +140,17 @@ class Controller
     redirectedUrl = rsp.header['x-xhr-redirected-to']
     url = new ComponentUrl(redirectedUrl || rsp.url)
 
-    if rsp.status == 0 || rsp.status == 204
-      #todo: rsp status of 0 needs to error out
+    if rsp.status == 204
       return
 
     rsp.onRequestEnd?(url.absolute)
     nextPage =  @processResponse(rsp)
 
     if nextPage
-      if rsp.async && url.pathname != @currentPage().pathname #todo: fix rsp.async thats wrong..
+      if rsp.queue != 'sync' && url.pathname != @currentPage().pathname
 
         unless rsp.ignoreSamePathConstraint
-          @progressBar.done() #todo: do i really want to do this?
           Utils.warn("Async response path is different from current page path")
-          return
 
       if rsp.pushState
         @history.reflectNewUrl url
@@ -168,7 +167,7 @@ class Controller
       @progressBar.done()
       @history.constrainPageCacheTo()
     else
-      rsp.onRequestError(rsp) # unify this
+      rsp.onRequestError(rsp)
 
   processResponse: (rsp) ->
     if @hasValidResponse(rsp)

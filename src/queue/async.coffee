@@ -15,7 +15,8 @@ class Async
       http: http
       onload: (err, rsp) =>
         if err || !rsp.ok
-          req.onRequestError?(rsp.xhr, req.url, req)
+          Utils.warn("The response had an error:' #{err.message}")
+          req.onRequestError?(@optsForRespond(rsp))
         else
           req.respond(@optsForRespond(rsp))
       isDone: false

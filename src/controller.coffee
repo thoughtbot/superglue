@@ -44,6 +44,11 @@ class Controller
 
   request: (url, options = {}) =>
     options = Utils.reverseMerge options,
+      onProgress: -> {}
+      onRequestStart: -> {}
+      onRequestError: -> {}
+      onRequestEnd: -> {}
+      onProgress: -> {}
       pushState: true
       queue: 'sync'
 

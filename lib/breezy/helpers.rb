@@ -9,7 +9,7 @@ module Breezy
     def breezy_snippet
       if defined?(@breezy) && @breezy
         snippet = @breezy.gsub(/\;$/, '')
-        "Breezy.replace(#{snippet});".html_safe
+        "Breezy.setInitialState(document.location.href, #{snippet});".html_safe
       end
     end
 

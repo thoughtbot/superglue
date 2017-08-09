@@ -20,6 +20,14 @@ class Controller
   setInitialUrl: (url) =>
     @history.setInitialUrl(url)
 
+  setInitialState: (url, state) =>
+    @setInitialUrl(url)
+    @setCSRFToken(state.csrf_token)
+    @replace(state)
+
+  setCSRFToken: (token) =>
+    @csrfToken = token
+
   currentPage: =>
     @history.currentPage
 

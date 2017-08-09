@@ -94,8 +94,7 @@ class Snapshot
       return
 
     @currentPage = nextPage
-
-    CSRFToken.update @currentPage.csrf_token if @currentPage.csrf_token?
+    @controller.csrfToken = @currentPage.csrf_token if @currentPage.csrf_token?
     @updateCurrentBrowserState()
 
   assetsChanged: (nextPage) =>

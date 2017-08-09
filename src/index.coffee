@@ -73,7 +73,6 @@ setup = (obj) ->
   obj.currentPage = controller.currentPage
   obj.on = Utils.emitter.on.bind(Utils.emitter)
   obj.emitter = Utils.emitter
-  obj.CSRFToken = CSRFToken
   obj.clearCache = controller.clearCache
   obj.reset = ->
     Utils.emitter.removeAllListeners('breezy:load')

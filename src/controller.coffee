@@ -75,7 +75,6 @@ class Controller
 
   createRequest: (url, options)=>
     jsAccept = 'text/javascript, application/x-javascript, application/javascript'
-    csrfToken = CSRFToken.get().token
 
     req =
       controller: @
@@ -97,8 +96,8 @@ class Controller
     if options.contentType?
       req.header['content-type'] =  options.contentType
 
-    if csrfToken?
-      req.header['x-csrf-token'] = csrfToken
+    if @csrfToken?
+      req.header['x-csrf-token'] = @csrfToken
 
     new Request req
 

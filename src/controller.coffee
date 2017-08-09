@@ -4,37 +4,9 @@ DoublyLinkedList = require('./doubly_linked_list')
 Utils = require('./utils')
 EVENTS = require('./events')
 PAGE_CACHE_SIZE = 20
-Config = require('./config.coffee')
-ProgressBar = require('./progress_bar.coffee')
-
-class Response
-  constructor: ({@url, @ignoreSamePathConstraint, @onRequestError, @onRequestEnd, @pushState})->
-
-class Request
-  constructor: ({@controller, @url,
-    @header,
-    @payload,
-    @method,
-    @onProgress,
-    @onRequestError,
-    @onRequestEnd,
-    @pushState,
-    @cacheRequest,
-    @ignoreSamePathConstraint
-  }) ->
-      @response = new Response
-        onRequestError: @onRequestError
-        url: @url
-        onRequestEnd: @onRequestEnd
-        pushState: @pushState
-        ignoreSamePathConstraint: @ignoreSamePathConstraint
-
-  respond: ({status, header, body})->
-    @response.url = @url
-    @response.status = status
-    @response.header = header
-    @response.body = body
-    @controller.onLoad(@response)
+Config = require('./config')
+ProgressBar = require('./progress_bar')
+Request = require('./request_response').request
 
 class Controller
   constructor: (history)->

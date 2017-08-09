@@ -61,6 +61,7 @@ setup = (obj) ->
   obj.controller = controller
   obj.graftByKeypath = controller.history.graftByKeypath
   obj.visit = visit
+  obj.config = Config
   obj.replace = controller.replace
   obj.cache = controller.cache
   obj.pagesCached = controller.history.pagesCached

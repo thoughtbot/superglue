@@ -4,7 +4,7 @@ uniqueId = ->
   new Date().getTime().toString(36)
 
 class ComponentUrl
-  constructor: (@original) ->
+  constructor: (@original, @baseUrl = '') ->
     return @original if @original?.constructor is ComponentUrl
     @_parse()
 
@@ -41,7 +41,7 @@ class ComponentUrl
     )
 
   _parse: ->
-    { @href, @protocol, @host, @hostname, @port, @pathname, @query, @hash } = parse(@original)
+    { @href, @protocol, @host, @hostname, @port, @pathname, @query, @hash } = parse(@original, @baseUrl)
 
     @origin = [@protocol, '//', @hostname].join ''
     @origin += ":#{@port}" unless @port.length is 0

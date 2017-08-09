@@ -32,7 +32,7 @@ class Controller
       queue: 'sync'
 
     queue = @queue = @fetchQueue(options.queue)
-    url = new ComponentUrl url
+    url = new ComponentUrl url, Config.fetchBaseUrl()
 
     if url.crossOrigin()
       @onCrossOriginRequest(url)

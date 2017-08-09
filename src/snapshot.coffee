@@ -22,6 +22,7 @@ class Snapshot
       previousUrl = new ComponentUrl(@currentBrowserState.url)
       newUrl = new ComponentUrl(location.state.url)
 
+      # is this really absolute???
       if restorePoint = @pageCache[newUrl.absolute]
         @cacheCurrentPage()
         @currentPage = restorePoint
@@ -56,14 +57,14 @@ class Snapshot
       positionY: window.pageYOffset
       positionX: window.pageXOffset
       url: currentUrl.pathToHash
-      pathname: currentUrl.pathToHash
+      pathname: currentUrl.pathname
       transition_cache: true
 
-    @pageCache[currentUrl.absolute] = @currentPage
+    @pageCache[currentUrl.pathname] = @currentPage
 
   setInitialUrl: (href) =>
     url = new ComponentUrl(href)
-    @history.replace url.pathname, { breezy: true, url: url.href }
+    @history.replace url.pathname, { breezy: true, url: url.pathname}
     @currentBrowserState = @history.location.state
 
   removeParamFromUrl: (url, parameter) =>
@@ -72,15 +73,16 @@ class Snapshot
       .replace(/^([^#]*)((\?)&|\?(#|$))/,'$1$3$4')
 
   reflectNewUrl: (url) =>
+    #todo: add somemore test for this one, has no hash??
     currentComponentUrl = new ComponentUrl(@currentBrowserState.url)
-
-    if (url = new ComponentUrl url).absolute != currentComponentUrl.href
+    nextUrl = new ComponentUrl url
+    if nextUrl.pathname != currentComponentUrl.pathname
+      url = new ComponentUrl(nextUrl, Config.fetchBaseUrl())
       preservedHash = if url.hasNoHash() then currentComponentUrl.hash else ''
       fullUrl = url.pathname + preservedHash
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
       fullUrl = @removeParamFromUrl(fullUrl, '__')
-
-      @history.push(fullUrl, { breezy: true, url: url.absolute + preservedHash })
+      @history.push(fullUrl, { breezy: true, url: url.pathname })
 
   updateCurrentBrowserState: =>
     @currentBrowserState = @history.location.state

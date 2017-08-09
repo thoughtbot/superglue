@@ -64,8 +64,8 @@ class Controller
     @history.cacheCurrentPage()
     if options.queue == 'sync'
       @progressBar.start()
-    restorePoint = @history.transitionCacheFor(url.absolute)
 
+    restorePoint = @history.transitionCacheFor(url.pathname)
     if @transitionCacheEnabled and restorePoint and restorePoint.transition_cache
       @history.reflectNewUrl(url)
       @restore(restorePoint)

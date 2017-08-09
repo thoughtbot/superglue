@@ -83,7 +83,7 @@ class Controller
       url: url
       header:
         'accept': jsAccept
-        'x-xhr-referer': @getRefererUrl()
+        'x-xhr-referer': @currentPage().url
         'x-requested-with': 'XMLHttpRequest'
       payload: options.payload
       method: options.requestMethod || 'GET'

@@ -25,8 +25,6 @@ progressBar = controller.progressBar
 controller.onCrossOriginRequest = (url) ->
   document.location.href = url.absolute
 
-controller.getRefererUrl = ->
-  document.location.href
 
 ProgressBarAPI = {}
 

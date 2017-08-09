@@ -10,12 +10,15 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm run build:test && bundle exec blade runner",
+    "test": "npm run browserify:test && npm run browserify:src && npm run blade",
     "blade": "bundle exec blade runner",
-    "build:test": "npm run build:test:src && npm run build:test:breezy ",
-    "build:test:src": "browserify test/javascript/src/test.coffee -o test/javascript/build/test.js -t coffeeify",
-    "build:test:breezy": "browserify src/index.coffee -o test/javascript/build/breezy.js -t coffeeify",
-    "build:rails": "browserify src/index.coffee -o lib/assets/javascript/breezy.js -t coffeeify"
+
+    "browserify:test": "mkdir -p tmp/browserify/ && browserify test/javascript/src/test.coffee -o tmp/browserify/test.js -t coffeeify --extension='.coffee'",
+    "browserify:src": "mkdir -p lib/assets/javascript/ && browserify src/index.coffee -o lib/assets/javascript/breezy.js -t coffeeify --extension='.coffee'",
+
+    "decaf:src": "rm -rf tmp/src && ./node_modules/coffeescript/bin/coffee -o tmp/decaf/breezy -c src/",
+    "decaf:test": "rm -rf  tmp/test/javascript/src && ./node_modules/coffeescript/bin/coffee -o tmp/test/javascript/src -c test/javascript/src",
+    "qunit:node": "rm -rf tmp/test && npm run decaf:src && npm run decaf:test && cp -a tmp/decaf/breezy tmp/src && ./node_modules/qunit/bin/cli.js  -c tmp/src/index.js -t tmp/test/javascript/src/test.js"
   },
   "repository": {
     "type": "git",
@@ -43,7 +46,12 @@
     "browserify": "^14.4.0",
     "browserify-istanbul": "^2.0.0",
     "coffeeify": "^2.1.0",
+    "coffeescript": "^1.12.7",
     "istanbul": "^0.4.5",
-    "sinon": "^1.17.7"
+    "lodash": "^4.17.4",
+    "qunit": "^1.0.0",
+    "sinon": "^1.17.7",
+    "superagent-mock": "^3.5.0",
+    "superagent-prefix": "0.0.2"
   }
 }

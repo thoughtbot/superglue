@@ -9,8 +9,8 @@ ProgressBar = require('./progress_bar')
 Request = require('./request_response').request
 
 class Controller
-  constructor: (history)->
-    @atomCache = {}
+  constructor: (history, onCrossOriginRequest = ->{})->
+    @atomCache = {} #rename me....
     @queues = {}
     @history = new Snapshot(this, history)
     @unlisten = history.listen(@history.onHistoryChange)
@@ -18,6 +18,8 @@ class Controller
     @transitionCacheEnabled = false
     @requestCachingEnabled = true
     @progressBar = new ProgressBar
+    @onCrossOriginRequest = onCrossOriginRequest
+
   reset: ->
     @transitionCacheEnabled = false
     @atomCache = {}

@@ -85,12 +85,15 @@ class Snapshot
   updateCurrentBrowserState: =>
     @currentBrowserState = @history.location.state
 
-  refreshBrowserForNewAssets: =>
-    document.location.reload()
+  refreshBrowserForNewAssets: (nextPage) =>
+    if window? and @currentPage and @assetsChanged(nextPage)
+      document.location.reload()
+      true
+    else
+      false
 
   changePage: (nextPage) =>
-    if @currentPage and @assetsChanged(nextPage)
-      @refreshBrowserForNewAssets()
+    if @refreshBrowserForNewAssets(nextPage)
       return
 
     @currentPage = nextPage

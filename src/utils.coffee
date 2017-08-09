@@ -36,6 +36,9 @@ withDefaults = (page, state) =>
       positionX: 0
       csrf_token: null
 
+directBrowserToUrl = (url) ->
+  document.location.href = url.absolute
+
 browserIsBuggy = () ->
 # Copied from https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
   ua = navigator.userAgent
@@ -187,6 +190,7 @@ module.exports =
   withDefaults: withDefaults
   browserSupportsBreezy: browserSupportsBreezy
   intersection: intersection
+  directBrowserToUrl: directBrowserToUrl
   triggerEvent: triggerEvent
   createRequest: createRequest
   Grafter: Grafter #todo: extract me!

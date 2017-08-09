@@ -8,6 +8,9 @@ addQueue = (name, obj) =>
 fetchQueue = (name) ->
   queues[name]
 
+removeQueue = (name) ->
+  delete queues[name]
+
 setBaseUrl = (url) ->
   baseUrl = url
 
@@ -16,6 +19,7 @@ fetchBaseUrl = ->
 
 module.exports =
   addQueue: addQueue
+  removeQueue: removeQueue
   fetchQueue: fetchQueue
   setBaseUrl: setBaseUrl
   fetchBaseUrl: fetchBaseUrl

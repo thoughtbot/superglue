@@ -11,6 +11,12 @@ class Snapshot
     @currentPage = null
     @loadedAssets= null
 
+  reset: =>
+    @pageCache = {}
+    @currentPage = null
+    @currentBrowserState = null
+    @loadedAssets = null
+
   onHistoryChange: (location, action) =>
     if action == 'POP' && location.state?.breezy && location.state.url!= @currentBrowserState.url
       previousUrl = new ComponentUrl(@currentBrowserState.url)

@@ -74,6 +74,11 @@ setup = (obj) ->
   obj.on = Utils.emitter.on.bind(Utils.emitter)
   obj.emitter = Utils.emitter
   obj.CSRFToken = CSRFToken
+  obj.clearCache = controller.clearCache
+  obj.reset = ->
+    Utils.emitter.removeAllListeners('breezy:load')
+    Config.setBaseUrl('')
+    controller.reset()
   obj
 
 platform = window ? exports

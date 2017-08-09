@@ -13,9 +13,17 @@ class Controller
     @atomCache = {}
     @queues = {}
     @history = new Snapshot(this, history)
+    @unlisten = history.listen(@history.onHistoryChange)
+
     @transitionCacheEnabled = false
     @requestCachingEnabled = true
     @progressBar = new ProgressBar
+  reset: ->
+    @transitionCacheEnabled = false
+    @atomCache = {}
+    @queues = {}
+    @unlisten()
+    @history.reset()
 
   setInitialUrl: (url) =>
     @history.setInitialUrl(url)
@@ -111,6 +119,9 @@ class Controller
   cache: (key, value) =>
     return @atomCache[key] if value == null
     @atomCache[key] ||= value
+
+  clearCache: (key, value) =>
+    @atomCache = {}
 
   onProgress: (event)=>
     @progressBar.advanceFromEvent(event)

@@ -1,5 +1,5 @@
-EVENTS = require('./events.coffee')
-Utils = require('./utils.coffee')
+EVENTS = require('./events')
+Utils = require('./utils')
 
 class ProgressBar
   constructor: ->

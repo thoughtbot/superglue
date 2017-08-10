@@ -1,4 +1,4 @@
-Utils = require('../utils.coffee')
+Utils = require('../utils')
 
 class Sync
   constructor: ->

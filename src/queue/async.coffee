@@ -1,5 +1,5 @@
-DoublyLinkedList = require('../doubly_linked_list.coffee')
-Utils = require('../utils.coffee')
+DoublyLinkedList = require('../doubly_linked_list')
+Utils = require('../utils')
 
 class Async
   constructor: ->
@@ -29,6 +29,8 @@ class Async
         element.rsp = rsp
         element.err = err
         @attemptToProcess()
+
+    return
 
   attemptToProcess: =>
     node = @dll.head

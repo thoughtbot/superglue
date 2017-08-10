@@ -1,6 +1,6 @@
-Utils = require('./utils.coffee')
-EVENTS = require('./events.coffee')
-ComponentUrl = require('./component_url.coffee')
+Utils = require('./utils')
+EVENTS = require('./events')
+ComponentUrl = require('./component_url')
 
 class Remote
   SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']

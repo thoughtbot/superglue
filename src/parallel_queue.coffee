@@ -1,5 +1,5 @@
-DoublyLinkedList = require('./doubly_linked_list.coffee')
-Utils = require('./utils.coffee')
+DoublyLinkedList = require('./doubly_linked_list')
+Utils = require('./utils')
 
 class ParallelQueue
   constructor: ->

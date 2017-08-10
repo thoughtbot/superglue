@@ -1,6 +1,5 @@
-ComponentUrl = require('./component_url.coffee')
+ComponentUrl = require('./component_url')
 EventEmitter = require('eventemitter3').EventEmitter
-CSRFToken = require('./csrf_token.coffee')
 request = require('superagent')
 
 emitter = new EventEmitter

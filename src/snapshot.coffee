@@ -1,7 +1,7 @@
-ComponentUrl = require('./component_url.coffee')
-CSRFToken = require('./csrf_token.coffee')
-Utils = require('./utils.coffee')
-EVENTS = require('./events.coffee')
+ComponentUrl = require('./component_url')
+Utils = require('./utils')
+EVENTS = require('./events')
+Config = require('./config')
 
 class Snapshot
   constructor: (@controller, @history) ->

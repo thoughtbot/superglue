@@ -1,14 +1,12 @@
-ComponentUrl = require('./component_url.coffee')
-Controller = require('./controller.coffee')
-CSRFToken = require('./csrf_token.coffee')
-Remote = require('./remote.coffee')
-Snapshot = require('./snapshot.coffee')
-Utils = require('./utils.coffee')
-EVENTS = require('./events.coffee')
+Controller = require('./controller')
+Remote = require('./remote')
+Snapshot = require('./snapshot')
+Utils = require('./utils')
+EVENTS = require('./events')
 History = require('history')
-Config = require('./config.coffee')
-Async = require('./queue/async.coffee')
-Sync = require('./queue/sync.coffee')
+Config = require('./config')
+Async = require('./queue/async')
+Sync = require('./queue/sync')
 
 Config.addQueue 'sync', Sync
 Config.addQueue 'async', Async

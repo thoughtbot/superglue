@@ -17,6 +17,8 @@ class ComponentUrl
 
   crossOrigin: ->
     if window?
+      #set initialstate should not take in a href... 
+      #still some confusion on how it should work with initial url
       @origin isnt (new ComponentUrl(document.location.href)).origin
     else
       false

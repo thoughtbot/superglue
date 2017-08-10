@@ -1,7 +1,37 @@
 ajax = require('superagent')
 
+type = (obj) ->
+  if obj == undefined or obj == null
+    return String obj
+  classToType = {
+    '[object Boolean]': 'boolean',
+    '[object Number]': 'number',
+    '[object String]': 'string',
+    '[object Function]': 'function',
+    '[object Array]': 'array',
+    '[object Date]': 'date',
+    '[object RegExp]': 'regexp',
+    '[object Object]': 'object'
+  }
+  return classToType[Object.prototype.toString.call(obj)]
+
+
+test = (desc, options = {}, callback) ->
+  if type(options) == 'function'
+    callback = options
+    options = {}
+
+  if options.skip
+    QUnit.skip desc, (assert) ->
+      @Breezy = Breezy
+      callback.call(@, assert)
+  else
+    QUnit.test desc, (assert) ->
+      @Breezy = Breezy
+      callback.call(@, assert)
+
 testWithSession = (desc, callback) ->
-  QUnit.test desc, (assert)->
+  test desc, skip: !window?, (assert)->
     iframe = document.getElementById('session')
     iframe.setAttribute('scrolling', 'yes')
     iframe.setAttribute('style', 'visibility: hidden;')
@@ -21,12 +51,9 @@ testWithSession = (desc, callback) ->
       @$ = (selector) => @document.querySelector(selector)
 
       callback.call(@, assert)
-      ajax.post('/__zuul/coverage/client')
-        .send(@window.__coverage__)
-        .end (err, res) ->
-          if (err)
-            console.log('error in coverage reports')
-            console.log(err)
       done()
 
-module.exports = testWithSession
+module.exports =
+  testWithSession: testWithSession
+  test: test
+

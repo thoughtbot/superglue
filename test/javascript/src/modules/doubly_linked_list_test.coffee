@@ -1,13 +1,13 @@
-testWithSession = require('../helpers/helpers.coffee')
-DoublyLinkedList = require('../../../../src/doubly_linked_list.coffee')
+test = require('../helpers/helpers').test
+DoublyLinkedList = require('../../../../src/doubly_linked_list')
 
 QUnit.module "DoublyLinkedList"
 
-testWithSession "#new starts off with 0 element", (assert) ->
+test "#new starts off with 0 element", (assert) ->
   ddl = new DoublyLinkedList
   assert.equal ddl.length, 0
 
-testWithSession "#push inserts an element", (assert) ->
+test "#push inserts an element", (assert) ->
   ddl = new DoublyLinkedList
   element = {}
   ddl.push(element)
@@ -21,7 +21,7 @@ testWithSession "#push inserts an element", (assert) ->
   assert.equal ddl.tail.element, element2
   assert.equal ddl.head.element, element
 
-testWithSession "#unshift inserts an element in the beginning", (assert) ->
+test "#unshift inserts an element in the beginning", (assert) ->
   ddl = new DoublyLinkedList
   element = {}
   ddl.unshift(element)
@@ -35,7 +35,7 @@ testWithSession "#unshift inserts an element in the beginning", (assert) ->
   assert.equal ddl.tail.element, element
   assert.equal ddl.head.element, element2
 
-testWithSession "#pop removes the last element", (assert) ->
+test "#pop removes the last element", (assert) ->
   ddl = new DoublyLinkedList
   element = {}
   element2 = {}
@@ -51,7 +51,7 @@ testWithSession "#pop removes the last element", (assert) ->
   assert.equal poppedElement, element2
   assert.equal ddl.tail.element, element
 
-testWithSession "#shift removes the first element", (assert) ->
+test "#shift removes the first element", (assert) ->
   ddl = new DoublyLinkedList
   element = {}
   element2 = {}

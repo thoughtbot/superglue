@@ -12,11 +12,12 @@ class Sync
     @http.on('progress', req.onProgress)
     @http.end (err, rsp) =>
       @http = null
-
       if err || !rsp.ok
         req.onRequestError(rsp, req.url, req)
       else
         req.respond(@optsForRespond(rsp))
+
+    return
 
   optsForRespond: (rsp) ->
     status: rsp.status

@@ -134,7 +134,7 @@ class Controller
     @progressBar.advanceFromEvent(event)
 
   onLoad: (rsp) =>
-    #react-native might not need the following line.
+    #todo: investigate: react-native might not need the following line.
     redirectedUrl = rsp.header['x-xhr-redirected-to']
     url = new ComponentUrl(redirectedUrl || rsp.url)
 
@@ -146,10 +146,10 @@ class Controller
     nextPage =  @processResponse(rsp)
 
     if nextPage
-      if rsp.async && url.pathname != @currentPage().pathname # fix rsp.async
+      if rsp.async && url.pathname != @currentPage().pathname #todo: fix rsp.async thats wrong..
 
         unless rsp.ignoreSamePathConstraint
-          @progressBar.done()
+          @progressBar.done() #todo: do i really want to do this?
           Utils.warn("Async response path is different from current page path")
           return
 
@@ -162,7 +162,7 @@ class Controller
         @history.changePage(nextPage)
         Utils.emitter.emit EVENTS.LOAD, @currentPage()
       else
-        ##clean this up
+        #todo: clean this up
         @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)
 
       @progressBar.done()

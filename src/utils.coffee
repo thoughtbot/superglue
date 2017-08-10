@@ -25,7 +25,6 @@ clone = (original) ->
 
 withDefaults = (page, state) =>
     currentUrl = new ComponentUrl state.url
-
     reverseMerge page,
       url: currentUrl.pathToHash
       pathname: currentUrl.pathname
@@ -174,6 +173,7 @@ module.exports =
   on: emitter.on.bind(emitter)
   emitter: emitter
   clone: clone
+  noop: ->{}
   withDefaults: withDefaults
   browserSupportsBreezy: browserSupportsBreezy
   intersection: intersection

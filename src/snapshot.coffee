@@ -52,10 +52,10 @@ class Snapshot
     return unless @currentPage
     currentUrl = new ComponentUrl @currentBrowserState.url
 
-    Utils.merge @currentPage,
+    Utils.reverseMerge @currentPage,
       cachedAt: new Date().getTime()
-      positionY: window.pageYOffset
-      positionX: window.pageXOffset
+      positionY: window?.pageYOffset
+      positionX: window?.pageXOffset
       url: currentUrl.pathToHash
       pathname: currentUrl.pathname
       transition_cache: true

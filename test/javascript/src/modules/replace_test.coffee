@@ -1,6 +1,6 @@
+testWithSession = require('../helpers/helpers').testWithSession
 
-testWithSession = require('../helpers/helpers.coffee')
-QUnit.module "Replace test"
+QUnit.module "Breezy.replace"
 
 testWithSession "replacing current state", (assert) ->
   done = assert.async()
@@ -9,9 +9,7 @@ testWithSession "replacing current state", (assert) ->
     csrf_token: 'new-token'
     assets: ['application-123.js', 'application-123.js']
 
-  assert.equal @$('meta[name="csrf-token"]').getAttribute('content'), 'token'
   @Breezy.on 'breezy:load', (data) =>
-    assert.equal @$('meta[name="csrf-token"]').getAttribute('content'), 'new-token'
     assert.propEqual data.data, { heading: "some data" } # body is replaced
     done()
   @Breezy.replace(doc)

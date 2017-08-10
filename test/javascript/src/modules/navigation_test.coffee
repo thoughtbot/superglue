@@ -1,4 +1,4 @@
-testWithSession = require('../helpers/helpers.coffee')
+testWithSession = require('../helpers/helpers').testWithSession
 sinon = require('sinon')
 QUnit.module "Navigation"
 
@@ -26,7 +26,7 @@ testWithSession "a successful visit", (assert) ->
 
   @document.addEventListener 'breezy:request-end', =>
     console.log 'breezy:request-end'
-    state = breezy: true, url: "#{location.protocol}//#{location.host}/app/session"
+    state = breezy: true, url: "/app/session"
     assert.propEqual @history.state.state, state
     assert.ok breezyClickFired
     assert.ok requestStared
@@ -36,7 +36,7 @@ testWithSession "a successful visit", (assert) ->
     console.log 'breezy:load'
     assert.ok requestFinished
     assert.propEqual data.data, { heading: "Some heading 2" }
-    state = breezy: true, url: "#{location.protocol}//#{location.host}/app/success"
+    state = breezy: true, url: "/app/success"
     assert.propEqual @history.state.state, state
     console.log(@location.href)
     #assert.equal @location.href, state.url
@@ -109,7 +109,7 @@ testWithSession "visits do not pushState when URL is the same", (assert) ->
       setTimeout (=> @Breezy.visit('/app/session#test')), 0
     else if load is 2
       setTimeout (=>
-        assert.equal @history.length, @originalHistoryLength + 1
+        assert.equal @history.length, @originalHistoryLength
         done()
       ), 0
   @originalHistoryLength = @history.length
@@ -151,7 +151,7 @@ testWithSession "visits with the async option allows request to run seperate fro
   @Breezy.visit('/app/session', queue: 'async')
 
 testWithSession "multiple remote visits with async will use a parallel queue and block onLoads until the xhr ahead of it finishes first", (assert) ->
-  sinon.stub(@Breezy.Utils, 'warn', ->{})
+  sinon.stub(@Breezy, 'warn', ->{})
   done = assert.async()
 
   response = '''
@@ -182,7 +182,7 @@ testWithSession "multiple remote visits with async will use a parallel queue and
   done()
 
 testWithSession "multiple remote visits with async options will use a parallel queue that onLoads in order", (assert) ->
-  sinon.stub(@Breezy.Utils, 'warn', ->{})
+  sinon.stub(@Breezy, 'warn', ->{})
   done = assert.async()
   response = '''
     (function() {

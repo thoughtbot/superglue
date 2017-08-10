@@ -71,18 +71,6 @@ triggerEvent = (name, data, target = document) =>
   event.initEvent name, true, true
   target.dispatchEvent event
 
-documentListenerForLinks = (eventType, handler) ->
-  document.addEventListener eventType, (ev) ->
-    target = ev.target
-    while target != document && target?
-      if target.nodeName == "A"
-        isNodeDisabled = target.getAttribute('disabled')
-        ev.preventDefault() if target.getAttribute('disabled')
-        unless isNodeDisabled
-          handler(ev)
-          return
-
-      target = target.parentNode
 
 isObject = (val) ->
   Object.prototype.toString.call(val) is '[object Object]'
@@ -180,7 +168,6 @@ module.exports =
   graftByKeypath:  ->
     grafter = new Grafter
     grafter.graftByKeypath.apply(grafter, arguments)
-  documentListenerForLinks: documentListenerForLinks
   reverseMerge: reverseMerge
   merge: merge
   emit: emitter.emit

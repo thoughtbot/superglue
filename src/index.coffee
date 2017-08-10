@@ -22,8 +22,6 @@ if window?
     visit = (url = document.location.href) -> document.location.href = url
 else
   history = History.createMemoryHistory()
-progressBar = controller.progressBar
-ProgressBarAPI = {}
   controller = new Controller(history, Utils.noop)
   visit = controller.request
 
@@ -37,7 +35,6 @@ setup = (obj) ->
   obj.pagesCached = controller.history.pagesCached
   obj.enableTransitionCache = controller.enableTransitionCache
   obj.disableRequestCaching = controller.disableRequestCaching
-  obj.ProgressBar = ProgressBarAPI
   obj.EVENTS = Utils.clone(EVENTS)
   obj.currentPage = controller.currentPage
   obj.on = Utils.emitter.on.bind(Utils.emitter)

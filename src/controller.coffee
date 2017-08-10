@@ -88,6 +88,7 @@ class Controller
       payload: options.payload
       method: options.requestMethod || 'GET'
       onRequestError: options.onRequestError
+      onProgress: options.onProgress
       onRequestEnd: options.onRequestEnd
       cacheRequest: options.cacheRequest
       pushState: options.pushState

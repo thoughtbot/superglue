@@ -10,3 +10,4 @@ tmp/
 .byebug_history
 log
 blade.yml
+lib/assets/javascript/breezy.js

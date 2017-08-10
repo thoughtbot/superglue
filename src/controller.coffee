@@ -138,10 +138,12 @@ class Controller
     redirectedUrl = rsp.header['x-xhr-redirected-to']
     url = new ComponentUrl(redirectedUrl || rsp.url)
 
+    if rsp.status == 0 || rsp.status == 204
+      #todo: rsp status of 0 needs to error out
+      return
+
     rsp.onRequestEnd?(url.absolute)
     nextPage =  @processResponse(rsp)
-    if rsp.status == 0 || rsp.status == 204
-      return
 
     if nextPage
       if rsp.async && url.pathname != @currentPage().pathname # fix rsp.async

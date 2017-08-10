@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+gem 'rails'
+
+gem 'blade', git: 'https://github.com/jho406/blade', branch: 'switch_to_puma_070'
+gem 'blade-sauce_labs_plugin'
+gem 'breezy_template', path: '../breezy_template'
+gem 'breezy', path: '../breezy_rails'
+gem 'sqlite3'

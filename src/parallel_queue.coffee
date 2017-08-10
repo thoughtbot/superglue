@@ -1,9 +1,11 @@
-#= require breezy/doubly_linked_list
+DoublyLinkedList = require('./doubly_linked_list')
+Utils = require('./utils')
 
-class Breezy.ParallelQueue
+class ParallelQueue
   constructor: ->
-    @dll = new Breezy.DoublyLinkedList
+    @dll = new DoublyLinkedList
     @active = true
+    Utils.on 'breezy:visit', => @drain()
 
   push:(xhr)->
     @dll.push(xhr)
@@ -30,6 +32,8 @@ class Breezy.ParallelQueue
       qxhr.abort()
       qxhr._isDone = true
       node = node.next
-    @dll = new Breezy.DoublyLinkedList
+    @dll = new DoublyLinkedList
     @active = true
+
+module.exports = ParallelQueue
 

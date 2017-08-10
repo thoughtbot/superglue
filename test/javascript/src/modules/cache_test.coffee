@@ -1,8 +1,10 @@
-QUnit.module "Cache"
+test = require('../helpers/helpers').test
 
-testWithSession "cache can only be set once", (assert) ->
-  @Breezy.cache('cachekey','hit')
-  assert.equal(@Breezy.cache('cachekey'), 'hit')
+QUnit.module "Cache", afterEach: -> Breezy.clearCache()
 
-  @Breezy.cache('cachekey','miss')
-  assert.equal(@Breezy.cache('cachekey'), 'hit')
+test "cache values can only be set once", (assert) ->
+  Breezy.cache('cachekey','hit')
+  assert.equal(Breezy.cache('cachekey'), 'hit')
+
+  Breezy.cache('cachekey','miss')
+  assert.equal(Breezy.cache('cachekey'), 'hit')

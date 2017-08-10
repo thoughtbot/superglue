@@ -1,9 +1,13 @@
 *.lock
+test/dummy/app/assets/javascripts/application.js
 node_modules
 pkg/
+test/javascript/build/test.js
+test/javascript/build/breezy.js
 vendor/bundle
 test/log/
 tmp/
 .byebug_history
 log
 blade.yml
+lib/assets/javascript/breezy.js

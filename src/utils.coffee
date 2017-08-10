@@ -1,3 +1,12 @@
+ComponentUrl = require('./component_url')
+EventEmitter = require('eventemitter3').EventEmitter
+request = require('superagent')
+
+emitter = new EventEmitter
+
+warn = ->
+  console.warn.apply(@, arguments)
+
 reverseMerge = (dest, obj) ->
   for k, v of obj
     dest[k] = v if !dest.hasOwnProperty(k)
@@ -15,18 +24,19 @@ clone = (original) ->
   copy
 
 withDefaults = (page, state) =>
-    currentUrl = new Breezy.ComponentUrl state.url
-
+    currentUrl = new ComponentUrl state.url
     reverseMerge page,
-      url: currentUrl.relative
+      url: currentUrl.pathToHash
       pathname: currentUrl.pathname
       cachedAt: new Date().getTime()
       assets: []
       data: {}
-      title: ''
       positionY: 0
       positionX: 0
       csrf_token: null
+
+directBrowserToUrl = (url) ->
+  document.location.href = url.absolute
 
 browserIsBuggy = () ->
 # Copied from https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
@@ -60,18 +70,6 @@ triggerEvent = (name, data, target = document) =>
   event.initEvent name, true, true
   target.dispatchEvent event
 
-documentListenerForLinks = (eventType, handler) ->
-  document.addEventListener eventType, (ev) ->
-    target = ev.target
-    while target != document && target?
-      if target.nodeName == "A"
-        isNodeDisabled = target.getAttribute('disabled')
-        ev.preventDefault() if target.getAttribute('disabled')
-        unless isNodeDisabled
-          handler(ev)
-          return
-
-      target = target.parentNode
 
 isObject = (val) ->
   Object.prototype.toString.call(val) is '[object Object]'
@@ -79,7 +77,7 @@ isObject = (val) ->
 isArray = (val) ->
   Object.prototype.toString.call(val) is '[object Array]'
 
-class Breezy.Grafter
+class Grafter
   constructor: ->
     @current_path = []
 
@@ -119,7 +117,7 @@ class Breezy.Grafter
         @current_path.pop()
         copy
       else
-        Breezy.Utils.warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
+        warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
         obj
 
     else if isArray(obj)
@@ -149,26 +147,39 @@ class Breezy.Grafter
         @current_path.pop()
         copy
       else
-        Breezy.Utils.warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
+        warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
         obj
     else
       obj
 
+createRequest = (opts)=>
+  jsAccept = 'text/javascript, application/x-javascript, application/javascript'
+  requestMethod = opts.requestMethod || 'GET'
+  url = opts.url.formatForXHR(cache: opts.cacheRequest)
 
+  req = request(requestMethod, url)
+  for header, value of opts.header
+    req.set(header, value)
+  req
 
-@Breezy.Utils =
-  warn: ->
-    console.warn.apply(@, arguments)
+module.exports =
+  warn: warn
   graftByKeypath:  ->
-    grafter = new  Breezy.Grafter
+    grafter = new Grafter
     grafter.graftByKeypath.apply(grafter, arguments)
-  documentListenerForLinks: documentListenerForLinks
   reverseMerge: reverseMerge
   merge: merge
+  emit: emitter.emit
+  on: emitter.on.bind(emitter)
+  emitter: emitter
   clone: clone
+  noop: ->{}
   withDefaults: withDefaults
   browserSupportsBreezy: browserSupportsBreezy
   intersection: intersection
+  directBrowserToUrl: directBrowserToUrl
   triggerEvent: triggerEvent
+  createRequest: createRequest
+  Grafter: Grafter #todo: extract me!
 
 

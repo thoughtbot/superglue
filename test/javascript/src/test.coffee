@@ -1,4 +1,15 @@
-#= require_tree ./helpers
-#= require_tree ./modules
+require('./modules/async_queue_test')
+require('./modules/cache_test')
+require('./modules/component_url_test')
+require('./modules/controller_test')
+require('./modules/csrf_token_test')
+require('./modules/doubly_linked_list_test')
+require('./modules/grafting_api_test')
+require('./modules/navigation_test')
+require('./modules/remote_test')
+require('./modules/replace_test')
+require('./modules/snapshot_test')
+require('./modules/sync_queue_test')
+require('./modules/utils_test')
+require('./modules/visit_test')
 
-QUnit.config.hidepassed = true

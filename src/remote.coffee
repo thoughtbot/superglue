@@ -1,14 +1,47 @@
-class Breezy.Remote
+Utils = require('./utils')
+EVENTS = require('./events')
+ComponentUrl = require('./component_url')
+
+pageChangePrevented = (url, target) ->
+  !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
+
+
+documentListenerForLinks = (eventType, handler, document) ->
+  document.addEventListener eventType, (ev) ->
+    target = ev.target
+    while target != document && target?
+      if target.nodeName == "A"
+        isNodeDisabled = target.getAttribute('disabled')
+        ev.preventDefault() if target.getAttribute('disabled')
+        unless isNodeDisabled
+          handler(ev)
+          return
+
+      target = target.parentNode
+
+class Remote
   SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
   FALLBACK_LINK_METHOD = 'GET'
   FALLBACK_FORM_METHOD = 'POST'
+
+  @listenForEvents: (document, callback) ->
+    remoteHandler = (ev) ->
+      target = ev.target
+      remote = new Remote(target)
+      return unless remote.isValid()
+      ev.preventDefault()
+      options = remote.toOptions()
+      return if pageChangePrevented(remote.httpUrl.absolute, options.target)
+      callback(remote.httpUrl, options)
+    documentListenerForLinks 'click', remoteHandler, document
+    document.addEventListener "submit", remoteHandler
 
   constructor: (target, opts={})->
     @target = target
     @payload = ''
     @contentType = null
     @setRequestType(target)
-    @async =  @getBZAttribute(target, 'bz-remote-async') || false
+    @q =  @getBZAttribute(target, 'bz-remote-q') || 'sync'
     @pushState =  !(@getBZAttribute(target, 'bz-push-state') == 'false')
     @httpUrl = target.getAttribute('href') || target.getAttribute('action')
     @silent = @getBZAttribute(target, 'bz-silent') || false
@@ -19,9 +52,32 @@ class Breezy.Remote
     payload: @payload
     contentType: @contentType
     silent: @silent
-    target: @target
-    async: @async
+    queue: @q
     pushState: @pushState
+    onRequestStart: @onRequestStart
+    onRequestEnd: @onRequestEnd
+    onRequestError: @onRequestError
+
+  onRequestError:(xhr) =>
+    if @q is'sync'
+      @goToErrorPage(xhr)
+    else
+      Utils.triggerEvent EVENTS.ERROR, xhr, @target
+
+  goToErrorPage: (xhr) ->
+    crossOriginRedirectUrl = (xhr) ->
+      redirect = xhr.header['location']
+      crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
+
+      if redirect? and crossOrigin
+        redirect
+    document.location.href = crossOriginRedirectUrl(xhr) or @httpUrl
+
+  onRequestStart:(url) =>
+    Utils.triggerEvent EVENTS.FETCH, url: url, @target
+
+  onRequestEnd:(url) =>
+    Utils.triggerEvent EVENTS.RECEIVE, url: url, @target
 
   setRequestType: (target)=>
     if target.tagName == 'A'
@@ -134,3 +190,5 @@ class Breezy.Remote
   hasBZAttribute: (node, attr) ->
     bzAttr = @bzAttribute(attr)
     node.getAttribute(bzAttr)? || node.getAttribute(attr)?
+
+module.exports = Remote

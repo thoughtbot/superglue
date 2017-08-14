@@ -1,4 +1,6 @@
 # Breezy
+Documentation below is outdated! Updates soon.
+
 Breezy makes it easy (even boring) to create single-page, multi-page, and sometimes-single-page applications with ReactJS and classic Rails.
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/jho406-bensonhurst.svg)](https://saucelabs.com/u/jho406-bensonhurst)

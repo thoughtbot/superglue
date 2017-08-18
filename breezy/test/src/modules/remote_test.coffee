@@ -222,9 +222,17 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.ok remote.isValid()
 
-  testWithSession "returns false with a invalid link (missing data-bz-remote)", (assert) ->
+  testWithSession "sets pushState true when sync", (assert) ->
     html = """
-      <a href="/test" data-bz-remote data-bz-push-state=false></a>
+      <a href="/test" data-bz-remote></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.pushState
+
+  testWithSession "sets pushState false when async", (assert) ->
+    html = """
+      <a href="/test" data-bz-remote data-bz-remote-q='async'></a>
     """
     target = createTarget(html)
     remote = new Remote(target)

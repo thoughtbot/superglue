@@ -29,25 +29,6 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.ok remote.isValid()
 
-  testWithSession "returns false with an invalid form (missing action)", (assert) ->
-    html = """
-      <form data-bz-remote method='post'>
-        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-      </form>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.notOk remote.isValid()
-
-    html = """
-      <form data-bz-visit method='post'>
-        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-      </form>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.notOk remote.isValid()
-
   testWithSession "returns false with an invalid form (missing bz-remote or bz-visit)", (assert) ->
     html = """
       <form method='post' action='/'>

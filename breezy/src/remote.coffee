@@ -38,13 +38,14 @@ class Remote
 
   constructor: (target, opts={})->
     @target = target
-    @payload = ''
-    @contentType = null
-    @setRequestType(target)
-    @setQueue(target)
-    @setPushState(target)
-    @httpUrl = target.getAttribute('href') || target.getAttribute('action')
-    @setPayload(target)
+    if @isValid()
+      @payload = ''
+      @contentType = null
+      @setRequestType(target)
+      @setQueue(target)
+      @setPushState(target)
+      @httpUrl = target.getAttribute('href') || target.getAttribute('action')
+      @setPayload(target)
 
   setQueue: (target) =>
     if @hasBZAttribute(target, 'bz-visit')
@@ -125,6 +126,7 @@ class Remote
         @payload.append("_method", @httpRequestType)
 
   isValid: =>
+    debugger
     @isValidLink() || @isValidForm()
 
   isValidLink: =>
@@ -139,8 +141,7 @@ class Remote
   isValidForm: =>
     if @target.tagName != 'FORM'
       return false
-    @isEnabledWithBz(@target) &&
-    @target.getAttribute('action')?
+    @isEnabledWithBz(@target)
 
   formAppend: (uriEncoded, key, value) ->
     uriEncoded += "&" if uriEncoded.length

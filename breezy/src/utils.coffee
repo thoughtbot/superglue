@@ -162,6 +162,18 @@ createRequest = (opts)=>
     req.set(header, value)
   req
 
+dispatch = (opts = {}) =>
+  emitter.emit('breezy:action', opts)
+
+goToErrorPage = (xhr, fallbackUrl) ->
+  crossOriginRedirectUrl = (xhr) ->
+    redirect = xhr.header['location']
+    crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
+
+    if redirect? and crossOrigin
+      redirect
+  document.location.href = crossOriginRedirectUrl(xhr) or fallbackUrl
+
 module.exports =
   warn: warn
   graftByKeypath:  ->
@@ -172,8 +184,10 @@ module.exports =
   emit: emitter.emit
   on: emitter.on.bind(emitter)
   emitter: emitter
+  dispatch: dispatch
   clone: clone
   noop: ->{}
+  goToErrorPage: goToErrorPage
   withDefaults: withDefaults
   browserSupportsBreezy: browserSupportsBreezy
   intersection: intersection

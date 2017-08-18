@@ -93,6 +93,22 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.ok remote.isValid()
 
+  testWithSession "returns false when dispatch is empty", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.isValid()
+
+  testWithSession "returns true when dispatch is used", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
   QUnit.module "#httpRequestType"
   testWithSession "returns GET link with bz-remote/visit set to nothing", (assert) ->
     html = """
@@ -204,6 +220,22 @@ QUnit.module "Remote Attribute", ->
     target = createTarget(html)
     remote = new Remote(target)
     assert.equal remote.actualRequestType, 'GET'
+
+  testWithSession "ignores data-bz-remote/visit when using dispatch", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-remote='post'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.actualRequestType, 'GET'
+
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-visit='post'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.actualRequestType, 'GET'
+
 
   QUnit.module "#payload"
   testWithSession "contains a _method when data-bz-remote/visit is set to verbs unsupported by the browser (PUT, DELETE)", (assert) ->
@@ -364,3 +396,37 @@ QUnit.module "Remote Attribute", ->
     assert.ok (payload instanceof FormData)
     assert.equal remote.httpUrl, '/'
     appendSpy.restore()
+
+  QUnit.module "#queue"
+
+  testWithSession "does not get set when using dispatch", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-remote></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.queue
+
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-visit></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.queue
+
+  QUnit.module "#action"
+
+  testWithSession "sets the action when using dispatch", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-remote></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.queue
+
+    html = """
+      <form action="/test" data-bz-dispatch='add_user' data-bz-visit></form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.action, 'add_user'

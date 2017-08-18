@@ -5,7 +5,6 @@ ComponentUrl = require('./component_url')
 pageChangePrevented = (url, target) ->
   !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
 
-
 documentListenerForLinks = (eventType, handler, document) ->
   document.addEventListener eventType, (ev) ->
     target = ev.target
@@ -32,7 +31,7 @@ class Remote
       ev.preventDefault()
       options = remote.toOptions()
       return if pageChangePrevented(remote.httpUrl.absolute, options.target)
-      callback(remote.httpUrl, options)
+      callback(options)
     documentListenerForLinks 'click', remoteHandler, document
     document.addEventListener "submit", remoteHandler
 
@@ -41,13 +40,19 @@ class Remote
     if @isValid()
       @payload = ''
       @contentType = null
+      @setAction(target)
       @setRequestType(target)
       @setQueue(target)
       @setPushState(target)
       @httpUrl = target.getAttribute('href') || target.getAttribute('action')
       @setPayload(target)
 
+  setAction: (target) =>
+    @action = @getBZAttribute(target, 'bz-dispatch')
+
   setQueue: (target) =>
+    return if @action
+
     if @hasBZAttribute(target, 'bz-visit')
       @q = 'sync'
     else if @hasBZAttribute(target, 'bz-remote')
@@ -60,6 +65,7 @@ class Remote
       @pushState = false
 
   toOptions: =>
+    href: @httpUrl
     requestMethod: @actualRequestType
     payload: @payload
     contentType: @contentType
@@ -71,18 +77,9 @@ class Remote
 
   onRequestError:(xhr) =>
     if @q is'sync'
-      @goToErrorPage(xhr)
+      Utils.goToErrorPage(xhr, @httpUrl)
     else
       Utils.triggerEvent EVENTS.ERROR, xhr, @target
-
-  goToErrorPage: (xhr) ->
-    crossOriginRedirectUrl = (xhr) ->
-      redirect = xhr.header['location']
-      crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
-
-      if redirect? and crossOrigin
-        redirect
-    document.location.href = crossOriginRedirectUrl(xhr) or @httpUrl
 
   onRequestStart:(url) =>
     Utils.triggerEvent EVENTS.FETCH, url: url, @target
@@ -95,18 +92,24 @@ class Remote
 
   setRequestType: (target)=>
     if target.tagName == 'A'
-      @httpRequestType = @getBZEntryPoint(target)
-      @httpRequestType ?= ''
-      @httpRequestType = @httpRequestType.toUpperCase()
+      if @action
+        @httpRequestType = FALLBACK_LINK_METHOD
+      else
+        @httpRequestType = @getBZEntryPoint(target)
+        @httpRequestType ?= ''
+        @httpRequestType = @httpRequestType.toUpperCase()
 
       if @httpRequestType not in SUPPORTED_METHODS
         @httpRequestType = FALLBACK_LINK_METHOD
 
     if target.tagName == 'FORM'
       formActionMethod = target.getAttribute('method')
-      @httpRequestType = formActionMethod || @getBZEntryPoint(target)
-      @httpRequestType ?= ''
-      @httpRequestType = @httpRequestType.toUpperCase()
+      if @action
+        @httpRequestType = formActionMethod
+      else
+        @httpRequestType = formActionMethod || @getBZEntryPoint(target)
+        @httpRequestType ?= ''
+        @httpRequestType = @httpRequestType.toUpperCase()
 
       if @httpRequestType not in SUPPORTED_METHODS
         @httpRequestType = FALLBACK_FORM_METHOD
@@ -126,7 +129,6 @@ class Remote
         @payload.append("_method", @httpRequestType)
 
   isValid: =>
-    debugger
     @isValidLink() || @isValidForm()
 
   isValidLink: =>
@@ -136,7 +138,7 @@ class Remote
     @isEnabledWithBz(@target)
 
   isEnabledWithBz: (target) =>
-    @hasBZAttribute(@target, 'bz-remote') || @hasBZAttribute(@target, 'bz-visit')
+    @hasBZAttribute(@target, 'bz-remote') or @hasBZAttribute(@target, 'bz-visit') or @getBZAttribute(@target, 'bz-dispatch')?
 
   isValidForm: =>
     if @target.tagName != 'FORM'
@@ -174,7 +176,6 @@ class Remote
   enabledInputs: (form) ->
     selector = "input:not([type='reset']):not([type='button']):not([type='submit']):not([type='image']), select, textarea"
     inputs = Array::slice.call(form.querySelectorAll(selector))
-    debugger
     disabledNodes = Array::slice.call(@querySelectorAllBZAttribute(form, 'bz-noserialize'))
 
     return inputs unless disabledNodes.length

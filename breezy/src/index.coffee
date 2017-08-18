@@ -15,20 +15,22 @@ if window?
   if Utils.browserSupportsBreezy()
     history = History.createBrowserHistory()
     controller = new Controller(history, Utils.directBrowserToUrl)
-    visit = controller.request
+    visit = controller.visit
 
-    Remote.listenForEvents(document, controller.request)
+    Remote.listenForEvents(document, controller.handleRemote)
   else
     visit = (url = document.location.href) -> document.location.href = url
 else
   history = History.createMemoryHistory()
   controller = new Controller(history, Utils.noop)
-  visit = controller.request
+  remote = controller.request
 
 setup = (obj) ->
   obj.controller = controller
   obj.graftByKeypath = controller.history.graftByKeypath
-  obj.visit = visit
+  obj.visit = controller.visit
+  obj.remote = controller.remote
+  obj.request = controller.request
   obj.config = Config
   obj.replace = controller.replace
   obj.cache = controller.cache
@@ -39,6 +41,7 @@ setup = (obj) ->
   obj.currentPage = controller.currentPage
   obj.on = Utils.emitter.on.bind(Utils.emitter)
   obj.emitter = Utils.emitter
+  obj.dispatch = Utils.dispatch
   obj.warn = Utils.warn
   obj.clearCache = controller.clearCache
   obj.setInitialState = controller.setInitialState.bind(controller)

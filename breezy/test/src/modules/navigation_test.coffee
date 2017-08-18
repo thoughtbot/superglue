@@ -53,7 +53,7 @@ testWithSession "visits to content with new assets generates a refresh", (assert
     done()
   @Breezy.visit('/app/success_with_new_assets')
 
-testWithSession "visits with an error response would redirect to that same errorpage", (assert) ->
+testWithSession "visits with an error response would redirect to that same error page", (assert) ->
   done = assert.async()
   html = """
     <a href="/app/does_not_exist" data-bz-visit></a>
@@ -175,8 +175,8 @@ testWithSession "multiple remote visits with async will use a parallel queue and
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Breezy.visit('/app', queue: 'async')
-  @Breezy.visit('/app', queue: 'async')
+  @Breezy.remote('/app')
+  @Breezy.remote('/app')
   assert.equal @Breezy.controller.queue.dll.length, 2
   requests[1].respond(200, { "Content-Type": "application/javascript" }, response)
 
@@ -205,8 +205,8 @@ testWithSession "multiple remote visits with async options will use a parallel q
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Breezy.visit('/app', queue: 'async')
-  @Breezy.visit('/app', queue: 'async')
+  @Breezy.remote('/app')
+  @Breezy.remote('/app')
   assert.equal @Breezy.controller.queue.dll.length, 2
   requests[0].respond(200, { "Content-Type": "application/javascript" }, response)
 

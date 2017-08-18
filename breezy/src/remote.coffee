@@ -41,14 +41,22 @@ class Remote
     @payload = ''
     @contentType = null
     @setRequestType(target)
-    @q =  @getBZAttribute(target, 'bz-remote-q') || 'sync'
-    if @q == 'sync'
-      @pushState = true
-    else
-      @pushState = false
-
+    @setQueue(target)
+    @setPushState(target)
     @httpUrl = target.getAttribute('href') || target.getAttribute('action')
     @setPayload(target)
+
+  setQueue: (target) =>
+    if @hasBZAttribute(target, 'bz-visit')
+      @q = 'sync'
+    else if @hasBZAttribute(target, 'bz-remote')
+      @q = 'async'
+
+  setPushState: (target) =>
+    if @hasBZAttribute(target, 'bz-visit')
+      @pushState = true
+    else if @hasBZAttribute(target, 'bz-remote')
+      @pushState = false
 
   toOptions: =>
     requestMethod: @actualRequestType
@@ -81,9 +89,12 @@ class Remote
   onRequestEnd:(url) =>
     Utils.triggerEvent EVENTS.RECEIVE, url: url, @target
 
+  getBZEntryPoint: (target)=>
+    @getBZAttribute(target, 'bz-visit') || @getBZAttribute(target, 'bz-remote')
+
   setRequestType: (target)=>
     if target.tagName == 'A'
-      @httpRequestType = @getBZAttribute(target, 'bz-remote')
+      @httpRequestType = @getBZEntryPoint(target)
       @httpRequestType ?= ''
       @httpRequestType = @httpRequestType.toUpperCase()
 
@@ -92,7 +103,7 @@ class Remote
 
     if target.tagName == 'FORM'
       formActionMethod = target.getAttribute('method')
-      @httpRequestType = formActionMethod || @getBZAttribute(target, 'bz-remote')
+      @httpRequestType = formActionMethod || @getBZEntryPoint(target)
       @httpRequestType ?= ''
       @httpRequestType = @httpRequestType.toUpperCase()
 
@@ -120,12 +131,15 @@ class Remote
     if @target.tagName != 'A'
       return false
 
-    @hasBZAttribute(@target, 'bz-remote')
+    @isEnabledWithBz(@target)
+
+  isEnabledWithBz: (target) =>
+    @hasBZAttribute(@target, 'bz-remote') || @hasBZAttribute(@target, 'bz-visit')
 
   isValidForm: =>
     if @target.tagName != 'FORM'
       return false
-    @hasBZAttribute(@target, 'bz-remote') &&
+    @isEnabledWithBz(@target) &&
     @target.getAttribute('action')?
 
   formAppend: (uriEncoded, key, value) ->
@@ -159,7 +173,8 @@ class Remote
   enabledInputs: (form) ->
     selector = "input:not([type='reset']):not([type='button']):not([type='submit']):not([type='image']), select, textarea"
     inputs = Array::slice.call(form.querySelectorAll(selector))
-    disabledNodes = Array::slice.call(@querySelectorAllBZAttribute(form, 'bz-remote-noserialize'))
+    debugger
+    disabledNodes = Array::slice.call(@querySelectorAllBZAttribute(form, 'bz-noserialize'))
 
     return inputs unless disabledNodes.length
 

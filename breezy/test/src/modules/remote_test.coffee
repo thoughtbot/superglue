@@ -8,8 +8,109 @@ createTarget = (html) ->
   return testDiv.firstChild
 
 QUnit.module "Remote Attribute", ->
+  QUnit.module "#isValid"
+
+  testWithSession "returns true with a valid form", (assert) ->
+    html = """
+      <form data-bz-remote method='post' action='/'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
+    html = """
+      <form data-bz-visit method='post' action='/'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
+  testWithSession "returns false with an invalid form (missing bz-remote or bz-visit)", (assert) ->
+    html = """
+      <form method='post' action='/'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.isValid()
+
+    html = """
+      <form method='post' data-bz-queue='foobar' action='/'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.isValid()
+
+  testWithSession "returns true with a valid link", (assert) ->
+    html = """
+      <a href="/test" data-bz-remote='POST'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
+    html = """
+      <a href="/test" data-bz-visit='POST'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
+  testWithSession "returns false with a invalid link (missing data-bz-remote)", (assert) ->
+    html = """
+      <a href="/test"></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.isValid()
+
+    html = """
+      <a href="/test" data-bz-queue='foobar'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.isValid()
+
+  testWithSession "returns true with bz-remote (sans data-)", (assert) ->
+    html = """
+      <a href="/test" bz-remote='POST'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
+    html = """
+      <a href="/test" bz-visit='POST'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
+  testWithSession "returns false when dispatch is empty", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.isValid()
+
+  testWithSession "returns true when dispatch is used", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.ok remote.isValid()
+
   QUnit.module "#httpRequestType"
-  testWithSession "returns GET link with bz-remote set to nothing", (assert) ->
+  testWithSession "returns GET link with bz-remote/visit set to nothing", (assert) ->
     html = """
       <a href="/test" data-bz-remote></a>
     """
@@ -18,9 +119,25 @@ QUnit.module "Remote Attribute", ->
     assert.equal remote.httpUrl, '/test'
     assert.equal remote.actualRequestType, 'GET'
 
-  testWithSession "returns a VERB link with bz-remote set to a valid verb", (assert) ->
+    html = """
+      <a href="/test" data-bz-visit></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.httpUrl, '/test'
+    assert.equal remote.actualRequestType, 'GET'
+
+  testWithSession "returns a VERB link with bz-remote/visit set to a valid verb", (assert) ->
     html = """
       <a href="/test" data-bz-remote='post'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.httpUrl, '/test'
+    assert.equal remote.actualRequestType, 'POST'
+
+    html = """
+      <a href="/test" data-bz-visit='post'></a>
     """
     target = createTarget(html)
     remote = new Remote(target)
@@ -46,9 +163,18 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.equal remote.actualRequestType, 'POST'
 
-  testWithSession "uses the data-bz-remote when method is not set", (assert) ->
+  testWithSession "uses the data-bz-remote/visit when method is not set", (assert) ->
     html = """
       <form data-bz-remote>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.actualRequestType, 'POST'
+
+    html = """
+      <form data-bz-visit>
         <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
       </form>
     """
@@ -76,7 +202,7 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.equal remote.actualRequestType, 'POST'
 
-  testWithSession "is set to data-bz-remote when used with a value, and when method is not set", (assert) ->
+  testWithSession "is set to data-bz-remote/visit when used with a value, and when method is not set", (assert) ->
     html = """
       <form data-bz-remote='get'>
         <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
@@ -86,8 +212,33 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.equal remote.actualRequestType, 'GET'
 
+    html = """
+      <form data-bz-visit='get'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.actualRequestType, 'GET'
+
+  testWithSession "ignores data-bz-remote/visit when using dispatch", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-remote='post'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.actualRequestType, 'GET'
+
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-visit='post'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.actualRequestType, 'GET'
+
+
   QUnit.module "#payload"
-  testWithSession "contains a _method when data-bz-remote is set to verbs unsupported by the browser (PUT, DELETE)", (assert) ->
+  testWithSession "contains a _method when data-bz-remote/visit is set to verbs unsupported by the browser (PUT, DELETE)", (assert) ->
     html = """
       <a href="/test" data-bz-remote='put'></a>
     """
@@ -97,10 +248,30 @@ QUnit.module "Remote Attribute", ->
     assert.equal remote.actualRequestType, 'POST'
     assert.equal remote.payload, "_method=PUT"
 
+    html = """
+      <a href="/test" data-bz-visit='put'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.httpUrl, '/test'
+    assert.equal remote.actualRequestType, 'POST'
+    assert.equal remote.payload, "_method=PUT"
 
-  testWithSession " will contain a _method when data-bz-remote on a form is set to verbs unsupported by the browser (PUT, DELETE)", (assert) ->
+  testWithSession " will contain a _method when data-bz-remote/visit on a form is set to verbs unsupported by the browser (PUT, DELETE)", (assert) ->
     html = """
       <form data-bz-remote method='PUT'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
+      </form>
+    """
+    target = createTarget(html)
+    appendSpy = sinon.spy(FormData.prototype, 'append')
+    remote = new Remote(target)
+
+    assert.ok appendSpy.calledWith('_method', 'PUT')
+    appendSpy.restore()
+
+    html = """
+      <form data-bz-visit method='PUT'>
         <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
       </form>
     """
@@ -121,7 +292,7 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.equal remote.contentType, null
 
-  testWithSession "#contentType returns form-urlencoded on non-GET links", (assert) ->
+  testWithSession "returns form-urlencoded on non-GET remote/visit links", (assert) ->
     html = """
       <a href="/test" data-bz-remote='put'></a>
     """
@@ -129,7 +300,14 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.equal remote.contentType, 'application/x-www-form-urlencoded; charset=UTF-8'
 
-  testWithSession "#contentType returns null on forms regardless of verb", (assert) ->
+    html = """
+      <a href="/test" data-bz-visit='put'></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.contentType, 'application/x-www-form-urlencoded; charset=UTF-8'
+
+  testWithSession "returns null on forms regardless of verb", (assert) ->
     html = """
       <form data-bz-remote>
         <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
@@ -166,65 +344,19 @@ QUnit.module "Remote Attribute", ->
     remote = new Remote(target)
     assert.equal remote.contentType, null
 
-  QUnit.module "#isValid"
 
-  testWithSession "returns true with a valid form", (assert) ->
+  QUnit.module "#pushState"
+  testWithSession "sets pushState true when visit", (assert) ->
     html = """
-      <form data-bz-remote method='post' action='/'>
-        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-      </form>
+      <a href="/test" data-bz-visit></a>
     """
     target = createTarget(html)
     remote = new Remote(target)
-    assert.ok remote.isValid()
+    assert.ok remote.pushState
 
-  testWithSession "returns false with an invalid form (missing action)", (assert) ->
+  testWithSession "sets pushState false when remote", (assert) ->
     html = """
-      <form data-bz-remote method='post'>
-        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-      </form>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.notOk remote.isValid()
-
-  testWithSession "returns false with an invalid form (missing data-bz-remote)", (assert) ->
-    html = """
-      <form method='post' action='/'>
-        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-      </form>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.notOk remote.isValid()
-
-  testWithSession "returns true with a valid link", (assert) ->
-    html = """
-      <a href="/test" data-bz-remote='POST'></a>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.ok remote.isValid()
-
-  testWithSession "returns false with a invalid link (missing data-bz-remote)", (assert) ->
-    html = """
-      <a href="/test"></a>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.notOk remote.isValid()
-
-  testWithSession "returns true with bz-remote (sans data-)", (assert) ->
-    html = """
-      <a href="/test" bz-remote='POST'></a>
-    """
-    target = createTarget(html)
-    remote = new Remote(target)
-    assert.ok remote.isValid()
-
-  testWithSession "returns false with a invalid link (missing data-bz-remote)", (assert) ->
-    html = """
-      <a href="/test" data-bz-remote data-bz-push-state=false></a>
+      <a href="/test" data-bz-remote></a>
     """
     target = createTarget(html)
     remote = new Remote(target)
@@ -248,10 +380,10 @@ QUnit.module "Remote Attribute", ->
     assert.equal remote.httpUrl, '/'
     appendSpy.restore()
 
-  testWithSession "won't include form inputs with bz-remote-noserialize", (assert) ->
+  testWithSession "won't include form inputs with bz-noserialize", (assert) ->
     html = """
-      <form data-bn-remote method='post' action='/'>
-        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz' bz-remote-noserialize>
+      <form data-bz-remote method='post' action='/'>
+        <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz' bz-noserialize>
       </form>
     """
 
@@ -265,17 +397,36 @@ QUnit.module "Remote Attribute", ->
     assert.equal remote.httpUrl, '/'
     appendSpy.restore()
 
-  testWithSession "ajax errors fire starting with the element", (assert) ->
-    done = assert.async()
+  QUnit.module "#queue"
+
+  testWithSession "does not get set when using dispatch", (assert) ->
     html = """
-      <a href="/does-not-exist" data-bz-remote data-bz-remote-q='async'></a>
+      <a href="/test" data-bz-dispatch='add_user' data-bz-remote></a>
     """
     target = createTarget(html)
-    @$('body').appendChild(target)
-    target.addEventListener 'breezy:request-error', =>
-      assert.ok true
-    @document.addEventListener 'breezy:request-error', =>
-      assert.ok true
-      done()
-    target.click()
+    remote = new Remote(target)
+    assert.notOk remote.queue
 
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-visit></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.queue
+
+  QUnit.module "#action"
+
+  testWithSession "sets the action when using dispatch", (assert) ->
+    html = """
+      <a href="/test" data-bz-dispatch='add_user' data-bz-remote></a>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.notOk remote.queue
+
+    html = """
+      <form action="/test" data-bz-dispatch='add_user' data-bz-visit></form>
+    """
+    target = createTarget(html)
+    remote = new Remote(target)
+    assert.equal remote.action, 'add_user'

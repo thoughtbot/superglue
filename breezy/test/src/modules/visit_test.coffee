@@ -1,6 +1,6 @@
 { test, testWithSession } = require('../helpers/helpers')
 sinon = require('sinon')
-QUnit.module "Visit", afterEach: -> @Breezy.reset()
+QUnit.module "Visit/Remote", afterEach: -> @Breezy.reset()
 
 # todo, add setBaseurl tests
 #
@@ -58,7 +58,7 @@ test "#visit, a successful visit", (assert) ->
 #
 #   @Breezy.visit('/app/success_with_new_assets', options)
 #
-test "#visit, error responses should call the error callback", (assert) ->
+test "#remote, error responses should call the error callback", (assert) ->
   done = assert.async()
   breezyClickFired = requestFinished = requestStarted = false
 
@@ -81,7 +81,7 @@ test "#visit, error responses should call the error callback", (assert) ->
     assert.ok false, 'this should not happen'
     done()
 
-  @Breezy.visit('/app/does_not_exist', options)
+  @Breezy.remote('/app/does_not_exist', options)
 
 # test "visits with different-origin URL, does nothing on node", (assert) ->
 #   @Breezy.config.setBaseUrl('http://localhost:9876')

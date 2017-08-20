@@ -10,7 +10,7 @@ createTarget = (html) ->
 testWithSession "a successful visit", (assert) ->
   done = assert.async()
   html = """
-    <a href="/app/success" data-bz-remote></a>
+    <a href="/app/success" data-bz-visit></a>
   """
   target = createTarget(html)
   @$('body').appendChild(target)
@@ -53,10 +53,10 @@ testWithSession "visits to content with new assets generates a refresh", (assert
     done()
   @Breezy.visit('/app/success_with_new_assets')
 
-testWithSession "visits with an error response would redirect to that same errorpage", (assert) ->
+testWithSession "visits with an error response would redirect to that same error page", (assert) ->
   done = assert.async()
   html = """
-    <a href="/app/does_not_exist" data-bz-remote></a>
+    <a href="/app/does_not_exist" data-bz-visit></a>
   """
   target = createTarget(html)
   @$('body').appendChild(target)
@@ -74,11 +74,17 @@ testWithSession "visits with an error response would redirect to that same error
   target.click()
 
 testWithSession "visits with different-origin URL, forces a normal redirection", (assert) ->
+  html = """
+    <a href="http://example.com" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
+
   done = assert.async()
   @window.addEventListener 'unload', =>
     assert.ok true
     done()
-  @Breezy.visit("http://example.com")
+  target.click()
 
 testWithSession "calling preventDefault on the before-change event cancels the visit", (assert) ->
   done = assert.async()
@@ -169,8 +175,8 @@ testWithSession "multiple remote visits with async will use a parallel queue and
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Breezy.visit('/app', queue: 'async')
-  @Breezy.visit('/app', queue: 'async')
+  @Breezy.remote('/app')
+  @Breezy.remote('/app')
   assert.equal @Breezy.controller.queue.dll.length, 2
   requests[1].respond(200, { "Content-Type": "application/javascript" }, response)
 
@@ -199,8 +205,8 @@ testWithSession "multiple remote visits with async options will use a parallel q
   xhr.onCreate = (xhr) ->
     requests.push(xhr)
 
-  @Breezy.visit('/app', queue: 'async')
-  @Breezy.visit('/app', queue: 'async')
+  @Breezy.remote('/app')
+  @Breezy.remote('/app')
   assert.equal @Breezy.controller.queue.dll.length, 2
   requests[0].respond(200, { "Content-Type": "application/javascript" }, response)
 
@@ -250,3 +256,18 @@ testWithSession "visits to content with an async Breezy.visit will kick off an a
       done()
 
   target.click()
+
+testWithSession "ajax errors fire starting with the element", (assert) ->
+  done = assert.async()
+  html = """
+    <a href="/does-not-exist" data-bz-remote></a>
+  """
+  target = createTarget(html)
+  @$('body').appendChild(target)
+  target.addEventListener 'breezy:request-error', =>
+    assert.ok true
+  @document.addEventListener 'breezy:request-error', =>
+    assert.ok true
+    done()
+  target.click()
+

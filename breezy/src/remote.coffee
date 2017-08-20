@@ -5,7 +5,6 @@ ComponentUrl = require('./component_url')
 pageChangePrevented = (url, target) ->
   !Utils.triggerEvent EVENTS.BEFORE_CHANGE, url: url, target
 
-
 documentListenerForLinks = (eventType, handler, document) ->
   document.addEventListener eventType, (ev) ->
     target = ev.target
@@ -32,26 +31,44 @@ class Remote
       ev.preventDefault()
       options = remote.toOptions()
       return if pageChangePrevented(remote.httpUrl.absolute, options.target)
-      callback(remote.httpUrl, options)
+      callback(options)
     documentListenerForLinks 'click', remoteHandler, document
     document.addEventListener "submit", remoteHandler
 
   constructor: (target, opts={})->
     @target = target
-    @payload = ''
-    @contentType = null
-    @setRequestType(target)
-    @q =  @getBZAttribute(target, 'bz-remote-q') || 'sync'
-    @pushState =  !(@getBZAttribute(target, 'bz-push-state') == 'false')
-    @httpUrl = target.getAttribute('href') || target.getAttribute('action')
-    @silent = @getBZAttribute(target, 'bz-silent') || false
-    @setPayload(target)
+    if @isValid()
+      @payload = ''
+      @contentType = null
+      @setAction(target)
+      @setRequestType(target)
+      @setQueue(target)
+      @setPushState(target)
+      @httpUrl = target.getAttribute('href') || target.getAttribute('action')
+      @setPayload(target)
+
+  setAction: (target) =>
+    @action = @getBZAttribute(target, 'bz-dispatch')
+
+  setQueue: (target) =>
+    return if @action
+
+    if @hasBZAttribute(target, 'bz-visit')
+      @q = 'sync'
+    else if @hasBZAttribute(target, 'bz-remote')
+      @q = 'async'
+
+  setPushState: (target) =>
+    if @hasBZAttribute(target, 'bz-visit')
+      @pushState = true
+    else if @hasBZAttribute(target, 'bz-remote')
+      @pushState = false
 
   toOptions: =>
+    href: @httpUrl
     requestMethod: @actualRequestType
     payload: @payload
     contentType: @contentType
-    silent: @silent
     queue: @q
     pushState: @pushState
     onRequestStart: @onRequestStart
@@ -60,18 +77,9 @@ class Remote
 
   onRequestError:(xhr) =>
     if @q is'sync'
-      @goToErrorPage(xhr)
+      Utils.goToErrorPage(xhr, @httpUrl)
     else
       Utils.triggerEvent EVENTS.ERROR, xhr, @target
-
-  goToErrorPage: (xhr) ->
-    crossOriginRedirectUrl = (xhr) ->
-      redirect = xhr.header['location']
-      crossOrigin = (new ComponentUrl(redirect)).crossOrigin()
-
-      if redirect? and crossOrigin
-        redirect
-    document.location.href = crossOriginRedirectUrl(xhr) or @httpUrl
 
   onRequestStart:(url) =>
     Utils.triggerEvent EVENTS.FETCH, url: url, @target
@@ -79,20 +87,29 @@ class Remote
   onRequestEnd:(url) =>
     Utils.triggerEvent EVENTS.RECEIVE, url: url, @target
 
+  getBZEntryPoint: (target)=>
+    @getBZAttribute(target, 'bz-visit') || @getBZAttribute(target, 'bz-remote')
+
   setRequestType: (target)=>
     if target.tagName == 'A'
-      @httpRequestType = @getBZAttribute(target, 'bz-remote')
-      @httpRequestType ?= ''
-      @httpRequestType = @httpRequestType.toUpperCase()
+      if @action
+        @httpRequestType = FALLBACK_LINK_METHOD
+      else
+        @httpRequestType = @getBZEntryPoint(target)
+        @httpRequestType ?= ''
+        @httpRequestType = @httpRequestType.toUpperCase()
 
       if @httpRequestType not in SUPPORTED_METHODS
         @httpRequestType = FALLBACK_LINK_METHOD
 
     if target.tagName == 'FORM'
       formActionMethod = target.getAttribute('method')
-      @httpRequestType = formActionMethod || @getBZAttribute(target, 'bz-remote')
-      @httpRequestType ?= ''
-      @httpRequestType = @httpRequestType.toUpperCase()
+      if @action
+        @httpRequestType = formActionMethod
+      else
+        @httpRequestType = formActionMethod || @getBZEntryPoint(target)
+        @httpRequestType ?= ''
+        @httpRequestType = @httpRequestType.toUpperCase()
 
       if @httpRequestType not in SUPPORTED_METHODS
         @httpRequestType = FALLBACK_FORM_METHOD
@@ -118,13 +135,15 @@ class Remote
     if @target.tagName != 'A'
       return false
 
-    @hasBZAttribute(@target, 'bz-remote')
+    @isEnabledWithBz(@target)
+
+  isEnabledWithBz: (target) =>
+    @hasBZAttribute(@target, 'bz-remote') or @hasBZAttribute(@target, 'bz-visit') or @getBZAttribute(@target, 'bz-dispatch')?
 
   isValidForm: =>
     if @target.tagName != 'FORM'
       return false
-    @hasBZAttribute(@target, 'bz-remote') &&
-    @target.getAttribute('action')?
+    @isEnabledWithBz(@target)
 
   formAppend: (uriEncoded, key, value) ->
     uriEncoded += "&" if uriEncoded.length
@@ -157,7 +176,7 @@ class Remote
   enabledInputs: (form) ->
     selector = "input:not([type='reset']):not([type='button']):not([type='submit']):not([type='image']), select, textarea"
     inputs = Array::slice.call(form.querySelectorAll(selector))
-    disabledNodes = Array::slice.call(@querySelectorAllBZAttribute(form, 'bz-remote-noserialize'))
+    disabledNodes = Array::slice.call(@querySelectorAllBZAttribute(form, 'bz-noserialize'))
 
     return inputs unless disabledNodes.length
 

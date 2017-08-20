@@ -45,6 +45,23 @@ class Controller
   fetchQueue:(name) =>
     @queues[name] ?= new (Config.fetchQueue(name))
 
+  handleRemote:(opts) =>
+    if opts.action?
+      Utils.dispatch(opts)
+    else
+      @request(opts.href, opts)
+
+  remote: (href, options = {}) =>
+    options.queue = 'async'
+    @request(href, options)
+
+  visit: (href, options = {}) =>
+    options.onRequestError = (xhr)->
+      Utils.goToErrorPage(xhr, href)
+    options.pushState = true
+    options.queue = 'sync'
+    @request(href, options)
+
   request: (url, options = {}) =>
     options = Utils.reverseMerge options,
       onProgress: -> {}
@@ -191,6 +208,5 @@ class Controller
   downloadingFile: (xhr) ->
     (disposition = xhr.header['content-disposition'])? and
       disposition.match /^attachment/
-
 
 module.exports = Controller

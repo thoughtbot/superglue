@@ -1,7 +1,11 @@
 require "test_helper"
+require "mocha"
+
 require "action_view"
 require "action_view/testing/resolvers"
 require "breezy_template"
+require 'byebug'
+require 'mocha/test_unit'
 
 BLOG_POST_PARTIAL = <<-JBUILDER
   json.extract! blog_post, :id, :body
@@ -55,6 +59,11 @@ class BreezyTemplateTest < ActionView::TestCase
 
     @context = self
     Rails.cache.clear
+  end
+
+  teardown do
+    # Mocha didn't auto teardown??
+    Mocha::Mockery.teardown
   end
 
   cattr_accessor :request_forgery, :breezy
@@ -970,7 +979,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        Breezy.visit('/some_url?_breezy_filter=hit.hit2', {async: true, pushState: false});
+        Breezy.request('/some_url?_breezy_filter=hit.hit2', {queue: 'async', pushState: false});
         return (
           {"data":{"hit":{"hit2":null}}}
         );
@@ -1026,8 +1035,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        Breezy.visit('/some_url?_breezy_filter=hit.hit2.id%3D1.greeting', {async: true, pushState: false});
-        Breezy.visit('/some_url?_breezy_filter=hit.hit2.id%3D2.greeting', {async: true, pushState: false});
+        Breezy.request('/some_url?_breezy_filter=hit.hit2.id%3D1.greeting', {queue: 'async', pushState: false});
+        Breezy.request('/some_url?_breezy_filter=hit.hit2.id%3D2.greeting', {queue: 'async', pushState: false});
         return (
           {"data":{"hit":{"hit2":[{"greeting":null},{"greeting":null}]}}}
         );
@@ -1083,7 +1092,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        Breezy.visit('?_breezy_filter=hello.content', {async: true, pushState: false});
+        Breezy.request('?_breezy_filter=hello.content', {queue: 'async', pushState: false});
         return ({"data":{"content":null},"action":"graft","path":"hello"});
       })()
     JS

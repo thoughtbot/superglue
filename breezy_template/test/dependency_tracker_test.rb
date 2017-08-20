@@ -2,7 +2,7 @@
 
 require 'test_helper'
 require 'breezy_template/dependency_tracker'
-
+require 'mocha'
 
 class FakeTemplate
   attr_reader :source, :handler

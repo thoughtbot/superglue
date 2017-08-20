@@ -1,5 +1,5 @@
 (function() {
-  Breezy.request('/app/success_with_async_render2', {queue: 'async', ignoreSamePathConstraint: true})
+  Breezy.request('/app/success_with_async_render2', {queue: 'async', ignoreSamePathConstraint: true, pushState: false})
   return {
     data: { heading: 'Some heading 2' , address: {}},
     title: 'title 2',

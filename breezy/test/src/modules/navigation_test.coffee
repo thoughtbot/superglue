@@ -26,8 +26,7 @@ testWithSession "a successful visit", (assert) ->
 
   @document.addEventListener 'breezy:request-end', =>
     console.log 'breezy:request-end'
-    state = breezy: true, url: "/app/session"
-    assert.propEqual @history.state.state, state
+    assert.equal @document.location.pathname, "/app/session"
     assert.ok breezyClickFired
     assert.ok requestStared
     requestFinished = true
@@ -36,7 +35,7 @@ testWithSession "a successful visit", (assert) ->
     console.log 'breezy:load'
     assert.ok requestFinished
     assert.propEqual data.data, { heading: "Some heading 2" }
-    state = breezy: true, url: "/app/success"
+    state = breezy: true, pathname: "/app/success"
     assert.propEqual @history.state.state, state
     console.log(@location.href)
     #assert.equal @location.href, state.url
@@ -237,7 +236,7 @@ testWithSession "visits to content with an async Breezy.visit will kick off an a
   done = assert.async()
   load = 0
   html = """
-    <a href="/app/success_with_async_render" data-bz-remote></a>
+    <a href="/app/success_with_async_render" data-bz-visit></a>
   """
   target = createTarget(html)
   @$('body').appendChild(target)

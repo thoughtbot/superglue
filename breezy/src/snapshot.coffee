@@ -5,53 +5,80 @@ Config = require('./config')
 
 class Snapshot
   constructor: (@controller, @history) ->
-    @pageCache = {}
-    @currentBrowserState = null
-    @pageCacheSize = 10
-    @currentPage = null
-    @loadedAssets= null
+    @state = {}
+    @stateSize = 10
+    @loadedAssets = null
+    @csrfToken = null
+    @lastPath = null
 
   reset: =>
-    @pageCache = {}
-    @currentPage = null
-    @currentBrowserState = null
+    @state = {}
+    @stateSize = 10
     @loadedAssets = null
+    @csrfToken = null
 
   onHistoryChange: (location, action) =>
-    if action == 'POP' && location.state?.breezy && location.state.url!= @currentBrowserState.url
-      previousUrl = new ComponentUrl(@currentBrowserState.url)
-      newUrl = new ComponentUrl(location.state.url)
+    if action == 'POP' && location.state?.breezy && location.state.pathname!= @lastPath
+      previousUrl = new ComponentUrl(@history.location.pathname)
+      newUrl = new ComponentUrl(location.pathname)
+      restored = @restore(newUrl)
+      if !restored
+        @controller.request location.pathname
 
-      if restorePoint = @pageCache[newUrl.pathname]
-        @cacheCurrentPage()
-        @currentPage = restorePoint
-        @controller.restore(@currentPage)
-      else
-        @controller.request location.state.url
+  setInitialState: (pathname, state) =>
+    url = new ComponentUrl pathname
+    @setInitialUrl(pathname)
+    page = @savePage(url.pathname, state)
+    Utils.emitter.emit EVENTS.LOAD, page
 
-  constrainPageCacheTo: (limit = @pageCacheSize) =>
-    pageCacheKeys = Object.keys @pageCache
+  constrainPageCacheTo: (limit = @stateSize) =>
+    stateKeys = Object.keys @state
 
-    cacheTimesRecentFirst = pageCacheKeys.map (url) =>
-      @pageCache[url].cachedAt
+    cacheTimesRecentFirst = stateKeys.map (url) =>
+      @state[url].cachedAt
     .sort (a, b) -> b - a
 
-    for key in pageCacheKeys when @pageCache[key].cachedAt <= cacheTimesRecentFirst[limit]
-      delete @pageCache[key]
+    for key in stateKeys when @state[key].cachedAt <= cacheTimesRecentFirst[limit]
+      delete @state[key]
 
-  transitionCacheFor: (url) =>
-    return if url is @currentBrowserState.url
-    cachedPage = @pageCache[url]
-    cachedPage if cachedPage and !cachedPage.transitionCacheDisabled
+  pageFor: (url) =>
+    url = new ComponentUrl url
+    @state[url.pathname]
 
-  pagesCached: (size = @pageCacheSize) =>
-    @pageCacheSize = parseInt(size) if /^[\d]+$/.test size
+  pagesCached: (size = @stateSize) =>
+    @stateSize = parseInt(size) if /^[\d]+$/.test size
 
-  cacheCurrentPage: =>
-    return unless @currentPage
-    currentUrl = new ComponentUrl @currentBrowserState.url
+  restore: (url) =>
+    url = new ComponentUrl url
+    restorePoint = @pageFor(url.pathname)
 
-    Utils.reverseMerge @currentPage,
+    if restorePoint && !restorePoint.transition_cache == false
+      @reflectNewUrl(url.pathname)
+      Utils.emitter.emit EVENTS.RESTORE
+      Utils.emitter.emit EVENTS.LOAD, restorePoint
+      true
+    else
+      false
+
+  remove: (url) =>
+    url = new ComponentUrl url
+    delete @state[url.pathname]
+
+  load: (url) =>
+    url = new ComponentUrl url
+    page = @pageFor(url.pathname)
+    Utils.emitter.emit EVENTS.LOAD, page
+
+  savePage: (url, page, pushState = false) =>
+    if @refreshBrowserForNewAssets(page)
+      return
+
+    if pushState
+      @reflectNewUrl url
+
+    currentUrl = new ComponentUrl url
+    @csrfToken = page.csrf_token if page? && page.csrf_token?
+    Utils.reverseMerge page,
       cachedAt: new Date().getTime()
       positionY: window?.pageYOffset
       positionX: window?.pageXOffset
@@ -59,12 +86,16 @@ class Snapshot
       pathname: currentUrl.pathname
       transition_cache: true
 
-    @pageCache[currentUrl.pathname] = @currentPage
+    @state[currentUrl.pathname] = page
+
+    return page
 
   setInitialUrl: (href) =>
     url = new ComponentUrl(href)
-    @history.replace url.pathname, { breezy: true, url: url.pathname}
-    @currentBrowserState = @history.location.state
+    @history.replace url.pathname, {breezy: true, pathname: url.pathname }
+
+  currentUrl: () =>
+    new ComponentUrl(@history.location.pathname)
 
   removeParamFromUrl: (url, parameter) =>
     return url
@@ -73,7 +104,7 @@ class Snapshot
 
   reflectNewUrl: (url) =>
     #todo: add somemore test for this one, has no hash??
-    currentComponentUrl = new ComponentUrl(@currentBrowserState.url)
+    currentComponentUrl = new ComponentUrl(@history.location.pathname)
     nextUrl = new ComponentUrl url
     if nextUrl.pathname != currentComponentUrl.pathname
       url = new ComponentUrl(nextUrl, Config.fetchBaseUrl())
@@ -81,36 +112,31 @@ class Snapshot
       fullUrl = url.pathname + preservedHash
       fullUrl = @removeParamFromUrl(fullUrl, '_breezy_filter')
       fullUrl = @removeParamFromUrl(fullUrl, '__')
-      @history.push(fullUrl, { breezy: true, url: url.pathname })
-
-  updateCurrentBrowserState: =>
-    @currentBrowserState = @history.location.state
+      @lastPath = url.pathname
+      @history.push(fullUrl, { breezy: true, pathname: url.pathname })
 
   refreshBrowserForNewAssets: (nextPage) =>
-    if window? and @currentPage and @assetsChanged(nextPage)
+    if window? and @assetsChanged(nextPage)
       document.location.reload()
       true
     else
       false
 
-  changePage: (nextPage) =>
-    if @refreshBrowserForNewAssets(nextPage)
-      return
-
-    @currentPage = nextPage
-    @controller.csrfToken = @currentPage.csrf_token if @currentPage.csrf_token?
-    @updateCurrentBrowserState()
+  currentPage: =>
+    key = @history.location.pathname
+    @state[key]
 
   assetsChanged: (nextPage) =>
-    @loadedAssets ||= @currentPage.assets
+    if !@loadedAssets
+      @loadedAssets ||= nextPage.assets
+      return false
+
     fetchedAssets = nextPage.assets
     fetchedAssets.length isnt @loadedAssets.length or Utils.intersection(fetchedAssets, @loadedAssets).length isnt @loadedAssets.length
 
   graftByKeypath: (keypath, node, opts={})=>
-    for k, v in @pageCache
-      @history.pageCache[k] = Utils.graftByKeypath(keypath, node, v, opts)
-
-    @currentPage = Utils.graftByKeypath(keypath, node, @currentPage, opts)
-    Utils.emitter.emit EVENTS.LOAD, @currentPage
+    for k, v of @state
+      @state[k] = Utils.graftByKeypath(keypath, node, v, opts)
+    Utils.emitter.emit EVENTS.LOAD, @currentPage()
 
 module.exports = Snapshot

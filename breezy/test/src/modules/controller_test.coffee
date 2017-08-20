@@ -26,12 +26,12 @@ QUnit.module "Controller", ->
       Config.addQueue('fake', FakeQueue)
       @history = history = History.createMemoryHistory()
       @controller = controller = new Controller(history)
-      controller.history.setInitialUrl('/')
-      controller.history.currentPage =
+      controller.history.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
+
       @snapshot = controller.history
 
     test 'pushes a request object into a specified queue', (assert) ->
@@ -48,6 +48,7 @@ QUnit.module "Controller", ->
       assert.propEqual request.header,
          'accept': 'text/javascript, application/x-javascript, application/javascript'
          'x-xhr-referer': '/'
+         'x-csrf-token': 'token'
          'x-requested-with': 'XMLHttpRequest'
 
     test 'with enableTransitionCache, restores a page if there is a restorepoint available', (assert) ->
@@ -61,20 +62,20 @@ QUnit.module "Controller", ->
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
-      @snapshot.pageCache['/foo'] = cache
+      @snapshot.state['/foo'] = cache
 
-      spy = sinon.spy(@controller, 'restore')
+      spy = sinon.spy(@controller.history, 'restore')
       @controller.request('/foo', queue: 'fake')
-      assert.ok spy.calledWith(cache)
+      assert.ok spy.called
       assert.equal @history.location.pathname, '/foo'
 
     test 'with disableTransitionCache, will not restore a page even if there is a restorepoint available', (assert) ->
       #todo: check here for refactor opportunity. esp history.reflectnewurl
       @controller.disableRequestCaching()
       cache = {}
-      @snapshot.pageCache['/foo'] = cache
+      @snapshot.state['/foo'] = cache
 
-      spy = sinon.spy(@controller, 'restore')
+      spy = sinon.spy(@controller.history, 'restore')
       @controller.request('/foo', queue: 'fake')
       assert.notOk spy.calledWith(cache)
       assert.equal @history.location.pathname, '/'
@@ -98,8 +99,7 @@ QUnit.module "Controller", ->
       Config.addQueue('sync', FakeQueue)
       history = History.createMemoryHistory()
       controller = new Controller(history)
-      controller.history.setInitialUrl('/')
-      controller.history.currentPage =
+      controller.history.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
@@ -125,43 +125,6 @@ QUnit.module "Controller", ->
       controller.cache('foobar', 123)
       assert.equal controller.cache('foobar', 321), 123
 
-  QUnit.module "replace", (hooks) ->
-    hooks.beforeEach ->
-      Config.addQueue('fake', FakeQueue)
-      @history = history = History.createMemoryHistory()
-      @controller = controller = new Controller(history)
-      controller.enableTransitionCache()
-      controller.history.setInitialUrl('/')
-      controller.history.currentPage =
-        data: {}
-        csrf_token: 'token'
-        transition_cache: true
-        assets: ['application-123.js']
-
-    hooks.afterEach ->
-      Breezy.reset()
-
-    test 'changes the page and calls load', (assert) ->
-      #todo: check here for refactor opportunity. esp history.reflectnewurl
-      done = assert.async()
-
-      nextPage =
-        data:
-          heading: 'Some heading'
-          address:
-            zip: 11201
-        csrf_token: 'token'
-        transition_cache: true
-        assets: ['application-123.js']
-
-      Utils.on 'breezy:load', =>
-        assert.ok true
-        assert.equal @history.location.pathname, '/', 'does not change the url'
-        assert.equal @controller.currentPage(), nextPage
-        done()
-
-      @controller.replace(nextPage)
-
   QUnit.module "restore", (hooks) ->
     hooks.afterEach ->
       Breezy.reset()
@@ -171,8 +134,7 @@ QUnit.module "Controller", ->
       @history = history = History.createMemoryHistory()
       @controller = controller = new Controller(history)
       controller.enableTransitionCache()
-      controller.history.setInitialUrl('/')
-      controller.history.currentPage =
+      controller.history.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
@@ -190,6 +152,9 @@ QUnit.module "Controller", ->
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
+
+
+      @controller.history.state['/foo'] = nextPage
       calls = 0
 
       Utils.on 'breezy:restore', =>
@@ -197,11 +162,11 @@ QUnit.module "Controller", ->
 
       Utils.on 'breezy:load', =>
         assert.equal calls, 1
-        assert.equal @history.location.pathname, '/', 'does not change the url'
-        assert.equal @controller.currentPage(), nextPage
+        assert.equal @history.location.pathname, '/foo'
+        assert.equal @controller.history.currentPage(), nextPage
         done()
 
-      @controller.restore(nextPage)
+      @controller.history.restore('/foo')
 
   QUnit.module "onLoad", (hooks) ->
     hooks.afterEach ->
@@ -213,8 +178,7 @@ QUnit.module "Controller", ->
       @history = history = History.createMemoryHistory()
       @controller = controller = new Controller(history)
       controller.enableTransitionCache()
-      controller.history.setInitialUrl('/')
-      controller.history.currentPage =
+      controller.history.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
@@ -236,6 +200,7 @@ QUnit.module "Controller", ->
         """
         ignoreSamePathContraint: false
         queue: 'sync'
+        url: '/'
         pushState: true
         onRequestEnd: ->{}
         onRequestError: ->{}

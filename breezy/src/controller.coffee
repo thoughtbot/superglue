@@ -27,20 +27,12 @@ class Controller
     @unlisten()
     @history.reset()
 
-  setInitialUrl: (url) =>
-    @history.setInitialUrl(url)
-
   setInitialState: ({pathname, state }) =>
-    @setInitialUrl(pathname)
-    @history.setInitialUrl(pathname)
-    @setCSRFToken(state.csrf_token)
-    @replace(state)
+    @history.setInitialState(pathname, state)
 
-  setCSRFToken: (token) =>
-    @csrfToken = token
-
-  currentPage: =>
-    @history.currentPage
+  currentLocation: =>
+    #todo rename me..
+    @history.history.location
 
   fetchQueue:(name) =>
     @queues[name] ?= new (Config.fetchQueue(name))
@@ -79,14 +71,13 @@ class Controller
       @onCrossOriginRequest(url)
       return
 
-    @history.cacheCurrentPage()
     if options.queue == 'sync'
       @progressBar.start()
 
-    restorePoint = @history.transitionCacheFor(url.pathname)
-    if @transitionCacheEnabled and restorePoint and restorePoint.transition_cache
-      @history.reflectNewUrl(url)
-      @restore(restorePoint)
+    if @transitionCacheEnabled
+      restored = @history.restore(url.pathname)
+      if restored
+        @progressBar.done()
 
     options.cacheRequest ?= @requestCachingEnabled
     options.onRequestStart?(url.absolute)
@@ -101,7 +92,7 @@ class Controller
       url: url
       header:
         'accept': jsAccept
-        'x-xhr-referer': @currentPage().url
+        'x-xhr-referer': @currentLocation().pathname
         'x-requested-with': 'XMLHttpRequest'
       payload: options.payload
       method: options.requestMethod || 'GET'
@@ -118,8 +109,8 @@ class Controller
     if options.contentType?
       req.header['content-type'] =  options.contentType
 
-    if @csrfToken?
-      req.header['x-csrf-token'] = @csrfToken
+    if @history.csrfToken?
+      req.header['x-csrf-token'] = @history.csrfToken
 
     new Request req
 
@@ -129,18 +120,6 @@ class Controller
   disableRequestCaching: (disable = true) =>
     @requestCachingEnabled = not disable
     disable
-
-  restore: (cachedPage, options = {}) =>
-    @progressBar.done()
-    @history.changePage(cachedPage, options)
-
-    Utils.emitter.emit EVENTS.RESTORE
-    Utils.emitter.emit EVENTS.LOAD, cachedPage
-
-  replace: (nextPage, options = {}) =>
-    Utils.withDefaults(nextPage, @history.currentBrowserState)
-    @history.changePage(nextPage, options)
-    Utils.emitter.emit EVENTS.LOAD, @currentPage()
 
   cache: (key, value) =>
     return @atomCache[key] if value == null
@@ -164,19 +143,15 @@ class Controller
     nextPage =  @processResponse(rsp)
 
     if nextPage
-      if rsp.queue != 'sync' && url.pathname != @currentPage().pathname
+      if rsp.queue != 'sync' && url.pathname != @currentLocation().pathname
 
         unless rsp.ignoreSamePathConstraint
           Utils.warn("Async response path is different from current page path")
 
-      if rsp.pushState
-        @history.reflectNewUrl url
-
-      Utils.withDefaults(nextPage, @history.currentBrowserState)
-
       if nextPage.action != 'graft'
-        @history.changePage(nextPage)
-        Utils.emitter.emit EVENTS.LOAD, @currentPage()
+        key = new ComponentUrl(rsp.url).pathname
+        @history.savePage(key, nextPage, rsp.pushState)
+        @history.load(key)
       else
         #todo: clean this up
         @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)

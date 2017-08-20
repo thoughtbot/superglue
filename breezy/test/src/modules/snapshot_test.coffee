@@ -11,155 +11,32 @@ class FakeController
 
 QUnit.module "Snapshot", ->
 
-  QUnit.module "#setInitialUrl"
+  QUnit.module "#setInitialState"
 
   test 'sets the inital location state', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
     snapshot = new Snapshot(controller, history)
     assert.notOk history.location.state?
-    snapshot.setInitialUrl('/')
-    assert.propEqual history.location.state, { breezy: true, url: '/' }
-
-  QUnit.module "#cacheCurrentPage"
-  test 'sets the pageCache', (assert) ->
-    history = History.createMemoryHistory()
-    controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    snapshot.setInitialUrl('/')
-
-    snapshot.currentPage =
-      data:
-        heading: 'Some heading'
-        address:
-          zip: 11201
-      csrf_token: 'token'
-      assets: ['application-123.js']
-
-    assert.propEqual snapshot.pageCache, {}
-    snapshot.cacheCurrentPage()
-    snapshot.pageCache['/']['cachedAt'] = 123
-    snapshot.pageCache['/']['positionX'] = 0
-    snapshot.pageCache['/']['positionY'] = 0
-
-    assert.ok _.isEqual snapshot.pageCache['/'],
-      data:
-        heading: 'Some heading'
-        address:
-          zip: 11201
-      csrf_token: 'token'
-      assets: [ 'application-123.js' ]
-      cachedAt: 123
-      positionY: 0
-      positionX: 0
-      url: '/'
-      pathname: '/'
-      transition_cache: true
-
-  QUnit.module "#transitionCacheFor"
-
-  test 'returns nothing if on the current page', (assert) ->
-    Breezy.reset()
-    history = History.createMemoryHistory()
-    controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    assert.notOk history.location.state?
-    snapshot.setInitialUrl('/')
-    snapshot.currentPage =
-      data:
-        heading: 'Some heading'
-        address:
-          zip: 11201
-      csrf_token: 'token'
-      assets: ['application-123.js']
-    snapshot.cacheCurrentPage()
-    transitionCache = snapshot.transitionCacheFor('/')
-
-    assert.notOk transitionCache?
-
-  test 'returns the cached page if loading a different page', (assert) ->
-    Breezy.reset()
-    history = History.createMemoryHistory()
-    controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    assert.notOk history.location.state?
-    snapshot.setInitialUrl('/')
-    snapshot.currentPage =
-      data:
-        heading: 'Some heading'
-        address:
-          zip: 11201
-      csrf_token: 'token'
-      assets: ['application-123.js']
-    snapshot.cacheCurrentPage()
-    snapshot.currentBrowserState = {breezy: true, url: '/foobar'}
-
-    transitionCache = snapshot.transitionCacheFor('/')
-    transitionCache.cachedAt = 0
-    transitionCache.positionX = 0
-    transitionCache.positionY = 0
-
-    cache =
-      data:
-        heading: 'Some heading'
-        address:
-          zip: 11201
-      csrf_token: 'token'
-      assets: [ 'application-123.js' ]
-      positionY: 0
-      positionX: 0
-      cachedAt: 0
-      url: '/'
-      pathname: '/'
-      transition_cache: true
-
-    assert.ok _.isEqual(transitionCache, cache)
-
-  QUnit.module "#reflectNewUrl"
-
-  test 'pushes a new location', (assert) ->
-    history = History.createMemoryHistory()
-    controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    assert.notOk history.location.state?
-    snapshot.setInitialUrl('/')
-
-    assert.propEqual history.location.state, { breezy: true, url: '/' }
-    assert.propEqual history.length, 1
-    snapshot.reflectNewUrl('/foobar')
-    assert.propEqual history.location.state, { breezy: true, url: '/foobar' }
-    assert.propEqual history.length, 2
-
-  test 'does not push a new location when the url is the same', (assert) ->
-    history = History.createMemoryHistory()
-    controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    assert.notOk history.location.state?
-    snapshot.setInitialUrl('/')
-
-    assert.propEqual history.location.state, { breezy: true, url: '/' }
-    assert.propEqual history.length, 1
-    snapshot.reflectNewUrl('/')
-    assert.propEqual history.location.state, { breezy: true, url: '/' }
-    assert.propEqual history.length, 1
-
-  QUnit.module "#changePage"
-
-  test 'sets the current page and the browser state', (assert) ->
-    history = History.createMemoryHistory()
-    controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    assert.notOk history.location.state?
-    snapshot.setInitialUrl('/')
-
-    snapshot.currentPage =
+    snapshot.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
+      transition_cache: true
       assets: ['application-123.js']
-    snapshot.cacheCurrentPage()
-    snapshot.currentBrowserState = {breezy: true, url: '/foobar'}
 
-    assert.equal controller.csrfToken, ''
+    assert.propEqual history.location.pathname, '/foobar'
+    assert.propEqual snapshot.state.length, 1
+
+  QUnit.module "#savePage"
+  test 'saves the page in the state', (assert) ->
+    history = History.createMemoryHistory()
+    controller = new FakeController
+    snapshot = new Snapshot(controller, history)
+    snapshot.setInitialState '/foobar',
+      data: {}
+      csrf_token: 'token'
+      transition_cache: true
+      assets: ['application-123.js']
 
     nextPage =
       data:
@@ -169,10 +46,108 @@ QUnit.module "Snapshot", ->
       csrf_token: 'token'
       assets: ['application-123.js']
 
-    history.location.state = {breezy: true, url: '/next'}
-    snapshot.changePage(nextPage)
-    assert.equal snapshot.currentPage, nextPage
-    assert.propEqual snapshot.currentBrowserState, {breezy: true, url: '/next'}
+    snapshot.savePage('/baz', nextPage)
+    snapshot.state['/baz'].cachedAt = 123
+
+    assert.ok _.isEqual snapshot.state['/baz'],
+      data:
+        heading: 'Some heading'
+        address:
+          zip: 11201
+      csrf_token: 'token'
+      assets: [ 'application-123.js' ]
+      cachedAt: 123
+      positionY: 0
+      positionX: 0
+      url: '/baz'
+      pathname: '/baz'
+      transition_cache: true
+    assert.equal history.location.pathname, '/foobar'
+
+  test 'pushes state if specified', (assert) ->
+    history = History.createMemoryHistory()
+    controller = new FakeController
+    snapshot = new Snapshot(controller, history)
+    snapshot.setInitialState '/foobar',
+      data: {}
+      csrf_token: 'token'
+      transition_cache: true
+      assets: ['application-123.js']
+
+    nextPage =
+      data:
+        heading: 'Some heading'
+        address:
+          zip: 11201
+      csrf_token: 'token'
+      assets: ['application-123.js']
+
+    assert.equal history.location.pathname, '/foobar'
+    snapshot.savePage('/baz', nextPage, true)
+    assert.equal history.location.pathname, '/baz'
+
+
+  QUnit.module "#pageFor"
+
+  test 'returns nothing if on the current page', (assert) ->
+    history = History.createMemoryHistory()
+    controller = new FakeController
+    snapshot = new Snapshot(controller, history)
+    snapshot.setInitialState '/foobar',
+      data: {}
+      csrf_token: 'token'
+      transition_cache: true
+      assets: ['application-123.js']
+
+    page = snapshot.pageFor('/foobar')
+    page.cachedAt = 123
+
+    assert.ok _.isEqual page,
+      data: {}
+      csrf_token: 'token'
+      assets: [ 'application-123.js' ]
+      cachedAt: 123
+      positionY: 0
+      positionX: 0
+      url: '/foobar'
+      pathname: '/foobar'
+      transition_cache: true
+
+  QUnit.module "#reflectNewUrl"
+
+  test 'pushes a new location', (assert) ->
+    history = History.createMemoryHistory()
+    controller = new FakeController
+    snapshot = new Snapshot(controller, history)
+    assert.notOk history.location.state?
+    snapshot.setInitialState '/foobar',
+      data: {}
+      csrf_token: 'token'
+      transition_cache: true
+      assets: ['application-123.js']
+
+    assert.propEqual history.location.pathname, '/foobar'
+    assert.propEqual history.length, 1
+    snapshot.reflectNewUrl('/baz')
+    assert.propEqual history.location.pathname, '/baz'
+    assert.propEqual history.length, 2
+
+  test 'does not push a new location when the url is the same', (assert) ->
+    history = History.createMemoryHistory()
+    controller = new FakeController
+    snapshot = new Snapshot(controller, history)
+    assert.notOk history.location.state?
+    snapshot.setInitialState '/foobar',
+      data: {}
+      csrf_token: 'token'
+      transition_cache: true
+      assets: ['application-123.js']
+
+    assert.propEqual history.location.pathname, '/foobar'
+    assert.propEqual history.length, 1
+    snapshot.reflectNewUrl('/foobar')
+    assert.propEqual history.location.pathname, '/foobar'
+    assert.propEqual history.length, 1
 
   QUnit.module "#constrainPageCacheTo"
 
@@ -181,19 +156,19 @@ QUnit.module "Snapshot", ->
     history = History.createMemoryHistory()
     controller = new FakeController
     snapshot = new Snapshot(controller, history)
-    snapshot.pageCache =
+    snapshot.state =
       '/': { cachedAt: 100}
       '/1': { cachedAt: 101}
       '/2': { cachedAt: 102}
       '/3': { cachedAt: 103}
       '/4': { cachedAt: 104}
 
-    numOfPagesCached = Object.keys(snapshot.pageCache).length
+    numOfPagesCached = Object.keys(snapshot.state).length
     assert.equal numOfPagesCached, 5
 
     snapshot.constrainPageCacheTo(2)
 
-    numOfPagesCached = Object.keys(snapshot.pageCache).length
+    numOfPagesCached = Object.keys(snapshot.state).length
     assert.equal numOfPagesCached, 2
 
   QUnit.module "Restore event"
@@ -242,7 +217,7 @@ QUnit.module "Snapshot", ->
       assert.notOk restoreCalled
       done()
     @Breezy.enableTransitionCache()
-    @Breezy.visit('/app/session')
+    @Breezy.visit('/app/success') #different url than session
 
   testWithSession "transition cache can be disabled with an override in the response", (assert) ->
     done = assert.async()

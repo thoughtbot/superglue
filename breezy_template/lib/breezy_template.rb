@@ -7,6 +7,7 @@ require 'breezy_template/digestor'
 require 'breezy_template/configuration'
 require 'breezy_template/handler'
 require 'breezy_template/partial_extension'
+require 'breezy_template/cache_extension'
 require 'breezy_template/deferment_extension'
 require 'breezy_template/search_extension'
 
@@ -22,8 +23,9 @@ module BreezyTemplate
 
   class Template < ::Jbuilder
     include PartialDigestor
-
     prepend PartialExtension
+
+    prepend CacheExtension
     prepend SearchExtension
     prepend DefermentExtension
 
@@ -33,29 +35,11 @@ module BreezyTemplate
 
     self.template_lookup_options = { handlers: [:breezy] }
 
-
-    class Digest
-      def initialize(digest)
-        @digest = "Breezy.cache(\"#{digest}\")"
-      end
-
-      def to_json(*)
-        @digest
-      end
-
-      def as_json(*)
-        self
-      end
-
-      def encode_json(*)
-        @digest
-      end
-    end
-
     def initialize(context, *args)
       @context = context
       @js = []
       @path = []
+      @extensions = {}
       super(*args)
     end
 
@@ -63,6 +47,10 @@ module BreezyTemplate
       attributes = @attributes
       @attributes = {}
       attributes
+    end
+
+    def wrap!(name, *args)
+      @extensions[name.to_sym] = args
     end
 
     def _breezy_visit_current(path)
@@ -87,41 +75,58 @@ module BreezyTemplate
         set!(*args)
       end
     ensure
+      # ::Byebug.byebug
+      @extensions = {}
       @path.pop
     end
 
-    def set!(key, value = BLANK, *args)
-      options = args.first || {}
-      options = _normalize_options(options)
-      return super if !_cache_options?(options) && !_deferment_options?(options)
+    def _scope
+      # ::Byebug.byebug
+      parent_extensions = @extensions
+      @extensions = {}
+      parent_attributes, parent_formatter = @attributes, @key_formatter
+      @attributes = BLANK
+      yield
+      @attributes
+    ensure
+      # ::Byebug.byebug
+      @extensions = parent_extensions
+      @attributes, @key_formatter = parent_attributes, parent_formatter
+    end
 
+    def set!(key, value = BLANK, *args)
+      _ensure_valid_key(key)
       result = if ::Kernel.block_given?
-        _ensure_valid_key(key)
-        _cache(*options[:cache]) { _scope { yield self } }
-      elsif ::Jbuilder === value
-        # json.age 32
-        # json.person another_jbuilder
-        # { "age": 32, "person": { ...  }
-        _ensure_valid_key(key)
-        _cache(*options[:cache]) { value.attributes! }
+        _result(value, &::Proc.new)
       else
-        # json.age 32
-        # { "age": 32 }
-        _ensure_valid_key(key)
-        _cache(*options[:cache]) { value }
+        _result(value)
       end
 
       _set_value key, result
     end
 
-    def child!(options = {})
-      return super(&::Proc.new) if !_cache_options?(options)
-      options = _normalize_options(options)
+    def _ensure_valid_key(key)
+      current_value = _blank? ? _blank : @attributes.fetch(_key(key), _blank)
+      raise NullError.build(key) if current_value.nil?
+    end
 
-      @attributes = [] unless ::Array === @attributes
-      @attributes << _cache(*options[:cache]) {
+    def _result(value)
+      if ::Kernel.block_given?
         _scope { yield self }
-      }
+      elsif ::Jbuilder === value
+        # json.age 32
+        # json.person another_jbuilder
+        # { "age": 32, "person": { ...  }
+        value.attributes!
+      else
+        # json.age 32
+        # { "age": 32 }
+        value
+      end
+    end
+
+    def _set_value(key, result)
+      super
     end
 
     def array!(collection = [], *attributes)
@@ -130,6 +135,7 @@ module BreezyTemplate
 
       collection = [] if collection.nil?
       collection = _prepare_collection_for_map(collection)
+
       array = if ::Kernel.block_given?
         _map_collection(collection, options, &::Proc.new)
       elsif attributes.any?
@@ -162,6 +168,7 @@ module BreezyTemplate
 
       def _args_for_set_with_block(*args)
         key = args[0]
+        #todo: check this
         if ::Hash === args[1] && _extended_options?(args[1])
           options = args[1]
           [key, BLANK, options]
@@ -175,11 +182,6 @@ module BreezyTemplate
           key, value, options = args
 
           [key, value, options]
-        elsif args.length == 2 && _extended_options?(args[1])
-          options = args[1]
-          key = args[0]
-
-          [key, BLANK, options]
         else
           key, value = args
 
@@ -188,22 +190,11 @@ module BreezyTemplate
       end
 
       def _extended_options?(value)
-        _partial_options?(value) || _cache_options?(value) || _deferment_options?(value)
+        false
       end
 
       def _mapping_element(element, options)
-        opts = options.dup
-        if opts[:cache]
-          opts[:cache] = opts[:cache].dup
-
-          if ::Array === opts[:cache] && ::Proc === opts[:cache].first
-            key_proc = opts[:cache][0]
-            opts[:cache][0] = key_proc.call(element)
-          end
-        end
-        _cache(*opts[:cache]) {
-          _scope { yield element }
-        }
+        _scope { yield element }
       end
 
       def _map_collection(collection, options)
@@ -224,49 +215,6 @@ module BreezyTemplate
         @path.pop
       end
 
-      def _cache_key(key, options={})
-        key = _fragment_name_with_digest(key, options)
-        key = url_for(key).split('://', 2).last if ::Hash === key
-        key = ::ActiveSupport::Cache.expand_cache_key(key, :jbuilder)
-
-        ::Digest::MD5.hexdigest(key.to_s).tap do |digest|
-          _logger.try :debug, "Cache key :#{key} was digested to #{digest}"
-        end
-      end
-
-      def _cache(key=nil, options={})
-        return yield self if !@context.controller.perform_caching || key.nil?
-
-        parent_js = @js
-        key = _cache_key(key, options)
-        @js = []
-
-        blank_or_value = begin
-          ::Rails.cache.fetch(key, options) do
-            result = yield self
-            if result !=BLANK
-              @js << _breezy_set_cache(key, result)
-              @js.join
-            else
-              BLANK
-            end
-          end
-        ensure
-          @js = parent_js
-        end
-
-        if blank_or_value == BLANK
-          BLANK
-        else
-          v = blank_or_value
-          @js.push(v)
-          Digest.new(key)
-        end
-      end
-
-      def _breezy_set_cache(key, value)
-        "Breezy.cache(\"#{key}\", #{_dump(value)});"
-      end
 
       def _breezy_return(results)
         "return (#{_dump(results)});"
@@ -274,11 +222,6 @@ module BreezyTemplate
 
       def _dump(value)
         ::MultiJson.dump(value)
-      end
-
-      def _ensure_valid_key(key)
-        current_value = _blank? ? BLANK : @attributes.fetch(_key(key), BLANK)
-        raise NullError.build(key) if current_value.nil?
       end
 
       def _normalize_options(options)
@@ -321,9 +264,6 @@ module BreezyTemplate
         end
       end
 
-      def _cache_options?(options)
-        ::Hash === options && options.key?(:cache)
-      end
 
       def _logger
         ::ActionView::Base.logger

@@ -10,14 +10,6 @@ module BreezyTemplate
       end
     end
 
-    def _fragment_name_with_digest(key, options)
-      if options[:partial] && !options[:skip_digest]
-        [key, _partial_digest(options[:partial])]
-      else
-        super
-      end
-    end
-
     def array!(collection = [], *attributes)
       options = attributes.first || {}
       options = _normalize_options(options)
@@ -27,6 +19,10 @@ module BreezyTemplate
       else
         super
       end
+    end
+
+    def _extended_options?(value)
+      _partial_options?(value) || super
     end
 
     def _partial_options?(options)
@@ -40,7 +36,7 @@ module BreezyTemplate
     end
 
     def _set_inline_partial(name, object, options)
-      value = if object.nil?
+      value = if object.nil? && options.empty?
         []
       elsif _is_collection?(object)
         _scope{ _render_partial_with_options options.merge(collection: object) }
@@ -49,9 +45,7 @@ module BreezyTemplate
         locals[options[:as]] = object if !_blank?(object) && options.key?(:as)
         locals.merge!(options[:locals]) if options.key? :locals
 
-        _cache(*options[:cache]) {
-          _scope{ _render_partial options.merge(locals: locals) }
-        }
+        _scope{ _render_partial options.merge(locals: locals) }
       end
 
       set! name, value

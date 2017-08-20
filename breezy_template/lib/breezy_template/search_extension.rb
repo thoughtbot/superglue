@@ -76,8 +76,8 @@ module BreezyTemplate
           @search_path = original_search_path[1..-1]
           if @search_path.size == 0
             if ::Kernel.block_given?
-              @found = if _cache_options?(options)
-                _cache(*options[:cache]) { _scope { yield self } }
+              @found = if _cache_options?
+                _cache(*_cache_options) { _scope { yield self } }
               else
                 _scope { yield self }
               end

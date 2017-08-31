@@ -415,31 +415,6 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "renders array of partials via set!" do
-    result = jbuild(<<-JBUILDER)
-      json.posts BLOG_POST_COLLECTION, partial: "blog_post", as: :blog_post
-    JBUILDER
-
-    expected = strip_format(<<-JS)
-      (function(){
-        return ({"data":{"posts":[
-          {"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":2,"body":"post body 2","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":3,"body":"post body 3","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":4,"body":"post body 4","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":5,"body":"post body 5","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":6,"body":"post body 6","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":7,"body":"post body 7","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}}
-        ]}});
-      })()
-    JS
-
-    assert_equal expected, result
-  end
-
   test "renders the partial and ignores the value" do
     result = jbuild <<-JBUILDER
       json.posts nil, partial: "footer"

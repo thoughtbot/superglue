@@ -75,24 +75,14 @@ module BreezyTemplate
           original_search_path = @search_path
           @search_path = original_search_path[1..-1]
           if @search_path.size == 0
-            if ::Kernel.block_given?
-              @found = if _cache_options?
-                _cache(*_cache_options) { _scope { yield self } }
-              else
-                _scope { yield self }
-              end
-            elsif _partial_options?(options)
-              super
-            else
-              @found = value
-            end
+            @found = super
           else
             if ::Kernel.block_given?
               yield self
             elsif _partial_options?(options)
               super
             else
-              ::Kernel.raise 'can not'
+              ::Kernel.raise 'This should not happen'
             end
           end
 

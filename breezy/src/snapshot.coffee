@@ -136,7 +136,7 @@ class Snapshot
 
   graftByKeypath: (keypath, node, opts={})=>
     for k, v of @state
-      @state[k] = Utils.graftByKeypath(keypath, node, v, opts)
+      @state[k] = Utils.set(v, keypath, node, opts)
     Utils.emitter.emit EVENTS.LOAD, @currentPage()
 
 module.exports = Snapshot

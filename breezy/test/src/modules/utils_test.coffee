@@ -7,19 +7,19 @@ QUnit.module "Utils", ->
   test "when the path parts are greater than avail", (assert) ->
     stub = sinon.stub(Breezy, 'warn', ->{})
     page = {}
-    clone = (new Utils.Grafter).graftByKeypath('a.b.c', 0 ,page)
+    clone = Utils.set(page, 'a.b.c', 0)
     assert.strictEqual page, clone
     stub.restore()
 
   test "when its not a tree like structure", (assert) ->
     page = null
-    clone = (new Utils.Grafter).graftByKeypath('a.b.c', 0 , page)
+    clone = Utils.set(page, 'a.b.c', 0)
     assert.strictEqual page, clone
 
   test "when the path does not exist", (assert) ->
     stub = sinon.stub(Breezy, 'warn', ->{})
     page = a: b: c: d: 5
-    clone = (new Utils.Grafter).graftByKeypath('a.b.z', foo: 'bar', page)
+    clone = Utils.set(page, 'a.b.z', foo: 'bar')
 
     assert.strictEqual page, clone
     assert.propEqual page, clone
@@ -46,7 +46,7 @@ QUnit.module "Utils", ->
 
   test "replaces the node at keypath", (assert) ->
     page = a: b: c: d: 5
-    clone = (new Utils.Grafter).graftByKeypath('a.b.c', foo: 'bar', page)
+    clone = Utils.set page, 'a.b.c', foo: 'bar'
     assert.notStrictEqual page, clone
     assert.propEqual clone, a: b: c: foo: 'bar'
 
@@ -58,7 +58,7 @@ QUnit.module "Utils", ->
       b: graft1
       h: graft2
 
-    clone = (new Utils.Grafter).graftByKeypath('a.b.c.d', foo: 'bar', page)
+    clone = Utils.set(page, 'a.b.c.d', foo: 'bar')
     assert.notStrictEqual clone.a.b, graft1
     assert.strictEqual clone.a.h, graft2
 
@@ -74,7 +74,7 @@ QUnit.module "Utils", ->
       {id: 3}
     ]
 
-    clone = (new Utils.Grafter).graftByKeypath('a.b.id=2', {id:2, foo: 'bar'}, page)
+    clone = Utils.set(page, 'a.b.id=2', {id:2, foo: 'bar'})
     assert.notStrictEqual page, clone
     assert.strictEqual page.a.b[0], clone.a.b[0]
     assert.strictEqual page.a.b[2], clone.a.b[2]
@@ -84,25 +84,6 @@ QUnit.module "Utils", ->
       {id: 3}
     ]
 
-  test "objects can be added using to an array an id attribute", (assert) ->
-    page = a: b: [
-      {id: 1},
-      {id: 2},
-      {id: 3}
-    ]
-
-    clone = (new Utils.Grafter).graftByKeypath('a.b', {id:4}, page, type: 'add')
-    assert.notStrictEqual page, clone
-    assert.notStrictEqual page.a.b, clone.a.b
-    assert.strictEqual page.a.b[0], clone.a.b[0]
-    assert.strictEqual page.a.b[2], clone.a.b[2]
-    assert.propEqual clone,  a: b: [
-      {id: 1},
-      {id: 2},
-      {id: 3},
-      {id: 4}
-    ]
-
   test "objects in arrays can be referenced using an index", (assert) ->
     page = a: b: [
       {id: 1},
@@ -110,7 +91,7 @@ QUnit.module "Utils", ->
       {id: 3}
     ]
 
-    clone = (new Utils.Grafter).graftByKeypath('a.b.1', {id:2, foo: 'bar'}, page)
+    clone = Utils.set(page, 'a.b.1', {id:2, foo: 'bar'})
     assert.notStrictEqual page, clone
     assert.strictEqual page.a.b[0], clone.a.b[0]
     assert.strictEqual page.a.b[2], clone.a.b[2]

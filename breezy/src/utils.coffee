@@ -77,80 +77,84 @@ isObject = (val) ->
 isArray = (val) ->
   Object.prototype.toString.call(val) is '[object Array]'
 
-class Grafter
-  constructor: ->
-    @current_path = []
+atKey = (node, key) ->
+  [attr, id] = key.split('=')
 
-  graftByKeypath: (path, leaf, obj, opts={}) ->
-    if typeof path is "string"
-      path = path.split('.')
-      return @graftByKeypath(path, leaf, obj, opts)
+  if isArray(node) and id
+    for child, i in node
+      if child[attr].toString() == id
+        break
 
-    head = path[0]
-    @current_path.push(head)
-    child = obj[head] if obj?
-    remaining = path.slice(1)
-
-    if path.length is 0
-      if opts.type == 'add' and isArray(obj)
-        copy = []
-        for child in obj
-          copy.push child
-
-        copy.push leaf
-        return copy
-      else
-        return leaf
-
-    if isObject(obj)
-      copy = {}
-      found = false
-      for key, value of obj
-        if key is head
-          node = @graftByKeypath(remaining, leaf, child, opts)
-          found = true unless child is node
-          copy[key] = node
-        else
-          copy[key] = value
-
-      return if found
-        @current_path.pop()
-        copy
-      else
-        warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
-        obj
-
-    else if isArray(obj)
-      [attr, id] = head.split('=')
-      found = false
-      if id == undefined
-        index = parseInt(attr)
-        child = obj[index]
-        node = @graftByKeypath(remaining, leaf, child, opts)
-        found = true unless child is node
-
-        copy = obj.slice(0, index)
-        copy.push(node)
-        copy = copy.concat(obj.slice(index + 1, obj.length))
-      else
-        id = parseInt(id) || 0
-        copy = []
-        for child in obj
-          if child[attr] == id
-            node = @graftByKeypath(remaining, leaf, child, opts)
-            found = true unless child is node
-            copy.push node
-          else
-            copy.push child
-
-      return if found
-        @current_path.pop()
-        copy
-      else
-        warn "Could not find key #{head} in keypath #{@current_path.join('.')}"
-        obj
+    if child[attr].toString() == id
+      return child
     else
-      obj
+      return undefined
+  else
+    return node[key]
+
+setValueIntoNode = (node, key, value) ->
+  [attr, id] = key.split('=')
+
+  if isArray(node) and id
+    for child, i in node
+      if child[attr].toString() == id
+        break
+
+    node[i] = value
+
+  else
+    return node[key] = value
+
+set = (node, path, value, opts={}) ->
+  return node unless node
+
+  root = node
+  keyPath = normalizeKeyPath(path)
+
+  branch = [node]
+  for key, i in keyPath
+    child = atKey(node, key)
+    if child == undefined
+      parentPath = keyPath[0..i].join('.')
+      Breezy.warn("Could not find child #{key} at #{parentPath}")
+      return root
+    branch.push child
+    node = child
+
+  branch[branch.length - 1] = value
+  branch = (shallowCopy(node) for node in branch)
+
+  for key, i in keyPath
+    setValueIntoNode(branch[i], key, branch[i + 1])
+
+  branch[0]
+
+get = (obj, keyPath) ->
+  keyPath = normalizeKeyPath(path)
+  result = obj
+
+  for key, i in keypath
+    break if !result
+    result = atKey(result, key)
+
+  result
+
+shallowCopy = (obj) ->
+  if isArray(obj)
+   copy = (num for num in obj)
+
+  if isObject(obj)
+    copy = {}
+    for key, value of obj
+      copy[key] = value
+
+  copy
+
+normalizeKeyPath = (path) ->
+  if typeof path is "string"
+    path.split('.')
+  else
+    path
 
 createRequest = (opts)=>
   jsAccept = 'text/javascript, application/x-javascript, application/javascript'
@@ -176,9 +180,7 @@ goToErrorPage = (xhr, fallbackUrl) ->
 
 module.exports =
   warn: warn
-  graftByKeypath:  ->
-    grafter = new Grafter
-    grafter.graftByKeypath.apply(grafter, arguments)
+  set: set
   reverseMerge: reverseMerge
   merge: merge
   emit: emitter.emit
@@ -194,6 +196,4 @@ module.exports =
   directBrowserToUrl: directBrowserToUrl
   triggerEvent: triggerEvent
   createRequest: createRequest
-  Grafter: Grafter #todo: extract me!
-
 

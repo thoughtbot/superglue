@@ -9,6 +9,8 @@ if Rails.version >= '4.1'
           def jsonify(value)
             if ::BreezyTemplate::Template::Digest === value
               value
+            elsif ::BreezyTemplate::Template::JointVar === value
+              value
             else
               original_jsonify(value)
             end

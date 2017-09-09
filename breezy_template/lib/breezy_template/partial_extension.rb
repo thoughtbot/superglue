@@ -1,5 +1,23 @@
 module BreezyTemplate
   module PartialExtension
+    class JointVar
+      def initialize
+        @digest = "joints"
+      end
+
+      def to_json(*)
+        @digest
+      end
+
+      def as_json(*)
+        self
+      end
+
+      def encode_json(*)
+        @digest
+      end
+    end
+
     def set!(key, value = BLANK, *args)
       options = args.first || {}
       options = _normalize_options(options)
@@ -50,6 +68,14 @@ module BreezyTemplate
     end
 
     def _render_partial(options)
+      joint = options[:joint]
+      if joint
+        joint = joint.to_sym
+        path = @path.dup.join('.')
+        @js.push "joints['#{joint}'] ||= []; joints['#{joint}'].push('#{path}');"
+        @joints[joint]
+      end
+
       options[:locals].merge! json: self
       @context.render options
     end

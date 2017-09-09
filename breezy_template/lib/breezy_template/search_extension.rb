@@ -34,7 +34,6 @@ module BreezyTemplate
       if @search_path && !@search_path.empty?
         id_name, id_val = @search_path.first.split('=')
 
-
         if (defined? ::ActiveRecord) && collection.is_a?(::ActiveRecord::Relation)
           if id_val
             id_val = id_val.to_i
@@ -80,7 +79,9 @@ module BreezyTemplate
             if ::Kernel.block_given?
               yield self
             elsif _partial_options?(options)
-              super
+              without_track = args.dup
+              # without_track.first.delete(:track)
+              super(key, value, *without_track)
             else
               ::Kernel.raise 'This should not happen'
             end

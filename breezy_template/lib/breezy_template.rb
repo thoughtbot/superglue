@@ -39,6 +39,7 @@ module BreezyTemplate
       @context = context
       @js = []
       @path = []
+      @joints = {}
       @extensions = {}
       super(*args)
     end
@@ -81,7 +82,6 @@ module BreezyTemplate
     end
 
     def _scope
-      # ::Byebug.byebug
       parent_extensions = @extensions
       @extensions = {}
       parent_attributes, parent_formatter = @attributes, @key_formatter
@@ -144,13 +144,15 @@ module BreezyTemplate
         collection.to_a
       end
 
+      @extensions = {}
       merge! array #remove this depednacy
     end
 
     def target!
       js = _breezy_return(@attributes)
+
       @js.push(js)
-      "(function(){#{@js.join}})()"
+      "(function(){var joints={};#{@js.join}})()"
     end
 
     private

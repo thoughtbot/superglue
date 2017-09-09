@@ -135,7 +135,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":"hello"}});
+        var joints={};
+        return ({"data":{"content":"hello"},"joints":joints});
       })()
     JS
 
@@ -156,7 +157,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":{"hit":123}}});
+        var joints={};
+        return ({"data":{"content":{"hit":123}},"joints":joints});
       })()
     JS
 
@@ -173,7 +175,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({\"data\":{\"content\":[3,4]}});
+        var joints={};
+        return ({\"data\":{\"content\":[3,4]},"joints":joints});
       })()
     JS
 
@@ -189,7 +192,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":"hello"},"assets":["/test.js","/test.css"]});
+        var joints={};
+        return ({"data":{"content":"hello"},"assets":["/test.js","/test.css"],"joints":joints});
       })()
     JS
 
@@ -208,7 +212,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":"hello"},"csrf_token":"secret"});
+        var joints={};
+        return ({"data":{"content":"hello"},"csrf_token":"secret","joints":joints});
       })()
     JS
 
@@ -225,7 +230,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":"hello"},"title":"this is fun","assets":["/test.js","/test.css"]});
+        var joints={};
+        return ({"data":{"content":"hello"},"title":"this is fun","assets":["/test.js","/test.css"],"joints":joints});
       })()
     JS
 
@@ -240,7 +246,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"camelStyle":"for JS"}});
+        var joints={};
+        return ({"data":{"camelStyle":"for JS"},"joints":joints});
       })()
     JS
 
@@ -258,10 +265,11 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return ({"data":{
           "LEVEL1":"one",
           "LEVEL2":{"VALUE":"two"}
-        }});
+        },"joints":joints});
       })()
     JS
 
@@ -273,16 +281,18 @@ class BreezyTemplateTest < ActionView::TestCase
     Rails.cache.clear
 
     result = jbuild(<<-JBUILDER)
-      json.post @post, partial: "blog_post", as: :blog_post
+      json.post @post, partial: "blog_post", as: :blog_post, joint: :header
     JBUILDER
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
+        joints['header'] ||= []; joints['header'].push('post');
         return ({"data":{"post":{
           "id":1,
           "body":"post body 1",
           "author":{"first_name":"David","last_name":"Heinemeier Hansson"}
-        }}});
+        }},"joints":joints});
       })()
     JS
 
@@ -296,7 +306,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"footer":{"terms":"You agree"}}});
+        var joints={};
+        return ({"data":{"footer":{"terms":"You agree"}},"joints":joints});
       })()
     JS
     assert_equal expected, result
@@ -309,7 +320,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"profile":{"email":"test@test.com"}}});
+        var joints={};
+        return ({"data":{"profile":{"email":"test@test.com"}},"joints":joints});
       })()
     JS
     assert_equal expected, result
@@ -323,8 +335,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"email":"test@test.com"});
-        return ({"data":{"profile":Breezy.cache("#{cache_keys[0]}")}});
+        return ({"data":{"profile":Breezy.cache("#{cache_keys[0]}")},"joints":joints});
       })()
     JS
 
@@ -338,7 +351,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"profile":{"email":"test@test.com"}}});
+        var joints={};
+        return ({"data":{"profile":{"email":"test@test.com"}},"joints":joints});
       })()
     JS
 
@@ -352,7 +366,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}]});
+        var joints={};
+        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"joints":joints});
       })()
     JS
 
@@ -367,9 +382,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"terms":"You agree"});
         Breezy.cache("#{cache_keys[1]}", {"terms":"You agree"});
-        return ({"data":[Breezy.cache("#{cache_keys[0]}"),Breezy.cache("#{cache_keys[1]}")]});
+        return ({"data":[Breezy.cache("#{cache_keys[0]}"),Breezy.cache("#{cache_keys[1]}")],"joints":joints});
       })()
     JS
 
@@ -383,6 +399,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return ({"data":[
           {"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
           {"id":2,"body":"post body 2","author":{"first_name":"Pavel","last_name":"Pravosud"}},
@@ -394,7 +411,7 @@ class BreezyTemplateTest < ActionView::TestCase
           {"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}},
           {"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
           {"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}}
-        ]});
+        ],"joints":joints});
       })()
     JS
 
@@ -408,7 +425,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":[]});
+        var joints={};
+        return ({"data":[],"joints":joints});
       })()
     JS
 
@@ -422,7 +440,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"posts":{"terms":"You agree"}}});
+        var joints={};
+        return ({"data":{"posts":{"terms":"You agree"}},"joints":joints});
       })()
     JS
     assert_equal expected, result
@@ -438,8 +457,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", 32);
-        return ({"data":{"hello":Breezy.cache("#{cache_keys[0]}")}});
+        return ({"data":{"hello":Breezy.cache("#{cache_keys[0]}")},"joints":joints});
       })()
     JS
 
@@ -460,9 +480,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"top":"hello4"});
         Breezy.cache("#{cache_keys[1]}", {"top":"hello5"});
-        return ({"data":{"hello":[Breezy.cache("#{cache_keys[0]}"),Breezy.cache("#{cache_keys[1]}")]}});
+        return ({"data":{"hello":[Breezy.cache("#{cache_keys[0]}"),Breezy.cache("#{cache_keys[1]}")]},"joints":joints});
       })()
     JS
 
@@ -488,10 +509,11 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"subcontent":"inner"});
         Breezy.cache("#{cache_keys[1]}", {"subcontent":"other"});
         Breezy.cache("#{cache_keys[2]}", {"content":Breezy.cache("#{cache_keys[0]}"),"other":Breezy.cache("#{cache_keys[1]}")});
-        return ({"data":{"hello":Breezy.cache("#{cache_keys[2]}")}});
+        return ({"data":{"hello":Breezy.cache("#{cache_keys[2]}")},"joints":joints});
       })()
     JS
 
@@ -514,7 +536,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({\"data\":{\"hello\":[]}});
+        var joints={};
+        return ({\"data\":{\"hello\":[]},"joints":joints});
       })()
     JS
 
@@ -560,8 +583,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"name":"Cache"});
-        return ({"data":{"post":Breezy.cache("#{cache_keys[0]}")}});
+        return ({"data":{"post":Breezy.cache("#{cache_keys[0]}")},"joints":joints});
       })()
     JS
 
@@ -580,8 +604,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", ["a","b","c"]);
-        return ({"data":{"content":Breezy.cache("#{cache_keys[0]}")}});
+        return ({"data":{"content":Breezy.cache("#{cache_keys[0]}")},"joints":joints});
       })()
     JS
 
@@ -651,7 +676,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"content":{"name":"Cache"}}});
+        var joints={};
+        return ({"data":{"content":{"name":"Cache"}},"joints":joints});
       })()
     JS
 
@@ -668,8 +694,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}});
-        return ({"data":{"post":Breezy.cache("#{cache_keys[0]}")}});
+        return ({"data":{"post":Breezy.cache("#{cache_keys[0]}")},"joints":joints});
       })()
     JS
 
@@ -694,8 +721,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"id":1,"body":"hit","author":{"first_name":"John","last_name":"Smith"}});
-        return ({"data":{"post":Breezy.cache("#{cache_keys[0]}")}});
+        return ({"data":{"post":Breezy.cache("#{cache_keys[0]}")},"joints":joints});
       })()
     JS
 
@@ -712,6 +740,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}});
         Breezy.cache("#{cache_keys[1]}", {"id":2,"body":"post body 2","author":{"first_name":"Pavel","last_name":"Pravosud"}});
         Breezy.cache("#{cache_keys[2]}", {"id":3,"body":"post body 3","author":{"first_name":"David","last_name":"Heinemeier Hansson"}});
@@ -722,7 +751,7 @@ class BreezyTemplateTest < ActionView::TestCase
         Breezy.cache("#{cache_keys[7]}", {"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}});
         Breezy.cache("#{cache_keys[8]}", {"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}});
         Breezy.cache("#{cache_keys[9]}", {"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}});
-        return ({"data":[Breezy.cache("#{cache_keys[0]}"),Breezy.cache("#{cache_keys[1]}"),Breezy.cache("#{cache_keys[2]}"),Breezy.cache("#{cache_keys[3]}"),Breezy.cache("#{cache_keys[4]}"),Breezy.cache("#{cache_keys[5]}"),Breezy.cache("#{cache_keys[6]}"),Breezy.cache("#{cache_keys[7]}"),Breezy.cache("#{cache_keys[8]}"),Breezy.cache("#{cache_keys[9]}")]});
+        return ({"data":[Breezy.cache("#{cache_keys[0]}"),Breezy.cache("#{cache_keys[1]}"),Breezy.cache("#{cache_keys[2]}"),Breezy.cache("#{cache_keys[3]}"),Breezy.cache("#{cache_keys[4]}"),Breezy.cache("#{cache_keys[5]}"),Breezy.cache("#{cache_keys[6]}"),Breezy.cache("#{cache_keys[7]}"),Breezy.cache("#{cache_keys[8]}"),Breezy.cache("#{cache_keys[9]}")],"joints":joints});
       })()
     JS
 
@@ -749,8 +778,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"greeting":"hello world"}}
+          {"data":{"greeting":"hello world"},"joints":joints}
         );
       })()
     JS
@@ -775,8 +805,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":23,"action":"graft","path":"hit.hit2"}
+          {"data":23,"action":"graft","path":"hit.hit2","joints":joints}
         );
       })()
     JS
@@ -793,8 +824,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":"You agree","action":"graft","path":"hit.hit2.terms"}
+          {"data":"You agree","action":"graft","path":"hit.hit2.terms","joints":joints}
         );
       })()
     JS
@@ -820,8 +852,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"greeting":"hello world"},"action":"graft","path":"hit.hit2"}
+          {"data":{"greeting":"hello world"},"action":"graft","path":"hit.hit2","joints":joints}
         );
       })()
     JS
@@ -843,8 +876,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.cache("#{cache_keys[0]}", {"greeting":"hello world"});
-        return ({"data":Breezy.cache("219dfba9f552f91402a22cf67c633582"),"action":"graft","path":"hit.hit2"});
+        return ({"data":Breezy.cache("219dfba9f552f91402a22cf67c633582"),"action":"graft","path":"hit.hit2","joints":joints});
       })()
 
 
@@ -875,8 +909,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=1"}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=1","joints":joints}
         );
       })()
     JS
@@ -907,8 +942,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.0"}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.0","joints":joints}
         );
       })()
     JS
@@ -930,8 +966,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.id=1"}
+          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.id=1","joints":joints}
         );
       })()
     JS
@@ -954,8 +991,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.0"}
+          {"data":{"name":"hit"},"action":"graft","path":"hit.hit2.0","joints":joints}
         );
       })()
     JS
@@ -981,9 +1019,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.request('/some_url?_breezy_filter=hit.hit2', {queue: 'async', pushState: false});
         return (
-          {"data":{"hit":{"hit2":null}}}
+          {"data":{"hit":{"hit2":null}},"joints":joints}
         );
       })()
     JS
@@ -1009,8 +1048,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         return (
-          {"data":{"hit":{"hit2":null}}}
+          {"data":{"hit":{"hit2":null}},"joints":joints}
         );
       })()
     JS
@@ -1039,10 +1079,11 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.request('/some_url?_breezy_filter=hit.hit2.id%3D1.greeting', {queue: 'async', pushState: false});
         Breezy.request('/some_url?_breezy_filter=hit.hit2.id%3D2.greeting', {queue: 'async', pushState: false});
         return (
-          {"data":{"hit":{"hit2":[{"greeting":null},{"greeting":null}]}}}
+          {"data":{"hit":{"hit2":[{"greeting":null},{"greeting":null}]}},"joints":joints}
         );
       })()
     JS
@@ -1060,7 +1101,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":{"hello":32}});
+        var joints={};
+        return ({"data":{"hello":32},"joints":joints});
       })()
     JS
 
@@ -1078,7 +1120,8 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        return ({"data":32,"action":"graft","path":"hello.world"});
+        var joints={};
+        return ({"data":32,"action":"graft","path":"hello.world","joints":joints});
       })()
     JS
 
@@ -1100,8 +1143,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
+        var joints={};
         Breezy.request('?_breezy_filter=hello.content', {queue: 'async', pushState: false});
-        return ({"data":{"content":null},"action":"graft","path":"hello"});
+        return ({"data":{"content":null},"action":"graft","path":"hello","joints":joints});
       })()
     JS
 

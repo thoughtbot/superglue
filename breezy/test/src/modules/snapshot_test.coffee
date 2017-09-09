@@ -62,6 +62,8 @@ QUnit.module "Snapshot", ->
       url: '/baz'
       pathname: '/baz'
       transition_cache: true
+      joints: {}
+
     assert.equal history.location.pathname, '/foobar'
 
   test 'pushes state if specified', (assert) ->
@@ -112,6 +114,7 @@ QUnit.module "Snapshot", ->
       url: '/foobar'
       pathname: '/foobar'
       transition_cache: true
+      joints: {}
 
   QUnit.module "#reflectNewUrl"
 
@@ -278,3 +281,36 @@ QUnit.module "Snapshot", ->
         done()
     @Breezy.pagesCached(0)
     @Breezy.visit('/app/success')
+
+  QUnit.module "#graftByJoint"
+  test 'updates all joints across pages', (assert) ->
+    history = History.createMemoryHistory()
+    controller = new FakeController
+    snapshot = new Snapshot(controller, history)
+    snapshot.setInitialState '/foobar',
+      data:
+        header:
+          cart:
+            total: 30
+      csrf_token: 'token'
+      transition_cache: true
+      assets: ['application-123.js']
+      joints:
+        info: ['header.cart']
+
+    nextPage =
+      data:
+        profile:
+          header:
+            cart:
+              total: 10
+      csrf_token: 'token'
+      assets: ['application-123.js']
+      joints:
+        info: ['profile.header.cart']
+
+    snapshot.savePage('/baz', nextPage)
+    pages = Object.values(snapshot.state)
+
+    snapshot.graftByJoint('info', total: 5)
+    assert.equal pages[0].data.header.cart.total, pages[1].data.profile.header.cart.total

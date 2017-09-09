@@ -144,17 +144,18 @@ class Controller
 
     if nextPage
       if rsp.queue != 'sync' && url.pathname != @currentLocation().pathname
-
         unless rsp.ignoreSamePathConstraint
           Utils.warn("Async response path is different from current page path")
+
 
       if nextPage.action != 'graft'
         key = new ComponentUrl(rsp.url).pathname
         @history.savePage(key, nextPage, rsp.pushState)
         @history.load(key)
       else
-        #todo: clean this up
-        @history.graftByKeypath("data.#{nextPage.path}", nextPage.data)
+        key = @history.currentUrl().pathname
+        @history.handleGraft(nextPage)
+        @history.load(key)
 
       @progressBar.done()
       @history.constrainPageCacheTo()

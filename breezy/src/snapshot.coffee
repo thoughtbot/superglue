@@ -69,6 +69,23 @@ class Snapshot
     page = @pageFor(url.pathname)
     Utils.emitter.emit EVENTS.LOAD, page
 
+  handleGraft: (page) =>
+    currentUrl = @currentUrl()
+    @csrfToken = page.csrf_token if page? && page.csrf_token?
+
+    Utils.reverseMerge page, joints: []
+
+    for joint, keypaths in page.joints
+      for path in keypaths
+        updatedNode = Utils.getIn(path, page.data)
+        @graftByTrack(track, path, updatedNode)
+
+    currentPage = @state[currentUrl.pathname]
+    @state[currentUrl.pathname].data = Utils.set(currentPage.data, page.path, page.data)
+
+    return @state[currentUrl.pathname]
+
+
   savePage: (url, page, pushState = false) =>
     if @refreshBrowserForNewAssets(page)
       return
@@ -85,6 +102,12 @@ class Snapshot
       url: currentUrl.pathToHash
       pathname: currentUrl.pathname
       transition_cache: true
+      joints: {}
+
+    for joint, keypaths in page.joints
+      for path in keypaths
+        updatedNode = Utils.getIn(path, page.data)
+        @graftByJoint(joint, path, node)
 
     @state[currentUrl.pathname] = page
 
@@ -138,5 +161,12 @@ class Snapshot
     for k, v of @state
       @state[k] = Utils.set(v, keypath, node, opts)
     Utils.emitter.emit EVENTS.LOAD, @currentPage()
+
+  graftByJoint: (joint, node, opts={}) =>
+    for k, v of @state
+      paths = v.joints[joint] || []
+
+      for path in paths
+        @state[k].data = Utils.set(v.data, path, node, opts)
 
 module.exports = Snapshot

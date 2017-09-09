@@ -1,6 +1,6 @@
 Controller = require('./controller')
 Remote = require('./remote')
-Snapshot = require('./snapshot')
+Store = require('./store')
 Utils = require('./utils')
 EVENTS = require('./events')
 History = require('history')
@@ -27,13 +27,13 @@ else
 
 setup = (obj) ->
   obj.controller = controller
-  obj.graftByKeypath = controller.history.graftByKeypath
+  obj.graftByKeypath = controller.store.graftByKeypath
   obj.visit = controller.visit
   obj.remote = controller.remote
   obj.request = controller.request
   obj.config = Config
   obj.cache = controller.cache
-  obj.pagesCached = controller.history.pagesCached
+  obj.pagesCached = controller.store.pagesCached
   obj.enableTransitionCache = controller.enableTransitionCache
   obj.disableRequestCaching = controller.disableRequestCaching
   obj.EVENTS = Utils.clone(EVENTS)

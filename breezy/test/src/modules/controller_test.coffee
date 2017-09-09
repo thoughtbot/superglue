@@ -3,7 +3,7 @@ History = require('history')
 sinon = require('sinon')
 Controller = require('../../../src/controller')
 Config = require('../../../src/config')
-Snapshot = require('../../../src/snapshot')
+Store = require('../../../src/store')
 Utils = require('../../../src/utils')
 _ = require('lodash')
 
@@ -26,13 +26,13 @@ QUnit.module "Controller", ->
       Config.addQueue('fake', FakeQueue)
       @history = history = History.createMemoryHistory()
       @controller = controller = new Controller(history)
-      controller.history.setInitialState '/',
+      controller.store.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
 
-      @snapshot = controller.history
+      @store = controller.store
 
     test 'pushes a request object into a specified queue', (assert) ->
       controller = @controller
@@ -62,9 +62,9 @@ QUnit.module "Controller", ->
         csrf_token: 'token'
         transition_cache: true
         assets: ['application-123.js']
-      @snapshot.state['/foo'] = cache
+      @store.state['/foo'] = cache
 
-      spy = sinon.spy(@controller.history, 'restore')
+      spy = sinon.spy(@controller.store, 'restore')
       @controller.request('/foo', queue: 'fake')
       assert.ok spy.called
       assert.equal @history.location.pathname, '/foo'
@@ -73,9 +73,9 @@ QUnit.module "Controller", ->
       #todo: check here for refactor opportunity. esp history.reflectnewurl
       @controller.disableRequestCaching()
       cache = {}
-      @snapshot.state['/foo'] = cache
+      @store.state['/foo'] = cache
 
-      spy = sinon.spy(@controller.history, 'restore')
+      spy = sinon.spy(@controller.store, 'restore')
       @controller.request('/foo', queue: 'fake')
       assert.notOk spy.calledWith(cache)
       assert.equal @history.location.pathname, '/'
@@ -99,7 +99,7 @@ QUnit.module "Controller", ->
       Config.addQueue('sync', FakeQueue)
       history = History.createMemoryHistory()
       controller = new Controller(history)
-      controller.history.setInitialState '/',
+      controller.store.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
@@ -134,7 +134,7 @@ QUnit.module "Controller", ->
       @history = history = History.createMemoryHistory()
       @controller = controller = new Controller(history)
       controller.enableTransitionCache()
-      controller.history.setInitialState '/',
+      controller.store.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true
@@ -154,7 +154,7 @@ QUnit.module "Controller", ->
         assets: ['application-123.js']
 
 
-      @controller.history.state['/foo'] = nextPage
+      @controller.store.state['/foo'] = nextPage
       calls = 0
 
       Utils.on 'breezy:restore', =>
@@ -163,10 +163,10 @@ QUnit.module "Controller", ->
       Utils.on 'breezy:load', =>
         assert.equal calls, 1
         assert.equal @history.location.pathname, '/foo'
-        assert.equal @controller.history.currentPage(), nextPage
+        assert.equal @controller.store.currentPage(), nextPage
         done()
 
-      @controller.history.restore('/foo')
+      @controller.store.restore('/foo')
 
   QUnit.module "onLoad", (hooks) ->
     hooks.afterEach ->
@@ -178,7 +178,7 @@ QUnit.module "Controller", ->
       @history = history = History.createMemoryHistory()
       @controller = controller = new Controller(history)
       controller.enableTransitionCache()
-      controller.history.setInitialState '/',
+      controller.store.setInitialState '/',
         data: {}
         csrf_token: 'token'
         transition_cache: true

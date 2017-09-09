@@ -1,5 +1,5 @@
 ComponentUrl = require('./component_url')
-Snapshot = require('./snapshot')
+Store = require('./store')
 DoublyLinkedList = require('./doubly_linked_list')
 Utils = require('./utils')
 EVENTS = require('./events')
@@ -12,8 +12,8 @@ class Controller
   constructor: (history, onCrossOriginRequest = ->{})->
     @atomCache = {} #todo rename me....
     @queues = {}
-    @history = new Snapshot(this, history)
-    @unlisten = history.listen(@history.onHistoryChange)
+    @store = new Store(this, history)
+    @unlisten = history.listen(@store.onHistoryChange)
 
     @transitionCacheEnabled = false
     @requestCachingEnabled = true
@@ -25,14 +25,14 @@ class Controller
     @atomCache = {}
     @queues = {}
     @unlisten()
-    @history.reset()
+    @store.reset()
 
   setInitialState: ({pathname, state }) =>
-    @history.setInitialState(pathname, state)
+    @store.setInitialState(pathname, state)
 
   currentLocation: =>
     #todo rename me..
-    @history.history.location
+    @store.history.location
 
   fetchQueue:(name) =>
     @queues[name] ?= new (Config.fetchQueue(name))
@@ -75,7 +75,7 @@ class Controller
       @progressBar.start()
 
     if @transitionCacheEnabled
-      restored = @history.restore(url.pathname)
+      restored = @store.restore(url.pathname)
       if restored
         @progressBar.done()
 
@@ -109,8 +109,8 @@ class Controller
     if options.contentType?
       req.header['content-type'] =  options.contentType
 
-    if @history.csrfToken?
-      req.header['x-csrf-token'] = @history.csrfToken
+    if @store.csrfToken?
+      req.header['x-csrf-token'] = @store.csrfToken
 
     new Request req
 
@@ -150,15 +150,15 @@ class Controller
 
       if nextPage.action != 'graft'
         key = new ComponentUrl(rsp.url).pathname
-        @history.savePage(key, nextPage, rsp.pushState)
-        @history.load(key)
+        @store.savePage(key, nextPage, rsp.pushState)
+        @store.load(key)
       else
-        key = @history.currentUrl().pathname
-        @history.handleGraft(nextPage)
-        @history.load(key)
+        key = @store.currentUrl().pathname
+        @store.handleGraft(nextPage)
+        @store.load(key)
 
       @progressBar.done()
-      @history.constrainPageCacheTo()
+      @store.constrainPageCacheTo()
     else
       rsp.onRequestError(rsp)
 

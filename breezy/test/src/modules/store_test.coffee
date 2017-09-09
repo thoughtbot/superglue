@@ -1,6 +1,6 @@
 { test, testWithSession } = require('../helpers/helpers')
 History = require('history')
-Snapshot = require('../../../src/snapshot')
+Store = require('../../../src/store')
 _ = require('lodash')
 
 class FakeController
@@ -9,30 +9,30 @@ class FakeController
   restore: -> {}
   request: -> {}
 
-QUnit.module "Snapshot", ->
+QUnit.module "Store", ->
 
   QUnit.module "#setInitialState"
 
   test 'sets the inital location state', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
+    store = new Store(controller, history)
     assert.notOk history.location.state?
-    snapshot.setInitialState '/foobar',
+    store.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
       transition_cache: true
       assets: ['application-123.js']
 
     assert.propEqual history.location.pathname, '/foobar'
-    assert.propEqual snapshot.state.length, 1
+    assert.propEqual store.state.length, 1
 
   QUnit.module "#savePage"
   test 'saves the page in the state', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    snapshot.setInitialState '/foobar',
+    store = new Store(controller, history)
+    store.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
       transition_cache: true
@@ -46,10 +46,10 @@ QUnit.module "Snapshot", ->
       csrf_token: 'token'
       assets: ['application-123.js']
 
-    snapshot.savePage('/baz', nextPage)
-    snapshot.state['/baz'].cachedAt = 123
+    store.savePage('/baz', nextPage)
+    store.state['/baz'].cachedAt = 123
 
-    assert.ok _.isEqual snapshot.state['/baz'],
+    assert.ok _.isEqual store.state['/baz'],
       data:
         heading: 'Some heading'
         address:
@@ -69,8 +69,8 @@ QUnit.module "Snapshot", ->
   test 'pushes state if specified', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    snapshot.setInitialState '/foobar',
+    store = new Store(controller, history)
+    store.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
       transition_cache: true
@@ -85,7 +85,7 @@ QUnit.module "Snapshot", ->
       assets: ['application-123.js']
 
     assert.equal history.location.pathname, '/foobar'
-    snapshot.savePage('/baz', nextPage, true)
+    store.savePage('/baz', nextPage, true)
     assert.equal history.location.pathname, '/baz'
 
 
@@ -94,14 +94,14 @@ QUnit.module "Snapshot", ->
   test 'returns nothing if on the current page', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    snapshot.setInitialState '/foobar',
+    store = new Store(controller, history)
+    store.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
       transition_cache: true
       assets: ['application-123.js']
 
-    page = snapshot.pageFor('/foobar')
+    page = store.pageFor('/foobar')
     page.cachedAt = 123
 
     assert.ok _.isEqual page,
@@ -121,9 +121,9 @@ QUnit.module "Snapshot", ->
   test 'pushes a new location', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
+    store = new Store(controller, history)
     assert.notOk history.location.state?
-    snapshot.setInitialState '/foobar',
+    store.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
       transition_cache: true
@@ -131,16 +131,16 @@ QUnit.module "Snapshot", ->
 
     assert.propEqual history.location.pathname, '/foobar'
     assert.propEqual history.length, 1
-    snapshot.reflectNewUrl('/baz')
+    store.reflectNewUrl('/baz')
     assert.propEqual history.location.pathname, '/baz'
     assert.propEqual history.length, 2
 
   test 'does not push a new location when the url is the same', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
+    store = new Store(controller, history)
     assert.notOk history.location.state?
-    snapshot.setInitialState '/foobar',
+    store.setInitialState '/foobar',
       data: {}
       csrf_token: 'token'
       transition_cache: true
@@ -148,7 +148,7 @@ QUnit.module "Snapshot", ->
 
     assert.propEqual history.location.pathname, '/foobar'
     assert.propEqual history.length, 1
-    snapshot.reflectNewUrl('/foobar')
+    store.reflectNewUrl('/foobar')
     assert.propEqual history.location.pathname, '/foobar'
     assert.propEqual history.length, 1
 
@@ -158,20 +158,20 @@ QUnit.module "Snapshot", ->
     Breezy.reset()
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    snapshot.state =
+    store = new Store(controller, history)
+    store.state =
       '/': { cachedAt: 100}
       '/1': { cachedAt: 101}
       '/2': { cachedAt: 102}
       '/3': { cachedAt: 103}
       '/4': { cachedAt: 104}
 
-    numOfPagesCached = Object.keys(snapshot.state).length
+    numOfPagesCached = Object.keys(store.state).length
     assert.equal numOfPagesCached, 5
 
-    snapshot.constrainPageCacheTo(2)
+    store.constrainPageCacheTo(2)
 
-    numOfPagesCached = Object.keys(snapshot.state).length
+    numOfPagesCached = Object.keys(store.state).length
     assert.equal numOfPagesCached, 2
 
   QUnit.module "Restore event"
@@ -286,8 +286,8 @@ QUnit.module "Snapshot", ->
   test 'updates all joints across pages', (assert) ->
     history = History.createMemoryHistory()
     controller = new FakeController
-    snapshot = new Snapshot(controller, history)
-    snapshot.setInitialState '/foobar',
+    store = new Store(controller, history)
+    store.setInitialState '/foobar',
       data:
         header:
           cart:
@@ -309,8 +309,8 @@ QUnit.module "Snapshot", ->
       joints:
         info: ['profile.header.cart']
 
-    snapshot.savePage('/baz', nextPage)
-    pages = Object.values(snapshot.state)
+    store.savePage('/baz', nextPage)
+    pages = Object.values(store.state)
 
-    snapshot.graftByJoint('info', total: 5)
+    store.graftByJoint('info', total: 5)
     assert.equal pages[0].data.header.cart.total, pages[1].data.profile.header.cart.total

@@ -3,7 +3,7 @@ Utils = require('./utils')
 EVENTS = require('./events')
 Config = require('./config')
 
-class Snapshot
+class Store
   constructor: (@controller, @history) ->
     @state = {}
     @stateSize = 10
@@ -169,4 +169,4 @@ class Snapshot
       for path in paths
         @state[k].data = Utils.set(v.data, path, node, opts)
 
-module.exports = Snapshot
+module.exports = Store

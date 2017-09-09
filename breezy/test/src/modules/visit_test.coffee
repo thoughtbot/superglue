@@ -35,7 +35,7 @@ test "#visit, a successful visit", (assert) ->
     assert.ok requestFinished
     assert.propEqual data.data, { heading: "Some heading 2" }
     state = breezy: true, pathname: "/app/success"
-    assert.propEqual @Breezy.controller.history.history.location.state, state
+    assert.propEqual @Breezy.controller.store.history.location.state, state
     done()
 
   @Breezy.visit('/app/success', options)
@@ -74,7 +74,7 @@ test "#remote, error responses should call the error callback", (assert) ->
     onRequestError: =>
       assert.ok requestStarted
       state = breezy: true, pathname: "/"
-      assert.propEqual @Breezy.controller.history.history.location.state, state
+      assert.propEqual @Breezy.controller.store.history.location.state, state
       done()
 
   @Breezy.on 'breezy:load', (data)->
@@ -97,7 +97,7 @@ test "#visits do not pushState when URL is the same", (assert) ->
   #todo, add a some logging to requests in the queue if error
   @Breezy.config.setBaseUrl('http://localhost:9876')
   @Breezy.setInitialState(pathname: '/', state: initialState)
-  history = @Breezy.controller.history.history
+  history = @Breezy.controller.store.history
   load = 0
   @Breezy.on 'breezy:load', =>
     load += 1

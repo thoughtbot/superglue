@@ -2,7 +2,7 @@ module BreezyTemplate
   module CacheExtension
     class Digest
       def initialize(digest)
-        @digest = "Breezy.cache(\"#{digest}\")"
+        @digest = "cache[\"#{digest}\"]"
       end
 
       def to_json(*)
@@ -76,7 +76,7 @@ module BreezyTemplate
     end
 
     def _breezy_set_cache(key, value)
-      "Breezy.cache(\"#{key}\", #{_dump(value)});"
+      "cache[\"#{key}\"]=#{_dump(value)};"
     end
 
     def _cache_key(key, options={})

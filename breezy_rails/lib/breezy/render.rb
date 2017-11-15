@@ -17,7 +17,7 @@ module Breezy
         view_parts = _prefixes.reverse.push(action_name)[1..-1]
         view_name = view_parts.map(&:camelize).join
 
-        breezy[:view] ||= view_name
+        breezy[:screen] ||= view_name
         render_options[:locals] ||= {}
         render_options[:locals][:breezy] = breezy
       end

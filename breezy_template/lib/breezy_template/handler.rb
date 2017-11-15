@@ -37,6 +37,7 @@ module BreezyTemplate
           end
 
           json.joints ::BreezyTemplate::PartialExtension::JointVar.new
+          json.defers ::BreezyTemplate::PartialExtension::DeferVar.new
 
           json.target!
         end

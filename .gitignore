@@ -1,5 +1,6 @@
 *.lock
 node_modules
+dist
 pkg/
 vendor/bundle
 test/log/

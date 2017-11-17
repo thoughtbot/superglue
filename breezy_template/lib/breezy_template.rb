@@ -54,13 +54,6 @@ module BreezyTemplate
       @extensions[name.to_sym] = args
     end
 
-    def _breezy_visit_current(path)
-      uri = ::URI.parse(@request_path)
-      qry = ::URI.decode_www_form(uri.query || '') << ["_breezy_filter", path.join('.')]
-      uri.query = ::URI.encode_www_form(qry)
-      "Breezy.request('#{uri}', {queue: 'async', pushState: false});"
-    end
-
     def _blank
       BLANK
     end
@@ -152,7 +145,7 @@ module BreezyTemplate
       js = _breezy_return(@attributes)
 
       @js.push(js)
-      "(function(){var joints={};#{@js.join}})()"
+      "(function(){var joints={};var cache={};var defers=[];#{@js.join}})()"
     end
 
     private

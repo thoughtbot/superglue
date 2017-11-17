@@ -1,58 +1,50 @@
 {
   "name": "@jho406/breezy",
-  "version": "0.1.4",
-  "description": "Develop ReactJS apps the Rails Way",
-  "main": "dist/breezy.js",
-  "files": [
-    "lib/assets/javascripts"
-  ],
-  "directories": {
-    "test": "test"
-  },
+  "version": "0.2.0",
+  "description": "",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "npm run build:all && npm run blade",
-    "blade": "bundle exec blade runner",
-    "export:rails":"npm run build:browser:src && cp build/browser/breezy.js ../breezy_rails/lib/assets/javascript/breezy.js" ,
-
-    "build:src": "node_modules/coffeescript/bin/coffee -o build/src/ -c src/",
-    "build:browser:src": "browserify src/index.coffee -o build/browser/breezy.js -t coffeeify --extension='.coffee'",
-    "build:browser:test": "browserify test/src/test.coffee -o build/browser/test.js -t coffeeify --extension='.coffee'",
-    "build:test": "node_modules/coffeescript/bin/coffee -o build/test/src -c test/src",
-    "build:all": "npm run build:src && npm run build:browser:src && npm run build:browser:test && npm run build:test",
-    "qunit": "npm run build:all && node_modules/qunit/bin/cli.js -c build/src/index.js -t build/test/src/test.js"
+    "test": "jasmine",
+    "lint": "./node_modules/.bin/eslint lib",
+    "build": "./node_modules/babel-cli/bin/babel.js lib -d dist",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jho406/breezy.git"
+    "url": "git+https://github.com/jho406/bz2.git"
   },
-  "keywords": [
-    "turbolinks",
-    "browser",
-    "pushstate"
-  ],
-  "author": "jho406",
+  "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jho406/breezy/issues"
+    "url": "https://github.com/jho406/bz2/issues"
   },
-  "homepage": "https://github.com/jho406/breezy#readme",
-  "dependencies": {
-    "eventemitter3": "^2.0.3",
-    "history": "^4.6.3",
-    "superagent": "^3.5.2",
-    "url-parse": "^1.1.9"
-  },
+  "homepage": "https://github.com/jho406/bz2#readme",
   "devDependencies": {
-    "babel": "^6.23.0",
-    "browserify": "^14.4.0",
-    "browserify-istanbul": "^2.0.0",
-    "coffeeify": "^2.1.0",
-    "coffeescript": "^1.12.7",
-    "istanbul": "^0.4.5",
-    "lodash": "^4.17.4",
-    "qunit": "^1.0.0",
-    "sinon": "^1.17.7",
-    "superagent-mock": "^3.5.0",
-    "superagent-prefix": "0.0.2"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "eslint": "^4.11.0",
+    "eslint-plugin-react": "^7.4.0",
+    "jasmine": "^2.8.0",
+    "jasmine-expect": "^3.7.1",
+    "jsdom": "^11.3.0",
+    "redux-mock-store": "^1.3.0",
+    "fetch-mock": "^5.13.1"
+  },
+  "dependencies": {
+    "cross-fetch": "0.0.8",
+    "form-data": "^2.3.1",
+    "history": "^4.7.2",
+    "prop-types": "^15.6.0",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "url-parse": "^1.1.9",
+    "uuid": "^3.1.0"
   }
 }

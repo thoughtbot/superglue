@@ -13,6 +13,13 @@ module BreezyTemplate
       end
     end
 
+    def _breezy_visit_current(path)
+      uri = ::URI.parse(@request_path)
+      qry = ::URI.decode_www_form(uri.query || '') << ["_breezy_filter", path.join('.')]
+      uri.query = ::URI.encode_www_form(qry)
+      "defers.push({url:'#{uri}'});"
+    end
+
     def _deferment_options?
       !!@extensions[:defer] && (@search_path.nil? || @search_path.size == 0)
 

@@ -13,3 +13,5 @@
 #     json.delete_url post_path(post)
 #   end
 # end
+#
+json.greetings 'Change me'

@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'coffee-rails', '~> 4.0'
   s.add_dependency 'actionpack', '< 6.0', '>= 4.0'
   s.add_dependency 'breezy_template'
+  s.add_dependency 'webpacker', '~> 3.0'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'mocha'

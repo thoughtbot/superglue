@@ -40,8 +40,10 @@ export function argsForNavInitialState(url, page) {
 }
 
 export function pageToInitialState(url, page) {
+  const pathname = parse(url).pathname
+
   return {
-    page: {[url]: page}
+    page: {[pathname]: page}
   }
 }
 

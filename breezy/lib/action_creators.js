@@ -3,6 +3,8 @@ import 'cross-fetch'
 import {registeredControlFlows} from './control_flows'
 import {getStore} from './connector'
 import parse from 'url-parse'
+import {uuidv4} from './utils/helpers'
+import {needsRefresh, refreshBrowser} from './window'
 
 export const savePage = ({url, page}) => {
   return {
@@ -145,7 +147,121 @@ export const remote = ({url, contentType = null, method = 'GET', body = '', flow
     return flowHandler(getState, dispatch, fetchArgs)
       .catch((err) => {
         dispatch(handleError(err.message))
+        err.fetchArgs = fetchArgs
         throw err
       })
   }
 }
+
+const fetchWithFlow = (fetchArgs, flow, dispatch) => {
+  return fetch(...fetchArgs)
+    .then(parseResponse)
+    .then(flow)
+    .catch((err) => {
+      dispatch(handleError(err.message))
+      err.fetchArgs = fetchArgs
+      throw err
+    })
+}
+
+export const visit = ({url, contentType = null, method = 'GET', body = ''}) => {
+  return (dispatch, getState) => {
+    const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
+    const seqId = uuidv4()
+    const fetchUrl = fetchArgs[0]
+
+    const flow = ({rsp, page}) => {
+      const controlFlows = getState().breezy.controlFlows
+      if (controlFlows['visit'] === seqId ) {
+        dispatch(persist({url: fetchUrl, page, dispatch}))
+
+        const state = getState()
+        const prevAssets = state.breezy.assets
+        const newAssets = page.assets
+        const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
+
+        return {
+          url: redirectedUrl || fetchUrl,
+          page,
+          screen: page.screen,
+          needsRefresh: needsRefresh(prevAssets, newAssets)
+        }
+      } else {
+        return dispatch({type: 'BREEZY_NOOP'})
+      }
+    }
+
+    dispatch(beforeFetch({fetchArgs}))
+    dispatch({type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId})
+    dispatch({type: 'BREEZY_PAGE_CHANGE'})
+
+    return fetchWithFlow(fetchArgs, flow, dispatch)
+  }
+}
+
+function dispatchCompleted(getState, dispatch) {
+  const inQ = getState().breezy.controlFlows.asyncInOrder
+
+  for (var i = 0, l = inQ.length; i < l; i++) {
+    let item = inQ[i]
+    if (item.done) {
+      dispatch(item.action)
+    } else {
+      break
+    }
+  }
+
+  dispatch({type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: i})
+}
+
+export const asyncInOrder = ({url, contentType = null, method = 'GET', body = ''}) => {
+  return (dispatch, getState) => {
+    const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
+    const seqId = uuidv4()
+    const fetchUrl = fetchArgs[0]
+
+    const flow = (page) => {
+      const action = persist({url: fetchUrl, page, dispatch})
+      dispatch({
+        type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
+        action,
+        seqId,
+      })
+      dispatchCompleted(getState, dispatch)
+    }
+
+    dispatch({
+      type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM',
+      seqId
+    })
+
+    dispatch(beforeFetch({fetchArgs}))
+    return fetchWithFlow(fetchArgs, flow, dispatch)
+  }
+}
+
+export const asyncNoOrder = ({url, contentType = null, method = 'GET', body = ''}) => {
+  return (dispatch, getState) => {
+    const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
+    const seqId = uuidv4()
+    const fetchUrl = fetchArgs[0]
+
+    const flow = (page) => {
+        const action = persist({url: fetchUrl, page, dispatch})
+        const inQ = getState().breezy.controlFlows.asyncNoOrder
+        const hasSeq = inQ.includes(seqId)
+        if(hasSeq) {
+          dispatch(action)
+        }
+      }
+
+    dispatch({
+      type: 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM',
+      seqId
+    })
+
+    dispatch(beforeFetch({fetchArgs}))
+    return fetchWithFlow(fetchArgs, flow, dispatch)
+  }
+}
+

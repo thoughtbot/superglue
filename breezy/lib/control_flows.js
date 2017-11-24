@@ -94,6 +94,23 @@ export function asyncNoOrder(getState, dispatch, fetchArgs) {
   return req
 }
 
+export function addToFailedQueue({rsp, fetchArgs}) {
+  dispatch({
+    type: 'BREEZY_QUEUED_FAILED_FETCH',
+    fetchArgs
+  })
+}
+
+// setInterval(()=>{
+//   const failedFetches = [...store.breezy.queues['failed']]
+//   failedFetches.forEach((args) => {
+//     asyncNoOrder(...args).catch((err) => {
+//       addToFailedQueue({[err.rsp], args})
+//     })
+//   })
+//
+// }, 1000)
+
 export const registeredControlFlows = {
   visit,
   asyncInOrder,

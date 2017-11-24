@@ -1,15 +1,20 @@
 import {
+} from './control_flows'
+import { pageReducer, breezyReducer, controlFlowReducer } from './reducers'
+import {
   visit,
   asyncInOrder,
   asyncNoOrder
-} from './control_flows'
-import { pageReducer, breezyReducer, controlFlowReducer } from './reducers'
-import * as helpers from './action_creators'
+} from './action_creators'
 import * as rsp from '../spec/fixtures'
 import fetchMock from 'fetch-mock'
 import * as connect from './connector'
 import configureMockStore from 'redux-mock-store'
 import * as util_helpers from './utils/helpers'
+import * as actionCreators from './action_creators'
+import thunk from 'redux-thunk'
+const middlewares = [thunk]
+const mockStore = configureMockStore(middlewares)
 
 const delay = (duration) => {
   return new Promise((res, rej) => setTimeout(res, duration))
@@ -22,7 +27,6 @@ describe('control flows', () => {
 
   describe('visit', () => {
     it('will only allow one visit at a time, nooping any earlier requests', (done) => {
-      const mockStore = configureMockStore()
       const initialState = {
         breezy: {
           assets:[],
@@ -40,14 +44,16 @@ describe('control flows', () => {
 
       const spy = spyOn(util_helpers, 'uuidv4')
       spy.and.returnValue('firstId')
-      visit(store.getState, store.dispatch, ['/first', {}], true)
+      store.dispatch(visit({url: '/first'}))
 
       spy.and.returnValue('secondId')
       initialState.breezy.controlFlows.visit = 'secondId'
 
       const expectedActions = [
+        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
         { type: 'BREEZY_PAGE_CHANGE' },
+        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
         { type: 'BREEZY_PAGE_CHANGE' },
         { type: 'BREEZY_NOOP' },
@@ -57,7 +63,7 @@ describe('control flows', () => {
         }
       ]
 
-      visit(store.getState, store.dispatch, ['/second', {}], true).then(() => {
+      store.dispatch(visit({url:'/second'})).then(() => {
         expect(store.getActions()).toEqual(expectedActions)
         done()
       })
@@ -137,7 +143,6 @@ describe('control flows', () => {
 
   describe('asyncInOrder', () => {
     it('will fire everything but resolve in the order of call', (done) => {
-      const mockStore = configureMockStore()
       const initialState = {
         breezy: {
           assets:[],
@@ -155,7 +160,9 @@ describe('control flows', () => {
 
       const expectedActions = [
         { type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM', seqId: 'firstId' },
+        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         { type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM', seqId: 'secondId' },
+        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         {
           type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
           action:{
@@ -189,19 +196,18 @@ describe('control flows', () => {
 
       const spy = spyOn(util_helpers, 'uuidv4')
       spy.and.returnValue('firstId')
-      asyncInOrder(store.getState, store.dispatch, ['/first', {}], false).then(() => {
+      store.dispatch(asyncInOrder({url:'/first'})).then(() => {
         expect(store.getActions()).toEqual(expectedActions)
         done()
       })
 
       spy.and.returnValue('secondId')
-      asyncInOrder(store.getState, store.dispatch, ['/second', {}], false)
+      store.dispatch(asyncInOrder({url:'/second'}))
     })
   })
 
   describe('asyncNoOrder', () => {
     it('will fire and resolve', (done) => {
-      const mockStore = configureMockStore()
       const store = mockStore({
         breezy: {
           assets:[],
@@ -217,13 +223,14 @@ describe('control flows', () => {
       fetchMock.mock('/foo', rsp.visitSuccess)
       const expectedActions = [
         { type: 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM', seqId: 'nextId' },
+        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         {
           type: 'BREEZY_SAVE_PAGE',
           url: '/foo',
           page: jasmine.any(Object)
         }
       ]
-      const req = asyncNoOrder(store.getState, store.dispatch, ['/foo'], false)
+      const req = store.dispatch(asyncNoOrder({url: '/foo'}))
       req.then(() => {
         expect(store.getActions()).toEqual(expectedActions)
         done()

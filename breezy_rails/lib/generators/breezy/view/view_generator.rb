@@ -13,23 +13,37 @@ DESC
 
       def copy_view_files
         base_parts = class_path + [file_name]
-        content_destination =  File.join("app/views", base_parts)
-        view_destination = "app/assets/javascripts/views"
+        destination =  File.join("app/views", base_parts)
 
-        empty_directory content_destination
-        empty_directory view_destination
 
         actions.each do |action|
           @action = action
           @js_filename = (base_parts + [action]).map(&:camelcase).join
-          @content_path =  File.join(content_destination, "#{@action}.js.breezy")
-          @view_path = File.join(view_destination, "#{@js_filename}.js.jsx")
+          @content_path =  File.join(destination, "#{@action}.js.breezy")
+          @view_path = File.join(destination, "#{@action}.jsx")
 
-          template 'View.js.jsx', @view_path
+          template 'view.js', @view_path
           template 'view.js.breezy', @content_path
         end
       end
 
+      def append_mapping
+        app_js = 'app/javascript/packs/application.js'
+        base_parts = class_path + [file_name]
+        destination =  File.join("views", base_parts)
+
+        actions.each do |action|
+          @js_filename = (base_parts + [action]).map(&:camelcase).join
+
+          inject_into_file app_js, after: "from 'breezy'" do
+            "\nimport #{@js_filename} from '#{destination}/#{action}'"
+          end
+
+          inject_into_file app_js, after: 'const mapping = {' do
+            "\n  #{@js_filename},"
+          end
+        end
+      end
     end
   end
 end

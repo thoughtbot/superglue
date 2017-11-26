@@ -43,7 +43,7 @@ export const remoteHandler = function(ev, store) {
   })
 }
 
-export const setNavAndListen = function(nav) {
+export const setDOMListenersForNav = function(nav) {
   navigator = nav
 
   const {document} = getWindow()
@@ -52,7 +52,7 @@ export const setNavAndListen = function(nav) {
   }
 }
 
-export const unsetNavAndUnlisten = function() {
+export const unsetDOMListenersForNav = function() {
   navigator = null
   if (hasWindow()) {
     const {document} = getWindow()

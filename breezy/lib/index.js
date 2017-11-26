@@ -3,7 +3,7 @@ import parse from 'url-parse'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
 import {rootReducer} from './reducers'
-import {setNavAndListen, unsetNavAndUnlisten} from './listeners'
+import {setDOMListenersForNav, unsetDOMListenersForNav} from './listeners'
 import {createStore, applyMiddleware} from 'redux'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
@@ -12,10 +12,12 @@ import connect from './connector'
 export {mapStateToProps, mapDispatchToProps} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
 export {remote} from './action_creators'
+export {setDOMListenersForNav, unsetDOMListenersForNav}
+export {setWindow, unsetWindow}
 
 export function stop() {
   unsetWindow()
-  unsetNavAndUnlisten()
+  unsetDOMListenersForNav()
 }
 
 export function argsForHistory(url, page) {
@@ -64,7 +66,7 @@ export function start({window, url, baseUrl='', history, initialPage={}}) {
 
   function handleRef(ref){
     if (hasWindow()) {
-      setNavAndListen(ref)
+      setDOMListenersForNav(ref)
     }
   }
 

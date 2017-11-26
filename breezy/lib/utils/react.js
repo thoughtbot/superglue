@@ -1,6 +1,7 @@
 import React from 'react'
 import parse from 'url-parse'
-import {remote} from '../action_creators'
+import { bindActionCreators } from 'redux'
+import * as actionCreators from '../action_creators'
 import {vanityUrl} from './url'
 import PropTypes from 'prop-types'
 
@@ -87,9 +88,5 @@ export const mapStateToProps = (state = {page:{}}, ownProps) => {
 }
 
 export const mapDispatchToProps = (dispatch) => {
-  return {
-    remote: (args) => {
-      return dispatch(remote(args))
-    }
-  }
+  return bindActionCreators(actionCreators, dispatch)
 }

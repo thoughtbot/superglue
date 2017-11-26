@@ -2,24 +2,16 @@ import React from 'react'
 import parse from 'url-parse'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
-import {breezyReducer} from './reducers'
 import {pageReducer} from './reducers'
 import {setNavAndListen, unsetNavAndUnlisten} from './listeners'
 import {combineReducers, createStore, applyMiddleware} from 'redux'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
-import {remote} from 'breezy/lib/action_creators'
 
-
-export {breezyReducer}
-export {remote}
-export {pageReducer}
-
-export const rootReducer = combineReducers({
-  breezy: breezyReducer,
-  page: pageReducer
-})
+export {mapStateToProps, mapDispatchToProps} from 'breezy/lib/utils/react'
+export {breezyReducer, pageReducer, rootReducer} from './reducers'
+export {remote} from 'breezy/lib/action_creators'
 
 export function stop() {
   unsetWindow()

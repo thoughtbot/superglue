@@ -160,4 +160,9 @@ const breezyReducer = function(state = {controlFlows:{}}, action) {
   return {...meta, controlFlows}
 }
 
+export const rootReducer = combineReducers({
+  breezy: breezyReducer,
+  page: pageReducer
+})
+
 export {pageReducer, breezyReducer, controlFlowReducer}

@@ -1,4 +1,5 @@
-import {persist, parseResponse} from './action_creators'
+import {persist} from './action_creators'
+import {parseResponse} from './utils/request'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh, refreshBrowser} from './window'
 

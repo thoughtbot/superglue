@@ -1,8 +1,10 @@
-import {isValidResponse, parseSJR} from './utils/request'
+import {
+  argsForFetch,
+  parseResponse
+ } from './utils/request'
 import 'cross-fetch'
 import {registeredControlFlows} from './control_flows'
 import {getStore} from './connector'
-import parse from 'url-parse'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh, refreshBrowser} from './window'
 
@@ -26,13 +28,13 @@ export const graftByJoint = (joint, payload) => {
   }
 }
 
-const beforeFetch = (opts) => {
+export const beforeFetch = (opts) => {
   return {...opts,
     type: 'BREEZY_BEFORE_FETCH'
   }
 }
 
-const handleError = (err) => {
+export const handleError = (err) => {
   return {
     type: 'BREEZY_FETCH_ERROR',
     payload: {
@@ -41,68 +43,11 @@ const handleError = (err) => {
   }
 }
 
-const validateResponse = (args) => {
-  const {rsp} = args
-  if(isValidResponse(rsp)) {
-    return args
-  } else {
-    const error = new Error('Invalid Breezy Response')
-    error.response = rsp
-    throw error
-  }
-}
-
-const handleServerErrors = (args)=> {
-  const {rsp} = args
-  if (!rsp.ok) {
-    const error = new Error(rsp.statusText)
-    error.response = rsp
-    throw error
-  }
-  return args
-}
-
 export const restorePage = (location) => {
   return {
     type: 'BREEZY_RESTORE_PAGE',
     url: location
   }
-}
-
-export const argsForFetch = (getState, {url, contentType = null, body = '', method = 'GET'}) => {
-  const currentState = getState().breezy || {}
-
-  const jsAccept = 'text/javascript, application/x-javascript, application/javascript'
-  const headers = {
-    'accept': jsAccept,
-    'x-xhr-referer': currentState.currentUrl,
-    'x-requested-with': 'XMLHttpRequest'
-  }
-
-  if (contentType) {
-    headers['content-type'] = contentType
-  }
-
-  if (currentState.csrfToken) {
-    headers['x-csrf-token'] = currentState.csrfToken
-  }
-  const href = new parse(url, currentState.baseUrl || '', false).href
-
-  return [href, {method, headers, body}]
-}
-
-const extractText = (rsp) => {
-  return rsp.text().then((txt) => {
-    return {rsp, txt}
-  })
-}
-
-export const parseResponse = (prm) => {
-  return Promise.resolve(prm)
-    .then(extractText)
-    .then(handleServerErrors)
-    .then(validateResponse)
-    .then(extractSJR)
 }
 
 const handleDeferments = (defers=[], dispatch) => {
@@ -122,18 +67,6 @@ export const persist = ({url, page, dispatch}) => {
     return savePage({url, page})
   } else {
     return handleGraft({url, page})
-  }
-}
-
-const extractSJR = ({rsp, txt}) => {
-  const page = parseSJR(txt)
-  if (page) {
-    return Promise.resolve({rsp, page})
-  } else {
-    const error = new Error('Could not parse Server Generated Javascript Response for Breezy')
-    error.response = rsp
-
-    throw error
   }
 }
 

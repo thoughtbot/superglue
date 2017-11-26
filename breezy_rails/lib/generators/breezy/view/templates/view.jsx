@@ -5,8 +5,11 @@ import { connect } from 'react-redux'
 class <%= @js_filename %> extends React.Component {
   render () {
     return (
-      <div> {this.props.greetings}
-      </div>
+      <View> 
+        <Text>
+          {this.props.greetings}
+        </Text>
+      </View>
     )
   }
 }

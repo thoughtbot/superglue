@@ -5,6 +5,13 @@ module Breezy
 Description:
     Creates a content view and jsx view.
 DESC
+      class_option :target,
+        aliases: '-t',
+        type: :string,
+        default: 'web',
+        desc: 'Specify target platform',
+        enum: ['web', 'mobile']
+
       argument :actions, type: :array, default: [], banner: "action action"
 
       def self.source_root
@@ -20,15 +27,27 @@ DESC
           @action = action
           @js_filename = (base_parts + [action]).map(&:camelcase).join
           @content_path =  File.join(destination, "#{@action}.js.breezy")
-          @view_path = File.join(destination, "#{@action}.jsx")
+          puts options
+          if options[:target] == 'mobile'
+            @view_ext = 'jsx'
+          else
+            @view_ext = 'js'
+          end
 
-          template 'view.js', @view_path
+          @view_path = File.join(destination, "#{@action}.#{@view_ext}")
+
+          template "view.#{@view_ext}", @view_path
           template 'view.js.breezy', @content_path
         end
       end
 
       def append_mapping
-        app_js = 'app/javascript/packs/application.js'
+        if options[:platform] == 'mobile'
+          app_js = 'app/javascript/packs/application.js'
+        else
+          app_js = 'App.js'
+        end
+
         base_parts = class_path + [file_name]
         destination =  File.join("views", base_parts)
 

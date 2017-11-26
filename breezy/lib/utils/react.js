@@ -75,7 +75,13 @@ export class Nav extends React.Component {
 Nav.contextTypes = {store: PropTypes.object}
 
 export const mapStateToProps = (state = {page:{}}, ownProps) => {
-  const {data} = state.page[ownProps.url] || {}
+  let url = ownProps.url
+  // support for react navigation
+  if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.url && !url) {
+    url = ownProps.navigation.state.params.url
+  }
+
+  const {data} = state.page[url] || {}
   const props = data
   return props || {}
 }

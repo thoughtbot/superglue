@@ -1,6 +1,7 @@
 import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from 'breezy'
 import { connect } from 'react-redux'
+import {View, Text} from 'react-native'
 
 class <%= @js_filename %> extends React.Component {
   render () {

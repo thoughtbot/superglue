@@ -27,7 +27,7 @@ DESC
           @action = action
           @js_filename = (base_parts + [action]).map(&:camelcase).join
           @content_path =  File.join(destination, "#{@action}.js.breezy")
-          puts options
+
           if options[:target] == 'mobile'
             @view_ext = 'jsx'
           else

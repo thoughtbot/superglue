@@ -54,11 +54,11 @@ if File.exist?(babelrc)
 
 else
   say "Copying .babelrc to app root directory"
-  copy_file "#{__dir__}/examples/.babelrc", ".babelrc"
+  copy_file "#{__dir__}/templates/web/.babelrc", ".babelrc"
 end
 
 say "Copying application.js file to #{Webpacker.config.source_entry_path}"
-copy_file "#{__dir__}/examples/application.js", "#{Webpacker.config.source_entry_path}/application.js"
+copy_file "#{__dir__}/templates/web/application.js", "#{Webpacker.config.source_entry_path}/application.js"
 
 say "Appending js tags to your application.html.erb"
 append_js_tags

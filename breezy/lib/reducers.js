@@ -3,6 +3,7 @@ import parseUrl from 'url-parse'
 import {pathQuery} from './utils/url'
 import {setIn, getIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
+import {combineReducers} from 'redux'
 
 const savePage = (state, url, page) => {
   const pathname = pathQuery(url)
@@ -63,7 +64,7 @@ const handleGraft = (state, url, page) => {
   return state
 }
 
-const pageReducer = (state = {}, action) => {
+export const pageReducer = (state = {}, action) => {
   switch(action.type) {
   case 'BREEZY_SAVE_PAGE': {
     const {url, page} = action
@@ -91,7 +92,7 @@ const pageReducer = (state = {}, action) => {
   }
 }
 
-const metaReducer = (state = {}, action) => {
+export const metaReducer = (state = {}, action) => {
   switch(action.type) {
   case 'BREEZY_HISTORY_CHANGE': {
     const {url} = action
@@ -110,7 +111,7 @@ const metaReducer = (state = {}, action) => {
   }
 }
 
-const controlFlowReducer = (state = {}, action) => {
+export const controlFlowReducer = (state = {}, action) => {
   switch(action.type) {
   case 'BREEZY_OVERRIDE_VISIT_SEQ': {
     return {...state, visit: action.seqId}
@@ -153,7 +154,7 @@ const controlFlowReducer = (state = {}, action) => {
   }
 }
 
-const breezyReducer = function(state = {controlFlows:{}}, action) {
+export const breezyReducer = function(state = {controlFlows:{}}, action) {
   let meta = metaReducer(state, action)
   let controlFlows = controlFlowReducer(meta.controlFlows, action)
 
@@ -164,5 +165,3 @@ export const rootReducer = combineReducers({
   breezy: breezyReducer,
   page: pageReducer
 })
-
-export {pageReducer, breezyReducer, controlFlowReducer}

@@ -137,7 +137,7 @@ describe('Nav', () => {
     it('adds a remote prop', () => {
       let dispatch = jasmine.createSpy('dispatch')
       let props = mapDispatchToProps(dispatch)
-      props.remote({url:'/foo'})
+      props.visit({url:'/foo'})
 
       expect(dispatch).toHaveBeenCalledWith(jasmine.any(Function))
     })

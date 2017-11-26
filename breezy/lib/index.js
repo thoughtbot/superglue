@@ -9,6 +9,12 @@ import {combineReducers, createStore, applyMiddleware} from 'redux'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
+import {remote} from 'breezy/lib/action_creators'
+
+
+export {breezyReducer}
+export {remote}
+export {pageReducer}
 
 export const rootReducer = combineReducers({
   breezy: breezyReducer,
@@ -81,4 +87,10 @@ export function start({window, url, baseUrl='', history, initialPage={}}) {
       </Provider>
     }
   }
+}
+
+export default {
+  connect,
+  start,
+  stop
 }

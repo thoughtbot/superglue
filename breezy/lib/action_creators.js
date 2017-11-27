@@ -3,7 +3,6 @@ import {
   parseResponse
  } from './utils/request'
 import 'cross-fetch'
-import {registeredControlFlows} from './control_flows'
 import {getStore} from './connector'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh, refreshBrowser} from './window'

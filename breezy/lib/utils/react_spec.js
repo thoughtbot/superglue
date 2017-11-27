@@ -1,6 +1,5 @@
 import { JSDOM } from 'jsdom'
 import { render } from 'react-dom'
-import {remote} from '../action_creators'
 import start from '../index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../../spec/fixtures'

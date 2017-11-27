@@ -11,7 +11,6 @@ import connect from './connector'
 
 export {mapStateToProps, mapDispatchToProps} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
-export {remote} from './action_creators'
 export {setDOMListenersForNav, unsetDOMListenersForNav}
 export {setWindow, unsetWindow}
 

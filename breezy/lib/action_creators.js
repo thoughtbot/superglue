@@ -52,7 +52,7 @@ export const restorePage = (location) => {
 
 const handleDeferments = (defers=[], dispatch) => {
   defers.forEach(function({url}){
-    dispatch(remote({url}))
+    dispatch(asyncNoOrder({url})) //todo: ability to ignore and not clear queue
   })
 }
 
@@ -70,21 +70,6 @@ export const persist = ({url, page, dispatch}) => {
   }
 }
 
-export const remote = ({url, contentType = null, method = 'GET', body = '', flow='visit'}) => {
-  return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
-    const flowHandler = registeredControlFlows[flow] || registeredControlFlows['visit']
-
-    dispatch(beforeFetch({fetchArgs}))
-
-    return flowHandler(getState, dispatch, fetchArgs)
-      .catch((err) => {
-        dispatch(handleError(err.message))
-        err.fetchArgs = fetchArgs
-        throw err
-      })
-  }
-}
 
 const fetchWithFlow = (fetchArgs, flow, dispatch) => {
   return fetch(...fetchArgs)

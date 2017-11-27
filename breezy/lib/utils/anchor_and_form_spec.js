@@ -21,17 +21,17 @@ describe('dom anchor and form helpers', () => {
   describe('isValid', () => {
     it('returns true with a valid link', () => {
       let target = createTarget(`
-        <a href='/test' data-bz-remote='POST'></a>
+        <a href='/test' data-bz-dispatch='visit'></a>
       `)
       expect(isValid(target)).toBe(true)
 
       target = createTarget(`
-        <a href='/test' data-bz-visit='POST'></a>
+        <a href='/test' data-bz-dispatch='visit'></a>
       `)
       expect(isValid(target)).toBe(true)
     })
 
-    it('returns false with an invalid link (missing data-bz-remote)', () => {
+    it('returns false with an invalid link (missing data-bz-dispatch)', () => {
       let target = createTarget(`
         <a href="/test"></a>
       `)
@@ -43,18 +43,6 @@ describe('dom anchor and form helpers', () => {
       expect(isValid(target)).toBe(false)
     })
 
-    it('returns true with a valid link', () => {
-      let target = createTarget(`
-        <a href='/test' bz-remote='POST'></a>
-      `)
-      expect(isValid(target)).toBe(true)
-
-      target = createTarget(`
-        <a href='/test' bz-visit='POST'></a>
-      `)
-      expect(isValid(target)).toBe(true)
-    })
-
     it('returns false when dispatch is empty', () => {
       let target = createTarget(`
         <a href="/test" data-bz-dispatch></a>
@@ -62,39 +50,18 @@ describe('dom anchor and form helpers', () => {
       expect(isValid(target)).toBe(false)
     })
 
-    it('returns true when dispatch is used', () => {
-      let target = createTarget(`
-        <a href="/test" data-bz-dispatch='add_user'></a>
-      `)
-      expect(isValid(target)).toBe(true)
-    })
-
     it('returns true with a valid form', () => {
       let target = createTarget(`
-        <form data-bz-remote method='post' action='/'>
-          <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-        </form>
-      `)
-      expect(isValid(target)).toBe(true)
-
-      target = createTarget(`
-        <form data-bz-visit method='post' action='/'>
+        <form data-bz-dispatch='visit' method='post' action='/'>
           <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
         </form>
       `)
       expect(isValid(target)).toBe(true)
     })
 
-    it('returns false with a invalid form (missing bz-remote or bz-visit)', () => {
+    it('returns false with a invalid form (missing bz-dispatch)', () => {
       let target = createTarget(`
         <form method='post' action='/'>
-          <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-        </form>
-      `)
-      expect(isValid(target)).toBe(false)
-
-      target = createTarget(`
-        <form method='post' data-bz-flow='foobar' action='/'>
           <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
         </form>
       `)
@@ -104,40 +71,30 @@ describe('dom anchor and form helpers', () => {
 
 
   describe('getRequestMethod', () => {
-    it('returns GET link with bz-remote/visit set to nothing', () => {
+    it('returns GET link with bz-method set to nothing', () => {
       let target = createTarget(`
-        <a href="/test" data-bz-remote></a>
-      `)
-      expect(getRequestMethod(target)).toBe('GET')
-
-      target = createTarget(`
-        <a href="/test" data-bz-visit></a>
+        <a href="/test" data-bz-dispatch='visit'></a>
       `)
       expect(getRequestMethod(target)).toBe('GET')
     })
 
     it('returns a VERB link with bz-remote/visit set to a valid verb', () => {
       let target = createTarget(`
-        <a href="/test" data-bz-remote=post></a>
-      `)
-      expect(getRequestMethod(target)).toBe('POST')
-
-      target = createTarget(`
-        <a href="/test" data-bz-visit=post></a>
+        <a href="/test" data-bz-dispatch='visit' data-bz-method='post'></a>
       `)
       expect(getRequestMethod(target)).toBe('POST')
     })
 
     it('returns GET link with bz-remote set to an invalid verb', () => {
       let target = createTarget(`
-        <a href="/test" data-bz-remote=invalid></a>
+        <a href="/test" data-bz-dispatch=visit data-bz-method=invalid></a>
       `)
       expect(getRequestMethod(target)).toBe('GET')
     })
 
     it('returns the form method by default', () => {
       let target = createTarget(`
-        <form data-bz-remote method='post'>
+        <form data-bz-dispatch=visit method='post'>
           <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
         </form>
       `)
@@ -146,48 +103,34 @@ describe('dom anchor and form helpers', () => {
 
     it('uses the data-bz-remote/visit when method is not set', () => {
       let target = createTarget(`
-        <form data-bz-remote>
-          <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-        </form>
-      `)
-      expect(getRequestMethod(target)).toBe('POST')
-
-      target = createTarget(`
-        <form data-bz-visit>
+        <form data-bz-dispatch='visit'>
           <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
         </form>
       `)
       expect(getRequestMethod(target)).toBe('POST')
     })
 
-    it('is set to data-bz-remote even if method is set', () => {
+    it('is set to data-bz-method even if method is set', () => {
       let target = createTarget(`
-      <form data-bz-remote='get' method='post'>
+      <form data-bz-dispatch=visit data-bz-method='get' method='post'>
         <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
       </form>
       `)
       expect(getRequestMethod(target)).toBe('GET')
     })
 
-    it('is set to POST when method is not set and data-bz-remote is present', () => {
+    it('is set to POST when method is not set and data-bz-method is present', () => {
       let target = createTarget(`
-        <form data-bz-remote>
+        <form data-bz-dispatch=visit>
           <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
         </form>
       `)
       expect(getRequestMethod(target)).toBe('POST')
     })
 
-    it('is set to data-bz-remote/visit when used with a value, and when method is not set', () => {
+    it('is set to data-bz-method when used with a value, and when method is not set', () => {
       let target = createTarget(`
-        <form data-bz-remote='get'>
-          <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
-        </form>
-      `)
-      expect(getRequestMethod(target)).toBe('GET')
-
-      target = createTarget(`
-        <form data-bz-visit='get'>
+        <form data-bz-dispatch='visit' data-bz-method='get'>
           <input type='file' name='foo'><input type='text' name='bar' value='fizzbuzz'>
         </form>
       `)
@@ -196,26 +139,16 @@ describe('dom anchor and form helpers', () => {
   })
 
   describe('getRequestMethodForFetch', () => {
-    it('returns POST with bz-remote/visit set to non-GET', () => {
+    it('returns POST with bz-method set to non-GET', () => {
       let target = createTarget(`
-        <a href="/test" data-bz-remote=put></a>
-      `)
-      expect(getRequestMethodForFetch(target)).toBe('POST')
-
-      target = createTarget(`
-        <a href="/test" data-bz-visit='put'></a>
+        <a href="/test" data-bz-dispatch='visit' data-bz-method=put></a>
       `)
       expect(getRequestMethodForFetch(target)).toBe('POST')
     })
 
-    it('returns GET with bz-remote/visit set to GET', () => {
+    it('returns GET with bz-remote set to GET', () => {
       let target = createTarget(`
         <a href="/test" data-bz-remote=get></a>
-      `)
-      expect(getRequestMethodForFetch(target)).toBe('GET')
-
-      target = createTarget(`
-        <a href="/test" data-bz-visit='get'></a>
       `)
       expect(getRequestMethodForFetch(target)).toBe('GET')
     })
@@ -278,7 +211,7 @@ describe('dom anchor and form helpers', () => {
   describe('getPayloadForLink', () => {
     it('creates a form payload with _method', () => {
       const target = createTarget(`
-        <a data-bz-remote='POST'></a>
+        <a data-bz-dispatch='visit' data-bz-method='POST'></a>
       `)
 
       spyOn(FormData.prototype, 'append')
@@ -289,28 +222,10 @@ describe('dom anchor and form helpers', () => {
     })
   })
 
-  describe('getPushState', () => {
-    it('returns true if bz-visit', () => {
-      const target = createTarget(`
-        <a data-bz-visit></a>
-      `)
-
-      expect(getPushState(target)).toBe(true)
-    })
-
-    it('returns false if bz-remote', () => {
-      const target = createTarget(`
-        <a data-bz-remote></a>
-      `)
-
-      expect(getPushState(target)).toBe(false)
-    })
-  })
-  
   describe('getContentType', () => {
     it('returns form-urlencoded if not a GET', () => {
       const target = createTarget(`
-        <a data-bz-visit='put'></a>
+        <a data-bz-dispatch='visit' data-bz-method='put'></a>
       `)
 
       expect(getContentType(target)).toBe("application/x-www-form-urlencoded; charset=UTF-8")
@@ -318,7 +233,7 @@ describe('dom anchor and form helpers', () => {
 
     it('returns undefined if GET', () => {
       const target = createTarget(`
-        <a data-bz-visit='get'></a>
+        <a data-bz-dispatch data-bz-method='get'></a>
       `)
 
       expect(getContentType(target)).toBe(undefined)

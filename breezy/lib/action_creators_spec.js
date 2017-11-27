@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
-import {remote} from './action_creators.js'
+import {visit} from './action_creators.js'
 import * as helpers from './utils/helpers'
 import * as connect from './connector'
 const middlewares = [thunk]
@@ -62,7 +62,7 @@ describe('async actions', () => {
       }
     ]
 
-    return store.dispatch(remote({url: '/foo'})).then(() => {
+    return store.dispatch(visit({url: '/foo'})).then(() => {
       const requestheaders = fetchMock.lastCall('/foo')[1].headers
       expect(requestheaders).toEqual({
         accept: "text/javascript, application/x-javascript, application/javascript",
@@ -171,7 +171,7 @@ describe('async actions', () => {
       }
     ]
 
-    return store.dispatch(remote({url: '/foo'})).catch((err) => {
+    return store.dispatch(visit({url: '/foo'})).catch((err) => {
       expect(err.message).toEqual('Internal Server Error')
       expect(err.response.status).toEqual(500)
       expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
@@ -203,7 +203,7 @@ describe('async actions', () => {
       }
     ]
 
-    return store.dispatch(remote({url: '/foo'})).catch((err) => {
+    return store.dispatch(visit({url: '/foo'})).catch((err) => {
       expect(err.message).toEqual('Invalid Breezy Response')
       expect(err.response.status).toEqual(200)
       expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
@@ -239,7 +239,7 @@ describe('async actions', () => {
       {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
     ]
 
-    return store.dispatch(remote({url: '/foo'})).catch((err) => {
+    return store.dispatch(visit({url: '/foo'})).catch((err) => {
       expect(err.message).toEqual('Could not parse Server Generated Javascript Response for Breezy')
       expect(err.response.status).toEqual(200)
       expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
@@ -252,7 +252,8 @@ describe('async actions', () => {
         currentUrl: '/bar',
         csrfToken: 'token',
         controlFlows: {
-          visit: 'fakeUUID'
+          visit: 'fakeUUID',
+          asyncNoOrder: ['fakeUUID']
         }
       }
     })
@@ -307,7 +308,7 @@ describe('async actions', () => {
       }
     })
 
-    store.dispatch(remote({url: '/foo'}))
+    store.dispatch(visit({url: '/foo'}))
   })
 })
 

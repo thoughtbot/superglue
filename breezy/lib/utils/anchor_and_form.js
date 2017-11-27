@@ -1,22 +1,17 @@
 import FormData from 'form-data'
 
+const SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
+const FALLBACK_LINK_METHOD = 'GET'
+const FALLBACK_FORM_METHOD = 'POST'
+const CONTROL_FLOWS = ['visit', 'async-no-order', 'async-in-order']
+
 export const toOptions = (target) => {
   return {
     url: getUrlForFetch(target),
     method: getRequestMethodForFetch(target),
     body: getPayloadForLink(target) || getPayload(target),
     contentType: getContentType(target),
-    pushState: getPushState(target),
-  }
-}
-
-export const getPushState = (target) => {
-  if (hasBZAttribute(target, 'bz-visit')){
-    return true
-  } else if (hasBZAttribute(target, 'bz-remote')){
-    return false
-  } else {
-    return false
+    action: getAction(target),
   }
 }
 
@@ -30,10 +25,6 @@ export const isValidLink = (target) => {
   }
 
   return isEnabledWithBz(target)
-}
-
-export const isEnabledWithBz = (target) => {
-  return hasBZAttribute(target, 'bz-remote') || hasBZAttribute(target, 'bz-visit') || (getBZAttribute(target, 'bz-dispatch') != null)
 }
 
 export const isValidForm = (target) => {
@@ -70,27 +61,23 @@ export const getContentType = (target) => {
   }
 }
 
-
-const SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
-const FALLBACK_LINK_METHOD = 'GET'
-const FALLBACK_FORM_METHOD = 'POST'
-
-const getBZEntryPoint = (target) => {
-  return getBZAttribute(target, 'bz-visit') || getBZAttribute(target, 'bz-remote')
+export const isEnabledWithBz = (target) => {
+  const action = getBZAttribute(target, 'bz-dispatch')
+  return CONTROL_FLOWS.includes(action)
 }
 
 export const getRequestMethod = (target) => {
-  let method = getBZEntryPoint(target)
+  let method = getBZAttribute(target, 'bz-method')
 
   if (target.tagName === 'A') {
-    method = (getBZEntryPoint(target) || '').toUpperCase()
+    method = (method || '').toUpperCase()
     if (!SUPPORTED_METHODS.includes(method)) {
       method = FALLBACK_LINK_METHOD
     }
   }
 
   if (target.tagName === 'FORM') {
-    method = getBZEntryPoint(target) || target.getAttribute('method') || ''
+    method = method || target.getAttribute('method') || ''
     method = method.toUpperCase()
     if (!SUPPORTED_METHODS.includes(method)) {
       method = FALLBACK_FORM_METHOD
@@ -107,6 +94,10 @@ export const getRequestMethodForFetch = (target) => {
   } else {
     return 'GET'
   }
+}
+
+export const getAction = (target) => {
+  return getBZAttribute(target, 'bz-dispatch')
 }
 
 export const getUrlForFetch = (target) => {

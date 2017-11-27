@@ -1,9 +1,15 @@
 import {getWindow, hasWindow} from './window'
 import {isValid, toOptions} from './utils/anchor_and_form'
-import {remote} from './action_creators'
+import {visit, asyncNoOrder, asyncInOrder} from './action_creators'
 import {store} from './connector'
 
 let navigator = null
+
+const domActionMapping = {
+  'visit': visit,
+  'async-in-order': asyncInOrder,
+  'async-no-order': asyncNoOrder
+}
 
 const clickHandler = (ev) => {
   let {target} = ev
@@ -37,8 +43,9 @@ export const remoteHandler = function(ev, store) {
   if (!isValid(target)) { return }
   ev.preventDefault()
 
-  const options = toOptions(target)
-  return store.dispatch(remote(options)).then((rsp) => {
+  const {actionName, ...options} = toOptions(target)
+  const action = domActionMapping[actionName]
+  return store.dispatch(action(options)).then((rsp) => {
     navigator.navigateTo(options.url, rsp.container)
   })
 }

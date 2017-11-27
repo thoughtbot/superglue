@@ -1,6 +1,6 @@
 import React from 'react'
 import parse from 'url-parse'
-import { bindActionCreators } from 'redux'
+import {bindActionCreators} from 'redux'
 import {
   visit,
   asyncNoOrder,

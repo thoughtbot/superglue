@@ -1,11 +1,10 @@
 import {
   argsForFetch,
   parseResponse
- } from './utils/request'
+} from './utils/request'
 import 'cross-fetch'
-import {getStore} from './connector'
 import {uuidv4} from './utils/helpers'
-import {needsRefresh, refreshBrowser} from './window'
+import {needsRefresh} from './window'
 
 export const savePage = ({url, page}) => {
   return {
@@ -56,10 +55,6 @@ const handleDeferments = (defers=[], dispatch) => {
 }
 
 export const persist = ({url, page, dispatch}) => {
-  const state = getStore().getState()
-  const prevAssets = state.breezy.assets
-  const newAssets = page.assets
-
   handleDeferments(page.defers, dispatch)
 
   if (page.action !== 'graft') {
@@ -164,13 +159,13 @@ export const asyncNoOrder = ({url, contentType = null, method = 'GET', body = ''
     const fetchUrl = fetchArgs[0]
 
     const flow = (page) => {
-        const action = persist({url: fetchUrl, page, dispatch})
-        const inQ = getState().breezy.controlFlows.asyncNoOrder
-        const hasSeq = inQ.includes(seqId)
-        if(hasSeq) {
-          dispatch(action)
-        }
+      const action = persist({url: fetchUrl, page, dispatch})
+      const inQ = getState().breezy.controlFlows.asyncNoOrder
+      const hasSeq = inQ.includes(seqId)
+      if(hasSeq) {
+        dispatch(action)
       }
+    }
 
     dispatch({
       type: 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM',

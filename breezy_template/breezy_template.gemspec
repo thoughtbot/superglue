@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.license  = 'MIT'
   s.homepage = 'https://github.com/jho406/breezy/'
   s.summary  = 'Breezy Templates for React props'
+  s.description = 'Breezy Templates for React props'
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 

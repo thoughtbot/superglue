@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.email    = 'jho406@gmail.com'
   s.license  = 'MIT'
   s.homepage = 'https://github.com/jho406/breezy/'
-  s.summary  = 'Turbolinks for react and rails'
+  s.summary  = 'Rails integration for BreezyJS'
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 

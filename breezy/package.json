@@ -1,6 +1,6 @@
 {
   "name": "@jho406/breezy",
-  "version": "0.2.2",
+  "version": "0.2.3-rc1",
   "description": "",
   "main": "dist/index.js",
   "scripts": {

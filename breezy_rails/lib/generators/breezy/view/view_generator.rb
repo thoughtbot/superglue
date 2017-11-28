@@ -26,7 +26,7 @@ DESC
         actions.each do |action|
           @action = action
           @js_filename = (base_parts + [action]).map(&:camelcase).join
-          @content_path =  File.join(destination, "#{@action}.js.breezy")
+          @content_path =  File.join(destination, "#{@action}.js.props")
 
           if options[:target] == 'mobile'
             @view_ext = 'jsx'

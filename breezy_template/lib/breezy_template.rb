@@ -16,6 +16,7 @@ module BreezyTemplate
     initializer :breezy_template do |app|
       ActiveSupport.on_load(:action_view) do
         ActionView::Template.register_template_handler :breezy, BreezyTemplate::Handler
+        ActionView::Template.register_template_handler :props, BreezyTemplate::Handler
         require 'breezy_template/dependency_tracker'
       end
     end

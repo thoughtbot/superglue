@@ -100,13 +100,13 @@ class RenderTest < ActionController::TestCase
   def assert_breezy_html(content)
     assert_response 200
     view = @response.request.params['action'].camelcase
-    assert_equal "<html><head><script type='text/javascript'>Breezy.replace((function(){return ({\"data\":#{content.to_json},\"view\":\"Render#{view}\",\"csrf_token\":\"secret\",\"assets\":[\"/app.js\"]});})());</script></head><body></body></html>", @response.body
+    assert_equal "<html><head><script type='text/javascript'>Breezy.replace((function(){var joints={};var cache={};var defers=[];return ({\"data\":#{content.to_json},\"screen\":\"Render#{view}\",\"csrf_token\":\"secret\",\"assets\":[\"/app.js\"],\"joints\":joints,\"defers\":defers});})());</script></head><body></body></html>", @response.body
     assert_equal 'text/html', @response.content_type
   end
 
   def assert_breezy_js(content)
     assert_response 200
-    assert_equal '(function(){return ({"data":' + content.to_json + ',"view":"RenderSimpleRenderWithBreezy","csrf_token":"secret","assets":["/app.js"]});})()', @response.body
+    assert_equal '(function(){var joints={};var cache={};var defers=[];return ({"data":' + content.to_json + ',"screen":"RenderSimpleRenderWithBreezy","csrf_token":"secret","assets":["/app.js"],"joints":joints,"defers":defers});})()', @response.body
     assert_equal 'text/javascript', @response.content_type
   end
 

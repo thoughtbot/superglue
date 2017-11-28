@@ -1,1 +1,3 @@
 /lib
+.babelrc
+*_spec.js

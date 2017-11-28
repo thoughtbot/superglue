@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jho406/bz2.git"
+    "url": "git+https://github.com/jho406/breezy.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jho406/bz2/issues"
   },
-  "homepage": "https://github.com/jho406/bz2#readme",
+  "homepage": "https://github.com/jho406/breezy#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",

@@ -54,7 +54,7 @@ if File.exist?(babelrc)
 
 else
   say "Copying .babelrc to app root directory"
-  copy_file "#{__dir__}/templates/web/.babelrc", ".babelrc"
+  copy_file "#{__dir__}/templates/web/babelrc", ".babelrc"
 end
 
 say "Copying application.js file to #{Webpacker.config.source_entry_path}"

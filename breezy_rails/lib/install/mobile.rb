@@ -33,7 +33,7 @@ if File.exist?(babelrc)
 
 else
   say "Copying .babelrc to app root"
-  copy_file "#{__dir__}/templates/mobile/.babelrc", Rails.root.join(".babelrc")
+  copy_file "#{__dir__}/templates/mobile/babelrc", Rails.root.join(".babelrc")
 end
 
 say "Copying application.js file to app root"

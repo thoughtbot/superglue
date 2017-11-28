@@ -6,7 +6,8 @@ import Breezy, {
   rootReducer,
   remote,
   pageToInitialState,
-} from 'breezy'
+} from '@jho406/breezy'
+import {visit} from '@jho406/breezy/dist/action_creators'
 import { StackNavigator } from 'react-navigation'
 
 //Change the below when you have your first screen
@@ -56,7 +57,7 @@ function start({url, baseUrl='', initialPage={}}) {
   store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
 
   // Uncomment below if you need to fetch on the initial screen
-  // store.dispatch(remote({url}))
+  // store.dispatch(visit({url}))
 
   const Nav = StackNavigator(navMapping, {
     initialRouteName: initialPage.screen,

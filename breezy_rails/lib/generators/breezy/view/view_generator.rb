@@ -54,7 +54,7 @@ DESC
         actions.each do |action|
           @js_filename = (base_parts + [action]).map(&:camelcase).join
 
-          inject_into_file app_js, after: "from 'breezy'" do
+          inject_into_file app_js, after: "from '@jho406/breezy'" do
             "\nimport #{@js_filename} from '#{destination}/#{action}'"
           end
 

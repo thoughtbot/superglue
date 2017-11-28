@@ -11,10 +11,10 @@ import Breezy, {
   setWindow,
   argsForHistory,
   argsForNavInitialState
-} from 'breezy'
+} from '@jho406/breezy'
 //The navigator is pretty bare bones
 //Feel free to replace the implementation
-import {Nav} from 'breezy/dist/utils/react'
+import {Nav} from '@jho406/breezy/dist/utils/react'
 
 
 // This mapping can be auto populate through

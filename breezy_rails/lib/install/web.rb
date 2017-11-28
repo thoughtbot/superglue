@@ -67,6 +67,6 @@ say "Installing all breezy dependencies"
 run "yarn add history react react-dom babel-preset-react prop-types --save"
 run "yarn add babel-plugin-module-resolver --save-dev"
 run "yarn add react-redux redux --save-dev"
-#run "yarn add react react-dom babel-preset-react prop-types module-resolver @jho406/breezy"
+run "yarn add @jho406/breezy"
 
 say "Webpacker now supports breezy.js 🎉", :green

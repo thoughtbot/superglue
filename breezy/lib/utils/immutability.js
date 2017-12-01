@@ -1,3 +1,6 @@
+// These were taken from Scour.js
+// Then, modified to respect the id=0 keypath
+
 const getIn = function(obj, path) {
   const keyPath = normalizeKeyPath(path)
   let result = obj
@@ -11,37 +14,56 @@ const getIn = function(obj, path) {
   return result
 }
 
-const isArray = function(val) {
-  return Object.prototype.toString.call(val) === '[object Array]'
+const clone = function (object) {
+  return Array.isArray(object)
+    ? [].slice.call(object)
+    : {... object}
 }
 
-const isObject = function(val) {
-  return Object.prototype.toString.call(val) === '[object Object]'
-}
+const getKey = function (node, key) {
+  if (Array.isArray(node) && isNaN(key)) {
+    const key_parts = Array.from(key.split('='))
+    const attr = key_parts[0]
+    const id = key_parts[1]
+    let i, child
 
-const setValueIntoNode = function(node, key, value) {
-  const [attr, id] = Array.from(key.split('='))
+    if(!id) {
+      return key
+    }
 
-  if (isArray(node) && id) {
-    let i
     for (i = 0; i < node.length; i++) {
-      const child = node[i]
+      child = node[i]
       if (child[attr].toString() === id) {
         break
       }
     }
 
-    return node[i] = value
-
+    return i
   } else {
-    return node[key] = value
+    return key
+  }
+}
+
+const cloneWithout = function (object, key) {
+  if (Array.isArray(object)) {
+    key = getKey(object, key)
+    return object.slice(0, +key).concat(object.slice(+key + 1))
+  } else {
+    let result = {}
+    key = '' + key
+    for (let k in object) {
+      if (object.hasOwnProperty(k) && key !== k) {
+        result[k] = object[k]
+      }
+    }
+    return result
   }
 }
 
 const atKey = function(node, key) {
   const [attr, id] = Array.from(key.split('='))
 
-  if (isArray(node) && id) {
+  if (Array.isArray(node) && id) {
     let child
     for (let i = 0; i < node.length; i++) {
       child = node[i]
@@ -68,54 +90,81 @@ const normalizeKeyPath = function(path) {
   }
 }
 
-const shallowCopy = function(obj) {
-  let copy
-  if (isArray(obj)) {
-    copy = (Array.from(obj))
-  }
+const setIn = function(object, keypath, value) {
+  keypath = normalizeKeyPath(keypath)
 
-  if (isObject(obj)) {
-    copy = {}
-    for (let key in obj) {
-      const value = obj[key]
-      copy[key] = value
+  let results = {}
+  let parents = {}
+  let i, len
+
+  for (i = 0, len = keypath.length; i < len; i++) {
+    if (i === 0) {
+      parents[i] = object
+    } else {
+      parents[i] = atKey(parents[i - 1], keypath[i - 1]) || {}
+      // handle cases when it isn't an object
+      if (typeof parents[i] !== 'object') {
+        parents[i] = {}
+      }
+    }
+  }
+  for (i = keypath.length; i >= 0; i--) {
+    if (!parents[i]) {
+      results[i] = value
+    } else {
+      results[i] = clone(parents[i])
+      let key = getKey(results[i], keypath[i])
+      results[i][key] = results[i + 1]
     }
   }
 
-  return copy
+  return results[0]
 }
 
+const delIn = function (object, keypath) {
+  keypath = normalizeKeyPath(keypath)
 
-const setIn = function(node, path, value, opts) {
-  let i, key
-  if (opts == null) { opts = {} }
-  if (!node) { return node }
+  let results = {}
+  let parents = {}
+  let i, len
 
-  const root = node
-  const keyPath = normalizeKeyPath(path)
-
-  let branch = [node]
-  for (i = 0; i < keyPath.length; i++) {
-    key = keyPath[i]
-    const child = atKey(node, key)
-    if (child === undefined) {
-      const parentPath = keyPath.slice(0, i + 1).join('.')
-      console.warn(`Could not find child ${key} at ${parentPath}`)
-      return root
+  for (i = 0, len = keypath.length; i < len; i++) {
+    if (i === 0) {
+      parents[i] = object
+    } else {
+      parents[i] = atKey(parents[i - 1], keypath[i - 1])
+      if (!parents[i] || typeof parents[i] !== 'object') {
+        return object
+      }
     }
-    branch.push(child)
-    node = child
   }
 
-  branch[branch.length - 1] = value
-  branch = branch.map(node => shallowCopy(node))
+  for (i = keypath.length - 1; i >= 0; i--) {
+    if (i === keypath.length - 1) {
+      results[i] = cloneWithout(parents[i], keypath[i])
 
-  for (i = 0; i < keyPath.length; i++) {
-    key = keyPath[i]
-    setValueIntoNode(branch[i], key, branch[i + 1])
+      delete results[i][keypath[i]]
+    } else {
+      results[i] = clone(parents[i])
+      results[i][keypath[i]] = results[i + 1]
+    }
   }
 
-  return branch[0]
+  return results[0]
 }
 
-export {getIn, setIn}
+const extendIn = function (source, keypath, extensions) {
+  keypath = normalizeKeyPath(keypath)
+
+  if (keypath.length === 0) return {...source, ...extensions}
+
+  let data =  {...getIn(source, keypath)}
+
+  for (let i = 2, len = arguments.length; i < len; i++) {
+    data = {...data, ...arguments[i]}
+  }
+
+  return setIn(source, keypath, data)
+}
+
+export {getIn, setIn, delIn, extendIn}

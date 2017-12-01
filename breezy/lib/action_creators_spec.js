@@ -22,7 +22,7 @@ describe('action creators', () => {
     fetchMock.restore()
   })
 
-  it('fires BREEZY_SAVE_PAGE when fetching', () => {
+  it('fires BREEZY_SAVE_RESPONSE when fetching', () => {
     const store = mockStore({
       breezy: {
         currentUrl: '/bar',
@@ -58,7 +58,7 @@ describe('action creators', () => {
       { type: 'BREEZY_PAGE_CHANGE'},
       {
         url: '/foo',
-        type: 'BREEZY_SAVE_PAGE',
+        type: 'BREEZY_SAVE_RESPONSE',
         page: {
           data: { heading: 'Some heading 2' },
           title: 'title 2',
@@ -178,7 +178,7 @@ describe('action creators', () => {
     })
   })
 
-  it('fires another BREEZY_SAVE_PAGE when the response has deferments', (done) => {
+  it('fires another BREEZY_SAVE_RESPONSE when the response has deferments', (done) => {
     const store = mockStore({
       breezy: {
         currentUrl: '/bar',
@@ -235,7 +235,7 @@ describe('action creators', () => {
       const lastAction = actions[actions.length - 1]
       const {type, url} = lastAction;
 
-      if(type === 'BREEZY_SAVE_PAGE' && url === '/some_defered_request') {
+      if(type === 'BREEZY_SAVE_RESPONSE' && url === '/some_defered_request') {
         done()
       }
     })
@@ -280,7 +280,7 @@ describe('action creators', () => {
           { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
           { type: 'BREEZY_PAGE_CHANGE' },
           { type: 'BREEZY_NOOP' },
-          { type: 'BREEZY_SAVE_PAGE',
+          { type: 'BREEZY_SAVE_RESPONSE',
             url: '/second',
             page: jasmine.any(Object)
           }
@@ -301,8 +301,8 @@ describe('action creators', () => {
             assets:[],
             controlFlows: {
               asyncInOrder: [
-                {seqId: 'firstId', done: false, action: {type: 'BREEZY_SAVE_PAGE'}},
-                {seqId: 'secondId', done: false, action: {type: 'BREEZY_SAVE_PAGE'}}
+                {seqId: 'firstId', done: false, action: {type: 'BREEZY_SAVE_RESPONSE'}},
+                {seqId: 'secondId', done: false, action: {type: 'BREEZY_SAVE_RESPONSE'}}
               ]
             }
           }
@@ -319,7 +319,7 @@ describe('action creators', () => {
           {
             type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
             action:{
-              type: 'BREEZY_SAVE_PAGE',
+              type: 'BREEZY_SAVE_RESPONSE',
               url: '/second',
               page: jasmine.any(Object)
             },
@@ -329,14 +329,14 @@ describe('action creators', () => {
           {
             type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
             action: {
-              type: 'BREEZY_SAVE_PAGE',
+              type: 'BREEZY_SAVE_RESPONSE',
               url: '/first',
               page: jasmine.any(Object)
             },
             seqId: 'firstId'
           },
-          { type: 'BREEZY_SAVE_PAGE' },
-          { type: 'BREEZY_SAVE_PAGE' },
+          { type: 'BREEZY_SAVE_RESPONSE' },
+          { type: 'BREEZY_SAVE_RESPONSE' },
           { type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: 2 }
         ]
 
@@ -378,7 +378,7 @@ describe('action creators', () => {
           { type: 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM', seqId: 'nextId' },
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           {
-            type: 'BREEZY_SAVE_PAGE',
+            type: 'BREEZY_SAVE_RESPONSE',
             url: '/foo',
             page: jasmine.any(Object)
           }

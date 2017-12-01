@@ -5,7 +5,6 @@ import {
   visit,
   asyncNoOrder,
   asyncInOrder,
-  graftByJoint
 } from '../action_creators'
 import {vanityUrl} from './url'
 import PropTypes from 'prop-types'
@@ -97,7 +96,6 @@ export const mapDispatchToProps = (dispatch) => {
     visit,
     asyncNoOrder,
     asyncInOrder,
-    graftByJoint
   }
   return bindActionCreators(actionCreators, dispatch)
 }

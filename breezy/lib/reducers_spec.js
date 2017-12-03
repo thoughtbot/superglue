@@ -2,6 +2,236 @@ import { pageReducer as reducer, controlFlowReducer } from '../lib/reducers'
 
 describe('reducers', () => {
   describe('page reducer', () => {
+    describe('BREEZY_EXTEND_IN_JOINT', () => {
+      it('merges a key at joint', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header']
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_EXTEND_IN_JOINT',
+          name: 'info',
+          keypath: 'cart',
+          value: {foo: 'bar'}
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30,
+                  foo: 'bar'
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header']
+            }
+          }
+        })
+      })
+    })
+
+    describe('BREEZY_DEL_IN_JOINT', () => {
+      it('deletes a key at joint', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_DEL_IN_JOINT',
+          name: 'info',
+          keypath: 'total'
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                cart: {}
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        })
+      })
+    })
+    describe('BREEZY_SET_IN_JOINT', () => {
+      it('take a grafting response and grafts it', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_SET_IN_JOINT',
+          name: 'info',
+          value: 300,
+          keypath: 'total'
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total:300
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        })
+      })
+    })
+
+    describe('BREEZY_EXTEND_IN_PAGE', () => {
+      it('immutably merges in the page', () => {
+        const cart = {total: 30}
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_EXTEND_IN_PAGE',
+          url: '/foo',
+          keypath: 'header',
+          value: {sibling: 90}
+        })
+
+        const newHeader = nextState['/foo'].data.header
+        expect(newHeader.cart).toBe(cart)
+        expect(newHeader.sibling).toEqual(90)
+      })
+    })
+
+    describe('BREEZY_DEL_IN_PAGE', () => {
+      it('immutably deletes in the page', () => {
+        const sibling = {cat: 10}
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                sibling,
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_DEL_IN_PAGE',
+          url: '/foo',
+          keypath: 'header.cart',
+        })
+
+        const newHeader = nextState['/foo'].data.header
+        expect(newHeader.cart).toEqual(undefined)
+        expect(newHeader.sibling).toBe(sibling)
+      })
+    })
+
+    describe('BREEZY_SET_IN_PAGE', () => {
+      it('immutably sets in the page', () => {
+        const sibling = {cat: 10}
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                sibling,
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_SET_IN_PAGE',
+          url: '/foo',
+          keypath: 'header.cart',
+          value: {foo: 3}
+        })
+
+        const newHeader = nextState['/foo'].data.header
+        expect(newHeader.cart).toEqual({foo: 3})
+        expect(newHeader.sibling).toBe(sibling)
+      })
+    })
+
     describe('BREEZY_HANDLE_GRAFT', () => {
       it('take a grafting response and grafts it', () => {
         const prevState = {
@@ -55,11 +285,11 @@ describe('reducers', () => {
       })
     })
 
-    describe('BREEZY_SAVE_PAGE', () => {
+    describe('BREEZY_SAVE_RESPONSE', () => {
       it('saves page', () => {
         const prevState = {}
         const nextState = reducer(prevState, {
-          type: 'BREEZY_SAVE_PAGE',
+          type: 'BREEZY_SAVE_RESPONSE',
           url: '/foo',
           page: {
             data: {},
@@ -114,7 +344,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_SAVE_PAGE',
+          type: 'BREEZY_SAVE_RESPONSE',
           url: '/bar',
           page: nextPage
         })

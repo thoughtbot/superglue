@@ -1,11 +1,11 @@
 import {reverseMerge} from './utils/helpers'
 import parseUrl from 'url-parse'
 import {pathQuery} from './utils/url'
-import {setIn, getIn} from'./utils/immutability'
+import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
 import {combineReducers} from 'redux'
 
-const savePage = (state, url, page) => {
+const saveResponse = (state, url, page) => {
   const pathname = pathQuery(url)
 
   state = {...state}
@@ -22,7 +22,7 @@ const savePage = (state, url, page) => {
     .forEach(([ref, paths]) => {
       paths.forEach((path) => {
         const updatedNode = getIn(page.data, path)
-        state = graftByJoint(state, ref, updatedNode)
+        state = setInByJoint(state, ref, updatedNode)
       })
     })
 
@@ -31,15 +31,62 @@ const savePage = (state, url, page) => {
   return state
 }
 
-const graftByJoint = (state, ref, node, opts={}) => {
+const extendInByJoint = (state, name, value, subpath) => {
   state = {...state}
   Object.entries(state)
     .forEach(([pathname, page]) => {
-      const keyPaths = page.joints[ref] || []
+      const keyPaths = page.joints[name] || []
       keyPaths.forEach((path) => {
-        state[pathname] = setIn(page, ['data', path].join('.'), node, opts)
+        const fullpath = ['data', path]
+        if (subpath) {
+          fullpath.push(subpath)
+        }
+        state[pathname] = extendIn(page, fullpath.join('.'), value)
       })
     })
+
+  return state
+}
+
+const delInByJoint = (state, name, subpath = null) => {
+  state = {...state}
+  Object.entries(state)
+    .forEach(([pathname, page]) => {
+      const keyPaths = page.joints[name] || []
+      keyPaths.forEach((path) => {
+        const fullpath = ['data', path]
+        if (subpath) {
+          fullpath.push(subpath)
+        }
+
+        state[pathname] = delIn(page, fullpath.join('.'))
+      })
+    })
+
+  return state
+}
+
+const setInByJoint = (state, name, value, subpath = null) => {
+  state = {...state}
+  Object.entries(state)
+    .forEach(([pathname, page]) => {
+      const keyPaths = page.joints[name] || []
+      keyPaths.forEach((path) => {
+        const fullpath = ['data', path]
+        if (subpath) {
+          fullpath.push(subpath)
+        }
+        state[pathname] = setIn(page, fullpath.join('.'), value)
+      })
+    })
+
+  return state
+}
+
+const graftByKeypath= (state, ref, node, opts={}) => {
+  state = {...state}
+  page = state[url]
+  state[url] = setIn(page, ['data', path].join('.'), node, opts)
 
   return state
 }
@@ -54,7 +101,7 @@ const handleGraft = (state, url, page) => {
     .forEach(([ref, paths]) => {
       paths.forEach((path) => {
         const updatedNode = getIn(page.data, path)
-        state = graftByJoint(state, ref, updatedNode)
+        state = setInByJoint(state, ref, updatedNode)
       })
     })
 
@@ -66,9 +113,13 @@ const handleGraft = (state, url, page) => {
 
 export const pageReducer = (state = {}, action) => {
   switch(action.type) {
-  case 'BREEZY_SAVE_PAGE': {
+  case 'BREEZY_SAVE_RESPONSE': {
     const {url, page} = action
-    return savePage(state, url, page)
+    return saveResponse(state, url, page)
+  }
+  case 'BREEZY_HANDLE_GRAFT': {
+    const {url, page} = action
+    return handleGraft(state, url, page)
   }
   case 'BREEZY_REMOVE_PAGE': {
     const {url} = action
@@ -77,15 +128,38 @@ export const pageReducer = (state = {}, action) => {
 
     return nextState
   }
-  case 'BREEZY_HANDLE_GRAFT': {
-    const {url, page} = action
-    return handleGraft(state, url, page)
-  }
-  case 'BREEZY_GRAFT_BY_JOINT': {
-    const {joint, payload} = action
-    const nextState = {...state}
+  case 'BREEZY_SET_IN_PAGE': {
+    const {url, keypath, value} = action
+    const fullPath = [url, 'data', keypath].join('.')
+    const nextState = setIn(state, fullPath, value)
 
-    return graftByJoint(nextState, joint, payload)
+    return nextState
+  }
+  case 'BREEZY_DEL_IN_PAGE': {
+    const {url, keypath} = action
+    const fullPath = [url, 'data', keypath].join('.')
+    const nextState = delIn(state, fullPath)
+
+    return nextState
+  }
+  case 'BREEZY_EXTEND_IN_PAGE': {
+    const {url, keypath, value} = action
+    const fullPath = [url, 'data', keypath].join('.')
+    const nextState = extendIn(state, fullPath, value)
+
+    return nextState
+  }
+  case 'BREEZY_SET_IN_JOINT': {
+    const {name, keypath, value} = action
+    return setInByJoint(state, name, value, keypath)
+  }
+  case 'BREEZY_DEL_IN_JOINT': {
+    const {name, keypath} = action
+    return delInByJoint(state, name, keypath)
+  }
+  case 'BREEZY_EXTEND_IN_JOINT': {
+    const {name, keypath, value} = action
+    return extendInByJoint(state, name, value, keypath)
   }
   default:
     return state
@@ -102,7 +176,7 @@ export const metaReducer = (state = {}, action) => {
     const {baseUrl} = action
     return {...state, baseUrl}
   }
-  case 'BREEZY_SAVE_PAGE': {
+  case 'BREEZY_SAVE_RESPONSE': {
     const {page} = action
     return {...state, csrfToken: page.csrf_token}
   }

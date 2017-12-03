@@ -6,9 +6,9 @@ import 'cross-fetch'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh} from './window'
 
-export const savePage = ({url, page}) => {
+export const saveResponse = ({url, page}) => {
   return {
-    type: 'BREEZY_SAVE_PAGE', url, page
+    type: 'BREEZY_SAVE_RESPONSE', url, page
   }
 }
 
@@ -18,10 +18,63 @@ export const handleGraft = ({url, page}) => {
   }
 }
 
-export const graftByJoint = (joint, payload) => {
+export const setInPage = ({url, keypath, value}) => {
   return {
-    type: 'BREEZY_GRAFT_BY_JOINT',
-    joint,
+    type: 'BREEZY_SET_IN_PAGE',
+    url,
+    keypath,
+    value
+  }
+}
+
+export const delInPage = ({url, keypath}) => {
+  return {
+    type: 'BREEZY_DEL_IN_PAGE',
+    url,
+    keypath,
+  }
+}
+
+export const extendInPage = ({url, keypath, value}) => {
+  return {
+    type: 'BREEZY_EXTEND_IN_PAGE',
+    url,
+    keypath,
+    value
+  }
+}
+
+export const setInJoint = ({name, keypath, value}) => {
+  return {
+    type: 'BREEZY_SET_IN_JOINT',
+    name,
+    keypath,
+    value
+  }
+}
+
+export const delInJoint = ({name, keypath}) => {
+  return {
+    type: 'BREEZY_SET_IN_JOINT',
+    name,
+    keypath
+  }
+}
+
+export const extendInJoint = ({name, keypath, value}) => {
+  return {
+    type: 'BREEZY_EXTEND_IN_JOINT',
+    name,
+    keypath,
+    value
+  }
+}
+
+export const graftByKeypath = (url, keypath, payload) => {
+  return {
+    type: 'BREEZY_GRAFT_BY_KEYPATH',
+    url,
+    keypath,
     payload
   }
 }
@@ -57,10 +110,10 @@ const handleDeferments = (defers=[], dispatch) => {
 export const persist = ({url, page, dispatch}) => {
   handleDeferments(page.defers, dispatch)
 
-  if (page.action !== 'graft') {
-    return savePage({url, page})
-  } else {
+  if (page.action === 'graft') {
     return handleGraft({url, page})
+  } else {
+    return saveResponse({url, page})
   }
 }
 
@@ -176,4 +229,3 @@ export const asyncNoOrder = ({url, contentType = null, method = 'GET', body = ''
     return fetchWithFlow(fetchArgs, flow, dispatch)
   }
 }
-

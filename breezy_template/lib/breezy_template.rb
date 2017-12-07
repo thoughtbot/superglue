@@ -24,8 +24,8 @@ module BreezyTemplate
 
   class Template < ::Jbuilder
     include PartialDigestor
-    prepend PartialExtension
 
+    prepend PartialExtension
     prepend CacheExtension
     prepend SearchExtension
     prepend DefermentExtension
@@ -34,7 +34,7 @@ module BreezyTemplate
       attr_accessor :template_lookup_options
     end
 
-    self.template_lookup_options = { handlers: [:breezy] }
+    self.template_lookup_options = { handlers: [:breezy, :props] }
 
     def initialize(context, *args)
       @context = context

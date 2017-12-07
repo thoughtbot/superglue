@@ -1080,8 +1080,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     result = jbuild(<<-JBUILDER, request: req)
       json.hit do
-        json.wrap! :defer, :auto
-        json.hit2 do
+        json.hit2(defer: :auto)do
           json.hit3 do
             json.greeting 'hello world'
           end
@@ -1111,8 +1110,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
     result = jbuild(<<-JBUILDER, request: req)
       json.hit do
-        json.wrap! :defer, :manual
-        json.hit2 do
+        json.hit2 defer: :manual do
           json.hit3 do
             json.greeting 'hello world'
           end
@@ -1144,8 +1142,7 @@ class BreezyTemplateTest < ActionView::TestCase
         json.hit2 do
           data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
           json.array! data, key: :id do
-            json.wrap! :defer, :auto
-            json.greeting do
+            json.greeting defer: :auto do
               json.gree 'hi'
             end
           end
@@ -1217,8 +1214,7 @@ class BreezyTemplateTest < ActionView::TestCase
     result = jbuild(<<-JBUILDER, breezy_filter: 'hello')
       json.wrap! :defer, :auto
       json.hello do
-        json.wrap! :defer, :auto
-        json.content do
+        json.content defer: :auto do
           json.world 32
         end
       end

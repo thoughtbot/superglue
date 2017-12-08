@@ -18,9 +18,10 @@ module BreezyTemplate
       end
     end
 
-    def _result(value)
-      if _cache_options?
-        _cache(*_cache_options) { super }
+    def _result(value, *args)
+      options = _cache_options(args[0])
+      if options
+        _cache(*options) { super }
       else
         super
       end
@@ -28,34 +29,39 @@ module BreezyTemplate
 
     def set!(key, value = BLANK, *args)
       options = args.first || {}
-      options = _normalize_options(options)
-      if options[:partial] && _cache_options?
-        _cache_options[1] ||= {}
-        _cache_options[1][:_partial] = options[:partial]
+
+      if options[:partial] && options[:cache]
+        options[:cache] = [*options[:cache]]
+        if options[:cache].size == 1
+          options[:cache].push({})
+        end
+        options[:cache][1][:_partial] = options[:partial]
       end
-        super
+      super
     end
 
     def array!(collection=[], *attributes)
       options = attributes.first || {}
-      options = _normalize_options(options)
 
-      if options[:partial] && _cache_options?
-        _cache_options[1] ||= {}
-        _cache_options[1][:_partial] = options[:partial]
+      if options[:partial] && options[:cache]
+        options[:cache] = [*options[:cache]]
+        if options[:cache].size == 1
+          options[:cache].push({})
+        end
+        options[:cache][1][:_partial] = options[:partial]
       end
 
       super
     end
 
     def _mapping_element(element, opts={})
-      if _cache_options
-        key = _cache_options.first
+      if _cache_options?(opts)
+        key, options = _cache_options(opts)
         if ::Proc === key
           key = key.call(element)
         end
 
-        _cache(key, opts) {
+        _cache(key, options) {
           _scope { yield element }
         }
       else
@@ -63,16 +69,20 @@ module BreezyTemplate
       end
     end
 
-    def _cache_options?
-      !!@extensions[:cache]
+    def _cache_options?(options)
+      !!options[:cache]
     end
 
-    def _cache_options
-      @extensions[:cache]
+    def _cache_options(options)
+      return nil if !options
+      options = [*options[:cache]]
+      key, options = options
+
+      return [key, options]
     end
 
     def _extended_options?(value)
-      _cache_options? || super
+      _cache_options?(value) || super
     end
 
     def _breezy_set_cache(key, value)
@@ -120,8 +130,8 @@ module BreezyTemplate
     end
 
     def _fragment_name_with_digest(key, options)
-      if _cache_options? && _cache_options[1] && _cache_options[1][:_partial] && !options[:skip_digest]
-        partial = _cache_options[1][:_partial]
+      if options && options[:_partial]
+        partial = options[:_partial]
         [key, _partial_digest(partial)]
       else
         super

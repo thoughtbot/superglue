@@ -351,8 +351,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "renders a partial with locals and caches" do
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, 'cachekey'
-      json.profile 32, partial: "profile", locals: {email: "test@test.com"}
+      opts = {
+        cache: 'cachekey',
+        partial: "profile",
+        locals: {email: "test@test.com"}
+      }
+      json.profile 32, opts
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -404,8 +408,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "render array of partials without an :as to a member and cache" do
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ->(i){ ['a', i] }
-      json.array! [1,2], partial: "footer"
+      json.array! [1,2], partial: "footer", cache: ->(i){ ['a', i] }
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -487,8 +490,10 @@ class BreezyTemplateTest < ActionView::TestCase
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
 
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['b', 'c']
-      json.hello 32
+      opts = {
+        cache: [['b', 'c']]
+      }
+      json.hello 32, opts
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -509,8 +514,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
     result = jbuild(<<-JBUILDER)
       json.hello do
-        json.wrap! :cache, ->(i){ ['a', i] }
-        json.array! [4,5] do |x|
+        opts = {
+          cache: ->(i){ ['a', i] }
+        }
+        json.array! [4,5], opts do |x|
           json.top "hello" + x.to_s
         end
       end
@@ -534,14 +541,11 @@ class BreezyTemplateTest < ActionView::TestCase
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
 
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['a', 'b']
-      json.hello do
-        json.wrap! :cache, ['d', 'z']
-        json.content  do
+      json.hello cache: [['a', 'b']] do
+        json.content cache: [['d', 'z']] do
           json.subcontent 'inner'
         end
-        json.wrap! :cache, ['e', 'z']
-        json.other do
+        json.other cache: [['e', 'z']] do
           json.subcontent 'other'
         end
       end
@@ -612,15 +616,15 @@ class BreezyTemplateTest < ActionView::TestCase
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
 
     jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['cachekey']
-      json.post do
+      opts = {cache: ['cachekey']}
+      json.post opts do
         json.name "Cache"
       end
     JBUILDER
 
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['cachekey']
-      json.post do
+      opts = {cache: ['cachekey']}
+      json.post opts do
         json.name "Miss"
       end
     JBUILDER
@@ -642,8 +646,7 @@ class BreezyTemplateTest < ActionView::TestCase
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
 
     result = jbuild <<-JBUILDER
-      json.wrap! :cache, "cachekey"
-      json.content do
+      json.content cache: "cachekey" do
         json.array! %w[a b c]
       end
     JBUILDER
@@ -738,8 +741,7 @@ class BreezyTemplateTest < ActionView::TestCase
     @post = BLOG_POST_COLLECTION.first
 
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['a', 'b']
-      json.post @post, partial: "blog_post", as: :blog_post
+      json.post @post, partial: "blog_post", as: :blog_post, cache: [['a', 'b']]
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -762,13 +764,23 @@ class BreezyTemplateTest < ActionView::TestCase
     @miss = BlogPost.new(2, "miss", "John Smith")
 
     cat =  jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['a', 'b']
-      json.post @hit, partial: "blog_post", as: :blog_post
+      opts = {
+        cache: [['a', 'b']],
+        partial: "blog_post",
+        as: :blog_post
+      }
+
+      json.post @hit, opts
     JBUILDER
 
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ['a', 'b']
-      json.post @miss, partial: "blog_post", as: :blog_post
+      opts = {
+        cache: [['a', 'b']],
+        partial: "blog_post",
+        as: :blog_post
+      }
+
+      json.post @miss, opts
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -787,8 +799,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "render array of partials and caches" do
     result = jbuild(<<-JBUILDER)
-      json.wrap! :cache, ->(d){ ['a', d.id] }
-      json.array! BLOG_POST_COLLECTION, partial: "blog_post", as: :blog_post
+      opts = {
+        cache: (->(d){ ['a', d.id] }),
+        partial: "blog_post",
+        as: :blog_post
+      }
+      json.array! BLOG_POST_COLLECTION, opts
     JBUILDER
     Rails.cache.clear
 
@@ -929,8 +945,7 @@ class BreezyTemplateTest < ActionView::TestCase
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
       json.hit do
-        json.wrap! :cache, ['a']
-        json.hit2 do
+        json.hit2 cache: 'a' do
           json.greeting 'hello world'
         end
       end

@@ -70,7 +70,6 @@ module BreezyTemplate
         set!(*args)
       end
     ensure
-      # ::Byebug.byebug
       @extensions = {}
       @path.pop
     end
@@ -83,17 +82,17 @@ module BreezyTemplate
       yield
       @attributes
     ensure
-      # ::Byebug.byebug
       @extensions = parent_extensions
       @attributes, @key_formatter = parent_attributes, parent_formatter
     end
 
     def set!(key, value = BLANK, *args)
       _ensure_valid_key(key)
+
       result = if ::Kernel.block_given?
-        _result(value, &::Proc.new)
+        _result(value, *args, &::Proc.new)
       else
-        _result(value)
+        _result(value, *args)
       end
 
       _set_value key, result
@@ -104,7 +103,7 @@ module BreezyTemplate
       raise NullError.build(key) if current_value.nil?
     end
 
-    def _result(value)
+    def _result(value, *args)
       if ::Kernel.block_given?
         _scope { yield self }
       elsif ::Jbuilder === value
@@ -221,6 +220,7 @@ module BreezyTemplate
       end
 
       def _normalize_options(options)
+        return options
         options = options.dup
         key = options[:cache]
         opts = {}

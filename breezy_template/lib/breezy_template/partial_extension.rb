@@ -82,7 +82,9 @@ module BreezyTemplate
         _scope{ _render_partial options.merge(locals: locals) }
       end
 
-      set! name, value
+      options = options.dup
+      options.delete(:partial)
+      set! name, value, options
     end
 
     def _render_partial(options)

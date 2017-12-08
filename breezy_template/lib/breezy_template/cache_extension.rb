@@ -35,7 +35,7 @@ module BreezyTemplate
         if options[:cache].size == 1
           options[:cache].push({})
         end
-        options[:cache][1][:_partial] = options[:partial]
+        options[:cache][1][:_partial] = [*options[:partial]][0]
       end
       super
     end
@@ -48,7 +48,7 @@ module BreezyTemplate
         if options[:cache].size == 1
           options[:cache].push({})
         end
-        options[:cache][1][:_partial] = options[:partial]
+        options[:cache][1][:_partial] = [*options[:partial]][0]
       end
 
       super

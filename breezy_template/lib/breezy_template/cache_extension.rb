@@ -27,31 +27,54 @@ module BreezyTemplate
       end
     end
 
+    def _normalize_with_cache_options(options)
+      return options unless options.key? :cache
+
+      options = options.dup
+      options[:cache] = [*options[:cache]]
+
+      if options[:cache].size == 1
+        options[:cache].push({})
+      end
+
+      options
+    end
+
     def set!(key, value = BLANK, *args)
       options = args.first || {}
+      options = _normalize_with_cache_options(options)
 
       if options[:partial] && options[:cache]
-        options[:cache] = [*options[:cache]]
-        if options[:cache].size == 1
-          options[:cache].push({})
-        end
-        options[:cache][1][:_partial] = [*options[:partial]][0]
+        partial_name = [*options[:partial]][0]
+        cache_options = options[:cache][1]
+        cache_options[:_partial] = partial_name
       end
-      super
+
+      if ::Kernel.block_given?
+        super(key, value, options, ::Proc.new)
+      else
+        super(key, value, options)
+      end
     end
 
     def array!(collection=[], *attributes)
-      options = attributes.first || {}
+      has_option = attributes.first.is_a? ::Hash
+      return super if !has_option
+
+      options = attributes.first.dup
+      options = _normalize_with_cache_options(options)
 
       if options[:partial] && options[:cache]
-        options[:cache] = [*options[:cache]]
-        if options[:cache].size == 1
-          options[:cache].push({})
-        end
-        options[:cache][1][:_partial] = [*options[:partial]][0]
+        partial_name = [*options[:partial]][0]
+        cache_options = options[:cache][1]
+        cache_options[:_partial] = partial_name
       end
 
-      super
+      if ::Kernel.block_given?
+        super(collection, options, ::Proc.new)
+      else
+        super(collection, options)
+      end
     end
 
     def _mapping_element(element, opts={})

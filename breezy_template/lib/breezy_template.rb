@@ -123,7 +123,9 @@ module BreezyTemplate
       array = if ::Kernel.block_given?
         _map_collection(collection, options, &::Proc.new)
       elsif attributes.any?
-        _map_collection(collection, options) { |element| extract! element, *attributes }
+        _map_collection(collection, options) { |element| 
+          extract! element, *attributes 
+        }
       else
         collection.to_a
       end

@@ -41,7 +41,6 @@ module BreezyTemplate
       @js = []
       @path = []
       @joints = {}
-      @extensions = {}
       super(*args)
     end
 
@@ -49,10 +48,6 @@ module BreezyTemplate
       attributes = @attributes
       @attributes = {}
       attributes
-    end
-
-    def wrap!(name, *args)
-      @extensions[name.to_sym] = args
     end
 
     def _blank
@@ -70,19 +65,15 @@ module BreezyTemplate
         set!(*args)
       end
     ensure
-      @extensions = {}
       @path.pop
     end
 
     def _scope
-      parent_extensions = @extensions
-      @extensions = {}
       parent_attributes, parent_formatter = @attributes, @key_formatter
       @attributes = BLANK
       yield
       @attributes
     ensure
-      @extensions = parent_extensions
       @attributes, @key_formatter = parent_attributes, parent_formatter
     end
 
@@ -137,7 +128,6 @@ module BreezyTemplate
         collection.to_a
       end
 
-      @extensions = {}
       merge! array #remove this depednacy
     end
 

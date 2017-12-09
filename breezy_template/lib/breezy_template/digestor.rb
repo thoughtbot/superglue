@@ -1,7 +1,8 @@
+require 'breezy_template/breezy_template'
 require 'action_view'
 require 'action_view/digestor'
 
-module BreezyTemplate
+class BreezyTemplate
   module PartialDigestor
     if ::Rails.version >= '5.0'
       def _partial_digestor(options)

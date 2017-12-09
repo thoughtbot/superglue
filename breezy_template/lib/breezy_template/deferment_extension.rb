@@ -1,4 +1,6 @@
-module BreezyTemplate
+require 'breezy_template/breezy_template'
+
+class BreezyTemplate
   module DefermentExtension
     ACTIVE_MODES = [:auto, :manual].freeze
 

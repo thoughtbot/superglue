@@ -1,4 +1,6 @@
-module BreezyTemplate
+require 'breezy_template/breezy_template'
+
+class BreezyTemplate
   module SearchExtension
     def found!
       found = @found
@@ -67,7 +69,6 @@ module BreezyTemplate
     def set!(key, value = BLANK, *args)
       return if @found
       options = args.first || {}
-      options = _normalize_options(options)
 
       if @search_path && !@search_path.empty?
         if key.to_s == @search_path.first
@@ -80,7 +81,6 @@ module BreezyTemplate
               yield self
             elsif _partial_options?(options)
               without_track = args.dup
-              # without_track.first.delete(:track)
               super(key, value, *without_track)
             else
               ::Kernel.raise 'This should not happen'

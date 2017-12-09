@@ -1,4 +1,6 @@
-module BreezyTemplate
+require 'breezy_template/breezy_template'
+
+class BreezyTemplate
   module PartialExtension
     class DeferVar
       def initialize
@@ -37,7 +39,7 @@ module BreezyTemplate
     end
 
     def set!(key, value = BLANK, *args)
-      options = args.first || {}
+      options = args.last || {}
 
       if args.one? && _partial_options?(options)
         _set_inline_partial key, value, options
@@ -47,9 +49,10 @@ module BreezyTemplate
     end
 
     def array!(collection = [], *attributes)
-      options = attributes.first || {}
+      options = attributes.last || {}
       options = _normalize_options_for_partial(options)
-      if attributes.one? && options[:partial] 
+
+      if attributes.one? && _partial_options?(options)
         _, opts = options[:partial]
         opts.reverse_merge!(collection: collection)
         _render_partial_with_options(options)
@@ -67,6 +70,10 @@ module BreezyTemplate
     end
 
     def _normalize_options_for_partial(options)
+      if !_partial_options?(options)
+        return options
+      end
+
       partial_options = [*options[:partial]]
       partial, rest = partial_options
       if partial && !rest
@@ -121,7 +128,7 @@ module BreezyTemplate
       ary_opts = options.dup
 
       partial_opts.reverse_merge! locals: {}
-      partial_opts.reverse_merge! ::BreezyTemplate::Template.template_lookup_options
+      partial_opts.reverse_merge! ::BreezyTemplate.template_lookup_options
       as = partial_opts[:as]
 
       if partial_opts.key?(:collection)

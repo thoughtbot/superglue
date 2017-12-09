@@ -1,4 +1,5 @@
 # This was taken from jbuilder
+require 'breezy_template/breezy_template'
 
 dependency_tracker = false
 
@@ -15,7 +16,7 @@ rescue LoadError
 end
 
 if dependency_tracker
-  class BreezyTemplate::Template
+  class BreezyTemplate
     module DependencyTrackerMethods
       # Matches:
       #   json.partial! partial: "comments/comment"
@@ -42,6 +43,6 @@ if dependency_tracker
   end
 
   ::BreezyTemplate::DependencyTracker = Class.new(dependency_tracker::ERBTracker)
-  ::BreezyTemplate::DependencyTracker.send :include, ::BreezyTemplate::Template::DependencyTrackerMethods
+  ::BreezyTemplate::DependencyTracker.send :include, ::BreezyTemplate::DependencyTrackerMethods
   dependency_tracker.register_tracker :breezy, ::BreezyTemplate::DependencyTracker
 end

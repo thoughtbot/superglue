@@ -1,4 +1,6 @@
-module BreezyTemplate
+require 'breezy_template/breezy_template'
+
+class BreezyTemplate
   module CacheExtension
     class Digest
       def initialize(digest)
@@ -123,7 +125,11 @@ module BreezyTemplate
     end
 
     def _cache(key=nil, options={})
-      return yield self if !@context.controller.perform_caching || key.nil?
+      perform_caching = @context.respond_to?(:controller) && @context.controller.perform_caching
+
+      if !perform_caching || key.nil?
+        return yield self
+      end
 
       parent_js = @js
       key = _cache_key(key, options)
@@ -157,7 +163,16 @@ module BreezyTemplate
         partial = options[:_partial]
         [key, _partial_digest(partial)]
       else
-        super
+        if @context.respond_to?(:cache_fragment_name)
+          # Current compatibility, fragment_name_with_digest is private again and cache_fragment_name
+          # should be used instead.
+          @context.cache_fragment_name(key, options)
+        elsif @context.respond_to?(:fragment_name_with_digest)
+          # Backwards compatibility for period of time when fragment_name_with_digest was made public.
+          @context.fragment_name_with_digest(key)
+        else
+          key
+        end
       end
     end
   end

@@ -963,14 +963,14 @@ class BreezyTemplateTest < ActionView::TestCase
   test "filtering for a node of a AR relation in a tree by id via an appended where clause" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.id=1')
       post = Post.create
-      post.comments.create title: 'first'
-      post.comments.create title: 'second'
+      post.notes.create title: 'first'
+      post.notes.create title: 'second'
 
-      post.comments.expects(:where).once().with('id'=>1).returns([{id: 1, title: 'first'}])
+      post.notes.expects(:where).once().with('id'=>1).returns([{id: 1, title: 'first'}])
 
       json.hit do
         json.hit2 do
-          json.array! post.comments do |x|
+          json.array! post.notes do |x|
             raise 'this should be be called' if x[:title] == 'second'
             json.title x[:title]
           end
@@ -997,15 +997,15 @@ class BreezyTemplateTest < ActionView::TestCase
   test "filtering for a node of a AR relation in a tree by index via an appended where clause" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.0')
       post = Post.create
-      post.comments.create title: 'first'
-      post.comments.create title: 'second'
+      post.notes.create title: 'first'
+      post.notes.create title: 'second'
 
-      offset = post.comments.offset(0)
-      post.comments.expects(:offset).once().with(0).returns(offset)
+      offset = post.notes.offset(0)
+      post.notes.expects(:offset).once().with(0).returns(offset)
 
       json.hit do
         json.hit2 do
-          json.array! post.comments do |x|
+          json.array! post.notes do |x|
             raise 'this should be be called' if x[:title] == 'second'
             json.title x[:title]
           end

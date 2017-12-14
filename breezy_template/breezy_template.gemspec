@@ -1,8 +1,6 @@
-require File.expand_path('../lib/breezy_template/version', __FILE__)
-
 Gem::Specification.new do |s|
   s.name     = 'breezy_template'
-  s.version  = BreezyTemplate::VERSION
+  s.version  = '0.2.1'
   s.author   = 'Johny Ho'
   s.email    = 'jho406@gmail.com'
   s.license  = 'MIT'
@@ -12,7 +10,11 @@ Gem::Specification.new do |s|
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 
-  s.add_dependency 'jbuilder', '< 3.0', '>= 1.5'
-  s.add_dependency 'actionpack', '< 6.0', '>= 4.0'
+  s.required_ruby_version = '>= 1.9.3'
+
+  s.add_dependency 'actionpack', '>= 4.2.0'
+  s.add_dependency 'activesupport', '>= 4.2.0'
+  s.add_dependency 'multi_json',    '>= 1.2'
+
   s.add_development_dependency 'mocha'
 end

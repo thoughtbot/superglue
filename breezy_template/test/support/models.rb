@@ -1,7 +1,7 @@
 class Post < ActiveRecord::Base
-  has_many :comments
+  has_many :notes
 end
 
-class Comment < ActiveRecord::Base
+class Note < ActiveRecord::Base
   belongs_to :post
 end

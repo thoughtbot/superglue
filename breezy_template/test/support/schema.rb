@@ -5,7 +5,7 @@ ActiveRecord::Schema.define do
     t.string :title
   end
 
-  create_table :comments, :force => true do |t|
+  create_table :notes, :force => true do |t|
     t.integer :post_id
     t.string :title
   end

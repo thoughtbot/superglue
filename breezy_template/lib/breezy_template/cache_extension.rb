@@ -1,4 +1,6 @@
-module BreezyTemplate
+require 'breezy_template/breezy_template'
+
+class BreezyTemplate
   module CacheExtension
     class Digest
       def initialize(digest)
@@ -18,44 +20,73 @@ module BreezyTemplate
       end
     end
 
-    def _result(value)
-      if _cache_options?
-        _cache(*_cache_options) { super }
+    def _result(value, *args)
+      options = _cache_options(args[0])
+      if options
+        _cache(*options) { super }
       else
         super
       end
     end
 
+    def _normalize_with_cache_options(options)
+      return options unless options.key? :cache
+
+      options = options.dup
+      options[:cache] = [*options[:cache]]
+
+      if options[:cache].size == 1
+        options[:cache].push({})
+      end
+
+      options
+    end
+
     def set!(key, value = BLANK, *args)
       options = args.first || {}
-      options = _normalize_options(options)
-      if options[:partial] && _cache_options?
-        _cache_options[1] ||= {}
-        _cache_options[1][:_partial] = options[:partial]
+      options = _normalize_with_cache_options(options)
+
+      if options[:partial] && options[:cache]
+        partial_name = [*options[:partial]][0]
+        cache_options = options[:cache][1]
+        cache_options[:_partial] = partial_name
       end
-        super
+
+      if ::Kernel.block_given?
+        super(key, value, options, ::Proc.new)
+      else
+        super(key, value, options)
+      end
     end
 
     def array!(collection=[], *attributes)
-      options = attributes.first || {}
-      options = _normalize_options(options)
+      has_option = attributes.first.is_a? ::Hash
+      return super if !has_option
 
-      if options[:partial] && _cache_options?
-        _cache_options[1] ||= {}
-        _cache_options[1][:_partial] = options[:partial]
+      options = attributes.first.dup
+      options = _normalize_with_cache_options(options)
+
+      if options[:partial] && options[:cache]
+        partial_name = [*options[:partial]][0]
+        cache_options = options[:cache][1]
+        cache_options[:_partial] = partial_name
       end
 
-      super
+      if ::Kernel.block_given?
+        super(collection, options, ::Proc.new)
+      else
+        super(collection, options)
+      end
     end
 
     def _mapping_element(element, opts={})
-      if _cache_options
-        key = _cache_options.first
+      if _cache_options?(opts)
+        key, options = _cache_options(opts)
         if ::Proc === key
           key = key.call(element)
         end
 
-        _cache(key, opts) {
+        _cache(key, options) {
           _scope { yield element }
         }
       else
@@ -63,16 +94,20 @@ module BreezyTemplate
       end
     end
 
-    def _cache_options?
-      !!@extensions[:cache]
+    def _cache_options?(options)
+      !!options[:cache]
     end
 
-    def _cache_options
-      @extensions[:cache]
+    def _cache_options(options)
+      return nil if !options
+      options = [*options[:cache]]
+      key, options = options
+
+      return [key, options]
     end
 
     def _extended_options?(value)
-      _cache_options? || super
+      _cache_options?(value) || super
     end
 
     def _breezy_set_cache(key, value)
@@ -90,7 +125,11 @@ module BreezyTemplate
     end
 
     def _cache(key=nil, options={})
-      return yield self if !@context.controller.perform_caching || key.nil?
+      perform_caching = @context.respond_to?(:controller) && @context.controller.perform_caching
+
+      if !perform_caching || key.nil?
+        return yield self
+      end
 
       parent_js = @js
       key = _cache_key(key, options)
@@ -120,11 +159,20 @@ module BreezyTemplate
     end
 
     def _fragment_name_with_digest(key, options)
-      if _cache_options? && _cache_options[1] && _cache_options[1][:_partial] && !options[:skip_digest]
-        partial = _cache_options[1][:_partial]
+      if options && options[:_partial]
+        partial = options[:_partial]
         [key, _partial_digest(partial)]
       else
-        super
+        if @context.respond_to?(:cache_fragment_name)
+          # Current compatibility, fragment_name_with_digest is private again and cache_fragment_name
+          # should be used instead.
+          @context.cache_fragment_name(key, options)
+        elsif @context.respond_to?(:fragment_name_with_digest)
+          # Backwards compatibility for period of time when fragment_name_with_digest was made public.
+          @context.fragment_name_with_digest(key)
+        else
+          key
+        end
       end
     end
   end

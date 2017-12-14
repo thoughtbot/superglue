@@ -1,4 +1,6 @@
-module BreezyTemplate
+require 'breezy_template/breezy_template'
+
+class BreezyTemplate
   module PartialExtension
     class DeferVar
       def initialize
@@ -37,8 +39,8 @@ module BreezyTemplate
     end
 
     def set!(key, value = BLANK, *args)
-      options = args.first || {}
-      options = _normalize_options(options)
+      options = args.last || {}
+
       if args.one? && _partial_options?(options)
         _set_inline_partial key, value, options
       else
@@ -47,11 +49,13 @@ module BreezyTemplate
     end
 
     def array!(collection = [], *attributes)
-      options = attributes.first || {}
-      options = _normalize_options(options)
+      options = attributes.last || {}
+      options = _normalize_options_for_partial(options)
 
       if attributes.one? && _partial_options?(options)
-        _render_partial_with_options(options.merge(collection: collection))
+        _, opts = options[:partial]
+        opts.reverse_merge!(collection: collection)
+        _render_partial_with_options(options)
       else
         super
       end
@@ -65,6 +69,20 @@ module BreezyTemplate
       ::Hash === options && options.key?(:partial)
     end
 
+    def _normalize_options_for_partial(options)
+      if !_partial_options?(options)
+        return options
+      end
+
+      partial_options = [*options[:partial]]
+      partial, rest = partial_options
+      if partial && !rest
+        options.dup.merge(partial: [partial, rest || {}])
+      else
+        options
+      end
+    end
+
     def _partial_digest(partial)
       lookup_context = @context.lookup_context
       name = lookup_context.find(partial, lookup_context.prefixes, true).virtual_path
@@ -72,20 +90,26 @@ module BreezyTemplate
     end
 
     def _set_inline_partial(name, object, options)
-      value = if object.nil? && options.empty?
+      options = _normalize_options_for_partial(options)
+      partial, partial_opts = options[:partial]
+      value = if object.nil? && partial.empty?
         []
       else
         locals = {}
-        locals[options[:as]] = object if !_blank?(object) && options.key?(:as)
-        locals.merge!(options[:locals]) if options.key? :locals
+        locals[partial_opts[:as]] = object if !_blank?(partial_opts) && partial_opts.key?(:as)
+        locals.merge!(partial_opts[:locals]) if partial_opts.key? :locals
+        partial_opts.merge!(locals: locals)
 
-        _scope{ _render_partial options.merge(locals: locals) }
+        _scope{ _render_partial(options) }
       end
 
-      set! name, value
+      options = options.dup
+      options.delete(:partial)
+      set! name, value, options
     end
 
     def _render_partial(options)
+      partial, options = options[:partial]
       joint = options[:joint]
       if joint
         joint = joint.to_sym
@@ -95,25 +119,30 @@ module BreezyTemplate
       end
 
       options[:locals].merge! json: self
-      @context.render options
+      @context.render options.merge(partial: partial)
     end
 
     def _render_partial_with_options(options)
+      options = _normalize_options_for_partial(options)
+      partial, partial_opts = options[:partial]
       ary_opts = options.dup
-      options.reverse_merge! locals: {}
-      options.reverse_merge! ::BreezyTemplate::Template.template_lookup_options
-      as = options[:as]
 
-      if options.key?(:collection)
-        collection = options.delete(:collection)
-        locals = options.delete(:locals)
+      partial_opts.reverse_merge! locals: {}
+      partial_opts.reverse_merge! ::BreezyTemplate.template_lookup_options
+      as = partial_opts[:as]
+
+      if partial_opts.key?(:collection)
+        collection = partial_opts.delete(:collection)
+        locals = partial_opts.delete(:locals)
 
         ary_opts.delete(:partial)
         array! collection, ary_opts do |member|
           member_locals = locals.clone
           member_locals.merge! collection: collection
           member_locals.merge! as.to_sym => member if as
-          _render_partial options.merge(locals: member_locals)
+          partial_opts.merge!(locals: member_locals)
+
+          _render_partial options
         end
       else
         _render_partial options

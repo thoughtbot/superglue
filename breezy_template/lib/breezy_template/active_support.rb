@@ -7,11 +7,11 @@ if Rails.version >= '4.1'
           alias_method :original_jsonify, :jsonify
 
           def jsonify(value)
-            if ::BreezyTemplate::Template::Digest === value
+            if ::BreezyTemplate::Digest === value
               value
-            elsif ::BreezyTemplate::Template::JointVar === value
+            elsif ::BreezyTemplate::JointVar === value
               value
-            elsif ::BreezyTemplate::Template::DeferVar === value
+            elsif ::BreezyTemplate::DeferVar === value
               value
             else
               original_jsonify(value)

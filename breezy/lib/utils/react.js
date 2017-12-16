@@ -3,7 +3,7 @@ import parse from 'url-parse'
 import {bindActionCreators} from 'redux'
 import {
   visit,
-  asyncNoOrder,
+  remote,
   asyncInOrder,
 } from '../action_creators'
 import {vanityUrl} from './url'
@@ -94,7 +94,7 @@ export const mapStateToProps = (state = {page:{}}, ownProps) => {
 export const mapDispatchToProps = (dispatch) => {
   const actionCreators = {
     visit,
-    asyncNoOrder,
+    remote,
     asyncInOrder,
   }
   return bindActionCreators(actionCreators, dispatch)

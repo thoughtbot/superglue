@@ -103,7 +103,7 @@ export const restorePage = (location) => {
 
 const handleDeferments = (defers=[], dispatch) => {
   defers.forEach(function({url}){
-    dispatch(asyncNoOrder({url})) //todo: ability to ignore and not clear queue
+    dispatch(remote({url})) //todo: ability to ignore and not clear queue
   })
 }
 
@@ -205,7 +205,7 @@ export const asyncInOrder = ({url, contentType = null, method = 'GET', body = ''
   }
 }
 
-export const asyncNoOrder = ({url, contentType = null, method = 'GET', body = ''}) => {
+export const remote = ({url, contentType = null, method = 'GET', body = ''}) => {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()
@@ -213,7 +213,7 @@ export const asyncNoOrder = ({url, contentType = null, method = 'GET', body = ''
 
     const flow = (page) => {
       const action = persist({url: fetchUrl, page, dispatch})
-      const inQ = getState().breezy.controlFlows.asyncNoOrder
+      const inQ = getState().breezy.controlFlows.remote
       const hasSeq = inQ.includes(seqId)
       if(hasSeq) {
         dispatch(action)

@@ -4,7 +4,7 @@ import fetchMock from 'fetch-mock'
 import {
   visit,
   asyncInOrder,
-  asyncNoOrder
+  remote
 } from './action_creators'
 import * as helpers from './utils/helpers'
 import * as connect from './connector'
@@ -185,7 +185,7 @@ describe('action creators', () => {
         csrfToken: 'token',
         controlFlows: {
           visit: 'fakeUUID',
-          asyncNoOrder: ['fakeUUID']
+          remote: ['fakeUUID']
         }
       }
     })
@@ -359,13 +359,13 @@ describe('action creators', () => {
       })
     })
 
-    describe('asyncNoOrder', () => {
+    describe('remote', () => {
       it('will fire and resolve', (done) => {
         const store = mockStore({
           breezy: {
             assets:[],
             controlFlows: {
-              asyncNoOrder: ['nextId']
+              remote: ['nextId']
             }
           }
         })
@@ -383,7 +383,7 @@ describe('action creators', () => {
             page: jasmine.any(Object)
           }
         ]
-        const req = store.dispatch(asyncNoOrder({url: '/foo'}))
+        const req = store.dispatch(remote({url: '/foo'}))
         req.then(() => {
           expect(store.getActions()).toEqual(expectedActions)
           done()

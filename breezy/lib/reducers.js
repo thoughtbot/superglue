@@ -221,7 +221,7 @@ export const controlFlowReducer = (state = {}, action) => {
       action: null
     }
 
-    return {...state, asyncNoOder: [...state.asyncNoOrder, item]}
+    return {...state, asyncNoOder: [...state.remote, item]}
   }
   default:
     return state

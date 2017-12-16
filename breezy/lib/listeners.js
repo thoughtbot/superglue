@@ -1,6 +1,6 @@
 import {getWindow, hasWindow} from './window'
 import {isValid, toOptions} from './utils/anchor_and_form'
-import {visit, asyncNoOrder, asyncInOrder} from './action_creators'
+import {visit, remote, asyncInOrder} from './action_creators'
 import {store} from './connector'
 
 let navigator = null
@@ -8,7 +8,7 @@ let navigator = null
 const domActionMapping = {
   'visit': visit,
   'async-in-order': asyncInOrder,
-  'async-no-order': asyncNoOrder
+  'remote': remote
 }
 
 const clickHandler = (ev) => {

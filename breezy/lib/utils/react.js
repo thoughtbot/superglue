@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux'
 import {
   visit,
   remote,
-  asyncInOrder,
+  remoteInOrder,
 } from '../action_creators'
 import {vanityUrl} from './url'
 import PropTypes from 'prop-types'
@@ -95,7 +95,7 @@ export const mapDispatchToProps = (dispatch) => {
   const actionCreators = {
     visit,
     remote,
-    asyncInOrder,
+    remoteInOrder,
   }
   return bindActionCreators(actionCreators, dispatch)
 }

@@ -165,7 +165,7 @@ export const visit = ({url, contentType = null, method = 'GET', body = ''}) => {
 }
 
 function dispatchCompleted(getState, dispatch) {
-  const inQ = getState().breezy.controlFlows.asyncInOrder
+  const inQ = getState().breezy.controlFlows.remoteInOrder
 
   for (var i = 0, l = inQ.length; i < l; i++) {
     let item = inQ[i]
@@ -179,7 +179,7 @@ function dispatchCompleted(getState, dispatch) {
   dispatch({type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: i})
 }
 
-export const asyncInOrder = ({url, contentType = null, method = 'GET', body = ''}) => {
+export const remoteInOrder = ({url, contentType = null, method = 'GET', body = ''}) => {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()

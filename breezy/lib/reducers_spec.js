@@ -358,13 +358,13 @@ describe('reducers', () => {
   describe('controlFlowReducer', () => {
     describe('BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM', () => {
       it('adds an item to the flow', () => {
-        const state = {asyncInOrder: []}
+        const state = {remoteInOrder: []}
         let nextState = controlFlowReducer(state, {
           type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM',
           seqId: 1
         })
 
-        expect(nextState.asyncInOrder).toEqual([{
+        expect(nextState.remoteInOrder).toEqual([{
           seqId: 1,
           done: false,
           action: null
@@ -374,7 +374,7 @@ describe('reducers', () => {
 
     describe('BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM', () => {
       it('updates the queued item with passed action', () => {
-        const state = {asyncInOrder: [
+        const state = {remoteInOrder: [
           {
             seqId: 0,
             done: false,
@@ -393,7 +393,7 @@ describe('reducers', () => {
           action: {foo: 'bar'}
         })
 
-        expect(nextState.asyncInOrder).toEqual([
+        expect(nextState.remoteInOrder).toEqual([
           {
             seqId: 0,
             done: false,
@@ -410,7 +410,7 @@ describe('reducers', () => {
 
     describe('BREEZY_ASYNC_IN_ORDER_DRAIN', () => {
       it('drains the q', () => {
-        const state = {asyncInOrder: [
+        const state = {remoteInOrder: [
           {a: 1}, {b: 2}, {c: 3}
         ]}
 
@@ -419,7 +419,7 @@ describe('reducers', () => {
           index: 2
         })
 
-        expect(nextState.asyncInOrder).toEqual([
+        expect(nextState.remoteInOrder).toEqual([
           {c: 3}
         ])
       })

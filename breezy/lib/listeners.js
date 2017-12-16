@@ -1,13 +1,13 @@
 import {getWindow, hasWindow} from './window'
 import {isValid, toOptions} from './utils/anchor_and_form'
-import {visit, remote, asyncInOrder} from './action_creators'
+import {visit, remote, remoteInOrder} from './action_creators'
 import {store} from './connector'
 
 let navigator = null
 
 const domActionMapping = {
   'visit': visit,
-  'async-in-order': asyncInOrder,
+  'remote-in-order': remoteInOrder,
   'remote': remote
 }
 

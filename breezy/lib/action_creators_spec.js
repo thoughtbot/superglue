@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
 import {
   visit,
-  asyncInOrder,
+  remoteInOrder,
   remote
 } from './action_creators'
 import * as helpers from './utils/helpers'
@@ -294,13 +294,13 @@ describe('action creators', () => {
     })
 
 
-    describe('asyncInOrder', () => {
+    describe('remoteInOrder', () => {
       it('will fire everything but resolve in the order of call', (done) => {
         const initialState = {
           breezy: {
             assets:[],
             controlFlows: {
-              asyncInOrder: [
+              remoteInOrder: [
                 {seqId: 'firstId', done: false, action: {type: 'BREEZY_SAVE_RESPONSE'}},
                 {seqId: 'secondId', done: false, action: {type: 'BREEZY_SAVE_RESPONSE'}}
               ]
@@ -341,21 +341,21 @@ describe('action creators', () => {
         ]
 
         fetchMock.mock('/first', delay(500).then(() => {
-          initialState.breezy.controlFlows.asyncInOrder[0].done = true
-          initialState.breezy.controlFlows.asyncInOrder[1].done = true
+          initialState.breezy.controlFlows.remoteInOrder[0].done = true
+          initialState.breezy.controlFlows.remoteInOrder[1].done = true
           return rsp.visitSuccess
         }))
         fetchMock.mock('/second', delay(200).then(rsp.visitSuccess))
 
         const spy = spyOn(helpers, 'uuidv4')
         spy.and.returnValue('firstId')
-        store.dispatch(asyncInOrder({url:'/first'})).then(() => {
+        store.dispatch(remoteInOrder({url:'/first'})).then(() => {
           expect(store.getActions()).toEqual(expectedActions)
           done()
         })
 
         spy.and.returnValue('secondId')
-        store.dispatch(asyncInOrder({url:'/second'}))
+        store.dispatch(remoteInOrder({url:'/second'}))
       })
     })
 

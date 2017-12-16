@@ -191,11 +191,11 @@ export const controlFlowReducer = (state = {}, action) => {
     return {...state, visit: action.seqId}
   }
   case 'BREEZY_ASYNC_IN_ORDER_DRAIN': {
-    const newQ = state.asyncInOrder.slice(action.index)
-    return {...state, asyncInOrder: newQ}
+    const newQ = state.remoteInOrder.slice(action.index)
+    return {...state, remoteInOrder: newQ}
   }
   case 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM': {
-    const newQ = state.asyncInOrder.map((item)=>{
+    const newQ = state.remoteInOrder.map((item)=>{
       if (item.seqId === action.seqId) {
         return {...item, done: true, action: action.action}
       } else {
@@ -203,7 +203,7 @@ export const controlFlowReducer = (state = {}, action) => {
       }
     })
 
-    return {...state, asyncInOrder: newQ}
+    return {...state, remoteInOrder: newQ}
   }
   case 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM': {
     const item = {
@@ -212,7 +212,7 @@ export const controlFlowReducer = (state = {}, action) => {
       action: null
     }
 
-    return {...state, asyncInOrder: [...state.asyncInOrder, item]}
+    return {...state, remoteInOrder: [...state.remoteInOrder, item]}
   }
   case 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM': {
     const item = {

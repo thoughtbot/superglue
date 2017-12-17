@@ -44,14 +44,14 @@ export default connect(
 
 Then, use one of the provided thunks for SPA functionality. For example, to selectively reload parts of your page:
 ```
-import {remote} from 'breezy/dist/action_creators'
+import {remote} from '@jho406/breezy/dist/action_creators'
 
 
 store.dispatch(remote('?_bz=header.shopping_cart'))
 ```
 The above will query for a node from `index.js.props`, and update the equivalent keypath in your store.
 
-Notice that by sitting on a seperate mime-type, we did not have to create any additional routes beyond our client-facing ones. And since the relationship between content and markup is always one-to-one, we can get away with just Integration tests. This means less testing, less code, and greater productivity.
+Notice that by sitting on a seperate mime-type, we did not have to create any additional routes beyond our client-facing ones. And since the relationship between content and markup is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
 
 
 ## Installation
@@ -109,7 +109,7 @@ page: {
 
 ```
 
-Breezy does not normalize the state, infact there's likely duplication across all pages. For example, a header being duplicated across multiple pages.
+Breezy does not normalize the client state, infact there's likely duplication across all pages. For example, a header being duplicated across multiple pages.
 
 Instead of normalizing state, Breezy provides tools that makes it easy to update cross-cutting concerns like a shared header.
 
@@ -492,18 +492,18 @@ json.set! :nested, to_nest
 #### visit
 
 ```
-visit({url, contentType = null, method = 'GET', body = ''})
+visit(url, {contentType = null, method = 'GET', body = ''})
 ```
 
 Makes an ajax call to a page, and sets the response to the pages store.
 
-There can only be one visit anytime, subsequent calls to visit would turn any visits in already progress into a noop. Other thunks with reducers will also no-op and drain their queues empty.
+There can only be one visit anytime, subsequent calls to visit would turn any visits in already progress into a noop.
 
 This thunk is normally used for full page to page transitions.
 
 #### remote
 ```
-remote({url, contentType = null, method = 'GET', body = ''}
+remote(url, {contentType = null, method = 'GET', body = ''}
 ```
 
 Makes an ajax call to a page, and sets the response to the pages store.
@@ -513,7 +513,7 @@ This is like a normal ajax request. remote will fire off and process responses w
 
 #### remoteInOrder
 ```
-remoteInOrder({url, contentType = null, method = 'GET', body = ''}
+remoteInOrder(url {contentType = null, method = 'GET', body = ''})
 ```
 
 Mostly the same as remote, the difference is that responses are put in a queue and evaluated in the order of when remoteInOrder was dispatched.
@@ -538,7 +538,7 @@ Use one of the thunks provided by breezy
 ```
 <a href='/posts?_bz=path.to.node' data-bz-dispatch='visit'></a>
 
-or 
+or
 
 <a href='/posts?_bz=path.to.node' data-bz-dispatch='remote'></a>
 

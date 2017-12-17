@@ -1,17 +1,29 @@
-language: ruby
-
-rvm:
-  - 2.2.4
-
-sudo: false
-cache: bundler
-before_script:
-  - bundle exec rake generate_blade_yml
-
-script:
- - bundle exec rake test
- - bundle exec blade ci
-
-gemfile:
-  - Gemfile.rails50
-  - Gemfile.rails42
+matrix:
+  include:
+    - language: ruby
+      rvm: 2.3
+      gemfile: breezy_template/Gemfile.rails42
+      before_install:
+        - cd breezy_template
+      install:
+        - bundle install
+      script:
+        - bundle exec rake test
+    - language: ruby
+      rvm: 2.3
+      gemfile: breezy_template/Gemfile.rails50
+      before_install:
+        - cd breezy_template
+      install:
+        - bundle install
+      script:
+        - bundle exec rake test
+    - language: node_js
+      node_js: 8
+      before_install:
+        - cd breezy
+      install:
+        - npm install
+      script:
+        - npm run lint
+        - npm run test

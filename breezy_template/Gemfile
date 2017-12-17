@@ -1,8 +1,0 @@
-source 'https://rubygems.org'
-gemspec
-gem 'rails'
-gem 'sqlite3'
-gem "mocha", :require => false
-gem 'rake'
-gem 'pry'
-gem 'byebug'

@@ -2,3 +2,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rails', '~> 4.2.0'
+gem "mocha", :require => false
+gem 'sqlite3'
+gem 'rake'
+gem 'byebug'

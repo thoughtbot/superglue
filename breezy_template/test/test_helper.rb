@@ -13,5 +13,4 @@ Rails.cache = ActiveSupport::Cache::MemoryStore.new
 
 load File.dirname(__FILE__) + '/support/schema.rb'
 require 'support/models'
-require 'support/test_application'
 

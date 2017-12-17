@@ -27,6 +27,8 @@ if dependency_tracker
       INDIRECT_RENDERS = /
         (?::partial\s*=>|partial:)  # partial: or :partial =>
         \s*                         # optional whitespace
+        \[*                         # optional Bracket
+        \s*                         # optional whitespace
         (['"])([^'"]+)\1            # quoted value
       /x
 

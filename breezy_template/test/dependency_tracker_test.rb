@@ -31,9 +31,25 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
     assert_equal [], dependencies
   end
 
+  test 'detects partial with no options (1.9 style)' do
+    dependencies = track_dependencies <<-RUBY
+      json.content hello: 'world', partial: 'path/to/partial'
+    RUBY
+
+    assert_equal %w[path/to/partial], dependencies
+  end
+
+  test 'detects partial with no options (1.8 style)' do
+    dependencies = track_dependencies <<-RUBY
+      json.content :hello => 'world', :partial => 'path/to/partial'
+    RUBY
+
+    assert_equal %w[path/to/partial], dependencies
+  end
+
   test 'detects partial with options (1.9 style)' do
     dependencies = track_dependencies <<-RUBY
-      json.content hello: 'world', partial: 'path/to/partial', foo: :bar
+      json.content hello: 'world', partial: ['path/to/partial', foo: :bar]
     RUBY
 
     assert_equal %w[path/to/partial], dependencies
@@ -41,7 +57,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
 
   test 'detects partial with options (1.8 style)' do
     dependencies = track_dependencies <<-RUBY
-      json.content :hello => 'world', :partial => 'path/to/partial', :foo => :bar
+      json.content :hello => 'world', :partial => ['path/to/partial', :foo => :bar]
     RUBY
 
     assert_equal %w[path/to/partial], dependencies
@@ -49,7 +65,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
 
   test 'detects partial in indirect collecton calls' do
     dependencies = track_dependencies <<-RUBY
-      json.comments @post.comments, partial: 'comments/comment', as: :comment
+      json.comments @post.comments, partial: ['comments/comment', as: :comment]
     RUBY
 
     assert_equal %w[comments/comment], dependencies

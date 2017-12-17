@@ -2,13 +2,13 @@ import parse from 'url-parse'
 
 const uniqueId = () => Math.random().toString(36).substring(2, 10)
 
-export const pathQuery = (url) => {
+export function pathQuery (url) {
   const {pathname, query} = new parse(url)
 
   return pathname + query
 }
 
-export const withAntiCache = (url) => {
+export function withAntiCache (url) {
   url = new parse(url, true)
   if (url.query.hasOwnProperty('_')) {
     return url.toString()
@@ -19,7 +19,7 @@ export const withAntiCache = (url) => {
 }
 
 
-export const withMimeBust = (url) => {
+export function withMimeBust (url) {
   url = new parse(url, true)
   if (url.query.hasOwnProperty('__')) {
     return url.toString()
@@ -29,7 +29,7 @@ export const withMimeBust = (url) => {
   }
 }
 
-export const vanityUrl = (url) => {
+export function vanityUrl (url) {
   url = new parse(url, true)
   let query = url.query
   delete query['__']
@@ -38,13 +38,13 @@ export const vanityUrl = (url) => {
   return url.toString()
 }
 
-export const withoutHash = (url) => {
+export function withoutHash (url){
   url = new parse(url, true)
   url.hash = ''
   return url.toString()
 }
 
-export const formatForXHR = (url, opts = {}) => {
+export function formatForXHR (url, opts = {}) {
   let formats = [
     withMimeBust,
     withoutHash,

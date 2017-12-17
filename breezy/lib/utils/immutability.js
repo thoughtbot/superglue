@@ -1,7 +1,7 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
-const getIn = function(obj, path) {
+function getIn(obj, path) {
   const keyPath = normalizeKeyPath(path)
   let result = obj
 
@@ -14,13 +14,13 @@ const getIn = function(obj, path) {
   return result
 }
 
-const clone = function (object) {
+function clone (object) {
   return Array.isArray(object)
     ? [].slice.call(object)
     : {... object}
 }
 
-const getKey = function (node, key) {
+function getKey (node, key) {
   if (Array.isArray(node) && isNaN(key)) {
     const key_parts = Array.from(key.split('='))
     const attr = key_parts[0]
@@ -44,7 +44,7 @@ const getKey = function (node, key) {
   }
 }
 
-const cloneWithout = function (object, key) {
+function cloneWithout (object, key) {
   if (Array.isArray(object)) {
     key = getKey(object, key)
     return object.slice(0, +key).concat(object.slice(+key + 1))
@@ -60,7 +60,7 @@ const cloneWithout = function (object, key) {
   }
 }
 
-const atKey = function(node, key) {
+function atKey (node, key) {
   const [attr, id] = Array.from(key.split('='))
 
   if (Array.isArray(node) && id) {
@@ -82,7 +82,7 @@ const atKey = function(node, key) {
   }
 }
 
-const normalizeKeyPath = function(path) {
+function normalizeKeyPath (path) {
   if (typeof path === 'string') {
     return path.split('.')
   } else {
@@ -90,7 +90,7 @@ const normalizeKeyPath = function(path) {
   }
 }
 
-const setIn = function(object, keypath, value) {
+function setIn (object, keypath, value) {
   keypath = normalizeKeyPath(keypath)
 
   let results = {}
@@ -121,7 +121,7 @@ const setIn = function(object, keypath, value) {
   return results[0]
 }
 
-const delIn = function (object, keypath) {
+function delIn (object, keypath) {
   keypath = normalizeKeyPath(keypath)
 
   let results = {}
@@ -153,7 +153,7 @@ const delIn = function (object, keypath) {
   return results[0]
 }
 
-const extendIn = function (source, keypath, extensions) {
+function extendIn (source, keypath, extensions) {
   keypath = normalizeKeyPath(keypath)
 
   if (keypath.length === 0) return {...source, ...extensions}

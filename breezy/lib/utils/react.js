@@ -79,7 +79,7 @@ export class Nav extends React.Component {
 
 Nav.contextTypes = {store: PropTypes.object}
 
-export const mapStateToProps = (state = {page:{}}, ownProps) => {
+export function mapStateToProps (state = {page:{}}, ownProps) {
   let url = ownProps.url
   // support for react navigation
   if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.url && !url) {
@@ -91,7 +91,7 @@ export const mapStateToProps = (state = {page:{}}, ownProps) => {
   return props || {}
 }
 
-export const mapDispatchToProps = (dispatch) => {
+export function mapDispatchToProps (dispatch) {
   const actionCreators = {
     visit,
     remote,

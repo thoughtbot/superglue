@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4'
 
-const reverseMerge = (dest, obj) => {
+function reverseMerge (dest, obj) {
   let k, v
   for (k in obj) {
     v = obj[k]

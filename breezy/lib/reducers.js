@@ -5,7 +5,7 @@ import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
 import {combineReducers} from 'redux'
 
-const saveResponse = (state, url, page) => {
+function saveResponse (state, url, page) {
   const pathname = pathQuery(url)
 
   state = {...state}
@@ -31,7 +31,7 @@ const saveResponse = (state, url, page) => {
   return state
 }
 
-const extendInByJoint = (state, name, value, subpath) => {
+function extendInByJoint (state, name, value, subpath) {
   state = {...state}
   Object.entries(state)
     .forEach(([pathname, page]) => {
@@ -48,7 +48,7 @@ const extendInByJoint = (state, name, value, subpath) => {
   return state
 }
 
-const delInByJoint = (state, name, subpath = null) => {
+function delInByJoint (state, name, subpath = null) {
   state = {...state}
   Object.entries(state)
     .forEach(([pathname, page]) => {
@@ -66,7 +66,7 @@ const delInByJoint = (state, name, subpath = null) => {
   return state
 }
 
-const setInByJoint = (state, name, value, subpath = null) => {
+function setInByJoint (state, name, value, subpath = null) {
   state = {...state}
   Object.entries(state)
     .forEach(([pathname, page]) => {
@@ -83,7 +83,7 @@ const setInByJoint = (state, name, value, subpath = null) => {
   return state
 }
 
-const graftByKeypath= (state, ref, node, opts={}) => {
+function graftByKeypath (state, ref, node, opts={}) {
   state = {...state}
   page = state[url]
   state[url] = setIn(page, ['data', path].join('.'), node, opts)
@@ -91,7 +91,7 @@ const graftByKeypath= (state, ref, node, opts={}) => {
   return state
 }
 
-const handleGraft = (state, url, page) => {
+function handleGraft (state, url, page) {
   state = {...state}
   const pathname = parseUrl(url).pathname
 
@@ -111,7 +111,7 @@ const handleGraft = (state, url, page) => {
   return state
 }
 
-export const pageReducer = (state = {}, action) => {
+export function pageReducer (state = {}, action) {
   switch(action.type) {
   case 'BREEZY_SAVE_RESPONSE': {
     const {url, page} = action
@@ -166,7 +166,7 @@ export const pageReducer = (state = {}, action) => {
   }
 }
 
-export const metaReducer = (state = {}, action) => {
+export function metaReducer (state = {}, action) {
   switch(action.type) {
   case 'BREEZY_HISTORY_CHANGE': {
     const {url} = action
@@ -185,7 +185,7 @@ export const metaReducer = (state = {}, action) => {
   }
 }
 
-export const controlFlowReducer = (state = {}, action) => {
+export function controlFlowReducer (state = {}, action) {
   switch(action.type) {
   case 'BREEZY_OVERRIDE_VISIT_SEQ': {
     return {...state, visit: action.seqId}
@@ -228,7 +228,7 @@ export const controlFlowReducer = (state = {}, action) => {
   }
 }
 
-export const breezyReducer = function(state = {controlFlows:{}}, action) {
+export function breezyReducer(state = {controlFlows:{}}, action) {
   let meta = metaReducer(state, action)
   let controlFlows = controlFlowReducer(meta.controlFlows, action)
 

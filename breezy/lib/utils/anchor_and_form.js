@@ -5,7 +5,7 @@ const FALLBACK_LINK_METHOD = 'GET'
 const FALLBACK_FORM_METHOD = 'POST'
 const CONTROL_FLOWS = ['visit', 'async-no-order', 'async-in-order']
 
-export const toOptions = (target) => {
+export function toOptions (target) {
   return {
     url: getUrlForFetch(target),
     method: getRequestMethodForFetch(target),
@@ -15,11 +15,11 @@ export const toOptions = (target) => {
   }
 }
 
-export const isValid = (target) => {
+export function isValid (target) {
   return isValidLink(target) || isValidForm(target)
 }
 
-export const isValidLink = (target) => {
+export function isValidLink (target) {
   if (target.tagName !== 'A') {
     return false
   }
@@ -27,19 +27,19 @@ export const isValidLink = (target) => {
   return isEnabledWithBz(target)
 }
 
-export const isValidForm = (target) => {
+export function isValidForm (target) {
   if (target.tagName !== 'FORM') {
     return false
   }
   return isEnabledWithBz(target)
 }
 
-export const hasBZAttribute = (target, attr) => {
+export function hasBZAttribute (target, attr) {
   const bzAttr = bzAttribute(attr)
   return (target.getAttribute(bzAttr) != null) || (target.getAttribute(attr) != null)
 }
 
-export const bzAttribute = (attr) => {
+export function bzAttribute (attr) {
   if (attr.slice(0,3) == 'bz-') {
     return `data-${attr}`
   } else {
@@ -47,13 +47,12 @@ export const bzAttribute = (attr) => {
   }
 }
 
-export const getBZAttribute = (node, attr) => {
+export function getBZAttribute (node, attr) {
   let bzAttr = bzAttribute(attr)
   return (node.getAttribute(bzAttr) || node.getAttribute(attr))
 }
 
-
-export const getContentType = (target) => {
+export function getContentType (target) {
   const contentType = 'application/x-www-form-urlencoded; charset=UTF-8'
   let method = getRequestMethod(target)
   if (method !== 'GET') {
@@ -61,12 +60,12 @@ export const getContentType = (target) => {
   }
 }
 
-export const isEnabledWithBz = (target) => {
+export function isEnabledWithBz (target) {
   const action = getBZAttribute(target, 'bz-dispatch')
   return CONTROL_FLOWS.includes(action)
 }
 
-export const getRequestMethod = (target) => {
+export function getRequestMethod (target) {
   let method = getBZAttribute(target, 'bz-method')
 
   if (target.tagName === 'A') {
@@ -87,7 +86,7 @@ export const getRequestMethod = (target) => {
   return method
 }
 
-export const getRequestMethodForFetch = (target) => {
+export function getRequestMethodForFetch (target) {
   const method = getRequestMethod(target)
   if (method !== 'GET') {
     return 'POST'
@@ -96,16 +95,16 @@ export const getRequestMethodForFetch = (target) => {
   }
 }
 
-export const getAction = (target) => {
+export function getAction (target) {
   return getBZAttribute(target, 'bz-dispatch')
 }
 
-export const getUrlForFetch = (target) => {
+export function getUrlForFetch (target) {
   const httpUrl = target.getAttribute('href') || target.getAttribute('action')
   return httpUrl
 }
 
-const enabledinputs = (form) => {
+function enabledinputs (form) {
   const selector = 'input:not([type="reset"]):not([type="button"]):not([type="submit"]):not([type="image"]), select, textarea'
   const inputs = Array.prototype.slice.call(form.querySelectorAll(selector))
   const disablednodes = Array.prototype.slice.call(queryselectorallbzattribute(form, 'bz-noserialize'))
@@ -126,7 +125,7 @@ const enabledinputs = (form) => {
   return enabledinputs
 }
 
-const queryselectorallbzattribute = (node, attr, value = null) => {
+function queryselectorallbzattribute (node, attr, value = null) {
   const bzattr = bzAttribute(attr)
   if (value) {
     return node.querySelectorAll(`[${bzattr}=${value}], [${attr}=${value}]`)
@@ -146,7 +145,7 @@ const formDataAppend = (formdata, input) => {
   return formdata
 }
 
-export const getPayloadForLink = (target) => {
+export function getPayloadForLink (target) {
   const method = getRequestMethod(target)
   if (target.tagName !== 'A') {
     return
@@ -160,7 +159,7 @@ export const getPayloadForLink = (target) => {
   return payload
 }
 
-export const getPayload = (target) => {
+export function getPayload (target) {
   if (target.tagName !== 'FORM') {
     return
   }

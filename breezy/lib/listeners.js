@@ -11,7 +11,7 @@ const domActionMapping = {
   'remote': remote
 }
 
-const clickHandler = (ev) => {
+function clickHandler (ev) {
   let {target} = ev
   const {document} = getWindow()
   while ((target !== document) && (target != null)) {
@@ -28,17 +28,17 @@ const clickHandler = (ev) => {
   }
 }
 
-const addListeners = (document) => {
+function addListeners (document) {
   document.addEventListener('click', clickHandler)
   document.addEventListener('submit', remoteHandler)
 }
 
-const removeListeners = (document) => {
+function removeListeners (document) {
   document.removeEventListener('click', clickHandler, false)
   document.removeEventListener('submit', remoteHandler, false)
 }
 
-export const remoteHandler = function(ev, store) {
+export function remoteHandler(ev, store) {
   const {target} = ev
   if (!isValid(target)) { return }
   ev.preventDefault()
@@ -50,7 +50,7 @@ export const remoteHandler = function(ev, store) {
   })
 }
 
-export const setDOMListenersForNav = function(nav) {
+export function setDOMListenersForNav (nav) {
   navigator = nav
 
   const {document} = getWindow()
@@ -59,7 +59,7 @@ export const setDOMListenersForNav = function(nav) {
   }
 }
 
-export const unsetDOMListenersForNav = function() {
+export function unsetDOMListenersForNav() {
   navigator = null
   if (hasWindow()) {
     const {document} = getWindow()

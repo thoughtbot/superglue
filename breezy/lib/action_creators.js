@@ -6,19 +6,19 @@ import 'cross-fetch'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh} from './window'
 
-export const saveResponse = ({url, page}) => {
+export function saveResponse ({url, page}) {
   return {
     type: 'BREEZY_SAVE_RESPONSE', url, page
   }
 }
 
-export const handleGraft = ({url, page}) => {
+export function handleGraft ({url, page}) {
   return {
     type: 'BREEZY_HANDLE_GRAFT', url, page
   }
 }
 
-export const setInPage = ({url, keypath, value}) => {
+export function setInPage ({url, keypath, value}) {
   return {
     type: 'BREEZY_SET_IN_PAGE',
     url,
@@ -27,7 +27,7 @@ export const setInPage = ({url, keypath, value}) => {
   }
 }
 
-export const delInPage = ({url, keypath}) => {
+export function delInPage ({url, keypath}) {
   return {
     type: 'BREEZY_DEL_IN_PAGE',
     url,
@@ -35,7 +35,7 @@ export const delInPage = ({url, keypath}) => {
   }
 }
 
-export const extendInPage = ({url, keypath, value}) => {
+export function extendInPage ({url, keypath, value}) {
   return {
     type: 'BREEZY_EXTEND_IN_PAGE',
     url,
@@ -44,7 +44,7 @@ export const extendInPage = ({url, keypath, value}) => {
   }
 }
 
-export const setInJoint = ({name, keypath, value}) => {
+export function setInJoint ({name, keypath, value}) {
   return {
     type: 'BREEZY_SET_IN_JOINT',
     name,
@@ -53,7 +53,7 @@ export const setInJoint = ({name, keypath, value}) => {
   }
 }
 
-export const delInJoint = ({name, keypath}) => {
+export function delInJoint ({name, keypath}) {
   return {
     type: 'BREEZY_SET_IN_JOINT',
     name,
@@ -61,7 +61,7 @@ export const delInJoint = ({name, keypath}) => {
   }
 }
 
-export const extendInJoint = ({name, keypath, value}) => {
+export function extendInJoint ({name, keypath, value}) {
   return {
     type: 'BREEZY_EXTEND_IN_JOINT',
     name,
@@ -70,7 +70,7 @@ export const extendInJoint = ({name, keypath, value}) => {
   }
 }
 
-export const graftByKeypath = (url, keypath, payload) => {
+export function graftByKeypath (url, keypath, payload) {
   return {
     type: 'BREEZY_GRAFT_BY_KEYPATH',
     url,
@@ -79,13 +79,13 @@ export const graftByKeypath = (url, keypath, payload) => {
   }
 }
 
-export const beforeFetch = (opts) => {
+export function beforeFetch (opts) {
   return {...opts,
     type: 'BREEZY_BEFORE_FETCH'
   }
 }
 
-export const handleError = (err) => {
+export function handleError (err) {
   return {
     type: 'BREEZY_FETCH_ERROR',
     payload: {
@@ -94,20 +94,20 @@ export const handleError = (err) => {
   }
 }
 
-export const restorePage = (location) => {
+export function restorePage (location) {
   return {
     type: 'BREEZY_RESTORE_PAGE',
     url: location
   }
 }
 
-const handleDeferments = (defers=[], dispatch) => {
+function handleDeferments (defers=[], dispatch) {
   defers.forEach(function({url}){
     dispatch(remote({url})) //todo: ability to ignore and not clear queue
   })
 }
 
-export const persist = ({url, page, dispatch}) => {
+export function persist ({url, page, dispatch}) {
   handleDeferments(page.defers, dispatch)
 
   if (page.action === 'graft') {
@@ -118,7 +118,7 @@ export const persist = ({url, page, dispatch}) => {
 }
 
 
-const fetchWithFlow = (fetchArgs, flow, dispatch) => {
+export function fetchWithFlow (fetchArgs, flow, dispatch) {
   return fetch(...fetchArgs)
     .then(parseResponse)
     .then(flow)
@@ -129,7 +129,7 @@ const fetchWithFlow = (fetchArgs, flow, dispatch) => {
     })
 }
 
-export const visit = ({url, contentType = null, method = 'GET', body = ''}) => {
+export function visit ({url, contentType = null, method = 'GET', body = ''}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()
@@ -179,7 +179,7 @@ function dispatchCompleted(getState, dispatch) {
   dispatch({type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: i})
 }
 
-export const remoteInOrder = ({url, contentType = null, method = 'GET', body = ''}) => {
+export function remoteInOrder ({url, contentType = null, method = 'GET', body = ''}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()
@@ -205,7 +205,7 @@ export const remoteInOrder = ({url, contentType = null, method = 'GET', body = '
   }
 }
 
-export const remote = ({url, contentType = null, method = 'GET', body = ''}) => {
+export function remote ({url, contentType = null, method = 'GET', body = ''}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()

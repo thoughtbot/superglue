@@ -46,21 +46,10 @@ export function pageToInitialState (url, page) {
   }
 }
 
-export function start ({window, url, baseUrl='', history, initialPage={}}) {
-  if (window) {
-    setWindow(window)
-  }
-
+export function start ({window, baseUrl='', history, initialPage={}}) {
+  setWindow(window)
+  const url = window.location.href
   history.replace(...argsForHistory(url, initialPage))
-
-  const store = createStore(
-    rootReducer,
-    pageToInitialState(url, initialPage),
-    applyMiddleware(thunk)
-  )
-
-  connect(store)
-  store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl: baseUrl})
 
 
   function handleRef (ref){
@@ -69,21 +58,30 @@ export function start ({window, url, baseUrl='', history, initialPage={}}) {
     }
   }
 
-  return class extends React.Component {
+  const nav = class extends React.Component {
     render () {
-      return <Provider store={store}>
+      return (
         <Nav ref={handleRef}
           mapping={this.props.mapping}
           initialState={argsForNavInitialState(url, initialPage)}
           history={history}
         />
-      </Provider>
+      )
     }
+  }
+
+  return {
+    reducer: rootReducer,
+    Nav: nav,
+    connect: function(store){
+      connect(store)
+      store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl: baseUrl})
+    },
+    initialState: pageToInitialState(url, initialPage)
   }
 }
 
 export default {
-  connect,
   start,
   stop
 }

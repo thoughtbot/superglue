@@ -31,7 +31,7 @@ DESC
           if options[:target] == 'mobile'
             @view_ext = 'jsx'
           else
-            @view_ext = 'js'
+            @view_ext = 'js' #todo fix me
           end
 
           @view_path = File.join(destination, "#{@action}.#{@view_ext}")
@@ -43,9 +43,9 @@ DESC
 
       def append_mapping
         if options[:platform] == 'mobile'
-          app_js = 'app/javascript/packs/application.js'
-        else
           app_js = 'App.js'
+        else
+          app_js = 'app/javascript/packs/application.js'
         end
 
         base_parts = class_path + [file_name]

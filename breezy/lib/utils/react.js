@@ -10,7 +10,7 @@ import {vanityUrl} from './url'
 import PropTypes from 'prop-types'
 
 export class Nav extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.navigateTo = this.navigateTo.bind(this)
 
@@ -61,12 +61,12 @@ export class Nav extends React.Component {
     }
   }
 
-  notFound(screen) {
+  notFound (screen) {
     const {store} = this.context
     store.dispatch({type: 'BREEZY_ERROR', message: `Could not find screen ${screen}`})
   }
 
-  render() {
+  render () {
     const Component = this.mapping[this.state.screen]
 
     if (Component) {

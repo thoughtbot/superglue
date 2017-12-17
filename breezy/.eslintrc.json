@@ -33,6 +33,7 @@
             "error",
             "never"
         ],
+        "space-before-function-paren": ["error", "always"],
         "react/jsx-uses-vars": 2,
         "no-console": ["error", { "allow": ["warn", "error"] }],
         "object-curly-spacing": ["error", "never"]

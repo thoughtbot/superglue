@@ -102,7 +102,7 @@ export function restorePage (location) {
 }
 
 function handleDeferments (defers=[], dispatch) {
-  defers.forEach(function({url}){
+  defers.forEach(function ({url}){
     dispatch(remote({url})) //todo: ability to ignore and not clear queue
   })
 }
@@ -164,7 +164,7 @@ export function visit ({url, contentType = null, method = 'GET', body = ''}) {
   }
 }
 
-function dispatchCompleted(getState, dispatch) {
+function dispatchCompleted (getState, dispatch) {
   const inQ = getState().breezy.controlFlows.remoteInOrder
 
   for (var i = 0, l = inQ.length; i < l; i++) {

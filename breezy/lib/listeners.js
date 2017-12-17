@@ -38,7 +38,7 @@ function removeListeners (document) {
   document.removeEventListener('submit', remoteHandler, false)
 }
 
-export function remoteHandler(ev, store) {
+export function remoteHandler (ev, store) {
   const {target} = ev
   if (!isValid(target)) { return }
   ev.preventDefault()
@@ -59,7 +59,7 @@ export function setDOMListenersForNav (nav) {
   }
 }
 
-export function unsetDOMListenersForNav() {
+export function unsetDOMListenersForNav () {
   navigator = null
   if (hasWindow()) {
     const {document} = getWindow()

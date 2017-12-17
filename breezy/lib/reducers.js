@@ -220,7 +220,7 @@ export function controlFlowReducer (state = {}, action) {
   }
 }
 
-export function breezyReducer(state = {controlFlows:{}}, action) {
+export function breezyReducer (state = {controlFlows:{}}, action) {
   let meta = metaReducer(state, action)
   let controlFlows = controlFlowReducer(meta.controlFlows, action)
 

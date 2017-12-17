@@ -1,7 +1,7 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
-function getIn(obj, path) {
+function getIn (obj, path) {
   const keyPath = normalizeKeyPath(path)
   let result = obj
 

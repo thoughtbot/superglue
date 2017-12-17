@@ -14,12 +14,12 @@ export {breezyReducer, pageReducer, rootReducer} from './reducers'
 export {setDOMListenersForNav, unsetDOMListenersForNav}
 export {setWindow, unsetWindow}
 
-export function stop() {
+export function stop () {
   unsetWindow()
   unsetDOMListenersForNav()
 }
 
-export function argsForHistory(url, page) {
+export function argsForHistory (url, page) {
   const pathname = parse(url).pathname
 
   return [pathname, {
@@ -29,7 +29,7 @@ export function argsForHistory(url, page) {
   }]
 }
 
-export function argsForNavInitialState(url, page) {
+export function argsForNavInitialState (url, page) {
   const pathname = parse(url).pathname
 
   return {
@@ -38,7 +38,7 @@ export function argsForNavInitialState(url, page) {
   }
 }
 
-export function pageToInitialState(url, page) {
+export function pageToInitialState (url, page) {
   const pathname = parse(url).pathname
 
   return {
@@ -46,7 +46,7 @@ export function pageToInitialState(url, page) {
   }
 }
 
-export function start({window, url, baseUrl='', history, initialPage={}}) {
+export function start ({window, url, baseUrl='', history, initialPage={}}) {
   if (window) {
     setWindow(window)
   }
@@ -63,14 +63,14 @@ export function start({window, url, baseUrl='', history, initialPage={}}) {
   store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl: baseUrl})
 
 
-  function handleRef(ref){
+  function handleRef (ref){
     if (hasWindow()) {
       setDOMListenersForNav(ref)
     }
   }
 
   return class extends React.Component {
-    render() {
+    render () {
       return <Provider store={store}>
         <Nav ref={handleRef}
           mapping={this.props.mapping}

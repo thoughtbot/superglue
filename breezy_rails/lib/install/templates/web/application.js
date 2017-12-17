@@ -13,7 +13,7 @@ const mapping = {
 }
 
 const history = createHistory({})
-const initialPage = window.BREEZY_INITIAL_PAGE_STATE,
+const initialPage = window.BREEZY_INITIAL_PAGE_STATE
 const baseUrl = ''
 
 //The Nav is pretty bare bones

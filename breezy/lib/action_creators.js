@@ -103,7 +103,7 @@ export function restorePage (location) {
 
 function handleDeferments (defers=[], dispatch) {
   defers.forEach(function ({url}){
-    dispatch(remote({url})) //todo: ability to ignore and not clear queue
+    dispatch(remote(url)) //todo: ability to ignore and not clear queue
   })
 }
 
@@ -129,7 +129,7 @@ export function fetchWithFlow (fetchArgs, flow, dispatch) {
     })
 }
 
-export function visit ({url, contentType = null, method = 'GET', body = ''}) {
+export function visit (url, {contentType = null, method = 'GET', body = ''} = {}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()
@@ -179,7 +179,7 @@ function dispatchCompleted (getState, dispatch) {
   dispatch({type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: i})
 }
 
-export function remoteInOrder ({url, contentType = null, method = 'GET', body = ''}) {
+export function remoteInOrder (url, {contentType = null, method = 'GET', body = ''} = {}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()
@@ -205,7 +205,7 @@ export function remoteInOrder ({url, contentType = null, method = 'GET', body = 
   }
 }
 
-export function remote ({url, contentType = null, method = 'GET', body = ''}) {
+export function remote (url, {contentType = null, method = 'GET', body = ''} = {}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {url, contentType, body, method})
     const seqId = uuidv4()

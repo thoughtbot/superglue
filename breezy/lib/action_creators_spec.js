@@ -68,7 +68,7 @@ describe('action creators', () => {
       }
     ]
 
-    return store.dispatch(visit({url: '/foo'})).then(() => {
+    return store.dispatch(visit('/foo')).then(() => {
       const requestheaders = fetchMock.lastCall('/foo')[1].headers
       expect(requestheaders).toEqual({
         accept: "text/javascript, application/x-javascript, application/javascript",
@@ -103,7 +103,7 @@ describe('action creators', () => {
       }
     ]
 
-    return store.dispatch(visit({url: '/foo'})).catch((err) => {
+    return store.dispatch(visit('/foo')).catch((err) => {
       expect(err.message).toEqual('Internal Server Error')
       expect(err.response.status).toEqual(500)
       expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
@@ -135,7 +135,7 @@ describe('action creators', () => {
       }
     ]
 
-    return store.dispatch(visit({url: '/foo'})).catch((err) => {
+    return store.dispatch(visit('/foo')).catch((err) => {
       expect(err.message).toEqual('Invalid Breezy Response')
       expect(err.response.status).toEqual(200)
       expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
@@ -171,7 +171,7 @@ describe('action creators', () => {
       {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
     ]
 
-    return store.dispatch(visit({url: '/foo'})).catch((err) => {
+    return store.dispatch(visit('/foo')).catch((err) => {
       expect(err.message).toEqual('Could not parse Server Generated Javascript Response for Breezy')
       expect(err.response.status).toEqual(200)
       expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
@@ -240,7 +240,7 @@ describe('action creators', () => {
       }
     })
 
-    store.dispatch(visit({url: '/foo'}))
+    store.dispatch(visit('/foo'))
   })
 
   describe('control flows', () => {
@@ -267,7 +267,7 @@ describe('action creators', () => {
 
         const spy = spyOn(helpers, 'uuidv4')
         spy.and.returnValue('firstId')
-        store.dispatch(visit({url: '/first'}))
+        store.dispatch(visit('/first'))
 
         spy.and.returnValue('secondId')
         initialState.breezy.controlFlows.visit = 'secondId'
@@ -286,7 +286,7 @@ describe('action creators', () => {
           }
         ]
 
-        store.dispatch(visit({url:'/second'})).then(() => {
+        store.dispatch(visit('/second')).then(() => {
           expect(store.getActions()).toEqual(expectedActions)
           done()
         })
@@ -349,13 +349,13 @@ describe('action creators', () => {
 
         const spy = spyOn(helpers, 'uuidv4')
         spy.and.returnValue('firstId')
-        store.dispatch(remoteInOrder({url:'/first'})).then(() => {
+        store.dispatch(remoteInOrder('/first')).then(() => {
           expect(store.getActions()).toEqual(expectedActions)
           done()
         })
 
         spy.and.returnValue('secondId')
-        store.dispatch(remoteInOrder({url:'/second'}))
+        store.dispatch(remoteInOrder('/second'))
       })
     })
 
@@ -383,7 +383,7 @@ describe('action creators', () => {
             page: jasmine.any(Object)
           }
         ]
-        const req = store.dispatch(remote({url: '/foo'}))
+        const req = store.dispatch(remote('/foo'))
         req.then(() => {
           expect(store.getActions()).toEqual(expectedActions)
           done()

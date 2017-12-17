@@ -83,14 +83,6 @@ function setInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function graftByKeypath (state, ref, node, opts={}) {
-  state = {...state}
-  page = state[url]
-  state[url] = setIn(page, ['data', path].join('.'), node, opts)
-
-  return state
-}
-
 function handleGraft (state, url, page) {
   state = {...state}
   const pathname = parseUrl(url).pathname

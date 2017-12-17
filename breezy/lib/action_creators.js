@@ -117,7 +117,6 @@ export function persist ({url, page, dispatch}) {
   }
 }
 
-
 export function fetchWithFlow (fetchArgs, flow, dispatch) {
   return fetch(...fetchArgs)
     .then(parseResponse)
@@ -156,9 +155,9 @@ export function visit (url, {contentType = null, method = 'GET', body = ''} = {}
       }
     }
 
+    dispatch({type: 'BREEZY_BEFORE_VISIT'})
     dispatch(beforeFetch({fetchArgs}))
     dispatch({type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId})
-    dispatch({type: 'BREEZY_PAGE_CHANGE'})
 
     return fetchWithFlow(fetchArgs, flow, dispatch)
   }
@@ -176,7 +175,7 @@ function dispatchCompleted (getState, dispatch) {
     }
   }
 
-  dispatch({type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: i})
+  dispatch({type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: i})
 }
 
 export function remoteInOrder (url, {contentType = null, method = 'GET', body = ''} = {}) {
@@ -188,7 +187,7 @@ export function remoteInOrder (url, {contentType = null, method = 'GET', body = 
     const flow = (page) => {
       const action = persist({url: fetchUrl, page, dispatch})
       dispatch({
-        type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
+        type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
         action,
         seqId,
       })
@@ -196,10 +195,11 @@ export function remoteInOrder (url, {contentType = null, method = 'GET', body = 
     }
 
     dispatch({
-      type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM',
+      type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM',
       seqId
     })
 
+    dispatch({type: 'BREEZY_BEFORE_REMOTE_IN_ORDER'})
     dispatch(beforeFetch({fetchArgs}))
     return fetchWithFlow(fetchArgs, flow, dispatch)
   }
@@ -221,10 +221,11 @@ export function remote (url, {contentType = null, method = 'GET', body = ''} = {
     }
 
     dispatch({
-      type: 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM',
+      type: 'BREEZY_REMOTE_QUEUE_ITEM',
       seqId
     })
 
+    dispatch({type: 'BREEZY_BEFORE_REMOTE'})
     dispatch(beforeFetch({fetchArgs}))
     return fetchWithFlow(fetchArgs, flow, dispatch)
   }

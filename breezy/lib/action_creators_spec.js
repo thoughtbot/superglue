@@ -53,9 +53,9 @@ describe('action creators', () => {
 
 
     const expectedActions = [
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: jasmine.any(Object)},
+      { type: 'BREEZY_BEFORE_VISIT'},
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      { type: 'BREEZY_PAGE_CHANGE'},
       {
         url: '/foo',
         type: 'BREEZY_SAVE_RESPONSE',
@@ -76,6 +76,7 @@ describe('action creators', () => {
         'x-requested-with': "XMLHttpRequest",
         'x-csrf-token': 'token'
       })
+
       expect(store.getActions()).toEqual((expectedActions))
     })
   })
@@ -94,9 +95,9 @@ describe('action creators', () => {
     fetchMock.mock('/foo', {status: 500})
 
     const expectedActions = [
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: jasmine.any(Object)},
+      { type: 'BREEZY_BEFORE_VISIT' },
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      { type: 'BREEZY_PAGE_CHANGE' },
       {
         type: 'BREEZY_FETCH_ERROR',
         payload:{error: "Internal Server Error" }
@@ -126,9 +127,9 @@ describe('action creators', () => {
     }})
 
     const expectedActions = [
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: jasmine.any(Object)},
+      { type: 'BREEZY_BEFORE_VISIT'},
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      { type: 'BREEZY_PAGE_CHANGE' },
       {
         type: 'BREEZY_FETCH_ERROR',
         payload:{error: "Invalid Breezy Response" }
@@ -165,9 +166,9 @@ describe('action creators', () => {
       })
 
     const expectedActions = [
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: jasmine.any(Object)},
+      { type: 'BREEZY_BEFORE_VISIT' },
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      { type: 'BREEZY_PAGE_CHANGE' },
       {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
     ]
 
@@ -273,12 +274,12 @@ describe('action creators', () => {
         initialState.breezy.controlFlows.visit = 'secondId'
 
         const expectedActions = [
+          { type: 'BREEZY_BEFORE_VISIT' },
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
-          { type: 'BREEZY_PAGE_CHANGE' },
+          { type: 'BREEZY_BEFORE_VISIT' },
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
-          { type: 'BREEZY_PAGE_CHANGE' },
           { type: 'BREEZY_NOOP' },
           { type: 'BREEZY_SAVE_RESPONSE',
             url: '/second',
@@ -312,12 +313,14 @@ describe('action creators', () => {
         spyOn(connect, 'getStore').and.returnValue(store)
 
         const expectedActions = [
-          { type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM', seqId: 'firstId' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
-          { type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM', seqId: 'secondId' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+          { type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', seqId: 'firstId' },
+          { type: 'BREEZY_BEFORE_REMOTE_IN_ORDER' },
+          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/first', jasmine.any(Object)]},
+          { type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', seqId: 'secondId' },
+          { type: 'BREEZY_BEFORE_REMOTE_IN_ORDER' },
+          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/second', jasmine.any(Object)]},
           {
-            type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
+            type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
             action:{
               type: 'BREEZY_SAVE_RESPONSE',
               url: '/second',
@@ -325,9 +328,9 @@ describe('action creators', () => {
             },
             seqId: 'secondId'
           },
-          { type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: 0 },
+          { type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: 0 },
           {
-            type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
+            type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
             action: {
               type: 'BREEZY_SAVE_RESPONSE',
               url: '/first',
@@ -337,7 +340,7 @@ describe('action creators', () => {
           },
           { type: 'BREEZY_SAVE_RESPONSE' },
           { type: 'BREEZY_SAVE_RESPONSE' },
-          { type: 'BREEZY_ASYNC_IN_ORDER_DRAIN', index: 2 }
+          { type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: 2 }
         ]
 
         fetchMock.mock('/first', delay(500).then(() => {
@@ -375,7 +378,8 @@ describe('action creators', () => {
 
         fetchMock.mock('/foo', rsp.visitSuccess)
         const expectedActions = [
-          { type: 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM', seqId: 'nextId' },
+          { type: 'BREEZY_REMOTE_QUEUE_ITEM', seqId: 'nextId' },
+          { type: 'BREEZY_BEFORE_REMOTE'},
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           {
             type: 'BREEZY_SAVE_RESPONSE',

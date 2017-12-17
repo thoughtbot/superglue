@@ -356,11 +356,11 @@ describe('reducers', () => {
   })
 
   describe('controlFlowReducer', () => {
-    describe('BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM', () => {
+    describe('BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', () => {
       it('adds an item to the flow', () => {
         const state = {remoteInOrder: []}
         let nextState = controlFlowReducer(state, {
-          type: 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM',
+          type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM',
           seqId: 1
         })
 
@@ -372,7 +372,7 @@ describe('reducers', () => {
       })
     })
 
-    describe('BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM', () => {
+    describe('BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM', () => {
       it('updates the queued item with passed action', () => {
         const state = {remoteInOrder: [
           {
@@ -388,7 +388,7 @@ describe('reducers', () => {
         ]}
 
         let nextState = controlFlowReducer(state, {
-          type: 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM',
+          type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
           seqId: 1,
           action: {foo: 'bar'}
         })
@@ -408,14 +408,14 @@ describe('reducers', () => {
       })
     })
 
-    describe('BREEZY_ASYNC_IN_ORDER_DRAIN', () => {
+    describe('BREEZY_REMOTE_IN_ORDER_DRAIN', () => {
       it('drains the q', () => {
         const state = {remoteInOrder: [
           {a: 1}, {b: 2}, {c: 3}
         ]}
 
         let nextState = controlFlowReducer(state, {
-          type: 'BREEZY_ASYNC_IN_ORDER_DRAIN',
+          type: 'BREEZY_REMOTE_IN_ORDER_DRAIN',
           index: 2
         })
 

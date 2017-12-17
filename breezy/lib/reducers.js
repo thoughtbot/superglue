@@ -182,11 +182,11 @@ export function controlFlowReducer (state = {}, action) {
   case 'BREEZY_OVERRIDE_VISIT_SEQ': {
     return {...state, visit: action.seqId}
   }
-  case 'BREEZY_ASYNC_IN_ORDER_DRAIN': {
+  case 'BREEZY_REMOTE_IN_ORDER_DRAIN': {
     const newQ = state.remoteInOrder.slice(action.index)
     return {...state, remoteInOrder: newQ}
   }
-  case 'BREEZY_ASYNC_IN_ORDER_UPDATE_QUEUED_ITEM': {
+  case 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM': {
     const newQ = state.remoteInOrder.map((item)=>{
       if (item.seqId === action.seqId) {
         return {...item, done: true, action: action.action}
@@ -197,7 +197,7 @@ export function controlFlowReducer (state = {}, action) {
 
     return {...state, remoteInOrder: newQ}
   }
-  case 'BREEZY_ASYNC_IN_ORDER_QUEUE_ITEM': {
+  case 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM': {
     const item = {
       seqId: action.seqId,
       done: false,
@@ -206,7 +206,7 @@ export function controlFlowReducer (state = {}, action) {
 
     return {...state, remoteInOrder: [...state.remoteInOrder, item]}
   }
-  case 'BREEZY_ASYNC_NO_ORDER_QUEUE_ITEM': {
+  case 'BREEZY_REMOTE_QUEUE_ITEM': {
     const item = {
       seqId: action.seqId,
       done: false,

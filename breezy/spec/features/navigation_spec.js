@@ -23,7 +23,7 @@ class Home extends React.Component {
   }
 
   visit() {
-    this.props.visit({url:'/foo'})
+    this.props.visit('/foo')
       .then(()=> this.props.navigateTo('about', '/foo'))
   }
 
@@ -143,7 +143,7 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.visit({url:'/foo?_bz=address'})
+          this.props.visit('/foo?_bz=address')
         }
 
         componentDidUpdate() {

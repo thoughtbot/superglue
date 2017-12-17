@@ -6,7 +6,7 @@ Breezy saves you time by shipping with an opinionated state shape for your Redux
 
 ## Features
 1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React. Its like replacing ERB with JSX.
-2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes for your API? With Breezy, you don't need to!
+2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes/controllers/serializers/tests for your API? With Breezy, you don't need to!
 2. **Less Javascript.** Go ahead and use your `link_to` helpers. Use your i18n helpers!
 3. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
 4. **Use Rails routing.** You don't need a javascript router.
@@ -31,7 +31,7 @@ views/
     index.jsx <- your markup goes here
 ```
 
-The idea is to separate your content from your markup. Your content props lives as a queryable tree written using jbuilder syntax that sits on a seperate mimetype. It then gets injected as props into your container component through a provided mapStateToProps selector that you can import for your react-redux connect function.
+The idea is to separate your content from your markup. Your content props lives as a queryable tree written using jbuilder syntax that sits on a seperate mimetype. It then gets injected as props into your container component through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
 
 ```
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
@@ -42,7 +42,7 @@ export default connect(
 )(MyComponent)
 ```
 
-Then, use one of the provided thunks for SPA functionality. For example, to selectively reload parts of your page:
+Then use one of the provided thunks for SPA functionality. For example, to selectively reload parts of your page:
 ```
 import {remote} from '@jho406/breezy/dist/action_creators'
 
@@ -51,7 +51,7 @@ store.dispatch(remote('?_bz=header.shopping_cart'))
 ```
 The above will query for a node from `index.js.props`, and update the equivalent keypath in your store.
 
-Notice that by sitting on a seperate mime-type, we did not have to create any additional routes beyond our client-facing ones. And since the relationship between content and markup is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
+By sitting on a different mimetype, there are no additional API routes that we have to add to our `routes.rb` beyond the client facing ones. And since the relationship between content and markup is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
 
 
 ## Installation
@@ -79,6 +79,50 @@ rails breezy:install:web
 rails g breezy:view Post index
 ```
 
+### Configuration
+The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare bones Nav component.
+
+The relevant parts to configuring Breezy is as follows:
+
+```
+...bunch of imports...
+
+// This mapping can be auto populate through
+// Breezy generators, for example:
+// Run `rails g breezy:view Post index`
+const mapping = {
+}
+
+const history = createHistory({}) // you will need the history library
+const initialPage = window.BREEZY_INITIAL_PAGE_STATE // gets populated automatically
+const baseUrl = '' //Normally blank, but you can change this if you are using react-native
+
+const {reducer, initialState, Nav, connect} = Breezy.start(
+  window,
+  initialPage,
+  baseUrl,
+  history
+)
+
+const store = createStore(
+  reducer,
+  initialState,
+  applyMiddleware(thunk)
+)
+
+//Connect breezy to the store!
+connect(store)
+
+//And use the nav inside the provider
+class App extends React.Component {
+  render() {
+    return <Provider store={store}>
+      <Nav mapping={mapping}/>
+    </Provider>
+  }
+}
+```
+
 ## The Breezy store shape
 Breezy occupies 2 nodes in your Redux state tree.
 
@@ -90,9 +134,9 @@ Breezy occupies 2 nodes in your Redux state tree.
 }
 ```
 
-Pages is where the results of your props templates live. Its a hash where the keys are the path of your visited url. Internally, it looks like this:
+`pages` is where the results of your props templates live. Its a hash where the keys are the path of your visited url. Internally, it looks like this:
 ```
-page: {
+pages: {
   '/bar': {
     data:{...propsFromBreezyTemplates},
     ...otherMetaInfoLikeCSRFTokensOrPartials
@@ -114,7 +158,7 @@ Breezy does not normalize the client state, infact there's likely duplication ac
 Instead of normalizing state, Breezy provides tools that makes it easy to update cross-cutting concerns like a shared header.
 
 ### Automatically updating cross cutting concerns
-Breezy can automatically update all pages using meta information about partial usage from the last request. You just have to add the option `joint: true` to your partials.
+Breezy can automatically update all `pages` using meta information about partial usage from the last request. You just have to add the option `joint: true` to your partials.
 
 For example:
 ```
@@ -129,16 +173,16 @@ json.header partial: ['header', joint: true]
 ```
 
 ### Manually updating cross cutting concerns
-If you want finer control, or want to perform optimistic updates, breezy provides a set of `action_creators` that will immutably update across pages.
+If you want finer control, or want to perform optimistic updates, breezy provides a set of `action_creators` that will immutably update across `pages`.
 
 
 ## Immutability Helpers
 
 ### API
-Breezy includes immutability helpers inspired by Scour.js out of the box. You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
+Breezy includes immutability helpers inspired by (Scour.js)[https://github.com/rstacruz/scour] out of the box. You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
 
 ```
-{
+'/posts': {
   posts: [
   {
     post_id: 1
@@ -166,13 +210,13 @@ or use Breezy's lookahead syntax
 'posts.post_id=1.comment.0.body'
 ```
 
-The above would find the first occurance where post_id=1 and continue traversing from there.
+The above would find the first occurance where post_id=1 before continuing traversing.
 
 #### setInJoint
 ```
 setInJoint({name, keypath, value})
 ```
-Traverses to the node by joint name, then keypath, and immutably sets a value across all pages.
+Traverses to the node by joint name, then keypath, and immutably sets a value across all `pages`.
 ```
 
 this.props.setInJoint({
@@ -187,7 +231,7 @@ this.props.setInJoint({
 ```
 extendInJoint({name, keypath, value})
 ```
-Traverses to the node by joint name, then keypath, and immutably extends the value across all pages.
+Traverses to the node by joint name, then keypath, and immutably extends the value across all `pages`.
 ```
 
 this.props.extendInJoint({
@@ -200,9 +244,9 @@ this.props.extendInJoint({
 
 #### delInJoint
 ```
-extendInJoint({name, keypath})
+delInJoint({name, keypath})
 ```
-Traverses to the node by joint name, then keypath, and immutably delete the value across all pages.
+Traverses to the node by joint name, then keypath, and immutably delete the value across all `pages`.
 ```
 
 this.props.extendInJoint({
@@ -264,7 +308,7 @@ this.props.delInPage({
 
 
 ## BreezyTemplate
-BreezyTemplate is a Server-generated Javascript Response (SJR) templating library based on JBuilder that you use to bulid the props that your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key differences.
+BreezyTemplate is a queryable Server-generated Javascript Response (SJR) templating library based on JBuilder that you use to bulid the props that your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key [differences](#differences_from_jbuilder).
 
 ### API
 
@@ -403,6 +447,44 @@ json.array! data, key: :id do
 end
 ```
 
+### Behavior with ActiveRecord
+Breezy's `array!` has support for ActiveRecord objects if you decide to pass in an `ActiveRelation`.
+
+
+Given this example:
+
+```ruby
+post = Post.create
+post.notes.create title: 'first'
+post.notes.create title: 'second'
+
+json.hit do
+  json.hit2 do
+    json.array! post.notes do |x|
+      json.title x[:title]
+    end
+  end
+end
+```
+
+and this dispatch
+
+```
+store.dispatch(remote('?_bz=hit.hit2.id=1'))
+```
+
+Breezy will append a `where(id: 1)` to `post.notes` when filtering for a node before continuing traversing your prop tree.
+
+
+Similarly with this dispatch:
+
+
+```
+store.dispatch(remote('?_bz=hit.hit2.0'))
+```
+
+Breezy will append a `offset(0).limit(1)` to `post.notes` when filtering for a node before continuing traversing your prop tree.
+
 
 ### Differences from JBuilder
 
@@ -499,7 +581,7 @@ Makes an ajax call to a page, and sets the response to the pages store.
 
 There can only be one visit anytime, subsequent calls to visit would turn any visits in already progress into a noop.
 
-This thunk is normally used for full page to page transitions.
+This thunk is normally used for page to page transitions.
 
 #### remote
 ```
@@ -508,15 +590,14 @@ remote(url, {contentType = null, method = 'GET', body = ''}
 
 Makes an ajax call to a page, and sets the response to the pages store.
 
-This is like a normal ajax request. remote will fire off and process responses without any flow control. It does however, respect the visit, and will noop exisiting requests when visit is used.
-
+This is like a normal ajax request. `remote` will fire off and process responses without any flow control.
 
 #### remoteInOrder
 ```
 remoteInOrder(url {contentType = null, method = 'GET', body = ''})
 ```
 
-Mostly the same as remote, the difference is that responses are put in a queue and evaluated in the order of when remoteInOrder was dispatched.
+Mostly the same as [remote](#remote), the difference is that responses are put in a queue and evaluated in the order of when `remoteInOrder` was dispatched.
 
 ### Filtering nodes
 Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then graft that node back onto its tree on the client side.
@@ -544,7 +625,7 @@ or
 
 or
 
-<a href='/posts?_bz=path.to.node' data-bz-dispatch='remoteInOrder'></a>
+<a href='/posts?_bz=path.to.node' data-bz-dispatch='remote-in-order'></a>
 
 ```
 
@@ -558,9 +639,10 @@ Also works with forms
 #### data-bz-method
 Sets the request verb for the thunk
 
-
 ```
 <a href='/posts?_bz=path.to.node' data-bz-dispatch='visit' data-bz-method='POST'></a>
 ```
 
 
+## Tutorial
+Soon!

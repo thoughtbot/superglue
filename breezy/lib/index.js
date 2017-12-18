@@ -1,10 +1,7 @@
 import React from 'react'
 import parse from 'url-parse'
-import thunk from 'redux-thunk'
-import {Provider} from 'react-redux'
 import {rootReducer} from './reducers'
 import {setDOMListenersForNav, unsetDOMListenersForNav} from './listeners'
-import {createStore, applyMiddleware} from 'redux'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
@@ -73,7 +70,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
   return {
     reducer: rootReducer,
     Nav: nav,
-    connect: function(store){
+    connect: function (store){
       connect(store)
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl: baseUrl})
     },

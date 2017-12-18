@@ -33,7 +33,7 @@ views/
 
 The idea is to separate your content from your markup. Your content props lives as a queryable tree written using jbuilder syntax that sits on a seperate mimetype. It then gets injected as props into your container component through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
 
-```
+```javascript
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 
 export default connect(
@@ -43,7 +43,7 @@ export default connect(
 ```
 
 Then use one of the provided thunks for SPA functionality. For example, to selectively reload parts of your page:
-```
+```javascript
 import {remote} from '@jho406/breezy/dist/action_creators'
 
 
@@ -84,7 +84,7 @@ The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/java
 
 The relevant parts to configuring Breezy is as follows:
 
-```
+```javascript
 ...bunch of imports...
 
 // This mapping can be auto populate through
@@ -97,12 +97,12 @@ const history = createHistory({}) // you will need the history library
 const initialPage = window.BREEZY_INITIAL_PAGE_STATE // gets populated automatically
 const baseUrl = '' //Normally blank, but you can change this if you are using react-native
 
-const {reducer, initialState, Nav, connect} = Breezy.start(
+const {reducer, initialState, Nav, connect} = Breezy.start({
   window,
   initialPage,
   baseUrl,
   history
-)
+})
 
 const store = createStore(
   reducer,
@@ -126,7 +126,7 @@ class App extends React.Component {
 ## The Breezy store shape
 Breezy occupies 2 nodes in your Redux state tree.
 
-```
+```javascript
 {
   breezy, // <-breezy's private store.
   pages, // where the results of your props live
@@ -135,7 +135,7 @@ Breezy occupies 2 nodes in your Redux state tree.
 ```
 
 `pages` is where the results of your props templates live. Its a hash where the keys are the path of your visited url. Internally, it looks like this:
-```
+```javascript
 pages: {
   '/bar': {
     data:{...propsFromBreezyTemplates},
@@ -161,14 +161,14 @@ Instead of normalizing state, Breezy provides tools that makes it easy to update
 Breezy can automatically update all `pages` using meta information about partial usage from the last request. You just have to add the option `joint: true` to your partials.
 
 For example:
-```
+```ruby
 json.header do
   json.cart 30
 end
 ```
 
 Extract your header into a partial and add the option `joint: true`
-```
+```ruby
 json.header partial: ['header', joint: true]
 ```
 
@@ -213,11 +213,11 @@ or use Breezy's lookahead syntax
 The above would find the first occurance where post_id=1 before continuing traversing.
 
 #### setInJoint
-```
+```javascript
 setInJoint({name, keypath, value})
 ```
 Traverses to the node by joint name, then keypath, and immutably sets a value across all `pages`.
-```
+```javascript
 
 this.props.setInJoint({
   name: 'header',
@@ -228,11 +228,11 @@ this.props.setInJoint({
 ```
 
 #### extendInJoint
-```
+```javascript
 extendInJoint({name, keypath, value})
 ```
 Traverses to the node by joint name, then keypath, and immutably extends the value across all `pages`.
-```
+```javascript
 
 this.props.extendInJoint({
   name: 'header',
@@ -243,11 +243,11 @@ this.props.extendInJoint({
 ```
 
 #### delInJoint
-```
+```javascript
 delInJoint({name, keypath})
 ```
 Traverses to the node by joint name, then keypath, and immutably delete the value across all `pages`.
-```
+```javascript
 
 this.props.extendInJoint({
   name: 'header',
@@ -259,13 +259,13 @@ this.props.extendInJoint({
 
 
 #### setInPage
-```
+```javascript
 setInPage({url, keypath, value})
 ```
 
 At the page specificed by the URL, traverses to the node by keypath and immutably set the value.
 
-```
+```javascript
 this.props.setInPage({
   url: '/foo?bar=5',
   keypath: 'header.cart.total',
@@ -276,13 +276,13 @@ this.props.setInPage({
 
 
 #### extendInPage
-```
+```javascript
 extendInPage({url, keypath, value})
 ```
 
 At the page specificed by the URL, traverses to the node by keypath and immutably extend the value.
 
-```
+```javascript
 this.props.extendInPage({
   url: '/foo?bar=5',
   keypath: 'header.cart',
@@ -292,13 +292,13 @@ this.props.extendInPage({
 ```
 
 #### delInPage({url, keypath})
-```
+```javascript
 delInPage({url, keypath})
 ```
 
 At the page specificed by the URL, traverses to the node by keypath and immutably delete the value.
 
-```
+```javascript
 this.props.delInPage({
   url: '/foo?bar=5',
   keypath: 'header.cart'
@@ -316,18 +316,18 @@ In general, BreezyTemplate functionality like partials or deferement, can only b
 
 For inline attributes, the first parameter is the value, and the last parameter are feature options.
 
-```
+```ruby
 json.post @post, partial: "blog_post", some_feature: true
 json.post @post, partial: ["blog_post", as: 'article'], some_feature: [true, {more_options: '123'}]
 ```
 
 For blocks, the first parameter are always feature options.
 
-```
+```ruby
 json.comments partial: "blog_post", some_feature: true do
 end
 
-or
+#or
 
 options = partial: ["blog_post", as: 'article'], some_feature: [true, {more_options: '123'}]
 
@@ -352,16 +352,16 @@ More usage:
 # We use a `nil` because of the last argument hash. The contents of the partial is what becomes the value.
 json.post nil, partial: "blog_post"
 
-or
+#or
 
 # Set @post as a local `article` within the `blog_post` partial.
 json.post @post, partial: ["blog_post", as: 'article']
 
-or
+#or
 # Add more locals
 json.post @big_post, partial: ["blog_post", locals: {email: 'tests@test.com'}]
 
-or
+#or
 
 # Use a partial for each element in an array
 json.array! @posts, partial: ["blog_post", as: :blog_post]
@@ -376,15 +376,15 @@ json.author(cache: "some_cache_key") do
   json.first_name "tommy"
 end
 
-or
+#or
 
 json.profile "hello", cache: "cachekey" #
 
-or
+#or
 
 json.profile nil, cache: "cachekey", partial: ["profile", locals: {foo: 1}]
 
-or nest it
+#or nest it
 
 json.author(cache: "some_cache_key") do
   json.address(cache: "some_other_cache_key") do
@@ -392,7 +392,7 @@ json.author(cache: "some_cache_key") do
   end
 end
 
-or use it on arrays
+#or use it on arrays
 
 opts = {
   cache: ->(i){ ['a', i] }
@@ -401,7 +401,7 @@ json.array! [4,5], opts do |x|
   json.top "hello" + x.to_s
 end
 
-or on arrays with partials
+#or on arrays with partials
 
 opts = {
   cache: (->(d){ ['a', d.id] }),
@@ -469,7 +469,7 @@ end
 
 and this dispatch
 
-```
+```javascript
 store.dispatch(remote('?_bz=hit.hit2.id=1'))
 ```
 
@@ -479,7 +479,7 @@ Breezy will append a `where(id: 1)` to `post.notes` when filtering for a node be
 Similarly with this dispatch:
 
 
-```
+```javascript
 store.dispatch(remote('?_bz=hit.hit2.0'))
 ```
 
@@ -543,7 +543,7 @@ end
 
 4. `json.array!` first args are options. So this
 
-```
+```ruby
 json.array! comments, :content, :id
 ```
 
@@ -561,7 +561,7 @@ end
 
 5. You can't pass JBuilder objects as values. The following will error out.
 
-```
+```ruby
 to_nest = Jbuilder.new{ |json| json.nested_value 'Nested Test' }
 
 json.set! :nested, to_nest
@@ -573,7 +573,7 @@ json.set! :nested, to_nest
 
 #### visit
 
-```
+```javascript
 visit(url, {contentType = null, method = 'GET', body = ''})
 ```
 
@@ -584,7 +584,7 @@ There can only be one visit anytime, subsequent calls to visit would turn any vi
 This thunk is normally used for page to page transitions.
 
 #### remote
-```
+```javascript
 remote(url, {contentType = null, method = 'GET', body = ''}
 ```
 
@@ -593,7 +593,7 @@ Makes an ajax call to a page, and sets the response to the pages store.
 This is like a normal ajax request. `remote` will fire off and process responses without any flow control.
 
 #### remoteInOrder
-```
+```javascript
 remoteInOrder(url {contentType = null, method = 'GET', body = ''})
 ```
 
@@ -606,7 +606,7 @@ Breezy's thunks will take care of most of the work for you:
 
 For example:
 
-```
+```javascript
 store.dispatch(remote('?_bz='header.shopping_cart'))
 ```
 
@@ -616,7 +616,7 @@ Breezy started out as a fork of Turbolinks/Turbograft and still retains a DOM at
 #### data-bz-dispatch
 Use one of the thunks provided by breezy
 
-```
+```html
 <a href='/posts?_bz=path.to.node' data-bz-dispatch='visit'></a>
 
 or
@@ -631,7 +631,7 @@ or
 
 Also works with forms
 
-```
+```html
 <form data-bz-dispatch=visit method='post'>
 </form>
 ```
@@ -639,7 +639,7 @@ Also works with forms
 #### data-bz-method
 Sets the request verb for the thunk
 
-```
+```html
 <a href='/posts?_bz=path.to.node' data-bz-dispatch='visit' data-bz-method='POST'></a>
 ```
 

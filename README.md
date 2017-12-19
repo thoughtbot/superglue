@@ -607,7 +607,7 @@ Breezy's thunks will take care of most of the work for you:
 For example:
 
 ```javascript
-store.dispatch(remote('?_bz='header.shopping_cart'))
+store.dispatch(remote('?_bz=header.shopping_cart'))
 ```
 
 ### Data-attributes API

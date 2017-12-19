@@ -367,6 +367,48 @@ json.post @big_post, partial: ["blog_post", locals: {email: 'tests@test.com'}]
 json.array! @posts, partial: ["blog_post", as: :blog_post]
 ```
 
+#### Partial Joints
+Breezy does not denormalize your store, instead it relies on your partial metadata to make it easy to update cross cutting concerns like a header. To enable this behavior, we use the `joint` option.
+
+For example, to update all your headers across all pages like so:
+
+```javascript
+extendInJoint({
+  name: 'header',
+  keypath: 'profile.address',
+  value: {zip_code: 11214}
+})
+```
+
+You would need use partials and add the option `joint: true`. Then the key `header` will be accessible by `extendInJoint`.
+
+```ruby
+### index.js.breezy
+json.header null, partial: ["profile", joint: true]
+
+
+### _profile.js.breezy
+json.profile do
+  json.address do
+    json.state "New York City"
+  end
+end
+
+```
+
+You can also rename the joint.
+```ruby
+### index.js.breezy
+json.header null, partial: ["profile", joint: 'super_header']
+```
+
+When using joints with Arrays, the argument **MUST** be a lamda:
+
+```ruby
+json.array! ['foo', 'bar'], partial: ["footer", joint: ->(x){"somefoo_#{x}"}]
+```
+
+
 #### Caching
 
 Usage:
@@ -410,6 +452,7 @@ opts = {
 json.array! @options, opts
 
 ```
+
 
 #### Deferment
 You can defer rendering of expensive content using the `defer: :auto` option. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with a `null` as a standin, and append a meta data to the response. When the client recieves the payload, breezy will use the meta data to issue an `remote` dispatch to fetch the missing node and graft it at the appropriate keypath on the client side.

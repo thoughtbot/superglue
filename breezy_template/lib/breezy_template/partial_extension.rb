@@ -91,7 +91,12 @@ class BreezyTemplate
 
     def _set_inline_partial(name, object, options)
       options = _normalize_options_for_partial(options)
+
       partial, partial_opts = options[:partial]
+      if partial_opts[:joint] == true
+        partial_opts[:joint] = name
+      end
+
       value = if object.nil? && partial.empty?
         []
       else
@@ -133,15 +138,19 @@ class BreezyTemplate
 
       if partial_opts.key?(:collection)
         collection = partial_opts.delete(:collection)
+        extract_joint_name = partial_opts.delete(:joint)
         locals = partial_opts.delete(:locals)
 
         ary_opts.delete(:partial)
         array! collection, ary_opts do |member|
+
           member_locals = locals.clone
           member_locals.merge! collection: collection
           member_locals.merge! as.to_sym => member if as
           partial_opts.merge!(locals: member_locals)
-
+          if extract_joint_name.respond_to?(:call)
+            partial_opts.merge!(joint: extract_joint_name.call(member))
+          end
           _render_partial options
         end
       else

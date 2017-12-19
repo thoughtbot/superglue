@@ -317,6 +317,58 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "renders a partial with implicit joint" do
+    result = jbuild(<<-JBUILDER)
+      json.footer nil, partial: ["footer", joint: true]
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        joints['footer'] ||= []; joints['footer'].push('footer');
+        return ({"data":{"footer":{"terms":"You agree"}},"joints":joints,"defers":defers});
+      })()
+    JS
+    assert_equal expected, result
+  end
+
+  test "renders a partial with explicit joint" do
+    result = jbuild(<<-JBUILDER)
+      json.footer nil, partial: ["footer", joint: 'hello']
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        joints['hello'] ||= []; joints['hello'].push('footer');
+        return ({"data":{"footer":{"terms":"You agree"}},"joints":joints,"defers":defers});
+      })()
+    JS
+    assert_equal expected, result
+  end
+
+  test "render array of partials with unique joints" do
+    result = jbuild(<<-JBUILDER)
+      json.array! [1,2], partial: ["footer", joint: ->(x){"somefoo"+x.to_s}]
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        joints['somefoo1'] ||= []; joints['somefoo1'].push('0');joints['somefoo2'] ||= []; joints['somefoo2'].push('1');
+        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"joints":joints,"defers":defers});
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
   test "renders a partial with no locals" do
     result = jbuild(<<-JBUILDER)
       json.footer nil, partial: "footer"

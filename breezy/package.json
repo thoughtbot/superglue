@@ -1,7 +1,7 @@
 {
   "name": "@jho406/breezy",
-  "version": "0.2.4",
-  "description": "",
+  "version": "0.3.0",
+  "description": "Use a vanilla Rails with React and Redux",
   "main": "dist/index.js",
   "scripts": {
     "test": "jasmine",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/jho406/breezy.git"
   },
-  "author": "",
+  "author": "Johny Ho",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jho406/breezy/issues"

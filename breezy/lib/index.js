@@ -66,13 +66,15 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
       )
     }
   }
+  const csrfToken = initialPage.csrf_token
 
   return {
     reducer: rootReducer,
     Nav: nav,
     connect: function (store){
       connect(store)
-      store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl: baseUrl})
+      store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
+      store.dispatch({type: 'BREEZY_SET_CSRF_TOKEN', csrfToken})
     },
     initialState: pageToInitialState(url, initialPage)
   }

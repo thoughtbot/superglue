@@ -172,6 +172,10 @@ export function metaReducer (state = {}, action) {
     const {page} = action
     return {...state, csrfToken: page.csrf_token}
   }
+  case 'BREEZY_SET_CSRF_TOKEN': {
+    const {csrfToken} = action
+    return {...state, csrfToken: csrfToken}
+  }
   default:
     return state
   }

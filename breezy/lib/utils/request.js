@@ -59,8 +59,9 @@ export function argsForFetch (getState, {url, contentType = null, body = '', met
     headers['x-csrf-token'] = currentState.csrfToken
   }
   const href = new parse(url, currentState.baseUrl || '', false).href
+  const credentials = 'same-origin'
 
-  return [href, {method, headers, body}]
+  return [href, {method, headers, body, credentials}]
 }
 
 export function extractText (rsp) {

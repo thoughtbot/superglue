@@ -181,7 +181,11 @@ export function metaReducer (state = {}, action) {
   }
 }
 
-export function controlFlowReducer (state = {}, action) {
+export function controlFlowReducer (state = {
+  remote:[],
+  remoteInOrder:[]
+  }, action) {
+
   switch(action.type) {
   case 'BREEZY_OVERRIDE_VISIT_SEQ': {
     return {...state, visit: action.seqId}
@@ -224,7 +228,7 @@ export function controlFlowReducer (state = {}, action) {
   }
 }
 
-export function breezyReducer (state = {controlFlows:{}}, action) {
+export function breezyReducer (state = {}, action) {
   let meta = metaReducer(state, action)
   let controlFlows = controlFlowReducer(meta.controlFlows, action)
 

@@ -217,7 +217,7 @@ export function controlFlowReducer (state = {}, action) {
       action: null
     }
 
-    return {...state, asyncNoOder: [...state.remote, item]}
+    return {...state, remote: [...state.remote, item]}
   }
   default:
     return state

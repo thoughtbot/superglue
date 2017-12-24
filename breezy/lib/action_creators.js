@@ -211,10 +211,13 @@ export function remote (url, {contentType = null, method = 'GET', body = ''} = {
     const seqId = uuidv4()
     const fetchUrl = fetchArgs[0]
 
-    const flow = (page) => {
+    const flow = ({page}) => {
       const action = persist({url: fetchUrl, page, dispatch})
       const inQ = getState().breezy.controlFlows.remote
-      const hasSeq = inQ.includes(seqId)
+      const hasSeq = !!inQ.find((element) => {
+        return element.seqId  === seqId
+      })
+
       if(hasSeq) {
         dispatch(action)
       }

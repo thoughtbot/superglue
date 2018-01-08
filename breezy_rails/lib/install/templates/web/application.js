@@ -18,12 +18,12 @@ const baseUrl = ''
 
 //The Nav is pretty bare bones
 //Feel free to replace the implementation
-const {reducer, initialState, Nav, connect} = Breezy.start(
+const {reducer, initialState, Nav, connect} = Breezy.start({
   window,
   initialPage,
   baseUrl,
   history
-)
+})
 
 const store = createStore(
   reducer,

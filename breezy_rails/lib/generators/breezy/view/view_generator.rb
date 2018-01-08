@@ -29,12 +29,12 @@ DESC
           @content_path =  File.join(destination, "#{@action}.js.props")
 
           if options[:target] == 'mobile'
-            @view_ext = 'jsx'
+            @view_ext = 'jsx.mobile'
           else
-            @view_ext = 'js' #todo fix me
+            @view_ext = 'jsx.web' #todo fix me
           end
 
-          @view_path = File.join(destination, "#{@action}.#{@view_ext}")
+          @view_path = File.join(destination, "#{@action}.jsx")
 
           template "view.#{@view_ext}", @view_path
           template 'view.js.breezy', @content_path

@@ -61,7 +61,7 @@ Make sure you have webpacker installed on your Rails application
 1. Install BreezyJS
 
 ```
-yarn add breezy --save
+yarn add @jho406/breezy --save
 ```
 
 2. Add the following to your Gemfile and run bundle

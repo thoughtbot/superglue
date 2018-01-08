@@ -7,6 +7,7 @@ require 'breezy/x_domain_blocker'
 require 'breezy/render'
 require 'breezy/helpers'
 require 'breezy/configuration'
+require 'breezy_template'
 
 module Breezy
   module Controller

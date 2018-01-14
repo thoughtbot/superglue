@@ -51,13 +51,20 @@ export class Nav extends React.Component {
     if (store) {
       store.dispatch({
         type: 'BREEZY_HISTORY_CHANGE',
-        url:  parse(location.pathname).href
+        url: parse(location.pathname).href
       })
     }
 
-    if (action === 'POP' && location.state && location.state.breezy) {
-      const {screen, url} = location.state
-      this.setState({screen, url})
+    if (action === 'POP') {
+      if(location.state && location.state.breezy) {
+        const {screen} = location.state
+        const url = parse(location.pathname).pathname
+
+        this.setState({screen, url})
+      } else {
+        // load previous page
+        window.location = location.pathname
+      }
     }
   }
 

@@ -187,8 +187,11 @@ export function remoteInOrder (url, {contentType = null, method = 'GET', body = 
     const seqId = uuidv4()
     const fetchUrl = fetchArgs[0]
 
-    const flow = (page) => {
-      const action = persist({url: fetchUrl, page, dispatch})
+
+    const flow = ({rsp, page}) => {
+      const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
+      const realUrl = parse(redirectedUrl || fetchUrl).pathname
+      const action = persist({url: realUrl, page, dispatch})
       dispatch({
         type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
         action,

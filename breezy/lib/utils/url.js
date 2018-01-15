@@ -47,7 +47,6 @@ export function formatForXHR (url, opts = {}) {
   let formats = [
     withMimeBust,
     withoutHash,
-    withMimeBust
   ]
 
   if (opts.cacheRequest) { formats.push(withAntiCache) }

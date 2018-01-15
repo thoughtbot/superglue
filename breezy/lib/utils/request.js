@@ -1,4 +1,5 @@
 import parse from 'url-parse'
+import {formatForXHR} from './url'
 
 export function isValidResponse (xhr) {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -64,7 +65,8 @@ export function argsForFetch (getState, {pathQuery, contentType = null, body = '
   const href = new parse(pathQuery, currentState.baseUrl || '', false).href
   const credentials = 'same-origin'
 
-  return [href, {method, headers, body, credentials}]
+
+  return [formatForXHR(href), options]
 }
 
 export function extractText (rsp) {

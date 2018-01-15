@@ -154,7 +154,7 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: 'BREEZY_EXTEND_IN_PAGE',
-          url: '/foo',
+          pathQuery: '/foo',
           keypath: 'header',
           value: {sibling: 90}
         })
@@ -188,7 +188,7 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: 'BREEZY_DEL_IN_PAGE',
-          url: '/foo',
+          pathQuery: '/foo',
           keypath: 'header.cart',
         })
 
@@ -221,7 +221,7 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: 'BREEZY_SET_IN_PAGE',
-          url: '/foo',
+          pathQuery: '/foo',
           keypath: 'header.cart',
           value: {foo: 3}
         })
@@ -262,7 +262,7 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: 'BREEZY_HANDLE_GRAFT',
-          url: '/foo',
+          pathQuery: '/foo',
           page: graftResponse
         })
 
@@ -290,7 +290,7 @@ describe('reducers', () => {
         const prevState = {}
         const nextState = reducer(prevState, {
           type: 'BREEZY_SAVE_RESPONSE',
-          url: '/foo',
+          pathQuery: '/foo',
           page: {
             data: {},
             csrf_token: 'token',
@@ -303,7 +303,7 @@ describe('reducers', () => {
           csrf_token: 'token',
           cachedAt: jasmine.any(Number),
           assets: [ 'application-123.js' ],
-          pathname: '/foo',
+          pathQuery: '/foo',
           joints: {}
         }))
       })
@@ -345,7 +345,7 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: 'BREEZY_SAVE_RESPONSE',
-          url: '/bar',
+          pathQuery: '/bar',
           page: nextPage
         })
 

@@ -18,7 +18,6 @@ export function withAntiCache (url) {
   }
 }
 
-
 export function withMimeBust (url) {
   url = new parse(url, true)
   if (url.query.hasOwnProperty('__')) {
@@ -35,7 +34,7 @@ export function vanityPath(url) {
   delete query['__']
   delete query['_bz']
   url.query = query
-  return url.pathname
+  return pathQuery(url.toString())
 }
 
 export function withoutHash (url){

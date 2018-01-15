@@ -1,20 +1,17 @@
 import {reverseMerge} from './utils/helpers'
 import parseUrl from 'url-parse'
-import {pathQuery} from './utils/url'
 import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
 import {combineReducers} from 'redux'
 
-function saveResponse (state, url, page) {
-  const pathname = pathQuery(url)
-
+function saveResponse (state, pathQuery, page) {
   state = {...state}
 
   reverseMerge(page, {
     cachedAt: new Date().getTime(),
     positionY: pageYOffset(),
     positionX: pageXOffset(),
-    pathname: pathname,
+    pathQuery,
     joints: {}
   })
 
@@ -26,7 +23,7 @@ function saveResponse (state, url, page) {
       })
     })
 
-  state[pathname] = page
+  state[pathQuery] = page
 
   return state
 }
@@ -83,9 +80,8 @@ function setInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function handleGraft (state, url, page) {
+function handleGraft (state, pathQuery, page) {
   state = {...state}
-  const pathname = parseUrl(url).pathname
 
   reverseMerge(page, {joints: {}})
 
@@ -96,9 +92,8 @@ function handleGraft (state, url, page) {
         state = setInByJoint(state, ref, updatedNode)
       })
     })
-
-  const currentPage = state[pathname]
-  state[pathname].data = setIn(currentPage.data, page.path, page.data)
+  const currentPage = state[pathQuery]
+  state[pathQuery].data = setIn(currentPage.data, page.path, page.data)
 
   return state
 }
@@ -106,37 +101,38 @@ function handleGraft (state, url, page) {
 export function pageReducer (state = {}, action) {
   switch(action.type) {
   case 'BREEZY_SAVE_RESPONSE': {
-    const {url, page} = action
-    return saveResponse(state, url, page)
+    const {pathQuery, page} = action
+    return saveResponse(state, pathQuery, page)
   }
   case 'BREEZY_HANDLE_GRAFT': {
-    const {url, page} = action
-    return handleGraft(state, url, page)
+    const {pathQuery, page} = action
+    return handleGraft(state, pathQuery, page)
   }
   case 'BREEZY_REMOVE_PAGE': {
-    const {url} = action
+    const {pathQuery} = action
     const nextState = {...state}
-    delete nextState[url]
+    delete nextState[pathQuery]
 
     return nextState
   }
   case 'BREEZY_SET_IN_PAGE': {
-    const {url, keypath, value} = action
-    const fullPath = [url, 'data', keypath].join('.')
+    const {pathQuery, keypath, value} = action
+    const fullPath = [pathQuery, 'data', keypath].join('.')
+    //todo: make setIn accept an array
     const nextState = setIn(state, fullPath, value)
 
     return nextState
   }
   case 'BREEZY_DEL_IN_PAGE': {
-    const {url, keypath} = action
-    const fullPath = [url, 'data', keypath].join('.')
+    const {pathQuery, keypath} = action
+    const fullPath = [pathQuery, 'data', keypath].join('.')
     const nextState = delIn(state, fullPath)
 
     return nextState
   }
   case 'BREEZY_EXTEND_IN_PAGE': {
-    const {url, keypath, value} = action
-    const fullPath = [url, 'data', keypath].join('.')
+    const {pathQuery, keypath, value} = action
+    const fullPath = [pathQuery, 'data', keypath].join('.')
     const nextState = extendIn(state, fullPath, value)
 
     return nextState

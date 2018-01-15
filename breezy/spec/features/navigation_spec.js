@@ -126,7 +126,7 @@ describe('navigation', () => {
             cachedAt: jasmine.any(Number),
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
-            pathname: '/foo',
+            pathQuery: '/foo',
             joints: {}
           }
         }

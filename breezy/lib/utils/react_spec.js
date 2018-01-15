@@ -153,7 +153,7 @@ describe('Nav', () => {
         }
       }
 
-      let props = mapStateToProps(slice, {url: '/foo'})
+      let props = mapStateToProps(slice, {pathQuery: '/foo'})
       expect(props).toEqual({heading: 'hi'})
     })
   })

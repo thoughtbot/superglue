@@ -46,6 +46,7 @@ export function remoteHandler (ev, store) {
   const {actionName, ...options} = toOptions(target)
   const action = domActionMapping[actionName]
   return store.dispatch(action(options)).then((rsp) => {
+    //todo: change to pathQuery
     navigator.navigateTo(options.url, rsp.container)
   })
 }

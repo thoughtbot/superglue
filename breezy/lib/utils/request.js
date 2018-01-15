@@ -41,7 +41,7 @@ export function handleServerErrors (args){
   return args
 }
 
-export function argsForFetch (getState, {url, contentType = null, body = '', method = 'GET'}) {
+export function argsForFetch (getState, {pathQuery, contentType = null, body = '', method = 'GET'}) {
   const currentState = getState().breezy || {}
 
   const jsAccept = 'text/javascript, application/x-javascript, application/javascript'
@@ -61,7 +61,7 @@ export function argsForFetch (getState, {url, contentType = null, body = '', met
   if (currentState.csrfToken) {
     headers['x-csrf-token'] = currentState.csrfToken
   }
-  const href = new parse(url, currentState.baseUrl || '', false).href
+  const href = new parse(pathQuery, currentState.baseUrl || '', false).href
   const credentials = 'same-origin'
 
   return [href, {method, headers, body, credentials}]

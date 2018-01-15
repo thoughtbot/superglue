@@ -6,7 +6,7 @@ import {
   remote,
   remoteInOrder,
 } from '../action_creators'
-import {vanityPath} from './url'
+import {vanityPath as convertToVanity, pathQuery as convertToPathQuery} from './url'
 import PropTypes from 'prop-types'
 
 export class Nav extends React.Component {
@@ -23,11 +23,12 @@ export class Nav extends React.Component {
     this.state = this.props.initialState || {}
   }
 
-  navigateTo (screen, url, {action} = {action: 'push'}) {
+  navigateTo (screen, pathQuery, {action} = {action: 'push'}) {
+    const vanityPath = convertToVanity(pathQuery)
     if (this.history) {
-      const historyArgs = [vanityPath(url), {
+      const historyArgs = [vanityPath, {
         screen,
-        url,
+        pathQuery: vanityPath,
         breezy: true
       }]
 
@@ -39,11 +40,11 @@ export class Nav extends React.Component {
         const {store} = this.context
         const oldUrl = history.location.state.url
         this.history.replace(...historyArgs)
-        store.dispatch({type: 'BREEZY_REMOVE_PAGE', url: oldUrl})
+        store.dispatch({type: 'BREEZY_REMOVE_PAGE', pathQuery: convertToVanityPath(oldUrl)})
       }
     }
 
-    this.setState({url, screen})
+    this.setState({pathQuery: vanityPath, screen})
   }
 
   onHistoryChange (location, action) {
@@ -57,10 +58,9 @@ export class Nav extends React.Component {
 
     if (action === 'POP') {
       if(location.state && location.state.breezy) {
-        const {screen} = location.state
-        const url = parse(location.pathname).pathname
+        const {screen, pathQuery} = location.state
 
-        this.setState({screen, url})
+        this.setState({screen, pathQuery})
       } else {
         // load previous page
         window.location = location.pathname
@@ -77,7 +77,7 @@ export class Nav extends React.Component {
     const Component = this.mapping[this.state.screen]
 
     if (Component) {
-      return <Component url={this.state.url} navigateTo={this.navigateTo} />
+      return <Component pathQuery={this.state.pathQuery} navigateTo={this.navigateTo} />
     } else {
       return this.notFound(this.state.screen)
     }
@@ -87,12 +87,12 @@ export class Nav extends React.Component {
 Nav.contextTypes = {store: PropTypes.object}
 
 export function mapStateToProps (state = {page:{}}, ownProps) {
-  let url = ownProps.url
+  let pathQuery = convertToVanity(ownProps.pathQuery)
   // support for react navigation
-  if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.url && !url) {
+  if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.url && !pathQuery) {
     url = ownProps.navigation.state.params.url
   }
-  const {data} = state.page[url] || {}
+  const {data} = state.page[pathQuery] || {}
   const props = data
   return props || {}
 }

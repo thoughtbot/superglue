@@ -5,6 +5,7 @@ import {setDOMListenersForNav, unsetDOMListenersForNav} from './listeners'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
+import {pathQuery as convertToPathQuery} from './utils/url'
 
 export {mapStateToProps, mapDispatchToProps} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
@@ -17,29 +18,25 @@ export function stop () {
 }
 
 export function argsForHistory (url, page) {
-  const pathname = parse(url).pathname
+  const pathq = convertToPathQuery(url)
 
-  return [pathname, {
+  return [pathq, {
     breezy: true,
-    url: url,
+    pathQuery: pathq,
     screen: page.screen
   }]
 }
 
 export function argsForNavInitialState (url, page) {
-  const pathname = parse(url).pathname
-
   return {
     screen: page.screen,
-    url: pathname
+    pathQuery: convertToPathQuery(url)
   }
 }
 
 export function pageToInitialState (url, page) {
-  const pathname = parse(url).pathname
-
   return {
-    page: {[pathname]: page}
+    page: {[convertToPathQuery(url)]: page}
   }
 }
 

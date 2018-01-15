@@ -57,7 +57,7 @@ describe('action creators', () => {
       { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
       {
-        url: '/foo',
+        pathQuery: '/foo',
         type: 'BREEZY_SAVE_RESPONSE',
         page: {
           data: { heading: 'Some heading 2' },
@@ -234,9 +234,9 @@ describe('action creators', () => {
       const state = store.getState()
       const actions = store.getActions()
       const lastAction = actions[actions.length - 1]
-      const {type, url} = lastAction;
+      const {type, pathQuery} = lastAction;
 
-      if(type === 'BREEZY_SAVE_RESPONSE' && url === '/some_defered_request') {
+      if(type === 'BREEZY_SAVE_RESPONSE' && pathQuery === '/some_defered_request') {
         done()
       }
     })
@@ -282,7 +282,7 @@ describe('action creators', () => {
           { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
           { type: 'BREEZY_NOOP' },
           { type: 'BREEZY_SAVE_RESPONSE',
-            url: '/second',
+            pathQuery: '/second',
             page: jasmine.any(Object)
           }
         ]
@@ -323,7 +323,7 @@ describe('action creators', () => {
             type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
             action:{
               type: 'BREEZY_SAVE_RESPONSE',
-              url: '/second',
+              pathQuery: '/second',
               page: jasmine.any(Object)
             },
             seqId: 'secondId'
@@ -333,7 +333,7 @@ describe('action creators', () => {
             type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
             action: {
               type: 'BREEZY_SAVE_RESPONSE',
-              url: '/first',
+              pathQuery: '/first',
               page: jasmine.any(Object)
             },
             seqId: 'firstId'
@@ -383,7 +383,7 @@ describe('action creators', () => {
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           {
             type: 'BREEZY_SAVE_RESPONSE',
-            url: '/foo',
+            pathQuery: '/foo',
             page: jasmine.any(Object)
           }
         ]

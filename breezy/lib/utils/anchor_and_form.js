@@ -1,13 +1,14 @@
 import FormData from 'form-data'
-
+import {pathQuery as convertToPathQuery} from './url'
 const SUPPORTED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
 const FALLBACK_LINK_METHOD = 'GET'
 const FALLBACK_FORM_METHOD = 'POST'
 const CONTROL_FLOWS = ['visit', 'async-no-order', 'async-in-order']
 
 export function toOptions (target) {
+
   return {
-    url: getUrlForFetch(target),
+    pathQuery: convertToPathQuery(getUrlForFetch(target)),
     method: getRequestMethodForFetch(target),
     body: getPayloadForLink(target) || getPayload(target),
     contentType: getContentType(target),

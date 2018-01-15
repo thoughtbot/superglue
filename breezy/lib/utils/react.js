@@ -57,9 +57,10 @@ export class Nav extends React.Component {
     }
 
     if (action === 'POP') {
-      if(location.state && location.state.breezy) {
-        const {screen, pathQuery} = location.state
+      const {screen, pathQuery} = location.state
+      const wasNotRefreshed = !!store.getState().page[pathQuery]
 
+      if(location.state && location.state.breezy && wasNotRefreshed) {
         this.setState({screen, pathQuery})
       } else {
         // load previous page

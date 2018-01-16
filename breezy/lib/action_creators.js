@@ -110,7 +110,6 @@ function handleDeferments (defers=[], dispatch) {
 
 export function persist ({url, page, dispatch}) {
   handleDeferments(page.defers, dispatch)
-
   if (page.action === 'graft') {
     return handleGraft({url, page})
   } else {
@@ -215,8 +214,10 @@ export function remote (url, {contentType = null, method = 'GET', body = ''} = {
     const seqId = uuidv4()
     const fetchUrl = fetchArgs[0]
 
-    const flow = ({page}) => {
-      const action = persist({url: fetchUrl, page, dispatch})
+    const flow = ({rsp, page}) => {
+      const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
+      const realUrl = parse(redirectedUrl || fetchUrl).pathname
+      const action = persist({url: realUrl, page, dispatch})
       const inQ = getState().breezy.controlFlows.remote
       const hasSeq = !!inQ.find((element) => {
         return element === seqId

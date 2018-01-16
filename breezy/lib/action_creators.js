@@ -125,6 +125,7 @@ export function fetchWithFlow (fetchArgs, flow, dispatch) {
     .catch((err) => {
       dispatch(handleError(err.message))
       err.fetchArgs = fetchArgs
+      err.url = fetchArgs[0]
       throw err
     })
 }
@@ -137,22 +138,24 @@ export function visit (url, {contentType = null, method = 'GET', body = ''} = {}
 
     const flow = ({rsp, page}) => {
       const controlFlows = getState().breezy.controlFlows
+      const state = getState()
+      const prevAssets = state.breezy.assets
+      const newAssets = page.assets
+      const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
+
+      const meta = {
+        url: parse(redirectedUrl || fetchUrl).pathname,
+        page,
+        screen: page.screen,
+        needsRefresh: needsRefresh(prevAssets, newAssets)
+      }
+
       if (controlFlows['visit'] === seqId ) {
-        dispatch(persist({url: fetchUrl, page, dispatch}))
-
-        const state = getState()
-        const prevAssets = state.breezy.assets
-        const newAssets = page.assets
-        const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
-
-        return {
-          url: redirectedUrl || fetchUrl,
-          page,
-          screen: page.screen,
-          needsRefresh: needsRefresh(prevAssets, newAssets)
-        }
+        dispatch(persist({url: meta.url, page, dispatch}))
+        return {...meta, canNavigate: true}
       } else {
-        return dispatch({type: 'BREEZY_NOOP'})
+        dispatch({type: 'BREEZY_NOOP'})
+        return {...meta, canNavigate: false}
       }
     }
 
@@ -231,6 +234,7 @@ export function remote (url, {contentType = null, method = 'GET', body = ''} = {
 
     dispatch({type: 'BREEZY_BEFORE_REMOTE'})
     dispatch(beforeFetch({fetchArgs}))
+
     return fetchWithFlow(fetchArgs, flow, dispatch)
   }
 }

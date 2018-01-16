@@ -47,8 +47,11 @@ export function argsForFetch (getState, {url, contentType = null, body = '', met
   const jsAccept = 'text/javascript, application/x-javascript, application/javascript'
   const headers = {
     'accept': jsAccept,
-    'x-xhr-referer': currentState.currentUrl,
     'x-requested-with': 'XMLHttpRequest'
+  }
+
+  if (currentState.currentUrl) {
+    headers['x-xhr-referer'] = currentState.currentUrl
   }
 
   if (contentType) {

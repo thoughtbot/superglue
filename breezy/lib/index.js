@@ -44,28 +44,31 @@ export function pageToInitialState (url, page) {
 }
 
 export function start ({window, baseUrl='', history, initialPage={}}) {
-  setWindow(window)
-  const url = window.location.href
-  history.replace(...argsForHistory(url, initialPage))
+  if (window) {
+    setWindow(window)
+    const url = window.location.href
+    history.replace(...argsForHistory(url, initialPage))
 
 
-  function handleRef (ref){
-    if (hasWindow()) {
-      setDOMListenersForNav(ref)
+    function handleRef (ref){
+      if (hasWindow()) {
+        setDOMListenersForNav(ref)
+      }
+    }
+
+    const nav = class extends React.Component {
+      render () {
+        return (
+          <Nav ref={handleRef}
+            mapping={this.props.mapping}
+            initialState={argsForNavInitialState(url, initialPage)}
+            history={history}
+          />
+        )
+      }
     }
   }
 
-  const nav = class extends React.Component {
-    render () {
-      return (
-        <Nav ref={handleRef}
-          mapping={this.props.mapping}
-          initialState={argsForNavInitialState(url, initialPage)}
-          history={history}
-        />
-      )
-    }
-  }
   const csrfToken = initialPage.csrf_token
 
   return {

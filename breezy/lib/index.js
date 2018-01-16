@@ -76,6 +76,12 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
     Nav: nav,
     connect: function (store){
       connect(store)
+      if(window) {
+        store.dispatch({
+          type: 'BREEZY_HISTORY_CHANGE',
+          url:  parse(url).pathname
+        })
+      }
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
       store.dispatch({type: 'BREEZY_SET_CSRF_TOKEN', csrfToken})
     },

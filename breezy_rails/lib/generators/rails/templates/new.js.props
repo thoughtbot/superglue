@@ -1,0 +1,3 @@
+json.meta do
+  json.index_path <%= plural_table_name %>_path
+end

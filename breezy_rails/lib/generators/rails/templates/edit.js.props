@@ -1,0 +1,11 @@
+<%attributes_list_with_timestamps.each do |attr|%>json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
+<% end %>
+
+json.attributes_for_form do
+  <%attributes_list.select{|attr| attr != :id }.each do |attr|%>json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
+  <% end %>end
+
+json.meta do
+  json.show_path <%=singular_table_name%>_path(@<%=singular_table_name%>)
+  json.index_path <%= plural_table_name %>_path
+end

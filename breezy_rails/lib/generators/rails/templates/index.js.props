@@ -1,0 +1,14 @@
+json.<%= plural_table_name %> do
+  json.array! @<%= plural_table_name %> do |<%= singular_table_name %>|
+    <% attributes_list_with_timestamps.each do |attr| %>json.<%=attr%> <%= singular_table_name %>.<%=attr%>
+    <% end %>json.meta do
+      json.edit_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
+      json.show_path <%=singular_table_name%>_path(<%=singular_table_name%>)
+      json.delete_path <%=singular_table_name%>_path(<%=singular_table_name%>)
+    end
+  end
+end
+
+json.meta do
+  json.new_path new_<%= singular_table_name %>_path
+end

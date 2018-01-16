@@ -63,10 +63,8 @@ copy_file "#{__dir__}/templates/web/application.js", "#{Webpacker.config.source_
 say "Appending js tags to your application.html.erb"
 append_js_tags
 
-say "Installing all breezy dependencies"
-run "yarn add history react react-dom babel-preset-react prop-types --save"
+say "Installing React, Redux, and Breezy"
+run "yarn add react-redux redux react react-dom babel-preset-react prop-types redux-form @jho406/breezy --save"
 run "yarn add babel-plugin-module-resolver --save-dev"
-run "yarn add react-redux redux --save-dev"
-run "yarn add @jho406/breezy"
 
 say "Webpacker now supports breezy.js 🎉", :green

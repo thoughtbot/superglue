@@ -6,7 +6,7 @@ require 'mocha'
 
 class FakeTemplate
   attr_reader :source, :handler
-  def initialize(source, handler = :jbuilder)
+  def initialize(source, handler = :breezy)
     @source, @handler = source, handler
   end
 end

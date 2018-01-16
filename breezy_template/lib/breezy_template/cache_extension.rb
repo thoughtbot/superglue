@@ -117,7 +117,7 @@ class BreezyTemplate
     def _cache_key(key, options={})
       key = _fragment_name_with_digest(key, options)
       key = url_for(key).split('://', 2).last if ::Hash === key
-      key = ::ActiveSupport::Cache.expand_cache_key(key, :jbuilder)
+      key = ::ActiveSupport::Cache.expand_cache_key(key, :breezy)
 
       ::Digest::MD5.hexdigest(key.to_s).tap do |digest|
         _logger.try :debug, "Cache key :#{key} was digested to #{digest}"

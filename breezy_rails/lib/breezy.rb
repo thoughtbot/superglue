@@ -36,6 +36,14 @@ module Breezy
     config.breezy = ActiveSupport::OrderedOptions.new
     config.breezy.auto_include = true
 
+    if Rails::VERSION::MAJOR >= 4
+      generators do |app|
+        Rails::Generators.configure! app.config.generators
+        Rails::Generators.hidden_namespaces.uniq!
+        require 'generators/rails/scaffold_controller_generator'
+      end
+    end
+
     initializer :breezy do |app|
       ActiveSupport.on_load(:action_controller) do
         next if self != ActionController::Base

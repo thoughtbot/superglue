@@ -44,9 +44,12 @@ export function pageToInitialState (url, page) {
 }
 
 export function start ({window, baseUrl='', history, initialPage={}}) {
+  let nav
+  let url
+
   if (window) {
     setWindow(window)
-    const url = window.location.href
+    url = window.location.href
     history.replace(...argsForHistory(url, initialPage))
 
 
@@ -56,7 +59,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
       }
     }
 
-    const nav = class extends React.Component {
+    nav = class extends React.Component {
       render () {
         return (
           <Nav ref={handleRef}
@@ -79,7 +82,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
       if(window) {
         store.dispatch({
           type: 'BREEZY_HISTORY_CHANGE',
-          url:  parse(url).pathname
+          url:  parse(url).href
         })
       }
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})

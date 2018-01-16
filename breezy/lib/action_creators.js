@@ -5,6 +5,7 @@ import {
 import 'cross-fetch'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh} from './window'
+import parse from 'url-parse'
 
 export function saveResponse ({url, page}) {
   return {

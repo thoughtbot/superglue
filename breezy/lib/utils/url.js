@@ -29,13 +29,13 @@ export function withMimeBust (url) {
   }
 }
 
-export function vanityUrl (url) {
+export function vanityPath(url) {
   url = new parse(url, true)
   let query = url.query
   delete query['__']
   delete query['_bz']
   url.query = query
-  return url.toString()
+  return url.pathname
 }
 
 export function withoutHash (url){

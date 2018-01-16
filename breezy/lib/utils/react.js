@@ -6,7 +6,7 @@ import {
   remote,
   remoteInOrder,
 } from '../action_creators'
-import {vanityUrl} from './url'
+import {vanityPath} from './url'
 import PropTypes from 'prop-types'
 
 export class Nav extends React.Component {
@@ -25,7 +25,7 @@ export class Nav extends React.Component {
 
   navigateTo (screen, url, {action} = {action: 'push'}) {
     if (this.history) {
-      const historyArgs = [vanityUrl(url), {
+      const historyArgs = [vanityPath(url), {
         screen,
         url,
         breezy: true
@@ -51,7 +51,7 @@ export class Nav extends React.Component {
     if (store) {
       store.dispatch({
         type: 'BREEZY_HISTORY_CHANGE',
-        url:  parse(location.pathname).pathname
+        url:  parse(location.pathname).href
       })
     }
 
@@ -85,7 +85,6 @@ export function mapStateToProps (state = {page:{}}, ownProps) {
   if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.url && !url) {
     url = ownProps.navigation.state.params.url
   }
-
   const {data} = state.page[url] || {}
   const props = data
   return props || {}

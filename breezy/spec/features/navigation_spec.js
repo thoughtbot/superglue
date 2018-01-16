@@ -65,6 +65,7 @@ describe('navigation', () => {
         },
         history
       })
+
       const {reducer, initialState, Nav} = bz
 
       const store = createStore(
@@ -111,6 +112,8 @@ describe('navigation', () => {
           csrfToken: 'token',
           controlFlows: {
             visit: jasmine.any(String),
+            remote: [],
+            remoteInOrder: []
           },
         },
         page: {

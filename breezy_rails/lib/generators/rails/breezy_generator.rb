@@ -9,6 +9,7 @@ module Rails
       source_root File.expand_path('../templates', __FILE__)
 
       argument :attributes, type: :array, default: [], banner: 'field:type field:type'
+      class_option :platform, type: :string, default: 'web', enum: ['web', 'mobile']
 
       def create_root_folder
         path = File.join('app/views', controller_file_path)
@@ -25,8 +26,7 @@ module Rails
         %w(index show new edit).each do |view|
           @action_name = view
           filename = filename_with_jsx_extensions(view)
-
-          if options[:breezy] == 'mobile'
+          if options[:platform] == 'mobile'
             template 'mobile/' + filename, File.join('app/views', controller_file_path, filename)
           else
             template 'web/' + filename, File.join('app/views', controller_file_path, filename)
@@ -34,7 +34,11 @@ module Rails
         end
 
         js_filename = [plural_table_name, 'form.jsx'].map(&:camelcase).join
-        template 'form.jsx', File.join('app/components', js_filename)
+        if options[:platform] == 'mobile'
+          template 'mobile/form.jsx', File.join('app/components', js_filename)
+        else
+          template 'web/form.jsx', File.join('app/components', js_filename)
+        end
 
         %w(index show new edit).each do |view|
           append_mapping(view)
@@ -45,7 +49,11 @@ module Rails
 
       protected
         def append_mapping(action)
-          app_js = 'app/javascript/packs/application.js'
+          if options[:platform] == 'mobile'
+            app_js = 'App.js'
+          else
+            app_js = 'app/javascript/packs/application.js'
+          end
 
           base_parts = class_path + [file_name]
           destination =  File.join("views", base_parts)

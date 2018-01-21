@@ -103,11 +103,8 @@ export function mapStateToProps (state = {page:{}}, ownProps) {
   return props || {}
 }
 
-export function mapDispatchToProps (dispatch) {
-  const actionCreators = {
-    visit,
-    remote,
-    remoteInOrder,
-  }
-  return bindActionCreators(actionCreators, dispatch)
+export const mapDispatchToProps = {
+  visit,
+  remote,
+  remoteInOrder,
 }

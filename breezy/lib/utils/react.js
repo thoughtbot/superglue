@@ -88,11 +88,16 @@ export class Nav extends React.Component {
 Nav.contextTypes = {store: PropTypes.object}
 
 export function mapStateToProps (state = {page:{}}, ownProps) {
-  let pathQuery = convertToVanity(ownProps.pathQuery)
+  let pathQuery
   // support for react navigation
   if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.pathQuery && !pathQuery) {
     pathQuery = ownProps.navigation.state.params.pathQuery
+  } else {
+    pathQuery = ownProps.pathQuery
   }
+
+  pathQuery = convertToVanity(pathQuery)
+
   const {data} = state.page[pathQuery] || {}
   const props = data
   return props || {}

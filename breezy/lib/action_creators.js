@@ -138,22 +138,34 @@ export function visit (pathQuery, {contentType = null, method = 'GET', body = ''
       const state = getState()
       const prevAssets = state.breezy.assets
       const newAssets = page.assets
-      const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
 
-      const meta = {
-        url: redirectedUrl || fetchUrl, //todo: handle redirects with different origins
-        pathQuery: convertToPathQuery(redirectedUrl || fetchUrl), //todo: handle redirects with different origins
-        page,
-        screen: page.screen,
-        needsRefresh: needsRefresh(prevAssets, newAssets)
-      }
+      const responseUrl = rsp.headers.get('x-response-url')
+      const contentLocation = rsp.headers.get('content-location')
+      const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
 
-      if (controlFlows['visit'] === seqId ) {
-        dispatch(persist({pathQuery: meta.pathQuery, page, dispatch}))
-        return {...meta, canNavigate: true}
+      if (shouldNotPersist) {
+        dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
+        return {
+          canNavigate: false
+        }
       } else {
-        dispatch({type: 'BREEZY_NOOP'})
-        return {...meta, canNavigate: false}
+        const baseUrl = getState().breezy.baseUrl
+        const actual = (responseUrl || contentLocation).replace(baseUrl, '')
+        const meta = {
+          url: actual, //todo: handle redirects with different origins
+          pathQuery: convertToPathQuery(actual), //todo: handle redirects with different origins
+          page,
+          screen: page.screen,
+          needsRefresh: needsRefresh(prevAssets, newAssets)
+        }
+
+        if (controlFlows['visit'] === seqId ) {
+          dispatch(persist({pathQuery: meta.pathQuery, page, dispatch}))
+          return {...meta, canNavigate: true}
+        } else {
+          dispatch({type: 'BREEZY_NOOP'})
+          return {...meta, canNavigate: false}
+        }
       }
     }
 
@@ -170,7 +182,7 @@ function dispatchCompleted (getState, dispatch) {
 
   for (var i = 0, l = inQ.length; i < l; i++) {
     let item = inQ[i]
-    if (item.done) {
+    if (item.done && item.action) {
       dispatch(item.action)
     } else {
       break
@@ -191,11 +203,23 @@ export function remoteInOrder (pathQuery, {contentType = null, method = 'GET', b
       const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
       const realUrl = convertToPathQuery(redirectedUrl || fetchUrl)
       const action = persist({pathQuery: realUrl, page, dispatch})
-      dispatch({
-        type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
-        action,
-        seqId,
-      })
+      const responseUrl = rsp.headers.get('x-response-url')
+      const contentLocation = rsp.headers.get('content-location')
+      const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
+
+      if (shouldNotPersist) {
+        dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
+        dispatch({
+          type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
+          seqId,
+        })
+      } else {
+        dispatch({
+          type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
+          action,
+          seqId,
+        })
+      }
       dispatchCompleted(getState, dispatch)
     }
 
@@ -226,7 +250,15 @@ export function remote (pathQuery, {contentType = null, method = 'GET', body = '
       })
 
       if(hasSeq) {
-        dispatch(action)
+        const responseUrl = rsp.headers.get('x-response-url')
+        const contentLocation = rsp.headers.get('content-location')
+        const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
+
+        if (shouldNotPersist) {
+          dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
+        } else {
+          dispatch(action)
+        }
       }
     }
 

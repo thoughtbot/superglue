@@ -40,6 +40,7 @@ module Breezy
       end
 
       def set_xhr_redirected_to
+        response.headers['X-RESPONSE-URL'] = request.fullpath
         if session && session[:_breezy_redirect_to]
           response.headers['X-XHR-Redirected-To'] = session.delete :_breezy_redirect_to
         end

@@ -65,11 +65,17 @@ export function argsForFetch (getState, {pathQuery, contentType = null, body = '
   const href = new parse(pathQuery, currentState.baseUrl || '', false).href
   const credentials = 'same-origin'
 
+  if (!(method == 'GET' || method == 'HEAD')) {
+    headers['x-http-method-override'] = method
+    method = 'POST'
+  }
+
   const options = {method, headers, body, credentials}
 
   if (method == 'GET' || method == 'HEAD') {
     delete options.body
   }
+
 
   return [formatForXHR(href), options]
 }

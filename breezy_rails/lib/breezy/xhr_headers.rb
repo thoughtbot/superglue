@@ -1,20 +1,9 @@
 module Breezy
-  # Intercepts calls to _compute_redirect_to_location (used by redirect_to) for two purposes.
-  #
-  # 1. Corrects the behavior of redirect_to with the :back option by using the X-XHR-Referer
-  # request header instead of the standard Referer request header.
-  #
-  # 2. Stores the return value (the redirect target url) to persist through to the redirect
-  # request, where it will be used to set the X-XHR-Redirected-To response header.  The
-  # Breezy script will detect the header and use replaceState to reflect the redirected
-  # url.
   module XHRHeaders
     if Rails.version >= '5.0'
       def redirect_back(fallback_location:, **args)
         if referer = request.headers["X-XHR-Referer"]
-          rsp = redirect_to referer, **args
-          store_for_breezy(self.location)
-          rsp
+          redirect_to referer, **args
         else
           super
         end
@@ -24,26 +13,23 @@ module Breezy
     def _compute_redirect_to_location(*args)
       options, request = _normalize_redirect_params(args)
 
-      store_for_breezy begin
+      url = begin
         if options == :back && request.headers["X-XHR-Referer"]
           super(*[(request if args.length == 2), request.headers["X-XHR-Referer"]].compact)
         else
           super(*args)
         end
       end
+
+      if request.xhr? && request.headers["X-BREEZY-REQUEST"]
+        self.status = 200
+        response.headers["X-BREEZY-LOCATION"] = url
+      end
     end
 
     private
-      def store_for_breezy(url)
-        session[:_breezy_redirect_to] = url if session && request.headers["X-XHR-Referer"]
-        url
-      end
-
-      def set_xhr_redirected_to
+      def set_response_url
         response.headers['X-RESPONSE-URL'] = request.fullpath
-        if session && session[:_breezy_redirect_to]
-          response.headers['X-XHR-Redirected-To'] = session.delete :_breezy_redirect_to
-        end
       end
 
       # Ensure backwards compatibility

@@ -116,6 +116,14 @@ export function persist ({pathQuery, page, dispatch}) {
 
 export function fetchWithFlow (fetchArgs, flow, dispatch) {
   return fetch(...fetchArgs)
+    .then((response) => {
+      const location = response.headers.get('x-breezy-location')
+      if (location) {
+        return fetch(location, {...fetchArgs[1], method: 'GET'})
+      } else {
+        return response
+      }
+    })
     .then(parseResponse)
     .then(flow)
     .catch((err) => {

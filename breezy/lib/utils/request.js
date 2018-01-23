@@ -48,7 +48,8 @@ export function argsForFetch (getState, {pathQuery, contentType = null, body = '
   const jsAccept = 'text/javascript, application/x-javascript, application/javascript'
   const headers = {
     'accept': jsAccept,
-    'x-requested-with': 'XMLHttpRequest'
+    'x-requested-with': 'XMLHttpRequest',
+    'x-breezy-request': true
   }
 
   if (currentState.currentUrl) {

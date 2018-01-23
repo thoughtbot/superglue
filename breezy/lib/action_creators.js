@@ -158,7 +158,7 @@ export function visit (pathQuery, {contentType = null, method = 'GET', body = ''
         }
       } else {
         const baseUrl = getState().breezy.baseUrl
-        const actual = (responseUrl || contentLocation).replace(baseUrl, '')
+        const actual = (contentLocation || responseUrl).replace(baseUrl, '')
         const meta = {
           url: actual, //todo: handle redirects with different origins
           pathQuery: convertToPathQuery(actual), //todo: handle redirects with different origins

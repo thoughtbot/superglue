@@ -25,7 +25,12 @@ module Rails
         %w(index show new edit).each do |view|
           @action_name = view
           filename = filename_with_jsx_extensions(view)
-          template filename, File.join('app/views', controller_file_path, filename)
+
+          if options[:breezy] == 'mobile'
+            template 'mobile/' + filename, File.join('app/views', controller_file_path, filename)
+          else
+            template 'web/' + filename, File.join('app/views', controller_file_path, filename)
+          end
         end
 
         js_filename = [plural_table_name, 'form.jsx'].map(&:camelcase).join

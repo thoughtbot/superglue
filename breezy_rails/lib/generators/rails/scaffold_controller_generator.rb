@@ -6,7 +6,7 @@ module Rails
     class ScaffoldControllerGenerator
       source_paths << File.expand_path('../templates', __FILE__)
 
-      hook_for :breezy, type: :boolean, default: true
+      hook_for :breezy, type: :string, default: 'web'
     end
   end
 end

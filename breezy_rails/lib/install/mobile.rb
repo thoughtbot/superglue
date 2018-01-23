@@ -50,5 +50,6 @@ copy_file "#{__dir__}/templates/mobile/package.json", Rails.root.join("package.j
 
 say "Installing all breezy dependencies"
 run "yarn"
+run "yarn add react-native-elements --save"
 
 say "Rails Breezy and ReactNative! 🎉", :green

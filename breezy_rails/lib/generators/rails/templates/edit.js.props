@@ -1,9 +1,16 @@
-<%attributes_list_with_timestamps.each do |attr|%>json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
-<% end %>
+<%- attributes_list_with_timestamps.each do |attr| -%>
+json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
+<%- end -%>
+
+if @<%= singular_table_name %>.errors.any?
+  json.errors @<%= singular_table_name %>.errors.to_h
+end
 
 json.attributes_for_form do
-  <%attributes_list.select{|attr| attr != :id }.each do |attr|%>json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
-  <% end %>end
+<%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+  json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
+<%- end -%>
+end
 
 json.meta do
   json.show_path <%=singular_table_name%>_path(@<%=singular_table_name%>)

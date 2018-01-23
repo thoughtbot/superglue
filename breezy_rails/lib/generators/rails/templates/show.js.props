@@ -1,5 +1,10 @@
-<%attributes_list_with_timestamps.each do |attr|%>json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
-<% end %>
+<%- attributes_list_with_timestamps.each do |attr|-%>
+json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
+<%- end -%>
+
+if notice
+  json.notice notice
+end
 
 json.meta do
   json.index_path <%= plural_table_name %>_path

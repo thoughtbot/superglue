@@ -1,6 +1,5 @@
 require 'breezy/version'
 require 'breezy/xhr_headers'
-require 'breezy/xhr_redirect'
 require 'breezy/xhr_url_for'
 require 'breezy/cookies'
 require 'breezy/x_domain_blocker'
@@ -15,10 +14,10 @@ module Breezy
 
     def self.included(base)
       if base.respond_to?(:before_action)
-        base.before_action :set_xhr_redirected_to, :set_request_method_cookie
+        base.before_action :set_response_url, :set_request_method_cookie
         base.after_action :abort_xdomain_redirect
       else
-        base.before_filter :set_xhr_redirected_to, :set_request_method_cookie
+        base.before_filter :set_response_url, :set_request_method_cookie
         base.after_filter :abort_xdomain_redirect
       end
 
@@ -60,9 +59,6 @@ module Breezy
         end
 
         require 'action_dispatch/routing/redirection'
-        ActionDispatch::Routing::Redirect.class_eval do
-          prepend XHRRedirect
-        end
 
         (ActionView::RoutingUrlFor rescue ActionView::Helpers::UrlHelper).module_eval do
           prepend XHRUrlFor

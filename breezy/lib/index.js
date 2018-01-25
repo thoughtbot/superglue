@@ -44,7 +44,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
   let nav
   let url
 
-  if (window) {
+  if (!!window) {
     setWindow(window)
     url = window.location.href
     history.replace(...argsForHistory(url, initialPage))
@@ -76,7 +76,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
     Nav: nav,
     connect: function (store){
       connect(store)
-      if(window) {
+      if(hasWindow()) {
         store.dispatch({
           type: 'BREEZY_HISTORY_CHANGE',
           url:  parse(url).href

@@ -64,17 +64,19 @@ Make sure you have webpacker installed on your Rails application
 yarn add @jho406/breezy --save
 ```
 
-2. Add the following to your Gemfile and run bundle
+2. Remove Turbolinks from your project. Breezy is actually a fork of Turbolinks/Turbograft, and shares many of the same strategies for page-to-page transitions. Unfortunately, this means it conflicts with Turbolinks at the moment.
+
+3. Add the following to your Gemfile and run bundle
 ```
 gem 'breezy'
 ```
 
-3. Run the installation generator
+4. Run the installation generator
 ```
 rails breezy:install:web
 ```
 
-4. Generate a view
+5. Generate a view
 ```
 rails g breezy:view Post index
 ```

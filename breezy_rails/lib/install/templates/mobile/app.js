@@ -20,7 +20,7 @@ import {View, Text} from 'react-native'
 class ExampleScreen extends React.Component {
   render() {
     return (
-      <View>
+      <View style={{paddingTop: 50}}>
         <Text>Looks like you're up and running!</Text>
         <Text>Next create your rails routes and controllers as usual</Text>
         <Text>Then run the view generators `rails g breezy:view Post index -t mobile`</Text>
@@ -38,20 +38,19 @@ const mapping = {
 }
 
 const navMapping = Object.entries(mapping).reduce((memo, [key, value])=> {
-  return {[key]: {screen: value}}
+  return {[key]: {screen: value}, ...memo}
 }, {})
 
 const {reducer, initialState, connect} = Breezy.start({
   initialPage,
-  baseUrl,
-  history
+  baseUrl
 })
 
 const store = createStore(
-  combineReducers(
+  combineReducers({
     ...reducer,
     form: formReducer
-  ),
+  }),
   initialState,
   applyMiddleware(thunk)
 )
@@ -60,17 +59,19 @@ connect(store)
 store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
 
 // Uncomment below if you need to fetch on the initial screen
-// store.dispatch(visit({url}))
-
+// store.dispatch(visit(initialPath))
+window.store = store
 const Nav = StackNavigator(navMapping, {
   initialRouteName: initialPage.screen,
-  initialRouteParams: {url}
+  initialRouteParams: {pathQuery: initialPath},
+  headerMode: 'none',
 })
 
 export default class extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav url={url}/>
+      <Nav pathQuery={initialPath}/>
     </Provider>
   }
 }
+

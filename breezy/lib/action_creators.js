@@ -118,8 +118,9 @@ export function fetchWithFlow (fetchArgs, flow, dispatch) {
   return fetch(...fetchArgs)
     .then((response) => {
       const location = response.headers.get('x-breezy-location')
+      const nextOpts = {...fetchArgs[1], body: undefined}
       if (location) {
-        return fetch(location, {...fetchArgs[1], method: 'GET'})
+        return fetch(location, {...nextOpts, method: 'GET'})
       } else {
         return response
       }

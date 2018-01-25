@@ -20,7 +20,7 @@ import {View, Text} from 'react-native'
 class ExampleScreen extends React.Component {
   render() {
     return (
-      <View>
+      <View style={{paddingTop: 50}}>
         <Text>Looks like you're up and running!</Text>
         <Text>Next create your rails routes and controllers as usual</Text>
         <Text>Then run the view generators `rails g breezy:view Post index -t mobile`</Text>
@@ -59,7 +59,7 @@ connect(store)
 store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
 
 // Uncomment below if you need to fetch on the initial screen
-store.dispatch(visit(initialPath))
+// store.dispatch(visit(initialPath))
 window.store = store
 const Nav = StackNavigator(navMapping, {
   initialRouteName: initialPage.screen,

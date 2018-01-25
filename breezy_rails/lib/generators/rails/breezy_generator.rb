@@ -36,6 +36,7 @@ module Rails
         js_filename = [plural_table_name, 'form.jsx'].map(&:camelcase).join
         if options[:platform] == 'mobile'
           template 'mobile/form.jsx', File.join('app/components', js_filename)
+          template 'mobile/elements.js', File.join('app/components', 'elements.js')
         else
           template 'web/form.jsx', File.join('app/components', js_filename)
         end

@@ -11,7 +11,14 @@ module Breezy
     def render(*args, &block)
       render_options = args.extract_options!
       breezy = render_options.delete(:breezy)
-      breezy = {} if breezy == true || @_use_breezy_html
+
+      if breezy == true
+        breezy = {}
+      end
+
+      if !breezy && @_use_breezy_html
+        breezy = {}
+      end
 
       if breezy
         view_parts = _prefixes.reverse.push(action_name)[1..-1]

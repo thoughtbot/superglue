@@ -3,6 +3,10 @@ import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import { connect } from 'react-redux'
 
 class <%= plural_table_name.camelize %>Index extends React.Component {
+  static defaultProps = {
+    <%= plural_table_name %>: []
+  }
+
   constructor (props) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
@@ -30,11 +34,12 @@ class <%= plural_table_name.camelize %>Index extends React.Component {
     const <%= singular_table_name %>Items = this.props.<%= plural_table_name %>.map((<%= singular_table_name %>, key) => {
       return (
         <tr key={<%= singular_table_name %>.id}>
-          <% attributes_list.select{|attr| attr != :id }.each do |attr| %><td>{<%=singular_table_name%>.<%=attr%>}</td>
-          <% end %>
-          <td><a onClick={ e => this.handleClick(comment.meta.show_path)}>Show</a></td>
-          <td><a onClick={ e => this.handleClick(comment.meta.edit_path)}>Edit</a></td>
-          <td><a onClick={ e => this.handleClick(comment.meta.delete_path, 'DELETE')}>Delete</a></td>
+          <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+          <td>{<%=singular_table_name%>.<%=attr%>}</td>
+          <%- end -%>
+          <td><a onClick={ e => this.handleClick(<%=singular_table_name%>.meta.show_path)}>Show</a></td>
+          <td><a onClick={ e => this.handleClick(<%=singular_table_name%>.meta.edit_path)}>Edit</a></td>
+          <td><a onClick={ e => this.handleClick(<%=singular_table_name%>.meta.delete_path, 'DELETE')}>Delete</a></td>
         </tr>
       )
     })
@@ -47,8 +52,10 @@ class <%= plural_table_name.camelize %>Index extends React.Component {
 
         <table>
           <thead>
-            <% attributes_list.select{|attr| attr != :id }.each do |attr| %><tr><th><%=attr.capitalize%></th></tr>
-            <% end %><tr>
+            <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+            <tr><th><%=attr.capitalize%></th></tr>
+            <%- end -%>
+            <tr>
               <th colSpan="3"></th>
             </tr>
           </thead>

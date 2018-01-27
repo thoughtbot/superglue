@@ -29,12 +29,12 @@ class <%= plural_table_name.camelize %>Show extends React.Component {
     return (
       <div>
         <p id="notice">{this.props.notice}</p>
-        <% attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| %>
+        <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
         <p>
           <strong><%= attr.capitalize %>:</strong>
           {this.props.<%=attr%>}
         </p>
-        <% end %>
+        <%- end -%>
         <a onClick={ e => this.handleClick(this.props.meta.edit_path)}>Edit</a>
         <a onClick={ e => this.handleClick(this.props.meta.index_path)}>Back</a>
       </div>

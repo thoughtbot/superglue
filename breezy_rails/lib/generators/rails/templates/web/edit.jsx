@@ -1,8 +1,9 @@
 import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
-import { connect } from 'react-redux'
-import { Field, reduxForm, stopSubmit, touch} from 'redux-form'
-import { SubmissionError } from 'redux-form'
+import {delInPage} from '@jho406/breezy/dist/action_creators'
+import {connect} from 'react-redux'
+import {Field, reduxForm, stopSubmit, touch} from 'redux-form'
+import {SubmissionError} from 'redux-form'
 import <%= plural_table_name.camelize %>Form from 'components/<%= plural_table_name.camelize %>Form'
 
 class <%= plural_table_name.camelize %>Edit extends React.Component {
@@ -37,10 +38,17 @@ class <%= plural_table_name.camelize %>Edit extends React.Component {
       contentType: 'application/json'
     }
 
+    this.props.delInPage({pathQuery: this.props.pathQuery, keypath: 'errors'})
     return this.props.visit('/<%= plural_table_name %>/' + this.props.id, options).then((rsp) => {
       // the window needs a full reload when asset fingerprint changes
       if (rsp.needsRefresh) {
         return window.location = rsp.url
+      }
+
+      if (this.props.errors) {
+        throw new SubmissionError({
+          ...this.props.errors
+        })
       }
 
       if (rsp.canNavigate) {
@@ -54,22 +62,13 @@ class <%= plural_table_name.camelize %>Edit extends React.Component {
         // recent visit. Do Nothing.
         return
       }
-
-      if (this.props.errors) {
-        throw new SubmissionError({
-          ...this.props.errors
-        })
-      } else {
-        //handle other errors here
-      }
     }).catch((err) => {
-      if (typeof(err) != SubmissionError) {
-        window.location = err.url
-      } else {
+      if (err.name === 'SubmissionError') {
         throw err
+      } else {
+        window.location = err.url
       }
     })
-
   }
 
   render () {
@@ -78,7 +77,6 @@ class <%= plural_table_name.camelize %>Edit extends React.Component {
         <<%= plural_table_name.camelize %>Form error={this.props.error} onSubmit={this.submit} initialValues={this.props.attributes_for_form}/>
         <a onClick={ e => this.handleClick(this.props.meta.show_path)}>Show</a>
         <a onClick={ e => this.handleClick(this.props.meta.index_path)}>Back</a>
-
       </div>
     )
   }
@@ -86,7 +84,7 @@ class <%= plural_table_name.camelize %>Edit extends React.Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {...mapDispatchToProps, delInPage}
 )(<%= plural_table_name.camelize %>Edit)
 
 

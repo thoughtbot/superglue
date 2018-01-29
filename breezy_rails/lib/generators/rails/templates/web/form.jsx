@@ -16,14 +16,14 @@ const SimpleForm = props => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <% attributes_list.select{|attr| attr != :id }.each do |attr| %>
+      <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
       <label><%=attr.to_s.humanize%></label>
       <Field
         name="<%=attr.to_s.camelize(:lower)%>"
         component={RenderField}
         type="text"
       />
-      <%end%>
+      <%- end -%>
       <button type="submit">
         Submit
       </button>

@@ -27,10 +27,10 @@ const {reducer, initialState, Nav, connect} = Breezy.start({
 })
 
 const store = createStore(
-  combineReducers(
+  combineReducers({
     ...reducer,
     form: formReducer
-  ),
+  }),
   initialState,
   applyMiddleware(thunk)
 )

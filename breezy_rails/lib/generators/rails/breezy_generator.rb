@@ -39,6 +39,7 @@ module Rails
           template 'mobile/elements.js', File.join('app/components', 'elements.js')
         else
           template 'web/form.jsx', File.join('app/components', js_filename)
+          template 'web/base.jsx', File.join('app/components', 'BaseScreen.jsx')
         end
 
         %w(index show new edit).each do |view|

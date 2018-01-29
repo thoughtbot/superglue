@@ -35,11 +35,11 @@ class <%= controller_class_name %>Controller < ApplicationController
       <%- if options[:platform] == 'mobile' -%>
       redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully created.'" %>
       <%- else -%>
-      redirect_to <%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
+      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
       <%- end -%>
     else
       response.set_header("content-location", new_<%= singular_table_name %>_path)
-      render :new
+      render :new, breezy: {screen: '<%= plural_table_name.camelize %>New'}
     end
   end
 
@@ -49,11 +49,11 @@ class <%= controller_class_name %>Controller < ApplicationController
       <%- if options[:platform] == 'mobile' -%>
       redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully updated.'" %>
       <%- else -%>
-      redirect_to <%= singular_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
+      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
       <%- end -%>
     else
       response.set_header("content-location", edit_<%= singular_table_name %>_path(@<%= singular_table_name %>))
-      render :edit
+      render :edit, breezy: {screen: '<%= plural_table_name.camelize %>Edit'}
     end
   end
 

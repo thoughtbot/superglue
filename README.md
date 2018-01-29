@@ -31,7 +31,7 @@ views/
     index.jsx <- your markup goes here
 ```
 
-The idea is to separate your content from your markup. Your content props lives as a queryable tree written using jbuilder syntax that sits on a seperate mimetype. It then gets injected as props into your container component through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
+The idea is to separate your content from your markup. Your content props lives as a queryable tree (akin to JSON pointers) written using jbuilder syntax that sits on a seperate mimetype. It then gets injected as props into your container component through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
 
 ```javascript
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'

@@ -52,7 +52,9 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
 
     function handleRef (ref){
       if (hasWindow()) {
-        setDOMListenersForNav(ref)
+        // todo: disable this for now, i'm not sure how to handle turbolinks style forms
+        // now that we've converted this library to react redux 
+        // setDOMListenersForNav(ref)
       }
     }
 

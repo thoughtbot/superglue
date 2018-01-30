@@ -2,7 +2,6 @@ import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import {delInPage} from '@jho406/breezy/dist/action_creators'
 import {connect} from 'react-redux'
-import {Field, reduxForm, stopSubmit, touch} from 'redux-form'
 import BaseScreen from 'components/BaseScreen'
 import <%= plural_table_name.camelize %>Form from 'components/<%= plural_table_name.camelize %>Form'
 

@@ -98,8 +98,14 @@ describe('Nav', () => {
 
     it('navigates to the page when history changes', (done) => {
       const history = createMemoryHistory({});
-      history.replace('/bar', {breezy: true, screen: 'home', url: '/bar'})
+      history.replace('/bar', {breezy: true, screen: 'home', pathQuery: '/bar'})
       const {dom, target} = createScene('<div></div>')
+      const mockStore = configureMockStore()
+      const store = mockStore({
+        page: {
+          '/bar': {}
+        }
+      })
 
       let mountTimes = 0
 
@@ -121,24 +127,16 @@ describe('Nav', () => {
       }
 
       render(
-        <Nav
-          mapping={{'home': ExampleHome, 'about': ExampleAbout}}
-          initialState={{screen:'home', url: '/bar'}}
-          history={history}
-        />,
+        <Provider store={store}>
+          <Nav
+            mapping={{'home': ExampleHome, 'about': ExampleAbout}}
+            initialState={{screen:'home', url: '/bar'}}
+            history={history}
+            />
+        </Provider>,
         target
       )
       target.getElementsByTagName('button')[0].click()
-    })
-  })
-
-  describe('mapDispatchToProps', ()=>{
-    it('adds a remote prop', () => {
-      let dispatch = jasmine.createSpy('dispatch')
-      let props = mapDispatchToProps(dispatch)
-      props.visit('/foo', {})
-
-      expect(dispatch).toHaveBeenCalledWith(jasmine.any(Function))
     })
   })
 
@@ -154,7 +152,7 @@ describe('Nav', () => {
       }
 
       let props = mapStateToProps(slice, {pathQuery: '/foo'})
-      expect(props).toEqual({heading: 'hi'})
+      expect(props).toEqual({heading: 'hi', pathQuery: '/foo'})
     })
   })
 })

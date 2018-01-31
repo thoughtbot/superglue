@@ -36,7 +36,7 @@ describe('action creators', () => {
     spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
     fetchMock
-      .mock('/foo', {
+      .mock('/foo?__=0', {
         body: `(function() {
           return {
             data: { heading: 'Some heading 2' },
@@ -47,14 +47,15 @@ describe('action creators', () => {
         })();`,
         headers: {
           'content-type': 'application/javascript',
-          'content-disposition': 'inline'
+          'content-disposition': 'inline',
+          'x-response-url': '/foo'
         }
       })
 
 
     const expectedActions = [
       { type: 'BREEZY_BEFORE_VISIT'},
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
       {
         pathQuery: '/foo',
@@ -69,11 +70,12 @@ describe('action creators', () => {
     ]
 
     return store.dispatch(visit('/foo')).then(() => {
-      const requestheaders = fetchMock.lastCall('/foo')[1].headers
+      const requestheaders = fetchMock.lastCall('/foo?__=0')[1].headers
       expect(requestheaders).toEqual({
         accept: "text/javascript, application/x-javascript, application/javascript",
         'x-xhr-referer': '/bar',
         'x-requested-with': "XMLHttpRequest",
+        'x-breezy-request': true,
         'x-csrf-token': 'token'
       })
 
@@ -92,11 +94,11 @@ describe('action creators', () => {
       }
     })
 
-    fetchMock.mock('/foo', {status: 500})
+    fetchMock.mock('/foo?__=0', {status: 500})
 
     const expectedActions = [
       { type: 'BREEZY_BEFORE_VISIT' },
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
       {
         type: 'BREEZY_FETCH_ERROR',
@@ -122,13 +124,13 @@ describe('action creators', () => {
       }
     })
     spyOn(connect, 'getStore').and.returnValue(store)
-    fetchMock.mock('/foo', {status: 200, headers: {
+    fetchMock.mock('/foo?__=0', {status: 200, headers: {
       'content-type': 'text/bad'
     }})
 
     const expectedActions = [
       { type: 'BREEZY_BEFORE_VISIT'},
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
       {
         type: 'BREEZY_FETCH_ERROR',
@@ -157,7 +159,7 @@ describe('action creators', () => {
     spyOn(connect, 'getStore').and.returnValue(store)
 
     fetchMock
-      .mock('/foo', {
+      .mock('/foo?__=0', {
         body: ``,
         headers: {
           'content-type': 'application/javascript',
@@ -167,7 +169,7 @@ describe('action creators', () => {
 
     const expectedActions = [
       { type: 'BREEZY_BEFORE_VISIT' },
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo', jasmine.any(Object)]},
+      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
       {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
     ]
@@ -193,7 +195,7 @@ describe('action creators', () => {
     spyOn(connect, 'getStore').and.returnValue(store)
     spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
     fetchMock
-      .mock('/foo', {
+      .mock('/foo?__=0', {
         body: `(function() {
           var defers=[];
           defers.push({url: '/some_defered_request'})
@@ -207,12 +209,13 @@ describe('action creators', () => {
         })();`,
         headers: {
           'content-type': 'application/javascript',
-          'content-disposition': 'inline'
+          'content-disposition': 'inline',
+          'x-response-url': '/foo'
         }
       })
 
     fetchMock
-      .mock('/some_defered_request', {
+      .mock('/some_defered_request?__=0', {
         body: `(function() {
           var defers=[];
           return {
@@ -225,7 +228,8 @@ describe('action creators', () => {
         })();`,
         headers: {
           'content-type': 'application/javascript',
-          'content-disposition': 'inline'
+          'content-disposition': 'inline',
+          'x-response-url': '/some_defered_request'
         }
       })
 
@@ -263,8 +267,13 @@ describe('action creators', () => {
         const store = mockStore(initialState)
         spyOn(connect, 'getStore').and.returnValue(store)
 
-        fetchMock.mock('/first', delay(500).then(rsp.visitSuccess))
-        fetchMock.mock('/second', delay(2000).then(rsp.visitSuccess))
+        let mockResponse = rsp.visitSuccess()
+        mockResponse.headers['x-response-url'] = '/first'
+        fetchMock.mock('/first?__=0', delay(500).then(() => mockResponse))
+
+        let mockResponse2 = rsp.visitSuccess()
+        mockResponse2.headers['x-response-url'] = '/second'
+        fetchMock.mock('/second?__=0', delay(2000).then(() => mockResponse2))
 
         const spy = spyOn(helpers, 'uuidv4')
         spy.and.returnValue('firstId')
@@ -315,10 +324,10 @@ describe('action creators', () => {
         const expectedActions = [
           { type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', seqId: 'firstId' },
           { type: 'BREEZY_BEFORE_REMOTE_IN_ORDER' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/first', jasmine.any(Object)]},
+          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/first?__=0', jasmine.any(Object)]},
           { type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', seqId: 'secondId' },
           { type: 'BREEZY_BEFORE_REMOTE_IN_ORDER' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/second', jasmine.any(Object)]},
+          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/second?__=0', jasmine.any(Object)]},
           {
             type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
             action:{
@@ -343,12 +352,18 @@ describe('action creators', () => {
           { type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: 2 }
         ]
 
-        fetchMock.mock('/first', delay(500).then(() => {
+        fetchMock.mock('/first?__=0', delay(500).then(() => {
           initialState.breezy.controlFlows.remoteInOrder[0].done = true
           initialState.breezy.controlFlows.remoteInOrder[1].done = true
-          return rsp.visitSuccess
+          let mockResponse = rsp.visitSuccess()
+          mockResponse.headers['x-response-url'] = '/first'
+          return mockResponse
         }))
-        fetchMock.mock('/second', delay(200).then(rsp.visitSuccess))
+        fetchMock.mock('/second?__=0', delay(200).then(() => {
+          let mockResponse = rsp.visitSuccess()
+          mockResponse.headers['x-response-url'] = '/second'
+          return mockResponse
+        }))
 
         const spy = spyOn(helpers, 'uuidv4')
         spy.and.returnValue('firstId')
@@ -376,7 +391,10 @@ describe('action creators', () => {
         spyOn(helpers, 'uuidv4').and.returnValue('nextId')
         spyOn(connect, 'getStore').and.returnValue(store)
 
-        fetchMock.mock('/foo', rsp.visitSuccess)
+        let mockResponse = rsp.visitSuccess()
+        mockResponse.headers['x-response-url'] = '/foo'
+        fetchMock.mock('/foo?__=0', mockResponse)
+
         const expectedActions = [
           { type: 'BREEZY_REMOTE_QUEUE_ITEM', seqId: 'nextId' },
           { type: 'BREEZY_BEFORE_REMOTE'},

@@ -209,12 +209,17 @@ export function remoteInOrder (pathQuery, {contentType = null, method = 'GET', b
 
 
     const flow = ({rsp, page}) => {
-      const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
-      const realUrl = convertToPathQuery(redirectedUrl || fetchUrl)
-      const action = persist({pathQuery: realUrl, page, dispatch})
       const responseUrl = rsp.headers.get('x-response-url')
       const contentLocation = rsp.headers.get('content-location')
       const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
+
+      const baseUrl = getState().breezy.baseUrl
+      const actual = (contentLocation || responseUrl).replace(baseUrl, '')
+      const action = persist({
+        pathQuery: convertToPathQuery(actual),
+        page,
+        dispatch
+      })
 
       if (shouldNotPersist) {
         dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
@@ -250,10 +255,8 @@ export function remote (pathQuery, {contentType = null, method = 'GET', body = '
     const fetchUrl = fetchArgs[0]
 
     const flow = ({rsp, page}) => {
-      const redirectedUrl = rsp.headers.get('x-xhr-redirected-to')
-      const realUrl = convertToPathQuery(redirectedUrl || fetchUrl)
-      const action = persist({pathQuery: realUrl, page, dispatch})
       const inQ = getState().breezy.controlFlows.remote
+
       const hasSeq = !!inQ.find((element) => {
         return element === seqId
       })
@@ -266,7 +269,16 @@ export function remote (pathQuery, {contentType = null, method = 'GET', body = '
         if (shouldNotPersist) {
           dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
         } else {
+          const baseUrl = getState().breezy.baseUrl
+          const actual = (contentLocation || responseUrl).replace(baseUrl, '')
+          const action = persist({pathQuery: convertToPathQuery(actual), page, dispatch})
+          const meta = {
+            url: actual, //todo: handle redirects with different origins
+            pathQuery: convertToPathQuery(actual), //todo: handle redirects with different origins
+            page,
+          }
           dispatch(action)
+          return meta
         }
       }
     }

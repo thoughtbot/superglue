@@ -69,7 +69,7 @@ describe('navigation', () => {
       const {reducer, initialState, Nav} = bz
 
       const store = createStore(
-        reducer,
+        combineReducers(reducer),
         initialState,
         applyMiddleware(thunk)
       )
@@ -102,7 +102,10 @@ describe('navigation', () => {
         </Provider>,
         target
       )
-      fetchMock.mock('/foo', rsp.visitSuccess)
+
+      const mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?__=0', mockResponse)
 
 
       const newState = {
@@ -154,7 +157,7 @@ describe('navigation', () => {
       const {reducer, initialState, Nav} = bz
 
       const store = createStore(
-        reducer,
+        combineReducers(reducer),
         initialState,
         applyMiddleware(thunk)
       )
@@ -187,7 +190,9 @@ describe('navigation', () => {
         target
       )
 
-      fetchMock.mock('/foo?_bz=address', rsp.graftSuccessWithNewZip)
+      const mockResponse = rsp.graftSuccessWithNewZip()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?_bz=address&__=0', mockResponse)
 
       target.getElementsByTagName('button')[0].click()
     })

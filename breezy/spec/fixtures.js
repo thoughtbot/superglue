@@ -10,7 +10,7 @@ export const visitSuccess = () => {
         })();`,
     headers: {
       'content-type': 'application/javascript',
-      'content-disposition': 'inline'
+      'content-disposition': 'inline',
     }
   }
 }

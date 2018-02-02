@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@jho406/breezy": "0.3.2",
     "expo": "^22.0.2",
     "react": "16.0.0-beta.5",
     "react-native": "^0.49.5",

@@ -1003,7 +1003,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"greeting":"hello world"};
-        return ({"data":cache["219dfba9f552f91402a22cf67c633582"],"action":"graft","path":"hit.hit2","joints":joints,"defers":defers});
+        return ({"data":cache["#{cache_keys[0]}"],"action":"graft","path":"hit.hit2","joints":joints,"defers":defers});
       })()
 
 

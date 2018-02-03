@@ -13,6 +13,8 @@ if Rails.version >= '4.1'
               value
             elsif ::BreezyTemplate::DeferVar === value
               value
+            elsif ::BreezyTemplate::Undefined === value
+              value
             else
               original_jsonify(value)
             end

@@ -1156,7 +1156,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var defers=[];
         defers.push({url:'/some_url?_breezy_filter=hit.hit2'});
         return (
-          {"data":{"hit":{"hit2":null}},"joints":joints,"defers":defers}
+          {"data":{"hit":{"hit2":undefined}},"joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1185,7 +1185,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"hit":{"hit2":null}},"joints":joints,"defers":defers}
+          {"data":{"hit":{"hit2":undefined}},"joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1219,7 +1219,7 @@ class BreezyTemplateTest < ActionView::TestCase
         defers.push({url:'/some_url?_breezy_filter=hit.hit2.id%3D1.greeting'});
         defers.push({url:'/some_url?_breezy_filter=hit.hit2.id%3D2.greeting'});
         return (
-          {"data":{"hit":{"hit2":[{"greeting":null},{"greeting":null}]}},"joints":joints,"defers":defers}
+          {"data":{"hit":{"hit2":[{"greeting":undefined},{"greeting":undefined}]}},"joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1283,7 +1283,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         defers.push({url:'?_breezy_filter=hello.content'});
-        return ({"data":{"content":null},"action":"graft","path":"hello","joints":joints,"defers":defers});
+        return ({"data":{"content":undefined},"action":"graft","path":"hello","joints":joints,"defers":defers});
       })()
     JS
 

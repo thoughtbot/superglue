@@ -1,6 +1,24 @@
 require 'breezy_template/breezy_template'
 
 class BreezyTemplate
+  class Undefined
+    def initialize
+      @value = "undefined"
+    end
+
+    def to_json(*)
+      @value
+    end
+
+    def as_json(*)
+      self
+    end
+
+    def encode_json(*)
+      @value
+    end
+  end
+
   module DefermentExtension
     ACTIVE_MODES = [:auto, :manual].freeze
 
@@ -10,7 +28,7 @@ class BreezyTemplate
         if _deferment_auto?(options)
           @js.push(_breezy_visit_current(@path))
         end
-        return _set_value key, nil
+        return _set_value key, Undefined.new
       else
         super
       end

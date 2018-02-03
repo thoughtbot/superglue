@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = 'breezy_template'
-  s.version  = '0.3.0'
+  s.version  = '0.4.0'
   s.author   = 'Johny Ho'
   s.email    = 'jho406@gmail.com'
   s.license  = 'MIT'

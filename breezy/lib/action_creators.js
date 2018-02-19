@@ -136,21 +136,46 @@ export function fetchWithFlow (fetchArgs, flow, dispatch) {
     })
 }
 
+export function visit () {
+  const controlFlows = getState().breezy.controlFlows
+  const seqId = uuidv4()
+
+  dispatch({type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId})
+
+  return remote(...arguments).then((meta) => {
+    const responseUrl = rsp.headers.get('x-response-url')
+    const contentLocation = rsp.headers.get('content-location')
+    const shouldNotPersist = (method !== 'GET' && !contentLocation && !responseUrl)
+
+    if (shouldNotPersist) {
+      return {...meta, canNavigate: false}
+    }
+
+    if (controlFlows['visit'] === seqId ) {
+      return {...meta, canNavigate: true}
+    } else {
+      dispatch({type: 'BREEZY_NOOP'})
+      return {...meta, canNavigate: false}
+    }
+  })
+}
+
 export function visit (pathQuery, {contentType = null, method = 'GET', body = ''} = {}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {pathQuery, contentType, body, method})
     const seqId = uuidv4()
     const fetchUrl = fetchArgs[0]
 
+    const controlFlows = getState().breezy.controlFlows
+    const state = getState()
+
     const flow = ({rsp, page}) => {
-      const controlFlows = getState().breezy.controlFlows
-      const state = getState()
       const prevAssets = state.breezy.assets
       const newAssets = page.assets
 
       const responseUrl = rsp.headers.get('x-response-url')
       const contentLocation = rsp.headers.get('content-location')
-      const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
+      const shouldNotPersist = (method !== 'GET' && !contentLocation && !responseUrl)
 
       if (shouldNotPersist) {
         dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
@@ -159,7 +184,12 @@ export function visit (pathQuery, {contentType = null, method = 'GET', body = ''
         }
       } else {
         const baseUrl = getState().breezy.baseUrl
-        const actual = (contentLocation || responseUrl).replace(baseUrl, '')
+        let actual = pathQuery
+
+        if (method !== 'GET') {
+          actual = (contentLocation || responseUrl).replace(baseUrl, '')
+        }
+
         const meta = {
           url: actual, //todo: handle redirects with different origins
           pathQuery: convertToPathQuery(actual), //todo: handle redirects with different origins
@@ -201,92 +231,29 @@ function dispatchCompleted (getState, dispatch) {
   dispatch({type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: i})
 }
 
-export function remoteInOrder (pathQuery, {contentType = null, method = 'GET', body = ''} = {}) {
+
+export function remote (pathQuery, {pageKey = null, contentType = null, method = 'GET', body = ''} = {}) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, {pathQuery, contentType, body, method})
-    const seqId = uuidv4()
     const fetchUrl = fetchArgs[0]
 
-
     const flow = ({rsp, page}) => {
-      const responseUrl = rsp.headers.get('x-response-url')
-      const contentLocation = rsp.headers.get('content-location')
-      const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
+      const prevAssets = state.breezy.assets
+      const newAssets = page.assets
 
       const baseUrl = getState().breezy.baseUrl
-      const actual = (contentLocation || responseUrl).replace(baseUrl, '')
-      const action = persist({
-        pathQuery: convertToPathQuery(actual),
+      const actual = (pageKey).replace(baseUrl, '')
+      const action = persist({pathQuery: pageKey, page, dispatch})
+      const meta = {
+        pageKey,
         page,
-        dispatch
-      })
-
-      if (shouldNotPersist) {
-        dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
-        dispatch({
-          type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
-          seqId,
-        })
-      } else {
-        dispatch({
-          type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
-          action,
-          seqId,
-        })
+        screen: page.screen,
+        rsp,
+        needsRefresh: needsRefresh(prevAssets, newAssets)
       }
-      dispatchCompleted(getState, dispatch)
+      dispatch(action)
+      return meta
     }
-
-    dispatch({
-      type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM',
-      seqId
-    })
-
-    dispatch({type: 'BREEZY_BEFORE_REMOTE_IN_ORDER'})
-    dispatch(beforeFetch({fetchArgs}))
-    return fetchWithFlow(fetchArgs, flow, dispatch)
-  }
-}
-
-export function remote (pathQuery, {contentType = null, method = 'GET', body = ''} = {}) {
-  return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, {pathQuery, contentType, body, method})
-    const seqId = uuidv4()
-    const fetchUrl = fetchArgs[0]
-
-    const flow = ({rsp, page}) => {
-      const inQ = getState().breezy.controlFlows.remote
-
-      const hasSeq = !!inQ.find((element) => {
-        return element === seqId
-      })
-
-      if(hasSeq) {
-        const responseUrl = rsp.headers.get('x-response-url')
-        const contentLocation = rsp.headers.get('content-location')
-        const shouldNotPersist = (method != 'GET' && !contentLocation && !responseUrl)
-
-        if (shouldNotPersist) {
-          dispatch({type: 'BREEZY_NOOP', fetchArgs, message: 'Response was successful but was not a GET with content-location or x-response-url'})
-        } else {
-          const baseUrl = getState().breezy.baseUrl
-          const actual = (contentLocation || responseUrl).replace(baseUrl, '')
-          const action = persist({pathQuery: convertToPathQuery(actual), page, dispatch})
-          const meta = {
-            url: actual, //todo: handle redirects with different origins
-            pathQuery: convertToPathQuery(actual), //todo: handle redirects with different origins
-            page,
-          }
-          dispatch(action)
-          return meta
-        }
-      }
-    }
-
-    dispatch({
-      type: 'BREEZY_REMOTE_QUEUE_ITEM',
-      seqId
-    })
 
     dispatch({type: 'BREEZY_BEFORE_REMOTE'})
     dispatch(beforeFetch({fetchArgs}))

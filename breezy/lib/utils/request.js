@@ -42,11 +42,12 @@ export function handleServerErrors (args){
   return args
 }
 
-export function argsForFetch (getState, {pathQuery, contentType = null, body = '', method = 'GET'}) {
+export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, body}) {
   const currentState = getState().breezy || {}
 
   const jsAccept = 'text/javascript, application/x-javascript, application/javascript'
-  const headers = {
+  headers = {
+    ...headers,
     'accept': jsAccept,
     'x-requested-with': 'XMLHttpRequest',
     'x-breezy-request': true
@@ -56,13 +57,10 @@ export function argsForFetch (getState, {pathQuery, contentType = null, body = '
     headers['x-xhr-referer'] = currentState.currentUrl
   }
 
-  if (contentType) {
-    headers['content-type'] = contentType
-  }
-
   if (currentState.csrfToken) {
     headers['x-csrf-token'] = currentState.csrfToken
   }
+
   const href = new parse(pathQuery, currentState.baseUrl || '', false).href
   const credentials = 'same-origin'
 
@@ -76,7 +74,6 @@ export function argsForFetch (getState, {pathQuery, contentType = null, body = '
   if (method == 'GET' || method == 'HEAD') {
     delete options.body
   }
-
 
   return [formatForXHR(href), options]
 }

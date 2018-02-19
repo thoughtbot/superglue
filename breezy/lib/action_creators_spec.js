@@ -219,7 +219,7 @@ describe('action creators', () => {
         body: `(function() {
           var defers=[];
           return {
-            data: { heading: 'Seconds heading baz' },
+            data: { heading: 'defered response heading' },
             title: 'title 2',
             csrf_token: 'token',
             assets: ['application-123.js', 'application-123.js'],
@@ -238,9 +238,9 @@ describe('action creators', () => {
       const state = store.getState()
       const actions = store.getActions()
       const lastAction = actions[actions.length - 1]
-      const {type, pathQuery} = lastAction;
+      const {type, pathQuery, page} = lastAction;
 
-      if(type === 'BREEZY_SAVE_RESPONSE' && pathQuery === '/some_defered_request') {
+      if(type === 'BREEZY_SAVE_RESPONSE' && page.data.heading === 'defered response heading') {
         done()
       }
     })
@@ -254,7 +254,7 @@ describe('action creators', () => {
     })
 
     describe('visit', () => {
-      it('will only allow one visit at a time, nooping any earlier requests', (done) => {
+      it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
         const initialState = {
           breezy: {
             assets:[],
@@ -277,7 +277,9 @@ describe('action creators', () => {
 
         const spy = spyOn(helpers, 'uuidv4')
         spy.and.returnValue('firstId')
-        store.dispatch(visit('/first'))
+        store.dispatch(visit('/first')).then((meta)=>{
+          expect(meta.canNavigate).toEqual(false)
+        })
 
         spy.and.returnValue('secondId')
         initialState.breezy.controlFlows.visit = 'secondId'
@@ -289,6 +291,10 @@ describe('action creators', () => {
           { type: 'BREEZY_BEFORE_VISIT' },
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
+          { type: 'BREEZY_SAVE_RESPONSE',
+            pathQuery: '/first',
+            page: jasmine.any(Object)
+          },
           { type: 'BREEZY_NOOP' },
           { type: 'BREEZY_SAVE_RESPONSE',
             pathQuery: '/second',
@@ -296,86 +302,14 @@ describe('action creators', () => {
           }
         ]
 
-        store.dispatch(visit('/second')).then(() => {
+        store.dispatch(visit('/second')).then((meta) => {
+          expect(meta.canNavigate).toEqual(true)
           expect(store.getActions()).toEqual(expectedActions)
           done()
         })
       })
     })
 
-
-    describe('remoteInOrder', () => {
-      it('will fire everything but resolve in the order of call', (done) => {
-        const initialState = {
-          breezy: {
-            assets:[],
-            controlFlows: {
-              remoteInOrder: [
-                {seqId: 'firstId', done: false, action: {type: 'BREEZY_SAVE_RESPONSE'}},
-                {seqId: 'secondId', done: false, action: {type: 'BREEZY_SAVE_RESPONSE'}}
-              ]
-            }
-          }
-        }
-
-        const store = mockStore(initialState)
-        spyOn(connect, 'getStore').and.returnValue(store)
-
-        const expectedActions = [
-          { type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', seqId: 'firstId' },
-          { type: 'BREEZY_BEFORE_REMOTE_IN_ORDER' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/first?__=0', jasmine.any(Object)]},
-          { type: 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM', seqId: 'secondId' },
-          { type: 'BREEZY_BEFORE_REMOTE_IN_ORDER' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: ['/second?__=0', jasmine.any(Object)]},
-          {
-            type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
-            action:{
-              type: 'BREEZY_SAVE_RESPONSE',
-              pathQuery: '/second',
-              page: jasmine.any(Object)
-            },
-            seqId: 'secondId'
-          },
-          { type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: 0 },
-          {
-            type: 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM',
-            action: {
-              type: 'BREEZY_SAVE_RESPONSE',
-              pathQuery: '/first',
-              page: jasmine.any(Object)
-            },
-            seqId: 'firstId'
-          },
-          { type: 'BREEZY_SAVE_RESPONSE' },
-          { type: 'BREEZY_SAVE_RESPONSE' },
-          { type: 'BREEZY_REMOTE_IN_ORDER_DRAIN', index: 2 }
-        ]
-
-        fetchMock.mock('/first?__=0', delay(500).then(() => {
-          initialState.breezy.controlFlows.remoteInOrder[0].done = true
-          initialState.breezy.controlFlows.remoteInOrder[1].done = true
-          let mockResponse = rsp.visitSuccess()
-          mockResponse.headers['x-response-url'] = '/first'
-          return mockResponse
-        }))
-        fetchMock.mock('/second?__=0', delay(200).then(() => {
-          let mockResponse = rsp.visitSuccess()
-          mockResponse.headers['x-response-url'] = '/second'
-          return mockResponse
-        }))
-
-        const spy = spyOn(helpers, 'uuidv4')
-        spy.and.returnValue('firstId')
-        store.dispatch(remoteInOrder('/first')).then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-          done()
-        })
-
-        spy.and.returnValue('secondId')
-        store.dispatch(remoteInOrder('/second'))
-      })
-    })
 
     describe('remote', () => {
       it('will fire and resolve', (done) => {
@@ -396,7 +330,6 @@ describe('action creators', () => {
         fetchMock.mock('/foo?__=0', mockResponse)
 
         const expectedActions = [
-          { type: 'BREEZY_REMOTE_QUEUE_ITEM', seqId: 'nextId' },
           { type: 'BREEZY_BEFORE_REMOTE'},
           { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
           {
@@ -405,7 +338,7 @@ describe('action creators', () => {
             page: jasmine.any(Object)
           }
         ]
-        const req = store.dispatch(remote('/foo'))
+        const req = store.dispatch(remote('/foo', {}, '/foo'))
         req.then(() => {
           expect(store.getActions()).toEqual(expectedActions)
           done()

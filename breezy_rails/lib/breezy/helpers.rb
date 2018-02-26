@@ -22,7 +22,7 @@ module Breezy
     end
 
     def breezy_filter
-      request.params[:_breezy_filter] || (session && session[:breezy_filter])
+      request.params[:_bz] || (session && session[:breezy_filter])
     end
   end
 end

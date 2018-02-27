@@ -6,6 +6,7 @@ import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
 import {pathQuery as convertToPathQuery} from './utils/url'
+import {persist} from './action_creators'
 
 export {mapStateToProps, mapDispatchToProps} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
@@ -84,6 +85,13 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
           url:  parse(url).href
         })
       }
+
+      store.dispatch(persist({
+        pathQuery: convertToPathQuery(url),
+        page: initialPage,
+        dispatch: store.dispatch,
+      }))
+
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
       store.dispatch({type: 'BREEZY_SET_CSRF_TOKEN', csrfToken})
     },

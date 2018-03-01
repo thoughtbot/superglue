@@ -1,16 +1,17 @@
 # Breezy
 
-Frontend work in React and Redux doesn't need to be tedious. Breezy returns to the productivity and happiness of vanilla Rails and combines it with all the goodness of React and Redux.
+Frontend work in React and Redux doesn't need to be tedious. Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React and Redux Application.
 
-Breezy saves you time by shipping with an opinionated state shape for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that doesn't require you to build any APIs.
+Breezy saves you time by shipping with an opinionated state shape for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
 
 ## Features
-1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React. Its like replacing ERB with JSX.
-2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes/controllers/serializers/tests for your API? With Breezy, you don't need to!
-2. **Less Javascript.** Go ahead and use your `link_to` helpers. Use your i18n helpers!
-3. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
-4. **Use Rails routing.** You don't need a javascript router.
-5. **Want to build React-native using the same Rails workflow?** We're working on it!
+1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React and Redux.
+2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes/controllers/serializers/tests for your REST-ful API? With Breezy, [you don't need to!](#how_does_it_work?)
+3. **All your resources in a single request** Classic multi-page applications already achieves this. Breezy just enhances your vanilla Rails workflow to make it work for React and Redux. You do not need GraphQL.
+4. **Less Javascript.** Go ahead and use your `link_to` helpers. Use your i18n helpers!
+5. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
+6. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
+7. **Want to build React-native using the same Rails workflow?** We're working on it!
 
 ## How does it work?
 
@@ -44,15 +45,13 @@ export default connect(
 
 Then use one of the provided thunks for SPA functionality. For example, to selectively reload parts of your page:
 ```javascript
-import {remote} from '@jho406/breezy/dist/action_creators'
+import {visit} from '@jho406/breezy/dist/action_creators'
 
-
-store.dispatch(remote('?_bz=header.shopping_cart'))
+store.dispatch(visit('?_bz=header.shopping_cart'))
 ```
 The above will query for a node from `index.js.props`, and update the equivalent keypath in your store.
 
 By sitting on a different mimetype, there are no additional API routes that we have to add to our `routes.rb` beyond the client facing ones. And since the relationship between content and markup is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
-
 
 ## Installation
 
@@ -76,13 +75,18 @@ gem 'breezy'
 rails breezy:install:web
 ```
 
-5. Generate a view
+5. Generate a scaffold
+```
+rails generate scaffold post body:string --force --no-template-engine --breezy
+```
+
+6. Or a view
 ```
 rails g breezy:view Post index
 ```
 
 ### Configuration
-The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare bones Nav component.
+The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare bones `Nav` component.
 
 The relevant parts to configuring Breezy is as follows:
 
@@ -123,6 +127,100 @@ class App extends React.Component {
     </Provider>
   }
 }
+```
+
+## Built-in Thunks
+Breezy comes with just 2 then-able thunks that should fulfill 90% of your needs.
+
+### API
+
+#### visit
+Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.
+
+```javascript
+visit(pathQuery).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+
+visit(pathQuery, {...fetchRequestOptions}).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+
+visit(pathQuery, {...fetchRequestOptions}, optionalPageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+
+visit(pathQuery, {...fetchRequestOptions}, optionalPageKey).catch(({message, fetchArgs, url, pathQuery}) => {})
+
+```
+
+##### arguments
+**pathQuery**
+The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
+
+**fetchRequestOptions**
+Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
+
+**optionalPageKey**
+The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
+
+##### callback arguments
+
+**canNavigate**
+There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback.
+
+**needsRefresh**
+If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true.
+
+**screen**
+The screen that your react application should render next.
+
+**page**
+The full parsed page response from your `foobar.js.props` template.
+
+**rsp**
+The raw response object
+
+##### catchable arguments
+The usual error object with a few additional attributes:
+
+**fetchArgs**
+The arguments passed to `fetch`.
+
+**url**
+The url passed to `fetch`.
+
+
+
+This thunk is normally used for page to page transitions.
+
+#### remote
+Makes an ajax call to a page, and sets the response to the `pages` store. Use `remote` when you want to request pages or parts of pages in a classic async fashion.
+
+```javascript
+remote(pathQuery).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+
+remote(pathQuery, {...fetchRequestOptions}).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+
+remote(pathQuery, {...fetchRequestOptions}, requiredPageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+
+remote(pathQuery, {...fetchRequestOptions}, requiredPageKey).catch(({message, fetchArgs, url, pathQuery}) => {})
+
+```
+
+Shares the same arguments as visit with a few key differences:
+
+1. You must explicitly provide it with a `requiredPageKey`. This is to prevent async requests from saving into the wrong state. Use this with the included `mapStateToProps`, which will provide you a `this.props.pathQuery` to use as the page key. For example:
+
+```
+this.props.remote(url.toString(), {}, this.props.pathQuery)
+```
+
+2. `canNavigate` is not available as an argument to your callback.
+
+### Filtering nodes
+Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then graft that node back onto its tree on the client side.
+
+Breezy's thunks will take care of most of the work for you:
+
+For example:
+
+```javascript
+store.dispatch(visit('?_bz=header.shopping_cart'))
 ```
 
 ## The Breezy store shape
@@ -181,7 +279,7 @@ If you want finer control, or want to perform optimistic updates, breezy provide
 ## Immutability Helpers
 
 ### API
-Breezy includes immutability helpers inspired by (Scour.js)[https://github.com/rstacruz/scour] out of the box. You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
+Breezy includes immutability helpers inspired by [Scour.js](https://github.com/rstacruz/scour) out of the box. You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
 
 ```
 '/posts': {
@@ -212,7 +310,7 @@ or use Breezy's lookahead syntax
 'posts.post_id=1.comment.0.body'
 ```
 
-The above would find the first occurance where post_id=1 before continuing traversing.
+The above would find the first occurance where `post_id=1` before continuing traversing.
 
 #### setInJoint
 ```javascript
@@ -258,7 +356,6 @@ this.props.extendInJoint({
 })
 
 ```
-
 
 #### setInPage
 ```javascript
@@ -338,7 +435,6 @@ json.post options do
 end
 ```
 
-
 #### Partials
 Partials are supported. The following will render the file views/posts/_blog_posts.js.props, and set a local variable `foo` assigned with @post, which you can use inside the partial.
 
@@ -370,7 +466,7 @@ json.array! @posts, partial: ["blog_post", as: :blog_post]
 ```
 
 #### Partial Joints
-Breezy does not denormalize your store, instead it relies on your partial metadata to make it easy to update cross cutting concerns like a header. To enable this behavior, we use the `joint` option.
+Breezy does not denormalize your store, instead it relies on your partial metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `joint` option.
 
 For example, to update all your headers across all pages like so:
 
@@ -409,7 +505,6 @@ When using joints with Arrays, the argument **MUST** be a lamda:
 ```ruby
 json.array! ['foo', 'bar'], partial: ["footer", joint: ->(x){"somefoo_#{x}"}]
 ```
-
 
 #### Caching
 
@@ -455,10 +550,8 @@ json.array! @options, opts
 
 ```
 
-
 #### Deferment
 You can defer rendering of expensive content using the `defer: :auto` option. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with a `null` as a standin, and append a meta data to the response. When the client recieves the payload, breezy will use the meta data to issue an `remote` dispatch to fetch the missing node and graft it at the appropriate keypath on the client side.
-
 
 Usage:
 ```ruby
@@ -576,7 +669,6 @@ end
 
 has to become this:
 
-
 ```ruby
 json.comments do
   json.array! comments do |item|
@@ -584,7 +676,6 @@ json.comments do
   end
 end
 ```
-
 
 4. `json.array!` first args are options. So this
 
@@ -603,7 +694,6 @@ json.comments do
 end
 ```
 
-
 5. You can't pass JBuilder objects as values. The following will error out.
 
 ```ruby
@@ -612,82 +702,9 @@ to_nest = Jbuilder.new{ |json| json.nested_value 'Nested Test' }
 json.set! :nested, to_nest
 ```
 
-
-## Thunks
-### API
-
-#### visit
-
-```javascript
-visit(url, {contentType = null, method = 'GET', body = ''})
-```
-
-Makes an ajax call to a page, and sets the response to the pages store.
-
-There can only be one visit anytime, subsequent calls to visit would turn any visits in already progress into a noop.
-
-This thunk is normally used for page to page transitions.
-
-#### remote
-```javascript
-remote(url, {contentType = null, method = 'GET', body = ''}
-```
-
-Makes an ajax call to a page, and sets the response to the pages store.
-
-This is like a normal ajax request. `remote` will fire off and process responses without any flow control.
-
-#### remoteInOrder
-```javascript
-remoteInOrder(url {contentType = null, method = 'GET', body = ''})
-```
-
-Mostly the same as [remote](#remote), the difference is that responses are put in a queue and evaluated in the order of when `remoteInOrder` was dispatched.
-
-### Filtering nodes
-Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then graft that node back onto its tree on the client side.
-
-Breezy's thunks will take care of most of the work for you:
-
-For example:
-
-```javascript
-store.dispatch(remote('?_bz=header.shopping_cart'))
-```
-
-### Data-attributes API
-Breezy started out as a fork of Turbolinks/Turbograft and still retains a DOM attribute API for convienence. If you don't need optimistic updates, and are happy with Turbolinks like behavior, then this is for you.
-
-#### data-bz-dispatch
-Use one of the thunks provided by breezy
-
-```html
-<a href='/posts?_bz=path.to.node' data-bz-dispatch='visit'></a>
-
-or
-
-<a href='/posts?_bz=path.to.node' data-bz-dispatch='remote'></a>
-
-or
-
-<a href='/posts?_bz=path.to.node' data-bz-dispatch='remote-in-order'></a>
-
-```
-
-Also works with forms
-
-```html
-<form data-bz-dispatch=visit method='post'>
-</form>
-```
-
-#### data-bz-method
-Sets the request verb for the thunk
-
-```html
-<a href='/posts?_bz=path.to.node' data-bz-dispatch='visit' data-bz-method='POST'></a>
-```
-
-
 ## Tutorial
 Soon!
+
+## Todo
+webpacker asset hash
+add support for namespaced screens

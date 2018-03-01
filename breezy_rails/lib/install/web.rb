@@ -67,4 +67,7 @@ say "Installing React, Redux, and Breezy"
 run "yarn add react-redux redux react react-dom babel-preset-react prop-types redux-form @jho406/breezy@0.3.2 --save"
 run "yarn add babel-plugin-module-resolver --save-dev"
 
+say "Updating webpack paths to include .jsx file extension"
+insert_into_file Webpacker.config.config_path, "    - .jsx\n", after: /extensions:\n/
+
 say "Webpacker now supports breezy.js 🎉", :green

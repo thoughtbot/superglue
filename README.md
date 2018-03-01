@@ -148,45 +148,28 @@ visit(pathQuery, {...fetchRequestOptions}, optionalPageKey).catch(({message, fet
 
 ```
 
-##### arguments
-**pathQuery**
-The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
+arguments | |
+--- | ---
+pathQuery| The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
+fetchRequestOptions | Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
+optionalPageKey | The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
 
-**fetchRequestOptions**
-Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
-
-**optionalPageKey**
-The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
-
-##### callback arguments
-
-**canNavigate**
-There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback.
-
-**needsRefresh**
-If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true.
-
-**screen**
-The screen that your react application should render next.
-
-**page**
-The full parsed page response from your `foobar.js.props` template.
-
-**rsp**
-The raw response object
-
-##### catchable arguments
-The usual error object with a few additional attributes:
-
-**fetchArgs**
-The arguments passed to `fetch`.
-
-**url**
-The url passed to `fetch`.
+callback arguments| |
+--- | ---
+canNavigate | There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback.
+needsRefresh | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true.
+screen | The screen that your react application should render next.
+page | The full parsed page response from your `foobar.js.props` template.
+rsp | The raw response object
 
 
+catchable arguments*| |
+--- | ---
+fetchArgs | The arguments passed to `fetch`.
+url | The url passed to `fetch`.
 
-This thunk is normally used for page to page transitions.
+*The usual error object with a few additional attributes.
+
 
 #### remote
 Makes an ajax call to a page, and sets the response to the `pages` store. Use `remote` when you want to request pages or parts of pages in a classic async fashion.
@@ -202,9 +185,9 @@ remote(pathQuery, {...fetchRequestOptions}, requiredPageKey).catch(({message, fe
 
 ```
 
-Shares the same arguments as visit with a few key differences:
+Shares the same arguments as `visit` with a few key differences:
 
-1. You must explicitly provide it with a `requiredPageKey`. This is to prevent async requests from saving into the wrong state. Use this with the included `mapStateToProps`, which will provide you a `this.props.pathQuery` to use as the page key. For example:
+1. You must explicitly provide it with a `requiredPageKey`. This is to prevent async requests from saving into the wrong state. Use with the included `mapStateToProps`, which provides a `this.props.pathQuery` to use as the page key. For example:
 
 ```
 this.props.remote(url.toString(), {}, this.props.pathQuery)

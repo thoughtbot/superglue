@@ -198,5 +198,5 @@ export function breezyReducer (state = {}, action) {
 
 export const rootReducer = {
   breezy: breezyReducer,
-  page: pageReducer
+  pages: pageReducer
 }

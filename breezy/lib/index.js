@@ -37,7 +37,7 @@ export function argsForNavInitialState (url, page) {
 
 export function pageToInitialState (url, page) {
   return {
-    page: {[convertToPathQuery(url)]: page}
+    pages: {[convertToPathQuery(url)]: page}
   }
 }
 
@@ -79,6 +79,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
     Nav: nav,
     connect: function (store){
       connect(store)
+
       if(hasWindow()) {
         store.dispatch({
           type: 'BREEZY_HISTORY_CHANGE',

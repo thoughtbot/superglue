@@ -115,12 +115,18 @@ describe('navigation', () => {
           csrfToken: 'token',
           controlFlows: {
             visit: jasmine.any(String),
-            remote: [],
-            remoteInOrder: []
           },
         },
-        page: {
-          '/bar': {data:{heading: 'this is page 1'}, screen: 'home'},
+        pages: {
+          '/bar': {
+            data: { heading: 'this is page 1' },
+            screen: 'home',
+            cachedAt: jasmine.any(Number),
+            positionY: jasmine.any(Number),
+            positionX: jasmine.any(Number),
+            pathQuery: '/bar',
+            joints: {}
+          },
           '/foo':{
             data: { heading: 'Some heading 2' },
             title: 'title 2',
@@ -171,7 +177,7 @@ describe('navigation', () => {
 
         componentDidUpdate() {
           const state = getStore().getState()
-          expect(state.page['/foo'].data.address).toEqual({zip: 91210})
+          expect(state.pages['/foo'].data.address).toEqual({zip: 91210})
           stop()
           done()
         }

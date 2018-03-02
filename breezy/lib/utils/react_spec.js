@@ -102,7 +102,7 @@ describe('Nav', () => {
       const {dom, target} = createScene('<div></div>')
       const mockStore = configureMockStore()
       const store = mockStore({
-        page: {
+        pages: {
           '/bar': {}
         }
       })
@@ -144,7 +144,7 @@ describe('Nav', () => {
     it('returns the state of the url', () => {
       let dispatch = jasmine.createSpy('dispatch')
       let slice = {
-        page:{
+        pages:{
           '/foo': {
             data: {heading: 'hi'}
           }

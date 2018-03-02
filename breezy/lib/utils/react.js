@@ -58,7 +58,7 @@ export class Nav extends React.Component {
 
     if (action === 'POP') {
       const {screen, pathQuery} = location.state
-      const wasNotRefreshed = !!store.getState().page[pathQuery]
+      const wasNotRefreshed = !!store.getState().pages[pathQuery]
 
       if(location.state && location.state.breezy && wasNotRefreshed) {
         this.setState({screen, pathQuery})
@@ -87,7 +87,7 @@ export class Nav extends React.Component {
 
 Nav.contextTypes = {store: PropTypes.object}
 
-export function mapStateToProps (state = {page:{}}, ownProps) {
+export function mapStateToProps (state = {pages:{}}, ownProps) {
   let pathQuery
   // support for react navigation
   let params
@@ -101,7 +101,7 @@ export function mapStateToProps (state = {page:{}}, ownProps) {
 
   pathQuery = convertToVanity(pathQuery)
 
-  const {data} = state.page[pathQuery] || {data:{}}
+  const {data} = state.pages[pathQuery] || {data:{}}
   return {...data, ...params, pathQuery}
 }
 

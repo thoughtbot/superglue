@@ -178,46 +178,11 @@ export function metaReducer (state = {}, action) {
 }
 
 export function controlFlowReducer (state = {
-  remote:[],
-  remoteInOrder:[]
   }, action) {
 
   switch(action.type) {
   case 'BREEZY_OVERRIDE_VISIT_SEQ': {
     return {...state, visit: action.seqId}
-  }
-  case 'BREEZY_REMOTE_IN_ORDER_DRAIN': {
-    const newQ = state.remoteInOrder.slice(action.index)
-    return {...state, remoteInOrder: newQ}
-  }
-  case 'BREEZY_REMOTE_IN_ORDER_UPDATE_QUEUED_ITEM': {
-    const newQ = state.remoteInOrder.map((item)=>{
-      if (item.seqId === action.seqId) {
-        return {...item, done: true, action: action.action}
-      } else {
-        return item
-      }
-    })
-
-    return {...state, remoteInOrder: newQ}
-  }
-  case 'BREEZY_REMOTE_IN_ORDER_QUEUE_ITEM': {
-    const item = {
-      seqId: action.seqId,
-      done: false,
-      action: null
-    }
-
-    return {...state, remoteInOrder: [...state.remoteInOrder, item]}
-  }
-  case 'BREEZY_REMOTE_QUEUE_ITEM': {
-    const item = {
-      seqId: action.seqId,
-      done: false,
-      action: null
-    }
-
-    return {...state, remote: [...state.remote, item]}
   }
   default:
     return state

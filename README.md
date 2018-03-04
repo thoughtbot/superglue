@@ -148,27 +148,25 @@ visit(pathQuery, {...fetchRequestOptions}, optionalPageKey).catch(({message, fet
 
 ```
 
-arguments | |
---- | ---
-pathQuery| The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
-fetchRequestOptions | Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
-optionalPageKey | The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
+Arguments | Type | Notes
+--- | --- | ---
+pathQuery| `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
+fetchRequestOptions | `Object` |  Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
+optionalPageKey | `String` | The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
 
-callback arguments| |
---- | ---
-canNavigate | There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback.
-needsRefresh | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true.
-screen | The screen that your react application should render next.
-page | The full parsed page response from your `foobar.js.props` template.
-rsp | The raw response object
+Callback options | Type | Notes
+--- | --- | ---
+canNavigate | `Boolean` | There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback.
+needsRefresh | `Boolean` | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true.
+screen | `String` | The screen that your react application should render next.
+page | `Object` | The full parsed page response from your `foobar.js.props` template.
+rsp | `Object` | The raw response object
 
 
-catchable arguments*| |
---- | ---
-fetchArgs | The arguments passed to `fetch`.
-url | The url passed to `fetch`.
-
-*The usual error object with a few additional attributes.
+Additional `.catch` error attributes* | Type | Notes
+--- | --- | ---
+fetchArgs | `Array` | The arguments passed to `fetch`, as tuple `[url, {req}]`. You can use this to implement your own retry logic.
+url | `String` | The full url, passed to `fetch`.
 
 
 #### remote
@@ -193,7 +191,7 @@ Shares the same arguments as `visit` with a few key differences:
 this.props.remote(url.toString(), {}, this.props.pathQuery)
 ```
 
-2. `canNavigate` is not available as an argument to your callback.
+2. `canNavigate` is not available as an option passed to your then-able function.
 
 ### Filtering nodes
 Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then graft that node back onto its tree on the client side.
@@ -203,7 +201,7 @@ Breezy's thunks will take care of most of the work for you:
 For example:
 
 ```javascript
-store.dispatch(visit('?_bz=header.shopping_cart'))
+store.dispatch(visit('/?_bz=header.shopping_cart'))
 ```
 
 ## The Breezy store shape

@@ -72,14 +72,6 @@ export function extendInJoint ({name, keypath, value}) {
   }
 }
 
-export function graftByKeypath (pathQuery, keypath, payload) {
-  return {
-    type: 'BREEZY_GRAFT_BY_KEYPATH',
-    pathQuery,
-    keypath,
-    payload
-  }
-}
 
 export function beforeFetch (opts) {
   return {...opts,

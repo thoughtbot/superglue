@@ -3,8 +3,16 @@ import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
 import {
   visit,
-  remoteInOrder,
-  remote
+  wrappedFetch,
+  remote,
+  setInPage,
+  delInPage,
+  extendInPage,
+  setInJoint,
+  delInJoint,
+  extendInJoint,
+  beforeFetch,
+  handleError,
 } from './action_creators'
 import * as helpers from './utils/helpers'
 import * as connect from './connector'
@@ -17,332 +25,549 @@ const delay = (duration) => {
 }
 
 describe('action creators', () => {
-  afterEach(() => {
-    fetchMock.reset()
-    fetchMock.restore()
+  describe('setInPage', () => {
+    it('fires immutable BREEZY_SET_IN_PAGE', () => {
+      const pathQuery = '/test?hello=123'
+      const keypath = 'a.b.c'
+      const value = {d: 'foo'}
+
+      const action = setInPage({
+        pathQuery,
+        keypath,
+        value,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_SET_IN_PAGE',
+        pathQuery,
+        keypath,
+        value,
+      })
+    })
   })
 
-  it('fires BREEZY_SAVE_RESPONSE when fetching', () => {
-    const store = mockStore({
-      breezy: {
-        currentUrl: '/bar',
-        csrfToken: 'token',
-        controlFlows: {
-          visit: 'fakeUUID'
+  describe('delInPage', () => {
+    it('fires immutable BREEZY_DEL_IN_PAGE', () => {
+      const pathQuery = '/test?hello=123'
+      const keypath = 'a.b.c'
+
+      const action = delInPage({
+        pathQuery,
+        keypath,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_DEL_IN_PAGE',
+        pathQuery,
+        keypath,
+      })
+    })
+  })
+
+  describe('extendInPage', () => {
+    it('fires immutable BREEZY_EXTEND_IN_PAGE', () => {
+      const pathQuery = '/test?hello=123'
+      const keypath = 'a.b.c'
+      const value = {d: 'foo'}
+
+      const action = extendInPage({
+        pathQuery,
+        keypath,
+        value,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_EXTEND_IN_PAGE',
+        pathQuery,
+        keypath,
+        value,
+      })
+    })
+  })
+
+  describe('setInJoint', () => {
+    it('fires immutable BREEZY_SET_IN_JOINT', () => {
+      const name = 'some_partial'
+      const keypath = 'a.b.c'
+      const value = {d: 'foo'}
+
+      const action = setInJoint({
+        type: 'BREEZY_SET_IN_JOINT',
+        name,
+        keypath,
+        value,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_SET_IN_JOINT',
+        name,
+        keypath,
+        value,
+      })
+    })
+  })
+
+  describe('delInJoint', () => {
+    it('fires immutable BREEZY_DEL_IN_JOINT', () => {
+      const name = 'some_partial'
+      const keypath = 'a.b.c'
+
+      const action = delInJoint({
+        type: 'BREEZY_DEL_IN_JOINT',
+        name,
+        keypath,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_DEL_IN_JOINT',
+        name,
+        keypath,
+      })
+    })
+  })
+
+  describe('extendInJoint', () => {
+    it('fires immutable BREEZY_DEL_IN_JOINT', () => {
+      const name = 'some_partial'
+      const keypath = 'a.b.c'
+      const value = {d: 'foo'}
+
+      const action = extendInJoint({
+        type: 'BREEZY_EXTEND_IN_JOINT',
+        name,
+        keypath,
+        value,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_EXTEND_IN_JOINT',
+        name,
+        keypath,
+        value,
+      })
+    })
+  })
+
+  describe('wrappedFetch', () => {
+    afterEach(() => {
+      fetchMock.reset()
+      fetchMock.restore()
+    })
+
+    it('follows x-breezy-location redirects', (done) => {
+      fetchMock
+        .mock('/redirecting_url', {
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-breezy-location': '/foo'
+          }
+        })
+
+      fetchMock
+        .mock('/foo', {
+          body: `(function() {
+            return {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/foo'
+          }
+        })
+
+      wrappedFetch(['/redirecting_url', {}], {}).then(done)
+    })
+  })
+
+  describe('visit', () => {
+    afterEach(() => {
+      fetchMock.reset()
+      fetchMock.restore()
+    })
+
+    const initialState = () => {
+      return {
+        breezy: {
+          currentUrl: '/bar',
+          csrfToken: 'token',
+          controlFlows: {
+            visit: 'fakeUUID'
+          }
         }
       }
-    })
-    spyOn(connect, 'getStore').and.returnValue(store)
-    spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+    }
 
-    fetchMock
-      .mock('/foo?__=0', {
-        body: `(function() {
-          return {
+    it('fires BREEZY_SAVE_RESPONSE when fetching', () => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock
+        .mock('/foo?__=0', {
+          body: `(function() {
+            return {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/foo'
+          }
+        })
+
+
+      const expectedActions = [
+        { type: 'BREEZY_BEFORE_VISIT'},
+        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        {
+          pathQuery: '/foo',
+          type: 'BREEZY_SAVE_RESPONSE',
+          page: {
             data: { heading: 'Some heading 2' },
             title: 'title 2',
             csrf_token: 'token',
             assets: ['application-123.js', 'application-123.js']
-          };
-        })();`,
-        headers: {
-          'content-type': 'application/javascript',
-          'content-disposition': 'inline',
-          'x-response-url': '/foo'
+          }
         }
+      ]
+
+      return store.dispatch(visit('/foo')).then(() => {
+        const requestheaders = fetchMock.lastCall('/foo?__=0')[1].headers
+        expect(requestheaders).toEqual({
+          accept: "text/javascript, application/x-javascript, application/javascript",
+          'x-xhr-referer': '/bar',
+          'x-requested-with': "XMLHttpRequest",
+          'x-breezy-request': true,
+          'x-csrf-token': 'token'
+        })
+
+        expect(store.getActions()).toEqual((expectedActions))
       })
-
-
-    const expectedActions = [
-      { type: 'BREEZY_BEFORE_VISIT'},
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      {
-        pathQuery: '/foo',
-        type: 'BREEZY_SAVE_RESPONSE',
-        page: {
-          data: { heading: 'Some heading 2' },
-          title: 'title 2',
-          csrf_token: 'token',
-          assets: ['application-123.js', 'application-123.js']
-        }
-      }
-    ]
-
-    return store.dispatch(visit('/foo')).then(() => {
-      const requestheaders = fetchMock.lastCall('/foo?__=0')[1].headers
-      expect(requestheaders).toEqual({
-        accept: "text/javascript, application/x-javascript, application/javascript",
-        'x-xhr-referer': '/bar',
-        'x-requested-with': "XMLHttpRequest",
-        'x-breezy-request': true,
-        'x-csrf-token': 'token'
-      })
-
-      expect(store.getActions()).toEqual((expectedActions))
-    })
-  })
-
-  it('fires BREEZY_REQUEST_ERROR on a bad server response status', () => {
-    const store = mockStore({
-      breezy: {
-        currentUrl: '/bar',
-        csrfToken: 'token',
-        controlFlows: {
-          visit: 4
-        }
-      }
     })
 
-    fetchMock.mock('/foo?__=0', {status: 500})
+    it('uses the override as the pageKey on non-GET requests', (done) => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-    const expectedActions = [
-      { type: 'BREEZY_BEFORE_VISIT' },
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      {
-        type: 'BREEZY_FETCH_ERROR',
-        payload:{error: "Internal Server Error" }
-      }
-    ]
-
-    return store.dispatch(visit('/foo')).catch((err) => {
-      expect(err.message).toEqual('Internal Server Error')
-      expect(err.response.status).toEqual(500)
-      expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
-    })
-  })
-
-  it('fires BREEZY_REQUEST_ERROR on a invalid response', () => {
-    const store = mockStore({
-      breezy: {
-        currentUrl: '/bar',
-        csrfToken: 'token',
-        controlFlows: {
-          visit: 4
-        }
-      }
-    })
-    spyOn(connect, 'getStore').and.returnValue(store)
-    fetchMock.mock('/foo?__=0', {status: 200, headers: {
-      'content-type': 'text/bad'
-    }})
-
-    const expectedActions = [
-      { type: 'BREEZY_BEFORE_VISIT'},
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      {
-        type: 'BREEZY_FETCH_ERROR',
-        payload:{error: "Invalid Breezy Response" }
-      }
-    ]
-
-    return store.dispatch(visit('/foo')).catch((err) => {
-      expect(err.message).toEqual('Invalid Breezy Response')
-      expect(err.response.status).toEqual(200)
-      expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
-    })
-  })
+      fetchMock
+        .mock('/with_pagekey_override?__=0', {
+          body: `(function() {
+            return {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/foo'
+          }
+        })
 
 
-  it('fires BREEZY_REQUEST_ERROR when the SJR returns nothing', () => {
-    const store = mockStore({
-      breezy: {
-        currentUrl: '/bar',
-        csrfToken: 'token',
-        controlFlows: {
-          visit: 4
-        }
-      }
-    })
-    spyOn(connect, 'getStore').and.returnValue(store)
+      return store.dispatch(visit('/with_pagekey_override', {method: 'POST'}, '/bar_override')).then((meta) => {
+        expect(meta).toEqual(jasmine.objectContaining({
+          pageKey: '/bar_override'
+        }))
 
-    fetchMock
-      .mock('/foo?__=0', {
-        body: ``,
-        headers: {
-          'content-type': 'application/javascript',
-          'content-disposition': 'inline'
-        }
-      })
-
-    const expectedActions = [
-      { type: 'BREEZY_BEFORE_VISIT' },
-      { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-      {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
-    ]
-
-    return store.dispatch(visit('/foo')).catch((err) => {
-      expect(err.message).toEqual('Could not parse Server Generated Javascript Response for Breezy')
-      expect(err.response.status).toEqual(200)
-      expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
-    })
-  })
-
-  it('fires another BREEZY_SAVE_RESPONSE when the response has deferments', (done) => {
-    const store = mockStore({
-      breezy: {
-        currentUrl: '/bar',
-        csrfToken: 'token',
-        controlFlows: {
-          visit: 'fakeUUID',
-          remote: ['fakeUUID']
-        }
-      }
-    })
-    spyOn(connect, 'getStore').and.returnValue(store)
-    spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
-    fetchMock
-      .mock('/foo?__=0', {
-        body: `(function() {
-          var defers=[];
-          defers.push({url: '/some_defered_request'})
-          return {
-            data: { heading: 'Some heading 2' },
-            title: 'title 2',
-            csrf_token: 'token',
-            assets: ['application-123.js', 'application-123.js'],
-            defers: defers
-          };
-        })();`,
-        headers: {
-          'content-type': 'application/javascript',
-          'content-disposition': 'inline',
-          'x-response-url': '/foo'
-        }
-      })
-
-    fetchMock
-      .mock('/some_defered_request?__=0', {
-        body: `(function() {
-          var defers=[];
-          return {
-            data: { heading: 'defered response heading' },
-            title: 'title 2',
-            csrf_token: 'token',
-            assets: ['application-123.js', 'application-123.js'],
-            defers: defers
-          };
-        })();`,
-        headers: {
-          'content-type': 'application/javascript',
-          'content-disposition': 'inline',
-          'x-response-url': '/some_defered_request'
-        }
-      })
-
-
-    store.subscribe(() => {
-      const state = store.getState()
-      const actions = store.getActions()
-      const lastAction = actions[actions.length - 1]
-      const {type, pathQuery, page} = lastAction;
-
-      if(type === 'BREEZY_SAVE_RESPONSE' && page.data.heading === 'defered response heading') {
         done()
-      }
+      })
     })
 
-    store.dispatch(visit('/foo'))
-  })
+    it('uses the content-location over x-response-url as the pageKey if no explicit key was set on non-GET requests', (done) => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-  describe('control flows', () => {
-    beforeEach(() => {
-      fetchMock.restore()
-    })
-
-    describe('visit', () => {
-      it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
-        const initialState = {
-          breezy: {
-            assets:[],
-            controlFlows: {
-              visit: 'firstId'
-            }
+      fetchMock
+        .mock('/foo?__=0', {
+          body: `(function() {
+            return {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/will_NOT_be_used',
+            'content-location': '/will_be_used',
           }
+        })
+
+
+      return store.dispatch(visit('/foo', {method: 'POST'})).then((meta) => {
+        expect(meta).toEqual(jasmine.objectContaining({
+          pageKey: '/will_be_used'
+        }))
+
+        done()
+      })
+    })
+
+   it('uses the x-response-url as the pageKey if no explicit key was set on non-GET requests and content-location is not avail', (done) => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock
+        .mock('/foo?__=0', {
+          body: `(function() {
+            return {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/will_be_used',
+          }
+        })
+
+      return store.dispatch(visit('/foo', {method: 'POST'})).then((meta) => {
+        expect(meta).toEqual(jasmine.objectContaining({
+          pageKey: '/will_be_used'
+        }))
+
+        done()
+      })
+    })
+
+    it('fires BREEZY_REQUEST_ERROR on a bad server response status', () => {
+      const store = mockStore(initialState())
+      fetchMock.mock('/foo?__=0', {status: 500})
+
+      const expectedActions = [
+        { type: 'BREEZY_BEFORE_VISIT' },
+        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        {
+          type: 'BREEZY_FETCH_ERROR',
+          payload:{error: "Internal Server Error" }
         }
+      ]
 
-        const store = mockStore(initialState)
-        spyOn(connect, 'getStore').and.returnValue(store)
+      return store.dispatch(visit('/foo')).catch((err) => {
+        expect(err.message).toEqual('Internal Server Error')
+        expect(err.response.status).toEqual(500)
+        expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
+      })
+    })
 
-        let mockResponse = rsp.visitSuccess()
-        mockResponse.headers['x-response-url'] = '/first'
-        fetchMock.mock('/first?__=0', delay(500).then(() => mockResponse))
+    it('fires BREEZY_REQUEST_ERROR on a invalid response', () => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      fetchMock.mock('/foo?__=0', {status: 200, headers: {
+        'content-type': 'text/bad'
+      }})
 
-        let mockResponse2 = rsp.visitSuccess()
-        mockResponse2.headers['x-response-url'] = '/second'
-        fetchMock.mock('/second?__=0', delay(2000).then(() => mockResponse2))
+      const expectedActions = [
+        { type: 'BREEZY_BEFORE_VISIT'},
+        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        {
+          type: 'BREEZY_FETCH_ERROR',
+          payload:{error: "Invalid Breezy Response" }
+        }
+      ]
 
-        const spy = spyOn(helpers, 'uuidv4')
-        spy.and.returnValue('firstId')
-        store.dispatch(visit('/first')).then((meta)=>{
-          expect(meta.canNavigate).toEqual(false)
-        })
-
-        spy.and.returnValue('secondId')
-        initialState.breezy.controlFlows.visit = 'secondId'
-
-        const expectedActions = [
-          { type: 'BREEZY_BEFORE_VISIT' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
-          { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
-          { type: 'BREEZY_BEFORE_VISIT' },
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
-          { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
-          { type: 'BREEZY_SAVE_RESPONSE',
-            pathQuery: '/first',
-            page: jasmine.any(Object)
-          },
-          { type: 'BREEZY_NOOP' },
-          { type: 'BREEZY_SAVE_RESPONSE',
-            pathQuery: '/second',
-            page: jasmine.any(Object)
-          }
-        ]
-
-        store.dispatch(visit('/second')).then((meta) => {
-          expect(meta.canNavigate).toEqual(true)
-          expect(store.getActions()).toEqual(expectedActions)
-          done()
-        })
+      return store.dispatch(visit('/foo')).catch((err) => {
+        expect(err.message).toEqual('Invalid Breezy Response')
+        expect(err.response.status).toEqual(200)
+        expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
       })
     })
 
 
-    describe('remote', () => {
-      it('will fire and resolve', (done) => {
-        const store = mockStore({
-          breezy: {
-            assets:[],
-            controlFlows: {
-              remote: ['nextId']
-            }
+    it('fires BREEZY_REQUEST_ERROR when the SJR returns nothing', () => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+
+      fetchMock
+        .mock('/foo?__=0', {
+          body: ``,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline'
           }
         })
 
-        spyOn(helpers, 'uuidv4').and.returnValue('nextId')
-        spyOn(connect, 'getStore').and.returnValue(store)
+      const expectedActions = [
+        { type: 'BREEZY_BEFORE_VISIT' },
+        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
+      ]
 
-        let mockResponse = rsp.visitSuccess()
-        mockResponse.headers['x-response-url'] = '/foo'
-        fetchMock.mock('/foo?__=0', mockResponse)
+      return store.dispatch(visit('/foo')).catch((err) => {
+        expect(err.message).toEqual('Could not parse Server Generated Javascript Response for Breezy')
+        expect(err.response.status).toEqual(200)
+        expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
+      })
+    })
 
-        const expectedActions = [
-          { type: 'BREEZY_BEFORE_REMOTE'},
-          { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
-          {
-            type: 'BREEZY_SAVE_RESPONSE',
-            pathQuery: '/foo',
-            page: jasmine.any(Object)
+    it('fires another BREEZY_SAVE_RESPONSE when the response has deferments', (done) => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+      fetchMock
+        .mock('/foo?__=0', {
+          body: `(function() {
+            var defers=[];
+            defers.push({url: '/some_defered_request'})
+            return {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js'],
+              defers: defers
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/foo'
           }
-        ]
-        const req = store.dispatch(remote('/foo', {}, '/foo'))
-        req.then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
+        })
+
+      fetchMock
+        .mock('/some_defered_request?__=0', {
+          body: `(function() {
+            var defers=[];
+            return {
+              data: { heading: 'defered response heading' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js'],
+              defers: defers
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/some_defered_request'
+          }
+        })
+
+
+      store.subscribe(() => {
+        const state = store.getState()
+        const actions = store.getActions()
+        const lastAction = actions[actions.length - 1]
+        const {type, pathQuery, page} = lastAction;
+
+        if(type === 'BREEZY_SAVE_RESPONSE' && page.data.heading === 'defered response heading') {
           done()
-        })
+        }
+      })
+
+      store.dispatch(visit('/foo'))
+    })
+  })
+
+  it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
+    const initialState = {
+      breezy: {
+        assets:[],
+        controlFlows: {
+          visit: 'firstId'
+        }
+      }
+    }
+
+    const store = mockStore(initialState)
+    spyOn(connect, 'getStore').and.returnValue(store)
+
+    let mockResponse = rsp.visitSuccess()
+    mockResponse.headers['x-response-url'] = '/first'
+    fetchMock.mock('/first?__=0', delay(500).then(() => mockResponse))
+
+    let mockResponse2 = rsp.visitSuccess()
+    mockResponse2.headers['x-response-url'] = '/second'
+    fetchMock.mock('/second?__=0', delay(2000).then(() => mockResponse2))
+
+    const spy = spyOn(helpers, 'uuidv4')
+    spy.and.returnValue('firstId')
+    store.dispatch(visit('/first')).then((meta)=>{
+      expect(meta.canNavigate).toEqual(false)
+    })
+
+    spy.and.returnValue('secondId')
+    initialState.breezy.controlFlows.visit = 'secondId'
+
+    const expectedActions = [
+      { type: 'BREEZY_BEFORE_VISIT' },
+      { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
+      { type: 'BREEZY_BEFORE_VISIT' },
+      { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
+      { type: 'BREEZY_SAVE_RESPONSE',
+        pathQuery: '/first',
+        page: jasmine.any(Object)
+      },
+      { type: 'BREEZY_NOOP' },
+      { type: 'BREEZY_SAVE_RESPONSE',
+        pathQuery: '/second',
+        page: jasmine.any(Object)
+      }
+    ]
+
+    store.dispatch(visit('/second')).then((meta) => {
+      expect(meta.canNavigate).toEqual(true)
+      expect(store.getActions()).toEqual(expectedActions)
+      done()
+    })
+  })
+
+
+  describe('remote', () => {
+    it('will fire and resolve', (done) => {
+      const store = mockStore({
+        breezy: {
+          assets:[],
+        }
+      })
+
+      spyOn(helpers, 'uuidv4').and.returnValue('nextId')
+      spyOn(connect, 'getStore').and.returnValue(store)
+
+      let mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?__=0', mockResponse)
+
+      const expectedActions = [
+        { type: 'BREEZY_BEFORE_REMOTE'},
+        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+        {
+          type: 'BREEZY_SAVE_RESPONSE',
+          pathQuery: '/foo',
+          page: jasmine.any(Object)
+        }
+      ]
+      const req = store.dispatch(remote('/foo', {}, '/foo'))
+      req.then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+        done()
       })
     })
   })

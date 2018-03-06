@@ -1,7 +1,6 @@
 import React from 'react'
 import parse from 'url-parse'
 import {rootReducer} from './reducers'
-import {setDOMListenersForNav, unsetDOMListenersForNav} from './listeners'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
@@ -10,12 +9,10 @@ import {persist} from './action_creators'
 
 export {mapStateToProps, mapDispatchToProps} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
-export {setDOMListenersForNav, unsetDOMListenersForNav}
 export {setWindow, unsetWindow}
 
 export function stop () {
   unsetWindow()
-  unsetDOMListenersForNav()
 }
 
 export function argsForHistory (url, page) {
@@ -50,19 +47,10 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
     url = window.location.href
     history.replace(...argsForHistory(url, initialPage))
 
-
-    function handleRef (ref){
-      if (hasWindow()) {
-        // todo: disable this for now, i'm not sure how to handle turbolinks style forms
-        // now that we've converted this library to react redux 
-        // setDOMListenersForNav(ref)
-      }
-    }
-
     nav = class extends React.Component {
       render () {
         return (
-          <Nav ref={handleRef}
+          <Nav
             mapping={this.props.mapping}
             initialState={argsForNavInitialState(url, initialPage)}
             history={history}

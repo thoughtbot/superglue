@@ -57,7 +57,7 @@ export function setInJoint ({name, keypath, value}) {
 
 export function delInJoint ({name, keypath}) {
   return {
-    type: 'BREEZY_SET_IN_JOINT',
+    type: 'BREEZY_DEL_IN_JOINT',
     name,
     keypath
   }

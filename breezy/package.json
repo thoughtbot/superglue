@@ -4,7 +4,7 @@
   "description": "Use a vanilla Rails with React and Redux",
   "main": "dist/index.js",
   "scripts": {
-    "test": "nyc jasmine",
+    "test": "nyc --reporter=html jasmine",
     "lint": "./node_modules/.bin/eslint lib",
     "build": "./node_modules/babel-cli/bin/babel.js lib -d dist",
     "prepublishOnly": "npm run build"

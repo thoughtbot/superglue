@@ -23,6 +23,30 @@ const mockStore = configureMockStore(middlewares)
 const delay = (duration) => {
   return new Promise((res, rej) => setTimeout(res, duration))
 }
+const initialState = () => {
+  return {
+    breezy: {
+      currentUrl: '/bar',
+      csrfToken: 'token',
+      controlFlows: {
+        visit: 'fakeUUID'
+      }
+    }
+  }
+}
+
+const successfulBody = () => {
+  return (
+    `(function() {
+        return {
+          data: { heading: 'Some heading 2' },
+          title: 'title 2',
+          csrf_token: 'token',
+          assets: ['application-123.js', 'application-123.js']
+        };
+      })();`
+    )
+}
 
 describe('action creators', () => {
   describe('setInPage', () => {
@@ -166,14 +190,7 @@ describe('action creators', () => {
 
       fetchMock
         .mock('/foo', {
-          body: `(function() {
-            return {
-              data: { heading: 'Some heading 2' },
-              title: 'title 2',
-              csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            };
-          })();`,
+          body: successfulBody(),
           headers: {
             'content-type': 'application/javascript',
             'content-disposition': 'inline',
@@ -191,17 +208,6 @@ describe('action creators', () => {
       fetchMock.restore()
     })
 
-    const initialState = () => {
-      return {
-        breezy: {
-          currentUrl: '/bar',
-          csrfToken: 'token',
-          controlFlows: {
-            visit: 'fakeUUID'
-          }
-        }
-      }
-    }
 
     it('fires BREEZY_SAVE_RESPONSE when fetching', () => {
       const store = mockStore(initialState())
@@ -210,14 +216,7 @@ describe('action creators', () => {
 
       fetchMock
         .mock('/foo?__=0', {
-          body: `(function() {
-            return {
-              data: { heading: 'Some heading 2' },
-              title: 'title 2',
-              csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            };
-          })();`,
+          body: successfulBody(),
           headers: {
             'content-type': 'application/javascript',
             'content-disposition': 'inline',
@@ -263,14 +262,7 @@ describe('action creators', () => {
 
       fetchMock
         .mock('/with_pagekey_override?__=0', {
-          body: `(function() {
-            return {
-              data: { heading: 'Some heading 2' },
-              title: 'title 2',
-              csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            };
-          })();`,
+          body: successfulBody(),
           headers: {
             'content-type': 'application/javascript',
             'content-disposition': 'inline',
@@ -295,14 +287,7 @@ describe('action creators', () => {
 
       fetchMock
         .mock('/foo?__=0', {
-          body: `(function() {
-            return {
-              data: { heading: 'Some heading 2' },
-              title: 'title 2',
-              csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            };
-          })();`,
+          body: successfulBody(),
           headers: {
             'content-type': 'application/javascript',
             'content-disposition': 'inline',
@@ -328,14 +313,7 @@ describe('action creators', () => {
 
       fetchMock
         .mock('/foo?__=0', {
-          body: `(function() {
-            return {
-              data: { heading: 'Some heading 2' },
-              title: 'title 2',
-              csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            };
-          })();`,
+          body: successfulBody(),
           headers: {
             'content-type': 'application/javascript',
             'content-disposition': 'inline',

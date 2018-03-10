@@ -63,14 +63,14 @@ store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
 window.store = store
 const Nav = StackNavigator(navMapping, {
   initialRouteName: initialPage.screen,
-  initialRouteParams: {pathQuery: initialPath},
+  initialRouteParams: {pageKey: initialPath},
   headerMode: 'none',
 })
 
 export default class extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav pathQuery={initialPath}/>
+      <Nav pageKey={initialPath}/>
     </Provider>
   }
 }

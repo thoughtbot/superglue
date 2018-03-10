@@ -1,12 +1,11 @@
 import React from 'react'
 import parse from 'url-parse'
-import {bindActionCreators} from 'redux'
 import {
   visit,
   remote,
   remoteInOrder,
 } from '../action_creators'
-import {vanityPath as convertToVanity, pathQuery as convertToPathQuery} from './url'
+import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
 
 export class Nav extends React.Component {
@@ -23,12 +22,12 @@ export class Nav extends React.Component {
     this.state = this.props.initialState || {}
   }
 
-  navigateTo (screen, pathQuery, {action} = {action: 'push'}) {
-    const vanityPath = convertToVanity(pathQuery)
+  navigateTo (screen, pageKey, {action} = {action: 'push'}) {
+    pageKey = withoutBZParams(pageKey)
     if (this.history) {
-      const historyArgs = [vanityPath, {
+      const historyArgs = [pageKey, {
         screen,
-        pathQuery: vanityPath,
+        pageKey,
         breezy: true
       }]
 
@@ -38,13 +37,13 @@ export class Nav extends React.Component {
 
       if(action === 'replace') {
         const {store} = this.context
-        const oldUrl = history.location.state.url
+        const oldPageKey = history.location.state.pageKey
         this.history.replace(...historyArgs)
-        store.dispatch({type: 'BREEZY_REMOVE_PAGE', pathQuery: convertToVanityPath(oldUrl)})
+        store.dispatch({type: 'BREEZY_REMOVE_PAGE', pageKey: oldPageKey})
       }
     }
 
-    this.setState({pathQuery: vanityPath, screen})
+    this.setState({pageKey, screen})
   }
 
   onHistoryChange (location, action) {
@@ -57,11 +56,11 @@ export class Nav extends React.Component {
     }
 
     if (action === 'POP') {
-      const {screen, pathQuery} = location.state
-      const wasNotRefreshed = !!store.getState().pages[pathQuery]
+      const {screen, pageKey} = location.state
+      const wasNotRefreshed = !!store.getState().pages[pageKey]
 
       if(location.state && location.state.breezy && wasNotRefreshed) {
-        this.setState({screen, pathQuery})
+        this.setState({screen, pageKey})
       } else {
         // load previous page
         window.location = location.pathname
@@ -78,7 +77,7 @@ export class Nav extends React.Component {
     const Component = this.mapping[this.state.screen]
 
     if (Component) {
-      return <Component pathQuery={this.state.pathQuery} navigateTo={this.navigateTo} />
+      return <Component pageKey={this.state.pageKey} navigateTo={this.navigateTo} />
     } else {
       return this.notFound(this.state.screen)
     }
@@ -88,21 +87,20 @@ export class Nav extends React.Component {
 Nav.contextTypes = {store: PropTypes.object}
 
 export function mapStateToProps (state = {pages:{}}, ownProps) {
-  let pathQuery
+  let pageKey
   // support for react navigation
   let params
-  if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.pathQuery && !pathQuery) {
-    pathQuery = ownProps.navigation.state.params.pathQuery
+  if (ownProps.navigation && ownProps.navigation.state && ownProps.navigation.state.params &&  ownProps.navigation.state.params.pageKey && !pageKey) {
+    pageKey = ownProps.navigation.state.params.pageKey
     params = ownProps.navigation.state.params
   } else {
-    pathQuery = ownProps.pathQuery
+    pageKey = ownProps.pageKey
     params = ownProps
   }
 
-  pathQuery = convertToVanity(pathQuery)
-
-  const {data} = state.pages[pathQuery] || {data:{}}
-  return {...data, ...params, pathQuery}
+  pageKey = withoutBZParams(pageKey)
+  const {data} = state.pages[pageKey] || {data:{}}
+  return {...data, ...params, pageKey}
 }
 
 export const mapDispatchToProps = {

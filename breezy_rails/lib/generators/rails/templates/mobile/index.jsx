@@ -39,7 +39,7 @@ class <%= plural_table_name.camelize %>Index extends React.Component {
     const nav = this.props.navigation
     this.props.visit(path, {method}).then((rsp)=>{
       if (rsp.canNavigate) {
-        return nav.navigate(rsp.screen, {pathQuery: rsp.pathQuery})
+        return nav.navigate(rsp.screen, {pageKey: rsp.pageKey})
       } else {
         // There can only be one visit at a time, if `canNavigate`
         // is false, then this request is being ignored for a more

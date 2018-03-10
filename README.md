@@ -138,13 +138,13 @@ Breezy comes with just 2 then-able thunks that should fulfill 90% of your needs.
 Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.
 
 ```javascript
-visit(pathQuery).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
 
-visit(pathQuery, {...fetchRequestOptions}).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+visit(pathQuery, {...fetchRequestOptions}).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
 
-visit(pathQuery, {...fetchRequestOptions}, optionalPageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+visit(pathQuery, {...fetchRequestOptions}, pageKey).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
 
-visit(pathQuery, {...fetchRequestOptions}, optionalPageKey).catch(({message, fetchArgs, url, pathQuery}) => {})
+visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, url, pageKey}) => {})
 
 ```
 
@@ -152,7 +152,7 @@ Arguments | Type | Notes
 --- | --- | ---
 pathQuery| `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
 fetchRequestOptions | `Object` |  Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
-optionalPageKey | `String` | The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
+pageKey | `String` | Optional. The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
 
 Callback options | Type | Notes
 --- | --- | ---
@@ -161,34 +161,36 @@ needsRefresh | `Boolean` | If the new request has new JS assets to get - i.e., t
 screen | `String` | The screen that your react application should render next.
 page | `Object` | The full parsed page response from your `foobar.js.props` template.
 rsp | `Object` | The raw response object
+pageKey | `String` | Location in the Breezy store where `page` is stored.
 
 
 Additional `.catch` error attributes* | Type | Notes
 --- | --- | ---
 fetchArgs | `Array` | The arguments passed to `fetch`, as tuple `[url, {req}]`. You can use this to implement your own retry logic.
 url | `String` | The full url, passed to `fetch`.
+pageKey | `String` | Location in the Breezy store where `page` is stored
 
 
 #### remote
 Makes an ajax call to a page, and sets the response to the `pages` store. Use `remote` when you want to request pages or parts of pages in a classic async fashion.
 
 ```javascript
-remote(pathQuery).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
 
-remote(pathQuery, {...fetchRequestOptions}).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+remote(pathQuery, {...fetchRequestOptions}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
 
-remote(pathQuery, {...fetchRequestOptions}, requiredPageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+remote(pathQuery, {...fetchRequestOptions}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
 
-remote(pathQuery, {...fetchRequestOptions}, requiredPageKey).catch(({message, fetchArgs, url, pathQuery}) => {})
+remote(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, url, pageKey}) => {})
 
 ```
 
 Shares the same arguments as `visit` with a few key differences:
 
-1. You must explicitly provide it with a `requiredPageKey`. This is to prevent async requests from saving into the wrong state. Use with the included `mapStateToProps`, which provides a `this.props.pathQuery` to use as the page key. For example:
+1. You must explicitly provide it with a `pageKey`. This is to prevent async requests from saving into the wrong state. Use with the included `mapStateToProps`, which provides a `this.props.pageKey` to use as the page key. For example:
 
 ```
-this.props.remote(url.toString(), {}, this.props.pathQuery)
+this.props.remote(url.toString(), {}, this.props.pageKey)
 ```
 
 2. `canNavigate` is not available as an option passed to your then-able function.

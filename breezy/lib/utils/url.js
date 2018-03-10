@@ -28,10 +28,11 @@ export function withMimeBust (url) {
   }
 }
 
-export function vanityPath(url) {
+export function withoutBZParams(url) {
   url = new parse(url, true)
   let query = url.query
   delete query['__']
+  delete query['_']
   delete query['_bz']
   url.query = query
   return pathQuery(url.toString())

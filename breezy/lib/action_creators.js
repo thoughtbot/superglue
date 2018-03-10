@@ -5,42 +5,41 @@ import {
 import 'cross-fetch'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh} from './window'
-import parse from 'url-parse'
-import {pathQuery as convertToPathQuery, vanityPath} from './utils/url'
+import {withoutBZParams} from './utils/url'
 
-export function saveResponse ({pathQuery, page}) {
+export function saveResponse ({pageKey, page}) {
   return {
-    type: 'BREEZY_SAVE_RESPONSE', pathQuery, page
+    type: 'BREEZY_SAVE_RESPONSE', pageKey, page
   }
 }
 
-export function handleGraft ({pathQuery, page}) {
+export function handleGraft ({pageKey, page}) {
   return {
-    type: 'BREEZY_HANDLE_GRAFT', pathQuery, page
+    type: 'BREEZY_HANDLE_GRAFT', pageKey, page
   }
 }
 
-export function setInPage ({pathQuery, keypath, value}) {
+export function setInPage ({pageKey, keypath, value}) {
   return {
     type: 'BREEZY_SET_IN_PAGE',
-    pathQuery,
+    pageKey,
     keypath,
     value
   }
 }
 
-export function delInPage ({pathQuery, keypath}) {
+export function delInPage ({pageKey, keypath}) {
   return {
     type: 'BREEZY_DEL_IN_PAGE',
-    pathQuery,
+    pageKey,
     keypath,
   }
 }
 
-export function extendInPage ({pathQuery, keypath, value}) {
+export function extendInPage ({pageKey, keypath, value}) {
   return {
     type: 'BREEZY_EXTEND_IN_PAGE',
-    pathQuery,
+    pageKey,
     keypath,
     value
   }
@@ -94,26 +93,25 @@ function handleDeferments (defers=[], dispatch, pageKey) {
   })
 }
 
-export function persist ({pathQuery, page, dispatch}) {
+export function persist ({pageKey, page, dispatch}) {
   // Ignore the _bz attributes when storing
-  const vanity = vanityPath(pathQuery)
 
-  handleDeferments(page.defers, dispatch, vanity)
+  handleDeferments(page.defers, dispatch, pageKey)
   if (page.action === 'graft') {
-    return handleGraft({pathQuery: vanity, page})
+    return handleGraft({pageKey, page})
   } else {
-    return saveResponse({pathQuery: vanity, page})
+    return saveResponse({pageKey, page})
   }
 }
-function handleFetchErr(err, fetchArgs, dispatch) {
+function handleFetchErr (err, fetchArgs, dispatch) {
   dispatch(handleError(err.message))
   err.fetchArgs = fetchArgs
   err.url = fetchArgs[0]
-  err.pathQuery = convertToPathQuery(fetchArgs[0])
+  err.pageKey = withoutBZParams(fetchArgs[0])
   throw err
 }
 
-export function wrappedFetch(fetchArgs, dispatch) {
+export function wrappedFetch (fetchArgs) {
   return fetch(...fetchArgs)
     .then((response) => {
       const location = response.headers.get('x-breezy-location')
@@ -130,10 +128,11 @@ export function wrappedFetch(fetchArgs, dispatch) {
 const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
   const prevAssets = state.breezy.assets
   const newAssets = page.assets
-
   const baseUrl = state.breezy.baseUrl
-  const actual = (pageKey).replace(baseUrl, '')
-  const action = persist({pathQuery: pageKey, page, dispatch})
+
+  pageKey = withoutBZParams(pageKey)
+
+  const action = persist({pageKey, page, dispatch})
   const meta = {
     pageKey,
     page,
@@ -152,7 +151,6 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
 
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {method, headers, body})
-    const fetchUrl = fetchArgs[0]
 
     dispatch({type: 'BREEZY_BEFORE_REMOTE'})
     dispatch(beforeFetch({fetchArgs}))
@@ -163,14 +161,11 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
   }
 }
 
-export function visit(pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
-    const fetchUrl = fetchArgs[0]
-
     const seqId = uuidv4()
     const controlFlows = getState().breezy.controlFlows
-    const state = getState()
     let actualKey = null
 
     dispatch({type: 'BREEZY_BEFORE_VISIT'})
@@ -187,7 +182,7 @@ export function visit(pathQuery, {method = 'GET', headers, body = ''} = {}, page
           const responseUrl = rsp.headers.get('x-response-url')
           const contentLocation = rsp.headers.get('content-location')
 
-          actualKey = (pageKey || contentLocation || responseUrl).replace(baseUrl, '')
+          actualKey = (pageKey || contentLocation || responseUrl)
         }
 
         const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)

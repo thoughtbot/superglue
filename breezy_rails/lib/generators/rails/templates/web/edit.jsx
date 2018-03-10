@@ -7,7 +7,7 @@ import <%= plural_table_name.camelize %>Form from 'components/<%= plural_table_n
 
 class <%= plural_table_name.camelize %>Edit extends BaseScreen {
   handleSubmit (body) {
-    this.props.delInPage({pathQuery: this.props.pathQuery, keypath: 'errors'})
+    this.props.delInPage({pageKey: this.props.pageKey, keypath: 'errors'})
     return super.handleSubmit('/<%= plural_table_name %>/' + this.props.id, body, 'PATCH')
   }
 

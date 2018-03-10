@@ -51,19 +51,19 @@ const successfulBody = () => {
 describe('action creators', () => {
   describe('setInPage', () => {
     it('fires immutable BREEZY_SET_IN_PAGE', () => {
-      const pathQuery = '/test?hello=123'
+      const pageKey = '/test?hello=123'
       const keypath = 'a.b.c'
       const value = {d: 'foo'}
 
       const action = setInPage({
-        pathQuery,
+        pageKey,
         keypath,
         value,
       })
 
       expect(action).toEqual({
         type: 'BREEZY_SET_IN_PAGE',
-        pathQuery,
+        pageKey,
         keypath,
         value,
       })
@@ -72,17 +72,17 @@ describe('action creators', () => {
 
   describe('delInPage', () => {
     it('fires immutable BREEZY_DEL_IN_PAGE', () => {
-      const pathQuery = '/test?hello=123'
+      const pageKey = '/test?hello=123'
       const keypath = 'a.b.c'
 
       const action = delInPage({
-        pathQuery,
+        pageKey ,
         keypath,
       })
 
       expect(action).toEqual({
         type: 'BREEZY_DEL_IN_PAGE',
-        pathQuery,
+        pageKey,
         keypath,
       })
     })
@@ -90,19 +90,19 @@ describe('action creators', () => {
 
   describe('extendInPage', () => {
     it('fires immutable BREEZY_EXTEND_IN_PAGE', () => {
-      const pathQuery = '/test?hello=123'
+      const pageKey = '/test?hello=123'
       const keypath = 'a.b.c'
       const value = {d: 'foo'}
 
       const action = extendInPage({
-        pathQuery,
+        pageKey,
         keypath,
         value,
       })
 
       expect(action).toEqual({
         type: 'BREEZY_EXTEND_IN_PAGE',
-        pathQuery,
+        pageKey,
         keypath,
         value,
       })
@@ -230,7 +230,7 @@ describe('action creators', () => {
         { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
-          pathQuery: '/foo',
+          pageKey: '/foo',
           type: 'BREEZY_SAVE_RESPONSE',
           page: {
             data: { heading: 'Some heading 2' },
@@ -500,12 +500,12 @@ describe('action creators', () => {
       { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
       { type: 'BREEZY_SAVE_RESPONSE',
-        pathQuery: '/first',
+        pageKey: '/first',
         page: jasmine.any(Object)
       },
       { type: 'BREEZY_NOOP' },
       { type: 'BREEZY_SAVE_RESPONSE',
-        pathQuery: '/second',
+        pageKey: '/second',
         page: jasmine.any(Object)
       }
     ]
@@ -538,7 +538,7 @@ describe('action creators', () => {
         { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         {
           type: 'BREEZY_SAVE_RESPONSE',
-          pathQuery: '/foo',
+          pageKey: '/foo',
           page: jasmine.any(Object)
         }
       ]

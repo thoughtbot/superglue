@@ -98,7 +98,7 @@ describe('Nav', () => {
 
     it('navigates to the page when history changes', (done) => {
       const history = createMemoryHistory({});
-      history.replace('/bar', {breezy: true, screen: 'home', pathQuery: '/bar'})
+      history.replace('/bar', {breezy: true, screen: 'home', pageKey: '/bar'})
       const {dom, target} = createScene('<div></div>')
       const mockStore = configureMockStore()
       const store = mockStore({
@@ -151,8 +151,8 @@ describe('Nav', () => {
         }
       }
 
-      let props = mapStateToProps(slice, {pathQuery: '/foo'})
-      expect(props).toEqual({heading: 'hi', pathQuery: '/foo'})
+      let props = mapStateToProps(slice, {pageKey: '/foo'})
+      expect(props).toEqual({heading: 'hi', pageKey: '/foo'})
     })
   })
 })

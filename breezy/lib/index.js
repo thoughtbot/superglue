@@ -4,7 +4,7 @@ import {rootReducer} from './reducers'
 import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
-import {pathQuery as convertToPathQuery} from './utils/url'
+import {withoutBZParams} from './utils/url'
 import {persist} from './action_creators'
 
 export {mapStateToProps, mapDispatchToProps} from './utils/react'
@@ -16,11 +16,11 @@ export function stop () {
 }
 
 export function argsForHistory (url, page) {
-  const pathq = convertToPathQuery(url)
+  const pathq = withoutBZParams(url)
 
   return [pathq, {
     breezy: true,
-    pathQuery: pathq,
+    pageKey: pathq,
     screen: page.screen
   }]
 }
@@ -28,13 +28,13 @@ export function argsForHistory (url, page) {
 export function argsForNavInitialState (url, page) {
   return {
     screen: page.screen,
-    pathQuery: convertToPathQuery(url)
+    pageKey: withoutBZParams(url)
   }
 }
 
 export function pageToInitialState (url, page) {
   return {
-    pages: {[convertToPathQuery(url)]: page}
+    pages: {[withoutBZParams(url)]: page}
   }
 }
 
@@ -42,7 +42,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
   let nav
   let url
 
-  if (!!window) {
+  if (window) {
     setWindow(window)
     url = window.location.href
     history.replace(...argsForHistory(url, initialPage))
@@ -76,7 +76,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
       }
 
       store.dispatch(persist({
-        pathQuery: convertToPathQuery(url),
+        pageKey: withoutBZParams(url),
         page: initialPage,
         dispatch: store.dispatch,
       }))

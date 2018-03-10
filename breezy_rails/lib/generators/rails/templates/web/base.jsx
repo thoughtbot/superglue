@@ -16,7 +16,7 @@ export default class extends React.Component {
       }
 
       if (rsp.canNavigate) {
-        return this.props.navigateTo(rsp.screen, rsp.pathQuery)
+        return this.props.navigateTo(rsp.screen, rsp.pageKey)
       } else {
         // There can only be one visit at a time, if `canNavigate`
         // is false, then this request is being ignored for a more
@@ -49,7 +49,7 @@ export default class extends React.Component {
         //Uncomment this if you want full-page reloads
         // window.location = rsp.url
 
-        return this.props.navigateTo(rsp.screen, rsp.pathQuery)
+        return this.props.navigateTo(rsp.screen, rsp.pageKey)
       } else {
         // There can only ve one visit at a time, if `canNavigate`
         // is false, then this request is being ignored for a more

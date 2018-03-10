@@ -1,17 +1,15 @@
 import {reverseMerge} from './utils/helpers'
-import parseUrl from 'url-parse'
 import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
-import {combineReducers} from 'redux'
 
-function saveResponse (state, pathQuery, page) {
+function saveResponse (state, pageKey, page) {
   state = {...state}
 
   reverseMerge(page, {
     cachedAt: new Date().getTime(),
     positionY: pageYOffset(),
     positionX: pageXOffset(),
-    pathQuery,
+    pageKey,
     joints: {}
   })
 
@@ -23,7 +21,7 @@ function saveResponse (state, pathQuery, page) {
       })
     })
 
-  state[pathQuery] = page
+  state[pageKey] = page
 
   return state
 }
@@ -80,7 +78,7 @@ function setInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function handleGraft (state, pathQuery, page) {
+function handleGraft (state, pageKey, page) {
   state = {...state}
 
   reverseMerge(page, {joints: {}})
@@ -92,8 +90,8 @@ function handleGraft (state, pathQuery, page) {
         state = setInByJoint(state, ref, updatedNode)
       })
     })
-  const currentPage = state[pathQuery]
-  state[pathQuery].data = setIn(currentPage.data, page.path, page.data)
+  const currentPage = state[pageKey]
+  state[pageKey].data = setIn(currentPage.data, page.path, page.data)
 
   return state
 }
@@ -101,38 +99,38 @@ function handleGraft (state, pathQuery, page) {
 export function pageReducer (state = {}, action) {
   switch(action.type) {
   case 'BREEZY_SAVE_RESPONSE': {
-    const {pathQuery, page} = action
-    return saveResponse(state, pathQuery, page)
+    const {pageKey, page} = action
+    return saveResponse(state, pageKey, page)
   }
   case 'BREEZY_HANDLE_GRAFT': {
-    const {pathQuery, page} = action
-    return handleGraft(state, pathQuery, page)
+    const {pageKey, page} = action
+    return handleGraft(state, pageKey, page)
   }
   case 'BREEZY_REMOVE_PAGE': {
-    const {pathQuery} = action
+    const {pageKey} = action
     const nextState = {...state}
-    delete nextState[pathQuery]
+    delete nextState[pageKey]
 
     return nextState
   }
   case 'BREEZY_SET_IN_PAGE': {
-    const {pathQuery, keypath, value} = action
-    const fullPath = [pathQuery, 'data', keypath].join('.')
+    const {pageKey, keypath, value} = action
+    const fullPath = [pageKey, 'data', keypath].join('.')
     //todo: make setIn accept an array
     const nextState = setIn(state, fullPath, value)
 
     return nextState
   }
   case 'BREEZY_DEL_IN_PAGE': {
-    const {pathQuery, keypath} = action
-    const fullPath = [pathQuery, 'data', keypath].join('.')
+    const {pageKey, keypath} = action
+    const fullPath = [pageKey, 'data', keypath].join('.')
     const nextState = delIn(state, fullPath)
 
     return nextState
   }
   case 'BREEZY_EXTEND_IN_PAGE': {
-    const {pathQuery, keypath, value} = action
-    const fullPath = [pathQuery, 'data', keypath].join('.')
+    const {pageKey, keypath, value} = action
+    const fullPath = [pageKey, 'data', keypath].join('.')
     const nextState = extendIn(state, fullPath, value)
 
     return nextState
@@ -178,7 +176,7 @@ export function metaReducer (state = {}, action) {
 }
 
 export function controlFlowReducer (state = {
-  }, action) {
+}, action) {
 
   switch(action.type) {
   case 'BREEZY_OVERRIDE_VISIT_SEQ': {

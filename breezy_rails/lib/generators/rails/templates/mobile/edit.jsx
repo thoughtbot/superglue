@@ -23,7 +23,7 @@ class <%= plural_table_name.camelize %>Edit extends React.Component {
       contentType: 'application/json'
     }
 
-    this.props.delInPage({pathQuery: this.props.pathQuery, keypath: 'errors'})
+    this.props.delInPage({pageKey: this.props.pageKey, keypath: 'errors'})
     return this.props.visit('/<%= plural_table_name %>/' + this.props.id, options).then((rsp) => {
       if (this.props.errors) {
         throw new SubmissionError({

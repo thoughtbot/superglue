@@ -124,7 +124,7 @@ describe('navigation', () => {
             cachedAt: jasmine.any(Number),
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
-            pathQuery: '/bar',
+            pageKey: '/bar',
             joints: {}
           },
           '/foo':{
@@ -135,7 +135,7 @@ describe('navigation', () => {
             cachedAt: jasmine.any(Number),
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
-            pathQuery: '/foo',
+            pageKey: '/foo',
             joints: {}
           }
         }

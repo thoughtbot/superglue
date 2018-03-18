@@ -5,6 +5,7 @@ import {
   visit,
   wrappedFetch,
   remote,
+  handleGraft,
   setInPage,
   delInPage,
   extendInPage,
@@ -49,6 +50,24 @@ const successfulBody = () => {
 }
 
 describe('action creators', () => {
+  describe('handleGraft', () => {
+    it('fires BREEZY_HANDLE_GRAFT', () => {
+      const pageKey = '/test'
+      const page = {d: 'foo'}
+
+      const action = handleGraft({
+        pageKey,
+        page,
+      })
+
+      expect(action).toEqual({
+        type: 'BREEZY_HANDLE_GRAFT',
+        pageKey,
+        page,
+      })
+    })
+  })
+
   describe('setInPage', () => {
     it('fires immutable BREEZY_SET_IN_PAGE', () => {
       const pageKey = '/test?hello=123'
@@ -460,7 +479,55 @@ describe('action creators', () => {
 
       store.dispatch(visit('/foo'))
     })
+
+    it('fires BREEZY_HANDLE_GRAFT when the response is a graft', (done) => {
+      const store = mockStore({...initialState(), pages: {
+        '/foo': {}
+      }})
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+      fetchMock
+        .mock('/foo?__=0', {
+          body: `(function() {
+            var defers=[];
+            return {
+              data: 'success',
+              action: 'graft',
+              path: 'heading.cart',
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js'],
+              defers: defers
+            };
+          })();`,
+          headers: {
+            'content-type': 'application/javascript',
+            'content-disposition': 'inline',
+            'x-response-url': '/foo'
+          }
+        })
+
+      store.subscribe(() => {
+        const state = store.getState()
+        const actions = store.getActions()
+        const lastAction = actions[actions.length - 1]
+        const {type, pageKey, page} = lastAction;
+
+        if(type === 'BREEZY_HANDLE_GRAFT') {
+          expect(pageKey).toEqual('/foo')
+          expect(page.data).toEqual('success')
+          done()
+        }
+      })
+
+      store.dispatch(visit('/foo'))
+    })
   })
+
+
+
+
+
 
   it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
     const initialState = {

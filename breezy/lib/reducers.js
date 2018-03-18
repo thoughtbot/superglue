@@ -80,18 +80,18 @@ function setInByJoint (state, name, value, subpath = null) {
 
 function handleGraft (state, pageKey, page) {
   state = {...state}
-
   reverseMerge(page, {joints: {}})
+
+  const currentPage = state[pageKey]
+  currentPage.data = setIn(currentPage.data, page.path, page.data)
 
   Object.entries(page.joints)
     .forEach(([ref, paths]) => {
       paths.forEach((path) => {
-        const updatedNode = getIn(page.data, path)
+        const updatedNode = getIn(currentPage.data, path)
         state = setInByJoint(state, ref, updatedNode)
       })
     })
-  const currentPage = state[pageKey]
-  state[pageKey].data = setIn(currentPage.data, page.path, page.data)
 
   return state
 }

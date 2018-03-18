@@ -233,7 +233,7 @@ describe('reducers', () => {
     })
 
     describe('BREEZY_HANDLE_GRAFT', () => {
-      it('take a grafting response and grafts it', () => {
+      it('takes a grafting response and grafts it', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -279,6 +279,85 @@ describe('reducers', () => {
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
+            }
+          }
+        })
+      })
+
+      it('takes a grafting response with joints and grafts it across', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          },
+          '/other': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          }
+        }
+
+        const graftResponse = {
+          data: { total: 100},
+          action: 'graft',
+          path: 'header.cart',
+          joints: {
+            user_header: ['header']
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_HANDLE_GRAFT',
+          pageKey: '/foo',
+          page: graftResponse
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 100
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          },
+          '/other': {
+            data: {
+              header: {
+                cart: {
+                  total: 100
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
             }
           }
         })

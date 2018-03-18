@@ -1,6 +1,64 @@
-import { pageReducer as reducer, controlFlowReducer } from '../lib/reducers'
+import {
+  pageReducer as reducer,
+  metaReducer,
+  controlFlowReducer
+} from '../lib/reducers'
 
 describe('reducers', () => {
+  describe('meta reducer', () => {
+    describe('BREEZY_HISTORY_CHANGE', () => {
+      it('sets the currentUrl', () => {
+        const prevState = {foo: 'bar'}
+        const action = {type: 'BREEZY_HISTORY_CHANGE', url: '/some_url'}
+        const nextState = metaReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          foo: 'bar',
+          currentUrl: '/some_url'
+        })
+      })
+    })
+
+    describe('BREEZY_SET_BASE_URL', () => {
+      it('sets the base URL', () => {
+        const prevState = {foo: 'bar'}
+        const action = {type: 'BREEZY_SET_BASE_URL', baseUrl: '/some_url'}
+        const nextState = metaReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          foo: 'bar',
+          baseUrl: '/some_url'
+        })
+      })
+    })
+
+    describe('BREEZY_SAVE_RESPONSE', () => {
+      it('saves the response csrfToken', () => {
+        const prevState = {foo: 'bar'}
+        const action = {type: 'BREEZY_SAVE_RESPONSE', page: {csrf_token: 'some_token'}}
+        const nextState = metaReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          foo: 'bar',
+          csrfToken: 'some_token'
+        })
+      })
+    })
+
+    describe('BREEZY_SET_CSRF_TOKEN', () => {
+      it('sets the initial CSRF token', () => {
+        const prevState = {foo: 'bar'}
+        const action = {type: 'BREEZY_SET_CSRF_TOKEN', csrfToken: 'some_token'}
+        const nextState = metaReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          foo: 'bar',
+          csrfToken: 'some_token'
+        })
+      })
+    })
+  })
+
   describe('page reducer', () => {
     describe('BREEZY_EXTEND_IN_JOINT', () => {
       it('merges a key at joint', () => {

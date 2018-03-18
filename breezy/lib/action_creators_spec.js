@@ -586,6 +586,12 @@ describe('action creators', () => {
 
 
   describe('remote', () => {
+    it('raises error when no pageKey is passed ', () => {
+      expect(() => {
+        remote('/foo', {})
+      }).toThrow(new Error("pageKey is a required parameter"))
+    })
+
     it('will fire and resolve', (done) => {
       const store = mockStore({
         breezy: {

@@ -69,7 +69,7 @@ describe('action creators', () => {
   })
 
   describe('setInPage', () => {
-    it('fires immutable BREEZY_SET_IN_PAGE', () => {
+    it('fires BREEZY_SET_IN_PAGE', () => {
       const pageKey = '/test?hello=123'
       const keypath = 'a.b.c'
       const value = {d: 'foo'}

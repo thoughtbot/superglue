@@ -25,21 +25,13 @@ namespace :breezy do
     desc "Install everything needed for breezy web"
     task 'web' => ["breezy:verify_webpacker", "webpacker:verify_install"] do
       template = File.expand_path("../install/web.rb", __dir__)
-      if Rails::VERSION::MAJOR >= 5
-        exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
-      else
-        exec "#{RbConfig.ruby} ./bin/rake rails:template LOCATION=#{template}"
-      end
+      exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
     end
 
     desc "Install everything needed for breezy mobile"
     task 'mobile' => ["breezy:verify_yarn"] do
       template = File.expand_path("../install/mobile.rb", __dir__)
-      if Rails::VERSION::MAJOR >= 5
-        exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
-      else
-        exec "#{RbConfig.ruby} ./bin/rake rails:template LOCATION=#{template}"
-      end
+      exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
     end
   end
 end

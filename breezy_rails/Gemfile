@@ -1,8 +1,0 @@
-source 'https://rubygems.org'
-gemspec
-
-gem 'rails'
-gem 'rake'
-gem 'byebug'
-gem 'puma'
-gem 'breezy_template', path: '../breezy_template'

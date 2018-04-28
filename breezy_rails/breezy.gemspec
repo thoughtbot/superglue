@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 
-  s.add_dependency 'actionpack', '< 6.0', '>= 4.0'
+  s.add_dependency 'actionpack', '>= 5.0'
   s.add_dependency 'breezy_template', '~> 0.4'
   s.add_dependency 'webpacker', '~> 3.0'
 

@@ -1,7 +1,6 @@
 require 'breezy/version'
 require 'breezy/xhr_headers'
 require 'breezy/xhr_url_for'
-require 'breezy/cookies'
 require 'breezy/x_domain_blocker'
 require 'breezy/render'
 require 'breezy/helpers'
@@ -10,14 +9,14 @@ require 'breezy_template'
 
 module Breezy
   module Controller
-    include XHRHeaders, Cookies, XDomainBlocker, Render, Helpers
+    include XHRHeaders, XDomainBlocker, Render, Helpers
 
     def self.included(base)
       if base.respond_to?(:before_action)
-        base.before_action :set_response_url, :set_request_method_cookie
+        base.before_action :set_response_url
         base.after_action :abort_xdomain_redirect
       else
-        base.before_filter :set_response_url, :set_request_method_cookie
+        base.before_filter :set_response_url
         base.after_filter :abort_xdomain_redirect
       end
 

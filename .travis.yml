@@ -2,7 +2,7 @@ matrix:
   include:
     - language: ruby
       rvm: 2.3
-      gemfile: breezy_template/Gemfile.rails42
+      gemfile: breezy_template/Gemfile.rails50
       before_install:
         - cd breezy_template
       install:
@@ -11,13 +11,49 @@ matrix:
         - bundle exec rake test
     - language: ruby
       rvm: 2.3
-      gemfile: breezy_template/Gemfile.rails50
+      gemfile: breezy_template/Gemfile.rails51
       before_install:
         - cd breezy_template
       install:
         - bundle install
       script:
         - bundle exec rake test
+    - language: ruby
+      rvm: 2.3
+      gemfile: breezy_rails/Gemfile.rails50
+      addons:
+        chrome: stable
+      before_install:
+        - wget -N http://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip -P ~/
+        - unzip ~/chromedriver_linux64.zip -d ~/
+        - rm ~/chromedriver_linux64.zip
+        - sudo mv -f ~/chromedriver /usr/local/share/
+        - sudo chmod +x /usr/local/share/chromedriver
+        - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+        - cd breezy_rails
+      install:
+        - bundle install
+      script:
+        - bundle exec rake test
+        - ruby -Ilib:test test/acceptance/breezy_installation_acceptance.rb
+    - language: ruby
+      rvm: 2.3
+      gemfile: breezy_rails/Gemfile.rails51
+      addons:
+        chrome: stable
+      before_install:
+        - wget -N http://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip -P ~/
+        - unzip ~/chromedriver_linux64.zip -d ~/
+        - rm ~/chromedriver_linux64.zip
+        - sudo mv -f ~/chromedriver /usr/local/share/
+        - sudo chmod +x /usr/local/share/chromedriver
+        - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+        - cd breezy_rails
+      install:
+        - bundle install
+      script:
+        - bundle exec rake test
+        - ruby -Ilib:test test/acceptance/breezy_installation_acceptance.rb
     - language: node_js
       node_js: 8
       before_install:

@@ -128,7 +128,6 @@ export function wrappedFetch (fetchArgs) {
 const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
   const prevAssets = state.breezy.assets
   const newAssets = page.assets
-  const baseUrl = state.breezy.baseUrl
 
   pageKey = withoutBZParams(pageKey)
 
@@ -174,8 +173,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
 
     return wrappedFetch(fetchArgs)
       .then(({rsp, page}) => {
-        const baseUrl = getState().breezy.baseUrl
-
         if (method === 'GET') {
           actualKey = pageKey || pathQuery
         } else {

@@ -16,7 +16,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'breezy_template', '~> 0.4'
   s.add_dependency 'webpacker', '~> 3.0'
 
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'mocha'
-  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'rake', ' ~> 12.0'
+  s.add_development_dependency 'byebug', '~> 9.0'
+  s.add_development_dependency 'sqlite3', '~> 1.3'
+  s.add_development_dependency 'minitest', '~> 5.10'
+  s.add_development_dependency 'capybara', '~> 3.0'
+  s.add_development_dependency 'selenium-webdriver', '~> 3.11'
 end

@@ -50,7 +50,11 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
     ...headers,
     'accept': jsAccept,
     'x-requested-with': 'XMLHttpRequest',
-    'x-breezy-request': true
+    'x-breezy-request': true,
+  }
+
+  if(method != 'GET') {
+    headers['content-type'] = 'application/json'
   }
 
   if (currentState.currentUrl) {

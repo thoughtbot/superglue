@@ -54,49 +54,46 @@ class BreezyTest < ActionController::TestCase
   end
 
   test "redirect to back uses xhr referer when available" do
+    @request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    @request.headers['X-BREEZY-REQUEST'] = 't'
+
     @request.env['HTTP_REFERER'] = 'http://test.host/referer'
     get :redirect_to_back
-    assert_redirected_to 'http://test.host/referer'
+    assert_response :ok
+    assert_equal @response.headers['X-BREEZY-LOCATION'], 'http://test.host/referer'
 
-    @request.env['HTTP_X_XHR_REFERER'] = 'http://test.host/xhr-referer'
+    @request.env['HTTP_X_XHR_REFERER'] = 'http://test.host/referer'
     get :redirect_to_back
-    assert_redirected_to 'http://test.host/xhr-referer'
+    assert_response :ok
+    assert_equal @response.headers['X-BREEZY-LOCATION'], 'http://test.host/referer'
   end
 
-  test "sets request method cookie on non get requests" do
-    post :simple_action
-    assert_equal 'POST', cookies[:request_method]
-    put :simple_action
-    assert_equal 'PUT', cookies[:request_method]
-  end
+  test "sets X-BREEZY-LOCATION header on redirect requests coming from breezy" do
+    @request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    @request.headers['X-BREEZY-REQUEST'] = 't'
 
-  test "pops request method cookie on get request" do
-    cookies[:request_method] = 'TEST'
-    get :simple_action
-    assert_nil cookies[:request_method]
-  end
-
-  test "sets xhr redirected to header on redirect requests coming from breezy" do
     get :redirect_to_same_origin
     get :simple_action
-    assert_nil @response.headers['X-XHR-Redirected-To']
+    assert_nil @response.headers['X-BREEZY-LOCATION']
 
     @request.env['HTTP_X_XHR_REFERER'] = 'http://test.host/'
     get :redirect_to_same_origin
-    @request.env['HTTP_X_XHR_REFERER'] = nil
-    get :simple_action
-    assert_equal 'http://test.host/path', @response.headers['X-XHR-Redirected-To']
+    assert_equal 'http://test.host/path', @response.headers['X-BREEZY-LOCATION']
   end
 
   test "changes status to 403 on breezy requests redirecting to different origin" do
+    @request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    @request.headers['X-BREEZY-REQUEST'] = 't'
+
     get :redirect_to_different_host
-    assert_response :redirect
+    assert_response :ok
+    assert @response.headers['X-BREEZY-LOCATION']
 
     get :redirect_to_different_protocol
-    assert_response :redirect
+    assert_response :ok
+    assert @response.headers['X-BREEZY-LOCATION']
 
     @request.env['HTTP_X_XHR_REFERER'] = 'http://test.host'
-
     get :redirect_to_different_host
     assert_response :forbidden
 
@@ -104,68 +101,25 @@ class BreezyTest < ActionController::TestCase
     assert_response :forbidden
 
     get :redirect_to_same_origin
-    assert_response :redirect
+    assert_response :ok
+    assert @response.headers['X-BREEZY-LOCATION']
   end
 
   test "handles invalid xhr referer on redirection" do
+    @request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    @request.headers['X-BREEZY-REQUEST'] = 't'
     @request.env['HTTP_X_XHR_REFERER'] = ':'
     get :redirect_to_same_origin
-    assert_response :redirect
+    assert_response :ok
+    assert @response.headers['X-BREEZY-LOCATION']
   end
 
   test "handles unescaped same origin location on redirection" do
+    @request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    @request.headers['X-BREEZY-REQUEST'] = 't'
     @request.env['HTTP_X_XHR_REFERER'] = 'http://test.host/'
     get :redirect_to_unescaped_path
-    assert_response :redirect
-  end
-
-  test "handles unescaped different origin location on redirection" do
-    @request.env['HTTP_X_XHR_REFERER'] = 'https://test.host/'
-    get :redirect_to_unescaped_path
-    assert_response :forbidden
-  end
-end
-
-class BreezyIntegrationTest < ActionDispatch::IntegrationTest
-  setup do
-    @session = open_session
-  end
-
-  test "sets xhr redirected to header on redirect requests coming from breezy" do
-    get '/redirect_hash'
-    get response.location
-    assert_nil response.headers['X-XHR-Redirected-To']
-
-    if Rails.version >= '5.0'
-      get '/redirect_hash', headers: { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
-    else
-      get '/redirect_hash', nil, { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
-    end
-    assert_response :redirect
-    assert_nil response.headers['X-XHR-Redirected-To']
-
-    if Rails.version >= '5.0'
-      get response.location, headers: { 'HTTP_X_XHR_REFERER' => nil }
-    else
-      get response.location, nil, { 'HTTP_X_XHR_REFERER' => nil }
-    end
-    assert_equal 'http://www.example.com/breezy/simple_action', response.headers['X-XHR-Redirected-To']
     assert_response :ok
-
-    if Rails.version >= '5.0'
-      get '/redirect_path', headers: { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
-    else
-      get '/redirect_path', nil, { 'HTTP_X_XHR_REFERER' => 'http://www.example.com/' }
-    end
-    assert_response :redirect
-    assert_nil response.headers['X-XHR-Redirected-To']
-
-    if Rails.version >= '5.0'
-      get response.location, headers: { 'HTTP_X_XHR_REFERER' => nil }
-    else
-      get response.location, nil, { 'HTTP_X_XHR_REFERER' => nil }
-    end
-    assert_equal 'http://www.example.com/breezy/simple_action', response.headers['X-XHR-Redirected-To']
-    assert_response :ok
+    assert @response.headers['X-BREEZY-LOCATION']
   end
 end

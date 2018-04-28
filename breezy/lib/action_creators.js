@@ -164,7 +164,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
     const seqId = uuidv4()
-    const controlFlows = getState().breezy.controlFlows
     let actualKey = null
 
     dispatch({type: 'BREEZY_BEFORE_VISIT'})
@@ -183,6 +182,7 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
         }
 
         const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)
+        const controlFlows = getState().breezy.controlFlows
 
         if (controlFlows['visit'] === seqId ) {
           return {...meta, canNavigate: true}

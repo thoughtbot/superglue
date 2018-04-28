@@ -2,42 +2,6 @@ require 'breezy_template/breezy_template'
 
 class BreezyTemplate
   module PartialExtension
-    class DeferVar
-      def initialize
-        @digest = "defers"
-      end
-
-      def to_json(*)
-        @digest
-      end
-
-      def as_json(*)
-        self
-      end
-
-      def encode_json(*)
-        @digest
-      end
-    end
-
-    class JointVar
-      def initialize
-        @digest = "joints"
-      end
-
-      def to_json(*)
-        @digest
-      end
-
-      def as_json(*)
-        self
-      end
-
-      def encode_json(*)
-        @digest
-      end
-    end
-
     def set!(key, value = BLANK, *args)
       options = args.last || {}
 

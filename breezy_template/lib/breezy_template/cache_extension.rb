@@ -2,24 +2,6 @@ require 'breezy_template/breezy_template'
 
 class BreezyTemplate
   module CacheExtension
-    class Digest
-      def initialize(digest)
-        @digest = "cache[\"#{digest}\"]"
-      end
-
-      def to_json(*)
-        @digest
-      end
-
-      def as_json(*)
-        self
-      end
-
-      def encode_json(*)
-        @digest
-      end
-    end
-
     def _result(value, *args)
       options = _cache_options(args[0])
       if options
@@ -154,7 +136,7 @@ class BreezyTemplate
       else
         v = blank_or_value
         @js.push(v)
-        Digest.new(key)
+        ::BreezyTemplate::Var.new("cache[\"#{key}\"]")
       end
     end
 

@@ -38,8 +38,8 @@ class BreezyTemplate
             session.delete(:breezy_filter)
           end
 
-          json.joints ::BreezyTemplate::PartialExtension::JointVar.new
-          json.defers ::BreezyTemplate::PartialExtension::DeferVar.new
+          json.joints ::BreezyTemplate::Var.new('joints')
+          json.defers ::BreezyTemplate::Var.new('defers')
 
           json.target!
         end

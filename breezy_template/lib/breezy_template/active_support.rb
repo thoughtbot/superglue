@@ -6,13 +6,7 @@ module ActiveSupport
         alias_method :original_jsonify, :jsonify
 
         def jsonify(value)
-          if ::BreezyTemplate::Digest === value
-            value
-          elsif ::BreezyTemplate::JointVar === value
-            value
-          elsif ::BreezyTemplate::DeferVar === value
-            value
-          elsif ::BreezyTemplate::Undefined === value
+          if ::BreezyTemplate::Var === value
             value
           else
             original_jsonify(value)

@@ -1,6 +1,7 @@
 require 'breezy_template/breezy_template'
 
 require 'breezy_template/blank'
+require 'breezy_template/var'
 require 'breezy_template/key_formatter'
 require 'breezy_template/errors'
 

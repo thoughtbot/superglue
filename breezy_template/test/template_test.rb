@@ -76,7 +76,7 @@ class TemplateTest < ActiveSupport::TestCase
     end
 
     assert result.has_key?('content')
-    assert_equal nil, result['content']
+    assert_nil result['content']
   end
 
   test 'multiple keys' do
@@ -156,7 +156,7 @@ class TemplateTest < ActiveSupport::TestCase
       end
     end
 
-    assert_equal nil, result['author']['name']
+    assert_nil result['author']['name']
     assert_equal 32, result['author']['age']
   end
   #

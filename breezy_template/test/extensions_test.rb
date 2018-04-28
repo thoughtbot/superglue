@@ -51,7 +51,8 @@ end
 class BreezyTemplateTest < ActionView::TestCase
   setup do
     self.request_forgery = false
-    BreezyTemplate.configuration.track_assets = []
+    BreezyTemplate.configuration.track_sprockets_assets = []
+    BreezyTemplate.configuration.track_pack_assets = []
 
     # this is a stub. Normally this would be set by the
     # controller locals
@@ -71,6 +72,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
   def breezy_filter
     @breezy_filter
+  end
+
+  def asset_pack_path(asset)
+    return asset
   end
 
   def request
@@ -190,9 +195,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
     assert_equal expected, result
   end
-  #
+
   test "render with asset tracking" do
-    BreezyTemplate.configuration.track_assets = ['test.js', 'test.css']
+    BreezyTemplate.configuration.track_sprockets_assets = ['test.js', 'test.css']
+    BreezyTemplate.configuration.track_pack_assets = ['test_pack.js', 'test_pack.css']
 
     result = jbuild(<<-TEMPLATE)
       json.content "hello"
@@ -203,7 +209,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"assets":["/test.js","/test.css"],"joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"assets":["/test.js","/test.css","test_pack.js","test_pack.css"],"joints":joints,"defers":defers});
       })()
     JS
 
@@ -233,7 +239,7 @@ class BreezyTemplateTest < ActionView::TestCase
   end
 
   test "wrapping jbuilder contents inside Breezy with additional options" do
-    BreezyTemplate.configuration.track_assets = ['test.js', 'test.css']
+    BreezyTemplate.configuration.track_sprockets_assets = ['test.js', 'test.css']
     self.breezy = { title: 'this is fun' }
 
     result = jbuild(<<-TEMPLATE)
@@ -1292,3 +1298,5 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 end
+
+

@@ -21,12 +21,19 @@ class BreezyTemplate
             json.csrf_token form_authenticity_token
           end
 
-          if ::BreezyTemplate.configuration.track_assets.any?
-            json.assets do
-              json.array! (::BreezyTemplate.configuration.track_assets || []).map{|assets|
-                asset_path(assets)
-              }
+          __sprockets_assets = (::BreezyTemplate.configuration.track_sprockets_assets || []).map do |asset|
+            asset_path(asset)
+          end
+
+          __pack_assets = []
+          if defined?(asset_pack_path)
+            __pack_assets = (::BreezyTemplate.configuration.track_pack_assets || []).map do |asset|
+              asset_pack_path(asset)
             end
+          end
+
+          if __sprockets_assets.any? || __pack_assets.any?
+            json.assets (__sprockets_assets + __pack_assets)
           end
 
           if defined?(breezy_filter) && !!breezy_filter

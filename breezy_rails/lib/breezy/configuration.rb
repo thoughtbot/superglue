@@ -4,12 +4,20 @@ module Breezy
       BreezyTemplate.configuration = nil
     end
 
-    def track_assets=(assets)
-      BreezyTemplate.configuration.track_assets = assets
+    def track_sprockets_assets=(assets)
+      BreezyTemplate.configuration.track_sprockets_assets = assets
     end
 
-    def track_assets
-      BreezyTemplate.configuration.track_assets
+    def track_sprockets_assets
+      BreezyTemplate.configuration.track_sprockets_assets
+    end
+
+    def track_pack_assets=(assets)
+      BreezyTemplate.configuration.track_pack_assets = assets
+    end
+
+    def track_pack_assets
+      BreezyTemplate.configuration.track_pack_assets
     end
   end
 

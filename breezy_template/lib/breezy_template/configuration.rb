@@ -2,10 +2,11 @@ require 'breezy_template/breezy_template'
 
 class BreezyTemplate
   class Configuration
-    attr_accessor :track_assets
+    attr_accessor :track_sprockets_assets, :track_pack_assets
 
     def initialize
-      @track_assets = ['application.js', 'application.css']
+      @track_sprockets_assets = ['application.js', 'application.css']
+      @track_pack_assets = ['application.js']
     end
   end
 

@@ -1021,12 +1021,17 @@ class BreezyTemplateTest < ActionView::TestCase
   end
 
   test "filtering for a node of a AR relation in a tree by id via an appended where clause" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.id=1')
-      post = Post.create
-      post.notes.create title: 'first'
-      post.notes.create title: 'second'
+    Post.delete_all
+    Note.delete_all
 
-      post.notes.expects(:where).once().with('id'=>1).returns([{id: 1, title: 'first'}])
+    post = Post.create
+    first_note = post.notes.create(title: 'first')
+    post.notes.create(title: 'second')
+
+    result = jbuild(<<-JBUILDER, breezy_filter: "hit.hit2.id=#{first_note.id}")
+      post = Post.first
+      first_note = Note.where(title: 'first').first
+      post.notes.expects(:where).once().with('id'=>first_note.id).returns([{id: first_note.id, title: 'first'}])
 
       json.hit do
         json.hit2 do
@@ -1039,14 +1044,14 @@ class BreezyTemplateTest < ActionView::TestCase
     JBUILDER
 
     Rails.cache.clear
-
+    id = Note.where(title: 'first').first.id
     expected = strip_format(<<-JS)
       (function(){
         var joints={};
         var cache={};
         var defers=[];
         return (
-          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=1","joints":joints,"defers":defers}
+          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=#{id}","joints":joints,"defers":defers}
         );
       })()
     JS

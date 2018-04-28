@@ -28,7 +28,7 @@ export function withMimeBust (url) {
   }
 }
 
-export function withoutBZParams(url) {
+export function withoutBZParams (url) {
   url = new parse(url, true)
   let query = url.query
   delete query['__']

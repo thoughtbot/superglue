@@ -44,11 +44,13 @@ class RenderTest < ActionController::TestCase
 
 
   setup do
-    Breezy.configuration.track_assets = ['app.js']
+    Breezy.configuration.track_sprockets_assets = ['app.js']
+    Breezy.configuration.track_pack_assets = ['app.js']
   end
 
   teardown do
-    Breezy.configuration.track_assets = []
+    Breezy.configuration.track_sprockets_assets = []
+    Breezy.configuration.track_pack_assets = []
   end
 
   test "render action via get" do

@@ -14,16 +14,23 @@ class ConfigurationTest < ActiveSupport::TestCase
     Breezy.configure do |config|
     end
 
-    track_assets = ['application.js', 'application.css']
-    assert_equal track_assets, Breezy.configuration.track_assets
+    track_sprockets_assets = ['application.js', 'application.css']
+    track_pack_assets = ['application.js']
+
+    assert_equal track_sprockets_assets, Breezy.configuration.track_sprockets_assets
+    assert_equal track_pack_assets, Breezy.configuration.track_pack_assets
   end
 
   test 'configuration with track_assets specified' do
     Breezy.configure do |config|
-      config.track_assets = ['app.js']
+      config.track_sprockets_assets = ['app.js']
+      config.track_pack_assets = ['pack.js']
     end
 
-    default_track_assets = ['app.js']
-    assert_equal default_track_assets, Breezy.configuration.track_assets
+    track_sprockets_assets = ['app.js']
+    track_pack_assets = ['pack.js']
+
+    assert_equal track_sprockets_assets, Breezy.configuration.track_sprockets_assets
+    assert_equal track_pack_assets, Breezy.configuration.track_pack_assets
   end
 end

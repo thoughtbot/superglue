@@ -60,6 +60,9 @@ end
 say "Copying application.js file to #{Webpacker.config.source_entry_path}"
 copy_file "#{__dir__}/templates/web/application.js", "#{Webpacker.config.source_entry_path}/application.js"
 
+say "Copying Breezy initializer"
+copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/breezy.rb"
+
 say "Appending js tags to your application.html.erb"
 append_js_tags
 

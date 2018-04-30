@@ -1,4 +1,5 @@
 # Breezy
+[![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
 Frontend work in React and Redux doesn't need to be tedious. Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React and Redux Application.
 

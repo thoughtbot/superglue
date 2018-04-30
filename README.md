@@ -6,7 +6,7 @@ Breezy saves you time by shipping with an opinionated state shape for your Redux
 
 ## Features
 1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React and Redux.
-2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes/controllers/serializers/tests for your REST-ful API? With Breezy, [you don't need to!](#how_does_it_work?)
+2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes/controllers/serializers/tests for your REST-ful API? With Breezy, [you don't need to!](#how-does-it-work)
 3. **All your resources in a single request** Classic multi-page applications already achieves this. Breezy just enhances your vanilla Rails workflow to make it work for React and Redux. You do not need GraphQL.
 4. **Less Javascript.** Go ahead and use your `link_to` helpers. Use your i18n helpers!
 5. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
@@ -15,7 +15,7 @@ Breezy saves you time by shipping with an opinionated state shape for your Redux
 
 ## How does it work?
 
-Here's a typical view structure in classic rails:
+Here's a view structure in vanilla Rails:
 
 ```
 views/
@@ -23,16 +23,20 @@ views/
     index.html.erb
 ```
 
-The larger your application gets, the larger your ERB. Instead of jumping head first into the complexities of SPA and REST-ful endpoints. Breezy does the following:
+The great thing about this is that its simple. There's only one route, and everything that the user sees is packed into `index.html.erb`. However, the more features `/posts` gets, the larger your ERB and the slower the page becomes.
+
+Breezy offers another option in the myriad of possibilities for developers, but one that sticks closer to a vanilla Rails workflow without the need for an additional set of routes, controllers, etc.
 
 ```
 views/
   posts/
-    index.js.props <- your content goes here
-    index.jsx <- your markup goes here
+    index.js.props <- your content
+    index.jsx <- your markup as JSX
+
+Note that there is no `post.html.xyz` anymore, Breezy takes care of that by rendering a blank `post.html` so that React/Redux can take over. You can override this behavior if you'd like.
 ```
 
-The idea is to separate your content from your markup. Your content props lives as a queryable tree (akin to JSON pointers) written using jbuilder syntax that sits on a seperate mimetype. It then gets injected as props into your container component through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
+Your props lives as a queryable tree (a bit like JSON pointers) written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
 
 ```javascript
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
@@ -43,27 +47,36 @@ export default connect(
 )(MyComponent)
 ```
 
-Then use one of the provided thunks for SPA functionality. For example, to selectively reload parts of your page:
+Then use one of the provided thunks for SPA functionality. For example,
+
 ```javascript
-import {visit} from '@jho406/breezy/dist/action_creators'
+to visit a page without reloading:
+this.props.visit('/next_page')
 
-store.dispatch(visit('?_bz=header.shopping_cart'))
+or selectively reload parts of the current page:
+this.props.remote('?_bz=header.shopping_cart', {..otherFetchProps}, this.props.pageKey)
 ```
-The above will query for a node from `index.js.props`, and update the equivalent keypath in your store.
 
-By sitting on a different mimetype, there are no additional API routes that we have to add to our `routes.rb` beyond the client facing ones. And since the relationship between content and markup is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
+The last example will query for a node from `index.js.props`, and immutably update the equivalent keypath in your Redux store.
+
+By sitting on a different mimetype, there are no additional routes that we have to add to our `routes.rb` beyond the client facing ones. And since the relationship between the `index.props` and `index.jsx` is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
 
 ## Installation
 
-Make sure you have webpacker installed on your Rails application
+Make sure you have webpacker installed on your Rails application.
 
-1. Install BreezyJS
+```
+bundle exec rails webpacker:install:react
+```
+
+1. Remove Turbolinks from your project. Breezy is actually a fork of Turbolinks 3/Turbograft, and shares many of the same strategies for page-to-page transitions. Unfortunately, this means it conflicts with Turbolinks at the moment.
+
+
+2. Install BreezyJS
 
 ```
 yarn add @jho406/breezy --save
 ```
-
-2. Remove Turbolinks from your project. Breezy is actually a fork of Turbolinks/Turbograft, and shares many of the same strategies for page-to-page transitions. Unfortunately, this means it conflicts with Turbolinks at the moment.
 
 3. Add the following to your Gemfile and run bundle
 ```
@@ -127,6 +140,17 @@ class App extends React.Component {
     </Provider>
   }
 }
+```
+
+### Rails Initializer
+Breezy will do a hard reload whenever asset fingerprints change. Add an initializer to control how Breezy tracks sprockets and webpack assets:
+
+```ruby
+# defaults
+Breezy.configure do |config|
+  config.track_sprockets_assets = ['application.js', 'application.css']
+  config.track_pack_assets = ['application.js']
+end
 ```
 
 ## Built-in Thunks
@@ -689,5 +713,4 @@ json.set! :nested, to_nest
 Soon!
 
 ## Todo
-webpacker asset hash
 add support for namespaced screens

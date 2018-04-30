@@ -22,7 +22,7 @@ module Breezy
 
       if breezy
         view_parts = _prefixes.reverse.push(action_name)[1..-1]
-        view_name = view_parts.map(&:camelize).join
+        view_name = view_parts.map(&:camelize).join.gsub('::', '')
 
         breezy[:screen] ||= view_name
         render_options[:locals] ||= {}

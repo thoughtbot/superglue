@@ -83,7 +83,6 @@ class BreezyInstallationTest < Minitest::Test
        --skip-turbolinks \
        --skip-spring \
        --skip-keeps \
-       --webpack=react \
        --no-rc"
   end
 
@@ -116,6 +115,11 @@ class BreezyInstallationTest < Minitest::Test
       FileUtils.rm_rf("testapp")
       generate_test_app "testapp"
       Dir.chdir('testapp') do
+        successfully "echo 'gem \"webpacker\", \"~> 3.5\"' >> Gemfile"
+        successfully 'bundle install'
+        successfully 'bundle exec rails webpacker:install'
+        successfully 'bundle exec rails webpacker:install:react'
+
         FileUtils.rm_f("public/index.html")
         install_breezy
         generate_scaffold

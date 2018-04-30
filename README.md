@@ -26,7 +26,7 @@ views/
 
 The great thing about this is that its simple. There's only one route, and everything that the user sees is packed into `index.html.erb`. However, the more features `/posts` gets, the larger your ERB and the slower the page becomes.
 
-Breezy offers another option in the myriad of possibilities for developers, one that sticks closer to a vanilla Rails workflow without the need for an additional set of routes, controllers, etc.
+Breezy offers another option in the myriad of possibilities for developers, one that sticks closer to a vanilla Rails workflow without the need for an additional set of routes, controllers, etc. Breezy does this:
 
 ```
 views/
@@ -37,7 +37,7 @@ views/
 Note that there is no `post.html.xyz` anymore, Breezy takes care of that by rendering a blank `post.html` so that React/Redux can take over. You can override this behavior if you'd like.
 ```
 
-Your props lives as a queryable tree (a bit like JSON pointers) written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function.
+Your props lives as a queryable tree (a bit like JSON pointers) written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:
 
 ```javascript
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'

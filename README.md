@@ -25,7 +25,7 @@ views/
 
 The great thing about this is that its simple. There's only one route, and everything that the user sees is packed into `index.html.erb`. However, the more features `/posts` gets, the larger your ERB and the slower the page becomes.
 
-Breezy offers another option in the myriad of possibilities for developers, but one that sticks closer to a vanilla Rails workflow without the need for an additional set of routes, controllers, etc.
+Breezy offers another option in the myriad of possibilities for developers, one that sticks closer to a vanilla Rails workflow without the need for an additional set of routes, controllers, etc.
 
 ```
 views/
@@ -142,7 +142,7 @@ class App extends React.Component {
 }
 ```
 
-### Rails Initializer
+#### Rails Initializer
 Breezy will do a hard reload whenever asset fingerprints change. Add an initializer to control how Breezy tracks sprockets and webpack assets:
 
 ```ruby
@@ -282,6 +282,29 @@ json.header partial: ['header', joint: true]
 ### Manually updating cross cutting concerns
 If you want finer control, or want to perform optimistic updates, breezy provides a set of `action_creators` that will immutably update across `pages`.
 
+## Rails controller helpers
+### API
+#### use_breezy_html
+```ruby
+class PostsController < ApplicationController
+  # `use_breezy_html` returns a blank template, allowing for JSX to take over
+  # on application.html.erb
+  before_action :use_breezy_html
+
+  def index
+...
+```
+
+Renders a blank view. Allowing for JSX to take over on `application.html.erb`.
+
+#### render
+Breezy determines which React component to render for the controller action by using a combination of the class name and action name. For example, `PostIndex` or `AdminPostIndex` for namespaced controllers. You can specificy which component by passing additional options to the render method:
+
+```ruby
+  def index
+    render :index, breezy: {screen: 'SomeOtherIndexScreen'}
+  end
+```
 
 ## Immutability Helpers
 

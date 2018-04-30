@@ -734,6 +734,3 @@ json.set! :nested, to_nest
 
 ## Tutorial
 Soon!
-
-## Todo
-add support for namespaced screens

@@ -37,9 +37,7 @@ class BreezyInstallationTest < Minitest::Test
       silencer = ""
     end
 
-    puts "#{command} -----------------------------------"
     return_value = system("#{command} #{silencer}")
-    puts return_value
 
     assert return_value
   end
@@ -137,15 +135,8 @@ class BreezyInstallationTest < Minitest::Test
 
     fill_in 'body', with: 'foobar'
     click_button 'Submit'
-    puts page.html
     successfully "ls #{TMP_DIR}/testapp/log/"
-    puts 'sleeping'
     sleep 30
-    puts "------production.log"
-    successfully "cat #{TMP_DIR}/testapp/log/production.log"
-    puts "------postscontroller"
-    successfully "cat #{TMP_DIR}/testapp/app/controllers/posts_controller.rb"
-    puts 'done'
     assert page.has_content?('Post was successfully created.')
     find("a", :text => "Edit").click
 

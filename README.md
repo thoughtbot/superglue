@@ -295,7 +295,7 @@ class PostsController < ApplicationController
 ...
 ```
 
-Renders a blank view. Allowing for JSX to take over on `application.html.erb`.
+Renders a blank view, allowing for JSX to take over on `application.html.erb`. Its the equivalent of creating `index.html.erb` that contains nothing.
 
 #### render
 Breezy determines which React component to render for the controller action by using a combination of the class name and action name. For example, `PostIndex` or `AdminPostIndex` for namespaced controllers. You can specificy which component by passing additional options to the render method:

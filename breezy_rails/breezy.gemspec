@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/*"]
 
   s.add_dependency 'actionpack', '>= 5.0'
-  s.add_dependency 'breezy_template', '~> 0.4'
+  s.add_dependency 'breezy_template', '~> 0.5.0'
   s.add_dependency 'webpacker', '~> 3.0'
 
   s.add_development_dependency 'rake', ' ~> 12.0'

@@ -1,8 +1,8 @@
-require File.expand_path('../lib/breezy/version', __FILE__)
+version = File.read(File.expand_path("../VERSION", __dir__)).strip
 
 Gem::Specification.new do |s|
   s.name     = 'breezy'
-  s.version  = Breezy::VERSION
+  s.version  = version
   s.author   = 'Johny Ho'
   s.email    = 'jho406@gmail.com'
   s.license  = 'MIT'
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/*"]
 
   s.add_dependency 'actionpack', '>= 5.0'
-  s.add_dependency 'breezy_template', '~> 0.5.0'
+  s.add_dependency 'breezy_template', version
   s.add_dependency 'webpacker', '~> 3.0'
 
   s.add_development_dependency 'rake', ' ~> 12.0'

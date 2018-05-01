@@ -1,4 +1,3 @@
-require 'breezy/version'
 require 'breezy/xhr_headers'
 require 'breezy/xhr_url_for'
 require 'breezy/x_domain_blocker'

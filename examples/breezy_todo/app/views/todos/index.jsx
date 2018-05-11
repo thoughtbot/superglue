@@ -119,5 +119,5 @@ class TodosIndex extends BaseScreen {
 
 export default connect(
   mapStateToProps,
-  {...mapDispatchToProps},
+  mapDispatchToProps,
 )(TodosIndex)

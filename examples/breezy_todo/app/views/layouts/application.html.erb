@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript">
+      window.BREEZY_INITIAL_PAGE_STATE=<%= breezy_snippet %>;
+    </script>
+
+    <title>BreezyTodo</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_pack_tag 'base' %>
+    <%= javascript_pack_tag 'application' %>
+  </head>
+
+  <body>
+    <section class="todoapp">
+      <div id='app'></div>
+      <%= yield %>
+    </section>
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+      <p>Created by <a href="http://github.com/rafe/">Jimmy Chao</a></p>
+      <p>Implemented with <a href="https://github.com/jho406/Breezy">Breezy</a></p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "breezy_todo",
+  "private": true,
+  "dependencies": {
+    "@jho406/breezy": "0.5.3",
+    "@rails/webpacker": "3.5",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-preset-react": "^6.24.1",
+    "classnames": "^2.2.5",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-form": "^7.3.0",
+    "redux-logger": "^3.0.6",
+    "todomvc-app-css": "^2.1.2",
+    "todomvc-common": "^1.0.5"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "2.11.2"
+  }
+}

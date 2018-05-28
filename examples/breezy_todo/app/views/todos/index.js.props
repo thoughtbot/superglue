@@ -1,0 +1,20 @@
+json.todos do
+  json.array! @todos do |todo|
+    json.id todo.id
+    json.description todo.description
+    json.completed todo.completed
+    json.created_at todo.created_at
+    json.updated_at todo.updated_at
+    json.meta do
+      json.todo_path todo_path(todo)
+    end
+  end
+end
+
+json.count Todo.where(completed: [nil, false]).count
+
+json.filter params['filter']
+
+json.meta do
+  json.todos_path todos_path
+end

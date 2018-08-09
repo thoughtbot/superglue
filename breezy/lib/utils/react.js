@@ -6,6 +6,7 @@ import {
 } from '../action_creators'
 import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
 
 export class Nav extends React.Component {
   constructor (props) {
@@ -105,4 +106,54 @@ export function mapStateToProps (state = {pages:{}}, ownProps) {
 export const mapDispatchToProps = {
   visit,
   remote,
+}
+
+export const mapDispatchToPropsWithNav = function (dispatch, ownProps) {
+  const browserVisit = (...args) => {
+    return visit(...args).then(rsp => {
+      if (rsp.needsRefresh) {
+        window.location = rsp.url
+        return
+      }
+
+      if (rsp.canNavigate) {
+        return ownProps.navigateTo(rsp.screen, rsp.pageKey)
+      } else {
+        // There can only be one visit at a time, if `canNavigate`
+        // is false, then this request is being ignored for a more
+        // recent visit. Do Nothing.
+        console.info('\
+          `visit` was called more recently somewhere else.\
+          The results of this request have been saved to \
+          the store, but no navigation will take place')
+        return
+      }
+    }).catch(err => {
+      if(err.response.ok) {
+       // err gets thrown, but if the response is ok,
+       // it must be an html body that
+       // breezy can't parse, just go to the location
+        window.location = err.response.url
+      } else {
+        if (response.status >= 400 && response.status < 500) {
+          window.location = '/400.html'
+          return
+        }
+
+        if (response.status >= 500) {
+          window.location = '/500.html'
+          return
+        }
+      }
+    })
+  }
+
+  const browserRemote = (...args) => {
+   return remote(...args, ownProps.pageKey)
+  }
+
+  return {
+    visit: bindActionCreators(browserVisit, dispatch)
+    remote: bindActionCreators(browserRemote, dispatch)
+  }
 }

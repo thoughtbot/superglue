@@ -70,6 +70,8 @@ export class Nav extends React.Component {
 
   notFound (screen) {
     const {store} = this.context
+    console.info(`Breezy Nav component was looking for ${screen} but could not find it in your mapping:`)
+    console.info(this.mapping)
     store.dispatch({type: 'BREEZY_ERROR', message: `Could not find screen ${screen}`})
   }
 
@@ -79,7 +81,7 @@ export class Nav extends React.Component {
     if (Component) {
       return <Component pageKey={this.state.pageKey} navigateTo={this.navigateTo} />
     } else {
-      return this.notFound(this.state.screen)
+      this.notFound(this.state.screen)
     }
   }
 }

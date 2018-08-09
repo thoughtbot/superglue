@@ -3,6 +3,12 @@ import parse from 'url-parse'
 import {
   visit,
   remote,
+  setInPage,
+  delInPage,
+  extendInPage,
+  setInJoint,
+  delInJoint,
+  extendInJoint,
 } from '../action_creators'
 import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
@@ -108,18 +114,30 @@ export function mapStateToProps (state = {pages:{}}, ownProps) {
 export const mapDispatchToProps = {
   visit,
   remote,
+  setInPage,
+  delInPage,
+  extendInPage,
+  setInJoint,
+  delInJoint,
+  extendInJoint,
 }
 
-export const mapDispatchToPropsWithNav = function (dispatch, ownProps) {
-  const browserVisit = (...args) => {
-    return visit(...args).then(rsp => {
+export function withBrowserBehavior(ctx) {
+  ctx.visit = ((...args) => {
+    return this.props.visit(...args).then(rsp => {
       if (rsp.needsRefresh) {
         window.location = rsp.url
         return
       }
 
+      if (this.props.errors) {
+        throw new SubmissionError({
+          ...this.props.errors
+        })
+      }
+
       if (rsp.canNavigate) {
-        return ownProps.navigateTo(rsp.screen, rsp.pageKey)
+        return this.props.navigateTo(rsp.screen, rsp.pageKey)
       } else {
         // There can only be one visit at a time, if `canNavigate`
         // is false, then this request is being ignored for a more
@@ -131,12 +149,17 @@ export const mapDispatchToPropsWithNav = function (dispatch, ownProps) {
         return
       }
     }).catch(err => {
+      if (err.name === 'SubmissionError') {
+        throw err
+      }
+
       if(err.response.ok) {
        // err gets thrown, but if the response is ok,
        // it must be an html body that
        // breezy can't parse, just go to the location
         window.location = err.response.url
       } else {
+
         if (response.status >= 400 && response.status < 500) {
           window.location = '/400.html'
           return
@@ -148,14 +171,9 @@ export const mapDispatchToPropsWithNav = function (dispatch, ownProps) {
         }
       }
     })
-  }
+  }).bind(ctx)
 
-  const browserRemote = (...args) => {
-   return remote(...args, ownProps.pageKey)
-  }
-
-  return {
-    visit: bindActionCreators(browserVisit, dispatch)
-    remote: bindActionCreators(browserRemote, dispatch)
-  }
+  ctx.remote = ((...args) => {
+    return this.props.remote(...args, this.props.pageKey)
+  }).bind(ctx)
 }

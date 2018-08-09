@@ -3,7 +3,6 @@ import parse from 'url-parse'
 import {
   visit,
   remote,
-  remoteInOrder,
 } from '../action_creators'
 import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
@@ -106,5 +105,4 @@ export function mapStateToProps (state = {pages:{}}, ownProps) {
 export const mapDispatchToProps = {
   visit,
   remote,
-  remoteInOrder,
 }

@@ -121,12 +121,12 @@ export const mapDispatchToProps = {
   extendInJoint,
 }
 
-class SubmissionError extends Error {
-  constructor (errors) {
-    super('Submit Validation Failed')
-    this.errors = errors
-  }
-}
+// class SubmissionError extends Error {
+//   constructor (errors) {
+//     super('Submit Validation Failed')
+//     this.errors = errors
+//   }
+// }
 
 export function withBrowserBehavior (visit, remote) {
   const wrappedVisit = ((...args) => {
@@ -136,11 +136,11 @@ export function withBrowserBehavior (visit, remote) {
         return
       }
 
-      if (this.props.errors) {
-        throw new SubmissionError({
-          ...this.props.errors
-        })
-      }
+      // if (this.props.errors) {
+      //   throw new SubmissionError({
+      //     ...this.props.errors
+      //   })
+      // }
 
       if (rsp.canNavigate) {
         return this.props.navigateTo(rsp.screen, rsp.pageKey)
@@ -155,9 +155,9 @@ export function withBrowserBehavior (visit, remote) {
         return
       }
     }).catch(err => {
-      if (err.name === 'SubmissionError') {
-        throw err
-      }
+      // if (err.name === 'SubmissionError') {
+      //   throw err
+      // }
 
       const response = err.response
       if(response.ok) {

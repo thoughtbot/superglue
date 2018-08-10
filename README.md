@@ -1,14 +1,14 @@
 # Breezy
 [![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
-Frontend work in React and Redux doesn't need to be tedious. Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React and Redux Application.
+Frontend work in React and Redux doesn't have to be tedious. Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React and Redux Application.
 
 Breezy saves you time by shipping with an opinionated state shape for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
 
 ## Features
 1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React and Redux.
 2. **No Private APIs.** Want a SPA, but don't like the hassle of building another set of routes/controllers/serializers/tests for your REST-ful API? With Breezy, [you don't need to!](#how-does-it-work)
-3. **All your resources in a single request** Classic multi-page applications already achieves this. Breezy just enhances your vanilla Rails workflow to make it work for React and Redux. You do not need GraphQL.
+3. **All your resources in a single request** Classic multi-page applications already achieves this. Breezy just enhances your vanilla Rails workflow to make it work for React and Redux.
 4. **Less Javascript.** Go ahead and use your `link_to` helpers. Use your i18n helpers!
 5. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
 6. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
@@ -24,7 +24,7 @@ views/
     index.html.erb
 ```
 
-The great thing about this is that its simple. There's only one route, and everything that the user sees is packed into `index.html.erb`. However, the more features `/posts` gets, the larger your ERB and the slower the page becomes.
+This is simple. There's only one route, and everything that the user sees is packed into `index.html.erb`. However, the more features `/posts` gets, the larger your ERB and the slower the page becomes.
 
 Breezy offers another option in the myriad of possibilities for developers, one that sticks closer to a vanilla Rails workflow without the need for an additional set of routes, controllers, etc. Breezy does this:
 
@@ -40,7 +40,18 @@ Note that there is no `post.html.xyz` anymore, Breezy takes care of that by rend
 Your props lives as a queryable tree (a bit like JSON pointers) written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:
 
 ```javascript
-import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
+import {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from '@jho406/breezy'
+
+class MyComponent extends React.Component {
+  constructor (props) {
+    super(props)
+    const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
+    this.visit = visit.bind(this)
+    this.remote = remote.bind(this)
+  }
+
+  ...
+}
 
 export default connect(
   mapStateToProps,
@@ -51,11 +62,12 @@ export default connect(
 Then use one of the provided thunks for SPA functionality. For example,
 
 ```javascript
+
 to visit a page without reloading:
-this.props.visit('/next_page')
+this.visit('/next_page', {..fetchOpts})
 
 or selectively reload parts of the current page:
-this.props.remote('?_bz=header.shopping_cart', {..otherFetchProps}, this.props.pageKey)
+this.remote('?_bz=header.shopping_cart', {..fetchOpts})
 ```
 
 The last example will query for a node from `index.js.props`, and immutably update the equivalent keypath in your Redux store.
@@ -155,7 +167,7 @@ end
 ```
 
 ## Built-in Thunks
-Breezy comes with just 2 then-able thunks that should fulfill 90% of your needs.
+Breezy comes with just 2 then-able thunks that should fulfill 90% of your needs. By default they don't add any additional behavior beyond updating the store. I recommend combining it with `withBrowserBehavior` for a reasonable navigation experience.
 
 ### API
 
@@ -220,6 +232,23 @@ this.props.remote(url.toString(), {}, this.props.pageKey)
 
 2. `canNavigate` is not available as an option passed to your then-able function.
 
+#### withBrowserBehavior
+Enhances `visit` and `remote` with navigation behavior on the returned Promises. For example, if the request `500`s, Breezy will navigate to '/500.html'. You can read the full behavior [here](https://github.com/jho406/Breezy/blob/master/breezy/lib/utils/react.js#L131).
+
+```javascript
+  constructor (props) {
+    const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
+    this.visit = visit.bind(this)
+    this.remote = remote.bind(this) //Note that the wrapped remote will automatically add the `pageKey` parameter for you. You do not need to explicity provide it if you wrap it.
+  }
+```
+
+Arguments | Type | Notes
+--- | --- | ---
+visit| `Function` | The visit function injected by `mapDispatchToProps`
+remote| `Function` | The remote function injected by `mapDispatchToProps`. The wrapped `remote` function will add the `pageKey` argument automatically for you.
+
+
 ### Filtering nodes
 Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then graft that node back onto its tree on the client side.
 
@@ -231,7 +260,38 @@ For example:
 store.dispatch(visit('/?_bz=header.shopping_cart'))
 ```
 
-## The Breezy store shape
+
+### The Breezy store shape
+How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
+
+Breezy's opinion is that its much saner to leave the business models/logic to the backend, and shape state on the frontend for presentational purposes only. In other words, there is no User model, only pages presented with `User`-like data.
+
+Implementation-wise, every page is given a node in the redux tree, and there is likely duplication of state across children. For example, a shared header `User` header. This means Breezy's store shape falls on the extreme end of denormalization.
+
+Intead of normalizing state, Breezy give you tools that immutably update cross-cutting concerns like a shared header.
+
+##### A Personal Note
+I think the biggest advantage of this approach is that it makes optimistic updates incredibly straight forward. Since optimistic updates are about **looking** like an action commited, rather than actually commiting, we can frame the question as "What part of the page I want to update" instead of "What business models do I have to update?".
+
+The former is extremely easy answer in Breezy. For example:
+
+```javascript
+
+const prevName = this.props.getInPage('header.user.firstName')
+
+//optimistically update
+this.props.setInPage('header.user.firstName', 'New Smith')
+this.props.setInPage(....moreStuff...)
+
+this.visit('/user', {method: 'PUT', body:JSON.stringify(...someAttrs)}).catch(_ => {
+  //revert on failure
+  this.props.setInPage('header.user.firstName', prevName)
+})
+
+```
+
+#### How does it look like
+
 Breezy occupies 2 nodes in your Redux state tree.
 
 ```javascript
@@ -260,10 +320,6 @@ pages: {
 }
 
 ```
-
-Breezy does not normalize the client state, infact there's likely duplication across all pages. For example, a header being duplicated across multiple pages.
-
-Instead of normalizing state, Breezy provides tools that makes it easy to update cross-cutting concerns like a shared header.
 
 ### Automatically updating cross cutting concerns
 Breezy can automatically update all `pages` using meta information about partial usage from the last request. You just have to add the option `joint: true` to your partials.
@@ -497,7 +553,7 @@ json.array! @posts, partial: ["blog_post", as: :blog_post]
 ```
 
 #### Partial Joints
-Breezy does not denormalize your store, instead it relies on your partial metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `joint` option.
+Breezy does not normalize your store, instead it relies on your partial metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `joint` option.
 
 For example, to update all your headers across all pages like so:
 

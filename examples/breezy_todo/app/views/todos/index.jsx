@@ -1,14 +1,19 @@
 import React, {Component} from 'react'
-import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
+import {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from '@jho406/breezy'
 import {connect} from 'react-redux'
-import BaseScreen from 'components/BaseScreen'
 import TodosForm from 'components/TodosForm'
 import TodoItem from 'components/TodoItem'
 import classNames from 'classnames'
 
-class TodosIndex extends BaseScreen {
+class TodosIndex extends Component{
   static defaultProps = {
     todos: []
+  }
+
+  constructor(props) {
+    super(props)
+    const {visit} = withBrowserBehavior(props.visit, props.remote)
+    this.visit = visit.bind(this)
   }
 
   filterParams() {
@@ -16,26 +21,31 @@ class TodosIndex extends BaseScreen {
   }
 
   createTodo (todo) {
-    return super.handleSubmit(
-      this.props.meta.todos_path + this.filterParams(),
-      {todo},
-      'POST'
-    )
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({todo})
+    }
+    const url = this.props.meta.todos_path + this.filterParams()
+
+    this.visit(url, options)
   }
 
   deleteTodo(todo) {
-    return super.handleSubmit(
+    return this.visit(
       todo.meta.todo_path + this.filterParams(),
-      {},
-      'DELETE'
+      {method: 'DELETE'},
     )
   }
 
   updateTodo(todo) {
-    return super.handleSubmit(
+    const options = {
+      method: 'PATCH',
+      body: JSON.stringify({todo})
+    }
+
+    return this.visit(
       todo.meta.todo_path + this.filterParams(),
-      todo,
-      'PATCH'
+      options,
     )
   }
 
@@ -88,7 +98,7 @@ class TodosIndex extends BaseScreen {
           <li>
             <a
               className={classNames({selected: !this.props.filter})}
-              onClick={() => this.handleClick(this.props.meta.todos_path)}
+              onClick={() => this.visit(this.props.meta.todos_path)}
             >
               All
             </a>
@@ -97,7 +107,7 @@ class TodosIndex extends BaseScreen {
           <li>
             <a
               className={classNames({selected: this.props.filter === 'active'})}
-              onClick={() => this.handleClick(this.props.meta.todos_path + '?filter=active')}
+              onClick={() => this.visit(this.props.meta.todos_path + '?filter=active')}
             >
               Active
             </a>
@@ -106,7 +116,7 @@ class TodosIndex extends BaseScreen {
           <li>
             <a
               className={classNames({selected: this.props.filter === 'completed'})}
-              onClick={() => this.handleClick(this.props.meta.todos_path + '?filter=completed')}
+              onClick={() => this.visit(this.props.meta.todos_path + '?filter=completed')}
             >
               Completed
             </a>

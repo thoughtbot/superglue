@@ -3,12 +3,26 @@ import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import {delInPage} from '@jho406/breezy/dist/action_creators'
 import {connect} from 'react-redux'
 import BaseScreen from 'components/BaseScreen'
+import {SubmissionError} from 'redux-form'
 import <%= plural_table_name.camelize %>Form from 'components/<%= plural_table_name.camelize %>Form'
 
 class <%= plural_table_name.camelize %>Edit extends BaseScreen {
-  handleSubmit (body) {
+  handleSubmit = (body) => {
     this.props.delInPage({pageKey: this.props.pageKey, keypath: 'errors'})
-    return super.handleSubmit('/<%= plural_table_name %>/' + this.props.id, body, 'PATCH')
+
+    const options = {
+      method:'PUT',
+      body: JSON.stringify(body),
+    }
+    const path = '/<%= plural_table_name %>/' + this.props.id
+
+    this.visit(path, options).then( rsp => {
+      if (this.props.errors) {
+        throw new SubmissionError({
+          ...this.props.errors
+        })
+      }
+    })
   }
 
   render () {
@@ -19,8 +33,8 @@ class <%= plural_table_name.camelize %>Edit extends BaseScreen {
           onSubmit={this.handleSubmit}
           initialValues={this.props.attributes_for_form}
         />
-        <a onClick={ e => this.handleClick(this.props.meta.show_path)}>Show</a>
-        <a onClick={ e => this.handleClick(this.props.meta.index_path)}>Back</a>
+        <a onClick={ e => this.visit(this.props.meta.show_path)}>Show</a>
+        <a onClick={ e => this.visit(this.props.meta.index_path)}>Back</a>
       </div>
     )
   }

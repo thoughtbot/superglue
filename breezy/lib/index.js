@@ -7,7 +7,7 @@ import connect from './connector'
 import {withoutBZParams} from './utils/url'
 import {persist} from './action_creators'
 
-export {mapStateToProps, mapDispatchToProps} from './utils/react'
+export {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
 export {setWindow, unsetWindow}
 

@@ -3,7 +3,12 @@ import parse from 'url-parse'
 import {
   visit,
   remote,
-  remoteInOrder,
+  setInPage,
+  delInPage,
+  extendInPage,
+  setInJoint,
+  delInJoint,
+  extendInJoint,
 } from '../action_creators'
 import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
@@ -70,6 +75,8 @@ export class Nav extends React.Component {
 
   notFound (screen) {
     const {store} = this.context
+    console.info(`Breezy Nav component was looking for ${screen} but could not find it in your mapping:`)
+    console.info(this.mapping)
     store.dispatch({type: 'BREEZY_ERROR', message: `Could not find screen ${screen}`})
   }
 
@@ -79,7 +86,7 @@ export class Nav extends React.Component {
     if (Component) {
       return <Component pageKey={this.state.pageKey} navigateTo={this.navigateTo} />
     } else {
-      return this.notFound(this.state.screen)
+      this.notFound(this.state.screen)
     }
   }
 }
@@ -106,5 +113,66 @@ export function mapStateToProps (state = {pages:{}}, ownProps) {
 export const mapDispatchToProps = {
   visit,
   remote,
-  remoteInOrder,
+  setInPage,
+  delInPage,
+  extendInPage,
+  setInJoint,
+  delInJoint,
+  extendInJoint,
+}
+
+// class SubmissionError extends Error {
+//   constructor (errors) {
+//     super('Submit Validation Failed')
+//     this.errors = errors
+//   }
+// }
+
+export function withBrowserBehavior (visit, remote) {
+  const wrappedVisit = (function(...args) {
+    return visit(...args).then(rsp => {
+      if (rsp.needsRefresh) {
+        window.location = rsp.url
+        return
+      }
+
+      if (rsp.canNavigate) {
+        return this.props.navigateTo(rsp.screen, rsp.pageKey)
+      } else {
+        // There can only be one visit at a time, if `canNavigate`
+        // is false, then this request is being ignored for a more
+        // recent visit. Do Nothing.
+        console.info('\
+          `visit` was called more recently somewhere else.\
+          The results of this request have been saved to \
+          the store, but no navigation will take place')
+        return
+      }
+    }).catch(err => {
+      const response = err.response
+      if(response.ok) {
+        // err gets thrown, but if the response is ok,
+        // it must be an html body that
+        // breezy can't parse, just go to the location
+        window.location = response.url
+      } else {
+
+        if (response.status >= 400 && response.status < 500) {
+          window.location = '/400.html'
+          return
+        }
+
+        if (response.status >= 500) {
+          window.location = '/500.html'
+          return
+        }
+      }
+    })
+  })
+
+  const wrappedRemote = (function(...args) {
+    return remote(...args, this.props.pageKey)
+  })
+
+  return {visit: wrappedVisit, remote: wrappedRemote}
 }

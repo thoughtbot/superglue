@@ -15,9 +15,9 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
           <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
           <td>{<%=singular_table_name%>.<%=attr%>}</td>
           <%- end -%>
-          <td><a onClick={ e => this.handleClick(<%=singular_table_name%>.meta.show_path)}>Show</a></td>
-          <td><a onClick={ e => this.handleClick(<%=singular_table_name%>.meta.edit_path)}>Edit</a></td>
-          <td><a onClick={ e => this.handleClick(<%=singular_table_name%>.meta.delete_path, 'DELETE')}>Delete</a></td>
+          <td><a onClick={ e => this.visit(<%=singular_table_name%>.meta.show_path)}>Show</a></td>
+          <td><a onClick={ e => this.visit(<%=singular_table_name%>.meta.edit_path)}>Edit</a></td>
+          <td><a onClick={ e => this.visit(<%=singular_table_name%>.meta.delete_path, {method: 'DELETE'})}>Delete</a></td>
         </tr>
       )
     })
@@ -43,7 +43,7 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
           </tbody>
         </table>
         <br />
-        <a onClick={ e => this.handleClick(this.props.meta.new_path)}>New <%= singular_table_name.capitalize %></a>
+        <a onClick={ e => this.visit(this.props.meta.new_path)}>New <%= singular_table_name.capitalize %></a>
       </div>
     )
   }

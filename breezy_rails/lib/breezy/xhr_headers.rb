@@ -21,6 +21,8 @@ module Breezy
         self.status = 200
         response.headers["X-BREEZY-LOCATION"] = url
       end
+
+      url
     end
 
     private

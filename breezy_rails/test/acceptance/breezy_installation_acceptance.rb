@@ -11,6 +11,12 @@ BREEZY_BREEZY_PATH = File.join(ROOT_DIR, 'breezy')
 
 SERVER_PORT = '3000'
 
+Minitest.load_plugins
+
+class <<Minitest
+  remove_method :plugin_rails_init if method_defined?(:plugin_rails_init)
+end
+
 class BreezyInstallationTest < Minitest::Test
   include Capybara::DSL
   include Capybara::Minitest::Assertions

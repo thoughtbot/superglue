@@ -28,6 +28,10 @@ FOOTER_PARTIAL = <<-JBUILDER
   json.terms "You agree"
 JBUILDER
 
+FLATTENED_PARTIAL = <<-JBUILDER
+  json.array! [1,2]
+JBUILDER
+
 BlogPost = Struct.new(:id, :body, :author_name)
 Collection = Struct.new(:id, :name)
 blog_authors = [ "David Heinemeier Hansson", "Pavel Pravosud" ].cycle
@@ -41,7 +45,8 @@ PARTIALS = {
   "_blog_post.js.breezy" => BLOG_POST_PARTIAL,
   "_profile.js.breezy" => PROFILE_PARTIAL,
   "_footer.js.breezy" => FOOTER_PARTIAL,
-  "_collection.js.breezy" => COLLECTION_PARTIAL
+  "_collection.js.breezy" => COLLECTION_PARTIAL,
+  "_flattened.js.breezy" => FLATTENED_PARTIAL
 }
 
 def strip_format(str)
@@ -540,6 +545,22 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return ({"data":{"posts":{"terms":"You agree"}},"joints":joints,"defers":defers});
+      })()
+    JS
+    assert_equal expected, result
+  end
+
+  test "renders the partial as an array and ignores the value" do
+    result = jbuild <<-JBUILDER
+      json.posts nil, partial: "flattened"
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        return ({"data":{"posts":[1,2]},"joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result

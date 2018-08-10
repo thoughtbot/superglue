@@ -122,9 +122,9 @@ export const mapDispatchToProps = {
   extendInJoint,
 }
 
-export function withBrowserBehavior(ctx) {
-  ctx.visit = ((...args) => {
-    return this.props.visit(...args).then(rsp => {
+export function withBrowserBehavior(visit, remote) {
+  const wrappedVisit = ((...args) => {
+    return visit(...args).then(rsp => {
       if (rsp.needsRefresh) {
         window.location = rsp.url
         return
@@ -171,9 +171,11 @@ export function withBrowserBehavior(ctx) {
         }
       }
     })
-  }).bind(ctx)
+  })
 
-  ctx.remote = ((...args) => {
-    return this.props.remote(...args, this.props.pageKey)
-  }).bind(ctx)
+  const wrappedRemote = ((...args) => {
+    return remote(...args, this.props.pageKey)
+  })
+
+  return {visit: wrappedVisit, remote: wrappedRemote}
 }

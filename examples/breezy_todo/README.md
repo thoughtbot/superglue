@@ -16,4 +16,12 @@ Start server
 
 `bin/rails s`
 
+Run yarn
+
+`yarn`
+
+Start webpacker
+
+`bin/webpack-dev-server`
+
 And visit http://localhost:3000 to check the example TodoMVC

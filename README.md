@@ -3,7 +3,7 @@
 
 Frontend work in React and Redux doesn't have to be tedious. Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React and Redux Application.
 
-Breezy saves you time by shipping with an [opinionated state shape](##the-breezy-store-shape) for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
+Breezy saves you time by shipping with an [opinionated state shape](#the-breezy-store-shape) for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
 
 ## Features
 1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React and Redux.

@@ -3,7 +3,7 @@
 
 Frontend work in React and Redux doesn't have to be tedious. Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React and Redux Application.
 
-Breezy saves you time by shipping with an opinionated state shape for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
+Breezy saves you time by shipping with an [opinionated state shape](##the-breezy-store-shape) for your Redux store, a set of thunks and selectors that work nicely with most usecases, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
 
 ## Features
 1. **A vanilla Rails workflow.** Breezy lets you use a classic multi-page workflow and still get all the benefits of React and Redux.
@@ -266,9 +266,9 @@ How should you structure your store? Should I replicate my business models, like
 
 Breezy's opinion is that its much saner to leave the business models/logic to the backend, and shape state on the frontend for presentational purposes only. In other words, there is no User model, only pages presented with `User`-like data.
 
-Implementation-wise, every page is given a node in the redux tree, and there is likely duplication of state across children. For example, a shared header `User` header. This means Breezy's store shape falls on the extreme end of denormalization.
+Breezy's store shape falls on the extreme end of denormalization, every page state is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header.
 
-Intead of normalizing state, Breezy give you tools that immutably update cross-cutting concerns like a shared header.
+Intead of normalizing state through business models, Breezy give you tools that make it easy to immutably update cross-cutting concerns like a shared header.
 
 ##### A Personal Note
 I think the biggest advantage of this approach is that it makes optimistic updates incredibly straight forward. Since optimistic updates are about **looking** like an action commited, rather than actually commiting, we can frame the question as "What part of the page I want to update" instead of "What business models do I have to update?".

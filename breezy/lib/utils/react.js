@@ -12,7 +12,6 @@ import {
 } from '../action_creators'
 import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
 
 export class Nav extends React.Component {
   constructor (props) {
@@ -122,7 +121,14 @@ export const mapDispatchToProps = {
   extendInJoint,
 }
 
-export function withBrowserBehavior(visit, remote) {
+class SubmissionError extends Error {
+  constructor (errors) {
+    super('Submit Validation Failed')
+    this.errors = errors
+  }
+}
+
+export function withBrowserBehavior (visit, remote) {
   const wrappedVisit = ((...args) => {
     return visit(...args).then(rsp => {
       if (rsp.needsRefresh) {
@@ -153,11 +159,12 @@ export function withBrowserBehavior(visit, remote) {
         throw err
       }
 
-      if(err.response.ok) {
-       // err gets thrown, but if the response is ok,
-       // it must be an html body that
-       // breezy can't parse, just go to the location
-        window.location = err.response.url
+      const response = err.response
+      if(response.ok) {
+        // err gets thrown, but if the response is ok,
+        // it must be an html body that
+        // breezy can't parse, just go to the location
+        window.location = response.url
       } else {
 
         if (response.status >= 400 && response.status < 500) {

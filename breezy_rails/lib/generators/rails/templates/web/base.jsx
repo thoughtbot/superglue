@@ -1,5 +1,4 @@
 import React from 'react'
-import {SubmissionError} from 'redux-form'
 import {withBrowserBehavior} from '@jho406/breezy'
 
 export default class extends React.Component {

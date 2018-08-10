@@ -1,5 +1,6 @@
 import React from 'react'
 import {withBrowserBehavior} from '@jho406/breezy'
+import {SubmissionError} from 'redux-form'
 
 export default class extends React.Component {
   constructor (props) {
@@ -10,7 +11,13 @@ export default class extends React.Component {
   }
 
   handleClick(path, method='GET') {
-    this.visit(path, {method})
+    this.visit(path, {method}).then( rsp => {
+      if (this.props.errors) {
+        throw new SubmissionError({
+          ...this.props.errors
+        })
+      }
+    })
   }
 
   handleSubmit (url, body, method='POST') {
@@ -20,7 +27,13 @@ export default class extends React.Component {
       contentType: 'application/json'
     }
 
-    return this.visit(url, options)
+    return this.visit(url, options).then(rsp => {
+      if (this.props.errors) {
+        throw new SubmissionError({
+          ...this.props.errors
+        })
+      }
+    })
   }
 }
 

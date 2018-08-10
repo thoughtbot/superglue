@@ -136,12 +136,6 @@ export function withBrowserBehavior (visit, remote) {
         return
       }
 
-      // if (this.props.errors) {
-      //   throw new SubmissionError({
-      //     ...this.props.errors
-      //   })
-      // }
-
       if (rsp.canNavigate) {
         return this.props.navigateTo(rsp.screen, rsp.pageKey)
       } else {
@@ -155,10 +149,6 @@ export function withBrowserBehavior (visit, remote) {
         return
       }
     }).catch(err => {
-      // if (err.name === 'SubmissionError') {
-      //   throw err
-      // }
-
       const response = err.response
       if(response.ok) {
         // err gets thrown, but if the response is ok,

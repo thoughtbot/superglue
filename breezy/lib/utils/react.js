@@ -129,7 +129,7 @@ export const mapDispatchToProps = {
 // }
 
 export function withBrowserBehavior (visit, remote) {
-  const wrappedVisit = ((...args) => {
+  const wrappedVisit = (function(...args) {
     return visit(...args).then(rsp => {
       if (rsp.needsRefresh) {
         window.location = rsp.url
@@ -170,7 +170,7 @@ export function withBrowserBehavior (visit, remote) {
     })
   })
 
-  const wrappedRemote = ((...args) => {
+  const wrappedRemote = (function(...args) {
     return remote(...args, this.props.pageKey)
   })
 

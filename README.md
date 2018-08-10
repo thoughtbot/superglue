@@ -264,7 +264,7 @@ store.dispatch(visit('/?_bz=header.shopping_cart'))
 ### The Breezy store shape
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 
-Breezy's opinion is that its much saner to leave the business models/logic to the backend, and shape state on the frontend for presentational purposes only. In other words, there is no User model, only pages presented with `User`-like data.
+Breezy's opinion is that its much saner to leave the business models/logic to the backend, and shape state on the frontend for presentational purposes only. In other words, there is no `User` model, only pages presented with `User`-like data.
 
 Breezy's store shape falls on the extreme end of denormalization, every page state is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header.
 

@@ -446,14 +446,14 @@ this.props.extendInJoint({
 
 #### setInPage
 ```javascript
-setInPage({url, keypath, value})
+setInPage({pagekey, keypath, value})
 ```
 
 At the page specificed by the URL, traverses to the node by keypath and immutably set the value.
 
 ```javascript
 this.props.setInPage({
-  url: '/foo?bar=5',
+  pageKey: '/foo?bar=5',
   keypath: 'header.cart.total',
   value: 100
 })
@@ -463,30 +463,30 @@ this.props.setInPage({
 
 #### extendInPage
 ```javascript
-extendInPage({url, keypath, value})
+extendInPage({pageKey, keypath, value})
 ```
 
 At the page specificed by the URL, traverses to the node by keypath and immutably extend the value.
 
 ```javascript
 this.props.extendInPage({
-  url: '/foo?bar=5',
+  pageKey: '/foo?bar=5',
   keypath: 'header.cart',
   value: {total: 100}
 })
 
 ```
 
-#### delInPage({url, keypath})
+#### delInPage
 ```javascript
-delInPage({url, keypath})
+delInPage({pageKey, keypath})
 ```
 
 At the page specificed by the URL, traverses to the node by keypath and immutably delete the value.
 
 ```javascript
 this.props.delInPage({
-  url: '/foo?bar=5',
+  pageKey: '/foo?bar=5',
   keypath: 'header.cart'
 })
 

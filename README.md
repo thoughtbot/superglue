@@ -154,7 +154,7 @@ class App extends React.Component {
 }
 ```
 
-### Custom reducers
+#### Custom reducers
 If you find yourself needing functionality beyond what the default reducers provide, ensure that you know how [Breezy shapes it store](#how-does-it-look-like), and take alook at the following example on how to update content using breezy's immutability helpers:
 
 ```javascript

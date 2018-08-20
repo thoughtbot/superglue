@@ -141,18 +141,21 @@ describe('Nav', () => {
   })
 
   describe('mapStateToToProps', ()=>{
-    it('returns the state of the url', () => {
+    it('returns the state of the url and the csrfToken', () => {
       let dispatch = jasmine.createSpy('dispatch')
       let slice = {
         pages:{
           '/foo': {
             data: {heading: 'hi'}
           }
+        },
+        breezy: {
+          csrfToken: 'token123'
         }
       }
 
       let props = mapStateToProps(slice, {pageKey: '/foo'})
-      expect(props).toEqual({heading: 'hi', pageKey: '/foo'})
+      expect(props).toEqual({heading: 'hi', pageKey: '/foo', csrfToken: 'token123'})
     })
   })
 })

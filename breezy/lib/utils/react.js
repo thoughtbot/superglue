@@ -93,7 +93,7 @@ export class Nav extends React.Component {
 
 Nav.contextTypes = {store: PropTypes.object}
 
-export function mapStateToProps (state = {pages:{}}, ownProps) {
+export function mapStateToProps (state = {pages:{}, breezy: {}}, ownProps) {
   let pageKey
   // support for react navigation
   let params
@@ -104,10 +104,10 @@ export function mapStateToProps (state = {pages:{}}, ownProps) {
     pageKey = ownProps.pageKey
     params = ownProps
   }
-
+  const csrfToken = state.breezy.csrfToken
   pageKey = withoutBZParams(pageKey)
   const {data} = state.pages[pageKey] || {data:{}}
-  return {...data, ...params, pageKey}
+  return {...data, ...params, pageKey, csrfToken}
 }
 
 export const mapDispatchToProps = {
@@ -129,7 +129,7 @@ export const mapDispatchToProps = {
 // }
 
 export function withBrowserBehavior (visit, remote) {
-  const wrappedVisit = (function(...args) {
+  const wrappedVisit = (function (...args) {
     return visit(...args).then(rsp => {
       if (rsp.needsRefresh) {
         window.location = rsp.url
@@ -170,7 +170,7 @@ export function withBrowserBehavior (visit, remote) {
     })
   })
 
-  const wrappedRemote = (function(...args) {
+  const wrappedRemote = (function (...args) {
     return remote(...args, this.props.pageKey)
   })
 

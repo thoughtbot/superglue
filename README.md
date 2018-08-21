@@ -73,6 +73,10 @@ The last example will query for a node from `index.js.props`, noop unrelated nod
 
 By sitting on a different mimetype, there are no additional routes that we have to add to our `routes.rb` beyond the client facing ones. And since the relationship between the `index.props` and `index.jsx` is always one-to-one, we can get away with just integration tests. This means less testing, less code, and greater productivity.
 
+### And Navigation?
+
+Breezy started as a fork of Turbolinks 3/Turbograft, and works in similar fashion. As soon as you use `visit` or `remote`, Breezy will request the props of `your_next_page.js.props`, add them to the redux store, push history, and render the correct component. Breezy will also manage the back button for you, pressing back will restore the `previous_page.js.props` and render the previous component.
+
 ## Installation
 
 Make sure you have webpacker installed on your Rails application.

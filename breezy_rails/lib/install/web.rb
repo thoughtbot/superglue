@@ -20,6 +20,21 @@ def append_js_tags
   end
 end
 
+def add_member_methods
+  inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
+    <<-RUBY
+  def self.member_at(index)
+    offset(index).limit(1)
+  end
+
+  def self.member_by(attribute, value)
+    find_by(Hash[attribute, val])
+  end
+
+    RUBY
+  end
+end
+
 
 if File.exist?(babelrc)
   react_babelrc = JSON.parse(File.read(babelrc))
@@ -65,6 +80,9 @@ copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/breezy
 
 say "Appending js tags to your application.html.erb"
 append_js_tags
+
+say "Adding required member methods to ApplicationRecord"
+add_member_methods
 
 say "Installing React, Redux, and Breezy"
 run "yarn add react-redux redux react react-dom babel-preset-react prop-types redux-form @jho406/breezy@0.3.2 --save"

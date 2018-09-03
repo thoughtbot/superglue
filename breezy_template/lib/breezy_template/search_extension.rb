@@ -36,31 +36,15 @@ class BreezyTemplate
       if @search_path && !@search_path.empty?
         id_name, id_val = @search_path.first.split('=')
 
-        if (defined? ::ActiveRecord) && collection.is_a?(::ActiveRecord::Relation)
-          if id_val
-            id_val = id_val.to_i
-            collection = collection.where(::Hash[id_name, id_val])
-          else
-            index = id_name.to_i
-            collection = collection.offset(index).limit(1)
-          end
+        if id_val
+          id_val = id_val.to_i
+          found = collection.member_by(id_name, id_val)
         else
-          if id_val
-            id_val = id_val.to_i
-            found = collection.find do |ele|
-              ele[id_name] == id_val || ele[id_name.to_sym] == id_val
-            end
-          else
-            index = id_name.to_i
-            found = collection[index]
-          end
-
-          if found
-            collection = [found]
-          else
-            collection = []
-          end
+          index = id_name.to_i
+          found = collection.member_at(index)
         end
+
+        found ? [found] : []
       else
         super
       end

@@ -1,6 +1,6 @@
 require "test_helper"
 require "mocha"
-
+require 'delegate'
 require "action_view"
 require "action_view/testing/resolvers"
 require "breezy_template"
@@ -517,9 +517,9 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "renders array of partials as empty array with nil-collection" do
+  test "renders array of partials as empty array with an empty collection" do
     result = jbuild(<<-JBUILDER)
-      json.array! nil, partial: ["blog_post", as: :blog_post]
+      json.array! [], partial: ["blog_post", as: :blog_post]
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -1041,84 +1041,12 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "filtering for a node of a AR relation in a tree by id via an appended where clause" do
-    Post.delete_all
-    Note.delete_all
-
-    post = Post.create
-    first_note = post.notes.create(title: 'first')
-    post.notes.create(title: 'second')
-
-    result = jbuild(<<-JBUILDER, breezy_filter: "hit.hit2.id=#{first_note.id}")
-      post = Post.first
-      first_note = Note.where(title: 'first').first
-      post.notes.expects(:where).once().with('id'=>first_note.id).returns([{id: first_note.id, title: 'first'}])
-
-      json.hit do
-        json.hit2 do
-          json.array! post.notes do |x|
-            raise 'this should be be called' if x[:title] == 'second'
-            json.title x[:title]
-          end
-        end
-      end
-    JBUILDER
-
-    Rails.cache.clear
-    id = Note.where(title: 'first').first.id
-    expected = strip_format(<<-JS)
-      (function(){
-        var joints={};
-        var cache={};
-        var defers=[];
-        return (
-          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.id=#{id}","joints":joints,"defers":defers}
-        );
-      })()
-    JS
-    assert_equal expected, result
-  end
-
-
-  test "filtering for a node of a AR relation in a tree by index via an appended where clause" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.0')
-      post = Post.create
-      post.notes.create title: 'first'
-      post.notes.create title: 'second'
-
-      offset = post.notes.offset(0)
-      post.notes.expects(:offset).once().with(0).returns(offset)
-
-      json.hit do
-        json.hit2 do
-          json.array! post.notes do |x|
-            raise 'this should be be called' if x[:title] == 'second'
-            json.title x[:title]
-          end
-        end
-      end
-    JBUILDER
-
-    Rails.cache.clear
-
-    expected = strip_format(<<-JS)
-      (function(){
-        var joints={};
-        var cache={};
-        var defers=[];
-        return (
-          {"data":{"title":"first"},"action":"graft","path":"hit.hit2.0","joints":joints,"defers":defers}
-        );
-      })()
-    JS
-    assert_equal expected, result
-  end
-
   test "filtering for a node in an array of a tree by id" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.id=1')
       json.hit do
         json.hit2 do
-          json.array! [{id: 1, name: 'hit' }, {id:2, name: 'miss'}] do |x|
+          data = ObjectCollection.new([{id: 1, name: 'hit' }, {id:2, name: 'miss'}])
+          json.array! data do |x|
             raise 'this should be be called' if x[:name] == 'miss'
             json.name x[:name]
           end
@@ -1143,9 +1071,10 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "filtering for a node in an array of a tree by index" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.0')
+      data = [{id: 1, name: 'hit' }, {id:2, name: 'miss'}]
       json.hit do
         json.hit2 do
-          json.array! [{id: 1, name: 'hit' }, {id:2, name: 'miss'}] do |x|
+          json.array! data do |x|
             raise 'this should be be called' if x[:name] == 'miss'
             json.name x[:name]
           end

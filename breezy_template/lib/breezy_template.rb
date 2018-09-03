@@ -135,24 +135,21 @@ class BreezyTemplate
     @attributes << _scope{ yield self }
   end
 
-
-  def array!(collection = [], *attributes)
+  def array!(collection, *attributes)
     options = attributes.first || {}
 
-    collection = [] if collection.nil?
+    if !collection.respond_to? :member_by
+      raise ::NotImplementedError, 'collection must implement member_by(attribute, value)'
+    end
+
+    if !collection.respond_to? :member_at
+      raise ::NotImplementedError, 'collection must implement member_at(index)'
+    end
+
+
     collection = _prepare_collection_for_map(collection)
     array = if ::Kernel.block_given?
       _map_collection(collection, options, &::Proc.new)
-    # elsif attributes.any?
-    #   if (!attributes.last.is_a? ::Hash)
-    #     _map_collection(collection) { |element|
-    #       extract! element, *attributes
-    #     }
-    #   else
-    #     _map_collection(collection, options) { |element|
-    #       extract! element, *attributes
-    #     }
-    #   end
     else
       collection.to_a
     end

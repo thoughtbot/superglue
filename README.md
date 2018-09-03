@@ -1,12 +1,12 @@
 # Breezy
 [![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
-Breezy brings the productivity and happiness of Rails to your multi or single page React and Redux Application.
+Breezy brings the productivity and happiness of vanilla Rails to your multi or single page React, Redux, Rails application.
 
 Out of the box, Breezy ships with an [opinionated state shape](#the-breezy-store-shape) for your Redux store, a set of thunks and selectors that work nicely with most usecases, immutable helpers, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
 
 ## Features
-1. **The Best of Rails, React, and Redux** Use your convienent `link_to` helpers, bring in [out-of-the-box](https://github.com/ant-design/antd-codemod) React components, and, when you need to, get down and dirty with Redux.
+1. **The Best of Rails, React, and Redux** Use your convienent `link_to` helpers, bring in [out-of-the-box](https://ant.design/) React components, and, when you need to, get down and dirty with Redux.
 2. **API ~~first~~ later development** Save the work for when you actually need it. With Breezy, you can build SPAs [without APIs](#how-does-it-work) and skip the hassle of building another set of routes/controllers/serializers/tests.
 3. **All your resources in a single request** Classic multi-page applications already achieves this. Breezy just enhances your Rails views to make it work for React and Redux.
 4. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
@@ -438,7 +438,7 @@ To reach the comment body you could do this:
 'posts.0.comment.0.body'
 ```
 
-or use Breezy's lookahead syntax
+or find first by its attribute and value
 
 ```
 'posts.post_id=1.comment.0.body'
@@ -569,6 +569,74 @@ json.post options do
 end
 ```
 
+#### Lists
+To support [filtering nodes](#filtering-nodes), any list passed to `array!` must implement `member_at(index)` and `member_by(attribute, value)`. For example, if you were using a delegate:
+
+```
+class ObjectCollection < SimpleDelegator
+  def member_at(index)
+    at(index)
+  end
+
+  def member_by(attribute, val)
+    find do |ele|
+      ele[attribute] == val
+    end
+  end
+end
+
+```
+
+Then in your template:
+
+```
+data = ObjectCollection.new([{id: 1, name: 'foo'}, {id: 2, name: 'bar'}])
+
+json.array! data do
+  ...
+end
+```
+
+Similarly for ActiveRecord:
+
+```
+class ApplicationRecord < ActiveRecord::Base
+  def self.member_at(index)
+    offset(index).limit(1)
+  end
+
+  def self.member_by(attribute, value)
+    find_by(Hash[attribute, val])
+  end
+end
+```
+
+Then in your template:
+
+```
+
+json.array! Post.all do
+  ...
+end
+```
+
+
+##### Array Core extention
+For convenience, BreezyTemplate includes a core_ext that adds these methods to `Array`. For example:
+
+```
+require 'breezy_template/core_ext'
+data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
+
+json.posts do
+  json.array! data do
+    ...
+  end
+end
+```
+
+Unfortunately, BreezyTemplate doesn't know what the elements are in your collection. The example above will be fine for [filtering](#filtering_nodes) by index `\posts?_bz=posts.0`, but will raise a `NotImplementedError` if you filter by attribute '/posts?_bz=posts.id=1'. So you may still have to provide your own delegator.
+
 #### Partials
 Partials are supported. The following will render the file views/posts/_blog_posts.js.props, and set a local variable `foo` assigned with @post, which you can use inside the partial.
 
@@ -637,6 +705,8 @@ json.header null, partial: ["profile", joint: 'super_header']
 When using joints with Arrays, the argument **MUST** be a lamda:
 
 ```ruby
+require 'breezy_template/core_ext' #See (lists)[#Lists]
+
 json.array! ['foo', 'bar'], partial: ["footer", joint: ->(x){"somefoo_#{x}"}]
 ```
 
@@ -666,6 +736,7 @@ json.author(cache: "some_cache_key") do
 end
 
 #or use it on arrays
+require 'breezy_template/core_ext' #See (lists)[#Lists]
 
 opts = {
   cache: ->(i){ ['a', i] }
@@ -710,6 +781,7 @@ If `:manual` is used, Breezy will no-op the block and do nothing after it reciev
 If you want to defer elements in an array, you should add a key as an option on `array!` to help breezy generate a more specific keypath, otherwise it'll just use the index.
 
 ```ruby
+require 'breezy_template/core_ext' #See (lists)[#Lists]
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
 json.array! data, key: :id do
@@ -718,45 +790,6 @@ json.array! data, key: :id do
   end
 end
 ```
-
-### Behavior with ActiveRecord
-Breezy's `array!` has support for ActiveRecord objects if you decide to pass in an `ActiveRelation`.
-
-
-Given this example:
-
-```ruby
-post = Post.create
-post.notes.create title: 'first'
-post.notes.create title: 'second'
-
-json.hit do
-  json.hit2 do
-    json.array! post.notes do |x|
-      json.title x[:title]
-    end
-  end
-end
-```
-
-and this dispatch
-
-```javascript
-store.dispatch(remote('?_bz=hit.hit2.id=1'))
-```
-
-Breezy will append a `where(id: 1)` to `post.notes` when filtering for a node before continuing traversing your prop tree.
-
-
-Similarly with this dispatch:
-
-
-```javascript
-store.dispatch(remote('?_bz=hit.hit2.0'))
-```
-
-Breezy will append a `offset(0).limit(1)` to `post.notes` when filtering for a node before continuing traversing your prop tree.
-
 
 ### Differences from JBuilder
 
@@ -835,6 +868,8 @@ to_nest = Jbuilder.new{ |json| json.nested_value 'Nested Test' }
 
 json.set! :nested, to_nest
 ```
+
+6. Any collection passed to `array!` must implement `member_at(index)` and `member_by(attribute, value)`. See [lists](#lists)
 
 ## Tutorial
 Soon!

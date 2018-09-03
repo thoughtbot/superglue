@@ -14,3 +14,17 @@ Rails.cache = ActiveSupport::Cache::MemoryStore.new
 load File.dirname(__FILE__) + '/support/schema.rb'
 require 'support/models'
 
+class ObjectCollection < SimpleDelegator
+  def member_at(index)
+    at(index)
+  end
+
+  def member_by(key, val)
+    find do |ele|
+      ele[key] == val || ele[key.to_sym] == val
+    end
+  end
+end
+
+
+require 'breezy_template/core_ext'

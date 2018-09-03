@@ -15,11 +15,27 @@ class NonEnumerable
   end
 
   delegate :map, :count, to: :@collection
+
+  def member_at(index)
+    @collection[index]
+  end
+
+  def member_by(attribute, value)
+    raise NotImplementedError
+  end
 end
 
-class VeryBasicWrapper < BasicObject
+class VeryBasicWrapper
   def initialize(thing)
     @thing = thing
+  end
+
+  def member_at(index)
+    @thing[index]
+  end
+
+  def member_by(attribute, value)
+    raise NotImplementedError
   end
 
   def method_missing(name, *args, &block)
@@ -260,7 +276,7 @@ class TemplateTest < ActiveSupport::TestCase
   #   assert_equal [], result['comments']
   # end
 
-  test 'nesting multiple children from a non-Enumerable that responds to #map' do
+  test 'nesting multiple children from a non-Enumerable that responds to #map, #members_at, #members_by' do
     comments = NonEnumerable.new([ Comment.new('hello', 1), Comment.new('world', 2) ])
 
     result = jbuild do |json|
@@ -292,7 +308,6 @@ class TemplateTest < ActiveSupport::TestCase
 
   test 'array! casts array-like objects to array before merging' do
     wrapped_array = VeryBasicWrapper.new(%w[foo bar])
-
     result = jbuild do |json|
       json.array! wrapped_array
     end

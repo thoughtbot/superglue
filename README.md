@@ -628,7 +628,7 @@ For convenience, BreezyTemplate includes a core_ext that adds these methods to `
 require 'breezy_template/core_ext'
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
-json.posts do
+
   json.array! data do
     ...
   end
@@ -870,6 +870,9 @@ json.set! :nested, to_nest
 ```
 
 6. Any collection passed to `array!` must implement `member_at(index)` and `member_by(attribute, value)`. See [lists](#lists)
+
+7. Key formatting via `json.key_format` is removed.
+
 
 ## Tutorial
 Soon!

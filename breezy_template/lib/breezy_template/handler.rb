@@ -10,7 +10,6 @@ class BreezyTemplate
       %{__already_defined = defined?(json); json||=::BreezyTemplate.new(self);json._filter_by_path(breezy_filter) if defined?(breezy_filter); json._set_request_url(request.path);#{template.source}
         if !(__already_defined && __already_defined != "method")
           json.merge!({data: json.found! || json.empty! })
-          json.key_format! :downcase
           if defined?(breezy) && breezy
             breezy.each do |k, v|
               json.set! k, v

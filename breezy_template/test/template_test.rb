@@ -66,10 +66,6 @@ end
 
 
 class TemplateTest < ActiveSupport::TestCase
-  setup do
-    BreezyTemplate.send :class_variable_set, '@@key_formatter', nil
-  end
-
   test 'single key' do
     result = jbuild do |json|
       json.content 'hello'
@@ -495,98 +491,6 @@ class TemplateTest < ActiveSupport::TestCase
   #   assert_equal 'Bob', result['relations'][0]['name']
   #   assert_equal 50, result['relations'][1]['age']
   # end
-
-  # reconsider
-  # test 'initialize via options hash' do
-  #   jbuilder = Jbuilder.new(key_formatter: 1, ignore_nil: 2)
-  #   assert_equal 1, jbuilder.instance_eval{ @key_formatter }
-  #   assert_equal 2, jbuilder.instance_eval{ @ignore_nil }
-  # end
-
-  test 'key_format! with parameter' do
-    result = jbuild do |json|
-      json.key_format! camelize: [:lower]
-      json.camel_style 'for JS'
-    end
-
-    assert_equal ['camelStyle'], result.keys
-  end
-
-  test 'key_format! with parameter not as an array' do
-    result = jbuild do |json|
-      json.key_format! :camelize => :lower
-      json.camel_style 'for JS'
-    end
-
-    assert_equal ['camelStyle'], result.keys
-  end
-
-  test 'key_format! propagates to child elements' do
-    result = jbuild do |json|
-      json.key_format! :upcase
-      json.level1 'one'
-      json.level2 do
-        json.value 'two'
-      end
-    end
-
-    assert_equal 'one', result['LEVEL1']
-    assert_equal 'two', result['LEVEL2']['VALUE']
-  end
-
-  test 'key_format! resets after child element' do
-    result = jbuild do |json|
-      json.level2 do
-        json.key_format! :upcase
-        json.value 'two'
-      end
-      json.level1 'one'
-    end
-
-    assert_equal 'two', result['level2']['VALUE']
-    assert_equal 'one', result['level1']
-  end
-
-  test 'key_format! with no parameter' do
-    result = jbuild do |json|
-      json.key_format! :upcase
-      json.lower 'Value'
-    end
-
-    assert_equal ['LOWER'], result.keys
-  end
-
-  test 'key_format! with multiple steps' do
-    result = jbuild do |json|
-      json.key_format! :upcase, :pluralize
-      json.pill 'foo'
-    end
-
-    assert_equal ['PILLs'], result.keys
-  end
-
-  test 'key_format! with lambda/proc' do
-    result = jbuild do |json|
-      json.key_format! ->(key){ key + ' and friends' }
-      json.oats 'foo'
-    end
-
-    assert_equal ['oats and friends'], result.keys
-  end
-
-  test 'default key_format!' do
-    BreezyTemplate.key_format camelize: :lower
-    result = jbuild{ |json| json.camel_style 'for JS' }
-    assert_equal ['camelStyle'], result.keys
-  end
-  #
-  test 'do not use default key formatter directly' do
-    BreezyTemplate.key_format
-    jbuild{ |json| json.key 'value' }
-    formatter = BreezyTemplate.send(:class_variable_get, '@@key_formatter')
-    cache = formatter.instance_variable_get('@cache')
-    assert_empty cache
-  end
 
   test 'ignore_nil! without a parameter' do
     result = jbuild do |json|

@@ -88,28 +88,22 @@ bundle exec rails webpacker:install:react
 1. Remove Turbolinks from your project. Breezy is actually a fork of Turbolinks 3/Turbograft, and shares many of the same strategies for page-to-page transitions. Unfortunately, this means it conflicts with Turbolinks at the moment.
 
 
-2. Install BreezyJS
-
-```
-yarn add @jho406/breezy --save
-```
-
-3. Add the following to your Gemfile and run bundle
+2. Add the following to your Gemfile and run bundle
 ```
 gem 'breezy'
 ```
 
-4. Run the installation generator
+3. Run the installation generator
 ```
 rails breezy:install:web
 ```
 
-5. Generate a scaffold
+4. Generate a scaffold
 ```
 rails generate scaffold post body:string --force --no-template-engine --breezy
 ```
 
-6. Or a view
+5. Or a view
 ```
 rails g breezy:view Post index
 ```

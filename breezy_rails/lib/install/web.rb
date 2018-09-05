@@ -85,7 +85,7 @@ say "Adding required member methods to ApplicationRecord"
 add_member_methods
 
 say "Installing React, Redux, and Breezy"
-run "yarn add react-redux redux react react-dom babel-preset-react prop-types redux-form @jho406/breezy@0.3.2 --save"
+run "yarn add react-redux redux react react-dom babel-preset-react prop-types redux-form @jho406/breezy --save"
 run "yarn add babel-plugin-module-resolver --save-dev"
 
 say "Updating webpack paths to include .jsx file extension"

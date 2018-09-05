@@ -127,7 +127,7 @@ class BreezyTemplate
     options = attributes.first || {}
 
     if !collection.respond_to? :member_by
-      raise ::NotImplementedError, 'collection must implement member_by(attribute, value)'
+      raise ::NotImplementedError, 'collection must implement member_by(attr, value)'
     end
 
     if !collection.respond_to? :member_at

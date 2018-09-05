@@ -564,7 +564,7 @@ end
 ```
 
 #### Lists
-To support [filtering nodes](#filtering-nodes), any list passed to `array!` must implement `member_at(index)` and `member_by(attribute, value)`. For example, if you were using a delegate:
+To support [filtering nodes](#filtering-nodes), any list passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. For example, if you were using a delegate:
 
 ```
 class ObjectCollection < SimpleDelegator
@@ -572,9 +572,9 @@ class ObjectCollection < SimpleDelegator
     at(index)
   end
 
-  def member_by(attribute, val)
+  def member_by(attr, val)
     find do |ele|
-      ele[attribute] == val
+      ele[attr] == val
     end
   end
 end
@@ -599,8 +599,8 @@ class ApplicationRecord < ActiveRecord::Base
     offset(index).limit(1)
   end
 
-  def self.member_by(attribute, value)
-    find_by(Hash[attribute, val])
+  def self.member_by(attr, value)
+    find_by(Hash[attr, val])
   end
 end
 ```
@@ -870,7 +870,7 @@ to_nest = Jbuilder.new{ |json| json.nested_value 'Nested Test' }
 json.set! :nested, to_nest
 ```
 
-6. Any collection passed to `array!` must implement `member_at(index)` and `member_by(attribute, value)`. See [lists](#lists)
+6. Any collection passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. See [lists](#lists)
 
 7. Key formatting via `json.key_format` is removed.
 

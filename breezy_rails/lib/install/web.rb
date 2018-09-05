@@ -27,8 +27,8 @@ def add_member_methods
     offset(index).limit(1)
   end
 
-  def self.member_by(attribute, value)
-    find_by(Hash[attribute, val])
+  def self.member_by(attr, value)
+    find_by(Hash[attr, val])
   end
 
     RUBY

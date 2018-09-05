@@ -376,7 +376,7 @@ json.header partial: ['header', joint: true]
 ```
 
 ### Manually updating cross cutting concerns
-If you want finer control, or want to perform optimistic updates, breezy provides a [action creators](#setinpage) that will immutably update across `pages`.
+If you want finer control, or want to perform optimistic updates, breezy provides [action creators](#setinpage) that will immutably update across `pages`.
 
 ## Rails controller helpers
 ### API
@@ -535,7 +535,7 @@ this.props.delInPage({
 
 
 ## BreezyTemplate
-BreezyTemplate is a queryable Server-generated Javascript Response (SJR) templating library based on JBuilder that you use to bulid the props that your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key [differences](#differences_from_jbuilder).
+BreezyTemplate is a queryable Server-generated Javascript Response (SJR) templating library based on JBuilder that you use to bulid the props that your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key [differences](#differences-from-jbuilder).
 
 ### API
 
@@ -615,24 +615,24 @@ end
 ```
 
 
-##### Array Core extention
+##### Array core extension
 For convenience, BreezyTemplate includes a core_ext that adds these methods to `Array`. For example:
 
 ```
 require 'breezy_template/core_ext'
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
-
+json.posts
   json.array! data do
     ...
   end
 end
 ```
 
-Unfortunately, BreezyTemplate doesn't know what the elements are in your collection. The example above will be fine for [filtering](#filtering_nodes) by index `\posts?_bz=posts.0`, but will raise a `NotImplementedError` if you filter by attribute '/posts?_bz=posts.id=1'. So you may still have to provide your own delegator.
+Unfortunately, BreezyTemplate doesn't know what the elements are in your collection. The example above will be fine for [filtering](#filtering_nodes) by index `\posts?_bz=posts.0`, but will raise a `NotImplementedError` if you filter by attribute `/posts?_bz=posts.id=1`. So you may still have to provide your own delegator.
 
 #### Partials
-Partials are supported. The following will render the file views/posts/_blog_posts.js.props, and set a local variable `foo` assigned with @post, which you can use inside the partial.
+Partials are supported. The following will render the file `views/posts/_blog_posts.js.props`, and set a local variable `foo` assigned with @post, which you can use inside the partial.
 
 
 ```ruby
@@ -662,7 +662,7 @@ json.array! @posts, partial: ["blog_post", as: :blog_post]
 ```
 
 #### Partial Joints
-Breezy does not normalize your store, instead it relies on your partial metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `joint` option.
+Breezy does not normalize your store, instead it relies on your partial's metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `joint` option.
 
 For example, to update all your headers across all pages like so:
 
@@ -677,11 +677,11 @@ extendInJoint({
 You would need use partials and add the option `joint: true`. Then the key `header` will be accessible by `extendInJoint`.
 
 ```ruby
-### index.js.breezy
+# index.js.breezy
 json.header null, partial: ["profile", joint: true]
 
 
-### _profile.js.breezy
+# _profile.js.breezy
 json.profile do
   json.address do
     json.state "New York City"
@@ -692,11 +692,11 @@ end
 
 You can also rename the joint.
 ```ruby
-### index.js.breezy
+# index.js.breezy
 json.header null, partial: ["profile", joint: 'super_header']
 ```
 
-When using joints with Arrays, the argument **MUST** be a lamda:
+When using joints with Arrays, the argument **MUST** be a lamda that returns a string:
 
 ```ruby
 require 'breezy_template/core_ext' #See (lists)[#Lists]
@@ -750,7 +750,7 @@ json.array! @options, opts
 ```
 
 #### Deferment
-You can defer rendering of expensive content using the `defer: :auto` option. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with `undefined` as a standin, and append a meta data to the response. When the client recieves the payload, breezy will use the meta data to issue an `remote` dispatch to fetch the missing node and graft it at the appropriate keypath on the client side.
+You can defer rendering of expensive content using the `defer: :auto` option. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with `undefined` as a standin, and append a bit of meta data to the response. When the client recieves the payload, breezy will use the meta data to issue a `remote` dispatch to fetch the missing node and graft it at the appropriate keypath on the client side.
 
 Usage:
 ```ruby
@@ -772,18 +772,25 @@ If `:manual` is used, Breezy will no-op the block and do nothing after it reciev
 
 
 #### Working with arrays
-If you want to defer elements in an array, you should add a key as an option on `array!` to help breezy generate a more specific keypath, otherwise it'll just use the index.
+If you want to defer elements in an array, you should specify which attribute you want to use to identify the uniqueness of the element via the `key` options. This helps Breezy generate a more specific keypath in its requests, otherwise it'll just use the index.
+
+For example:
 
 ```ruby
 require 'breezy_template/core_ext' #See (lists)[#Lists]
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
-json.array! data, key: :id do
-  json.greeting defer: :auto do
-    json.greet 'hi'
+json.posts
+  json.array! data, key: :some_id do |item|
+    json.some_id item.id # the attribute i want to use as `key`.
+    json.contact(defer: :auto) do
+      json.address '123 example drive'
+    end
   end
 end
 ```
+
+When Breezy receives the response, it will automatically kick off `remote(?_bz=posts.some_id=1.contact)` and `remote(?_bz=posts.some_id=2.contact)`.
 
 ### Differences from JBuilder
 
@@ -838,7 +845,7 @@ json.comments do
 end
 ```
 
-4. `json.array!` first args are options. So this
+4. `json.array!` method signature is `json.array!(collection, options) {}`. So this
 
 ```ruby
 json.array! comments, :content, :id

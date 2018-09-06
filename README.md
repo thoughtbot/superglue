@@ -36,7 +36,7 @@ views/
 Note that there is no `post.html.xyz` anymore, Breezy takes care of that by rendering a blank `post.html` so that React/Redux can take over. You can override this behavior if you'd like.
 ```
 
-Your props lives as a [queryable](#filtering-nodes) and [deferable](#deferment) tree written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:
+Your props lives as a [queryable](#filtering-nodes) and [deferable](#deferment) tree written using [jbuilder-like syntax](#breezytemplate) that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:
 
 ```javascript
 import {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from '@jho406/breezy'
@@ -536,6 +536,46 @@ this.props.delInPage({
 
 ## BreezyTemplate
 BreezyTemplate is a queryable Server-generated Javascript Response (SJR) templating library based on JBuilder that you use to bulid the props that your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key [differences](#differences-from-jbuilder).
+
+Example:
+```ruby
+json.menu do
+  json.current_user do
+    json.email current_user.email
+    json.avatar current_user.avatar
+    json.inbox current_user.messages.count
+  end
+end
+
+json.dashboard(defer: :auto) do
+  sleep 5
+  json.complex_post_metric 500
+end
+
+json.posts do
+  page_num = params[:page_num]
+  paged_posts = @posts.page(page_num).per(20)
+
+  json.list do
+    json.array! paged_posts, key: :id do |post|
+      json.id post.id
+      json.description post.description
+      json.comments_count post.comments.count
+      json.edit_path edit_post_path(post)
+    end
+  end
+
+  json.pagination_path posts_path
+  json.current paged_posts.current_page
+  json.total @posts.count
+end
+
+if notice
+  json.notice notice
+end
+
+json.footer nil, partial: 'footer'
+```
 
 ### API
 

@@ -106,7 +106,9 @@ class BreezyTemplateTest < ActionView::TestCase
   end
 
   def action_controller_test_request
-    if ::Rails.version.start_with?('5.1')
+    if ::Rails.version.start_with?('5.2')
+      ::ActionController::TestRequest.create({})
+    elsif ::Rails.version.start_with?('5.1')
       ::ActionController::TestRequest.create({})
     elsif ::Rails.version.start_with?('5')
       ::ActionController::TestRequest.create

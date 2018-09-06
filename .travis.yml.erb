@@ -1,0 +1,52 @@
+matrix:
+  include:
+    <%ruby_versions = %w(2.3 2.4 2.5)%>
+    <%gemfiles = ['breezy_template/Gemfile.rails50', 'breezy_template/Gemfile.rails51', 'breezy_template/Gemfile.rails52']%>
+    <%gemfiles.each do |gemfile|%>
+      <%ruby_versions.each do |ver|%>
+    - language: ruby
+      rvm: <%=ver%>
+      gemfile: <%=gemfile%>
+      before_install:
+        - cd breezy_template
+      install:
+        - bundle install
+      script:
+        - bundle exec rake test
+      <%end%>
+    <%end%>
+
+    <%ruby_versions = %w(2.3 2.4 2.5)%>
+    <%gemfiles = ['breezy_rails/Gemfile.rails50', 'breezy_rails/Gemfile.rails51', 'breezy_rails/Gemfile.rails52']%>
+    <%gemfiles.each do |gemfile|%>
+      <%ruby_versions.each do |ver|%>
+    - language: ruby
+      rvm: <%=ver%>
+      gemfile: <%=gemfile%>
+      addons:
+        chrome: stable
+      before_install:
+        - wget -N http://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip -P ~/
+        - unzip ~/chromedriver_linux64.zip -d ~/
+        - rm ~/chromedriver_linux64.zip
+        - sudo mv -f ~/chromedriver /usr/local/share/
+        - sudo chmod +x /usr/local/share/chromedriver
+        - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+        - cd breezy_rails
+      install:
+        - bundle install
+      script:
+        - bundle exec rake test
+        - BUNDLE_GEMFILE='' ruby -Ilib:test test/acceptance/breezy_installation_acceptance.rb
+      <%end%>
+    <%end%>
+
+    - language: node_js
+      node_js: 8
+      before_install:
+        - cd breezy
+      install:
+        - npm install
+      script:
+        - npm run lint
+        - npm run test

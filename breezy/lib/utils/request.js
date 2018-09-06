@@ -43,6 +43,8 @@ export function handleServerErrors (args){
 }
 
 export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, body}) {
+  method = method.toUpperCase()
+
   const currentState = getState().breezy || {}
 
   const jsAccept = 'text/javascript, application/x-javascript, application/javascript'

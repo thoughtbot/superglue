@@ -893,6 +893,23 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "filtering for a nonexistant node in the tree" do
+    begin
+      jbuild(<<-JBUILDER)
+        json._filter_by_path('miss.miss.miss.miss')
+        json.hit do
+          json.hit2 do
+            json.greeting 'hello world'
+          end
+        end
+      JBUILDER
+    rescue => e
+      assert_equal e.cause.class, BreezyTemplate::NotFoundError
+      assert_equal e.message, 'Could not find node at ["miss", "miss", "miss", "miss"]'
+    end
+
+    Rails.cache.clear
+  end
   test "filtering for a raw value is also possble" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
       json.hit do

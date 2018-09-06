@@ -2,10 +2,14 @@ require 'breezy_template/breezy_template'
 
 class BreezyTemplate
   module SearchExtension
-    def found!
+    def _found!
+      if !@search_path.nil? && @found.nil?
+        ::Kernel.raise NotFoundError.build(@search_path)
+      end
+
       found = @found
       @found = nil
-      @search_path = []
+      @search_path = nil
       found
     end
 

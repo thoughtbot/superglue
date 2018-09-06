@@ -21,4 +21,11 @@ class BreezyTemplate
       new(message)
     end
   end
+
+  class NotFoundError < ::StandardError
+    def self.build(search_path)
+      message = "Could not find node at #{search_path}"
+      new(message)
+    end
+  end
 end

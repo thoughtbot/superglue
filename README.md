@@ -36,7 +36,7 @@ views/
 Note that there is no `post.html.xyz` anymore, Breezy takes care of that by rendering a blank `post.html` so that React/Redux can take over. You can override this behavior if you'd like.
 ```
 
-Your props lives as a queryable tree (a bit like JSON pointers) written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:
+Your props lives as a [queryable](#filtering-nodes) and [deferable](#deferment) tree written using jbuilder syntax that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:
 
 ```javascript
 import {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from '@jho406/breezy'
@@ -750,7 +750,7 @@ json.array! @options, opts
 ```
 
 #### Deferment
-You can defer rendering of expensive content using the `defer: :auto` option. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with `undefined` as a standin, and append a bit of meta data to the response. When the client recieves the payload, breezy will use the meta data to issue a `remote` dispatch to fetch the missing node and graft it at the appropriate keypath on the client side.
+You can defer rendering of expensive nodes in your content tree using the `defer: :auto` option. Behind the scenes BreezyTemplates will no-op the block entirely, replace the value with `undefined` as a standin, and append a bit of meta data to the response. When the client recieves the payload, breezy will use the meta data to issue a `remote` dispatch to fetch the missing node and graft it at the appropriate keypath on the client side.
 
 Usage:
 ```ruby

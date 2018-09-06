@@ -11,9 +11,6 @@ ActiveSupport::TestCase.test_order = :random if ActiveSupport::TestCase.respond_
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 Rails.cache = ActiveSupport::Cache::MemoryStore.new
 
-load File.dirname(__FILE__) + '/support/schema.rb'
-require 'support/models'
-
 class ObjectCollection < SimpleDelegator
   def member_at(index)
     at(index)

@@ -19,6 +19,15 @@ module Breezy
 
       if request.xhr? && request.headers["X-BREEZY-REQUEST"]
         self.status = 200
+
+        if params['_bz'] && !url.include?('_bz')
+          parsed_url =  URI.parse(url)
+          qry_with_bz = URI.decode_www_form(String(parsed_url.query)) << ["_bz", params['_bz']]
+          parsed_url.query = URI.encode_www_form(qry_with_bz)
+
+          url = parsed_url.to_s
+        end
+
         response.headers["X-BREEZY-LOCATION"] = url
       end
 

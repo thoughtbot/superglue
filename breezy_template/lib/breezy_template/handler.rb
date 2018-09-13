@@ -40,10 +40,6 @@ class BreezyTemplate
             json.path breezy_filter
           end
 
-          if defined?(session) && session
-            session.delete(:breezy_filter)
-          end
-
           json.joints ::BreezyTemplate::Var.new('joints')
           json.defers ::BreezyTemplate::Var.new('defers')
 

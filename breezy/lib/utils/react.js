@@ -171,6 +171,10 @@ export function withBrowserBehavior (visit, remote) {
   })
 
   const wrappedRemote = (function (...args) {
+    if (args.length == 1) {
+      args.push(undefined)
+    }
+
     return remote(...args, this.props.pageKey)
   })
 

@@ -103,11 +103,6 @@ rails breezy:install:web
 rails generate scaffold post body:string --force --no-template-engine --breezy
 ```
 
-5. Or a view
-```
-rails g breezy:view Post index
-```
-
 ### Configuration
 The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare bones `Nav` component.
 

@@ -9,7 +9,6 @@ module Rails
       source_root File.expand_path('../templates', __FILE__)
 
       argument :attributes, type: :array, default: [], banner: 'field:type field:type'
-      class_option :platform, type: :string, default: 'web', enum: ['web', 'mobile']
 
       def create_root_folder
         path = File.join('app/views', controller_file_path)
@@ -26,21 +25,12 @@ module Rails
         %w(index show new edit).each do |view|
           @action_name = view
           filename = filename_with_jsx_extensions(view)
-          if options[:platform] == 'mobile'
-            template 'mobile/' + filename, File.join('app/views', controller_file_path, filename)
-          else
-            template 'web/' + filename, File.join('app/views', controller_file_path, filename)
-          end
+          template 'web/' + filename, File.join('app/views', controller_file_path, filename)
         end
 
         js_filename = [plural_table_name, 'form.jsx'].map(&:camelcase).join
-        if options[:platform] == 'mobile'
-          template 'mobile/form.jsx', File.join('app/components', js_filename)
-          template 'mobile/elements.js', File.join('app/components', 'elements.js')
-        else
-          template 'web/form.jsx', File.join('app/components', js_filename)
-          template 'web/base.jsx', File.join('app/components', 'BaseScreen.jsx')
-        end
+        template 'web/form.jsx', File.join('app/components', js_filename)
+        template 'web/base.jsx', File.join('app/components', 'BaseScreen.jsx')
 
         %w(index show new edit).each do |view|
           append_mapping(view)
@@ -50,11 +40,7 @@ module Rails
 
       protected
         def append_mapping(action)
-          if options[:platform] == 'mobile'
-            app_js = 'App.js'
-          else
-            app_js = 'app/javascript/packs/application.js'
-          end
+          app_js = 'app/javascript/packs/application.js'
 
           base_parts = class_path + [file_name]
           destination =  File.join("views", base_parts)

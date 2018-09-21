@@ -1,6 +1,5 @@
 import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
-import {delInPage} from '@jho406/breezy/dist/action_creators'
 import {connect} from 'react-redux'
 import BaseScreen from 'components/BaseScreen'
 import {SubmissionError} from 'redux-form'

@@ -14,8 +14,8 @@ class <%= plural_table_name.camelize %>Show extends BaseScreen {
           {this.props.<%=attr%>}
         </p>
         <%- end -%>
-        <a onClick={ e => this.visit(this.props.meta.edit_path)}>Edit</a>
-        <a onClick={ e => this.visit(this.props.meta.index_path)}>Back</a>
+        <a onClick={ e => this.visit(this.props.edit_<%= singular_table_name %>_path)}>Edit</a>
+        <a onClick={ e => this.visit(this.props.<%= plural_table_name %>_path )}>Back</a>
       </div>
     )
   }

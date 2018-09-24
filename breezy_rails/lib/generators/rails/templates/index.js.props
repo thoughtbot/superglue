@@ -3,11 +3,8 @@ json.<%= plural_table_name %> do
     <%- attributes_list_with_timestamps.each do |attr| -%>
     json.<%=attr%> <%= singular_table_name %>.<%=attr%>
     <%- end -%>
-    json.meta do
-      json.edit_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
-      json.show_path <%=singular_table_name%>_path(<%=singular_table_name%>)
-      json.delete_path <%=singular_table_name%>_path(<%=singular_table_name%>)
-    end
+    json.edit_post_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.post_path <%=singular_table_name%>_path(<%=singular_table_name%>)
   end
 end
 
@@ -15,6 +12,4 @@ if notice
   json.notice notice
 end
 
-json.meta do
-  json.new_path new_<%= singular_table_name %>_path
-end
+json.new_post_path new_<%= singular_table_name %>_path

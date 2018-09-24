@@ -12,7 +12,5 @@ json.attributes_for_form do
 <%- end -%>
 end
 
-json.meta do
-  json.show_path <%=singular_table_name%>_path(@<%=singular_table_name%>)
-  json.index_path <%= plural_table_name %>_path
-end
+json.post_path <%= singular_table_name%>_path(@<%=singular_table_name%>)
+json.posts_path <%= plural_table_name %>_path

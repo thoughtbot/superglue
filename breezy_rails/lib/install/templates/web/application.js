@@ -4,7 +4,6 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 import createHistory from 'history/createBrowserHistory'
-import { reducer as formReducer } from 'redux-form'
 import Breezy from '@jho406/breezy'
 
 // This mapping can be auto populate through
@@ -29,7 +28,6 @@ const {reducer, initialState, Nav, connect} = Breezy.start({
 const store = createStore(
   combineReducers({
     ...reducer,
-    form: formReducer
   }),
   initialState,
   applyMiddleware(thunk)

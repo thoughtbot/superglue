@@ -1,37 +1,31 @@
 import React from 'react'
-import { Field, reduxForm, stopSubmit, touch} from 'redux-form'
+import { Formik, Form, Field } from 'formik';
 
-const RenderField = ({ input, label, type, meta: { touched, error } }) => (
-  <div>
-    <label>{label}</label>
-    <div>
-      <input {...input} placeholder={label} type={type} />
-      {touched && error && <span>{error}</span>}
-    </div>
-  </div>
+export default React.forwardRef(
+  ({initialValues = {
+  <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+    <%=attr.to_s%>:'',
+  <%- end -%>
+  }, onSubmit}, ref) => {
+   return (
+     <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        ref={ref}
+      >
+        {({ errors, touched, isSubmitting }) => (
+          <Form>
+          <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+            <Field type="text" name="<%=attr.to_s%>" />
+            {errors.<%=attr.to_s%> && touched.<%=attr.to_s%> && errors.<%=attr.to_s%>}
+          <%- end -%>
+
+            <button type="submit" disabled={isSubmitting}>
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    )
+  }
 )
-
-const SimpleForm = props => {
-  const { error, handleSubmit, initialValue } = props
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-      <label><%=attr.to_s.humanize%></label>
-      <Field
-        name="<%=attr.to_s.camelize(:lower)%>"
-        component={RenderField}
-        type="text"
-      />
-      <%- end -%>
-      <button type="submit">
-        Submit
-      </button>
-    </form>
-  )
-}
-
-export default reduxForm({
-  form: '<%=plural_table_name%>_form' // a unique identifier for this form
-})(SimpleForm)
-

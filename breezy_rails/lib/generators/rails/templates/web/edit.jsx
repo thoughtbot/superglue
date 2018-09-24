@@ -2,24 +2,23 @@ import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import {connect} from 'react-redux'
 import BaseScreen from 'components/BaseScreen'
-import {SubmissionError} from 'redux-form'
 import <%= plural_table_name.camelize %>Form from 'components/<%= plural_table_name.camelize %>Form'
 
 class <%= plural_table_name.camelize %>Edit extends BaseScreen {
-  handleSubmit = (body) => {
+  formRef = React.createRef()
+
+  handleSubmit = (values, {setSubmitting}) => {
     this.props.delInPage({pageKey: this.props.pageKey, keypath: 'errors'})
 
     const options = {
       method:'PUT',
-      body: JSON.stringify(body),
+      body: JSON.stringify(values),
     }
-    const path = '/<%= plural_table_name %>/' + this.props.id
 
-    this.visit(path, options).then( rsp => {
+    this.visit(this.props.<%= singular_table_name %>, options).then( rsp => {
+      setSubmitting(false)
       if (this.props.errors) {
-        throw new SubmissionError({
-          ...this.props.errors
-        })
+        this.formRef.current.setErrors(this.props.errors)
       }
     })
   }
@@ -28,12 +27,12 @@ class <%= plural_table_name.camelize %>Edit extends BaseScreen {
     return (
       <div>
         <<%= plural_table_name.camelize %>Form
-          error={this.props.error}
           onSubmit={this.handleSubmit}
           initialValues={this.props.attributes_for_form}
+          ref={this.formRef}
         />
-        <a onClick={ e => this.visit(this.props.meta.show_path)}>Show</a>
-        <a onClick={ e => this.visit(this.props.meta.index_path)}>Back</a>
+        <a onClick={ e => this.visit(this.props.post_path)}>Show</a>
+        <a onClick={ e => this.visit(this.props.posts_path)}>Back</a>
       </div>
     )
   }
@@ -41,7 +40,7 @@ class <%= plural_table_name.camelize %>Edit extends BaseScreen {
 
 export default connect(
   mapStateToProps,
-  {...mapDispatchToProps, delInPage}
+  mapDispatchToProps
 )(<%= plural_table_name.camelize %>Edit)
 
 

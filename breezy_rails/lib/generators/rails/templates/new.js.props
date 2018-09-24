@@ -2,6 +2,4 @@ if @<%= singular_table_name %>.errors.any?
   json.errors @<%= singular_table_name %>.errors.to_h
 end
 
-json.meta do
-  json.index_path <%= plural_table_name %>_path
-end
+json.<%= plural_table_name %>_path <%= plural_table_name %>_path

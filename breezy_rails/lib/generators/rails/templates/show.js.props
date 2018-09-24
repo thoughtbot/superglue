@@ -6,7 +6,5 @@ if notice
   json.notice notice
 end
 
-json.meta do
-  json.index_path <%= plural_table_name %>_path
-  json.edit_path edit_<%= singular_table_name %>_path(@<%= singular_table_name %>)
-end
+json.<%= plural_table_name %>_path <%= plural_table_name %>_path
+json.edit_<%= singular_table_name %>_path edit_<%= singular_table_name %>_path(@<%= singular_table_name %>)

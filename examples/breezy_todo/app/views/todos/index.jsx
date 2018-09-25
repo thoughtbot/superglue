@@ -10,6 +10,8 @@ class TodosIndex extends Component{
     todos: []
   }
 
+  formRef = React.createRef()
+
   constructor(props) {
     super(props)
     const {visit} = withBrowserBehavior(props.visit, props.remote)
@@ -25,7 +27,7 @@ class TodosIndex extends Component{
       method: 'POST',
       body: JSON.stringify({todo})
     }
-    const url = this.props.meta.todos_path + this.filterParams()
+    const url = this.props.todos_path + this.filterParams()
 
     this.visit(url, options)
   }
@@ -34,7 +36,13 @@ class TodosIndex extends Component{
     return this.visit(
       todo.meta.todo_path + this.filterParams(),
       {method: 'DELETE'},
-    )
+    ).then( rsp => {
+      setSubmitting(false)
+      if (this.props.errors) {
+        this.formRef.current.setErrors(this.props.errors)
+      }
+    })
+
   }
 
   updateTodo(todo) {
@@ -65,6 +73,7 @@ class TodosIndex extends Component{
         <header className="header">
           <h1>Todos</h1>
           <TodosForm
+            ref={this.formRef}
             onSubmit={(args) => {
               this.createTodo(args)
             }}

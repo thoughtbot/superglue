@@ -1,23 +1,32 @@
 import React from 'react'
-import { Field, reduxForm, stopSubmit, touch} from 'redux-form'
+import { Formik, Form, Field } from 'formik';
 
-const TodosForm = (props) => {
-  return (
-    <form onSubmit={(...args) => {
-      props.handleSubmit(...args)
-      props.reset()
-    }}>
-      <Field
-        name="description"
-        component="input"
-        className="new-todo"
-        placeholder="What needs to be done?"
-        type="text"
-      />
-    </form>
-  )
-}
+export default React.forwardRef(
+  ({initialValues = {
+    description:'',
+  }, onSubmit}, ref) => {
+   return (
+     <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        ref={ref}
+      >
+        {({ errors, touched, isSubmitting }) => (
+          <Form>
+            <Field
+              name="description"
+              className="new-todo"
+              placeholder="What needs to be done?"
+              type="text"
+            />
+            {errors.description && touched.description && errors.description}
 
-export default reduxForm({
-  form: 'todos_form'
-})(TodosForm)
+            <button type="submit" disabled={isSubmitting}>
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    )
+  }
+)

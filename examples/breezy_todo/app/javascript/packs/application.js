@@ -4,7 +4,6 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 import createHistory from 'history/createBrowserHistory'
-import { reducer as formReducer } from 'redux-form'
 import Breezy from '@jho406/breezy'
 import logger from 'redux-logger'
 import TodosIndex from 'views/todos/index'
@@ -32,7 +31,6 @@ const {reducer, initialState, Nav, connect} = Breezy.start({
 const store = createStore(
   combineReducers({
     ...reducer,
-    form: formReducer
   }),
   initialState,
   applyMiddleware(thunk, logger)

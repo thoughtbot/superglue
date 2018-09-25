@@ -15,6 +15,4 @@ json.count Todo.where(completed: [nil, false]).count
 
 json.filter params['filter']
 
-json.meta do
-  json.todos_path todos_path
-end
+json.todos_path todos_path

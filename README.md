@@ -241,7 +241,7 @@ Arguments | Type | Notes
 --- | --- | ---
 pathQuery| `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
 fetchRequestOptions | `Object` |  Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
-pageKey | `String` | Optional. The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. This value will default to response `x-response-url`, `content-location`.
+pageKey | `String` | Optional. The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. If not specified, Breezy will use the response's `x-response-url` (reserved for Breezy's use), or `content-location` headers. It is [recommended](#setting-the-content-locatio) to use `response.set_header("content-location", new_todo_path)` in your `create` and `update` methods.
 
 Callback options | Type | Notes
 --- | --- | ---
@@ -373,7 +373,7 @@ json.header partial: ['header', joint: true]
 ### Manually updating cross cutting concerns
 If you want finer control, or want to perform optimistic updates, breezy provides [action creators](#setinpage) that will immutably update across `pages`.
 
-## Rails controller helpers
+## Rails controller helpers and behavior
 ### API
 #### use_breezy_html
 ```ruby
@@ -397,7 +397,24 @@ Breezy determines which React component to render for the controller action by u
   end
 ```
 
+### Setting the content location
 
+On non-GET requests, Breezy uses the response's `content-location` to create the key used to store your props. This is because when you render in a `create` or `update`, the returned response does not neccesarily reflect the url the user should see. For example, if i'm on `posts/new` and you make a POST request to `posts/`, you may render `posts/new` for any errors you'd like to show.
+
+It is recommended that set this header in your `create` and `update` methods.
+
+```
+def create
+  @post = Post.new(post_params)
+
+  if @post.save
+    redirect_to @post, notice: 'Post was successfully created.'
+  else
+    response.set_header("content-location", new_post_path)
+    render :new, breezy: {screen: 'PostsNew'}
+  end
+end
+```
 
 ## Immutability Helpers
 
@@ -485,7 +502,7 @@ this.props.extendInJoint({
 setInPage({pagekey, keypath, value})
 ```
 
-At the page specificed by the URL, traverses to the node by keypath and immutably set the value. If a partial was used......
+At the page specificed by the URL, traverses to the node by keypath and immutably set the value.
 
 ```javascript
 this.props.setInPage({

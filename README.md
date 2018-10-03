@@ -6,12 +6,11 @@ Breezy brings the productivity and happiness of vanilla Rails to your multi or s
 Out of the box, Breezy ships with an [opinionated state shape](#the-breezy-store-shape) for your Redux store, a set of thunks and selectors that work nicely with most usecases, immutable helpers, a jbuilder-forked library to build your container props, and a AJAX workflow that does not require you to build REST-ful APIs.
 
 ## Features
-1. **The Best of Rails, React, and Redux** Use your convienent `link_to` helpers, bring in [out-of-the-box](https://ant.design/) React components, and, when you need to, get down and dirty with Redux.
+1. **The Best of Rails, React, and Redux** Use your convienent `link_to` helpers, bring in [out-of-the-box](https://ant.design/components/button/) React components, and, when you need to, get down and dirty with Redux.
 2. **API ~~first~~ later development** Save the work for when you actually need it. With Breezy, you can build SPAs [without APIs](#how-does-it-work) and skip the hassle of building another set of routes/controllers/serializers/tests.
 3. **All your resources in a single request** Classic multi-page applications already achieves this. Breezy just enhances your Rails views to make it work for React and Redux.
 4. **Mix normal HTML and React pages.** Need some pages to be in React and some pages, maybe the login page, to be in plain ERB? No Problem!
 5. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
-6. **Want to build React-native using the same Rails workflow?** We're working on it!
 
 ## How does it work?
 
@@ -320,7 +319,7 @@ How should you structure your store? Should I replicate my business models, like
 
 Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [super easy](#automatically-updating-cross-cutting-concerns) to update and manage cross-cutting concerns like a shared header.
 
-Breezy's opinion is that its much saner to leave the business models to the backend, and shape state on the frontend for presentational purposes only. In other words, there is no `User` model on the front end, just pages with `User`-like data.
+Breezy's opinion is that its much saner to leave the business models to the backend, and shape state on the frontend for ~~only~~ mostly presentational purposes. In other words, there is no `User` model on the front end, just pages with `User`-like data.
 
 #### How does it look like
 

@@ -5,9 +5,7 @@ json.todos do
     json.completed todo.completed
     json.created_at todo.created_at
     json.updated_at todo.updated_at
-    json.meta do
-      json.todo_path todo_path(todo)
-    end
+    json.todo_path todo_path(todo)
   end
 end
 

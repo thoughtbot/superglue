@@ -34,7 +34,7 @@ class TodosIndex extends Component{
 
   deleteTodo(todo) {
     return this.visit(
-      todo.meta.todo_path + this.filterParams(),
+      todo.todo_path + this.filterParams(),
       {method: 'DELETE'},
     ).then( rsp => {
       setSubmitting(false)
@@ -52,7 +52,7 @@ class TodosIndex extends Component{
     }
 
     return this.visit(
-      todo.meta.todo_path + this.filterParams(),
+      todo.todo_path + this.filterParams(),
       options,
     )
   }
@@ -107,7 +107,7 @@ class TodosIndex extends Component{
           <li>
             <a
               className={classNames({selected: !this.props.filter})}
-              onClick={() => this.visit(this.props.meta.todos_path)}
+              onClick={() => this.visit(this.props.todos_path)}
             >
               All
             </a>
@@ -116,7 +116,7 @@ class TodosIndex extends Component{
           <li>
             <a
               className={classNames({selected: this.props.filter === 'active'})}
-              onClick={() => this.visit(this.props.meta.todos_path + '?filter=active')}
+              onClick={() => this.visit(this.props.todos_path + '?filter=active')}
             >
               Active
             </a>
@@ -125,7 +125,7 @@ class TodosIndex extends Component{
           <li>
             <a
               className={classNames({selected: this.props.filter === 'completed'})}
-              onClick={() => this.visit(this.props.meta.todos_path + '?filter=completed')}
+              onClick={() => this.visit(this.props.todos_path + '?filter=completed')}
             >
               Completed
             </a>

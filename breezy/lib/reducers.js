@@ -1,4 +1,4 @@
-import {reverseMerge} from './utils/helpers'
+import {reverseMerge, pagePath} from './utils/helpers'
 import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
 
@@ -115,7 +115,7 @@ export function pageReducer (state = {}, action) {
   }
   case 'BREEZY_SET_IN_PAGE': {
     const {pageKey, keypath, value} = action
-    const fullPath = [pageKey, 'data', keypath].join('.')
+    const fullPath = pagePath(pageKey, keypath)
     //todo: make setIn accept an array
     const nextState = setIn(state, fullPath, value)
 
@@ -123,14 +123,14 @@ export function pageReducer (state = {}, action) {
   }
   case 'BREEZY_DEL_IN_PAGE': {
     const {pageKey, keypath} = action
-    const fullPath = [pageKey, 'data', keypath].join('.')
+    const fullPath = pagePath(pageKey, keypath)
     const nextState = delIn(state, fullPath)
 
     return nextState
   }
   case 'BREEZY_EXTEND_IN_PAGE': {
     const {pageKey, keypath, value} = action
-    const fullPath = [pageKey, 'data', keypath].join('.')
+    const fullPath = pagePath(pageKey, keypath)
     const nextState = extendIn(state, fullPath, value)
 
     return nextState

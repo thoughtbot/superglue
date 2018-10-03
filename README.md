@@ -147,7 +147,50 @@ class App extends React.Component {
 ```
 
 #### Custom reducers
-If you find yourself needing functionality beyond what the default reducers provide, ensure that you know how [Breezy shapes it store](#how-does-it-look-like), and take alook at the following example on how to update content using breezy's immutability helpers:
+If you find yourself needing functionality beyond what the default reducers provide, take a look at how [Breezy shapes it store](#how-does-it-look-like) and add your own reducers:
+
+```javascript
+yarn add reduce-reducers
+```
+
+and modify your `application.js`
+
+```javascript
+....
+import reduceReducers from 'reduce-reducers'
+import {setIn} from '@jho406/breezy'
+import {pagePath} from '@jho406/breezy/dist/utils/helpers'
+
+function myCustomReducer(state = {}, action) {
+  switch(action.type) {
+  case 'USER_UPLOADS_FILES': {
+    const {pageKey, keypath, someValue} = action
+    const path = pagePath(pageKey, keypath)
+    const nextState = setIn(state, path, someValue)
+
+    return nextState
+  }
+  default:
+    return state
+  }
+}
+
+const {reducer, ...otherStuff} = Breezy.start({...})
+
+const {
+  breezy: breezyReducer,
+  pages: pagesReducer,
+} = reducer
+
+const store = createStore(
+  combineReducers({
+    breezy: breezyReducer,
+    pages: reduceReducers(pagesReducer, myCustomReducer),
+  }),
+  initialState,
+  applyMiddleware(thunk)
+)
+```
 
 ```javascript
 import {setIn} from '@jho406/breezy/dist/immutability'

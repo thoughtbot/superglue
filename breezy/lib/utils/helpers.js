@@ -11,4 +11,8 @@ function reverseMerge (dest, obj) {
   return dest
 }
 
-export {reverseMerge, uuidv4}
+function pagePath (pageKey, keypath) {
+  return [pageKey, 'data', keypath].join('.')
+}
+
+export {reverseMerge, uuidv4, pagePath}

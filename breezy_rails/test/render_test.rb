@@ -60,12 +60,12 @@ class RenderTest < ActionController::TestCase
 
   test "simple render with breezy" do
     get :simple_render_with_breezy
-    assert_breezy_html({author: "john smith"})
+    assert_breezy_html({author: "john smith"}, screen: :action)
   end
 
   test "implied render with breezy" do
     get :implied_render_with_breezy
-    assert_breezy_html({author: "john smith"})
+    assert_breezy_html({author: "john smith"}, screen: :implied_render_with_breezy)
   end
 
   test "simple render with breezy via get js" do
@@ -99,16 +99,16 @@ class RenderTest < ActionController::TestCase
 
   private
 
-  def assert_breezy_html(content)
+  def assert_breezy_html(content, opts={})
     assert_response 200
-    view = @response.request.params['action'].camelcase
-    assert_equal "<html><head><script type='text/javascript'>Breezy.replace((function(){var joints={};var cache={};var defers=[];return ({\"data\":#{content.to_json},\"screen\":\"Render#{view}\",\"csrf_token\":\"secret\",\"assets\":[\"/app.js\"],\"joints\":joints,\"defers\":defers});})());</script></head><body></body></html>", @response.body
+
+    assert_equal "<html><head><script type='text/javascript'>Breezy.replace((function(){var joints={};var cache={};var defers=[];return ({\"data\":#{content.to_json},\"screen\":\"render/#{opts[:screen].to_s}\",\"csrf_token\":\"secret\",\"assets\":[\"/app.js\"],\"joints\":joints,\"defers\":defers});})());</script></head><body></body></html>", @response.body
     assert_equal 'text/html', @response.content_type
   end
 
   def assert_breezy_js(content)
     assert_response 200
-    assert_equal '(function(){var joints={};var cache={};var defers=[];return ({"data":' + content.to_json + ',"screen":"RenderSimpleRenderWithBreezy","csrf_token":"secret","assets":["/app.js"],"joints":joints,"defers":defers});})()', @response.body
+    assert_equal '(function(){var joints={};var cache={};var defers=[];return ({"data":' + content.to_json + ',"screen":"render/action","csrf_token":"secret","assets":["/app.js"],"joints":joints,"defers":defers});})()', @response.body
     assert_equal 'text/javascript', @response.content_type
   end
 

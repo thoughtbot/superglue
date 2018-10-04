@@ -75,9 +75,8 @@ export class Nav extends React.Component {
 
   notFound (screen) {
     const {store} = this.context
-    console.info(`Breezy Nav component was looking for ${screen} but could not find it in your mapping:`)
-    console.info(this.mapping)
     store.dispatch({type: 'BREEZY_ERROR', message: `Could not find screen ${screen}`})
+    throw new Error(`Breezy Nav component was looking for ${screen} but could not find it in your mapping.`)
   }
 
   render () {
@@ -120,13 +119,6 @@ export const mapDispatchToProps = {
   delInJoint,
   extendInJoint,
 }
-
-// class SubmissionError extends Error {
-//   constructor (errors) {
-//     super('Submit Validation Failed')
-//     this.errors = errors
-//   }
-// }
 
 export function withBrowserBehavior (visit, remote) {
   const wrappedVisit = (function (...args) {

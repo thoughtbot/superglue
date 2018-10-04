@@ -110,10 +110,9 @@ The relevant parts to configuring Breezy is as follows:
 ```javascript
 ...bunch of imports...
 
-// This mapping can be auto populate through
-// Breezy generators, for example:
-// Run `rails g breezy:view Post index`
-const mapping = {
+// Mapping between your props template to Component
+// e.g, {'posts/new': PostNew}
+const screenToComponentMapping = {
 }
 
 const history = createHistory({}) // you will need the history library
@@ -144,6 +143,10 @@ class App extends React.Component {
     </Provider>
   }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  render(<App mapping={screenToComponentMapping}/>, document.getElementById('app'))
+})
 ```
 
 #### Custom reducers
@@ -416,11 +419,28 @@ class PostsController < ApplicationController
 Renders a blank view, allowing for JSX to take over on `application.html.erb`. Its the equivalent of creating `index.html.erb` that contains nothing.
 
 #### render
-Breezy determines which React component to render for the controller action by using a combination of the class name and action name. For example, `PostIndex` or `AdminPostIndex` for namespaced controllers. You can specificy which component by passing additional options to the render method:
+
+By default, the template name and path relative to `app/views` is used as the screen.
 
 ```ruby
   def index
-    render :index, breezy: {screen: 'SomeOtherIndexScreen'}
+    render :index # if you're template is posts/index.js.props, the screen would be "post/index"
+  end
+```
+
+Breezy determines which React component to render via the mapping in `application.js`:
+
+```javascript
+const screenToComponentMapping = {
+  'posts/index': PostIndex
+}
+```
+
+You can specificy override this behavior by passing additional options to the render method:
+
+```ruby
+  def index
+    render :index, breezy: {screen: 'some_screen'}
   end
 ```
 

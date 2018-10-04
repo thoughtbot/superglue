@@ -6,10 +6,10 @@ import { render } from 'react-dom'
 import createHistory from 'history/createBrowserHistory'
 import Breezy from '@jho406/breezy'
 
-// This mapping can be auto populate through
-// Breezy generators, for example:
-// Run `rails g breezy:view Post index`
-const mapping = {
+// Mapping between your props template to Component
+// e.g {'posts/new': PostNew}
+
+const screenToComponentMapping = {
 }
 
 const history = createHistory({})
@@ -38,11 +38,11 @@ connect(store)
 class App extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav mapping={mapping}/>
+      <Nav mapping={this.props.mapping}/>
     </Provider>
   }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  render(<App mapping={mapping}/>, document.getElementById('app'))
+  render(<App mapping={screenToComponentMapping}/>, document.getElementById('app'))
 })

@@ -42,17 +42,14 @@ module Rails
         def append_mapping(action)
           app_js = 'app/javascript/packs/application.js'
 
-          base_parts = class_path + [file_name]
-          destination =  File.join("views", base_parts)
-
-          @js_filename = [plural_table_name, action].map(&:camelcase).join
+          component_name = [plural_table_name, action].map(&:camelcase).join
 
           inject_into_file app_js, after: "from '@jho406/breezy'" do
-            "\nimport #{@js_filename} from 'views/#{controller_file_path}/#{action}'"
+            "\nimport #{component_name} from 'views/#{controller_file_path}/#{action}'"
           end
 
-          inject_into_file app_js, after: 'const mapping = {' do
-            "\n  #{@js_filename},"
+          inject_into_file app_js, after: 'const screenToComponentMapping = {' do
+            "\n  '#{[controller_file_path, action].join('/')}': #{component_name},"
           end
         end
 

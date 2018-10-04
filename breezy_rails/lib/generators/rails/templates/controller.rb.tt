@@ -39,7 +39,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       <%- end -%>
     else
       response.set_header("content-location", new_<%= singular_table_name %>_path)
-      render :new, breezy: {screen: '<%= plural_table_name.camelize %>New'}
+      render :new
     end
   end
 
@@ -53,7 +53,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       <%- end -%>
     else
       response.set_header("content-location", edit_<%= singular_table_name %>_path(@<%= singular_table_name %>))
-      render :edit, breezy: {screen: '<%= plural_table_name.camelize %>Edit'}
+      render :edit
     end
   end
 

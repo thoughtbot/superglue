@@ -192,21 +192,6 @@ const store = createStore(
 )
 ```
 
-```javascript
-import {setIn} from '@jho406/breezy/dist/immutability'
-
-export function uploadReducer (state = {}, action) {
-  switch(action.type) {
-  case 'USER_UPLOADS_FILES': {
-    const {pageKey, keypath, files} = action
-    const fullPath = [pageKey, 'data', keypath].join('.')
-    const nextState = setIn(state, fullPath, value)
-
-    return nextState
-  }
-}
-```
-
 #### Rails Initializer
 Breezy will do a hard reload whenever the asset fingerprints change. Add an initializer to control how Breezy tracks sprockets and webpack assets:
 

@@ -424,7 +424,7 @@ By default, the template name and path relative to `app/views` is used as the sc
 
 ```ruby
   def index
-    render :index # if you're template is posts/index.js.props, the screen would be "post/index"
+    render :index # if your template is posts/index.js.props, the screen would be "post/index"
   end
 ```
 

@@ -161,7 +161,7 @@ and modify your `application.js`
 ```javascript
 ....
 import reduceReducers from 'reduce-reducers'
-import {setIn} from '@jho406/breezy'
+import {setIn} from '@jho406/breezy/dist/utils/immutability'
 import {pagePath} from '@jho406/breezy/dist/utils/helpers'
 
 function myCustomReducer(state = {}, action) {

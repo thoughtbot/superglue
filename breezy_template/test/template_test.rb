@@ -248,30 +248,6 @@ class TemplateTest < ActiveSupport::TestCase
     assert_equal [], result['comments']
   end
 
-  # test 'nesting multiple children from array with inline loop' do
-  #   comments = [ Comment.new('hello', 1), Comment.new('world', 2) ]
-  #
-  #   result = jbuild do |json|
-  #     json.comments comments do |comment|
-  #       json.content comment.content
-  #     end
-  #   end
-  #
-  #   assert_equal ['content'], result['comments'].first.keys
-  #   assert_equal 'hello', result['comments'].first['content']
-  #   assert_equal 'world', result['comments'].second['content']
-  # end
-
-  # todo: revisit test 'handles nil-collections as empty arrays' do
-  #   result = jbuild do |json|
-  #     json.comments nil do |comment|
-  #       json.content comment.content
-  #     end
-  #   end
-  #
-  #   assert_equal [], result['comments']
-  # end
-
   test 'nesting multiple children from a non-Enumerable that responds to #map, #members_at, #members_by' do
     comments = NonEnumerable.new([ Comment.new('hello', 1), Comment.new('world', 2) ])
 
@@ -288,20 +264,6 @@ class TemplateTest < ActiveSupport::TestCase
     assert_equal 'world', result['comments'].second['content']
   end
 
-  # test 'nesting multiple chilren from a non-Enumerable that responds to #map with inline loop' do
-  #   comments = NonEnumerable.new([ Comment.new('hello', 1), Comment.new('world', 2) ])
-  #
-  #   result = jbuild do |json|
-  #     json.comments comments do |comment|
-  #       json.content comment.content
-  #     end
-  #   end
-  #
-  #   assert_equal ['content'], result['comments'].first.keys
-  #   assert_equal 'hello', result['comments'].first['content']
-  #   assert_equal 'world', result['comments'].second['content']
-  # end
-
   test 'array! casts array-like objects to array before merging' do
     wrapped_array = VeryBasicWrapper.new(%w[foo bar])
     result = jbuild do |json|
@@ -310,20 +272,6 @@ class TemplateTest < ActiveSupport::TestCase
 
     assert_equal %w[foo bar], result
   end
-
-  # #todo: remove this ability
-  # test 'nesting multiple children from array with inline loop on root' do
-  #   comments = [ Comment.new('hello', 1), Comment.new('world', 2) ]
-  #
-  #   result = jbuild do |json|
-  #     json.call(comments) do |comment|
-  #       json.content comment.content
-  #     end
-  #   end
-  #
-  #   assert_equal 'hello', result.first['content']
-  #   assert_equal 'world', result.second['content']
-  # end
 
   test 'array nested inside nested hash' do
     result = jbuild do |json|

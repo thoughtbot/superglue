@@ -89,14 +89,13 @@ export function handleError (err) {
 
 function handleDeferments (defers=[], dispatch, pageKey) {
   defers.forEach(function ({url}){
-    dispatch(remote(url, {}, pageKey)) //todo: ability to ignore and not clear queue
+    dispatch(remote(url, {}, pageKey))
   })
 }
 
 export function persist ({pageKey, page, dispatch}) {
-  // Ignore the _bz attributes when storing
-
   handleDeferments(page.defers, dispatch, pageKey)
+
   if (page.action === 'graft') {
     return handleGraft({pageKey, page})
   } else {

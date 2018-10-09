@@ -31,8 +31,6 @@ views/
   posts/
     index.js.props <- your content
     index.jsx <- your markup as JSX
-
-Note that there is no `post.html.xyz` anymore, Breezy takes care of that by rendering a blank `post.html` so that React/Redux can take over. You can override this behavior if you'd like.
 ```
 
 Your props lives as a [queryable](#filtering-nodes) and [deferable](#deferment) tree written using [jbuilder-like syntax](#breezytemplate) that gets served at `/posts.js`, while your markup lives as a JSX component and gets rendered by React when `/posts.html` loads. The props are injected through a provided `mapStateToProps` selector that you can import for your react-redux `connect` function:

@@ -10,7 +10,7 @@ module Breezy
 
     def render(*args, &block)
       if !@_use_breezy
-        super
+        return super
       end
 
       render_options = args.extract_options!
@@ -24,13 +24,14 @@ module Breezy
       render_options[:locals][:breezy] = breezy
 
       if request.format == :html
-         original_formats = self.formats
+        original_formats = self.formats
+        @_breezy_snippet = render_to_string(*args, render_options.merge(formats: [:js]))
+        self.formats = original_formats
 
-         @_breezy_snippet = render_to_string(*args, render_options.merge(formats: [:js]))
-         self.formats = original_formats
-
-         render_options.reverse_merge!(formats: original_formats, template: 'breezy/response')
+        render_options.reverse_merge!(formats: original_formats, template: 'breezy/response')
       end
+
+      super(*args, render_options, &block)
     end
   end
 end

@@ -8,14 +8,17 @@ class RenderController < TestController
     'render/action.html.erb' => 'john smith',
     'render/implied_render_with_breezy.js.breezy' => 'json.author "john smith"',
     'render/implied_render_with_breezy.html.erb' => 'john smith',
-    'layouts/application.html.erb' => "<html><head><%=breezy_tag%></head><body><%=yield%></body></html>"
+    'layouts/application.html.erb' => <<~HTML
+      <html>
+        <head>
+          <script><%= breezy_snippet %></script>
+        </head>
+        <body><%=yield%></body>
+      </html>
+    HTML
   ))
 
   layout 'application'
-
-  before_action do
-    @_use_breezy = false
-  end
 
   before_action :use_breezy, only: [:simple_render_with_breezy, :implied_render_with_breezy]
 
@@ -31,7 +34,7 @@ class RenderController < TestController
   end
 
   def render_action_with_breezy_false
-    render :action, breezy: false
+    render :action
   end
 
   def form_authenticity_token
@@ -60,12 +63,12 @@ class RenderTest < ActionController::TestCase
 
   test "simple render with breezy" do
     get :simple_render_with_breezy
-    assert_breezy_html({author: "john smith"}, screen: :action)
+    assert_breezy_html({author: "john smith"}, screen: 'render/action')
   end
 
   test "implied render with breezy" do
     get :implied_render_with_breezy
-    assert_breezy_html({author: "john smith"}, screen: :implied_render_with_breezy)
+    assert_breezy_html({author: "john smith"}, screen: 'render/implied_render_with_breezy')
   end
 
   test "simple render with breezy via get js" do
@@ -102,7 +105,16 @@ class RenderTest < ActionController::TestCase
   def assert_breezy_html(content, opts={})
     assert_response 200
 
-    assert_equal "<html><head><script type='text/javascript'>Breezy.replace((function(){var joints={};var cache={};var defers=[];return ({\"data\":#{content.to_json},\"screen\":\"render/#{opts[:screen].to_s}\",\"csrf_token\":\"secret\",\"assets\":[\"/app.js\"],\"joints\":joints,\"defers\":defers});})());</script></head><body></body></html>", @response.body
+    rendered = <<~HTML
+      <html>
+        <head>
+          <script>(function(){var joints={};var cache={};var defers=[];return ({"data":#{content.to_json},"screen":"#{opts[:screen]}","csrf_token":"secret","assets":["/app.js"],"joints":joints,"defers":defers});})();</script>
+        </head>
+        <body></body>
+      </html>
+    HTML
+
+    assert_equal rendered, @response.body
     assert_equal 'text/html', @response.content_type
   end
 
@@ -120,7 +132,17 @@ class RenderTest < ActionController::TestCase
 
   def assert_normal_render(content)
     assert_response 200
-    assert_equal "<html><head></head><body>#{content}</body></html>", @response.body
+
+    rendered = <<~HTML
+      <html>
+        <head>
+          <script></script>
+        </head>
+        <body>#{content}</body>
+      </html>
+    HTML
+
+    assert_equal rendered, @response.body
     assert_equal 'text/html', @response.content_type
   end
 end

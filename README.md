@@ -403,18 +403,18 @@ If you want finer control, or want to perform optimistic updates, breezy provide
 
 ## Rails controller helpers and behavior
 ### API
-#### use_breezy_html
+#### use_breezy
 ```ruby
 class PostsController < ApplicationController
-  # `use_breezy_html` returns a blank template, allowing for JSX to take over
+  # `use_breezy` enables breezy functionality
   # on application.html.erb
-  before_action :use_breezy_html
+  before_action :use_breezy
 
   def index
 ...
 ```
 
-Renders a blank view, allowing for JSX to take over on `application.html.erb`. Its the equivalent of creating `index.html.erb` that contains nothing.
+Enables Breezy funtionality, and renders a blank HTML view, allowing for JSX to take over on `application.html.erb`.
 
 #### render
 

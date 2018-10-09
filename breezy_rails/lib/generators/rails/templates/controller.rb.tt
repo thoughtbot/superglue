@@ -5,9 +5,9 @@ require_dependency "<%= namespaced_path %>/application_controller"
 <% module_namespacing do -%>
 class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy]
-  # `use_breezy_html` returns a blank template, allowing for JS to take over
+  # `use_breezy` enables breezy functionality
   # on application.html.erb
-  before_action :use_breezy_html
+  before_action :use_breezy
 
   # GET <%= route_url %>
   def index

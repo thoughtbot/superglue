@@ -401,7 +401,7 @@ json.header partial: ['header', joint: true]
 ```
 
 ### Manually updating cross cutting concerns
-If you want finer control, or want to perform optimistic updates, breezy provides [action creators](#setinpage) that will immutably update across `pages`.
+If you want finer control, or want to perform optimistic updates, breezy provides [action creators](#setinjoint) that will immutably update across `pages`.
 
 ## Rails controller helpers and behavior
 ### API
@@ -789,7 +789,8 @@ end
 
 ```
 
-You can also rename the joint.
+A joint uniquely identify a rendered partial across the application. By default, the name of the joint is named after the key where the partial is used. You can also rename a joint:
+
 ```ruby
 # index.js.breezy
 json.header null, partial: ["profile", joint: 'super_header']

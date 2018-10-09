@@ -20,10 +20,8 @@ module Breezy
       end
 
       if base.respond_to?(:helper_method)
-        base.helper_method :breezy_tag
-        base.helper_method :breezy_silient?
         base.helper_method :breezy_snippet
-        base.helper_method :use_breezy_html
+        base.helper_method :use_breezy
         base.helper_method :breezy_filter
       end
     end

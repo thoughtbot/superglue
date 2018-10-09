@@ -14,10 +14,10 @@ class RenderController < TestController
   layout 'application'
 
   before_action do
-    @_use_breezy_html = false
+    @_use_breezy = false
   end
 
-  before_action :use_breezy_html, only: [:simple_render_with_breezy, :implied_render_with_breezy]
+  before_action :use_breezy, only: [:simple_render_with_breezy, :implied_render_with_breezy]
 
   def render_action
     render :action

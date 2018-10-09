@@ -1,7 +1,7 @@
 module Breezy
   module Render
     def default_render(*args)
-      if @_use_breezy_html
+      if @_use_breezy
         render(*args)
       else
         super
@@ -9,31 +9,28 @@ module Breezy
     end
 
     def render(*args, &block)
+      if !@_use_breezy
+        super
+      end
+
       render_options = args.extract_options!
-      breezy = render_options.delete(:breezy)
+      breezy_options = render_options.delete(:breezy)
 
-      if breezy == true
+      if !breezy_options
         breezy = {}
       end
 
-      if !breezy && @_use_breezy_html
-        breezy = {}
-      end
+      render_options[:locals] ||= {}
+      render_options[:locals][:breezy] = breezy
 
-      if breezy
-        render_options[:locals] ||= {}
-        render_options[:locals][:breezy] = breezy
-      end
-
-      if @_use_breezy_html && request.format == :html
+      if request.format == :html
          original_formats = self.formats
 
-         @breezy = render_to_string(*args, render_options.merge(formats: [:js]))
+         @_breezy_snippet = render_to_string(*args, render_options.merge(formats: [:js]))
          self.formats = original_formats
+
          render_options.reverse_merge!(formats: original_formats, template: 'breezy/response')
       end
-
-      super(*args, render_options, &block)
     end
   end
 end

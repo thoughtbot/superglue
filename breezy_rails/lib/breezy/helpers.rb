@@ -1,24 +1,14 @@
 module Breezy
   module Helpers
-    def breezy_tag
-      if defined?(@breezy) && @breezy
-        "<script type='text/javascript'>Breezy.replace(#{@breezy});</script>".html_safe
-      end
-    end
-
     def breezy_snippet
-      if defined?(@breezy) && @breezy
-        snippet = @breezy.gsub(/\;$/, '')
+      if defined?(@_breezy_snippet) && @_breezy_snippet
+        snippet = @_breezy_snippet.gsub(/\;$/, '')
         "#{snippet};".html_safe
       end
     end
 
-    def use_breezy_html
-      @_use_breezy_html = true
-    end
-
-    def breezy_silient?
-      !!request.headers["X-SILENT"]
+    def use_breezy
+      @_use_breezy = true
     end
 
     def breezy_filter

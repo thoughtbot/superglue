@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BreezyController < TestController
   before_action do
-    @_use_breezy_html = false
+    @_use_breezy = false
   end
 
   def simple_action

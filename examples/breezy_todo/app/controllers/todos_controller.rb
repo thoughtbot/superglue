@@ -23,7 +23,7 @@ class TodosController < ApplicationController
       redirect_to todos_url(filter: params['filter'])
     else
       response.set_header("content-location", new_todo_path)
-      render :index, breezy: {screen: 'TodosIndex'}
+      render :index
     end
   end
 
@@ -33,7 +33,7 @@ class TodosController < ApplicationController
       redirect_to todos_url(filter: params['filter'])
     else
       response.set_header("content-location", edit_todo_path(@todo))
-      render :index, breezy: {screen: 'TodosIndex'}
+      render :index
     end
   end
 

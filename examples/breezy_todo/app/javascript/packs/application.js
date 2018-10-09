@@ -12,7 +12,7 @@ import TodosIndex from 'views/todos/index'
 // Breezy generators, for example:
 // Run `rails g breezy:view Post index`
 const mapping = {
-  TodosIndex,
+  'todos/index': TodosIndex
 }
 
 const history = createHistory({})

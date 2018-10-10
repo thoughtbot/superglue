@@ -116,12 +116,11 @@ export function wrappedFetch (fetchArgs) {
       const location = response.headers.get('x-breezy-location')
       const nextOpts = {...fetchArgs[1], body: undefined}
       if (location) {
-        return fetch(location, {...nextOpts, method: 'GET'})
+        return wrappedFetch([location, {...nextOpts, method: 'GET'}])
       } else {
         return response
       }
     })
-    .then(parseResponse)
 }
 
 const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
@@ -154,6 +153,7 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
     dispatch(beforeFetch({fetchArgs}))
 
     return wrappedFetch(fetchArgs)
+      .then(parseResponse)
       .then(({rsp, page}) => persistAndMeta(getState(), rsp, page, pageKey, dispatch))
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }
@@ -170,6 +170,7 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     dispatch({type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId})
 
     return wrappedFetch(fetchArgs)
+      .then(parseResponse)
       .then(({rsp, page}) => {
         if (method === 'GET') {
           actualKey = pageKey || pathQuery

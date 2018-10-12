@@ -11,7 +11,7 @@ import TodosIndex from 'views/todos/index'
 // This mapping can be auto populate through
 // Breezy generators, for example:
 // Run `rails g breezy:view Post index`
-const mapping = {
+const screenToComponentMapping = {
   'todos/index': TodosIndex
 }
 
@@ -41,11 +41,11 @@ connect(store)
 class App extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav mapping={mapping}/>
+      <Nav mapping={this.props.mapping}/>
     </Provider>
   }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  render(<App mapping={mapping}/>, document.getElementById('app'))
+  render(<App mapping={screenToComponentMapping}/>, document.getElementById('app'))
 })

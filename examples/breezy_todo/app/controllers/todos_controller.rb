@@ -2,7 +2,7 @@ class TodosController < ApplicationController
   before_action :set_todo, only: [:show, :edit, :update, :destroy]
   # `use_breezy_html` returns a blank template, allowing for JS to take over
   # on application.html.erb
-  before_action :use_breezy_html
+  before_action :use_breezy
 
   # GET /todos
   def index

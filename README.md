@@ -137,7 +137,7 @@ connect(store)
 class App extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav mapping={mapping}/>
+      <Nav mapping={this.props.mapping}/>
     </Provider>
   }
 }

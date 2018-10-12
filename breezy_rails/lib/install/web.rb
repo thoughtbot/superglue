@@ -85,8 +85,7 @@ say "Adding required member methods to ApplicationRecord"
 add_member_methods
 
 say "Installing React, Redux, and Breezy"
-run "yarn add react-redux redux react react-dom babel-preset-react prop-types formik @jho406/breezy --save"
-run "yarn add babel-plugin-module-resolver --save-dev"
+run "yarn add babel-plugin-module-resolver babel-preset-react formik history prop-types react-redux redux-thunk redux react react-dom @jho406/breezy --save"
 
 say "Updating webpack paths to include .jsx file extension"
 insert_into_file Webpacker.config.config_path, "    - .jsx\n", after: /extensions:\n/

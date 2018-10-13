@@ -26,7 +26,7 @@ class Home extends React.Component {
 
   visit() {
     this.props.visit('/foo')
-      .then(()=> this.props.navigateTo('about', '/foo'))
+      .then(()=> this.props.navigateTo('/foo'))
   }
 
   render() {
@@ -131,6 +131,7 @@ describe('navigation', () => {
             data: { heading: 'Some heading 2' },
             title: 'title 2',
             csrf_token: 'token',
+            screen: 'about',
             assets: ['application-123.js', 'application-123.js'],
             cachedAt: jasmine.any(Number),
             positionY: jasmine.any(Number),

@@ -12,6 +12,7 @@ import {
 } from '../action_creators'
 import {withoutBZParams} from './url'
 import PropTypes from 'prop-types'
+import {uuidv4} from './helpers'
 
 export class Nav extends React.Component {
   constructor (props) {
@@ -27,11 +28,12 @@ export class Nav extends React.Component {
     this.state = this.props.initialState || {}
   }
 
-  navigateTo (screen, pageKey, {action} = {action: 'push'}) {
+  navigateTo (pageKey, {action} = {action: 'push'}) {
     pageKey = withoutBZParams(pageKey)
+    const {store} = this.context
+
     if (this.history) {
       const historyArgs = [pageKey, {
-        screen,
         pageKey,
         breezy: true
       }]
@@ -41,14 +43,24 @@ export class Nav extends React.Component {
       }
 
       if(action === 'replace') {
-        const {store} = this.context
         const oldPageKey = history.location.state.pageKey
         this.history.replace(...historyArgs)
         store.dispatch({type: 'BREEZY_REMOVE_PAGE', pageKey: oldPageKey})
       }
     }
 
-    this.setState({pageKey, screen})
+    const hasPage = !!store.getState().pages[pageKey]
+    if (hasPage) {
+      const seqId = uuidv4()
+      store.dispatch({
+        type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId
+      })
+
+      this.setState({pageKey})
+      return true
+    } else {
+      return false
+    }
   }
 
   onHistoryChange (location, action) {
@@ -65,7 +77,7 @@ export class Nav extends React.Component {
       const wasNotRefreshed = !!store.getState().pages[pageKey]
 
       if(location.state && location.state.breezy && wasNotRefreshed) {
-        this.setState({screen, pageKey})
+        this.setState({pageKey})
       } else {
         // load previous page
         window.location = location.pathname
@@ -84,7 +96,9 @@ export class Nav extends React.Component {
   }
 
   render () {
-    const Component = this.mapping[this.state.screen]
+    const {store} = this.context
+    const {screen} = store.getState().pages[this.state.pageKey]
+    const Component = this.mapping[screen]
 
     if (Component) {
       return <Component pageKey={this.state.pageKey} navigateTo={this.navigateTo} />
@@ -133,7 +147,7 @@ export function withBrowserBehavior (visit, remote) {
       }
 
       if (rsp.canNavigate) {
-        return this.props.navigateTo(rsp.screen, rsp.pageKey)
+        return this.props.navigateTo(rsp.pageKey)
       } else {
         // There can only be one visit at a time, if `canNavigate`
         // is false, then this request is being ignored for a more

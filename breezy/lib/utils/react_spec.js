@@ -22,7 +22,7 @@ class Home extends React.Component {
   }
 
   visit() {
-    this.props.navigateTo('about', '/foo')
+    this.props.navigateTo('/foo')
   }
 
   render() {
@@ -55,12 +55,22 @@ describe('Nav', () => {
         }
       }
 
+      const mockStore = configureMockStore()
+      const store = mockStore(
+        {pages: {
+          '/foo': {screen:'about'},
+          '/bar': {screen:'home'}
+        }}
+      )
+
       render(
-        <Nav
-          mapping={{'home': Home, 'about': ExampleAbout}}
-          initialState={{screen:'home', url: '/bar'}}
-          history={history}
-        />,
+        <Provider store={store}>
+          <Nav
+            mapping={{'home': Home, 'about': ExampleAbout}}
+            initialState={{screen:'home', pageKey: '/bar'}}
+            history={history}
+          />
+        </Provider>,
         target
       )
       target.getElementsByTagName('button')[0].click()
@@ -71,12 +81,18 @@ describe('Nav', () => {
       const {dom, target} = createScene('<div></div>')
 
       const mockStore = configureMockStore()
-      const store = mockStore({})
+      const store = mockStore(
+        {pages: {
+          '/foo': {screen:'about'},
+          '/bar': {screen:'home'}
+        }}
+      )
 
       class ExampleAbout extends About {
         componentDidMount(){
           const expectedActions = [
-            { type: 'BREEZY_HISTORY_CHANGE', url: '/foo' }
+            { type: 'BREEZY_HISTORY_CHANGE', url: '/foo' },
+            { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
           ]
           expect(store.getActions()).toEqual(expectedActions)
           done()
@@ -87,7 +103,7 @@ describe('Nav', () => {
         <Provider store={store}>
           <Nav
             mapping={{'home': Home, 'about': ExampleAbout}}
-            initialState={{screen:'home', url: '/bar'}}
+            initialState={{screen:'home', pageKey: '/bar'}}
             history={history}
             />
         </Provider>,
@@ -97,13 +113,14 @@ describe('Nav', () => {
     })
 
     it('navigates to the page when history changes', (done) => {
-      const history = createMemoryHistory({});
+      const history = createMemoryHistory({})
       history.replace('/bar', {breezy: true, screen: 'home', pageKey: '/bar'})
       const {dom, target} = createScene('<div></div>')
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': {}
+          '/bar': {screen: 'home'},
+          '/foo': {screen: 'about'}
         }
       })
 
@@ -130,7 +147,7 @@ describe('Nav', () => {
         <Provider store={store}>
           <Nav
             mapping={{'home': ExampleHome, 'about': ExampleAbout}}
-            initialState={{screen:'home', url: '/bar'}}
+            initialState={{screen:'home', pageKey: '/bar'}}
             history={history}
             />
         </Provider>,

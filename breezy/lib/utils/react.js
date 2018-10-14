@@ -25,10 +25,10 @@ export class Nav extends React.Component {
       this.unsubscribeHistory = this.history.listen(this.onHistoryChange)
     }
     this.mapping = props.mapping
-    this.state = this.props.initialState || {}
+    this.state = this.props.initialState || {ownProps: {}}
   }
 
-  navigateTo (pageKey, {action} = {action: 'push'}) {
+  navigateTo (pageKey, {action, ownProps} = {action: 'push', ownProps: {}}) {
     pageKey = withoutBZParams(pageKey)
     const {store} = this.context
 
@@ -56,7 +56,7 @@ export class Nav extends React.Component {
         type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId
       })
 
-      this.setState({pageKey})
+      this.setState({pageKey, ownProps})
       return true
     } else {
       return false
@@ -101,7 +101,7 @@ export class Nav extends React.Component {
     const Component = this.mapping[screen]
 
     if (Component) {
-      return <Component pageKey={this.state.pageKey} navigateTo={this.navigateTo} />
+      return <Component pageKey={this.state.pageKey} navigateTo={this.navigateTo} {...this.state.ownProps}/>
     } else {
       this.notFound(this.state.screen)
     }

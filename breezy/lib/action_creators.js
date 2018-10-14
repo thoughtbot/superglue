@@ -89,7 +89,7 @@ export function handleError (err) {
 
 
 export function saveAndProcessPage (pageKey, page) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     const {defers = []} = page
 
     defers.forEach(function ({url}){

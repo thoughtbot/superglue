@@ -73,7 +73,7 @@ export class Nav extends React.Component {
     }
 
     if (action === 'POP') {
-      const {screen, pageKey} = location.state
+      const {pageKey} = location.state
       const wasNotRefreshed = !!store.getState().pages[pageKey]
 
       if(location.state && location.state.breezy && wasNotRefreshed) {

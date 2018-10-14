@@ -77,7 +77,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
 
       store.dispatch(saveAndProcessPage(
         withoutBZParams(url),
-        initialPage,
+        initialPage
       ))
 
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})

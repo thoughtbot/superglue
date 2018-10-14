@@ -88,17 +88,19 @@ export function handleError (err) {
 }
 
 
-export function persist ({pageKey, page, dispatch}) {
-  const {defers = []} = page
+export function persist ({pageKey, page}) {
+  return (dispatch, getState) => {
+    const {defers = []} = page
 
-  defers.forEach(function ({url}){
-    dispatch(remote(url, {}, pageKey))
-  })
+    defers.forEach(function ({url}){
+      dispatch(remote(url, {}, pageKey))
+    })
 
-  if (page.action === 'graft') {
-    dispatch(handleGraft({pageKey, page}))
-  } else {
-    dispatch(saveResponse({pageKey, page}))
+    if (page.action === 'graft') {
+      dispatch(handleGraft({pageKey, page}))
+    } else {
+      dispatch(saveResponse({pageKey, page}))
+    }
   }
 }
 
@@ -136,7 +138,8 @@ const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
     rsp,
     needsRefresh: needsRefresh(prevAssets, newAssets)
   }
-  persist({pageKey, page, dispatch})
+
+  dispatch(persist({pageKey, page}))
   return meta
 }
 

@@ -87,14 +87,13 @@ export function handleError (err) {
   }
 }
 
-function handleDeferments (defers=[], dispatch, pageKey) {
+
+export function persist ({pageKey, page, dispatch}) {
+  const {defers = []} = page
+
   defers.forEach(function ({url}){
     dispatch(remote(url, {}, pageKey))
   })
-}
-
-export function persist ({pageKey, page, dispatch}) {
-  handleDeferments(page.defers, dispatch, pageKey)
 
   if (page.action === 'graft') {
     return handleGraft({pageKey, page})
@@ -102,6 +101,7 @@ export function persist ({pageKey, page, dispatch}) {
     return saveResponse({pageKey, page})
   }
 }
+
 function handleFetchErr (err, fetchArgs, dispatch) {
   dispatch(handleError(err.message))
   err.fetchArgs = fetchArgs

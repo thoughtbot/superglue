@@ -88,7 +88,7 @@ export class Nav extends React.Component {
   notFound (screen) {
     const {store} = this.context
     store.dispatch({type: 'BREEZY_ERROR', message: `Could not find screen ${screen}`})
-    let reminder
+    let reminder = ''
     if (!screen) {
       reminder = 'Did you forget to use_breezy in your controllers?'
     }

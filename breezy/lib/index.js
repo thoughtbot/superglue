@@ -5,7 +5,7 @@ import {setWindow, unsetWindow, hasWindow} from './window'
 import {Nav} from './utils/react'
 import connect from './connector'
 import {withoutBZParams} from './utils/url'
-import {persist} from './action_creators'
+import {saveAndProcessPage} from './action_creators'
 
 export {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
@@ -75,7 +75,7 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
         })
       }
 
-      store.dispatch(persist(
+      store.dispatch(saveAndProcessPage(
         withoutBZParams(url),
         initialPage,
       ))

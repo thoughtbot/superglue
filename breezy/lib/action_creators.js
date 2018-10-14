@@ -88,7 +88,7 @@ export function handleError (err) {
 }
 
 
-export function persist (pageKey, page) {
+export function saveAndProcessPage (pageKey, page) {
   return (dispatch, getState) => {
     const {defers = []} = page
 
@@ -139,7 +139,7 @@ const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
     needsRefresh: needsRefresh(prevAssets, newAssets)
   }
 
-  dispatch(persist(pageKey, page))
+  dispatch(saveAndProcessPage(pageKey, page))
   return meta
 }
 

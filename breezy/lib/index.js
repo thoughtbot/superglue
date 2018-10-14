@@ -75,11 +75,11 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
         })
       }
 
-      store.dispatch(persist({
+      persist({
         pageKey: withoutBZParams(url),
         page: initialPage,
         dispatch: store.dispatch,
-      }))
+      })
 
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
       store.dispatch({type: 'BREEZY_SET_CSRF_TOKEN', csrfToken})

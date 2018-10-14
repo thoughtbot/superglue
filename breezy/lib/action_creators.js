@@ -96,9 +96,9 @@ export function persist ({pageKey, page, dispatch}) {
   })
 
   if (page.action === 'graft') {
-    return handleGraft({pageKey, page})
+    dispatch(handleGraft({pageKey, page}))
   } else {
-    return saveResponse({pageKey, page})
+    dispatch(saveResponse({pageKey, page}))
   }
 }
 
@@ -129,7 +129,6 @@ const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
 
   pageKey = withoutBZParams(pageKey)
 
-  const action = persist({pageKey, page, dispatch})
   const meta = {
     pageKey,
     page,
@@ -137,7 +136,7 @@ const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
     rsp,
     needsRefresh: needsRefresh(prevAssets, newAssets)
   }
-  dispatch(action)
+  persist({pageKey, page, dispatch})
   return meta
 }
 

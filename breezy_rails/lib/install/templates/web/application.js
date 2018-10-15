@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 import createHistory from 'history/createBrowserHistory'
 import Breezy from '@jho406/breezy'
+import Nav from '@jho406/breezy/dist/NavComponent'
 
 // Mapping between your props template to Component
 // e.g {'posts/new': PostNew}
@@ -17,13 +18,12 @@ const baseUrl = ''
 
 //The Nav is pretty bare bones
 //Feel free to replace the implementation
-const {reducer, initialState, Nav, connect} = Breezy.start({
+const {reducer, initialState, initialPageKey, connect} = Breezy.start({
   window,
   initialPage,
   baseUrl,
   history
 })
-
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -40,7 +40,11 @@ connect(store)
 class App extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav mapping={this.props.mapping}/>
+      <Nav
+        mapping={this.props.mapping}
+        history={history}
+        initialPageKey={initialPageKey}
+      />
     </Provider>
   }
 }

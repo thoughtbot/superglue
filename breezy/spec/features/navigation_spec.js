@@ -7,9 +7,10 @@ import thunk from 'redux-thunk'
 import {combineReducers, createStore, applyMiddleware} from 'redux'
 import { Provider, connect } from 'react-redux'
 import React from 'react'
-import {Nav, mapStateToProps, mapDispatchToProps} from '../../lib/utils/react'
+import {mapStateToProps, mapDispatchToProps} from '../../lib/utils/react'
 import {getStore} from '../../lib/connector'
 import { createMemoryHistory } from 'history'
+import Nav from '../../lib/NavComponent.js'
 
 process.on('unhandledRejection', r => console.log(r));
 
@@ -54,19 +55,19 @@ describe('navigation', () => {
     it('saves the page', (done) => {
       let history = createMemoryHistory({});
       let {dom, target} = createScene(`<div></div>`, 'http://localhost/bar')
+      let initialPage = {
+        data: {
+          heading: 'this is page 1',
+        },
+        screen: 'home'
+      }
 
       const bz = start({
         window: dom.window,
-        initialPage: {
-          data: {
-            heading: 'this is page 1'
-          },
-          screen: 'home'
-        },
-        history
+        initialPage,
+        url: '/bar'
       })
-
-      const {reducer, initialState, Nav} = bz
+      const {reducer, initialState, initialPageKey} = bz
 
       const store = createStore(
         combineReducers(reducer),
@@ -98,7 +99,11 @@ describe('navigation', () => {
 
       render(
         <Provider store={store}>
-          <Nav mapping={{'home': VisibleHome, 'about': VisibleAbout}}/>
+          <Nav
+            mapping={{'home': VisibleHome, 'about': VisibleAbout}}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
         </Provider>,
         target
       )
@@ -150,19 +155,20 @@ describe('navigation', () => {
     it('grafts the node', (done) => {
       let history = createMemoryHistory({});
       let {dom, target} = createScene(`<div></div>`, 'http://localhost/foo')
+      let initialPage = {
+        data: {
+          heading: 'this is page 1'
+        },
+        screen: 'home'
+      }
+
 
       const bz = start({
         window: dom.window,
-        initialPage: {
-          data: {
-            heading: 'this is page 1'
-          },
-          screen: 'home'
-        },
-        history
+        initialPage,
+        url: '/foo'
       })
-      const {reducer, initialState, Nav} = bz
-
+      const {reducer, initialState, initialPageKey} = bz
       const store = createStore(
         combineReducers(reducer),
         initialState,
@@ -192,7 +198,11 @@ describe('navigation', () => {
 
       render(
         <Provider store={store}>
-          <Nav mapping={{'home': VisibleHome}}/>
+          <Nav
+            mapping={{'home': VisibleHome}}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
         </Provider>,
         target
       )

@@ -1,8 +1,6 @@
-import React from 'react'
 import parse from 'url-parse'
 import {rootReducer} from './reducers'
 import {setWindow, unsetWindow, hasWindow} from './window'
-import {Nav} from './utils/react'
 import connect from './connector'
 import {withoutBZParams} from './utils/url'
 import {saveAndProcessPage} from './action_creators'
@@ -15,51 +13,23 @@ export function stop () {
   unsetWindow()
 }
 
-export function argsForHistory (url, page) {
-  const pathq = withoutBZParams(url)
-
-  return [pathq, {
-    breezy: true,
-    pageKey: pathq,
-    screen: page.screen
-  }]
-}
-
-export function argsForNavInitialState (url, page) {
+function pageToInitialState (key, page) {
   return {
-    screen: page.screen,
-    pageKey: withoutBZParams(url)
+    pages: {[key]: page}
   }
 }
 
-export function pageToInitialState (url, page) {
-  return {
-    pages: {[withoutBZParams(url)]: page}
-  }
-}
-
-export function start ({window, baseUrl='', history, initialPage={}}) {
+export function start ({window, baseUrl='', url, initialPage={}}) {
   let nav
-  let url
 
   if (window) {
     setWindow(window)
-    url = window.location.href
-    history.replace(...argsForHistory(url, initialPage))
-
-    nav = class extends React.Component {
-      render () {
-        return (
-          <Nav
-            mapping={this.props.mapping}
-            initialState={argsForNavInitialState(url, initialPage)}
-            history={history}
-          />
-        )
-      }
+    if (!url) {
+      url = window.location.href
     }
   }
 
+  const initialPageKey = withoutBZParams(parse(url).href)
   const csrfToken = initialPage.csrf_token
 
   return {
@@ -76,14 +46,15 @@ export function start ({window, baseUrl='', history, initialPage={}}) {
       }
 
       store.dispatch(saveAndProcessPage(
-        withoutBZParams(url),
+        initialPageKey,
         initialPage
       ))
 
       store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
       store.dispatch({type: 'BREEZY_SET_CSRF_TOKEN', csrfToken})
     },
-    initialState: pageToInitialState(url, initialPage)
+    initialState: pageToInitialState(initialPageKey, initialPage),
+    initialPageKey,
   }
 }
 

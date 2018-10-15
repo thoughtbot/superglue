@@ -4,7 +4,7 @@ import {uuidv4} from './utils/helpers'
 import parse from 'url-parse'
 import PropTypes from 'prop-types'
 
-function argsForHistory (url, page) {
+function argsForHistory (url) {
   const pageKey = withoutBZParams(url)
 
   return [pageKey, {

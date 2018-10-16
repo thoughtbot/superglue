@@ -157,11 +157,11 @@ describe('navigation', () => {
       let {dom, target} = createScene(`<div></div>`, 'http://localhost/foo')
       let initialPage = {
         data: {
-          heading: 'this is page 1'
+          heading: 'this is page 1',
+          address: undefined
         },
         screen: 'home'
       }
-
 
       const bz = start({
         window: dom.window,

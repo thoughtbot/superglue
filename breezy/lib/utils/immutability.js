@@ -60,8 +60,28 @@ function cloneWithout (object, key) {
   }
 }
 
+function isArray(ary) {
+  return Array.isArray(ary)
+}
+
+function isObject(obj) {
+  return !isArray(obj) && obj === Object(obj)
+}
+
 function atKey (node, key) {
   const [attr, id] = Array.from(key.split('='))
+
+  if(!isArray(node) && !isObject(node)) {
+    throw new Error(`Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`)
+  }
+
+  if(isObject(node) && id) {
+    throw new Error(`Expected to find an Array when using the key: ${key}`)
+  }
+
+  if(isObject(node) && !node.hasOwnProperty(key)) {
+    throw new Error(`Expected to find key: ${key} in object ${JSON.stringify(node)}`)
+  }
 
   if (Array.isArray(node) && id) {
     let child
@@ -84,6 +104,11 @@ function atKey (node, key) {
 
 function normalizeKeyPath (path) {
   if (typeof path === 'string') {
+    path = path.replace(/ /g,'')
+    if (path === '') {
+      return []
+    }
+
     return path.split('.')
   } else {
     return path
@@ -95,27 +120,20 @@ function setIn (object, keypath, value) {
 
   let results = {}
   let parents = {}
-  let i, len
+  let i
 
-  for (i = 0, len = keypath.length; i < len; i++) {
-    if (i === 0) {
-      parents[i] = object
-    } else {
-      parents[i] = atKey(parents[i - 1], keypath[i - 1]) || {}
-      // handle cases when it isn't an object
-      if (typeof parents[i] !== 'object') {
-        parents[i] = {}
-      }
-    }
+  parents[0] = object
+
+  for (i = 0; i < keypath.length ; i++) {
+    parents[i + 1] = atKey(parents[i], keypath[i])
   }
-  for (i = keypath.length; i >= 0; i--) {
-    if (!parents[i]) {
-      results[i] = value
-    } else {
-      results[i] = clone(parents[i])
-      let key = getKey(results[i], keypath[i])
-      results[i][key] = results[i + 1]
-    }
+
+  results[keypath.length] = value
+
+  for (i = keypath.length - 1; i >= 0; i--) {
+    results[i] = clone(parents[i])
+    let key = getKey(results[i], keypath[i])
+    results[i][key] = results[i + 1]
   }
 
   return results[0]
@@ -128,15 +146,10 @@ function delIn (object, keypath) {
   let parents = {}
   let i, len
 
-  for (i = 0, len = keypath.length; i < len; i++) {
-    if (i === 0) {
-      parents[i] = object
-    } else {
-      parents[i] = atKey(parents[i - 1], keypath[i - 1])
-      if (!parents[i] || typeof parents[i] !== 'object') {
-        return object
-      }
-    }
+  parents[0] = object
+
+  for (i = 0; i < keypath.length ; i++) {
+    parents[i + 1] = atKey(parents[i], keypath[i])
   }
 
   for (i = keypath.length - 1; i >= 0; i--) {
@@ -152,7 +165,7 @@ function delIn (object, keypath) {
 }
 
 function ext (obj1, obj2) {
-  if (Array.isArray(obj1)) {
+  if (isArray(obj1)) {
     return [...obj1, ...obj2]
   } else {
     return {...obj1, ...obj2}

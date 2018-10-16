@@ -342,6 +342,54 @@ describe('reducers', () => {
         })
       })
 
+
+      it('takes a grafting response and grafts it using extend', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              messages:[{body: 'world'}]
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const graftResponse = {
+          data: [{body: 'hi'}],
+          action: 'graft',
+          path: 'messages',
+          title: 'foobar',
+          csrf_token: 'token',
+          grafting_strategy: 'extend',
+          assets: ['application-123.js']
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_HANDLE_GRAFT',
+          pageKey: '/foo',
+          page: graftResponse
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              messages: [
+                {body: 'world'},
+                {body: 'hi'}
+              ]
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        })
+      })
+
       it('takes a grafting response with joints and grafts it across', () => {
         const prevState = {
           '/foo': {
@@ -420,6 +468,87 @@ describe('reducers', () => {
           }
         })
       })
+
+      it('takes a grafting response with joints ignores grafting it across when update_joints: false', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          },
+          '/other': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          }
+        }
+
+        const graftResponse = {
+          data: { total: 100},
+          action: 'graft',
+          path: 'header.cart',
+          joints: {
+            user_header: ['header']
+          },
+          update_joints: false,
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_HANDLE_GRAFT',
+          pageKey: '/foo',
+          page: graftResponse
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 100
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          },
+          '/other': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              user_header: ['header']
+            }
+          }
+        })
+      })
+
     })
 
     describe('BREEZY_SAVE_RESPONSE', () => {
@@ -445,7 +574,7 @@ describe('reducers', () => {
         }))
       })
 
-      it('grafts any joints', () => {
+      it('updates any joints', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -488,6 +617,52 @@ describe('reducers', () => {
 
         const nextStateCartTotal = nextState['/foo'].data.header.cart.total;
         expect(nextStateCartTotal).toEqual(10)
+      })
+
+      it('skips updating joints when update_joints: false', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart']
+            }
+          }
+        }
+
+        const nextPage = {
+          data: {
+            profile: {
+              header: {
+                cart: {
+                  total: 10
+                }
+              }
+            }
+          },
+          csrf_token: 'token',
+          assets: ['application-123.js'],
+          joints: {
+            info: ['profile.header.cart']
+          },
+          update_joints: false
+        }
+
+        const nextState = reducer(prevState, {
+          type: 'BREEZY_SAVE_RESPONSE',
+          pageKey: '/bar',
+          page: nextPage
+        })
+
+        const nextStateCartTotal = nextState['/foo'].data.header.cart.total;
+        expect(nextStateCartTotal).toEqual(30)
       })
     })
   })

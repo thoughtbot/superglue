@@ -130,6 +130,7 @@ describe('navigation', () => {
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
             pageKey: '/bar',
+            update_joints: true,
             joints: {}
           },
           '/foo':{
@@ -142,6 +143,7 @@ describe('navigation', () => {
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
             pageKey: '/foo',
+            update_joints: true,
             joints: {}
           }
         }

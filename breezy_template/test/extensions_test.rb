@@ -152,7 +152,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -176,7 +176,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":{"hit":123}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"content":{"hit":123}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -196,7 +196,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({\"data\":{\"content\":[3,4]},"screen":"test","joints":joints,"defers":defers});
+        return ({\"data\":{\"content\":[3,4]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -216,7 +216,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","assets":["/test.js","/test.css","test_pack.js","test_pack.css"],"joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"update_joints":true,"screen":"test","assets":["/test.js","/test.css","test_pack.js","test_pack.css"],"joints":joints,"defers":defers});
       })()
     JS
 
@@ -238,7 +238,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","csrf_token":"secret","joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"update_joints":true,"screen":"test","csrf_token":"secret","joints":joints,"defers":defers});
       })()
     JS
 
@@ -258,7 +258,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","title":"this is fun","assets":["/test.js","/test.css"],"joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"update_joints":true,"screen":"test","title":"this is fun","assets":["/test.js","/test.css"],"joints":joints,"defers":defers});
       })()
     JS
 
@@ -283,7 +283,7 @@ class BreezyTemplateTest < ActionView::TestCase
           "id":1,
           "body":"post body 1",
           "author":{"first_name":"David","last_name":"Heinemeier Hansson"}
-        }},"screen":"test","joints":joints,"defers":defers});
+        }},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -301,7 +301,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         joints['footer'] ||= []; joints['footer'].push('footer');
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"footer":{"terms":"You agree"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -318,7 +318,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         joints['hello'] ||= []; joints['hello'].push('footer');
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"footer":{"terms":"You agree"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -335,7 +335,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         joints['somefoo1'] ||= []; joints['somefoo1'].push('0');joints['somefoo2'] ||= []; joints['somefoo2'].push('1');
-        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"screen":"test","joints":joints,"defers":defers});
+        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -352,7 +352,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"footer":{"terms":"You agree"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -368,7 +368,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"profile":{"email":"test@test.com"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"profile":{"email":"test@test.com"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -389,7 +389,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"email":"test@test.com"};
-        return ({"data":{"profile":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"profile":cache["#{cache_keys[0]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -406,7 +406,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"profile":{"email":"test@test.com"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"profile":{"email":"test@test.com"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -423,7 +423,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"screen":"test","joints":joints,"defers":defers});
+        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -442,7 +442,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var defers=[];
         cache["#{cache_keys[0]}"]={"terms":"You agree"};
         cache["#{cache_keys[1]}"]={"terms":"You agree"};
-        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]],"screen":"test","joints":joints,"defers":defers});
+        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]],"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -470,7 +470,7 @@ class BreezyTemplateTest < ActionView::TestCase
           {"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}},
           {"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
           {"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}}
-        ],"screen":"test","joints":joints,"defers":defers});
+        ],"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -487,7 +487,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":[],"screen":"test","joints":joints,"defers":defers});
+        return ({"data":[],"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -504,7 +504,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"posts":{"terms":"You agree"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"posts":{"terms":"You agree"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -520,7 +520,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"posts":[1,2]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"posts":[1,2]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -542,7 +542,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]=32;
-        return ({"data":{"hello":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"hello":cache["#{cache_keys[0]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -570,7 +570,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var defers=[];
         cache["#{cache_keys[0]}"]={"top":"hello4"};
         cache["#{cache_keys[1]}"]={"top":"hello5"};
-        return ({"data":{"hello":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"hello":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -599,7 +599,7 @@ class BreezyTemplateTest < ActionView::TestCase
         cache["#{cache_keys[0]}"]={"subcontent":"inner"};
         cache["#{cache_keys[1]}"]={"subcontent":"other"};
         cache["#{cache_keys[2]}"]={"content":cache["#{cache_keys[0]}"],"other":cache["#{cache_keys[1]}"]};
-        return ({"data":{"hello":cache["#{cache_keys[2]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"hello":cache["#{cache_keys[2]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -625,7 +625,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({\"data\":{\"hello\":[]},"screen":"test","joints":joints,"defers":defers});
+        return ({\"data\":{\"hello\":[]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -675,7 +675,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"name":"Cache"};
-        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"post":cache["#{cache_keys[0]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -697,7 +697,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]=["a","b","c"];
-        return ({"data":{"content":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"content":cache["#{cache_keys[0]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -767,7 +767,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":{"name":"Cache"}},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"content":{"name":"Cache"}},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -787,7 +787,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
-        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"post":cache["#{cache_keys[0]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -824,7 +824,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"id":1,"body":"hit","author":{"first_name":"John","last_name":"Smith"}};
-        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"post":cache["#{cache_keys[0]}"]},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -857,7 +857,7 @@ class BreezyTemplateTest < ActionView::TestCase
         cache["#{cache_keys[7]}"]={"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}};
         cache["#{cache_keys[8]}"]={"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
         cache["#{cache_keys[9]}"]={"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}};
-        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"],cache["#{cache_keys[2]}"],cache["#{cache_keys[3]}"],cache["#{cache_keys[4]}"],cache["#{cache_keys[5]}"],cache["#{cache_keys[6]}"],cache["#{cache_keys[7]}"],cache["#{cache_keys[8]}"],cache["#{cache_keys[9]}"]],"screen":"test","joints":joints,"defers":defers});
+        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"],cache["#{cache_keys[2]}"],cache["#{cache_keys[3]}"],cache["#{cache_keys[4]}"],cache["#{cache_keys[5]}"],cache["#{cache_keys[6]}"],cache["#{cache_keys[7]}"],cache["#{cache_keys[8]}"],cache["#{cache_keys[9]}"]],"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -887,7 +887,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"greeting":"hello world"},"screen":"test","joints":joints,"defers":defers}
+          {"data":{"greeting":"hello world"},"update_joints":true,"screen":"test","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -933,7 +933,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":23,"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"defers":defers}
+          {"data":23,"update_joints":true,"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -954,7 +954,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":"You agree","screen":"test","action":"graft","path":"hit.hit2.terms","joints":joints,"defers":defers}
+          {"data":"You agree","update_joints":true,"screen":"test","action":"graft","path":"hit.hit2.terms","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -984,7 +984,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"defers":defers}
+          {"data":{"greeting":"hello world"},"update_joints":true,"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1009,7 +1009,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"greeting":"hello world"};
-        return ({"data":cache["#{cache_keys[0]}"],"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"defers":defers});
+        return ({"data":cache["#{cache_keys[0]}"],"update_joints":true,"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"defers":defers});
       })()
 
 
@@ -1038,7 +1038,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"name":"hit"},"screen":"test","action":"graft","path":"hit.hit2.id=1","joints":joints,"defers":defers}
+          {"data":{"name":"hit"},"update_joints":true,"screen":"test","action":"graft","path":"hit.hit2.id=1","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1066,7 +1066,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"name":"hit"},"screen":"test","action":"graft","path":"hit.hit2.0","joints":joints,"defers":defers}
+          {"data":{"name":"hit"},"update_joints":true,"screen":"test","action":"graft","path":"hit.hit2.0","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1096,7 +1096,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2'});
         return (
-          {"data":{"hit":{"hit2":undefined}},"screen":"test","joints":joints,"defers":defers}
+          {"data":{"hit":{"hit2":undefined}},"update_joints":true,"screen":"test","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1125,7 +1125,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"hit":{"hit2":undefined}},"screen":"test","joints":joints,"defers":defers}
+          {"data":{"hit":{"hit2":undefined}},"update_joints":true,"screen":"test","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1159,7 +1159,7 @@ class BreezyTemplateTest < ActionView::TestCase
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D1.greeting'});
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D2.greeting'});
         return (
-          {"data":{"hit":{"hit2":[{"greeting":undefined},{"greeting":undefined}]}},"screen":"test","joints":joints,"defers":defers}
+          {"data":{"hit":{"hit2":[{"greeting":undefined},{"greeting":undefined}]}},"update_joints":true,"screen":"test","joints":joints,"defers":defers}
         );
       })()
     JS
@@ -1179,7 +1179,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"hello":32},"screen":"test","joints":joints,"defers":defers});
+        return ({"data":{"hello":32},"update_joints":true,"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -1199,7 +1199,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":32,"screen":"test","action":"graft","path":"hello.world","joints":joints,"defers":defers});
+        return ({"data":32,"update_joints":true,"screen":"test","action":"graft","path":"hello.world","joints":joints,"defers":defers});
       })()
     JS
 
@@ -1223,7 +1223,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         defers.push({url:'?_bz=hello.content'});
-        return ({"data":{"content":undefined},"screen":"test","action":"graft","path":"hello","joints":joints,"defers":defers});
+        return ({"data":{"content":undefined},"update_joints":true,"screen":"test","action":"graft","path":"hello","joints":joints,"defers":defers});
       })()
     JS
 

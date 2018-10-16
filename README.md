@@ -387,7 +387,10 @@ page = renderer.render(
   :index,
   assigns: {messages: Messages.where(id: 1)},
   locals: {breezy_filter: 'body.messages'},
-  breezy: {grafting_strategy: 'extend'} #grafting_strategy is a render option
+  breezy: {
+    grafting_strategy: 'extend',
+    update_joints: false
+  }
 )
 
 ActionCable.server.broadcast(
@@ -505,6 +508,7 @@ Option| Type | Notes
 --- | --- | ---
 screen| `String` | Override which screen the will render. Defaults to the template id (path to template without the rails root and file ext).
 grating_strategy| `String` | Can be `extend` or `set`. Defaults to `set`. This option specifies how Breezy will graft filtered nodes. `set` will replace the node, while `extend` will merge.
+update_joints| `Bool` | Defaults to `true`. If set to `false`, Breezy will not auto-update joints on this render. Typically used when rendering views outside controllers.
 
 When using the screen option, remember that Breezy determines which React component to render via the mapping in `application.js`.
 

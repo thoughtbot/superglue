@@ -142,8 +142,6 @@ function delIn (object, keypath) {
   for (i = keypath.length - 1; i >= 0; i--) {
     if (i === keypath.length - 1) {
       results[i] = cloneWithout(parents[i], keypath[i])
-
-      delete results[i][keypath[i]]
     } else {
       results[i] = clone(parents[i])
       results[i][keypath[i]] = results[i + 1]
@@ -153,18 +151,21 @@ function delIn (object, keypath) {
   return results[0]
 }
 
-function extendIn (source, keypath, extensions) {
-  keypath = normalizeKeyPath(keypath)
-
-  if (keypath.length === 0) return {...source, ...extensions}
-
-  let data =  {...getIn(source, keypath)}
-
-  for (let i = 2, len = arguments.length; i < len; i++) {
-    data = {...data, ...arguments[i]}
+function ext (obj1, obj2) {
+  if (Array.isArray(obj1)) {
+    return [...obj1, ...obj2]
+  } else {
+    return {...obj1, ...obj2}
   }
+}
 
-  return setIn(source, keypath, data)
+function extendIn (source, keypath, extension) {
+  keypath = normalizeKeyPath(keypath)
+  if (keypath.length === 0) return ext(source, extension)
+
+  let data = clone(getIn(source, keypath))
+
+  return setIn(source, keypath, ext(data, extension))
 }
 
 export {getIn, setIn, delIn, extendIn}

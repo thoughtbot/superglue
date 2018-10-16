@@ -1,4 +1,4 @@
-import { getIn, setIn, delIn, extendIn} from './immutability'
+import { getIn, setIn, delIn, extendIn } from './immutability'
 
 describe('setIn', () => {
   // it('returns the original when the path is greater than avail', () => {
@@ -84,15 +84,54 @@ describe('delIn', () => {
 
     expect(nextPage).toEqual({a: {b:{c:{}}, h: graft2}})
   })
+
+  it('deletes an array node using an index', () => {
+    const page = {a:{b: [
+      {foo_id: 1},
+      {foo_id: 2},
+      {foo_id: 3}
+    ]}}
+    const clone = delIn(page, 'a.b.0')
+    expect(page).not.toBe(clone)
+    expect(page.a.b[1]).toBe(clone.a.b[0])
+    expect(page.a.b[2]).toBe(clone.a.b[1])
+    expect(clone).toEqual({a: {b: [
+      {foo_id: 2},
+      {foo_id: 3}
+    ]}})
+  })
+
+  it('deletes an array node using an id attribute', () => {
+    const page = {a:{b: [
+      {foo_id: 1},
+      {foo_id: 2},
+      {foo_id: 3}
+    ]}}
+    const clone = delIn(page, 'a.b.foo_id=2')
+    expect(page).not.toBe(clone)
+    expect(page.a.b[0]).toBe(clone.a.b[0])
+    expect(page.a.b[2]).toBe(clone.a.b[1])
+    expect(clone).toEqual({a: {b: [
+      {foo_id: 1},
+      {foo_id: 3}
+    ]}})
+  })
 })
 
 describe('extendIn', () => {
   it('extends a node in the tree', () => {
     const page = {a:{b:{c:1}}}
-    const nextPage = extendIn(page, 'a.b', {z: 1})
+    const clone = extendIn(page, 'a.b', {z: 1})
+    expect(page).not.toBe(clone)
+    expect(clone).toEqual({a:{b: {c: 1, z: 1}}})
+  })
 
-    expect(nextPage).toEqual({a:{b: {c: 1, z: 1}}})
+  it('extends an array node in the tree', () => {
+    const page = {a:{b:[{c:1}]}}
+    const clone = extendIn(page, 'a.b', [{z: 1}])
+
+    expect(page).not.toBe(clone)
+    expect(page.a.b[0]).toBe(clone.a.b[0])
+    expect(clone).toEqual({a:{b: [{c: 1}, {z: 1}]}})
   })
 })
-
-

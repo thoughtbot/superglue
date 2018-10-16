@@ -242,6 +242,7 @@ export const mapDispatchToProps = {
   setInJoint,
   delInJoint,
   extendInJoint,
+  saveAndProcessSJRPage,
 }
 ```
 
@@ -277,12 +278,13 @@ this.props.navigateTo('/posts', ownProps:{restored: true})
 ```
 
 ## Built-in Thunks
-Breezy comes with 2 then-able thunks that should fulfill 90% of your needs. By default they don't add any additional behavior beyond updating the store. I recommend combining it with `withBrowserBehavior` for a reasonable navigation experience.
 
 ### API
 
 #### visit
 Makes an ajax call to a page, pushes to `History`, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.
+
+For a browser-like navigational experience, combine with [withBrowserBehavior](#withBrowserBehavior)
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
@@ -320,6 +322,8 @@ pageKey | `String` | Location in the Breezy store where `page` is stored
 
 #### remote
 Remote DOES NOT affect your `History`. Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](#filtering-nodes) of the current page or preload other pages.
+
+Combine with [withBrowserBehavior](#withBrowserBehavior)
 
 ```javascript
 remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
@@ -362,10 +366,47 @@ Arguments | Type | Notes
 visit| `Function` | The visit function injected by `mapDispatchToProps`
 remote| `Function` | The remote function injected by `mapDispatchToProps`. The wrapped `remote` function will add the `pageKey` argument automatically for you.
 
-### Filtering nodes
-Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then graft that node back onto its tree on the client side.
 
-Breezy's thunks will take care of most of the work for you:
+### saveAndProcessSJRPage
+Save and process a rendered view from BreezyTemplate. It will also handle any deferment, and joint updating. Useful if you want to stream a fully rendered `your_template.js.props` to preload, or graft nodes via websockets.
+
+Arguments | Type | Notes
+--- | --- | ---
+pageKey| `String` | The page key where you want template to be saved in. Use your rails `foo_path` helpers.
+pageSJR| `String` | A rendered BreezyTemplate
+
+For example, to update a user header when an email changes:
+
+```ruby
+renderer = MessagesController.renderer.new()
+page = renderer.render(
+  :index,
+  assigns: {messages: Messages.where(id: 1)},
+  locals: {breezy_filter: 'body.messages'},
+  breezy: {grafting_strategy: 'extend'} #grafting_strategy is a render option
+)
+
+ActionCable.server.broadcast(
+  "some_product_index_channel",
+  pageKey: products_path,
+  page: page
+)
+```
+
+then somewhere in your listener:
+
+```javascript
+
+handleNewMessage(data) {
+  const pageKey, page = data
+  this.props.saveAndProcessSJRPage(pageKey, page)
+}
+```
+
+See [render](#render), for more options.
+
+### Filtering nodes
+Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then `setIn` that node back onto its tree on the client side. Joints will also automatically be updated where needed.
 
 For example:
 
@@ -448,29 +489,25 @@ class PostsController < ApplicationController
 Enables Breezy funtionality, and renders a blank HTML view, allowing for JSX to take over on `application.html.erb`.
 
 #### render
-
-By default, the template name and path relative to `app/views` is used as the screen.
+You can override behavior through the `breezy` option:
 
 ```ruby
   def index
-    render :index # if your template is posts/index.js.props, the screen would be "post/index"
+    render :index, breezy: {..more_options..}
   end
 ```
 
-Breezy determines which React component to render via the mapping in `application.js`:
+Option| Type | Notes
+--- | --- | ---
+screen| `String` | Override which screen the will render. Defaults to the template id (path to template without the rails root and file ext).
+grating_strategy| `String` | Can be `extend` or `set`. Defaults to `set`. This option specifies how Breezy will graft filtered nodes. `set` will replace the node, while `extend` will merge.
+
+When using the screen option, remember that Breezy determines which React component to render via the mapping in `application.js`.
 
 ```javascript
 const screenToComponentMapping = {
   'posts/index': PostIndex
 }
-```
-
-You can specificy override this behavior by passing additional options to the render method:
-
-```ruby
-  def index
-    render :index, breezy: {screen: 'some_screen'}
-  end
 ```
 
 ### Setting the content location

@@ -6,6 +6,7 @@ import 'cross-fetch'
 import {uuidv4} from './utils/helpers'
 import {needsRefresh} from './window'
 import {withoutBZParams} from './utils/url'
+import {parseSJR} from './utils/request'
 
 export function saveResponse ({pageKey, page}) {
   return {
@@ -87,6 +88,10 @@ export function handleError (err) {
   }
 }
 
+export function saveAndProcessSJRPage (pageKey, pageSJR) {
+  const page = parseSJR(pageSJR)
+  return saveAndProcessPage(pageKey, page)
+}
 
 export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {

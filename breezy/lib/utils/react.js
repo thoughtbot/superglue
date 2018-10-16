@@ -7,6 +7,7 @@ import {
   setInJoint,
   delInJoint,
   extendInJoint,
+  saveAndProcessSJRPage,
 } from '../action_creators'
 import {withoutBZParams} from './url'
 
@@ -36,6 +37,7 @@ export const mapDispatchToProps = {
   setInJoint,
   delInJoint,
   extendInJoint,
+  saveAndProcessSJRPage,
 }
 
 export function withBrowserBehavior (visit, remote) {

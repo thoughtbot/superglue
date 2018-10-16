@@ -245,6 +245,36 @@ export const mapDispatchToProps = {
 }
 ```
 
+## Nav Component
+
+A `Nav` component for your redux application.
+
+```
+import Nav from '@jho406/breezy/dist/NavComponent'
+...
+<Provider store={store}>
+  <Nav
+    mapping={this.props.mapping}
+    history={history}
+    initialPageKey={initialPageKey}
+  />
+</Provider>
+
+```
+
+### API
+
+#### navigateTo
+Passed to all your mapped components.
+
+prop | Notes
+--- | ---
+pageKey | The location where your props are stored in breezy. Identical to the path from your Rails `foo_path` helpers.
+ownProps | Any additional props to be passed to the next page component.
+
+```javascript
+this.props.navigateTo('/posts', ownProps:{restored: true})
+```
 
 ## Built-in Thunks
 Breezy comes with 2 then-able thunks that should fulfill 90% of your needs. By default they don't add any additional behavior beyond updating the store. I recommend combining it with `withBrowserBehavior` for a reasonable navigation experience.
@@ -318,6 +348,8 @@ You can also wrap this function with sane defaults using `withBrowserBehavior` w
 Enhances `visit` and `remote` with navigation behavior on the returned Promises. For example, if the request `500`s, Breezy will navigate to '/500.html'. You can read the full behavior [here](https://github.com/jho406/Breezy/blob/master/breezy/lib/utils/react.js#L131).
 
 ```javascript
+  import {...someStuff..., withBrowserBehavior} from '@jho406/breezy'
+
   constructor (props) {
     const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
     this.visit = visit.bind(this)
@@ -344,7 +376,6 @@ store.dispatch(visit('/?_bz=header.shopping_cart'))
 
 ### The Breezy store shape
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
-
 
 Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [super easy](#automatically-updating-cross-cutting-concerns) to update and manage cross-cutting concerns like a shared header.
 

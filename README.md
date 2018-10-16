@@ -266,6 +266,10 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 ### API
 
 #### navigateTo
+```javascript
+this.props.navigateTo('/posts', ownProps:{restored: true})
+```
+
 Passed to all your mapped components.
 
 prop | Notes
@@ -273,9 +277,6 @@ prop | Notes
 pageKey | The location where your props are stored in breezy. Identical to the path from your Rails `foo_path` helpers.
 ownProps | Any additional props to be passed to the next page component.
 
-```javascript
-this.props.navigateTo('/posts', ownProps:{restored: true})
-```
 
 ## Built-in Thunks
 
@@ -301,7 +302,7 @@ Arguments | Type | Notes
 --- | --- | ---
 pathQuery| `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure.
 fetchRequestOptions | `Object` |  Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`.
-pageKey | `String` | Optional. The key that breezy will use to store the recieved page. You wouldn't normally use this when using the visit thunk. If not specified, Breezy will use the response's `x-response-url` (reserved for Breezy's use), or `content-location` headers. It is [recommended](#setting-the-content-locatio) to use `response.set_header("content-location", new_todo_path)` in your `create` and `update` methods.
+pageKey | `String` | Optional. The key that breezy will use to store the recieved page. If not specified, Breezy will use the response's `content-location` headers. See [setting the content location](#setting-the-content-location)
 
 Callback options | Type | Notes
 --- | --- | ---
@@ -367,7 +368,7 @@ visit| `Function` | The visit function injected by `mapDispatchToProps`
 remote| `Function` | The remote function injected by `mapDispatchToProps`. The wrapped `remote` function will add the `pageKey` argument automatically for you.
 
 
-### saveAndProcessSJRPage
+#### saveAndProcessSJRPage
 Save and process a rendered view from BreezyTemplate. It will also handle any deferment, and joint updating. Useful if you want to stream a fully rendered `your_template.js.props` to preload, or graft nodes via websockets.
 
 Arguments | Type | Notes
@@ -375,7 +376,7 @@ Arguments | Type | Notes
 pageKey| `String` | The page key where you want template to be saved in. Use your rails `foo_path` helpers.
 pageSJR| `String` | A rendered BreezyTemplate
 
-For example, to update a user header when an email changes:
+For example, to update a chat:
 
 ```ruby
 renderer = MessagesController.renderer.new()
@@ -393,7 +394,7 @@ ActionCable.server.broadcast(
 )
 ```
 
-then somewhere in your listener:
+then somewhere in your JS listener:
 
 ```javascript
 
@@ -1040,6 +1041,8 @@ json.set! :nested, to_nest
 
 7. Key formatting via `json.key_format` is removed.
 
+## Special Thanks!
+Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/)
 
 ## Tutorial
 Soon!

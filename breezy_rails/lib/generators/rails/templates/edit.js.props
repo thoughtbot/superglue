@@ -1,10 +1,10 @@
+json.flash flash.to_h
+json.errors @<%= singular_table_name %>.errors.to_h
+
 <%- attributes_list_with_timestamps.each do |attr| -%>
 json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
 <%- end -%>
 
-if @<%= singular_table_name %>.errors.any?
-  json.errors @<%= singular_table_name %>.errors.to_h
-end
 
 json.attributes_for_form do
 <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>

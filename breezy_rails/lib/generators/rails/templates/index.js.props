@@ -1,3 +1,5 @@
+json.flash flash.to_h
+
 json.<%= plural_table_name %> do
   json.array! @<%= plural_table_name %> do |<%= singular_table_name %>|
     <%- attributes_list_with_timestamps.each do |attr| -%>
@@ -8,8 +10,5 @@ json.<%= plural_table_name %> do
   end
 end
 
-if notice
-  json.notice notice
-end
 
 json.new_post_path new_<%= singular_table_name %>_path

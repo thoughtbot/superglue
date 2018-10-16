@@ -1,10 +1,9 @@
+json.flash flash.to_h
+
 <%- attributes_list_with_timestamps.each do |attr|-%>
 json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
 <%- end -%>
 
-if notice
-  json.notice notice
-end
 
 json.<%= plural_table_name %>_path <%= plural_table_name %>_path
 json.edit_<%= singular_table_name %>_path edit_<%= singular_table_name %>_path(@<%= singular_table_name %>)

@@ -24,7 +24,7 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
 
     return (
       <div>
-        <p id="notice">{this.props.notice}</p>
+        <p id="notice">{this.props.flash && this.props.flash.notice}</p>
 
         <h1><%= plural_table_name.capitalize %></h1>
 

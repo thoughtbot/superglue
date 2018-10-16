@@ -7,7 +7,7 @@ class <%= plural_table_name.camelize %>Show extends BaseScreen {
   render () {
     return (
       <div>
-        <p id="notice">{this.props.notice}</p>
+        <p id="notice">{this.props.flash && this.props.flash.notice}</p>
         <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
         <p>
           <strong><%= attr.capitalize %>:</strong>

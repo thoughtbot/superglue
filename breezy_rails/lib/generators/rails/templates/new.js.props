@@ -1,5 +1,4 @@
-if @<%= singular_table_name %>.errors.any?
-  json.errors @<%= singular_table_name %>.errors.to_h
-end
+json.flash flash.to_h
+json.errors @<%= singular_table_name %>.errors.to_h
 
 json.<%= plural_table_name %>_path <%= plural_table_name %>_path

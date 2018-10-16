@@ -79,11 +79,17 @@ function setInByJoint (state, name, value, subpath = null) {
 }
 
 function handleGraft (state, pageKey, page) {
+  let strategy = setIn
+
+  if (page.grafting_strategy === 'extend') {
+    strategy = extendIn
+  }
+
   state = {...state}
   reverseMerge(page, {joints: {}})
 
   const currentPage = state[pageKey]
-  currentPage.data = setIn(currentPage.data, page.path, page.data)
+  currentPage.data = strategy(currentPage.data, page.path, page.data)
 
   Object.entries(page.joints)
     .forEach(([ref, paths]) => {

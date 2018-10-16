@@ -60,11 +60,11 @@ function cloneWithout (object, key) {
   }
 }
 
-function isArray(ary) {
+function isArray (ary) {
   return Array.isArray(ary)
 }
 
-function isObject(obj) {
+function isObject (obj) {
   return !isArray(obj) && obj === Object(obj)
 }
 
@@ -144,7 +144,7 @@ function delIn (object, keypath) {
 
   let results = {}
   let parents = {}
-  let i, len
+  let i
 
   parents[0] = object
 

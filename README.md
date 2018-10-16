@@ -267,16 +267,19 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 
 #### navigateTo
 ```javascript
-this.props.navigateTo('/posts', ownProps:{restored: true})
+this.props.navigateTo('/posts', {ownProps:{restored: true}})
 ```
 
-Passed to all your mapped components.
+If there is an existing page in your store `navigateTo` will restore the props, render the correct component, and return `true`. Otherwise it will return `false`. This is useful if you want to restore an existing page before making a call to `visit` or `remote`.
 
-prop | Notes
+Parameter | Notes
 --- | ---
-pageKey | The location where your props are stored in breezy. Identical to the path from your Rails `foo_path` helpers.
-ownProps | Any additional props to be passed to the next page component.
+pageKey | The location where your props are stored in breezy. Use your rails `foo_path` helpers.
+options| Additional options, see below.
 
+Options | Notes
+--- | ---
+ownProps | Any additional props to be passed to the next page component.
 
 ## Built-in Thunks
 

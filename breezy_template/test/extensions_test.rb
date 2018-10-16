@@ -258,7 +258,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","assets":["/test.js","/test.css"],"title":"this is fun","joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"screen":"test","title":"this is fun","assets":["/test.js","/test.css"],"joints":joints,"defers":defers});
       })()
     JS
 

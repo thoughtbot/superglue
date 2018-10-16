@@ -17,6 +17,12 @@ class BreezyTemplate
 
           json.set! :screen, '#{self.template_id(template)}'
 
+          if defined?(breezy) && breezy
+            breezy.each do |k, v|
+              json.set! k, v
+            end
+          end
+
           if protect_against_forgery?
             json.csrf_token form_authenticity_token
           end
@@ -39,12 +45,6 @@ class BreezyTemplate
           if defined?(breezy_filter) && !!breezy_filter
             json.action 'graft'
             json.path breezy_filter
-          end
-
-          if defined?(breezy) && breezy
-            breezy.each do |k, v|
-              json.set! k, v
-            end
           end
 
           json.joints ::BreezyTemplate::Var.new('joints')

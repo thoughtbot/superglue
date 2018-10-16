@@ -425,7 +425,7 @@ store.dispatch(visit('/?_bz=header.shopping_cart'))
 ### The Breezy store shape
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 
-Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [super easy](#automatically-updating-cross-cutting-concerns) to update and manage cross-cutting concerns like a shared header.
+Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [easy](#automatically-updating-cross-cutting-concerns) to update and manage cross-cutting concerns like a shared header.
 
 Breezy's opinion is that its much saner to leave the business models to the backend, and shape state on the frontend for ~~only~~ mostly presentational purposes. In other words, there is no `User` model on the front end, just pages with `User`-like data.
 
@@ -507,7 +507,7 @@ You can override behavior through the `breezy` option:
 Option| Type | Notes
 --- | --- | ---
 screen| `String` | Override which screen the will render. Defaults to the template id (path to template without the rails root and file ext).
-grating_strategy| `String` | Can be `extend` or `set`. Defaults to `set`. This option specifies how Breezy will graft filtered nodes. `set` will replace the node, while `extend` will merge.
+grafting_strategy| `String` | Can be `extend` or `set`. Defaults to `set`. This option specifies how Breezy will graft filtered nodes. `set` will replace the node, while `extend` will merge.
 update_joints| `Bool` | Defaults to `true`. If set to `false`, Breezy will not auto-update joints on this render. Typically used when rendering views outside controllers.
 
 When using the screen option, remember that Breezy determines which React component to render via the mapping in `application.js`.
@@ -610,10 +610,9 @@ delInJoint({name, keypath})
 Traverses to the node by joint name, then keypath, and immutably delete the value across all `pages`.
 ```javascript
 
-this.props.extendInJoint({
+this.props.delInJoint({
   name: 'header',
   keypath: 'profile.address',
-  value: {zip: 11214}
 })
 
 ```
@@ -863,7 +862,7 @@ end
 
 ```
 
-A joint uniquely identify a rendered partial across the application. By default, the name of the joint is named after the key where the partial is used. You can also rename a joint:
+A joint uniquely identifies a rendered partial across the application. By default, the name of the joint is named after the key where the partial is used. You can also rename a joint:
 
 ```ruby
 # index.js.breezy
@@ -877,6 +876,8 @@ require 'breezy_template/core_ext' #See (lists)[#Lists]
 
 json.array! ['foo', 'bar'], partial: ["footer", joint: ->(x){"somefoo_#{x}"}]
 ```
+
+Use joints sparingly, and only if you are sure a partial is a cross-cutting concern. Headers, footers, and partials for list elements are good candidates, while a partial containing lists is not.
 
 #### Caching
 

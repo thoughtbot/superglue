@@ -117,7 +117,7 @@ const history = createHistory({}) // you will need the history library
 const initialPage = window.BREEZY_INITIAL_PAGE_STATE // gets populated automatically
 const baseUrl = '' //Normally blank, but you can change this if you are using react-native
 
-const {reducer, initialState, Nav, connect} = Breezy.start({
+const {reducer, initialState, initialPageKey, connect} = Breezy.start({
   window,
   initialPage,
   baseUrl,
@@ -137,10 +137,15 @@ connect(store)
 class App extends React.Component {
   render() {
     return <Provider store={store}>
-      <Nav mapping={this.props.mapping}/>
+      <Nav
+        mapping={this.props.mapping}
+        history={history}
+        initialPageKey={initialPageKey}
+      />
     </Provider>
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", function() {
   render(<App mapping={screenToComponentMapping}/>, document.getElementById('app'))
@@ -219,7 +224,7 @@ export default connect(
 ### API
 
 #### mapStateToProps
-An out of the box `mapStateToProps` to be used with react-redux's `connect`.
+An out-of-the-box `mapStateToProps` to be used with react-redux's `connect`.
 
 Breezy will include all props you build in your `xyz.js.props` and the following:
 
@@ -540,7 +545,7 @@ end
 ## Immutability Helpers
 
 ### API
-Breezy includes immutability helpers inspired by [Scour.js](https://github.com/rstacruz/scour) out of the box. You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
+Breezy includes immutability helpers inspired by [Scour.js](https://github.com/rstacruz/scour). You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
 
 ```
 '/posts': {
@@ -702,9 +707,7 @@ json.posts do
   json.total @posts.count
 end
 
-if notice
-  json.notice notice
-end
+json.flash flash.to_h
 
 json.footer nil, partial: 'footer'
 ```

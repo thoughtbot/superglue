@@ -479,7 +479,6 @@ You can override behavior through the `breezy` option:
 Option| Type | Notes
 --- | --- | ---
 screen| `String` | Override which screen the will render. Defaults to the template id (path to template without the rails root and file ext).
-grafting_strategy| `String` | Can be `extend` or `set`. Defaults to `set`. This option specifies how Breezy will graft filtered nodes. `set` will replace the node, while `extend` will merge.
 
 When using the screen option, remember that Breezy determines which React component to render via the mapping in `application.js`.
 

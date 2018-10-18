@@ -342,54 +342,6 @@ describe('reducers', () => {
         })
       })
 
-
-      it('takes a grafting response and grafts it using extend', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              messages:[{body: 'world'}]
-            },
-            csrf_token: 'token',
-            assets: ['application-123.js'],
-            joints: {
-              info: ['header.cart']
-            }
-          }
-        }
-
-        const graftResponse = {
-          data: [{body: 'hi'}],
-          action: 'graft',
-          path: 'messages',
-          title: 'foobar',
-          csrf_token: 'token',
-          grafting_strategy: 'extend',
-          assets: ['application-123.js']
-        }
-
-        const nextState = reducer(prevState, {
-          type: 'BREEZY_HANDLE_GRAFT',
-          pageKey: '/foo',
-          page: graftResponse
-        })
-
-        expect(nextState).toEqual({
-          '/foo': {
-            data: {
-              messages: [
-                {body: 'world'},
-                {body: 'hi'}
-              ]
-            },
-            csrf_token: 'token',
-            assets: ['application-123.js'],
-            joints: {
-              info: ['header.cart']
-            }
-          }
-        })
-      })
-
       it('takes a grafting response with joints and grafts it across', () => {
         const prevState = {
           '/foo': {

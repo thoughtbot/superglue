@@ -11,18 +11,15 @@ function saveResponse (state, pageKey, page) {
     positionX: pageXOffset(),
     pageKey,
     joints: {},
-    update_joints: true,
   })
 
-  if (page.update_joints) {
-    Object.entries(page.joints)
-      .forEach(([ref, paths]) => {
-        paths.forEach((path) => {
-          const updatedNode = getIn(page.data, path)
-          state = setInByJoint(state, ref, updatedNode)
-        })
+  Object.entries(page.joints)
+    .forEach(([ref, paths]) => {
+      paths.forEach((path) => {
+        const updatedNode = getIn(page.data, path)
+        state = setInByJoint(state, ref, updatedNode)
       })
-  }
+    })
 
   state[pageKey] = page
 
@@ -89,20 +86,18 @@ function handleGraft (state, pageKey, page) {
   }
 
   state = {...state}
-  reverseMerge(page, {joints: {}, update_joints: true})
+  reverseMerge(page, {joints: {}})
 
   const currentPage = state[pageKey]
   currentPage.data = strategy(currentPage.data, page.path, page.data)
 
-  if (page.update_joints) {
-    Object.entries(page.joints)
-      .forEach(([ref, paths]) => {
-        paths.forEach((path) => {
-          const updatedNode = getIn(currentPage.data, path)
-          state = setInByJoint(state, ref, updatedNode)
-        })
+  Object.entries(page.joints)
+    .forEach(([ref, paths]) => {
+      paths.forEach((path) => {
+        const updatedNode = getIn(currentPage.data, path)
+        state = setInByJoint(state, ref, updatedNode)
       })
-  }
+    })
 
   return state
 }

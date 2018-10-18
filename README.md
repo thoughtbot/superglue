@@ -384,39 +384,6 @@ Arguments | Type | Notes
 pageKey| `String` | The page key where you want template to be saved in. Use your rails `foo_path` helpers.
 pageSJR| `String` | A rendered BreezyTemplate
 
-For example, to update a chat:
-
-```ruby
-renderer = MessagesController.renderer.new()
-page = renderer.render(
-  :index,
-  assigns: {messages: Messages.where(id: 1)},
-  locals: {breezy_filter: 'body.messages'},
-  breezy: {
-    grafting_strategy: 'extend',
-    update_joints: false
-  }
-)
-
-ActionCable.server.broadcast(
-  "some_product_index_channel",
-  pageKey: products_path,
-  page: page
-)
-```
-
-then somewhere in your JS listener:
-
-```javascript
-
-handleNewMessage(data) {
-  const pageKey, page = data
-  this.props.saveAndProcessSJRPage(pageKey, page)
-}
-```
-
-See [render](#render), for more options.
-
 ### Filtering nodes
 Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching (if an `ActiveRecord::Relation` is encountered, it will append a where clause with your provided id) while traversing, and return the node. Breezy will then `setIn` that node back onto its tree on the client side. Joints will also automatically be updated where needed.
 
@@ -513,7 +480,6 @@ Option| Type | Notes
 --- | --- | ---
 screen| `String` | Override which screen the will render. Defaults to the template id (path to template without the rails root and file ext).
 grafting_strategy| `String` | Can be `extend` or `set`. Defaults to `set`. This option specifies how Breezy will graft filtered nodes. `set` will replace the node, while `extend` will merge.
-update_joints| `Bool` | Defaults to `true`. If set to `false`, Breezy will not auto-update joints on this render. Typically used when rendering views outside controllers.
 
 When using the screen option, remember that Breezy determines which React component to render via the mapping in `application.js`.
 

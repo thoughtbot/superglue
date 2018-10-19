@@ -1,6 +1,12 @@
-import {reverseMerge, pagePath} from './utils/helpers'
+import {
+  reverseMerge,
+  forEachJoint,
+  forEachJointAtNameAcrossAllPages,
+  pagePath,
+} from './utils/helpers'
 import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
+
 
 function saveResponse (state, pageKey, page) {
   state = {...state}
@@ -13,13 +19,10 @@ function saveResponse (state, pageKey, page) {
     joints: {},
   })
 
-  Object.entries(page.joints)
-    .forEach(([ref, paths]) => {
-      paths.forEach((path) => {
-        const updatedNode = getIn(page.data, path)
-        state = setInByJoint(state, ref, updatedNode)
-      })
-    })
+  forEachJoint(page.joints, (jointName, jointPath) => {
+    const updatedNode = getIn(page, jointPath)
+    state = setInByJoint(state, jointName, updatedNode)
+  })
 
   state[pageKey] = page
 
@@ -28,71 +31,56 @@ function saveResponse (state, pageKey, page) {
 
 function extendInByJoint (state, name, value, subpath) {
   state = {...state}
-  Object.entries(state)
-    .forEach(([pathname, page]) => {
-      const keyPaths = page.joints[name] || []
-      keyPaths.forEach((path) => {
-        const fullpath = ['data', path]
-        if (subpath) {
-          fullpath.push(subpath)
-        }
-        state[pathname] = extendIn(page, fullpath.join('.'), value)
-      })
-    })
+
+  forEachJointAtNameAcrossAllPages(state, name, (pageKey, page, pathToJoint)=>{
+    const fullpath = [pathToJoint]
+    if (subpath) {
+      fullpath.push(subpath)
+    }
+    state[pageKey] = extendIn(page, fullpath.join('.'), value)
+  })
 
   return state
 }
 
 function delInByJoint (state, name, subpath = null) {
   state = {...state}
-  Object.entries(state)
-    .forEach(([pathname, page]) => {
-      const keyPaths = page.joints[name] || []
-      keyPaths.forEach((path) => {
-        const fullpath = ['data', path]
-        if (subpath) {
-          fullpath.push(subpath)
-        }
 
-        state[pathname] = delIn(page, fullpath.join('.'))
-      })
-    })
+  forEachJointAtNameAcrossAllPages(state, name, (pageKey, page, pathToJoint)=>{
+    const fullpath = [pathToJoint]
+    if (subpath) {
+      fullpath.push(subpath)
+    }
+    state[pageKey] = delIn(page, fullpath.join('.'))
+  })
 
   return state
 }
 
 function setInByJoint (state, name, value, subpath = null) {
   state = {...state}
-  Object.entries(state)
-    .forEach(([pathname, page]) => {
-      const keyPaths = page.joints[name] || []
-      keyPaths.forEach((path) => {
-        const fullpath = ['data', path]
-        if (subpath) {
-          fullpath.push(subpath)
-        }
-        state[pathname] = setIn(page, fullpath.join('.'), value)
-      })
-    })
+  forEachJointAtNameAcrossAllPages(state, name, (pageKey, page, pathToJoint)=>{
+    const fullpath = [pathToJoint]
+    if (subpath) {
+      fullpath.push(subpath)
+    }
+    state[pageKey] = setIn(page, fullpath.join('.'), value)
+  })
 
   return state
 }
 
 function handleGraft (state, pageKey, page) {
-
   state = {...state}
   reverseMerge(page, {joints: {}})
 
   const currentPage = state[pageKey]
   currentPage.data = setIn(currentPage.data, page.path, page.data)
 
-  Object.entries(page.joints)
-    .forEach(([ref, paths]) => {
-      paths.forEach((path) => {
-        const updatedNode = getIn(currentPage.data, path)
-        state = setInByJoint(state, ref, updatedNode)
-      })
-    })
+  forEachJoint(page.joints, (jointName, jointPath) => {
+    const updatedNode = getIn(currentPage, jointPath)
+    state = setInByJoint(state, jointName, updatedNode)
+  })
 
   return state
 }

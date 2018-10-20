@@ -564,7 +564,6 @@ describe('action creators', () => {
         pageKey: '/first',
         page: jasmine.any(Object)
       },
-      { type: 'BREEZY_NOOP' },
       { type: 'BREEZY_SAVE_RESPONSE',
         pageKey: '/second',
         page: jasmine.any(Object)

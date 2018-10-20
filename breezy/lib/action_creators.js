@@ -199,7 +199,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
         if (controlFlows['visit'] === seqId ) {
           return {...meta, canNavigate: true}
         } else {
-          dispatch({type: 'BREEZY_NOOP'})
           return {...meta, canNavigate: false}
         }
       })

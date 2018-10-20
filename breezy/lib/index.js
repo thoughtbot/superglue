@@ -4,11 +4,15 @@ import {setWindow, unsetWindow, hasWindow} from './window'
 import connect from './connector'
 import {withoutBZParams} from './utils/url'
 import {saveAndProcessPage} from './action_creators'
+import {
+  HISTORY_CHANGE,
+  SET_CSRF_TOKEN,
+  SET_BASE_URL,
+} from './actions'
 
 export {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
 export {setWindow, unsetWindow}
-
 export function stop () {
   unsetWindow()
 }
@@ -40,7 +44,7 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
 
       if(hasWindow()) {
         store.dispatch({
-          type: 'BREEZY_HISTORY_CHANGE',
+          type: HISTORY_CHANGE,
           url:  parse(url).href
         })
       }
@@ -50,8 +54,8 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
         initialPage
       ))
 
-      store.dispatch({type: 'BREEZY_SET_BASE_URL', baseUrl})
-      store.dispatch({type: 'BREEZY_SET_CSRF_TOKEN', csrfToken})
+      store.dispatch({type: SET_BASE_URL, baseUrl})
+      store.dispatch({type: SET_CSRF_TOKEN, csrfToken})
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,

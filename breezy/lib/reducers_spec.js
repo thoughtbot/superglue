@@ -9,7 +9,7 @@ describe('reducers', () => {
     describe('BREEZY_HISTORY_CHANGE', () => {
       it('sets the currentUrl', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: 'BREEZY_HISTORY_CHANGE', url: '/some_url'}
+        const action = {type: '@@breezy/HISTORY_CHANGE', url: '/some_url'}
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -22,7 +22,7 @@ describe('reducers', () => {
     describe('BREEZY_SET_BASE_URL', () => {
       it('sets the base URL', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: 'BREEZY_SET_BASE_URL', baseUrl: '/some_url'}
+        const action = {type: '@@breezy/SET_BASE_URL', baseUrl: '/some_url'}
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -35,7 +35,7 @@ describe('reducers', () => {
     describe('BREEZY_SAVE_RESPONSE', () => {
       it('saves the response csrfToken', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: 'BREEZY_SAVE_RESPONSE', page: {csrf_token: 'some_token'}}
+        const action = {type: '@@breezy/SAVE_RESPONSE', page: {csrf_token: 'some_token'}}
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -48,7 +48,7 @@ describe('reducers', () => {
     describe('BREEZY_SET_CSRF_TOKEN', () => {
       it('sets the initial CSRF token', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: 'BREEZY_SET_CSRF_TOKEN', csrfToken: 'some_token'}
+        const action = {type: '@@breezy/SET_CSRF_TOKEN', csrfToken: 'some_token'}
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -80,7 +80,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_EXTEND_IN_JOINT',
+          type: '@@breezy/EXTEND_IN_JOINT',
           name: 'info',
           keypath: 'cart',
           value: {foo: 'bar'}
@@ -126,7 +126,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_DEL_IN_JOINT',
+          type: '@@breezy/DEL_IN_JOINT',
           name: 'info',
           keypath: 'total'
         })
@@ -167,7 +167,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_SET_IN_JOINT',
+          type: '@@breezy/SET_IN_JOINT',
           name: 'info',
           value: 300,
           keypath: 'total'
@@ -211,7 +211,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_EXTEND_IN_PAGE',
+          type: '@@breezy/EXTEND_IN_PAGE',
           pageKey: '/foo',
           keypath: 'header',
           value: {sibling: 90}
@@ -245,7 +245,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_DEL_IN_PAGE',
+          type: '@@breezy/DEL_IN_PAGE',
           pageKey: '/foo',
           keypath: 'header.cart',
         })
@@ -278,7 +278,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_SET_IN_PAGE',
+          type: '@@breezy/SET_IN_PAGE',
           pageKey: '/foo',
           keypath: 'header.cart',
           value: {foo: 3}
@@ -319,7 +319,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_HANDLE_GRAFT',
+          type: '@@breezy/HANDLE_GRAFT',
           pageKey: '/foo',
           page: graftResponse
         })
@@ -384,7 +384,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_HANDLE_GRAFT',
+          type: '@@breezy/HANDLE_GRAFT',
           pageKey: '/foo',
           page: graftResponse
         })
@@ -426,7 +426,7 @@ describe('reducers', () => {
       it('saves page', () => {
         const prevState = {}
         const nextState = reducer(prevState, {
-          type: 'BREEZY_SAVE_RESPONSE',
+          type: '@@breezy/SAVE_RESPONSE',
           pageKey: '/foo',
           page: {
             data: {},
@@ -481,7 +481,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: 'BREEZY_SAVE_RESPONSE',
+          type: '@@breezy/SAVE_RESPONSE',
           pageKey: '/bar',
           page: nextPage
         })

@@ -61,7 +61,7 @@ describe('action creators', () => {
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_HANDLE_GRAFT',
+        type: '@@breezy/HANDLE_GRAFT',
         pageKey,
         page,
       })
@@ -81,7 +81,7 @@ describe('action creators', () => {
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_SET_IN_PAGE',
+        type: '@@breezy/SET_IN_PAGE',
         pageKey,
         keypath,
         value,
@@ -100,7 +100,7 @@ describe('action creators', () => {
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_DEL_IN_PAGE',
+        type: '@@breezy/DEL_IN_PAGE',
         pageKey,
         keypath,
       })
@@ -120,7 +120,7 @@ describe('action creators', () => {
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_EXTEND_IN_PAGE',
+        type: '@@breezy/EXTEND_IN_PAGE',
         pageKey,
         keypath,
         value,
@@ -135,14 +135,14 @@ describe('action creators', () => {
       const value = {d: 'foo'}
 
       const action = setInJoint({
-        type: 'BREEZY_SET_IN_JOINT',
+        type: '@@breezy/SET_IN_JOINT',
         name,
         keypath,
         value,
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_SET_IN_JOINT',
+        type: '@@breezy/SET_IN_JOINT',
         name,
         keypath,
         value,
@@ -156,13 +156,13 @@ describe('action creators', () => {
       const keypath = 'a.b.c'
 
       const action = delInJoint({
-        type: 'BREEZY_DEL_IN_JOINT',
+        type: '@@breezy/DEL_IN_JOINT',
         name,
         keypath,
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_DEL_IN_JOINT',
+        type: '@@breezy/DEL_IN_JOINT',
         name,
         keypath,
       })
@@ -176,14 +176,14 @@ describe('action creators', () => {
       const value = {d: 'foo'}
 
       const action = extendInJoint({
-        type: 'BREEZY_EXTEND_IN_JOINT',
+        type: '@@breezy/EXTEND_IN_JOINT',
         name,
         keypath,
         value,
       })
 
       expect(action).toEqual({
-        type: 'BREEZY_EXTEND_IN_JOINT',
+        type: '@@breezy/EXTEND_IN_JOINT',
         name,
         keypath,
         value,
@@ -245,11 +245,11 @@ describe('action creators', () => {
 
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        { type: '@@breezy/BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
           pageKey: '/foo',
-          type: 'BREEZY_SAVE_RESPONSE',
+          type: '@@breezy/SAVE_RESPONSE',
           page: {
             data: { heading: 'Some heading 2' },
             title: 'title 2',
@@ -353,10 +353,10 @@ describe('action creators', () => {
       fetchMock.mock('/foo?__=0', {status: 500})
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        { type: '@@breezy/BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
-          type: 'BREEZY_FETCH_ERROR',
+          type: '@@breezy/FETCH_ERROR',
           payload:{error: "Internal Server Error" }
         }
       ]
@@ -376,10 +376,10 @@ describe('action creators', () => {
       }})
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        { type: '@@breezy/BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
-          type: 'BREEZY_FETCH_ERROR',
+          type: '@@breezy/FETCH_ERROR',
           payload:{error: "Invalid Breezy Response" }
         }
       ]
@@ -406,9 +406,9 @@ describe('action creators', () => {
         })
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
-        { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
-        {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
+        { type: '@@breezy/BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+        {type: '@@breezy/FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
       ]
 
       return store.dispatch(visit('/foo')).catch((err) => {
@@ -468,7 +468,7 @@ describe('action creators', () => {
         const lastAction = actions[actions.length - 1]
         const {type, pathQuery, page} = lastAction;
 
-        if(type === 'BREEZY_SAVE_RESPONSE' && page.data.heading === 'defered response heading') {
+        if(type === '@@breezy/SAVE_RESPONSE' && page.data.heading === 'defered response heading') {
           done()
         }
       })
@@ -509,7 +509,7 @@ describe('action creators', () => {
         const lastAction = actions[actions.length - 1]
         const {type, pageKey, page} = lastAction;
 
-        if(type === 'BREEZY_HANDLE_GRAFT') {
+        if(type === '@@breezy/HANDLE_GRAFT') {
           expect(pageKey).toEqual('/foo')
           expect(page.data).toEqual('success')
           done()
@@ -556,15 +556,15 @@ describe('action creators', () => {
     initialState.breezy.controlFlows.visit = 'secondId'
 
     const expectedActions = [
-      { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
-      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
-      { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
-      { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
-      { type: 'BREEZY_SAVE_RESPONSE',
+      { type: '@@breezy/BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+      { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
+      { type: '@@breezy/BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+      { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
+      { type: '@@breezy/SAVE_RESPONSE',
         pageKey: '/first',
         page: jasmine.any(Object)
       },
-      { type: 'BREEZY_SAVE_RESPONSE',
+      { type: '@@breezy/SAVE_RESPONSE',
         pageKey: '/second',
         page: jasmine.any(Object)
       }
@@ -600,9 +600,9 @@ describe('action creators', () => {
       fetchMock.mock('/foo?__=0', mockResponse)
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
+        { type: '@@breezy/BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         {
-          type: 'BREEZY_SAVE_RESPONSE',
+          type: '@@breezy/SAVE_RESPONSE',
           pageKey: '/foo',
           page: jasmine.any(Object)
         }

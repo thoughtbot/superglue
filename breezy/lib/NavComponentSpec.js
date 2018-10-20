@@ -92,9 +92,9 @@ describe('Nav', () => {
       class ExampleAbout extends About {
         componentDidMount(){
           const expectedActions = [
-            { type: 'BREEZY_HISTORY_CHANGE', url: '/bar' },
-            { type: 'BREEZY_HISTORY_CHANGE', url: '/foo' },
-            { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
+            { type: '@@breezy/HISTORY_CHANGE', url: '/bar' },
+            { type: '@@breezy/HISTORY_CHANGE', url: '/foo' },
+            { type: '@@breezy/OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
           ]
           expect(store.getActions()).toEqual(expectedActions)
           done()

@@ -7,22 +7,35 @@ import {uuidv4} from './utils/helpers'
 import {needsRefresh} from './window'
 import {withoutBZParams} from './utils/url'
 import {parseSJR} from './utils/request'
+import {
+  SAVE_RESPONSE,
+  HANDLE_GRAFT,
+  SET_IN_PAGE,
+  DEL_IN_PAGE,
+  EXTEND_IN_PAGE,
+  SET_IN_JOINT,
+  DEL_IN_JOINT,
+  EXTEND_IN_JOINT,
+  BEFORE_FETCH,
+  FETCH_ERROR,
+  OVERRIDE_VISIT_SEQ,
+} from './actions'
 
 export function saveResponse ({pageKey, page}) {
   return {
-    type: 'BREEZY_SAVE_RESPONSE', pageKey, page
+    type: SAVE_RESPONSE, pageKey, page
   }
 }
 
 export function handleGraft ({pageKey, page}) {
   return {
-    type: 'BREEZY_HANDLE_GRAFT', pageKey, page
+    type: HANDLE_GRAFT, pageKey, page
   }
 }
 
 export function setInPage ({pageKey, keypath, value}) {
   return {
-    type: 'BREEZY_SET_IN_PAGE',
+    type: SET_IN_PAGE,
     pageKey,
     keypath,
     value
@@ -31,7 +44,7 @@ export function setInPage ({pageKey, keypath, value}) {
 
 export function delInPage ({pageKey, keypath}) {
   return {
-    type: 'BREEZY_DEL_IN_PAGE',
+    type: DEL_IN_PAGE,
     pageKey,
     keypath,
   }
@@ -39,7 +52,7 @@ export function delInPage ({pageKey, keypath}) {
 
 export function extendInPage ({pageKey, keypath, value}) {
   return {
-    type: 'BREEZY_EXTEND_IN_PAGE',
+    type: EXTEND_IN_PAGE,
     pageKey,
     keypath,
     value
@@ -48,7 +61,7 @@ export function extendInPage ({pageKey, keypath, value}) {
 
 export function setInJoint ({name, keypath, value}) {
   return {
-    type: 'BREEZY_SET_IN_JOINT',
+    type: SET_IN_JOINT,
     name,
     keypath,
     value
@@ -57,7 +70,7 @@ export function setInJoint ({name, keypath, value}) {
 
 export function delInJoint ({name, keypath}) {
   return {
-    type: 'BREEZY_DEL_IN_JOINT',
+    type: DEL_IN_JOINT,
     name,
     keypath
   }
@@ -65,23 +78,22 @@ export function delInJoint ({name, keypath}) {
 
 export function extendInJoint ({name, keypath, value}) {
   return {
-    type: 'BREEZY_EXTEND_IN_JOINT',
+    type: EXTEND_IN_JOINT,
     name,
     keypath,
     value
   }
 }
 
-
 export function beforeFetch (opts) {
   return {...opts,
-    type: 'BREEZY_BEFORE_FETCH'
+    type: BEFORE_FETCH,
   }
 }
 
 export function handleError (err) {
   return {
-    type: 'BREEZY_FETCH_ERROR',
+    type: FETCH_ERROR,
     payload: {
       error: err
     }
@@ -172,7 +184,7 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     let actualKey = null
 
     dispatch(beforeFetch({fetchArgs}))
-    dispatch({type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId})
+    dispatch({type: OVERRIDE_VISIT_SEQ, seqId})
 
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
@@ -185,13 +197,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
 
           actualKey = (pageKey || contentLocation || responseUrl)
         }
-// UpdateAllJoints
-// SavePage
-// FetchDeferedNodes
-
-// UpdateAllJoints
-// GraftNodeOntoPage
-// FetchDeferedNodes
 
         const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)
         const controlFlows = getState().breezy.controlFlows

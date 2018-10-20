@@ -607,7 +607,6 @@ describe('action creators', () => {
       fetchMock.mock('/foo?__=0', mockResponse)
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_REMOTE'},
         { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
         {
           type: 'BREEZY_SAVE_RESPONSE',

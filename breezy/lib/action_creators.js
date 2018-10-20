@@ -156,7 +156,6 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {method, headers, body})
 
-    dispatch({type: 'BREEZY_BEFORE_REMOTE'})
     dispatch(beforeFetch({fetchArgs}))
 
     return wrappedFetch(fetchArgs)

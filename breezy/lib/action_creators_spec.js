@@ -245,7 +245,6 @@ describe('action creators', () => {
 
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_VISIT'},
         { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
@@ -354,7 +353,6 @@ describe('action creators', () => {
       fetchMock.mock('/foo?__=0', {status: 500})
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_VISIT' },
         { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
@@ -378,7 +376,6 @@ describe('action creators', () => {
       }})
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_VISIT'},
         { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {
@@ -409,7 +406,6 @@ describe('action creators', () => {
         })
 
       const expectedActions = [
-        { type: 'BREEZY_BEFORE_VISIT' },
         { type: 'BREEZY_BEFORE_FETCH', fetchArgs: ['/foo?__=0', jasmine.any(Object)]},
         { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: jasmine.any(String)},
         {type: 'BREEZY_FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
@@ -560,10 +556,8 @@ describe('action creators', () => {
     initialState.breezy.controlFlows.visit = 'secondId'
 
     const expectedActions = [
-      { type: 'BREEZY_BEFORE_VISIT' },
       { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'firstId' },
-      { type: 'BREEZY_BEFORE_VISIT' },
       { type: 'BREEZY_BEFORE_FETCH' ,fetchArgs: jasmine.any(Object)},
       { type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId: 'secondId' },
       { type: 'BREEZY_SAVE_RESPONSE',

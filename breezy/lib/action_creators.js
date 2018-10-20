@@ -171,7 +171,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     const seqId = uuidv4()
     let actualKey = null
 
-    dispatch({type: 'BREEZY_BEFORE_VISIT'})
     dispatch(beforeFetch({fetchArgs}))
     dispatch({type: 'BREEZY_OVERRIDE_VISIT_SEQ', seqId})
 
@@ -186,6 +185,13 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
 
           actualKey = (pageKey || contentLocation || responseUrl)
         }
+// UpdateAllJoints
+// SavePage
+// FetchDeferedNodes
+
+// UpdateAllJoints
+// GraftNodeOntoPage
+// FetchDeferedNodes
 
         const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)
         const controlFlows = getState().breezy.controlFlows

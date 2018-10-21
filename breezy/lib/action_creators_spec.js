@@ -369,8 +369,8 @@ describe('action creators', () => {
         { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: jasmine.any(String)}},
         {
-          type: '@@breezy/FETCH_ERROR',
-          payload:{error: "Internal Server Error" }
+          type: '@@breezy/ERROR',
+          payload:{message: "Internal Server Error" }
         }
       ]
 
@@ -392,8 +392,8 @@ describe('action creators', () => {
         { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload:{seqId: jasmine.any(String)}},
         {
-          type: '@@breezy/FETCH_ERROR',
-          payload:{error: "Invalid Breezy Response" }
+          type: '@@breezy/ERROR',
+          payload:{message: "Invalid Breezy Response" }
         }
       ]
 
@@ -421,7 +421,7 @@ describe('action creators', () => {
       const expectedActions = [
         { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload:{seqId: jasmine.any(String)}},
-        {type: '@@breezy/FETCH_ERROR', payload:{error: 'Could not parse Server Generated Javascript Response for Breezy' }}
+        {type: '@@breezy/ERROR', payload:{message: 'Could not parse Server Generated Javascript Response for Breezy' }}
       ]
 
       return store.dispatch(visit('/foo')).catch((err) => {

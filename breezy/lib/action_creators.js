@@ -17,7 +17,7 @@ import {
   DEL_IN_JOINT,
   EXTEND_IN_JOINT,
   BEFORE_FETCH,
-  FETCH_ERROR,
+  BREEZY_ERROR,
   OVERRIDE_VISIT_SEQ,
 } from './actions'
 
@@ -114,9 +114,9 @@ export function beforeFetch (payload) {
 
 export function handleError (err) {
   return {
-    type: FETCH_ERROR,
+    type: BREEZY_ERROR,
     payload: {
-      error: err
+      message: err.message
     }
   }
 }
@@ -143,10 +143,10 @@ export function saveAndProcessPage (pageKey, page) {
 }
 
 function handleFetchErr (err, fetchArgs, dispatch) {
-  dispatch(handleError(err.message))
   err.fetchArgs = fetchArgs
   err.url = fetchArgs[0]
   err.pageKey = withoutBZParams(fetchArgs[0])
+  dispatch(handleError(err))
   throw err
 }
 

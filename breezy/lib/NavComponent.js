@@ -106,17 +106,21 @@ class Nav extends React.Component {
 
   notFound (screen) {
     const {store} = this.context
-    store.dispatch({
-      type: BREEZY_ERROR,
-      payload: {
-        message: `Could not find screen ${screen}`
-      }
-    })
     let reminder = ''
     if (!screen) {
       reminder = 'Did you forget to use_breezy in your controllers?'
     }
-    throw new Error(`Breezy Nav component was looking for ${screen} but could not find it in your mapping. ${reminder}`)
+
+    const error = new Error(`Breezy Nav component was looking for ${screen} but could not find it in your mapping. ${reminder}`)
+
+    store.dispatch({
+      type: BREEZY_ERROR,
+      payload: {
+        message: error.message
+      }
+    })
+
+    throw error
   }
 
   render () {

@@ -12,7 +12,6 @@ export const SET_IN_JOINT = '@@breezy/SET_IN_JOINT'
 export const DEL_IN_JOINT = '@@breezy/DEL_IN_JOINT'
 export const EXTEND_IN_JOINT = '@@breezy/EXTEND_IN_JOINT'
 
-export const FETCH_ERROR = '@@breezy/FETCH_ERROR'
 export const BREEZY_ERROR = '@@breezy/ERROR'
 
 export const HISTORY_CHANGE = '@@breezy/HISTORY_CHANGE'

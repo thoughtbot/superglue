@@ -45,7 +45,9 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
       if(hasWindow()) {
         store.dispatch({
           type: HISTORY_CHANGE,
-          url:  parse(url).href
+          payload: {
+            url:  parse(url).href
+          }
         })
       }
 
@@ -54,8 +56,8 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
         initialPage
       ))
 
-      store.dispatch({type: SET_BASE_URL, baseUrl})
-      store.dispatch({type: SET_CSRF_TOKEN, csrfToken})
+      store.dispatch({type: SET_BASE_URL, payload: {baseUrl}})
+      store.dispatch({type: SET_CSRF_TOKEN, payload: {csrfToken}})
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,

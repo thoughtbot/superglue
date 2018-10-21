@@ -23,71 +23,92 @@ import {
 
 export function saveResponse ({pageKey, page}) {
   return {
-    type: SAVE_RESPONSE, pageKey, page
+    type: SAVE_RESPONSE,
+    payload: {
+      pageKey,
+      page
+    }
   }
 }
 
 export function handleGraft ({pageKey, page}) {
   return {
-    type: HANDLE_GRAFT, pageKey, page
+    type: HANDLE_GRAFT,
+    payload: {
+      pageKey,
+      page
+    }
   }
 }
 
 export function setInPage ({pageKey, keypath, value}) {
   return {
     type: SET_IN_PAGE,
-    pageKey,
-    keypath,
-    value
+    payload: {
+      pageKey,
+      keypath,
+      value
+    }
   }
 }
 
 export function delInPage ({pageKey, keypath}) {
   return {
     type: DEL_IN_PAGE,
-    pageKey,
-    keypath,
+    payload: {
+      pageKey,
+      keypath,
+    }
   }
 }
 
 export function extendInPage ({pageKey, keypath, value}) {
   return {
     type: EXTEND_IN_PAGE,
-    pageKey,
-    keypath,
-    value
+    payload:{
+      pageKey,
+      keypath,
+      value
+    }
   }
 }
 
 export function setInJoint ({name, keypath, value}) {
   return {
     type: SET_IN_JOINT,
-    name,
-    keypath,
-    value
+    payload: {
+      name,
+      keypath,
+      value
+    }
   }
 }
 
 export function delInJoint ({name, keypath}) {
   return {
     type: DEL_IN_JOINT,
-    name,
-    keypath
+    payload: {
+      name,
+      keypath
+    }
   }
 }
 
 export function extendInJoint ({name, keypath, value}) {
   return {
     type: EXTEND_IN_JOINT,
-    name,
-    keypath,
-    value
+    payload: {
+      name,
+      keypath,
+      value
+    }
   }
 }
 
-export function beforeFetch (opts) {
-  return {...opts,
+export function beforeFetch (payload) {
+  return {
     type: BEFORE_FETCH,
+    payload,
   }
 }
 
@@ -184,7 +205,12 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     let actualKey = null
 
     dispatch(beforeFetch({fetchArgs}))
-    dispatch({type: OVERRIDE_VISIT_SEQ, seqId})
+    dispatch({
+      type: OVERRIDE_VISIT_SEQ,
+      payload: {
+        seqId
+      }
+    })
 
     return wrappedFetch(fetchArgs)
       .then(parseResponse)

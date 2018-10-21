@@ -9,7 +9,12 @@ describe('reducers', () => {
     describe('BREEZY_HISTORY_CHANGE', () => {
       it('sets the currentUrl', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: '@@breezy/HISTORY_CHANGE', url: '/some_url'}
+        const action = {
+          type: '@@breezy/HISTORY_CHANGE',
+          payload: {
+            url: '/some_url'
+          }
+        }
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -22,7 +27,12 @@ describe('reducers', () => {
     describe('BREEZY_SET_BASE_URL', () => {
       it('sets the base URL', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: '@@breezy/SET_BASE_URL', baseUrl: '/some_url'}
+        const action = {
+          type: '@@breezy/SET_BASE_URL',
+          payload: {
+            baseUrl: '/some_url'
+          }
+        }
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -35,7 +45,12 @@ describe('reducers', () => {
     describe('BREEZY_SAVE_RESPONSE', () => {
       it('saves the response csrfToken', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: '@@breezy/SAVE_RESPONSE', page: {csrf_token: 'some_token'}}
+        const action = {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            page: {csrf_token: 'some_token'}
+          }
+        }
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -48,7 +63,12 @@ describe('reducers', () => {
     describe('BREEZY_SET_CSRF_TOKEN', () => {
       it('sets the initial CSRF token', () => {
         const prevState = {foo: 'bar'}
-        const action = {type: '@@breezy/SET_CSRF_TOKEN', csrfToken: 'some_token'}
+        const action = {
+          type: '@@breezy/SET_CSRF_TOKEN', 
+          payload: {
+            csrfToken: 'some_token'
+          }
+        }
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -81,9 +101,11 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/EXTEND_IN_JOINT',
-          name: 'info',
-          keypath: 'cart',
-          value: {foo: 'bar'}
+          payload: {
+            name: 'info',
+            keypath: 'cart',
+            value: {foo: 'bar'}
+          }
         })
 
         expect(nextState).toEqual({
@@ -127,8 +149,10 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/DEL_IN_JOINT',
-          name: 'info',
-          keypath: 'total'
+          payload: {
+            name: 'info',
+            keypath: 'total'
+          }
         })
 
         expect(nextState).toEqual({
@@ -168,9 +192,11 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/SET_IN_JOINT',
-          name: 'info',
-          value: 300,
-          keypath: 'total'
+          payload: {
+            name: 'info',
+            value: 300,
+            keypath: 'total'
+          }
         })
 
         expect(nextState).toEqual({
@@ -212,9 +238,11 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/EXTEND_IN_PAGE',
-          pageKey: '/foo',
-          keypath: 'header',
-          value: {sibling: 90}
+          payload: {
+            pageKey: '/foo',
+            keypath: 'header',
+            value: {sibling: 90}
+          }
         })
 
         const newHeader = nextState['/foo'].data.header
@@ -246,8 +274,10 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/DEL_IN_PAGE',
-          pageKey: '/foo',
-          keypath: 'header.cart',
+          payload: {
+            pageKey: '/foo',
+            keypath: 'header.cart',
+          }
         })
 
         const newHeader = nextState['/foo'].data.header
@@ -279,9 +309,11 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/SET_IN_PAGE',
-          pageKey: '/foo',
-          keypath: 'header.cart',
-          value: {foo: 3}
+          payload: {
+            pageKey: '/foo',
+            keypath: 'header.cart',
+            value: {foo: 3}
+          }
         })
 
         const newHeader = nextState['/foo'].data.header
@@ -320,8 +352,10 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/HANDLE_GRAFT',
-          pageKey: '/foo',
-          page: graftResponse
+          payload: {
+            pageKey: '/foo',
+            page: graftResponse
+          }
         })
 
         expect(nextState).toEqual({
@@ -385,8 +419,10 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/HANDLE_GRAFT',
-          pageKey: '/foo',
-          page: graftResponse
+          payload: {
+            pageKey: '/foo',
+            page: graftResponse
+          }
         })
 
         expect(nextState).toEqual({
@@ -427,11 +463,13 @@ describe('reducers', () => {
         const prevState = {}
         const nextState = reducer(prevState, {
           type: '@@breezy/SAVE_RESPONSE',
-          pageKey: '/foo',
-          page: {
-            data: {},
-            csrf_token: 'token',
-            assets: ['application-123.js']
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: {},
+              csrf_token: 'token',
+              assets: ['application-123.js']
+            }
           }
         })
 
@@ -482,8 +520,10 @@ describe('reducers', () => {
 
         const nextState = reducer(prevState, {
           type: '@@breezy/SAVE_RESPONSE',
-          pageKey: '/bar',
-          page: nextPage
+          payload: {
+            pageKey: '/bar',
+            page: nextPage
+          }
         })
 
         const nextStateCartTotal = nextState['/foo'].data.header.cart.total;

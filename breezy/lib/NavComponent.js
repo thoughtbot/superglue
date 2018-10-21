@@ -69,7 +69,10 @@ class Nav extends React.Component {
     if (hasPage) {
       const seqId = uuidv4()
       store.dispatch({
-        type: OVERRIDE_VISIT_SEQ, seqId
+        type: OVERRIDE_VISIT_SEQ,
+        payload: {
+          seqId
+        }
       })
 
       this.setState({pageKey, ownProps})
@@ -83,7 +86,9 @@ class Nav extends React.Component {
     const {store} = this.context
     store.dispatch({
       type: HISTORY_CHANGE,
-      url: parse(location.pathname).href
+      payload: {
+        url: parse(location.pathname).href
+      }
     })
 
     if (action === 'POP') {
@@ -101,7 +106,12 @@ class Nav extends React.Component {
 
   notFound (screen) {
     const {store} = this.context
-    store.dispatch({type: BREEZY_ERROR, message: `Could not find screen ${screen}`})
+    store.dispatch({
+      type: BREEZY_ERROR,
+      payload: {
+        message: `Could not find screen ${screen}`
+      }
+    })
     let reminder = ''
     if (!screen) {
       reminder = 'Did you forget to use_breezy in your controllers?'

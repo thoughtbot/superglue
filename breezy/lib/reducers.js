@@ -105,22 +105,22 @@ function handleGraft (state, pageKey, page) {
 export function pageReducer (state = {}, action) {
   switch(action.type) {
   case SAVE_RESPONSE: {
-    const {pageKey, page} = action
+    const {pageKey, page} = action.payload
     return saveResponse(state, pageKey, page)
   }
   case HANDLE_GRAFT: {
-    const {pageKey, page} = action
+    const {pageKey, page} = action.payload
     return handleGraft(state, pageKey, page)
   }
   case REMOVE_PAGE: {
-    const {pageKey} = action
+    const {pageKey} = action.payload
     const nextState = {...state}
     delete nextState[pageKey]
 
     return nextState
   }
   case SET_IN_PAGE: {
-    const {pageKey, keypath, value} = action
+    const {pageKey, keypath, value} = action.payload
     const fullPath = pagePath(pageKey, keypath)
     //todo: make setIn accept an array
     const nextState = setIn(state, fullPath, value)
@@ -128,29 +128,29 @@ export function pageReducer (state = {}, action) {
     return nextState
   }
   case DEL_IN_PAGE: {
-    const {pageKey, keypath} = action
+    const {pageKey, keypath} = action.payload
     const fullPath = pagePath(pageKey, keypath)
     const nextState = delIn(state, fullPath)
 
     return nextState
   }
   case EXTEND_IN_PAGE: {
-    const {pageKey, keypath, value} = action
+    const {pageKey, keypath, value} = action.payload
     const fullPath = pagePath(pageKey, keypath)
     const nextState = extendIn(state, fullPath, value)
 
     return nextState
   }
   case SET_IN_JOINT: {
-    const {name, keypath, value} = action
+    const {name, keypath, value} = action.payload
     return setInByJoint(state, name, value, keypath)
   }
   case DEL_IN_JOINT: {
-    const {name, keypath} = action
+    const {name, keypath} = action.payload
     return delInByJoint(state, name, keypath)
   }
   case EXTEND_IN_JOINT: {
-    const {name, keypath, value} = action
+    const {name, keypath, value} = action.payload
     return extendInByJoint(state, name, value, keypath)
   }
   default:
@@ -161,19 +161,19 @@ export function pageReducer (state = {}, action) {
 export function metaReducer (state = {}, action) {
   switch(action.type) {
   case HISTORY_CHANGE: {
-    const {url} = action
+    const {url} = action.payload
     return {...state, currentUrl: url}
   }
   case SET_BASE_URL: {
-    const {baseUrl} = action
+    const {baseUrl} = action.payload
     return {...state, baseUrl}
   }
   case SAVE_RESPONSE: {
-    const {page} = action
+    const {page} = action.payload
     return {...state, csrfToken: page.csrf_token}
   }
   case SET_CSRF_TOKEN: {
-    const {csrfToken} = action
+    const {csrfToken} = action.payload
     return {...state, csrfToken: csrfToken}
   }
   default:
@@ -186,7 +186,8 @@ export function controlFlowReducer (state = {
 
   switch(action.type) {
   case OVERRIDE_VISIT_SEQ: {
-    return {...state, visit: action.seqId}
+    const {seqId} = action.payload
+    return {...state, visit: seqId}
   }
   default:
     return state

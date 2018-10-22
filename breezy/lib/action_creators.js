@@ -134,15 +134,15 @@ export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {
     const {defers = []} = page
 
-    defers.forEach(function ({url}){
-      dispatch(remote(url, {}, pageKey))
-    })
-
     if (isGraft(page)) {
       dispatch(handleGraft({pageKey, page}))
     } else {
       dispatch(saveResponse({pageKey, page}))
     }
+
+    defers.forEach(function ({url}){
+      dispatch(remote(url, {}, pageKey))
+    })
   }
 }
 

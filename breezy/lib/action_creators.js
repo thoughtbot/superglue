@@ -148,7 +148,7 @@ export function fetchDeferments (pageKey, {defers = []}) {
   }
 }
 
-export function updateAllJointsToMatch(pageKey) {
+export function updateAllJointsToMatch (pageKey) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -169,7 +169,7 @@ export function saveAndProcessPage (pageKey, page) {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    dispatch(fetchDeferments(pageKey, page)).finally(_=> {
+    dispatch(fetchDeferments(pageKey, page)).finally(() => {
       dispatch(updateAllJointsToMatch(pageKey))
     })
   }
@@ -222,21 +222,21 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
       .then(({rsp, page}) => {
-         pageKey = withoutBZParams(pageKey)
-         const {breezy} = getState()
-         const meta = {
-           ...buildMeta(pageKey, page, breezy),
-           rsp
-         }
-         dispatch(saveAndProcessPage(pageKey, page))
+        pageKey = withoutBZParams(pageKey)
+        const {breezy} = getState()
+        const meta = {
+          ...buildMeta(pageKey, page, breezy),
+          rsp
+        }
+        dispatch(saveAndProcessPage(pageKey, page))
 
-         return meta
-       })
+        return meta
+      })
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }
 }
 
-function extractPageKey(pathQuery, {method = 'GET'}, rsp) {
+function extractPageKey (pathQuery, {method = 'GET'}, rsp) {
   if (method === 'GET') {
     return pathQuery
   } else {
@@ -247,7 +247,7 @@ function extractPageKey(pathQuery, {method = 'GET'}, rsp) {
   }
 }
 
-function canNavigate(seqId, {controlFlows}) {
+function canNavigate (seqId, {controlFlows}) {
   if (controlFlows['visit'] === seqId ) {
     return true
   } else {

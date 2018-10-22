@@ -16,7 +16,7 @@ export function pagePath (pageKey, keypath) {
   return [pageKey, 'data', keypath].join('.')
 }
 
-export function forEachJointAtNameAcrossAllPages(pages, name, fn = _=>{}) {
+export function forEachJointAtNameAcrossAllPages (pages, name, fn = ()=>{}) {
   Object.entries(pages)
     .forEach(([pageKey, page]) => {
       const keyPaths = page.joints[name] || []
@@ -27,7 +27,7 @@ export function forEachJointAtNameAcrossAllPages(pages, name, fn = _=>{}) {
     })
 }
 
-export function forEachJoint(joints, fn = _ => {}) {
+export function forEachJoint (joints, fn = () => {}) {
   Object.entries(joints)
     .forEach(([jointName, paths]) => {
       paths.forEach((path) => {
@@ -37,11 +37,11 @@ export function forEachJoint(joints, fn = _ => {}) {
     })
 }
 
-export function isGraft(page) {
+export function isGraft (page) {
   return page.action === 'graft'
 }
 
-export function extractNodeAndPath(page) {
+export function extractNodeAndPath (page) {
   if(page.action === 'graft') {
     const node = page.data
     const pathToNode = page.path

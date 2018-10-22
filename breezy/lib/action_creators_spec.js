@@ -432,7 +432,7 @@ describe('action creators', () => {
       const expectedActions = [
         { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload:{seqId: jasmine.any(String)}},
-        {type: '@@breezy/ERROR', payload:{message: 'Could not parse Server Generated Javascript Response for Breezy' }}
+        { type: '@@breezy/ERROR', payload:{message: 'Could not parse Server Generated Javascript Response for Breezy' }}
       ]
 
       return store.dispatch(visit('/foo')).catch((err) => {

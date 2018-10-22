@@ -191,14 +191,6 @@ function buildMeta (pageKey, page, {assets}) {
   }
 }
 
-const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
-  pageKey = withoutBZParams(pageKey)
-  const meta = {...buildMeta(pageKey, pageKey, state.breezy), rsp}
-
-  dispatch(saveAndProcessPage(pageKey, page))
-  return meta
-}
-
 export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
   if (!pageKey) {
     throw new Error('pageKey is a required parameter')
@@ -211,7 +203,17 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
 
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
-      .then(({rsp, page}) => persistAndMeta(getState(), rsp, page, pageKey, dispatch))
+      .then(({rsp, page}) => {
+         pageKey = withoutBZParams(pageKey)
+         const {breezy} = getState()
+         const meta = {
+           ...buildMeta(pageKey, page, breezy),
+           rsp
+         }
+         dispatch(saveAndProcessPage(pageKey, page))
+
+         return meta
+       })
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }
 }
@@ -239,7 +241,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
     const seqId = uuidv4()
-    let actualKey = null
 
     dispatch(beforeFetch({fetchArgs}))
     dispatch({
@@ -252,10 +253,16 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
       .then(({rsp, page}) => {
-        actualKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
+        pageKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
+        pageKey = withoutBZParams(pageKey)
 
-        const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)
         const {breezy} = getState()
+        const meta = {
+          ...buildMeta(pageKey, page, breezy),
+          rsp
+        }
+        dispatch(saveAndProcessPage(pageKey, page))
+
         return {...meta, canNavigate: canNavigate(seqId, breezy)}
       })
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))

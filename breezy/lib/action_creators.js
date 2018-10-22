@@ -209,6 +209,14 @@ function extractPageKey(pathQuery, {method = 'GET'}, rsp) {
   }
 }
 
+function canNavigate(seqId, {controlFlows}) {
+  if (controlFlows['visit'] === seqId ) {
+    return true
+  } else {
+    return false
+  }
+}
+
 export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
@@ -229,13 +237,8 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
         actualKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
 
         const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)
-        const controlFlows = getState().breezy.controlFlows
-
-        if (controlFlows['visit'] === seqId ) {
-          return {...meta, canNavigate: true}
-        } else {
-          return {...meta, canNavigate: false}
-        }
+        const {breezy} = getState()
+        return {...meta, canNavigate: canNavigate(seqId, breezy)}
       })
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }

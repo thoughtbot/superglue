@@ -254,12 +254,23 @@ describe('action creators', () => {
           }
         })
 
-
       const expectedActions = [
         { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: jasmine.any(String)}},
         {
           type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: { heading: 'Some heading 2' },
+              title: 'title 2',
+              csrf_token: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            }
+          }
+        },
+        {
+          type: '@@breezy/UPDATE_ALL_JOINTS',
           payload: {
             pageKey: '/foo',
             page: {
@@ -535,11 +546,6 @@ describe('action creators', () => {
     })
   })
 
-
-
-
-
-
   it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
     const initialState = {
       breezy: {
@@ -581,7 +587,19 @@ describe('action creators', () => {
           page: jasmine.any(Object)
         }
       },
+      { type: '@@breezy/UPDATE_ALL_JOINTS',
+        payload: {
+          pageKey: '/first',
+          page: jasmine.any(Object)
+        }
+      },
       { type: '@@breezy/SAVE_RESPONSE',
+        payload: {
+          pageKey: '/second',
+          page: jasmine.any(Object)
+        }
+      },
+      { type: '@@breezy/UPDATE_ALL_JOINTS',
         payload: {
           pageKey: '/second',
           page: jasmine.any(Object)
@@ -622,6 +640,13 @@ describe('action creators', () => {
         { type: '@@breezy/BEFORE_FETCH' , payload: {fetchArgs: jasmine.any(Object)}},
         {
           type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: jasmine.any(Object)
+          }
+        },
+        {
+          type: '@@breezy/UPDATE_ALL_JOINTS',
           payload: {
             pageKey: '/foo',
             page: jasmine.any(Object)

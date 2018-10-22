@@ -22,8 +22,17 @@ import {
   HISTORY_CHANGE,
   SET_BASE_URL,
   SET_CSRF_TOKEN,
+  UPDATE_ALL_JOINTS,
 } from './actions'
 
+function updateAllJoints (state, pageKey, page) {
+  forEachJoint(page.joints, (jointName, jointPath) => {
+    const updatedNode = getIn(page, jointPath)
+    state = setInByJoint(state, jointName, updatedNode)
+  })
+
+  return state
+}
 
 function saveResponse (state, pageKey, page) {
   state = {...state}
@@ -34,11 +43,6 @@ function saveResponse (state, pageKey, page) {
     positionX: pageXOffset(),
     pageKey,
     joints: {},
-  })
-
-  forEachJoint(page.joints, (jointName, jointPath) => {
-    const updatedNode = getIn(page, jointPath)
-    state = setInByJoint(state, jointName, updatedNode)
   })
 
   state[pageKey] = page
@@ -94,11 +98,6 @@ function handleGraft (state, pageKey, page) {
   const currentPage = state[pageKey]
   currentPage.data = setIn(currentPage.data, page.path, page.data)
 
-  forEachJoint(page.joints, (jointName, jointPath) => {
-    const updatedNode = getIn(currentPage, jointPath)
-    state = setInByJoint(state, jointName, updatedNode)
-  })
-
   return state
 }
 
@@ -107,6 +106,10 @@ export function pageReducer (state = {}, action) {
   case SAVE_RESPONSE: {
     const {pageKey, page} = action.payload
     return saveResponse(state, pageKey, page)
+  }
+  case UPDATE_ALL_JOINTS: {
+    const {pageKey, page} = action.payload
+    return updateAllJoints(state, pageKey, page)
   }
   case HANDLE_GRAFT: {
     const {pageKey, page} = action.payload

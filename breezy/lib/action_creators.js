@@ -19,6 +19,7 @@ import {
   BEFORE_FETCH,
   BREEZY_ERROR,
   OVERRIDE_VISIT_SEQ,
+  UPDATE_ALL_JOINTS,
 } from './actions'
 
 export function saveResponse ({pageKey, page}) {
@@ -140,8 +141,18 @@ export function saveAndProcessPage (pageKey, page) {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    defers.forEach(function ({url}){
-      dispatch(remote(url, {}, pageKey))
+    const deferedRemotes = defers.map(function ({url}){
+      return dispatch(remote(url, {}, pageKey))
+    })
+
+    Promise.all(deferedRemotes).finally(_=> {
+      dispatch({
+        type: UPDATE_ALL_JOINTS,
+        payload: {
+          pageKey,
+          page
+        }
+      })
     })
   }
 }

@@ -375,87 +375,6 @@ describe('reducers', () => {
           }
         })
       })
-
-      it('takes a grafting response with joints and grafts it across', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 30
-                }
-              }
-            },
-            csrf_token: 'token',
-            assets: ['application-123.js'],
-            joints: {
-              user_header: ['header']
-            }
-          },
-          '/other': {
-            data: {
-              header: {
-                cart: {
-                  total: 30
-                }
-              }
-            },
-            csrf_token: 'token',
-            assets: ['application-123.js'],
-            joints: {
-              user_header: ['header']
-            }
-          }
-        }
-
-        const graftResponse = {
-          data: { total: 100},
-          action: 'graft',
-          path: 'header.cart',
-          joints: {
-            user_header: ['header']
-          }
-        }
-
-        const nextState = reducer(prevState, {
-          type: '@@breezy/HANDLE_GRAFT',
-          payload: {
-            pageKey: '/foo',
-            page: graftResponse
-          }
-        })
-
-        expect(nextState).toEqual({
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 100
-                }
-              }
-            },
-            csrf_token: 'token',
-            assets: ['application-123.js'],
-            joints: {
-              user_header: ['header']
-            }
-          },
-          '/other': {
-            data: {
-              header: {
-                cart: {
-                  total: 100
-                }
-              }
-            },
-            csrf_token: 'token',
-            assets: ['application-123.js'],
-            joints: {
-              user_header: ['header']
-            }
-          }
-        })
-      })
     })
 
     describe('BREEZY_SAVE_RESPONSE', () => {
@@ -482,7 +401,9 @@ describe('reducers', () => {
           joints: {}
         }))
       })
+    })
 
+    describe('BREEZY_UPDATE_ALL_JOINTS', () => {
       it('updates any joints', () => {
         const prevState = {
           '/foo': {
@@ -519,7 +440,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: '@@breezy/SAVE_RESPONSE',
+          type: '@@breezy/UPDATE_ALL_JOINTS',
           payload: {
             pageKey: '/bar',
             page: nextPage

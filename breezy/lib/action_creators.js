@@ -167,19 +167,22 @@ export function wrappedFetch (fetchArgs) {
     })
 }
 
-const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
-  const prevAssets = state.breezy.assets
+function buildMeta (pageKey, page, {assets}) {
+  const prevAssets = assets
   const newAssets = page.assets
-
   pageKey = withoutBZParams(pageKey)
 
-  const meta = {
+  return {
     pageKey,
     page,
     screen: page.screen,
-    rsp,
     needsRefresh: needsRefresh(prevAssets, newAssets)
   }
+}
+
+const persistAndMeta = (state, rsp, page, pageKey, dispatch) => {
+  pageKey = withoutBZParams(pageKey)
+  const meta = {...buildMeta(pageKey, pageKey, state.breezy), rsp}
 
   dispatch(saveAndProcessPage(pageKey, page))
   return meta

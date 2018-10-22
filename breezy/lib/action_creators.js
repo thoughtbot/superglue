@@ -198,6 +198,17 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
   }
 }
 
+function extractPageKey(pathQuery, {method = 'GET'}, rsp) {
+  if (method === 'GET') {
+    return pathQuery
+  } else {
+    const responseUrl = rsp.headers.get('x-response-url')
+    const contentLocation = rsp.headers.get('content-location')
+
+    return contentLocation || responseUrl
+  }
+}
+
 export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
@@ -215,14 +226,7 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
       .then(({rsp, page}) => {
-        if (method === 'GET') {
-          actualKey = pageKey || pathQuery
-        } else {
-          const responseUrl = rsp.headers.get('x-response-url')
-          const contentLocation = rsp.headers.get('content-location')
-
-          actualKey = (pageKey || contentLocation || responseUrl)
-        }
+        actualKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
 
         const meta = persistAndMeta(getState(), rsp, page, actualKey, dispatch)
         const controlFlows = getState().breezy.controlFlows

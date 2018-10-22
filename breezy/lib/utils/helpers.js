@@ -36,3 +36,23 @@ export function forEachJoint(joints, fn = _ => {}) {
       })
     })
 }
+
+export function isGraft(page) {
+  return page.action === 'graft'
+}
+
+export function extractNodeAndPath(page) {
+  if(page.action === 'graft') {
+    const node = page.data
+    const pathToNode = page.path
+
+    return {node, pathToNode}
+  } else {
+    const errMsg = 'Expected page to be a graft response rendered from node filtering.'
+    throw new Error(errMsg)
+  }
+}
+
+export function parseSJR (body) {
+  return (new Function(`'use strict'; return ${body}` )())
+}

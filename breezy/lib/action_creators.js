@@ -3,10 +3,14 @@ import {
   parseResponse
 } from './utils/request'
 import 'cross-fetch'
-import {uuidv4} from './utils/helpers'
+import {
+  uuidv4,
+  isGraft,
+  extractNodeAndPath,
+  parseSJR,
+} from './utils/helpers'
 import {needsRefresh} from './window'
 import {withoutBZParams} from './utils/url'
-import {parseSJR} from './utils/request'
 import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
@@ -23,6 +27,8 @@ import {
 } from './actions'
 
 export function saveResponse ({pageKey, page}) {
+  pageKey = withoutBZParams(pageKey)
+
   return {
     type: SAVE_RESPONSE,
     payload: {
@@ -33,6 +39,8 @@ export function saveResponse ({pageKey, page}) {
 }
 
 export function handleGraft ({pageKey, node, pathToNode}) {
+  pageKey = withoutBZParams(pageKey)
+
   return {
     type: HANDLE_GRAFT,
     payload: {
@@ -128,23 +136,9 @@ export function saveAndProcessSJRPage (pageKey, pageSJR) {
   return saveAndProcessPage(pageKey, page)
 }
 
-export function isGraft(page) {
-  return page.action === 'graft'
-}
-
-export function extractNodeAndPath(page) {
-  if(page.action === 'graft') {
-    const node = page.data
-    const pathToNode = page.path
-
-    return {node, pathToNode}
-  } else {
-    const errMsg = 'Expected page to be a graft response rendered from node filtering.'
-    throw new Error(errMsg)
-  }
-}
-
 export function fetchDeferments (pageKey, {defers = []}) {
+  pageKey = withoutBZParams(pageKey)
+
   return (dispatch) => {
     const fetches = defers.map(function ({url}){
       return dispatch(remote(url, {}, pageKey))
@@ -155,6 +149,8 @@ export function fetchDeferments (pageKey, {defers = []}) {
 }
 
 export function updateAllJointsToMatch(pageKey) {
+  pageKey = withoutBZParams(pageKey)
+
   return {
     type: UPDATE_ALL_JOINTS,
     payload: {
@@ -165,6 +161,7 @@ export function updateAllJointsToMatch(pageKey) {
 
 export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {
+    pageKey = withoutBZParams(pageKey)
     if (isGraft(page)) {
       const {node, pathToNode} = extractNodeAndPath(page)
       dispatch(handleGraft({pageKey, node, pathToNode}))

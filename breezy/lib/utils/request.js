@@ -1,12 +1,9 @@
 import parse from 'url-parse'
 import {formatForXHR} from './url'
+import {parseSJR} from './helpers'
 
 export function isValidResponse (xhr) {
   return isValidContent(xhr) && !downloadingFile(xhr)
-}
-
-export function parseSJR (body) {
-  return (new Function(`'use strict'; return ${body}` )())
 }
 
 export function isValidContent (rsp) {

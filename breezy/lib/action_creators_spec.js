@@ -53,18 +53,21 @@ describe('action creators', () => {
   describe('handleGraft', () => {
     it('fires BREEZY_HANDLE_GRAFT', () => {
       const pageKey = '/test'
-      const page = {d: 'foo'}
+      const node = {d: 'foo'}
+      const pathToNode = 'a.b'
 
       const action = handleGraft({
         pageKey,
-        page,
+        node,
+        pathToNode,
       })
 
       expect(action).toEqual({
         type: '@@breezy/HANDLE_GRAFT',
         payload: {
           pageKey,
-          page,
+          node,
+          pathToNode,
         }
       })
     })
@@ -273,12 +276,6 @@ describe('action creators', () => {
           type: '@@breezy/UPDATE_ALL_JOINTS',
           payload: {
             pageKey: '/foo',
-            page: {
-              data: { heading: 'Some heading 2' },
-              title: 'title 2',
-              csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            }
           }
         }
       ]
@@ -492,7 +489,6 @@ describe('action creators', () => {
         const lastAction = actions[actions.length - 1]
         const {type, payload} = lastAction
         const {pageKey, page} = payload
-
         if(type === '@@breezy/SAVE_RESPONSE' && page.data.heading === 'defered response heading') {
           done()
         }
@@ -533,11 +529,12 @@ describe('action creators', () => {
         const actions = store.getActions()
         const lastAction = actions[actions.length - 1]
         const {type, payload} = lastAction
-        const {pageKey, page} = payload
+        const {pageKey, node, pathToNode} = payload
 
         if(type === '@@breezy/HANDLE_GRAFT') {
           expect(pageKey).toEqual('/foo')
-          expect(page.data).toEqual('success')
+          expect(node).toEqual('success')
+          expect(pathToNode).toEqual('heading.cart')
           done()
         }
       })
@@ -590,7 +587,6 @@ describe('action creators', () => {
       { type: '@@breezy/UPDATE_ALL_JOINTS',
         payload: {
           pageKey: '/first',
-          page: jasmine.any(Object)
         }
       },
       { type: '@@breezy/SAVE_RESPONSE',
@@ -602,7 +598,6 @@ describe('action creators', () => {
       { type: '@@breezy/UPDATE_ALL_JOINTS',
         payload: {
           pageKey: '/second',
-          page: jasmine.any(Object)
         }
       }
     ]
@@ -649,7 +644,6 @@ describe('action creators', () => {
           type: '@@breezy/UPDATE_ALL_JOINTS',
           payload: {
             pageKey: '/foo',
-            page: jasmine.any(Object)
           }
         }
       ]

@@ -354,7 +354,8 @@ describe('reducers', () => {
           type: '@@breezy/HANDLE_GRAFT',
           payload: {
             pageKey: '/foo',
-            page: graftResponse
+            node: graftResponse.data,
+            pathToNode: graftResponse.path,
           }
         })
 
@@ -404,7 +405,7 @@ describe('reducers', () => {
     })
 
     describe('BREEZY_UPDATE_ALL_JOINTS', () => {
-      it('updates any joints', () => {
+      it('updates all joints using the selected page as reference', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -419,23 +420,22 @@ describe('reducers', () => {
             joints: {
               info: ['header.cart']
             }
-          }
-        }
-
-        const nextPage = {
-          data: {
-            profile: {
-              header: {
-                cart: {
-                  total: 10
+          },
+          '/bar': {
+            data: {
+              profile: {
+                header: {
+                  cart: {
+                    total: 10
+                  }
                 }
               }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['profile.header.cart']
             }
-          },
-          csrf_token: 'token',
-          assets: ['application-123.js'],
-          joints: {
-            info: ['profile.header.cart']
           }
         }
 
@@ -443,7 +443,6 @@ describe('reducers', () => {
           type: '@@breezy/UPDATE_ALL_JOINTS',
           payload: {
             pageKey: '/bar',
-            page: nextPage
           }
         })
 

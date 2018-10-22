@@ -25,9 +25,10 @@ import {
   UPDATE_ALL_JOINTS,
 } from './actions'
 
-function updateAllJoints (state, pageKey, page) {
-  forEachJoint(page.joints, (jointName, jointPath) => {
-    const updatedNode = getIn(page, jointPath)
+function updateAllJoints (state, pageKey) {
+  const selectedPage = state[pageKey]
+  forEachJoint(selectedPage.joints, (jointName, jointPath) => {
+    const updatedNode = getIn(selectedPage, jointPath)
     state = setInByJoint(state, jointName, updatedNode)
   })
 
@@ -91,12 +92,10 @@ function setInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function handleGraft (state, pageKey, page) {
+function handleGraft (state, pageKey, node, pathToNode) {
   state = {...state}
-  reverseMerge(page, {joints: {}})
-
   const currentPage = state[pageKey]
-  currentPage.data = setIn(currentPage.data, page.path, page.data)
+  currentPage.data = setIn(currentPage.data, pathToNode, node)
 
   return state
 }
@@ -108,12 +107,16 @@ export function pageReducer (state = {}, action) {
     return saveResponse(state, pageKey, page)
   }
   case UPDATE_ALL_JOINTS: {
-    const {pageKey, page} = action.payload
-    return updateAllJoints(state, pageKey, page)
+    const {pageKey} = action.payload
+    return updateAllJoints(state, pageKey)
   }
   case HANDLE_GRAFT: {
-    const {pageKey, page} = action.payload
-    return handleGraft(state, pageKey, page)
+    const {
+      pageKey,
+      node,
+      pathToNode,
+    } = action.payload
+    return handleGraft(state, pageKey, node, pathToNode)
   }
   case REMOVE_PAGE: {
     const {pageKey} = action.payload

@@ -27,17 +27,18 @@ export function saveResponse ({pageKey, page}) {
     type: SAVE_RESPONSE,
     payload: {
       pageKey,
-      page
+      page,
     }
   }
 }
 
-export function handleGraft ({pageKey, page}) {
+export function handleGraft ({pageKey, node, pathToNode}) {
   return {
     type: HANDLE_GRAFT,
     payload: {
       pageKey,
-      page
+      node,
+      pathToNode,
     }
   }
 }
@@ -131,28 +132,48 @@ export function isGraft(page) {
   return page.action === 'graft'
 }
 
+export function extractNodeAndPath(page) {
+  if(page.action === 'graft') {
+    const node = page.data
+    const pathToNode = page.path
+
+    return {node, pathToNode}
+  } else {
+    const errMsg = 'Expected page to be a graft response rendered from node filtering.'
+    throw new Error(errMsg)
+  }
+}
+
+export function fetchDeferments (pageKey, {defers = []}) {
+  return (dispatch) => {
+    const fetches = defers.map(function ({url}){
+      return dispatch(remote(url, {}, pageKey))
+    })
+
+    return Promise.all(fetches)
+  }
+}
+
+export function updateAllJointsToMatch(pageKey) {
+  return {
+    type: UPDATE_ALL_JOINTS,
+    payload: {
+      pageKey
+    }
+  }
+}
+
 export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {
-    const {defers = []} = page
-
     if (isGraft(page)) {
-      dispatch(handleGraft({pageKey, page}))
+      const {node, pathToNode} = extractNodeAndPath(page)
+      dispatch(handleGraft({pageKey, node, pathToNode}))
     } else {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    const deferedRemotes = defers.map(function ({url}){
-      return dispatch(remote(url, {}, pageKey))
-    })
-
-    Promise.all(deferedRemotes).finally(_=> {
-      dispatch({
-        type: UPDATE_ALL_JOINTS,
-        payload: {
-          pageKey,
-          page
-        }
-      })
+    dispatch(fetchDeferments(pageKey, page)).finally(_=> {
+      dispatch(updateAllJointsToMatch(pageKey))
     })
   }
 }

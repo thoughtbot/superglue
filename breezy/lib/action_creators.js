@@ -126,6 +126,10 @@ export function saveAndProcessSJRPage (pageKey, pageSJR) {
   return saveAndProcessPage(pageKey, page)
 }
 
+export function isGraft(page) {
+  return page.action === 'graft'
+}
+
 export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {
     const {defers = []} = page
@@ -134,7 +138,7 @@ export function saveAndProcessPage (pageKey, page) {
       dispatch(remote(url, {}, pageKey))
     })
 
-    if (page.action === 'graft') {
+    if (isGraft(page)) {
       dispatch(handleGraft({pageKey, page}))
     } else {
       dispatch(saveResponse({pageKey, page}))

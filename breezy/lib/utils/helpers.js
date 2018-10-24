@@ -27,7 +27,7 @@ export function forEachJointAtNameAcrossAllPages (pages, name, fn = ()=>{}) {
     })
 }
 
-export function forEachJoint (joints, fn = () => {}) {
+export function forEachJointInPage ({joints}, fn = () => {}) {
   Object.entries(joints)
     .forEach(([jointName, paths]) => {
       paths.forEach((path) => {

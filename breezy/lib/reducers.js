@@ -1,6 +1,6 @@
 import {
   reverseMerge,
-  forEachJoint,
+  forEachJointInPage,
   forEachJointAtNameAcrossAllPages,
   pagePath,
 } from './utils/helpers'
@@ -25,7 +25,7 @@ import {
 
 function updateAllJoints (state, pageKey) {
   const selectedPage = state[pageKey]
-  forEachJoint(selectedPage.joints, (jointName, jointPath) => {
+  forEachJointInPage(selectedPage, (jointName, jointPath) => {
     const updatedNode = getIn(selectedPage, jointPath)
     state = setInByJoint(state, jointName, updatedNode)
   })

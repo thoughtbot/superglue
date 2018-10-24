@@ -169,9 +169,16 @@ export function saveAndProcessPage (pageKey, page) {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    dispatch(fetchDeferments(pageKey, page)).finally(() => {
-      dispatch(updateAllJointsToMatch(pageKey))
-    })
+    dispatch(fetchDeferments(pageKey, page))
+      .then(() => dispatch(updateAllJointsToMatch(pageKey)))
+      .catch((error) => {
+        dispatch({
+          type: BREEZY_ERROR,
+          payload: error.message
+        })
+
+        throw error
+      })
   }
 }
 

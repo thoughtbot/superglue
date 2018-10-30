@@ -1,12 +1,12 @@
 # Table of contents
 
 * [Breezy](README.md)
-* [Getting Started](getting-started.md)
-* [Solving Problems](recipes.md)
+* [Getting Started](docs/getting-started.md)
+* [Solving Problems](docs/recipes.md)
 
 ## API
 
-* [React Redux](api/react-redux.md)
-* [Rails](api/rails.md)
-* [BreezyTemplate](api/breezy-template.md)
+* [React Redux](docs/react-redux.md)
+* [Rails](docs/rails.md)
+* [BreezyTemplate](docs/breezy-template.md)
 

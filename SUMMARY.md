@@ -2,7 +2,7 @@
 
 * [Breezy](README.md)
 * [Getting Started](getting-started.md)
-* [Recipes](recipes.md)
+* [Solving Problems](recipes.md)
 
 ## API
 

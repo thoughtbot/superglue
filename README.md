@@ -12,6 +12,10 @@ Breezy is a Turbolinks inspired library for React, Redux, and Rails. It brings s
 4. **All your resources in a single request** Move over GraphQL, classic multi-page applications already achieves this to some extent. Breezy just enhances your Rails views to make it work for React and Redux.
 5. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
 
+## Documentation
+
+Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy)
+
 ## At a glance
 
 ```text
@@ -99,4 +103,8 @@ this.visit("/posts/1")
 ```
 
 The above will request the `show.js.props`, pass it to `show.jsx` and update the browser history.
+
+## Special Thanks
+
+Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/)
 

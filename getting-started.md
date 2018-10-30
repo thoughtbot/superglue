@@ -137,7 +137,3 @@ Breezy.configure do |config|
 end
 ```
 
-## Special Thanks
-
-Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/)
-

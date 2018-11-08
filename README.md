@@ -23,7 +23,7 @@ views/
   posts/
     index.js.props
     index.jsx
-    show.props
+    show.js.props
     show.jsx
 ```
 
@@ -57,7 +57,7 @@ json.posts do
 end
 ```
 
-And inject it to your screen component with the provided mapStateToProps
+And inject it to your screen component with the provided `mapStateToProps`
 
 ```javascript
 import {

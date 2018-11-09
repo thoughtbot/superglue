@@ -242,21 +242,6 @@ class Users::PasswordsController < Devise::PasswordsController
 
   before_action :use_breezy
   respond_to :html, :js
-
-  def create
-    self.resource = resource_class.send_reset_password_instructions(resource_params)
-    yield resource if block_given?
-
-    respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
-  end
-
-  protected
-
-
-  def after_sending_reset_password_instructions_path_for(resource)
-    set_flash_message(:notice, :send_instructions)
-    new_password_path(resource)
-  end
 end
 
 ```

@@ -177,7 +177,101 @@ export default connect(
 
 ## Usage with Devise
 
-It can be done, and someday i'll expand this section, but I recommend against using Breezy with Devise. Practically, its probably not worth it to replace perfectly working Devise HTML, unless you REALLY want to.
+For Breezy to work with devise, you'll need the following:
+
+A custom failure app:
+
+```ruby
+require 'breezy/xhr_headers'
+
+class BreezyDeviseFailureApp < Devise::FailureApp
+  include Breezy::XHRHeaders
+
+  def skip_format?
+    %w(html js */*).include? request_format.to_s
+  end
+
+  def http_auth?
+    if request.xhr? && request.format != :js
+      Devise.http_authenticatable_on_xhr
+    else
+      !(request_format && is_navigational_format?)
+    end
+  end
+end
+```
+
+A custom responder to use in your devise controllers
+
+```ruby
+
+class BreezyResponder < ActionController::Responder
+  include Responders::FlashResponder
+  include Responders::HttpCacheResponder
+
+  def to_js
+    set_flash_message! if set_flash_message?
+    default_render
+  rescue ActionView::MissingTemplate => e
+    breezy_behavior(e)
+  end
+
+  def breezy_behavior(e)
+    if get?
+      raise error
+    elsif has_errors? && default_action
+      action = rendering_options[:action]
+      controller_name = @controller.controller_name
+      content_location = @controller.url_for(action: action, controller: controller_name, only_path: true)
+      @controller.response.set_header("content-location", content_location)
+
+      render rendering_options
+    else
+      redirect_to navigation_location
+    end
+  end
+end
+```
+
+In your Devise controllers
+```
+
+class Users::PasswordsController < Devise::PasswordsController
+  layout 'application'
+  self.responder = BreezyResponder
+
+  before_action :use_breezy
+  respond_to :html, :js
+
+  def create
+    self.resource = resource_class.send_reset_password_instructions(resource_params)
+    yield resource if block_given?
+
+    respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
+  end
+
+  protected
+
+
+  def after_sending_reset_password_instructions_path_for(resource)
+    set_flash_message(:notice, :send_instructions)
+    new_password_path(resource)
+  end
+end
+
+```
+
+And finally, in your Devise initializer
+
+```
+Devise.setup do |config|
+  config.navigational_formats = ['*/*', :html, :js]
+
+  config.warden do |manager|
+    manager.failure_app = BreezyDeviseFailureApp
+  end
+end
+```
 
 ## Usage with Kaminari
 

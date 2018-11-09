@@ -94,9 +94,9 @@ If there is an existing page in your store `navigateTo` will restore the props, 
 
 ### visit
 
-Makes an ajax call to a page, pushes to `History`, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.
+Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.There can only ever be one visit at a time. If you happen to call `visit` while another visit is taking place, only the most recent visit will callback with `canNavigate: true`.
 
-For a browser-like navigational experience, combine with [withBrowserBehavior](react-redux.md#withbrowserbehavior)
+For a browser-like navigational experience, including History pushes, combine with [withBrowserBehavior](react-redux.md#withbrowserbehavior)
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})

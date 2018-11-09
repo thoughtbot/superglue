@@ -394,7 +394,7 @@ Let's grab [react-actioncable-provider](https://github.com/cpunion/react-actionc
 yarn add react-actioncable-provider
 ```
 
-#### Appending chat messages to window
+#### Appending chat messages
 
 ```ruby
 class ChatChannel < ApplicationCable::Channel
@@ -472,3 +472,5 @@ export default connect(
   mapDispatchToProps
 )(ChatRoom)
 ```
+
+## Instaclick

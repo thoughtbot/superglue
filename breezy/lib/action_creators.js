@@ -217,10 +217,6 @@ function buildMeta (pageKey, page, {assets}) {
 }
 
 export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
-  if (!pageKey) {
-    throw new Error('pageKey is a required parameter')
-  }
-
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {method, headers, body})
 
@@ -229,6 +225,7 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
       .then(({rsp, page}) => {
+        pageKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
         pageKey = withoutBZParams(pageKey)
         const {breezy} = getState()
         const meta = {
@@ -267,7 +264,6 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
     const seqId = uuidv4()
 
-    dispatch(beforeFetch({fetchArgs}))
     dispatch({
       type: OVERRIDE_VISIT_SEQ,
       payload: {
@@ -275,20 +271,10 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
       }
     })
 
-    return wrappedFetch(fetchArgs)
-      .then(parseResponse)
-      .then(({rsp, page}) => {
-        pageKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
-        pageKey = withoutBZParams(pageKey)
-
+    return remote(pathQuery, {method, headers, body}, pageKey)(dispatch, getState)
+      .then((obj) => {
         const {breezy} = getState()
-        const meta = {
-          ...buildMeta(pageKey, page, breezy),
-          rsp
-        }
-        dispatch(saveAndProcessPage(pageKey, page))
-
-        return {...meta, canNavigate: canNavigate(seqId, breezy)}
+        return {...obj, canNavigate: canNavigate(seqId, breezy)}
       })
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }

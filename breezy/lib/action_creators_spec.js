@@ -258,8 +258,8 @@ describe('action creators', () => {
         })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: jasmine.any(String)}},
+        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
@@ -374,8 +374,8 @@ describe('action creators', () => {
       fetchMock.mock('/foo?__=0', {status: 500})
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: jasmine.any(String)}},
+        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         {
           type: '@@breezy/ERROR',
           payload:{message: "Internal Server Error" }
@@ -397,8 +397,8 @@ describe('action creators', () => {
       }})
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload:{seqId: jasmine.any(String)}},
+        { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         {
           type: '@@breezy/ERROR',
           payload:{message: "Invalid Breezy Response" }
@@ -427,8 +427,8 @@ describe('action creators', () => {
         })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload:{seqId: jasmine.any(String)}},
+        { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
         { type: '@@breezy/ERROR', payload:{message: 'Could not parse Server Generated Javascript Response for Breezy' }}
       ]
 
@@ -574,10 +574,10 @@ describe('action creators', () => {
     initialState.breezy.controlFlows.visit = 'secondId'
 
     const expectedActions = [
-      { type: '@@breezy/BEFORE_FETCH' , payload: {fetchArgs: jasmine.any(Object)}},
       { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'firstId' }},
-      { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: jasmine.any(Object)}},
+      { type: '@@breezy/BEFORE_FETCH' , payload: {fetchArgs: jasmine.any(Object)}},
       { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'secondId' }},
+      { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: jasmine.any(Object)}},
       { type: '@@breezy/SAVE_RESPONSE',
         payload: {
           pageKey: '/first',
@@ -611,12 +611,6 @@ describe('action creators', () => {
 
 
   describe('remote', () => {
-    it('raises error when no pageKey is passed ', () => {
-      expect(() => {
-        remote('/foo', {})
-      }).toThrow(new Error("pageKey is a required parameter"))
-    })
-
     it('will fire and resolve', (done) => {
       const store = mockStore({
         breezy: {

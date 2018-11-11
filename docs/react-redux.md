@@ -443,4 +443,3 @@ Enhances `visit` and `remote` with navigation behavior on the returned Promises.
 | :--- | :--- | :--- |
 | visit | `Function` | The visit function injected by `mapDispatchToProps` |
 | remote | `Function` | The remote function injected by `mapDispatchToProps`. The wrapped `remote` function will add the `pageKey` argument automatically for you. |
-

@@ -118,6 +118,7 @@ import {
 
 class PreloadIndex extends React.Component {
   constructor (props) {
+    super()
     const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
     this.visit = visit.bind(this)
     this.remote = remote.bind(this)
@@ -154,6 +155,7 @@ import {
 
 class SurveyIndex extends React.Component {
   constructor (props) {
+    super()
     const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
     this.visit = visit.bind(this)
     this.remote = remote.bind(this) //Note that the wrapped remote will automatically add the `pageKey` parameter for you. You do not need to explicity provide it if you wrap it.
@@ -234,8 +236,7 @@ end
 ```
 
 In your Devise controllers
-```
-
+```ruby
 class Users::PasswordsController < Devise::PasswordsController
   layout 'application'
   self.responder = BreezyResponder
@@ -248,7 +249,7 @@ end
 
 And finally, in your Devise initializer
 
-```
+```ruby
 Devise.setup do |config|
   config.navigational_formats = ['*/*', :html, :js]
 
@@ -308,6 +309,7 @@ import parse from 'url-parse'
 
 class PostsIndex extends React.Component {
   constructor (props) {
+    super()
     const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
     this.visit = visit.bind(this)
     this.remote = remote.bind(this)
@@ -436,7 +438,7 @@ import {
   parseSJR
 } from '@jho406/breezy/dist/utils/helpers'
 
-export default class ChatRoom extends Component {
+export default class ChatRoom extends React.Component {
   onReceived (rendered) {
     //first we extract the node
     const {node, pathToNode} =  extractNodeAndPath(parseSJR(rendered))
@@ -473,4 +475,67 @@ export default connect(
 )(ChatRoom)
 ```
 
-## Instaclick
+## Replicating Instantclick
+[InstantClick](http://instantclick.io) is a neat javascript utility that speeds up your website by preloading the next page on hover. To make this work for Breezy:
+
+```
+yarn add react-hoveritent
+```
+
+
+
+```javascript
+import {
+  mapStateToProps,
+  mapDispatchToProps,
+  withBrowserBehavior
+} from '@jho406/breezy'
+import HoverIntent from 'react-hoverintent'
+
+class PostsIndex extends React.Component {
+  constructor (props) {
+    super()
+    const {
+      visit,
+      remote,
+      pageKey
+    } = props
+
+    this.visit = enhanceWithBrowserBehavior(visit)
+
+    this.instaVisit = enhanceWithBrowserBehavior(() => {
+      return this.props.visitGuard(()=> {
+        return this.state.instaPromise
+      })
+    })
+  }
+
+  instaHover = (...fetchArgs) => {
+    // Here we use the unwrapped visit from props
+    this.setState({
+      instaPromise: this.remote(...fetchArgs)
+    })
+  }
+
+  render () {
+    return (
+      <HoverIntent
+        onMouseOver={() => this.instaHover('/foo')}
+        sensitivity={10}
+        interval={1000}
+        timeout={250}
+      >
+        <a onClick={this.instaVisit}> </a>
+      </HoverIntent>
+    )
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostsIndex)
+
+```
+
+

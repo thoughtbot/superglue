@@ -42,7 +42,7 @@ export const mapDispatchToProps = {
   saveAndProcessSJRPage,
 }
 
-export function withBrowserBehavior (visit, remote) {
+export function enhanceVisitWithBrowserBehavior (visit) {
   const wrappedVisit = (function (...args) {
     return visit(...args).then(rsp => {
       if (rsp.needsRefresh) {
@@ -84,13 +84,5 @@ export function withBrowserBehavior (visit, remote) {
     })
   })
 
-  const wrappedRemote = (function (...args) {
-    if (args.length == 1) {
-      args.push(undefined)
-    }
-
-    return remote(...args, this.props.pageKey)
-  })
-
-  return {visit: wrappedVisit, remote: wrappedRemote}
+  return wrappedVisit
 }

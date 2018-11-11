@@ -113,15 +113,14 @@ Then in your page component:
 import {
   mapStateToProps,
   mapDispatchToProps,
-  withBrowserBehavior
+  enhanceVisitWithBrowserBehavior
 } from '@jho406/breezy'
 
 class PreloadIndex extends React.Component {
   constructor (props) {
     super()
-    const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit)
     this.visit = visit.bind(this)
-    this.remote = remote.bind(this)
   }
 
   componentDidMount() {
@@ -150,15 +149,14 @@ The old Turbolinks 3 behavior is to load the page from cache if you have it, if 
 import {
   mapStateToProps,
   mapDispatchToProps,
-  withBrowserBehavior
+  enhanceVisitWithBrowserBehavior
 } from '@jho406/breezy'
 
 class SurveyIndex extends React.Component {
   constructor (props) {
     super()
-    const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit)
     this.visit = visit.bind(this)
-    this.remote = remote.bind(this) //Note that the wrapped remote will automatically add the `pageKey` parameter for you. You do not need to explicity provide it if you wrap it.
   }
 
   turboVisit = () => {
@@ -302,7 +300,7 @@ Then in your component
 import {
   mapStateToProps,
   mapDispatchToProps,
-  withBrowserBehavior
+  enhanceVisitWithBrowserBehavior
 } from '@jho406/breezy'
 import { Pagination } from 'antd'
 import parse from 'url-parse'
@@ -310,9 +308,8 @@ import parse from 'url-parse'
 class PostsIndex extends React.Component {
   constructor (props) {
     super()
-    const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit)
     this.visit = visit.bind(this)
-    this.remote = remote.bind(this)
   }
 
   onPaginateChange = (page) => {
@@ -429,7 +426,7 @@ end
 import {
   mapStateToProps,
   mapDispatchToProps,
-  withBrowserBehavior
+  enhanceVisitWithBrowserBehavior
 } from '@jho406/breezy'
 
 import {ActionCable} from 'react-actioncable-provider'
@@ -482,13 +479,13 @@ export default connect(
 yarn add react-hoveritent
 ```
 
-
+Then create your own visit function with instaclick behavior like the below. Note that we are using the `ensureSingleVisit` action creator (which powers Breezy's `visit`) and the unenhanced version of the `visit` that you receive through the props.
 
 ```javascript
 import {
   mapStateToProps,
   mapDispatchToProps,
-  withBrowserBehavior
+  enhanceVisitWithBrowserBehavior
 } from '@jho406/breezy'
 import HoverIntent from 'react-hoverintent'
 
@@ -501,26 +498,27 @@ class PostsIndex extends React.Component {
       pageKey
     } = props
 
-    this.visit = enhanceWithBrowserBehavior(visit)
+    this.visit = enhanceVisitWithBrowserBehavior(visit)
 
     this.instaVisit = enhanceWithBrowserBehavior(() => {
-      return this.props.visitGuard(()=> {
-        return this.state.instaPromise
+      return this.props.ensureSingleVisit(()=> {
+        // return a copy of the promise
+        return this.state.instaPromise.then((v) => v)
       })
     })
   }
 
-  instaHover = (...fetchArgs) => {
+  prefetch = (...fetchArgs) => {
     // Here we use the unwrapped visit from props
     this.setState({
-      instaPromise: this.remote(...fetchArgs)
+      instaPromise: this.props.visit(...fetchArgs)
     })
   }
 
   render () {
     return (
       <HoverIntent
-        onMouseOver={() => this.instaHover('/foo')}
+        onMouseOver={() => this.prefetch('/foo')}
         sensitivity={10}
         interval={1000}
         timeout={250}

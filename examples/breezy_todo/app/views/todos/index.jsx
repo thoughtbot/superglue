@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from '@jho406/breezy'
+import {mapStateToProps, mapDispatchToProps, enhanceVisitWithBrowserBehavior} from '@jho406/breezy'
 import {connect} from 'react-redux'
 import TodosForm from 'components/TodosForm'
 import TodoItem from 'components/TodoItem'
@@ -14,7 +14,7 @@ class TodosIndex extends Component{
 
   constructor(props) {
     super(props)
-    const {visit} = withBrowserBehavior(props.visit, props.remote)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit)
     this.visit = visit.bind(this)
   }
 

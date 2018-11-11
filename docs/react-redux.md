@@ -96,7 +96,7 @@ If there is an existing page in your store `navigateTo` will restore the props, 
 
 Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.There can only ever be one visit at a time. If you happen to call `visit` while another visit is taking place, only the most recent visit will callback with `canNavigate: true`.
 
-For a browser-like navigational experience, including History pushes, combine with [withBrowserBehavior](react-redux.md#withbrowserbehavior)
+For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](react-redux.md#enhancevisitwithbrowserbehavior)
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
@@ -133,8 +133,6 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 Remote DOES NOT affect your `History`. Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#filtering-nodes) of the current page or preload other pages.
 
-Combine with [withBrowserBehavior](react-redux.md#withbrowserbehavior)
-
 ```javascript
 remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
 
@@ -152,8 +150,6 @@ Shares the same arguments as `visit` with a few key differences:
 ```text
 this.props.remote(url.toString(), {}, this.props.pageKey)
 ```
-
-You can also wrap this function with sane defaults using `withBrowserBehavior` which will [automatically](react-redux.md#withbrowserbehavior) add the `pageKey` for you.
 
 * `canNavigate` is not available as an option passed to your then-able function.
 
@@ -425,17 +421,16 @@ this.props.delInPage({
 
 ## Utility
 
-### withBrowserBehavior
+### enhanceVisitWithBrowserBehavior
 
-Enhances `visit` and `remote` with navigation behavior on the returned Promises. For example, if the request `500`s, Breezy will navigate to '/500.html'. You can read the full behavior [here](https://github.com/jho406/Breezy/blob/master/breezy/lib/utils/react.js#L131).
+Enhances `visit` with navigation behavior on the returned Promises. For example, if the request `500`s, Breezy will navigate to '/500.html'. You can read the full behavior [here](https://github.com/jho406/Breezy/blob/master/breezy/lib/utils/react.js#L131).
 
 ```javascript
-  import {...someStuff..., withBrowserBehavior} from '@jho406/breezy'
+  import {...someStuff..., enhanceVisitWithBrowserBehavior} from '@jho406/breezy'
 
   constructor (props) {
-    const {visit, remote} = withBrowserBehavior(props.visit, props.remote)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit)
     this.visit = visit.bind(this)
-    this.remote = remote.bind(this) //Note that the wrapped remote will automatically add the `pageKey` parameter for you. You do not need to explicity provide it if you wrap it.
   }
 ```
 

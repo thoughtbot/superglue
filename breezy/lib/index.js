@@ -10,7 +10,7 @@ import {
   SET_BASE_URL,
 } from './actions'
 
-export {mapStateToProps, mapDispatchToProps, withBrowserBehavior} from './utils/react'
+export {mapStateToProps, mapDispatchToProps, enhanceVisitWithBrowserBehavior} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
 export {setWindow, unsetWindow}
 export function stop () {

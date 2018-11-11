@@ -63,18 +63,14 @@ And inject it to your screen component with the provided `mapStateToProps`
 import {
     mapStateToProps,
     mapDispatchToProps,
-    withBrowserBehavior
+    enhanceVisitWithBrowserBehavior
   } from '@jho406/breezy'
 
 class PostsIndex extends React.Component {
   constructor(props) {
     super(props)
-     const {
-       visit,
-       remote
-      } = withBrowserBehavior(props.visit, props.remote)
-      this.visit = visit.bind(this)
-      this.remote = remote.bind(this)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit, props.remote)
+    this.visit = visit.bind(this)
   }
 
   render() {

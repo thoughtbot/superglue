@@ -8,6 +8,7 @@ import {
   delInJoint,
   extendInJoint,
   saveAndProcessSJRPage,
+  ensureSingleVisit,
 } from '../action_creators'
 import {withoutBZParams} from './url'
 
@@ -30,6 +31,7 @@ export function mapStateToProps (state = {pages:{}, breezy: {}}, ownProps) {
 
 export const mapDispatchToProps = {
   visit,
+  ensureSingleVisit,
   remote,
   setInPage,
   delInPage,

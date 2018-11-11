@@ -259,11 +259,9 @@ function canNavigate (seqId, {controlFlows}) {
   }
 }
 
-export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+export function ensureSingleVisit(fn) {
   return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
     const seqId = uuidv4()
-
     dispatch({
       type: OVERRIDE_VISIT_SEQ,
       payload: {
@@ -271,11 +269,19 @@ export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pag
       }
     })
 
-    return remote(pathQuery, {method, headers, body}, pageKey)(dispatch, getState)
-      .then((obj) => {
-        const {breezy} = getState()
-        return {...obj, canNavigate: canNavigate(seqId, breezy)}
-      })
-      .catch(e => handleFetchErr(e, fetchArgs, dispatch))
+    return fn().then((obj) => {
+      const {breezy} = getState()
+      return {...obj, canNavigate: canNavigate(seqId, breezy)}
+    })
+  }
+}
+
+export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+  return (dispatch, getState) => {
+    const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
+
+    return ensureSingleVisit(() => {
+      return remote(pathQuery, {method, headers, body}, pageKey)(dispatch, getState)
+    })(dispatch, getState).catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }
 }

@@ -39,6 +39,7 @@ Here's what's included:
 
 ```javascript
 export const mapDispatchToProps = {
+  ensureSingleVisit,
   visit,
   remote,
   setInPage,
@@ -131,7 +132,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 ### remote
 
-Remote DOES NOT affect your `History`. Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#filtering-nodes) of the current page or preload other pages.
+Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#filtering-nodes) of the current page or preload other pages.
 
 ```javascript
 remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
@@ -144,12 +145,6 @@ remote(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs,
 ```
 
 Shares the same arguments as `visit` with a few key differences:
-
-* You must explicitly provide it with a `pageKey`. This is to prevent async requests from saving into the wrong state. Use with the included `mapStateToProps`, which provides a `this.props.pageKey`. For example:
-
-```text
-this.props.remote(url.toString(), {}, this.props.pageKey)
-```
 
 * `canNavigate` is not available as an option passed to your then-able function.
 

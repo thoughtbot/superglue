@@ -69,7 +69,7 @@ import {
 class PostsIndex extends React.Component {
   constructor(props) {
     super(props)
-    const visit = enhanceVisitWithBrowserBehavior(props.visit, props.remote)
+    const visit = enhanceVisitWithBrowserBehavior(props.visit)
     this.visit = visit.bind(this)
   }
 
@@ -109,7 +109,7 @@ The above will request the `show.js.props`, pass it to `show.jsx` and update the
 You can also refresh a node inside of `index.jsx`.
 
 ```javascript
-this.remote("/posts?_bz=header")
+this.props.remote("/posts?_bz=header")
 ```
 
 The above will fetch the `json.header` node in `index.js.props`, noop the `json.posts` node, immutably graft it in your store, before handling it to React to render.

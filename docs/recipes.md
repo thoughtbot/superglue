@@ -67,7 +67,7 @@ In your component
 // survey.jsx
 //...in your component
   handleTab2Click = () => {
-    this.remote('/survey?_bz=questions.question_set_2')
+    this.props.remote('/survey?_bz=questions.question_set_2')
   }
   render() {
     return (
@@ -380,7 +380,7 @@ Then when you build the component
 ```javascript
   componentDidMount() {
     this.polling = setInterval(() => {
-      this.remote('/posts?_bz=dashboard.visitors')
+      this.props.remote('/posts?_bz=dashboard.visitors')
     })
   }
 ```

@@ -259,7 +259,7 @@ function canNavigate (seqId, {controlFlows}) {
   }
 }
 
-export function ensureSingleVisit(fn) {
+export function ensureSingleVisit (fn) {
   return (dispatch, getState) => {
     const seqId = uuidv4()
     dispatch({

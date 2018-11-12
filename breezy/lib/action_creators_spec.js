@@ -43,9 +43,9 @@ const successfulBody = () => {
     `(function() {
         return {
           data: { heading: 'Some heading 2' },
-          title: 'title 2',
           csrf_token: 'token',
-          assets: ['application-123.js', 'application-123.js']
+          assets: [],
+          defers: []
         };
       })();`
     )
@@ -267,9 +267,8 @@ describe('action creators', () => {
     it('fires SAVE_RESPONSE and process a page', () => {
      const page = {
         data: { heading: 'Some heading 2' },
-        title: 'title 2',
         csrf_token: 'token',
-        assets: ['application-123.js', 'application-123.js']
+        assets: []
       }
       const store = mockStore(initialState())
       const expectedActions = [
@@ -279,9 +278,8 @@ describe('action creators', () => {
             pageKey: '/foo',
             page: {
               data: { heading: 'Some heading 2' },
-              title: 'title 2',
               csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
+              assets: []
             }
           }
         },
@@ -307,9 +305,8 @@ describe('action creators', () => {
 
      const page = {
         data: { heading: 'Some heading 2' },
-        title: 'title 2',
         csrf_token: 'token',
-        assets: ['application-123.js', 'application-123.js'],
+        assets: [],
         defers: [{url: '/some_defered_request?_bz=body'}]
       }
 
@@ -355,9 +352,8 @@ describe('action creators', () => {
               data: 'success',
               action: 'graft',
               path: 'body',
-              title: 'title 2',
               csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js'],
+              assets: [],
               defers: []
             };
           })();`,
@@ -382,9 +378,8 @@ describe('action creators', () => {
         data: 'success',
         action: 'graft',
         path: 'heading.cart',
-        title: 'title 2',
-        csrf_token: 'token',
-        assets: ['application-123.js', 'application-123.js'],
+        csrf_token: '',
+        assets: [],
         defers: []
       }
 
@@ -421,9 +416,8 @@ describe('action creators', () => {
 
      const page = {
         data: { heading: 'Some heading 2' },
-        title: 'title 2',
         csrf_token: 'token',
-        assets: ['application-123.js', 'application-123.js'],
+        assets: [],
         defers: [{url: '/some_defered_request?_bz=body'}]
       }
 
@@ -470,78 +464,13 @@ describe('action creators', () => {
     })
   })
 
-  describe('visit', () => {
-    afterEach(() => {
-      fetchMock.reset()
-      fetchMock.restore()
-    })
-
-
-    it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
-      const initialState = {
-        breezy: {
-          assets:[],
-          controlFlows: {
-            visit: 'firstId'
-          }
-        }
-      }
-
-      const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
-
-      let mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/first'
-      fetchMock.mock('/first?__=0', delay(500).then(() => mockResponse))
-
-      let mockResponse2 = rsp.visitSuccess()
-      mockResponse2.headers['x-response-url'] = '/second'
-      fetchMock.mock('/second?__=0', delay(2000).then(() => mockResponse2))
-
-      const spy = spyOn(helpers, 'uuidv4')
-      spy.and.returnValue('firstId')
-      store.dispatch(visit('/first')).then((meta)=>{
-        expect(meta.canNavigate).toEqual(false)
-      })
-
-      spy.and.returnValue('secondId')
-      initialState.breezy.controlFlows.visit = 'secondId'
-
-      const expectedActions = [
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'firstId' }},
-        { type: '@@breezy/BEFORE_FETCH' , payload: jasmine.any(Object)},
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'secondId' }},
-        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object)},
-        { type: '@@breezy/SAVE_RESPONSE',
-          payload: jasmine.any(Object)
-        },
-        { type: '@@breezy/UPDATE_ALL_JOINTS',
-          payload: jasmine.any(Object)
-        },
-        { type: '@@breezy/SAVE_RESPONSE',
-          payload: jasmine.any(Object)
-        },
-        { type: '@@breezy/UPDATE_ALL_JOINTS',
-          payload: jasmine.any(Object)
-        }
-      ]
-
-      store.dispatch(visit('/second')).then((meta) => {
-        expect(meta.canNavigate).toEqual(true)
-        expect(store.getActions()).toEqual(expectedActions)
-        done()
-      })
-    })
-
-  })
-
   describe('remote', () => {
     afterEach(() => {
       fetchMock.reset()
       fetchMock.restore()
     })
 
-    it('fires SAVE_RESPONSE when fetching', () => {
+    it('fetches with correct headers and fires SAVE_RESPONSE', () => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
@@ -563,9 +492,9 @@ describe('action creators', () => {
             pageKey: '/foo',
             page: {
               data: { heading: 'Some heading 2' },
-              title: 'title 2',
               csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js']
+              assets: [],
+              defers: [],
             }
           }
         },
@@ -743,9 +672,8 @@ describe('action creators', () => {
               data: 'success',
               action: 'graft',
               path: 'heading.cart',
-              title: 'title 2',
               csrf_token: 'token',
-              assets: ['application-123.js', 'application-123.js'],
+              assets: [],
               defers: defers
             };
           })();`,
@@ -772,39 +700,65 @@ describe('action creators', () => {
 
       store.dispatch(remote('/foo'))
     })
+  })
 
-    it('will fire and resolve', (done) => {
-      const store = mockStore({
+  describe('visit', () => {
+    afterEach(() => {
+      fetchMock.reset()
+      fetchMock.restore()
+    })
+
+    it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
+      const initialState = {
         breezy: {
           assets:[],
+          controlFlows: {
+            visit: 'firstId'
+          }
         }
-      })
+      }
 
-      spyOn(helpers, 'uuidv4').and.returnValue('nextId')
+      const store = mockStore(initialState)
       spyOn(connect, 'getStore').and.returnValue(store)
 
       let mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('/foo?__=0', mockResponse)
+      mockResponse.headers['x-response-url'] = '/first'
+      fetchMock.mock('/first?__=0', delay(500).then(() => mockResponse))
+
+      let mockResponse2 = rsp.visitSuccess()
+      mockResponse2.headers['x-response-url'] = '/second'
+      fetchMock.mock('/second?__=0', delay(2000).then(() => mockResponse2))
+
+      const spy = spyOn(helpers, 'uuidv4')
+      spy.and.returnValue('firstId')
+      store.dispatch(visit('/first')).then((meta)=>{
+        expect(meta.canNavigate).toEqual(false)
+      })
+
+      spy.and.returnValue('secondId')
+      initialState.breezy.controlFlows.visit = 'secondId'
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH' , payload: {fetchArgs: jasmine.any(Object)}},
-        {
-          type: '@@breezy/SAVE_RESPONSE',
-          payload: {
-            pageKey: '/foo',
-            page: jasmine.any(Object)
-          }
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'firstId' }},
+        { type: '@@breezy/BEFORE_FETCH' , payload: jasmine.any(Object)},
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'secondId' }},
+        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object)},
+        { type: '@@breezy/SAVE_RESPONSE',
+          payload: jasmine.any(Object)
         },
-        {
-          type: '@@breezy/UPDATE_ALL_JOINTS',
-          payload: {
-            pageKey: '/foo',
-          }
+        { type: '@@breezy/UPDATE_ALL_JOINTS',
+          payload: jasmine.any(Object)
+        },
+        { type: '@@breezy/SAVE_RESPONSE',
+          payload: jasmine.any(Object)
+        },
+        { type: '@@breezy/UPDATE_ALL_JOINTS',
+          payload: jasmine.any(Object)
         }
       ]
-      const req = store.dispatch(remote('/foo', {}, '/foo'))
-      req.then(() => {
+
+      store.dispatch(visit('/second')).then((meta) => {
+        expect(meta.canNavigate).toEqual(true)
         expect(store.getActions()).toEqual(expectedActions)
         done()
       })

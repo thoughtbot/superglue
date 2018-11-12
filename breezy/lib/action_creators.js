@@ -2,6 +2,7 @@ import {
   argsForFetch,
   parseResponse
 } from './utils/request'
+import parse from 'url-parse'
 import 'cross-fetch'
 import {
   uuidv4,
@@ -22,6 +23,7 @@ import {
   EXTEND_IN_JOINT,
   BEFORE_FETCH,
   BREEZY_ERROR,
+  BREEZY_GRAFTING_ERROR,
   OVERRIDE_VISIT_SEQ,
   UPDATE_ALL_JOINTS,
 } from './actions'
@@ -38,7 +40,7 @@ export function saveResponse ({pageKey, page}) {
   }
 }
 
-export function handleGraft ({pageKey, node, pathToNode}) {
+export function handleGraft ({pageKey, node, pathToNode, joints={}}) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -47,6 +49,7 @@ export function handleGraft ({pageKey, node, pathToNode}) {
       pageKey,
       node,
       pathToNode,
+      joints
     }
   }
 }
@@ -115,14 +118,14 @@ export function extendInJoint ({name, keypath, value}) {
   }
 }
 
-export function beforeFetch (payload) {
+function beforeFetch (payload) {
   return {
     type: BEFORE_FETCH,
     payload,
   }
 }
 
-export function handleError (err) {
+function handleError (err) {
   return {
     type: BREEZY_ERROR,
     payload: {
@@ -136,19 +139,31 @@ export function saveAndProcessSJRPage (pageKey, pageSJR) {
   return saveAndProcessPage(pageKey, page)
 }
 
-export function fetchDeferments (pageKey, {defers = []}) {
+function fetchDeferments (pageKey, {defers = []}) {
   pageKey = withoutBZParams(pageKey)
-
   return (dispatch) => {
     const fetches = defers.map(function ({url}){
-      return dispatch(remote(url, {}, pageKey))
+      return dispatch(remote(url, {}, pageKey)).catch((err) => {
+        let parsedUrl = new parse(url, true)
+        const keyPath = parsedUrl.query._bz
+
+        dispatch({
+          type: BREEZY_GRAFTING_ERROR,
+          payload: {
+            url,
+            err,
+            pageKey,
+            keyPath,
+          }
+        })
+      })
     })
 
     return Promise.all(fetches)
   }
 }
 
-export function updateAllJointsToMatch (pageKey) {
+function updateAllJointsToMatch (pageKey) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -162,23 +177,16 @@ export function updateAllJointsToMatch (pageKey) {
 export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {
     pageKey = withoutBZParams(pageKey)
+    const {joints} = page
     if (isGraft(page)) {
       const {node, pathToNode} = extractNodeAndPath(page)
-      dispatch(handleGraft({pageKey, node, pathToNode}))
+      dispatch(handleGraft({joints, pageKey, node, pathToNode}))
     } else {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    dispatch(fetchDeferments(pageKey, page))
-      .then(() => dispatch(updateAllJointsToMatch(pageKey)))
-      .catch((error) => {
-        dispatch({
-          type: BREEZY_ERROR,
-          payload: error.message
-        })
-
-        throw error
-      })
+    dispatch(updateAllJointsToMatch(pageKey))
+    return dispatch(fetchDeferments(pageKey, page))
   }
 }
 

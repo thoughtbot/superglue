@@ -64,7 +64,7 @@ describe('reducers', () => {
       it('sets the initial CSRF token', () => {
         const prevState = {foo: 'bar'}
         const action = {
-          type: '@@breezy/SET_CSRF_TOKEN', 
+          type: '@@breezy/SET_CSRF_TOKEN',
           payload: {
             csrfToken: 'some_token'
           }
@@ -335,9 +335,7 @@ describe('reducers', () => {
             },
             csrf_token: 'token',
             assets: ['application-123.js'],
-            joints: {
-              info: ['header.cart']
-            }
+            joints: {}
           }
         }
 
@@ -370,8 +368,66 @@ describe('reducers', () => {
             },
             csrf_token: 'token',
             assets: ['application-123.js'],
+            joints: {}
+          }
+        })
+      })
+
+      it('takes any new joints and merges them', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
+            }
+          }
+        }
+
+        const graftResponse = {
+          data: { total: 100},
+          action: 'graft',
+          path: 'header.cart',
+          title: 'foobar',
+          csrf_token: 'token',
+          joints: {
+            info: ['header.cart.cat', 'header.cart.cat'],
+            footer: ['footer']
+          },
+          assets: ['application-123.js']
+        }
+
+        const nextState = reducer(prevState, {
+          type: '@@breezy/HANDLE_GRAFT',
+          payload: {
+            pageKey: '/foo',
+            node: graftResponse.data,
+            pathToNode: graftResponse.path,
+            joints: graftResponse.joints
+          }
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 100
+                }
+              }
+            },
+            csrf_token: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: ['header.cart.cat', 'header.cart'],
+              footer: ['footer']
             }
           }
         })

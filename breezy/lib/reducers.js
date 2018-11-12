@@ -90,10 +90,22 @@ function setInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function handleGraft (state, pageKey, node, pathToNode) {
+function handleGraft (state, pageKey, node, pathToNode, joints={}) {
   state = {...state}
+  joints = {...joints}
+
   const currentPage = state[pageKey]
   currentPage.data = setIn(currentPage.data, pathToNode, node)
+
+  Object.entries(currentPage.joints).forEach(([name, keyPaths]) => {
+    if(!joints[name]) {
+      joints[name] = []
+    }
+
+    joints[name] = [...new Set([...joints[name], ...currentPage.joints[name]])]
+  })
+
+  currentPage.joints = joints
 
   return state
 }
@@ -113,8 +125,9 @@ export function pageReducer (state = {}, action) {
       pageKey,
       node,
       pathToNode,
+      joints,
     } = action.payload
-    return handleGraft(state, pageKey, node, pathToNode)
+    return handleGraft(state, pageKey, node, pathToNode, joints)
   }
   case REMOVE_PAGE: {
     const {pageKey} = action.payload

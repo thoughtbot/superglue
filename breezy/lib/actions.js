@@ -13,6 +13,7 @@ export const DEL_IN_JOINT = '@@breezy/DEL_IN_JOINT'
 export const EXTEND_IN_JOINT = '@@breezy/EXTEND_IN_JOINT'
 
 export const BREEZY_ERROR = '@@breezy/ERROR'
+export const BREEZY_GRAFTING_ERROR = '@@breezy/GRAFTING_ERROR'
 export const UPDATE_ALL_JOINTS = '@@breezy/UPDATE_ALL_JOINTS'
 
 export const HISTORY_CHANGE = '@@breezy/HISTORY_CHANGE'

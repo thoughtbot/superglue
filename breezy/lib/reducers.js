@@ -97,7 +97,7 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
   const currentPage = state[pageKey]
   currentPage.data = setIn(currentPage.data, pathToNode, node)
 
-  Object.entries(currentPage.joints).forEach(([name, keyPaths]) => {
+  Object.keys(currentPage.joints).forEach((name) => {
     if(!joints[name]) {
       joints[name] = []
     }

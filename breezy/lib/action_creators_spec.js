@@ -15,6 +15,7 @@ import {
   beforeFetch,
   handleError,
   saveResponse,
+  ensureSingleVisit,
   saveAndProcessPage
 } from './action_creators'
 import * as helpers from './utils/helpers'
@@ -406,7 +407,6 @@ describe('action creators', () => {
       })
     })
 
-
     it ('fires a GRAFTING_ERROR when a fetch fails',  () => {
       const store = mockStore({...initialState(), pages: {
         '/foo': {}
@@ -760,6 +760,57 @@ describe('action creators', () => {
       store.dispatch(visit('/second')).then((meta) => {
         expect(meta.canNavigate).toEqual(true)
         expect(store.getActions()).toEqual(expectedActions)
+        done()
+      })
+    })
+  })
+
+  describe('ensureSingleVisit', () => {
+    it('takes a fn that returns a promise and resolves it with canNavigate:true with one active visit', (done) => {
+      const initialState = {
+        breezy: {
+          controlFlows: {
+            visit: 'nextId'
+          }
+        }
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'nextId')
+
+      const customVisit = ensureSingleVisit(() => {
+        const meta = {}
+        return Promise.resolve(meta)
+      })
+
+      store.dispatch(customVisit).then((meta) => {
+        expect(meta.canNavigate).toEqual(true)
+        done()
+      })
+    })
+
+    it('takes a fn that returns a promise and resolves it with canNavigate:false when another ensureSingleVisit is called elsewhere', (done) => {
+      const initialState = {
+        breezy: {
+          controlFlows: {
+            visit: 'nextId'
+          }
+        }
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'nextId')
+
+      const customVisit = ensureSingleVisit(() => {
+        const meta = {}
+        initialState.breezy.controlFlows.visit = 'uuid_of_visit_that_got_initiated_elsewhere_while_this_was_resolving'
+        return Promise.resolve(meta)
+      })
+
+      store.dispatch(customVisit).then((meta) => {
+        expect(meta.canNavigate).toEqual(false)
         done()
       })
     })

@@ -99,7 +99,7 @@ export default connect(
 When the user lands on the `/posts` the `index.jsx` is rendered with `index.js.props`. SPA navigation is handled just like Turbolinks:
 
 ```javascript
-this.visit("/posts/1")
+this.visit("/posts/1") //if you've used `enhanceWithBrowserBehavior`
 ```
 
 The above will request the `show.js.props`, pass it to `show.jsx` and update the browser history.

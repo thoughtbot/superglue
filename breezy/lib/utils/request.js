@@ -39,7 +39,7 @@ export function handleServerErrors (args){
   return args
 }
 
-export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, body}) {
+export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, body=''} = {}) {
   method = method.toUpperCase()
 
   const currentState = getState().breezy || {}
@@ -52,7 +52,7 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
     'x-breezy-request': true,
   }
 
-  if(method != 'GET') {
+  if(method != 'GET' && method!= 'HEAD') {
     headers['content-type'] = 'application/json'
   }
 

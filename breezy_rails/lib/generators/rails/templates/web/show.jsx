@@ -11,11 +11,11 @@ class <%= plural_table_name.camelize %>Show extends BaseScreen {
         <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
         <p>
           <strong><%= attr.capitalize %>:</strong>
-          {this.props.<%=attr%>}
+          {this.props.<%=attr.camelize(:lower)%>}
         </p>
         <%- end -%>
-        <a onClick={ e => this.visit(this.props.edit_<%= singular_table_name %>_path)}>Edit</a>
-        <a onClick={ e => this.visit(this.props.<%= plural_table_name %>_path )}>Back</a>
+        <a onClick={ e => this.visit(this.props.edit<%= singular_table_name.camelize %>Path)}>Edit</a>
+        <a onClick={ e => this.visit(this.props.<%= plural_table_name.camelize(:lower) %>Path )}>Back</a>
       </div>
     )
   }

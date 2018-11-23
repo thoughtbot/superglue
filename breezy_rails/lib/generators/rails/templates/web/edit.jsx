@@ -15,7 +15,7 @@ class <%= plural_table_name.camelize %>Edit extends BaseScreen {
       body: JSON.stringify(values),
     }
 
-    this.visit(this.props.<%= singular_table_name %>, options).then( rsp => {
+    this.visit(this.props.<%= singular_table_name.camelize(:lower) %>, options).then( rsp => {
       setSubmitting(false)
       if (this.props.errors) {
         this.formRef.current.setErrors(this.props.errors)
@@ -28,11 +28,11 @@ class <%= plural_table_name.camelize %>Edit extends BaseScreen {
       <div>
         <<%= plural_table_name.camelize %>Form
           onSubmit={this.handleSubmit}
-          initialValues={this.props.attributes_for_form}
+          initialValues={this.props.attributesForForm}
           ref={this.formRef}
         />
-        <a onClick={ e => this.visit(this.props.post_path)}>Show</a>
-        <a onClick={ e => this.visit(this.props.posts_path)}>Back</a>
+        <a onClick={ e => this.visit(this.props.<%= singular_table_name.camelize(:lower) %>Path)}>Show</a>
+        <a onClick={ e => this.visit(this.props.<%= plural_table_name.camelize(:lower) %>Path)}>Back</a>
       </div>
     )
   }

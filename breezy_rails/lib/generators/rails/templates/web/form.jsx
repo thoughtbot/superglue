@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 export default React.forwardRef(
   ({initialValues = {
   <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-    <%=attr.to_s%>:'',
+    <%=attr.camelize(:lower).to_s%>:'',
   <%- end -%>
   }, onSubmit}, ref) => {
    return (
@@ -17,7 +17,7 @@ export default React.forwardRef(
           <Form>
           <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
             <Field type="text" name="<%=attr.to_s%>" />
-            {errors.<%=attr.to_s%> && touched.<%=attr.to_s%> && errors.<%=attr.to_s%>}
+            {errors.<%=attr.camelize(:lower).to_s%> && touched.<%=attr.camelize(:lower).to_s%> && errors.<%=attr.camelize(:lower).to_s%>}
           <%- end -%>
 
             <button type="submit" disabled={isSubmitting}>

@@ -5,19 +5,19 @@ import BaseScreen from 'components/BaseScreen'
 
 class <%= plural_table_name.camelize %>Index extends BaseScreen {
   static defaultProps = {
-    <%= plural_table_name %>: []
+    <%= plural_table_name.camelize(:lower) %>: []
   }
 
   render () {
-    const <%= singular_table_name %>Items = this.props.<%= plural_table_name %>.map((<%= singular_table_name %>, key) => {
+    const <%= singular_table_name.camelize(:lower) %>Items = this.props.<%= plural_table_name.camelize(:lower) %>.map((<%= singular_table_name.camelize(:lower) %>, key) => {
       return (
-        <tr key={<%= singular_table_name %>.id}>
+        <tr key={<%= singular_table_name.camelize(:lower) %>.id}>
           <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-          <td>{<%=singular_table_name%>.<%=attr%>}</td>
+          <td>{<%=singular_table_name.camelize(:lower)%>.<%=attr.camelize(:lower)%>}</td>
           <%- end -%>
-          <td><a onClick={ e => this.visit(<%=singular_table_name%>.post_path)}>Show</a></td>
-          <td><a onClick={ e => this.visit(<%=singular_table_name%>.edit_post_path)}>Edit</a></td>
-          <td><a onClick={ e => this.visit(<%=singular_table_name%>.post_path, {method: 'DELETE'})}>Delete</a></td>
+          <td><a onClick={ e => this.visit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path)}>Show</a></td>
+          <td><a onClick={ e => this.visit(<%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path)}>Edit</a></td>
+          <td><a onClick={ e => this.visit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path, {method: 'DELETE'})}>Delete</a></td>
         </tr>
       )
     })
@@ -43,7 +43,7 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
           </tbody>
         </table>
         <br />
-        <a onClick={ e => this.visit(this.props.new_post_path)}>New <%= singular_table_name.capitalize %></a>
+        <a onClick={ e => this.visit(this.props.new<%= singular_table_name.camelize %>Path)}>New <%= singular_table_name.capitalize %></a>
       </div>
     )
   }

@@ -12,5 +12,5 @@ json.attributes_for_form do
 <%- end -%>
 end
 
-json.post_path <%= singular_table_name%>_path(@<%=singular_table_name%>)
-json.posts_path <%= plural_table_name %>_path
+json.<%= singular_table_name%>_path <%= singular_table_name%>_path(@<%=singular_table_name%>)
+json.<%= plural_table_name %>_path <%= plural_table_name %>_path

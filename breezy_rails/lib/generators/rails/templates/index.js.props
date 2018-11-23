@@ -5,10 +5,10 @@ json.<%= plural_table_name %> do
     <%- attributes_list_with_timestamps.each do |attr| -%>
     json.<%=attr%> <%= singular_table_name %>.<%=attr%>
     <%- end -%>
-    json.edit_post_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
-    json.post_path <%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.edit_<%=singular_table_name%>_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.<%=singular_table_name%>_path <%=singular_table_name%>_path(<%=singular_table_name%>)
   end
 end
 
 
-json.new_post_path new_<%= singular_table_name %>_path
+json.new_<%= singular_table_name %>_path new_<%= singular_table_name %>_path

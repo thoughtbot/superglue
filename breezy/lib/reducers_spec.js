@@ -48,7 +48,7 @@ describe('reducers', () => {
         const action = {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
-            page: {csrf_token: 'some_token'}
+            page: {csrfToken: 'some_token'}
           }
         }
         const nextState = metaReducer(prevState, action)
@@ -91,7 +91,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header']
@@ -118,7 +118,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header']
@@ -139,7 +139,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -162,7 +162,7 @@ describe('reducers', () => {
                 cart: {}
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -182,7 +182,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -208,7 +208,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -228,7 +228,7 @@ describe('reducers', () => {
                 cart
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -264,7 +264,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -299,7 +299,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -333,7 +333,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {}
           }
@@ -344,7 +344,7 @@ describe('reducers', () => {
           action: 'graft',
           path: 'header.cart',
           title: 'foobar',
-          csrf_token: 'token',
+          csrfToken: 'token',
           assets: ['application-123.js']
         }
 
@@ -366,7 +366,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {}
           }
@@ -383,7 +383,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -396,7 +396,7 @@ describe('reducers', () => {
           action: 'graft',
           path: 'header.cart',
           title: 'foobar',
-          csrf_token: 'token',
+          csrfToken: 'token',
           joints: {
             info: ['header.cart.cat', 'header.cart.cat'],
             footer: ['footer']
@@ -423,7 +423,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart.cat', 'header.cart'],
@@ -443,7 +443,7 @@ describe('reducers', () => {
             pageKey: '/foo',
             page: {
               data: {},
-              csrf_token: 'token',
+              csrfToken: 'token',
               assets: ['application-123.js']
             }
           }
@@ -451,7 +451,7 @@ describe('reducers', () => {
 
         expect(nextState['/foo']).toEqual(jasmine.objectContaining({
           data: {},
-          csrf_token: 'token',
+          csrfToken: 'token',
           cachedAt: jasmine.any(Number),
           assets: [ 'application-123.js' ],
           pageKey: '/foo',
@@ -471,7 +471,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['header.cart']
@@ -487,7 +487,7 @@ describe('reducers', () => {
                 }
               }
             },
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-123.js'],
             joints: {
               info: ['profile.header.cart']

@@ -58,7 +58,6 @@ class BreezyTemplateTest < ActionView::TestCase
     self.request_forgery = false
     BreezyTemplate.configuration.track_sprockets_assets = []
     BreezyTemplate.configuration.track_pack_assets = []
-    BreezyTemplate.key_format camelize: :lower
 
     # this is a stub. Normally this would be set by the
     # controller locals
@@ -239,7 +238,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","csrf_token":"secret","joints":joints,"defers":defers});
+        return ({"data":{"content":"hello"},"screen":"test","csrfToken":"secret","joints":joints,"defers":defers});
       })()
     JS
 
@@ -260,48 +259,6 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return ({"data":{"content":"hello"},"screen":"test","title":"this is fun","assets":["/test.js","/test.css"],"joints":joints,"defers":defers});
-      })()
-    JS
-
-    assert_equal expected, result
-  end
-
-  test "key_format! with parameter" do
-    result = jbuild(<<-JBUILDER)
-      json.key_format! :downcase
-      json.camel_style "for JS"
-    JBUILDER
-
-    expected = strip_format(<<-JS)
-      (function(){
-        var joints={};
-        var cache={};
-        var defers=[];
-        return ({"data":{"camel_style":"for JS"},"screen":"test","joints":joints,"defers":defers});
-      })()
-    JS
-
-    assert_equal expected, result
-  end
-
-  test "key_format! propagates to child elements" do
-    result = jbuild(<<-JBUILDER)
-      json.key_format! :upcase
-      json.level1 "one"
-      json.level2 do
-        json.value "two"
-      end
-    JBUILDER
-
-    expected = strip_format(<<-JS)
-      (function(){
-        var joints={};
-        var cache={};
-        var defers=[];
-        return ({"data":{
-          "LEVEL1":"one",
-          "LEVEL2":{"VALUE":"two"}
-        },"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 

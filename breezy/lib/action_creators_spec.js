@@ -44,7 +44,7 @@ const successfulBody = () => {
     `(function() {
         return {
           data: { heading: 'Some heading 2' },
-          csrf_token: 'token',
+          csrfToken: 'token',
           assets: [],
           defers: []
         };
@@ -268,7 +268,7 @@ describe('action creators', () => {
     it('fires SAVE_RESPONSE and process a page', () => {
      const page = {
         data: { heading: 'Some heading 2' },
-        csrf_token: 'token',
+        csrfToken: 'token',
         assets: []
       }
       const store = mockStore(initialState())
@@ -279,7 +279,7 @@ describe('action creators', () => {
             pageKey: '/foo',
             page: {
               data: { heading: 'Some heading 2' },
-              csrf_token: 'token',
+              csrfToken: 'token',
               assets: []
             }
           }
@@ -306,7 +306,7 @@ describe('action creators', () => {
 
      const page = {
         data: { heading: 'Some heading 2' },
-        csrf_token: 'token',
+        csrfToken: 'token',
         assets: [],
         defers: [{url: '/some_defered_request?_bz=body'}]
       }
@@ -353,7 +353,7 @@ describe('action creators', () => {
               data: 'success',
               action: 'graft',
               path: 'body',
-              csrf_token: 'token',
+              csrfToken: 'token',
               assets: [],
               defers: []
             };
@@ -379,7 +379,7 @@ describe('action creators', () => {
         data: 'success',
         action: 'graft',
         path: 'heading.cart',
-        csrf_token: '',
+        csrfToken: '',
         assets: [],
         defers: []
       }
@@ -416,7 +416,7 @@ describe('action creators', () => {
 
      const page = {
         data: { heading: 'Some heading 2' },
-        csrf_token: 'token',
+        csrfToken: 'token',
         assets: [],
         defers: [{url: '/some_defered_request?_bz=body'}]
       }
@@ -492,7 +492,7 @@ describe('action creators', () => {
             pageKey: '/foo',
             page: {
               data: { heading: 'Some heading 2' },
-              csrf_token: 'token',
+              csrfToken: 'token',
               assets: [],
               defers: [],
             }
@@ -672,7 +672,7 @@ describe('action creators', () => {
               data: 'success',
               action: 'graft',
               path: 'heading.cart',
-              csrf_token: 'token',
+              csrfToken: 'token',
               assets: [],
               defers: defers
             };

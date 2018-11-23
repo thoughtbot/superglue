@@ -4,7 +4,7 @@ export const visitSuccess = () => {
           return {
             data: { heading: 'Some heading 2' },
             title: 'title 2',
-            csrf_token: 'token',
+            csrfToken: 'token',
             screen: 'about',
             assets: ['application-123.js', 'application-123.js']
           };
@@ -24,7 +24,7 @@ export const graftSuccessWithNewZip = () => {
             action: 'graft',
             path: 'address',
             title: 'foobar',
-            csrf_token: 'token',
+            csrfToken: 'token',
             assets: ['application-new123.js', 'application-new123.js']
           };
         })();`,

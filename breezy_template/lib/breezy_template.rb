@@ -34,7 +34,6 @@ class BreezyTemplate
 
   self.template_lookup_options = { handlers: [:breezy, :props] }
 
-  @@key_formatter = KeyFormatter.new({camelize: :lower})
   @@ignore_nil    = false
 
   def initialize(context, options = {})
@@ -44,7 +43,7 @@ class BreezyTemplate
     @joints = {}
 
     @attributes = {}
-    @key_formatter = options.fetch(:key_formatter){ @@key_formatter ? @@key_formatter.clone : nil}
+    @key_formatter = KeyFormatter.new({camelize: :lower})
     @ignore_nil = options.fetch(:ignore_nil, @@ignore_nil)
 
     yield self if ::Kernel.block_given?
@@ -104,15 +103,6 @@ class BreezyTemplate
     end
   ensure
     @path.pop
-  end
-
-  def key_format!(*args)
-    @key_formatter = KeyFormatter.new(*args)
-  end
-
-  # Same as the instance method key_format! except sets the default.
-  def self.key_format(*args)
-    @@key_formatter = KeyFormatter.new(*args)
   end
 
   def empty!

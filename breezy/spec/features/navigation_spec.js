@@ -135,7 +135,7 @@ describe('navigation', () => {
           '/foo':{
             data: { heading: 'Some heading 2' },
             title: 'title 2',
-            csrf_token: 'token',
+            csrfToken: 'token',
             screen: 'about',
             assets: ['application-123.js', 'application-123.js'],
             cachedAt: jasmine.any(Number),

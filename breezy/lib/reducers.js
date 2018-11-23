@@ -187,7 +187,7 @@ export function metaReducer (state = {}, action) {
   }
   case SAVE_RESPONSE: {
     const {page} = action.payload
-    return {...state, csrfToken: page.csrf_token}
+    return {...state, csrfToken: page.csrfToken}
   }
   case SET_CSRF_TOKEN: {
     const {csrfToken} = action.payload

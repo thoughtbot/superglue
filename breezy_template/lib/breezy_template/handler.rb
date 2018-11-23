@@ -15,7 +15,6 @@ class BreezyTemplate
         if !(__already_defined && __already_defined != "method")
           json.merge!({data: json._found! || json.empty! })
 
-          json.key_format! :downcase
           json.set! :screen, '#{self.template_id(template)}'
 
           if defined?(breezy) && breezy

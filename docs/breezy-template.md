@@ -8,6 +8,7 @@ Example:
 
 ```ruby
 json.menu do
+  # all keys will be formatted as camelCase for JS
   json.current_user do
     json.email current_user.email
     json.avatar current_user.avatar
@@ -301,7 +302,7 @@ When Breezy receives the response, it will automatically kick off `remote(?_bz=p
 
 ## Differences from JBuilder
 
-### Blocks, Arrays, Sets are NOT additive. 
+### Blocks, Arrays, Sets are NOT additive.
 
 The last one wins! So
 
@@ -390,7 +391,7 @@ json.set! :nested, to_nest
 
 Any collection passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. See [lists](breezy-template.md#lists)
 
-### No key format
+### key format defaulted to camelCase
 
-Key formatting via `json.key_format` is removed.
+Key formatting is defaulted to `camelCase`
 

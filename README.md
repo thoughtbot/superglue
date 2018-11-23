@@ -14,7 +14,7 @@ Breezy is a Turbolinks inspired library for React, Redux, and Rails. It brings s
 
 # Documentation
 
-Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy)
+Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure to select the correct version. `master` will always be in development.
 
 # At a glance
 
@@ -78,7 +78,7 @@ class PostsIndex extends React.Component {
     {this.props.posts.map((post) => {
        return (
          <li>
-           <a onClick={() => this.visit(post.post_path)}>
+           <a onClick={() => this.visit(post.postPath)}>
              {post.title}
            </a>
          </li>

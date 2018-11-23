@@ -2,6 +2,7 @@ require 'breezy_template/breezy_template'
 
 require 'breezy_template/blank'
 require 'breezy_template/var'
+require 'breezy_template/key_formatter'
 require 'breezy_template/errors'
 
 require 'breezy_template/active_support'
@@ -33,6 +34,7 @@ class BreezyTemplate
 
   self.template_lookup_options = { handlers: [:breezy, :props] }
 
+  @@key_formatter = {camelize: :lower}
   @@ignore_nil    = false
 
   def initialize(context, options = {})
@@ -42,6 +44,7 @@ class BreezyTemplate
     @joints = {}
 
     @attributes = {}
+    @key_formatter = options.fetch(:key_formatter){ @@key_formatter ? @@key_formatter.clone : nil}
     @ignore_nil = options.fetch(:ignore_nil, @@ignore_nil)
 
     yield self if ::Kernel.block_given?
@@ -101,6 +104,15 @@ class BreezyTemplate
     end
   ensure
     @path.pop
+  end
+
+  def key_format!(*args)
+    @key_formatter = KeyFormatter.new(*args)
+  end
+
+  # Same as the instance method key_format! except sets the default.
+  def self.key_format(*args)
+    @@key_formatter = KeyFormatter.new(*args)
   end
 
   def empty!
@@ -211,7 +223,7 @@ class BreezyTemplate
   end
 
   def _key(key)
-    key.to_s
+    @key_formatter ? @key_formatter.format(key) : key.to_s
   end
 
   def _set_value(key, value)
@@ -249,12 +261,12 @@ class BreezyTemplate
   end
 
   def _scope
-    parent_attributes = @attributes
+    parent_attributes, parent_formatter = @attributes, @key_formatter
     @attributes = BLANK
     yield
     @attributes
   ensure
-    @attributes = parent_attributes
+    @attributes, @key_formatter = parent_attributes, parent_formatter
   end
 
   def _is_collection?(object)

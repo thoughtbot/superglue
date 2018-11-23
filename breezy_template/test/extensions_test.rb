@@ -265,6 +265,48 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "key_format! with parameter" do
+    result = jbuild(<<-JBUILDER)
+      json.key_format! camelize: [:lower]
+      json.camel_style "for JS"
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        return ({"data":{"camelStyle":"for JS"},"joints":joints,"defers":defers});
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "key_format! propagates to child elements" do
+    result = jbuild(<<-JBUILDER)
+      json.key_format! :upcase
+      json.level1 "one"
+      json.level2 do
+        json.value "two"
+      end
+    JBUILDER
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        return ({"data":{
+          "LEVEL1":"one",
+          "LEVEL2":{"VALUE":"two"}
+        },"joints":joints,"defers":defers});
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
   test "renders partial via the option through set!" do
     @post = BLOG_POST_COLLECTION.first
     Rails.cache.clear

@@ -34,7 +34,7 @@ class BreezyTemplate
 
   self.template_lookup_options = { handlers: [:breezy, :props] }
 
-  @@key_formatter = {camelize: :lower}
+  @@key_formatter = KeyFormatter.new({camelize: :lower})
   @@ignore_nil    = false
 
   def initialize(context, options = {})

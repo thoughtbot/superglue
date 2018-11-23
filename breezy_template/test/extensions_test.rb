@@ -58,6 +58,7 @@ class BreezyTemplateTest < ActionView::TestCase
     self.request_forgery = false
     BreezyTemplate.configuration.track_sprockets_assets = []
     BreezyTemplate.configuration.track_pack_assets = []
+    BreezyTemplate.key_format camelize: :lower
 
     # this is a stub. Normally this would be set by the
     # controller locals
@@ -267,7 +268,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "key_format! with parameter" do
     result = jbuild(<<-JBUILDER)
-      json.key_format! camelize: [:lower]
+      json.key_format! :downcase
       json.camel_style "for JS"
     JBUILDER
 
@@ -276,7 +277,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        return ({"data":{"camelStyle":"for JS"},"joints":joints,"defers":defers});
+        return ({"data":{"camel_style":"for JS"},"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -300,7 +301,7 @@ class BreezyTemplateTest < ActionView::TestCase
         return ({"data":{
           "LEVEL1":"one",
           "LEVEL2":{"VALUE":"two"}
-        },"joints":joints,"defers":defers});
+        },"screen":"test","joints":joints,"defers":defers});
       })()
     JS
 
@@ -324,7 +325,7 @@ class BreezyTemplateTest < ActionView::TestCase
         return ({"data":{"post":{
           "id":1,
           "body":"post body 1",
-          "author":{"first_name":"David","last_name":"Heinemeier Hansson"}
+          "author":{"firstName":"David","lastName":"Heinemeier Hansson"}
         }},"screen":"test","joints":joints,"defers":defers});
       })()
     JS
@@ -502,16 +503,16 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return ({"data":[
-          {"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":2,"body":"post body 2","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":3,"body":"post body 3","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":4,"body":"post body 4","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":5,"body":"post body 5","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":6,"body":"post body 6","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":7,"body":"post body 7","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}},
-          {"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}},
-          {"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}}
+          {"id":1,"body":"post body 1","author":{"firstName":"David","lastName":"Heinemeier Hansson"}},
+          {"id":2,"body":"post body 2","author":{"firstName":"Pavel","lastName":"Pravosud"}},
+          {"id":3,"body":"post body 3","author":{"firstName":"David","lastName":"Heinemeier Hansson"}},
+          {"id":4,"body":"post body 4","author":{"firstName":"Pavel","lastName":"Pravosud"}},
+          {"id":5,"body":"post body 5","author":{"firstName":"David","lastName":"Heinemeier Hansson"}},
+          {"id":6,"body":"post body 6","author":{"firstName":"Pavel","lastName":"Pravosud"}},
+          {"id":7,"body":"post body 7","author":{"firstName":"David","lastName":"Heinemeier Hansson"}},
+          {"id":8,"body":"post body 8","author":{"firstName":"Pavel","lastName":"Pravosud"}},
+          {"id":9,"body":"post body 9","author":{"firstName":"David","lastName":"Heinemeier Hansson"}},
+          {"id":10,"body":"post body 10","author":{"firstName":"Pavel","lastName":"Pravosud"}}
         ],"screen":"test","joints":joints,"defers":defers});
       })()
     JS
@@ -828,7 +829,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
+        cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
         return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
       })()
     JS
@@ -865,7 +866,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        cache["#{cache_keys[0]}"]={"id":1,"body":"hit","author":{"first_name":"John","last_name":"Smith"}};
+        cache["#{cache_keys[0]}"]={"id":1,"body":"hit","author":{"firstName":"John","lastName":"Smith"}};
         return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"defers":defers});
       })()
     JS
@@ -889,16 +890,16 @@ class BreezyTemplateTest < ActionView::TestCase
         var joints={};
         var cache={};
         var defers=[];
-        cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
-        cache["#{cache_keys[1]}"]={"id":2,"body":"post body 2","author":{"first_name":"Pavel","last_name":"Pravosud"}};
-        cache["#{cache_keys[2]}"]={"id":3,"body":"post body 3","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
-        cache["#{cache_keys[3]}"]={"id":4,"body":"post body 4","author":{"first_name":"Pavel","last_name":"Pravosud"}};
-        cache["#{cache_keys[4]}"]={"id":5,"body":"post body 5","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
-        cache["#{cache_keys[5]}"]={"id":6,"body":"post body 6","author":{"first_name":"Pavel","last_name":"Pravosud"}};
-        cache["#{cache_keys[6]}"]={"id":7,"body":"post body 7","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
-        cache["#{cache_keys[7]}"]={"id":8,"body":"post body 8","author":{"first_name":"Pavel","last_name":"Pravosud"}};
-        cache["#{cache_keys[8]}"]={"id":9,"body":"post body 9","author":{"first_name":"David","last_name":"Heinemeier Hansson"}};
-        cache["#{cache_keys[9]}"]={"id":10,"body":"post body 10","author":{"first_name":"Pavel","last_name":"Pravosud"}};
+        cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
+        cache["#{cache_keys[1]}"]={"id":2,"body":"post body 2","author":{"firstName":"Pavel","lastName":"Pravosud"}};
+        cache["#{cache_keys[2]}"]={"id":3,"body":"post body 3","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
+        cache["#{cache_keys[3]}"]={"id":4,"body":"post body 4","author":{"firstName":"Pavel","lastName":"Pravosud"}};
+        cache["#{cache_keys[4]}"]={"id":5,"body":"post body 5","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
+        cache["#{cache_keys[5]}"]={"id":6,"body":"post body 6","author":{"firstName":"Pavel","lastName":"Pravosud"}};
+        cache["#{cache_keys[6]}"]={"id":7,"body":"post body 7","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
+        cache["#{cache_keys[7]}"]={"id":8,"body":"post body 8","author":{"firstName":"Pavel","lastName":"Pravosud"}};
+        cache["#{cache_keys[8]}"]={"id":9,"body":"post body 9","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
+        cache["#{cache_keys[9]}"]={"id":10,"body":"post body 10","author":{"firstName":"Pavel","lastName":"Pravosud"}};
         return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"],cache["#{cache_keys[2]}"],cache["#{cache_keys[3]}"],cache["#{cache_keys[4]}"],cache["#{cache_keys[5]}"],cache["#{cache_keys[6]}"],cache["#{cache_keys[7]}"],cache["#{cache_keys[8]}"],cache["#{cache_keys[9]}"]],"screen":"test","joints":joints,"defers":defers});
       })()
     JS

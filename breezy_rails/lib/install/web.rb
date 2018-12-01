@@ -56,7 +56,7 @@ if File.exist?(babelrc)
       "alias": {
         "views": "./app/views",
         "components": "./app/components",
-        "javascripts": "./app/javascripts"
+        "javascript": "./app/javascript"
       }
     }])
 

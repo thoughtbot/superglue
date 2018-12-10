@@ -67,6 +67,7 @@ describe('Nav', () => {
       render(
         <Provider store={store}>
           <Nav
+            store={store}
             mapping={{'home': Home, 'about': ExampleAbout}}
             initialPageKey={'/bar'}
             history={history}
@@ -104,6 +105,7 @@ describe('Nav', () => {
       render(
         <Provider store={store}>
           <Nav
+            store={store}
             mapping={{'home': Home, 'about': ExampleAbout}}
             initialPageKey={'/bar'}
             history={history}
@@ -147,6 +149,7 @@ describe('Nav', () => {
       render(
         <Provider store={store}>
           <Nav
+            store={store}
             mapping={{'home': ExampleHome, 'about': ExampleAbout}}
             initialPageKey={'/bar'}
             history={history}

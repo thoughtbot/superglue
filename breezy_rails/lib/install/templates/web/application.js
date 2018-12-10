@@ -41,6 +41,7 @@ class App extends React.Component {
   render() {
     return <Provider store={store}>
       <Nav
+        store={store}
         mapping={this.props.mapping}
         history={history}
         initialPageKey={initialPageKey}

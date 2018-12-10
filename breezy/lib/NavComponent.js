@@ -50,7 +50,7 @@ class Nav extends React.Component {
 
   navigateTo (pageKey, {action, ownProps} = {action: 'push', ownProps: {}}) {
     pageKey = withoutBZParams(pageKey)
-    const {store} = this.context
+    const {store} = this.props
 
     const historyArgs = [pageKey, {
       pageKey,
@@ -83,7 +83,7 @@ class Nav extends React.Component {
   }
 
   onHistoryChange (location, action) {
-    const {store} = this.context
+    const {store} = this.props
     store.dispatch({
       type: HISTORY_CHANGE,
       payload: {
@@ -105,7 +105,7 @@ class Nav extends React.Component {
   }
 
   notFound (screen) {
-    const {store} = this.context
+    const {store} = this.props
     let reminder = ''
     if (!screen) {
       reminder = 'Did you forget to use_breezy in your controllers?'
@@ -124,8 +124,11 @@ class Nav extends React.Component {
   }
 
   render () {
-    const {store} = this.context
-    const {mapping} = this.props
+    const {
+      mapping,
+      store
+    } = this.props
+
     const {pageKey, ownProps} = this.state
     const {screen} = store.getState().pages[pageKey]
     const Component = mapping[screen]
@@ -137,7 +140,5 @@ class Nav extends React.Component {
     }
   }
 }
-
-Nav.contextTypes = {store: PropTypes.object}
 
 export default Nav

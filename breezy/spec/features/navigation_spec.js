@@ -100,6 +100,7 @@ describe('navigation', () => {
       render(
         <Provider store={store}>
           <Nav
+            store={store}
             mapping={{'home': VisibleHome, 'about': VisibleAbout}}
             history={history}
             initialPageKey={initialPageKey}
@@ -199,6 +200,7 @@ describe('navigation', () => {
       render(
         <Provider store={store}>
           <Nav
+            store={store}
             mapping={{'home': VisibleHome}}
             history={history}
             initialPageKey={initialPageKey}

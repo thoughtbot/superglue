@@ -7,7 +7,7 @@ Breezy is a Turbolinks inspired library for React, Redux, and Rails. It brings s
 # Features
 
 1. **The Best of Rails, React, and Redux** Use your convienent URL helpers, bring in [out-of-the-box](https://ant.design/components/button/) React components, and, when you need to, get down and dirty with Redux.
-2. **Batteries Included** Be productive with Rails, React and Redux from day one with easy-to-use thunks, immutable action creators, an opinionated store shape, and scaffolds for minimal setup.
+2. **Batteries Included** Be productive with Rails, React and Redux from day one with easy-to-use thunks, an opinionated store shape, and scaffolds for minimal setup.
 3. **API** ~~**first**~~ **later development** Save the work for when you actually need it. With Breezy, you can build SPAs without APIs and skip the hassle of building another set of routes/controllers/serializers/tests.
 4. **All your resources in a single request** Move over GraphQL, classic multi-page applications already achieves this to some extent. Breezy just enhances your Rails views to make it work for React and Redux.
 5. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.

@@ -4,18 +4,12 @@ import {
   forEachJointAtNameAcrossAllPages,
   pagePath,
 } from './utils/helpers'
-import {setIn, getIn, extendIn, delIn} from'./utils/immutability'
+import {setIn, getIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
 import {
+  REMOVE_PAGE,
   SAVE_RESPONSE,
   HANDLE_GRAFT,
-  SET_IN_PAGE,
-  DEL_IN_PAGE,
-  EXTEND_IN_PAGE,
-  SET_IN_JOINT,
-  DEL_IN_JOINT,
-  EXTEND_IN_JOINT,
-  REMOVE_PAGE,
   OVERRIDE_VISIT_SEQ,
   HISTORY_CHANGE,
   SET_BASE_URL,
@@ -45,34 +39,6 @@ function saveResponse (state, pageKey, page) {
   })
 
   state[pageKey] = page
-
-  return state
-}
-
-function extendInByJoint (state, name, value, subpath) {
-  state = {...state}
-
-  forEachJointAtNameAcrossAllPages(state, name, (pageKey, page, pathToJoint)=>{
-    const fullpath = [pathToJoint]
-    if (subpath) {
-      fullpath.push(subpath)
-    }
-    state[pageKey] = extendIn(page, fullpath.join('.'), value)
-  })
-
-  return state
-}
-
-function delInByJoint (state, name, subpath = null) {
-  state = {...state}
-
-  forEachJointAtNameAcrossAllPages(state, name, (pageKey, page, pathToJoint)=>{
-    const fullpath = [pathToJoint]
-    if (subpath) {
-      fullpath.push(subpath)
-    }
-    state[pageKey] = delIn(page, fullpath.join('.'))
-  })
 
   return state
 }
@@ -135,40 +101,6 @@ export function pageReducer (state = {}, action) {
     delete nextState[pageKey]
 
     return nextState
-  }
-  case SET_IN_PAGE: {
-    const {pageKey, keypath, value} = action.payload
-    const fullPath = pagePath(pageKey, keypath)
-    //todo: make setIn accept an array
-    const nextState = setIn(state, fullPath, value)
-
-    return nextState
-  }
-  case DEL_IN_PAGE: {
-    const {pageKey, keypath} = action.payload
-    const fullPath = pagePath(pageKey, keypath)
-    const nextState = delIn(state, fullPath)
-
-    return nextState
-  }
-  case EXTEND_IN_PAGE: {
-    const {pageKey, keypath, value} = action.payload
-    const fullPath = pagePath(pageKey, keypath)
-    const nextState = extendIn(state, fullPath, value)
-
-    return nextState
-  }
-  case SET_IN_JOINT: {
-    const {name, keypath, value} = action.payload
-    return setInByJoint(state, name, value, keypath)
-  }
-  case DEL_IN_JOINT: {
-    const {name, keypath} = action.payload
-    return delInByJoint(state, name, keypath)
-  }
-  case EXTEND_IN_JOINT: {
-    const {name, keypath, value} = action.payload
-    return extendInByJoint(state, name, value, keypath)
   }
   default:
     return state

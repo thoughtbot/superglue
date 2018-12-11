@@ -12,6 +12,7 @@ import {
 
 export {mapStateToProps, mapDispatchToProps, enhanceVisitWithBrowserBehavior} from './utils/react'
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
+export {getIn} from './utils/immutability.js'
 export {setWindow, unsetWindow}
 export function stop () {
   unsetWindow()

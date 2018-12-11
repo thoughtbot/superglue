@@ -1,12 +1,6 @@
 import {
   visit,
   remote,
-  setInPage,
-  delInPage,
-  extendInPage,
-  setInJoint,
-  delInJoint,
-  extendInJoint,
   saveAndProcessSJRPage,
   ensureSingleVisit,
 } from '../action_creators'
@@ -33,12 +27,6 @@ export const mapDispatchToProps = {
   visit,
   ensureSingleVisit,
   remote,
-  setInPage,
-  delInPage,
-  extendInPage,
-  setInJoint,
-  delInJoint,
-  extendInJoint,
   saveAndProcessSJRPage,
 }
 

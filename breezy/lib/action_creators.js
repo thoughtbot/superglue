@@ -15,12 +15,6 @@ import {withoutBZParams} from './utils/url'
 import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
-  SET_IN_PAGE,
-  DEL_IN_PAGE,
-  EXTEND_IN_PAGE,
-  SET_IN_JOINT,
-  DEL_IN_JOINT,
-  EXTEND_IN_JOINT,
   BEFORE_FETCH,
   BREEZY_ERROR,
   BREEZY_GRAFTING_ERROR,
@@ -50,70 +44,6 @@ export function handleGraft ({pageKey, node, pathToNode, joints={}}) {
       node,
       pathToNode,
       joints
-    }
-  }
-}
-
-export function setInPage ({pageKey, keypath, value}) {
-  return {
-    type: SET_IN_PAGE,
-    payload: {
-      pageKey,
-      keypath,
-      value
-    }
-  }
-}
-
-export function delInPage ({pageKey, keypath}) {
-  return {
-    type: DEL_IN_PAGE,
-    payload: {
-      pageKey,
-      keypath,
-    }
-  }
-}
-
-export function extendInPage ({pageKey, keypath, value}) {
-  return {
-    type: EXTEND_IN_PAGE,
-    payload:{
-      pageKey,
-      keypath,
-      value
-    }
-  }
-}
-
-export function setInJoint ({name, keypath, value}) {
-  return {
-    type: SET_IN_JOINT,
-    payload: {
-      name,
-      keypath,
-      value
-    }
-  }
-}
-
-export function delInJoint ({name, keypath}) {
-  return {
-    type: DEL_IN_JOINT,
-    payload: {
-      name,
-      keypath
-    }
-  }
-}
-
-export function extendInJoint ({name, keypath, value}) {
-  return {
-    type: EXTEND_IN_JOINT,
-    payload: {
-      name,
-      keypath,
-      value
     }
   }
 }

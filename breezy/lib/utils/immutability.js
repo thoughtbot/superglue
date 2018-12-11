@@ -139,46 +139,4 @@ function setIn (object, keypath, value) {
   return results[0]
 }
 
-function delIn (object, keypath) {
-  keypath = normalizeKeyPath(keypath)
-
-  let results = {}
-  let parents = {}
-  let i
-
-  parents[0] = object
-
-  for (i = 0; i < keypath.length ; i++) {
-    parents[i + 1] = atKey(parents[i], keypath[i])
-  }
-
-  for (i = keypath.length - 1; i >= 0; i--) {
-    if (i === keypath.length - 1) {
-      results[i] = cloneWithout(parents[i], keypath[i])
-    } else {
-      results[i] = clone(parents[i])
-      results[i][keypath[i]] = results[i + 1]
-    }
-  }
-
-  return results[0]
-}
-
-function ext (obj1, obj2) {
-  if (isArray(obj1)) {
-    return [...obj1, ...obj2]
-  } else {
-    return {...obj1, ...obj2}
-  }
-}
-
-function extendIn (source, keypath, extension) {
-  keypath = normalizeKeyPath(keypath)
-  if (keypath.length === 0) return ext(source, extension)
-
-  let data = clone(getIn(source, keypath))
-
-  return setIn(source, keypath, ext(data, extension))
-}
-
-export {getIn, setIn, delIn, extendIn}
+export {getIn, setIn}

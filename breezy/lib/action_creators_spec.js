@@ -6,12 +6,6 @@ import {
   wrappedFetch,
   remote,
   handleGraft,
-  setInPage,
-  delInPage,
-  extendInPage,
-  setInJoint,
-  delInJoint,
-  extendInJoint,
   beforeFetch,
   handleError,
   saveResponse,
@@ -94,138 +88,6 @@ describe('action creators', () => {
           node,
           pathToNode,
           joints,
-        }
-      })
-    })
-  })
-
-  describe('setInPage', () => {
-    it('fires BREEZY_SET_IN_PAGE', () => {
-      const pageKey = '/test?hello=123'
-      const keypath = 'a.b.c'
-      const value = {d: 'foo'}
-
-      const action = setInPage({
-        pageKey,
-        keypath,
-        value,
-      })
-
-      expect(action).toEqual({
-        type: '@@breezy/SET_IN_PAGE',
-        payload: {
-          pageKey,
-          keypath,
-          value,
-        }
-      })
-    })
-  })
-
-  describe('delInPage', () => {
-    it('fires immutable BREEZY_DEL_IN_PAGE', () => {
-      const pageKey = '/test?hello=123'
-      const keypath = 'a.b.c'
-
-      const action = delInPage({
-        pageKey ,
-        keypath,
-      })
-
-      expect(action).toEqual({
-        type: '@@breezy/DEL_IN_PAGE',
-        payload: {
-          pageKey,
-          keypath,
-        }
-      })
-    })
-  })
-
-  describe('extendInPage', () => {
-    it('fires immutable BREEZY_EXTEND_IN_PAGE', () => {
-      const pageKey = '/test?hello=123'
-      const keypath = 'a.b.c'
-      const value = {d: 'foo'}
-
-      const action = extendInPage({
-        pageKey,
-        keypath,
-        value,
-      })
-
-      expect(action).toEqual({
-        type: '@@breezy/EXTEND_IN_PAGE',
-        payload: {
-          pageKey,
-          keypath,
-          value,
-        }
-      })
-    })
-  })
-
-  describe('setInJoint', () => {
-    it('fires immutable BREEZY_SET_IN_JOINT', () => {
-      const name = 'some_partial'
-      const keypath = 'a.b.c'
-      const value = {d: 'foo'}
-
-      const action = setInJoint({
-        name,
-        keypath,
-        value,
-      })
-
-      expect(action).toEqual({
-        type: '@@breezy/SET_IN_JOINT',
-        payload: {
-          name,
-          keypath,
-          value,
-        }
-      })
-    })
-  })
-
-  describe('delInJoint', () => {
-    it('fires immutable BREEZY_DEL_IN_JOINT', () => {
-      const name = 'some_partial'
-      const keypath = 'a.b.c'
-
-      const action = delInJoint({
-        name,
-        keypath,
-      })
-
-      expect(action).toEqual({
-        type: '@@breezy/DEL_IN_JOINT',
-        payload: {
-          name,
-          keypath,
-        }
-      })
-    })
-  })
-
-  describe('extendInJoint', () => {
-    it('fires immutable BREEZY_DEL_IN_JOINT', () => {
-      const name = 'some_partial'
-      const keypath = 'a.b.c'
-      const value = {d: 'foo'}
-
-      const action = extendInJoint({
-        name,
-        keypath,
-        value,
-      })
-
-      expect(action).toEqual({
-        type: '@@breezy/EXTEND_IN_JOINT',
-        payload: {
-          name,
-          keypath,
-          value,
         }
       })
     })
@@ -392,6 +254,58 @@ describe('action creators', () => {
             node: 'success',
             pathToNode: 'heading.cart',
             joints: {}
+          }
+        },
+        {
+          type: '@@breezy/UPDATE_ALL_JOINTS',
+          payload: {
+            pageKey: '/foo',
+          }
+        }
+      ]
+
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual((expectedActions))
+      })
+    })
+
+    it ('fires HANDLE_GRAFT, and process a page with a joint',  () => {
+      const store = mockStore({...initialState(), pages: {
+        '/foo': {}
+      }})
+
+      const page = {
+        data: 'success',
+        action: 'graft',
+        path: 'heading.cart',
+        csrfToken: '',
+        assets: [],
+        defers: [],
+        joints: {
+          info: ['header.email']
+        },
+        lastJointName: 'info',
+        lastJointPath: 'header.email',
+      }
+
+      const expectedActions = [
+        {
+          type: '@@breezy/HANDLE_GRAFT',
+          payload: {
+            pageKey: '/foo',
+            node: 'success',
+            pathToNode: 'heading.cart',
+            joints: {
+              info: ['header.email']
+            }
+          }
+        },
+        {
+          type: '@@breezy/MATCH_JOINTS_IN_PAGE',
+          payload: {
+            pageKey: '/foo',
+            lastJointName: 'info',
+            lastJointPath: 'header.email'
           }
         },
         {

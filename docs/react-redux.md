@@ -33,21 +33,13 @@ You will also receive additional props from the use of the `<NavComponent>`
 
 ### mapDispatchToProps
 
-A map of thunks and useful immutable action creators.
-
-Here's what's included:
+A map of handy thunks.
 
 ```javascript
 export const mapDispatchToProps = {
   ensureSingleVisit,
   visit,
   remote,
-  setInPage,
-  delInPage,
-  extendInPage,
-  setInJoint,
-  delInJoint,
-  extendInJoint,
   saveAndProcessSJRPage,
 }
 ```

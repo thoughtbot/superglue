@@ -22,7 +22,7 @@ const createScene = (html, url='http://localhost') => {
 class Home extends React.Component {
   constructor(props) {
     super(props)
-    this.visit = this.visit.bind(this)
+    this.enhancedVisit = this.visit.bind(this)
   }
 
   visit() {
@@ -34,7 +34,7 @@ class Home extends React.Component {
     return (
       <div>
       Home Page, {this.props.heading}
-      <button onClick={this.visit}> click </button>
+      <button onClick={this.enhancedVisit}> click </button>
       </div>
     )
   }

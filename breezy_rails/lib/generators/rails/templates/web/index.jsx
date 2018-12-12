@@ -15,9 +15,9 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
           <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
           <td>{<%=singular_table_name.camelize(:lower)%>.<%=attr.camelize(:lower)%>}</td>
           <%- end -%>
-          <td><a onClick={ e => this.visit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path)}>Show</a></td>
-          <td><a onClick={ e => this.visit(<%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path)}>Edit</a></td>
-          <td><a onClick={ e => this.visit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path, {method: 'DELETE'})}>Delete</a></td>
+          <td><a onClick={ e => this.enhancedVisit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path)}>Show</a></td>
+          <td><a onClick={ e => this.enhancedVisit(<%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path)}>Edit</a></td>
+          <td><a onClick={ e => this.enhancedVisit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path, {method: 'DELETE'})}>Delete</a></td>
         </tr>
       )
     })
@@ -43,7 +43,7 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
           </tbody>
         </table>
         <br />
-        <a onClick={ e => this.visit(this.props.new<%= singular_table_name.camelize %>Path)}>New <%= singular_table_name.capitalize %></a>
+        <a onClick={ e => this.enhancedVisit(this.props.new<%= singular_table_name.camelize %>Path)}>New <%= singular_table_name.capitalize %></a>
       </div>
     )
   }

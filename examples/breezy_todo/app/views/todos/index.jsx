@@ -15,7 +15,7 @@ class TodosIndex extends Component{
   constructor(props) {
     super(props)
     const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.visit = visit.bind(this)
+    this.enhancedVisit = visit.bind(this)
   }
 
   filterParams() {
@@ -29,11 +29,11 @@ class TodosIndex extends Component{
     }
     const url = this.props.todos_path + this.filterParams()
 
-    this.visit(url, options)
+    this.enhancedVisit(url, options)
   }
 
   deleteTodo(todo) {
-    return this.visit(
+    return this.enhancedVisit(
       todo.todo_path + this.filterParams(),
       {method: 'DELETE'},
     ).then( rsp => {
@@ -51,7 +51,7 @@ class TodosIndex extends Component{
       body: JSON.stringify({todo})
     }
 
-    return this.visit(
+    return this.enhancedVisit(
       todo.todo_path + this.filterParams(),
       options,
     )
@@ -107,7 +107,7 @@ class TodosIndex extends Component{
           <li>
             <a
               className={classNames({selected: !this.props.filter})}
-              onClick={() => this.visit(this.props.todos_path)}
+              onClick={() => this.enhancedVisit(this.props.todos_path)}
             >
               All
             </a>
@@ -116,7 +116,7 @@ class TodosIndex extends Component{
           <li>
             <a
               className={classNames({selected: this.props.filter === 'active'})}
-              onClick={() => this.visit(this.props.todos_path + '?filter=active')}
+              onClick={() => this.enhancedVisit(this.props.todos_path + '?filter=active')}
             >
               Active
             </a>
@@ -125,7 +125,7 @@ class TodosIndex extends Component{
           <li>
             <a
               className={classNames({selected: this.props.filter === 'completed'})}
-              onClick={() => this.visit(this.props.todos_path + '?filter=completed')}
+              onClick={() => this.enhancedVisit(this.props.todos_path + '?filter=completed')}
             >
               Completed
             </a>

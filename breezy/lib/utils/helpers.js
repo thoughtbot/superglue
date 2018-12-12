@@ -16,13 +16,13 @@ export function pagePath (pageKey, keypath) {
   return [pageKey, 'data', keypath].join('.')
 }
 
-export function forEachJointAtNameAcrossAllPages (pages, name, fn = ()=>{}) {
+export function forEachPathToJointAcrossAllPages (pages, name, fn = ()=>{}) {
   Object.entries(pages)
     .forEach(([pageKey, page]) => {
       const keyPaths = page.joints[name] || []
       keyPaths.forEach((path) => {
-        const pathToJoint = ['data', path].join('.')
-        fn(pageKey, page, pathToJoint)
+        const pathToJoint = [pageKey, 'data', path].join('.')
+        fn(pathToJoint)
       })
     })
 }

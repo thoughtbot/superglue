@@ -4,7 +4,7 @@ import {
   parseSJR,
   pagePath,
   forEachJointInPage,
-  forEachJointAtNameAcrossAllPages,
+  forEachPathToJointAcrossAllPages,
 } from './helpers'
 
 describe('pagePath', () => {
@@ -14,7 +14,7 @@ describe('pagePath', () => {
   })
 })
 
-describe('forEachJointAcrossAllPages', () => {
+describe('forEachPathToJointAcrossAllPages', () => {
   it('iterates through each named joint across all pages', () => {
     const pages = {
       '/foo': {
@@ -31,15 +31,15 @@ describe('forEachJointAcrossAllPages', () => {
     }
 
     const iters = []
-    forEachJointAtNameAcrossAllPages(pages, 'header', (pageKey, page, pathToJoint)=>{
-      iters.push([pageKey, page, pathToJoint])
+    forEachPathToJointAcrossAllPages(pages, 'header', (pathToJoint)=>{
+      iters.push(pathToJoint)
     })
 
     expect(iters).toEqual([
-      ['/foo', pages['/foo'], 'data.a.b.c'],
-      ['/foo', pages['/foo'], 'data.d.e.f'],
-      ['/bar', pages['/bar'], 'data.g.h.i'],
-      ['/bar', pages['/bar'], 'data.j.k.l'],
+      '/foo.data.a.b.c',
+      '/foo.data.d.e.f',
+      '/bar.data.g.h.i',
+      '/bar.data.j.k.l',
     ])
   })
 })

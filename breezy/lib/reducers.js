@@ -1,7 +1,7 @@
 import {
   reverseMerge,
   forEachJointInPage,
-  forEachJointAtNameAcrossAllPages,
+  forEachPathToJointAcrossAllPages,
   pagePath,
 } from './utils/helpers'
 import {setIn, getIn} from'./utils/immutability'
@@ -45,12 +45,12 @@ function saveResponse (state, pageKey, page) {
 
 function setInByJoint (state, name, value, subpath = null) {
   state = {...state}
-  forEachJointAtNameAcrossAllPages(state, name, (pageKey, page, pathToJoint)=>{
+  forEachPathToJointAcrossAllPages(state, name, (pathToJoint) =>{
     const fullpath = [pathToJoint]
     if (subpath) {
       fullpath.push(subpath)
     }
-    state[pageKey] = setIn(page, fullpath.join('.'), value)
+    state = setIn(state, fullpath.join('.'), value)
   })
 
   return state

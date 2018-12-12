@@ -44,22 +44,6 @@ function getKey (node, key) {
   }
 }
 
-function cloneWithout (object, key) {
-  if (Array.isArray(object)) {
-    key = getKey(object, key)
-    return object.slice(0, +key).concat(object.slice(+key + 1))
-  } else {
-    let result = {}
-    key = '' + key
-    for (let k in object) {
-      if (object.hasOwnProperty(k) && key !== k) {
-        result[k] = object[k]
-      }
-    }
-    return result
-  }
-}
-
 function isArray (ary) {
   return Array.isArray(ary)
 }

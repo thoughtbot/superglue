@@ -2,7 +2,6 @@ import React from 'react'
 import {withoutBZParams} from './utils/url'
 import {uuidv4} from './utils/helpers'
 import parse from 'url-parse'
-import PropTypes from 'prop-types'
 import {
   BREEZY_ERROR,
   OVERRIDE_VISIT_SEQ,

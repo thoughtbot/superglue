@@ -34,7 +34,7 @@ export function forEachJointPathInPage (page, name, fn = ()=>{}) {
   })
 }
 
-export function jointPathsInPage(page, name) {
+export function jointPathsInPage (page, name) {
   return page.joints[name] || []
 }
 

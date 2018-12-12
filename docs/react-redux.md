@@ -151,7 +151,7 @@ Save and process a rendered view from BreezyTemplate. It will also handle any de
 
 ## Filtering nodes
 
-Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then `setIn` that node back onto its tree on the client side. Joints will also automatically be updated where needed.
+Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Joints will also automatically be updated where needed.
 
 For example:
 
@@ -163,7 +163,7 @@ store.dispatch(visit('/?_bz=header.shopping_cart'))
 
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 
-Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [easy](react-redux.md#updating-joints) to update and manage cross-cutting concerns like a shared header.
+Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [easy](utility.md#forEachJointPathAcrossAllPages) to update and manage cross-cutting concerns like a shared header.
 
 Breezy's opinion is that its much saner to leave the business models to the backend, and shape state on the frontend for ~~only~~ mostly presentational purposes. In other words, there is no `User` model on the front end, just pages with `User`-like data.
 
@@ -200,7 +200,7 @@ pages: {
 
 ## Updating Joints
 
-A Joint is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [BreezyTemplate](breezy-template.md)
+A Joint is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [BreezyTemplate](breezy-template.md#partial-joints)
 
 For example:
 
@@ -228,200 +228,5 @@ Breezy will track all joints used in `cart.js.props` and use it to update the eq
 
 ### Manually updating joints
 
-If you want finer control, or want to perform optimistic updates, breezy provides [action creators](react-redux.md#setinjoint) that will immutably update across `pages`.
+If you want finer control, or want to perform optimistic updates, use [custom reducers](recipes.md#custom-reducers) along side with breezy [helpers](utility.md).
 
-## Custom reducers
-
-If you find yourself needing functionality beyond what the default reducers provide, take a look at how [Breezy shapes it store](react-redux.md#how-does-it-look-like) and add your own reducers:
-
-```javascript
-yarn add reduce-reducers
-```
-
-and modify your `application.js`
-
-```javascript
-....
-import reduceReducers from 'reduce-reducers'
-import {setIn} from '@jho406/breezy/dist/utils/immutability'
-import {pagePath} from '@jho406/breezy/dist/utils/helpers'
-
-function myCustomReducer(state = {}, action) {
-  switch(action.type) {
-  case 'USER_UPLOADS_FILES': {
-    const {pageKey, keypath, someValue} = action
-    const path = pagePath(pageKey, keypath)
-    const nextState = setIn(state, path, someValue)
-
-    return nextState
-  }
-  default:
-    return state
-  }
-}
-
-const {reducer, ...otherStuff} = Breezy.start({...})
-
-const {
-  breezy: breezyReducer,
-  pages: pagesReducer,
-} = reducer
-
-const store = createStore(
-  combineReducers({
-    breezy: breezyReducer,
-    pages: reduceReducers(pagesReducer, myCustomReducer),
-  }),
-  initialState,
-  applyMiddleware(thunk)
-)
-```
-
-## Immutability action creators
-
-Breezy includes immutable action creators inspired by [Scour.js](https://github.com/rstacruz/scour). You would need to use keypaths to traverse the prop tree. For example, given a page that looks like this:
-
-```text
-'/posts': {
-  posts: [
-  {
-    post_id: 1
-    title: 'hello world'
-    comments: [
-      {
-        comment_id: 1,
-        body: 'Here's a comment
-      }
-    ]
-  }
-  ]
-}
-```
-
-To reach the comment body you could do this:
-
-```text
-'posts.0.comment.0.body'
-```
-
-or find first by its attribute and value
-
-```text
-'posts.post_id=1.comment.0.body'
-```
-
-The above would find the first occurance where `post_id=1` before continuing traversing.
-
-### setInJoint
-
-```javascript
-setInJoint({name, keypath, value})
-```
-
-Traverses to the node by joint name, then keypath, and immutably sets a value across all `pages`.
-
-```javascript
-this.props.setInJoint({
-  name: 'header',
-  keypath: 'cart.total',
-  value: 100
-})
-```
-
-### extendInJoint
-
-```javascript
-extendInJoint({name, keypath, value})
-```
-
-Traverses to the node by joint name, then keypath, and immutably extends the value across all `pages`.
-
-```javascript
-this.props.extendInJoint({
-  name: 'header',
-  keypath: 'profile.address',
-  value: {zip: 11214}
-})
-```
-
-### delInJoint
-
-```javascript
-delInJoint({name, keypath})
-```
-
-Traverses to the node by joint name, then keypath, and immutably delete the value across all `pages`.
-
-```javascript
-this.props.delInJoint({
-  name: 'header',
-  keypath: 'profile.address',
-})
-```
-
-### setInPage
-
-```javascript
-setInPage({pagekey, keypath, value})
-```
-
-At the page specificed by the URL, traverses to the node by keypath and immutably set the value.
-
-```javascript
-this.props.setInPage({
-  pageKey: '/foo?bar=5',
-  keypath: 'header.cart.total',
-  value: 100
-})
-```
-
-### extendInPage
-
-```javascript
-extendInPage({pageKey, keypath, value})
-```
-
-At the page specificed by the URL, traverses to the node by keypath and immutably extend the value.
-
-```javascript
-this.props.extendInPage({
-  pageKey: '/foo?bar=5',
-  keypath: 'header.cart',
-  value: {total: 100}
-})
-```
-
-### delInPage
-
-```javascript
-delInPage({pageKey, keypath})
-```
-
-At the page specificed by the URL, traverses to the node by keypath and immutably delete the value.
-
-```javascript
-this.props.delInPage({
-  pageKey: '/foo?bar=5',
-  keypath: 'header.cart'
-})
-```
-
-## Utility
-
-### enhanceVisitWithBrowserBehavior
-
-Enhances `visit` with navigation behavior on the returned Promises. For example, if the request `500`s, Breezy will navigate to '/500.html'. You can read the full behavior [here](https://github.com/jho406/Breezy/blob/master/breezy/lib/utils/react.js#L131).
-
-```javascript
-  import {...someStuff..., enhanceVisitWithBrowserBehavior} from '@jho406/breezy'
-
-  constructor (props) {
-    const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.visit = visit.bind(this)
-  }
-```
-
-| Arguments | Type | Notes |
-| :--- | :--- | :--- |
-| visit | `Function` | The visit function injected by `mapDispatchToProps` |
-| remote | `Function` | The remote function injected by `mapDispatchToProps`. The wrapped `remote` function will add the `pageKey` argument automatically for you. |

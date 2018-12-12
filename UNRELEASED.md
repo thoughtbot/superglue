@@ -9,3 +9,8 @@
 - NEW: Breezy now dispatches `@@breezy/GRAFTING_ERROR`. This is a listenable action that you can use to retry deferments that fail due to network errors. You will recieve the `pageKey`, the `url` that failed, and the `keyPath` to the missing node.
 - `remote` now has a fallback `pageKey` if one isn't provided.
 - `ensureSingleVisit`, the function that powers `visit` is now exposed for use. Come in super handy when you want to create your own `visit` function. For example, instaclick functionality.
+
+- Remove immutable helpers. It doesn't seem like good practice to create immutable action creators, probably doing too much work for the user and makes testing more difficult. Instead recommend and document immmer usage and keep getIn (exported for traversing), and setIn (for internal use) around.
+
+- Added a kitchen sink app in the example dir that demos everything
+

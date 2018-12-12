@@ -476,7 +476,7 @@ export default connect(
 [InstantClick](http://instantclick.io) is a neat javascript utility that speeds up your website by preloading the next page on hover. To make this work for Breezy:
 
 ```
-yarn add react-hoveritent
+yarn add react-hoverintent
 ```
 
 Then create your own visit function with instaclick behavior like the below. Note that we are using the `ensureSingleVisit` action creator (which powers Breezy's `visit`) and the unenhanced version of the `visit` that you receive through the props.
@@ -536,4 +536,54 @@ export default connect(
 
 ```
 
+## Custom reducers
 
+If you find yourself needing functionality beyond what the default reducers provide, take a look at how [Breezy shapes it store](react-redux.md#how-does-it-look-like) and add your own reducers:
+
+```javascript
+yarn add reduce-reducers immer
+```
+
+and modify your `application.js`
+
+```javascript
+....
+import reduceReducers from 'reduce-reducers'
+import {getIn} from '@jho406/breezy'
+import {
+  forEachJointPathAcrossAllPages,
+} from '@jho406/breezy/dist/utils/helpers'
+import produce from "immer"
+
+function myCustomReducer(state = {}, action) {
+  switch(action.type) {
+  case 'USER_CHANGES_EMAIL': {
+    const {email} = action
+    return produce(state, draft => {
+      forEachJointPathAcrossAllPages(state, 'header', (pathToJoint) => {
+        const headerNode = getIn(draft, pathToJoint)
+        header.email = email
+      })
+    })
+  }
+  default:
+    return state
+  }
+}
+
+const {reducer, ...otherStuff} = Breezy.start({...})
+
+const {
+  breezy: breezyReducer,
+  pages: pagesReducer,
+} = reducer
+
+const store = createStore(
+  combineReducers({
+    breezy: breezyReducer,
+    pages: reduceReducers(pagesReducer, myCustomReducer),
+  }),
+  initialState,
+  applyMiddleware(thunk)
+)
+```

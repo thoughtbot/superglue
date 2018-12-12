@@ -193,10 +193,11 @@ json.profile do
 end
 ```
 
-A joint uniquely identifies a rendered partial across the application. By default, the name of the joint is named after the key where the partial is used. You can also rename a joint:
+A joint uniquely identifies a rendered partial across the application. When enabled with `joint: true`, the name of the joint is the key where the partial is used. You can also give a custom name:
 
 ```ruby
 # index.js.breezy
+
 json.header null, partial: ["profile", joint: 'super_header']
 ```
 

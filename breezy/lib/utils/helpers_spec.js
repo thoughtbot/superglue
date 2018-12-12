@@ -4,7 +4,9 @@ import {
   parseSJR,
   pagePath,
   forEachJointInPage,
-  forEachPathToJointAcrossAllPages,
+  forEachJointPathAcrossAllPages,
+  forEachJointPathInPage,
+  jointPathsInPage
 } from './helpers'
 
 describe('pagePath', () => {
@@ -14,7 +16,42 @@ describe('pagePath', () => {
   })
 })
 
-describe('forEachPathToJointAcrossAllPages', () => {
+describe('jointPathsInPage', () => {
+  it('returns the joint paths in page', () => {
+    const page = {
+      joints: {
+        'header': ['a.b.c', 'd.e.f']
+      }
+    }
+    const paths = jointPathsInPage(page, 'header')
+
+    expect(paths).toEqual([
+      'a.b.c',
+      'd.e.f',
+    ])
+  })
+})
+
+describe('forEachPathToJointInPage', () => {
+  it('iterates through each named joint in the current page', () => {
+    const page = {
+      joints: {
+        'header': ['a.b.c', 'd.e.f']
+      }
+    }
+    const iters = []
+    forEachJointPathInPage(page, 'header', (pathToJoint)=>{
+      iters.push(pathToJoint)
+    })
+
+    expect(iters).toEqual([
+      'data.a.b.c',
+      'data.d.e.f',
+    ])
+  })
+})
+
+describe('forEachJointPathAcrossAllPages', () => {
   it('iterates through each named joint across all pages', () => {
     const pages = {
       '/foo': {
@@ -31,7 +68,7 @@ describe('forEachPathToJointAcrossAllPages', () => {
     }
 
     const iters = []
-    forEachPathToJointAcrossAllPages(pages, 'header', (pathToJoint)=>{
+    forEachJointPathAcrossAllPages(pages, 'header', (pathToJoint)=>{
       iters.push(pathToJoint)
     })
 

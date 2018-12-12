@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nyc --reporter=html jasmine",
     "lint": "./node_modules/.bin/eslint lib",
-    "build": "./node_modules/babel-cli/bin/babel.js lib -d dist",
+    "build": "./node_modules/babel-cli/bin/babel.js lib -d dist --ignore '**/*spec.js'",
     "prepublishOnly": "npm run build"
   },
   "repository": {

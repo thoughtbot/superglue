@@ -11,7 +11,7 @@ Enhances `visit` with navigation behavior on the returned Promises. For example,
 
   constructor (props) {
     const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.visit = visit.bind(this)
+    this.enhancedVisit = visit.bind(this)
   }
 ```
 

@@ -221,7 +221,7 @@ json.header partial: ['header', joint: true]
 And you dispatch a visit to `/cart`
 
 ```javascript
-  this.visit('/cart')
+  this.enhancedVisit('/cart')
 ```
 
 Breezy will track all joints used in `cart.js.props` and use it to update the equivalent joints across all pages in your store.

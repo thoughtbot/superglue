@@ -120,7 +120,7 @@ class PreloadIndex extends React.Component {
   constructor (props) {
     super()
     const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.visit = visit.bind(this)
+    this.enhancedVisit = visit.bind(this)
   }
 
   componentDidMount() {
@@ -128,7 +128,7 @@ class PreloadIndex extends React.Component {
         this.props.saveAndProcessSJRPage(pageKey, renderedView)
     })
 
-    this.visit(this.props.next_path) //Redirect
+    this.enhancedVisit(this.props.next_path) //Redirect
   }
   render () {
     return <div className='loading'>loading other resources</div>
@@ -156,7 +156,7 @@ class SurveyIndex extends React.Component {
   constructor (props) {
     super()
     const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.visit = visit.bind(this)
+    this.enhancedVisit = visit.bind(this)
   }
 
   turboVisit = () => {
@@ -164,7 +164,7 @@ class SurveyIndex extends React.Component {
       // do nothing and let navigateTo just load and transition
     } else {
       // can't navigate due to missing cache, attempt to visit instead
-      this.visit('/next_page')
+      this.enhancedVisit('/next_page')
     }
   }
 }
@@ -309,7 +309,7 @@ class PostsIndex extends React.Component {
   constructor (props) {
     super()
     const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.visit = visit.bind(this)
+    this.enhancedVisit = visit.bind(this)
   }
 
   onPaginateChange = (page) => {
@@ -318,7 +318,7 @@ class PostsIndex extends React.Component {
     url.query.page_num = page
     url.query._bz = 'shoots'
 
-    this.visit(pagination_path)
+    this.enhancedVisit(pagination_path)
   }
 
   render () {
@@ -498,7 +498,7 @@ class PostsIndex extends React.Component {
       pageKey
     } = props
 
-    this.visit = enhanceVisitWithBrowserBehavior(visit)
+    this.enhancedVisit = enhanceVisitWithBrowserBehavior(visit)
 
     this.instaVisit = enhanceWithBrowserBehavior(() => {
       return this.props.ensureSingleVisit(()=> {

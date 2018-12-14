@@ -44,7 +44,18 @@ class BreezyTemplate
 
           if defined?(breezy_filter) && !!breezy_filter
             json.action 'graft'
+            __formatter = ::BreezyTemplate::KeyFormatter.new({camelize: :lower})
             json.path breezy_filter
+              .split('.')
+              .map {|part|
+                if part.include? '='
+                  k, v = parts.split('=')
+                  [__formatter.format(k),'=', v].join('=')
+                else
+                  __formatter.format(part)
+                end
+              }
+              .join('.')
           end
 
           json.joints ::BreezyTemplate::Var.new('joints')

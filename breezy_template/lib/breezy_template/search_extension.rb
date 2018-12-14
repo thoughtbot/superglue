@@ -13,9 +13,11 @@ class BreezyTemplate
       found
     end
 
-    def _filter_by_path(search_path)
+    def _set_search_path_once(search_path)
+      return if @search_path
+
       if search_path.is_a? ::String
-        return _filter_by_path(search_path.split('.'))
+        return _set_search_path_once(search_path.split('.'))
       end
       @search_path = search_path
     end

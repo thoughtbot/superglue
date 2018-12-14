@@ -28,6 +28,14 @@ FOOTER_PARTIAL = <<-JBUILDER
   json.terms "You agree"
 JBUILDER
 
+NESTED_PARTIAL = <<-JBUILDER
+  json.foo do
+    json.bar 'goo'
+  end
+
+  json.nested nil, partial: "footer"
+JBUILDER
+
 FLATTENED_PARTIAL = <<-JBUILDER
   json.array! [1,2]
 JBUILDER
@@ -45,6 +53,7 @@ PARTIALS = {
   "_blog_post.js.breezy" => BLOG_POST_PARTIAL,
   "_profile.js.breezy" => PROFILE_PARTIAL,
   "_footer.js.breezy" => FOOTER_PARTIAL,
+  "_nested.js.breezy" => NESTED_PARTIAL,
   "_collection.js.breezy" => COLLECTION_PARTIAL,
   "_flattened.js.breezy" => FLATTENED_PARTIAL
 }
@@ -941,10 +950,10 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "filter with partial" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+  test "filter with partials" do
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.nested.terms')
       json.hit do
-        json.hit2 nil, partial: "footer"
+        json.hit2 nil, partial: "nested"
       end
     JBUILDER
 
@@ -954,7 +963,7 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":"You agree","screen":"test","action":"graft","path":"hit.hit2.terms","joints":joints,"defers":defers}
+          {"data":"You agree","screen":"test","action":"graft","path":"hit.hit2.nested.terms","joints":joints,"defers":defers}
         );
       })()
     JS

@@ -15,7 +15,7 @@ module Breezy
       filter = request.params[:_bz]
 
       if filter
-        filter.gsub(/[^\da-zA-Z\=\.]+/, '')
+        filter.gsub(/[^\da-zA-Z\_\=\.]+/, '')
       end
     end
   end

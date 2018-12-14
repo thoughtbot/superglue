@@ -61,6 +61,13 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
   joints = {...joints}
 
   const currentPage = state[pageKey]
+
+  if (!currentPage) {
+    const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
+
+    throw error
+  }
+
   currentPage.data = setIn(currentPage.data, pathToNode, node)
 
   Object.keys(currentPage.joints).forEach((name) => {

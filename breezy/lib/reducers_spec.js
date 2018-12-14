@@ -190,6 +190,36 @@ describe('reducers', () => {
           }
         })
       })
+
+      fit('throws cant find page if the page does not exist for grafting', () => {
+        const prevState = {
+        }
+
+        const graftResponse = {
+          data: { total: 100},
+          action: 'graft',
+          path: 'header.cart',
+          title: 'foobar',
+          csrfToken: 'token',
+          joints: {
+            info: ['header.cart.cat', 'header.cart.cat'],
+            footer: ['footer']
+          },
+          assets: ['application-123.js']
+        }
+
+        expect(() => {
+          const nextState = reducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              node: graftResponse.data,
+              pathToNode: graftResponse.path,
+              joints: graftResponse.joints
+            }
+          })
+        }).toThrow(new Error("Breezy was looking for /foo in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?"))
+      })
     })
 
     describe('BREEZY_SAVE_RESPONSE', () => {

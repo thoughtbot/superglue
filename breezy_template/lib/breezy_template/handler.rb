@@ -11,7 +11,7 @@ class BreezyTemplate
 
     def self.call(template)
       # this juggling is required to keep line numbers right in the error
-      %{__already_defined = defined?(json);json||=::BreezyTemplate.new(self);json._set_search_path_once(breezy_filter) if defined?(breezy_filter); json._set_request_url(request.path);#{template.source}
+      %{__already_defined = defined?(json);json||=::BreezyTemplate.new(self);json._set_search_path_once(breezy_filter) if defined?(breezy_filter); json._set_request_url_once(request.path);#{template.source}
         if !(__already_defined && __already_defined != "method")
           json.merge!({data: json._found! || json.empty! })
 

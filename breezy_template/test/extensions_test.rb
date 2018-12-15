@@ -24,6 +24,10 @@ PROFILE_PARTIAL = <<-JBUILDER
   json.email email
 JBUILDER
 
+RECORD_PARTIAL = <<-JBUILDER
+  json.email record[:email]
+JBUILDER
+
 FOOTER_PARTIAL = <<-JBUILDER
   json.terms "You agree"
 JBUILDER
@@ -52,6 +56,7 @@ PARTIALS = {
   "_partial.js.breezy"  => "foo ||= 'hello'; json.content foo",
   "_blog_post.js.breezy" => BLOG_POST_PARTIAL,
   "_profile.js.breezy" => PROFILE_PARTIAL,
+  "_record.js.breezy" => RECORD_PARTIAL,
   "_footer.js.breezy" => FOOTER_PARTIAL,
   "_nested.js.breezy" => NESTED_PARTIAL,
   "_collection.js.breezy" => COLLECTION_PARTIAL,
@@ -874,7 +879,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "filtering for a node in the tree" do
     result = jbuild(<<-JBUILDER)
-      json._filter_by_path('hit.hit2')
+      json._set_search_path_once('hit.hit2')
       json.hit do
         json.hit2 do
           json.greeting 'hello world'
@@ -907,7 +912,7 @@ class BreezyTemplateTest < ActionView::TestCase
   test "filtering for a nonexistant node in the tree" do
     begin
       jbuild(<<-JBUILDER)
-        json._filter_by_path('miss.miss.miss.miss')
+        json._set_search_path_once('miss.miss.miss.miss')
         json.hit do
           json.hit2 do
             json.greeting 'hello world'
@@ -1174,6 +1179,43 @@ class BreezyTemplateTest < ActionView::TestCase
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
         return (
           {"data":{"hit":{"hit2":[{"name":"foo"},{"id":2,"_defered":true}]}},"screen":"test","joints":joints,"defers":defers}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "rendering with node array partial deferment" do
+    req = action_controller_test_request
+    req.path = '/some_url'
+
+    result = jbuild(<<-JBUILDER, request: req)
+      keep_first = lambda do |item|
+        if item[:id] == 1
+          false
+        else
+          :auto
+        end
+      end
+
+      json.hit do
+        json.hit2 do
+          data = [{id: 1, email: 'foo'}, {id: 2, email: 'bar'}]
+          json.array! data, key: :id, defer: keep_first, partial: ['record', as: :record]
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
+        return (
+          {"data":{"hit":{"hit2":[{"email":"foo"},{"id":2,"_defered":true}]}},"screen":"test","joints":joints,"defers":defers}
         );
       })()
     JS

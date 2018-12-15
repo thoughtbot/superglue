@@ -35,8 +35,8 @@ class BreezyTemplate
       _deferment_options(options) == :auto
     end
 
-    def _set_request_url(request_path)
-      @request_path = request_path
+    def _set_request_url_once(request_path)
+      @request_path ||= request_path
     end
 
     def _extended_options?(value)

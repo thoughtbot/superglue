@@ -1142,7 +1142,78 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "rendering with selective array node deferment" do
+    req = action_controller_test_request
+    req.path = '/some_url'
+
+    result = jbuild(<<-JBUILDER, request: req)
+      keep_first = lambda do |item|
+        if item[:id] == 1
+          false
+        else
+          :auto
+        end
+      end
+
+      json.hit do
+        json.hit2 do
+          data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
+          json.array! data, key: :id, defer: keep_first do |item|
+            json.name item[:name]
+          end
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
+        return (
+          {"data":{"hit":{"hit2":[{"name":"foo"},{"id":2,"_defered":true}]}},"screen":"test","joints":joints,"defers":defers}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
   test "rendering with node array deferment" do
+    req = action_controller_test_request
+    req.path = '/some_url'
+
+    result = jbuild(<<-JBUILDER, request: req)
+      json.hit do
+        json.hit2 do
+          data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
+          json.array! data, key: :id, defer: :auto do |item|
+            json.name item[:name]
+          end
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var cache={};
+        var defers=[];
+        defers.push({url:'/some_url?_bz=hit.hit2.id%3D1'});
+        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
+        return (
+          {"data":{"hit":{"hit2":[{"id":1,"_defered":true},{"id":2,"_defered":true}]}},"screen":"test","joints":joints,"defers":defers}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "rendering with node array deferment on nested node" do
     req = action_controller_test_request
     req.path = '/some_url'
 

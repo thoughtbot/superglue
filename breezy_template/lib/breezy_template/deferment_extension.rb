@@ -45,10 +45,21 @@ class BreezyTemplate
 
     def _mapping_element(element, options)
       if _deferment_options?(options)
+        if ::Proc === _deferment_options(options)
+           value = _deferment_options(options).call(element)
+           options = options.dup.merge({defer: value})
+        end
+      end
+
+      if _deferment_options?(options)
+        if _deferment_auto?(options)
+          @js.push(_breezy_visit_current(@path))
+        end
+
         if options.has_key? :key
           id_name = options[:key]
           id_val = element[id_name]
-          ::Hash[id_name, id_val]
+          ::Hash[id_name, id_val, :_defered, true]
         else
           nil
         end

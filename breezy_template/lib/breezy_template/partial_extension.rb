@@ -17,9 +17,7 @@ class BreezyTemplate
       options = _normalize_options_for_partial(options)
 
       if attributes.one? && _partial_options?(options)
-        _, opts = options[:partial]
-        opts.reverse_merge!(collection: collection)
-        _render_partial_with_options(options)
+        _render_partial_with_options(collection, options)
       else
         super
       end
@@ -91,33 +89,28 @@ class BreezyTemplate
       @context.render options.merge(partial: partial)
     end
 
-    def _render_partial_with_options(options)
+    def _render_partial_with_options(collection, options)
       options = _normalize_options_for_partial(options)
       partial, partial_opts = options[:partial]
-      ary_opts = options.dup
+      array_opts = options.dup
 
       partial_opts.reverse_merge! locals: {}
       partial_opts.reverse_merge! ::BreezyTemplate.template_lookup_options
       as = partial_opts[:as]
 
-      if partial_opts.key?(:collection)
-        collection = partial_opts.delete(:collection)
-        extract_joint_name = partial_opts.delete(:joint)
-        locals = partial_opts.delete(:locals)
+      extract_joint_name = partial_opts.delete(:joint)
+      locals = partial_opts.delete(:locals)
 
-        ary_opts.delete(:partial)
-        array! collection, ary_opts do |member|
+      array_opts.delete(:partial)
+      array! collection, array_opts do |member|
+        member_locals = locals.clone
+        member_locals.merge! collection: collection
+        member_locals.merge! as.to_sym => member if as
+        partial_opts.merge!(locals: member_locals)
 
-          member_locals = locals.clone
-          member_locals.merge! collection: collection
-          member_locals.merge! as.to_sym => member if as
-          partial_opts.merge!(locals: member_locals)
-          if extract_joint_name.respond_to?(:call)
-            partial_opts.merge!(joint: extract_joint_name.call(member))
-          end
-          _render_partial options
+        if extract_joint_name.respond_to?(:call)
+          partial_opts.merge!(joint: extract_joint_name.call(member))
         end
-      else
         _render_partial options
       end
     end

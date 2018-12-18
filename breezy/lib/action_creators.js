@@ -134,8 +134,11 @@ export function wrappedFetch (fetchArgs) {
       const location = response.headers.get('x-breezy-location')
       const nextOpts = {...fetchArgs[1], body: undefined}
       if (location) {
-        return wrappedFetch([location, {...nextOpts, method: 'GET'}])
+        return wrappedFetch([location, {...nextOpts, method: 'GET', _redirected: true}])
       } else {
+        if (fetchArgs[1] && fetchArgs[1]._redirected) {
+          response._redirected = true
+        }
         return response
       }
     })
@@ -168,7 +171,9 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
         const {breezy} = getState()
         const meta = {
           ...buildMeta(pageKey, page, breezy),
-          rsp
+          redirected: rsp._redirected,
+          rsp,
+          fetchArgs,
         }
         dispatch(saveAndProcessPage(pageKey, page))
 

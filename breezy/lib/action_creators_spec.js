@@ -483,6 +483,37 @@ describe('action creators', () => {
       })
     })
 
+    it('returns a meta with redirected true if was redirected', (done) => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock
+        .mock('/redirecting_url?__=0', {
+          headers: {
+            'content-type': 'application/javascript',
+            'x-breezy-location': '/foo'
+          }
+        })
+
+      fetchMock
+        .mock('/foo', {
+          body: successfulBody(),
+          headers: {
+            'content-type': 'application/javascript',
+            'x-response-url': '/foo'
+          }
+        })
+
+      return store.dispatch(remote('/redirecting_url')).then((meta) => {
+        expect(meta).toEqual(jasmine.objectContaining({
+          redirected: true
+        }))
+
+        done()
+      })
+    })
+
     it('uses the x-response-url as the pageKey if no explicit key was set on non-GET requests and content-location is not avail', (done) => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)

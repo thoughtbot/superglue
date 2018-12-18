@@ -38,8 +38,13 @@ export function enhanceVisitWithBrowserBehavior (visit) {
         return
       }
 
+      let action = 'push'
+      if (!rsp.redirected && rsp.fetchArgs[1].method != 'GET') {
+        action = 'replace'
+      }
+
       if (rsp.canNavigate) {
-        return this.props.navigateTo(rsp.pageKey)
+        return this.props.navigateTo(rsp.pageKey, {action})
       } else {
         // There can only be one visit at a time, if `canNavigate`
         // is false, then this request is being ignored for a more

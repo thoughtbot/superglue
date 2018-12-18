@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
-Breezy is a Turbolinks inspired library for React, Redux, and Rails. It brings sanity to your frontend development while returning you to the productivity and happiness of classic Rails.
+Inspired by Turbolinks, Breezy is an Ajax library and opinionated state shape for React, Redux, and Rails. It brings sanity to your frontend development while returning you to the productivity and happiness of classic Rails.
 
 # Features
 

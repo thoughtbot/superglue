@@ -13,7 +13,13 @@ export function reverseMerge (dest, obj) {
 }
 
 export function pagePath (pageKey, keypath) {
-  return [pageKey, 'data', keypath].join('.')
+  let fullPath = [pageKey, 'data']
+
+  if (keyPath) {
+    fullPath.push(keyPath)
+  }
+
+  return fullPath
 }
 
 export function forEachJointPathAcrossAllPages (pages, name, fn = ()=>{}) {

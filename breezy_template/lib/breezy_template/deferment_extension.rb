@@ -59,9 +59,9 @@ class BreezyTemplate
         if options.has_key? :key
           id_name = options[:key]
           id_val = element[id_name]
-          ::Hash[id_name, id_val, :_defered, true]
+          ::Hash[id_name, id_val]
         else
-          nil
+          ::BreezyTemplate::Var.new('undefined')
         end
       else
         super

@@ -1255,6 +1255,40 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
+  test "rendering with node array deferment using index" do
+    req = action_controller_test_request
+    req.path = '/some_url'
+
+    result = jbuild(<<-JBUILDER, request: req)
+      json.hit do
+        json.hit2 do
+          data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
+          json.array! data, defer: :auto do |item|
+            json.name item[:name]
+          end
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var lastJointName;
+        var lastJointPath;
+        var cache={};
+        var defers=[];
+        defers.push({url:'/some_url?_bz=hit.hit2.0'});
+        defers.push({url:'/some_url?_bz=hit.hit2.1'});
+        return (
+          {"data":{"hit":{"hit2":[undefined,undefined]}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
   test "rendering with node array deferment on nested node" do
     req = action_controller_test_request
     req.path = '/some_url'

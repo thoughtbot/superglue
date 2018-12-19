@@ -12,14 +12,14 @@ export function reverseMerge (dest, obj) {
   return dest
 }
 
-export function pagePath (pageKey, keypath) {
+export function pagePath (pageKey, keyPath) {
   let fullPath = [pageKey, 'data']
 
   if (keyPath) {
     fullPath.push(keyPath)
   }
 
-  return fullPath
+  return fullPath.join('.')
 }
 
 export function forEachJointPathAcrossAllPages (pages, name, fn = ()=>{}) {

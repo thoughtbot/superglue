@@ -64,11 +64,10 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
 
   if (!currentPage) {
     const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
-
     throw error
   }
 
-  currentPage.data = setIn(currentPage.data, pathToNode, node)
+  let nextState = setIn(state, [pageKey, 'data', pathToNode].join('.'), node)
 
   Object.keys(currentPage.joints).forEach((name) => {
     if(!joints[name]) {
@@ -78,9 +77,8 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
     joints[name] = [...new Set([...joints[name], ...currentPage.joints[name]])]
   })
 
-  currentPage.joints = joints
-
-  return state
+  nextState = setIn(nextState, [pageKey, 'joints'].join('.'), joints)
+  return nextState
 }
 
 export function pageReducer (state = {}, action) {

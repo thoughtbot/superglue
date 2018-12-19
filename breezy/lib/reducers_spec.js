@@ -115,6 +115,7 @@ describe('reducers', () => {
           }
         })
 
+        expect(nextState).not.toBe(prevState)
         expect(nextState).toEqual({
           '/foo': {
             data: {

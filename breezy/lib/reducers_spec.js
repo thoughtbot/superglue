@@ -295,5 +295,58 @@ describe('reducers', () => {
         expect(nextStateCartTotal).toEqual(10)
       })
     })
+
+    describe('MATCH_JOINTS_IN_PAGE', () => {
+      it('updates all joints in a page using the selected joint as reference', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  status: 'new'
+                }
+              },
+              body : {
+                menu: {
+                  sideCart: {
+                    status: 'old'
+                  }
+                },
+                miniMenu: {
+                  sideCart: {
+                    status: 'old'
+                  }
+                }
+              } 
+            },
+            csrfToken: 'token',
+            assets: ['application-123.js'],
+            joints: {
+              info: [
+                'header.cart',
+                'body.menu.sideCart',
+                'body.miniMenu.sideCart'
+              ]
+            }
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: '@@breezy/MATCH_JOINTS_IN_PAGE',
+          payload: {
+            pageKey: '/foo',
+            lastJointName: 'info',
+            lastJointPath: 'header.cart'
+          }
+        })
+
+        const page = nextState['/foo'].data
+        expect(page.header.cart.status).toEqual('new')
+        expect(page.body.menu.sideCart.status).toEqual('new')
+        expect(page.body.miniMenu.sideCart.status).toEqual('new')
+
+        expect(page.body.menu.sideCart).not.toBe(page.body.miniMenu.sideCart.status)
+      })
+    })
   })
 })

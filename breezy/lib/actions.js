@@ -7,6 +7,7 @@ export const HANDLE_GRAFT = '@@breezy/HANDLE_GRAFT'
 export const BREEZY_ERROR = '@@breezy/ERROR'
 export const BREEZY_GRAFTING_ERROR = '@@breezy/GRAFTING_ERROR'
 export const UPDATE_ALL_JOINTS = '@@breezy/UPDATE_ALL_JOINTS'
+export const MATCH_JOINTS_IN_PAGE = '@@breezy/MATCH_JOINTS_IN_PAGE'
 
 export const HISTORY_CHANGE = '@@breezy/HISTORY_CHANGE'
 export const SET_BASE_URL = '@@breezy/SET_BASE_URL'

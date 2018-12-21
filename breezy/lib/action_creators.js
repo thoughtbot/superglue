@@ -21,6 +21,7 @@ import {
   BEFORE_FETCH,
   BREEZY_ERROR,
   BREEZY_GRAFTING_ERROR,
+  MATCH_JOINTS_IN_PAGE,
   OVERRIDE_VISIT_SEQ,
   UPDATE_ALL_JOINTS,
 } from './actions'
@@ -107,13 +108,40 @@ function updateAllJointsToMatch (pageKey) {
   }
 }
 
+function updateJointsInPageToMatch({pageKey, lastJointName, lastJointPath}) {
+  pageKey = withoutBZParams(pageKey)
+
+  return {
+    type: MATCH_JOINTS_IN_PAGE,
+    payload: {
+      pageKey,
+      lastJointName,
+      lastJointPath,
+    }
+  }
+}
+
 export function saveAndProcessPage (pageKey, page) {
   return (dispatch) => {
     pageKey = withoutBZParams(pageKey)
-    const {joints} = page
+
+    const {
+      joints,
+      lastJointName,
+      lastJointPath
+    } = page
+
     if (isGraft(page)) {
       const {node, pathToNode} = extractNodeAndPath(page)
       dispatch(handleGraft({joints, pageKey, node, pathToNode}))
+
+      if (lastJointName) {
+        dispatch(updateJointsInPageToMatch({
+          pageKey,
+          lastJointName,
+          lastJointPath,
+        }))
+      }
     } else {
       dispatch(saveResponse({pageKey, page}))
     }

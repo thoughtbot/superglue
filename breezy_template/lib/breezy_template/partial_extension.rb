@@ -81,7 +81,7 @@ class BreezyTemplate
       if joint
         joint = joint.to_sym
         path = @path.dup.join('.')
-        @js.push "joints['#{joint}'] = joints['#{joint}'] || []; joints['#{joint}'].push('#{path}');"
+        @js.push "joints['#{joint}'] = joints['#{joint}'] || []; joints['#{joint}'].push('#{path}'); lastJointName='#{joint}'; lastJointPath='#{path}';"
         @joints[joint]
       end
 

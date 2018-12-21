@@ -15,6 +15,7 @@ import {
   SET_BASE_URL,
   SET_CSRF_TOKEN,
   UPDATE_ALL_JOINTS,
+  MATCH_JOINTS_IN_PAGE,
 } from './actions'
 
 function updateAllJoints (state, pageKey) {
@@ -51,10 +52,28 @@ function copyInByJoint (state, name, value, subpath = null) {
     if (subpath) {
       fullpath.push(subpath)
     }
-    state = setIn(state, fullpath.join('.'), JSON.parse(value))
+    state = setIn(state, fullpath.join('.'), JSON.parse(copy))
   })
 
   return state
+}
+
+function updateJointsInPageToMatch(state, pageKey, jointName, pathToJoint) {
+  const currentPage = state[pageKey]
+  if (!currentPage) {
+    const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
+    throw error
+  }
+
+  const node = getIn(state, [pageKey, 'data', pathToJoint].join('.'))
+  const copy = JSON.stringify(node)
+  let nextState = state
+
+  forEachJointPathInPage(currentPage, name, (path) => {
+    nextState = setIn(nextState, [pageKey, path].join('.'), JSON.parse(copy))
+  })
+
+  return nextState
 }
 
 function handleGraft (state, pageKey, node, pathToNode, joints={}) {
@@ -67,7 +86,6 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
     const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
     throw error
   }
-
   let nextState = setIn(state, [pageKey, 'data', pathToNode].join('.'), node)
 
   Object.keys(currentPage.joints).forEach((name) => {
@@ -75,7 +93,10 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
       joints[name] = []
     }
 
-    joints[name] = [...new Set([...joints[name], ...currentPage.joints[name]])]
+    joints[name] = [
+      ...new Set([...joints[name],
+      ...currentPage.joints[name]])
+    ]
   })
 
   nextState = setIn(nextState, [pageKey, 'joints'].join('.'), joints)
@@ -92,6 +113,15 @@ export function pageReducer (state = {}, action) {
     const {pageKey} = action.payload
     return updateAllJoints(state, pageKey)
   }
+  case MATCH_JOINTS_IN_PAGE: {
+    const {
+      pageKey,
+      lastJointName,
+      lastJointPath,
+    } = action.payload
+
+    return updateJointsInPageToMatch(state, pageKey, lastJointName, lastJointPath)
+  }
   case HANDLE_GRAFT: {
     const {
       pageKey,
@@ -99,6 +129,7 @@ export function pageReducer (state = {}, action) {
       pathToNode,
       joints,
     } = action.payload
+
     return handleGraft(state, pageKey, node, pathToNode, joints)
   }
   case REMOVE_PAGE: {

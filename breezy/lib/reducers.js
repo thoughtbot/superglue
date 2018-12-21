@@ -21,7 +21,7 @@ function updateAllJoints (state, pageKey) {
   const selectedPage = state[pageKey]
   forEachJointInPage(selectedPage, (jointName, jointPath) => {
     const updatedNode = getIn(selectedPage, jointPath)
-    state = setInByJoint(state, jointName, updatedNode)
+    state = copyInByJoint(state, jointName, updatedNode)
   })
 
   return state
@@ -43,14 +43,15 @@ function saveResponse (state, pageKey, page) {
   return state
 }
 
-function setInByJoint (state, name, value, subpath = null) {
+function copyInByJoint (state, name, value, subpath = null) {
   state = {...state}
+  const copy = JSON.stringify(value)
   forEachJointPathAcrossAllPages(state, name, (pathToJoint) =>{
     const fullpath = [pathToJoint]
     if (subpath) {
       fullpath.push(subpath)
     }
-    state = setIn(state, fullpath.join('.'), value)
+    state = setIn(state, fullpath.join('.'), JSON.parse(value))
   })
 
   return state

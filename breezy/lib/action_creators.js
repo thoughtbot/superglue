@@ -11,7 +11,10 @@ import {
   parseSJR,
 } from './utils/helpers'
 import {needsRefresh} from './window'
-import {withoutBZParams} from './utils/url'
+import {
+  withoutBZParams,
+  withoutBusters,
+} from './utils/url'
 import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
@@ -158,6 +161,8 @@ function buildMeta (pageKey, page, {assets}) {
 }
 
 export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+  pathQuery = withoutBusters(pathQuery)
+
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {method, headers, body})
 
@@ -220,6 +225,8 @@ export function ensureSingleVisit (fn) {
 }
 
 export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+  pathQuery = withoutBZParams(pathQuery)
+
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
 

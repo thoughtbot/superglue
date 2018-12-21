@@ -180,7 +180,7 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.visit('/foo?_bz=address')
+          this.props.remote('/foo?_bz=address')
         }
 
         componentDidUpdate() {

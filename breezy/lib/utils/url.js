@@ -28,6 +28,15 @@ export function withMimeBust (url) {
   }
 }
 
+export function withoutBusters (url) {
+  url = new parse(url, true)
+  let query = url.query
+  delete query['__']
+  delete query['_']
+  url.query = query
+  return pathQuery(url.toString())
+}
+
 export function withoutBZParams (url) {
   url = new parse(url, true)
   let query = url.query

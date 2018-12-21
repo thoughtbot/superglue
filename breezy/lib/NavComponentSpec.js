@@ -78,6 +78,39 @@ describe('Nav', () => {
       target.getElementsByTagName('button')[0].click()
     })
 
+    it('does not navigates to the specified page if the page is not in the store', (done) => {
+      const history = createMemoryHistory({});
+      const {dom, target} = createScene('<div></div>')
+
+      class ExampleHome extends Home {
+        visit() {
+          expect(this.props.navigateTo('/foo')).toEqual(false)
+          expect(history.length).toEqual(1)
+          done()
+        }
+      }
+
+      const mockStore = configureMockStore()
+      const store = mockStore(
+        {pages: {
+          '/bar': {screen:'home'}
+        }}
+      )
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            mapping={{'home': ExampleHome, 'about': About}}
+            initialPageKey={'/bar'}
+            history={history}
+          />
+        </Provider>,
+        target
+      )
+      target.getElementsByTagName('button')[0].click()
+    })
+
     it('navigates to the specified page and calls the action when used with react-redux', (done) => {
       const history = createMemoryHistory({});
       const {dom, target} = createScene('<div></div>')

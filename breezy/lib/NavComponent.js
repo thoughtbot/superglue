@@ -50,22 +50,22 @@ class Nav extends React.Component {
   navigateTo (pageKey, {action, ownProps} = {action: 'push', ownProps: {}}) {
     pageKey = withoutBZParams(pageKey)
     const {store} = this.props
-
-    const historyArgs = [pageKey, {
-      pageKey,
-      breezy: true
-    }]
-
-    if(action === 'push') {
-      this.history.push(...historyArgs)
-    }
-
-    if(action === 'replace') {
-      this.history.replace(...historyArgs)
-    }
-
     const hasPage = !!store.getState().pages[pageKey]
+
     if (hasPage) {
+      const historyArgs = [pageKey, {
+        pageKey,
+        breezy: true
+      }]
+
+      if(action === 'push') {
+        this.history.push(...historyArgs)
+      }
+
+      if(action === 'replace') {
+        this.history.replace(...historyArgs)
+      }
+
       const seqId = uuidv4()
       store.dispatch({
         type: OVERRIDE_VISIT_SEQ,

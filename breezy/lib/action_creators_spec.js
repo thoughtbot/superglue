@@ -458,6 +458,17 @@ describe('action creators', () => {
       })
     })
 
+    it('cleans any __ and - params', (done) => {
+      const store = mockStore(initialState())
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock.mock('/first?_bz=foo&__=0', rsp.visitSuccess())
+      store.dispatch(remote('/first?_bz=foo&__=bar&_=baz')).then((meta)=>{
+        done()
+      })
+    })
+
     it('uses the content-location over x-response-url as the pageKey if no explicit key was set on non-GET requests', (done) => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
@@ -705,6 +716,26 @@ describe('action creators', () => {
       store.dispatch(visit('/second')).then((meta) => {
         expect(meta.canNavigate).toEqual(true)
         expect(store.getActions()).toEqual(expectedActions)
+        done()
+      })
+    })
+
+    it('cleans any _bz, __, and - params', (done) => {
+      const initialState = {
+        breezy: {
+          assets:[],
+          controlFlows: {
+            visit: 'firstId'
+          }
+        }
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock.mock('/first?__=0', rsp.visitSuccess())
+      store.dispatch(visit('/first?_bz=foo&__=bar&_=baz')).then((meta)=>{
         done()
       })
     })

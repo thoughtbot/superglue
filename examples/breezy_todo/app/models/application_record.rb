@@ -2,7 +2,7 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
   def self.member_at(index)
-    offset(index).limit(1)
+    offset(index).limit(1).first
   end
 
   def self.member_by(attr, value)

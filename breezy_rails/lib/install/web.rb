@@ -24,7 +24,7 @@ def add_member_methods
   inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
     <<-RUBY
   def self.member_at(index)
-    offset(index).limit(1)
+    offset(index).limit(1).first
   end
 
   def self.member_by(attr, value)

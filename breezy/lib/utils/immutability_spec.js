@@ -26,6 +26,14 @@ describe('getIn', () => {
       getIn(page, 'a.b.c')
     }).toThrow(new Error("Expected to traverse an Array or Obj, got 2"))
   })
+
+  it('treats url-ish keys as object keys', () => {
+    const page = {'/page?hello=2':{b:{c:{d:5}}}}
+    const node = getIn(page, '/page?hello=2.b.c')
+
+    expect(node).toBe(page['/page?hello=2'].b.c)
+    expect(node).toEqual({d: 5})
+  })
 })
 
 describe('setIn', () => {

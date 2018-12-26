@@ -1,6 +1,8 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
+const isSearchable = /^[\da-zA-Z\-\_\=\.]+$/
+
 function getIn (obj, path) {
   const keyPath = normalizeKeyPath(path)
   let result = obj
@@ -53,7 +55,11 @@ function isObject (obj) {
 }
 
 function atKey (node, key) {
-  const [attr, id] = Array.from(key.split('='))
+  let id, attr
+
+  if (isSearchable.test(key)) {
+    [attr, id] = Array.from(key.split('='))
+  }
 
   if(!isArray(node) && !isObject(node)) {
     throw new Error(`Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`)

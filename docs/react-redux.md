@@ -91,6 +91,8 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use `v
 
 For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](react-redux.md#enhancevisitwithbrowserbehavior)
 
+**Note** `visit` will strip any `_bz` filtering parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
+
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
 
@@ -126,6 +128,8 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#filtering-nodes) of the current page or preload other pages.
 
+**Note** `remote` will respect `_bz` filtering parameters.
+
 ```javascript
 remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
 
@@ -156,7 +160,7 @@ Breezy can filter your content tree for a specific node. This is done by adding 
 For example:
 
 ```javascript
-store.dispatch(visit('/?_bz=header.shopping_cart'))
+store.dispatch(remote('/?_bz=header.shopping_cart'))
 ```
 
 ## Updating Fragments
@@ -166,7 +170,7 @@ A Fragment is a way for breezy to know that this node in your page is linked acr
 For example:
 
 ```ruby
-json.header partial: ['header', fragment: true]
+json.header partial: ['header', fragment_name: 'header']
 ```
 
 ### Automatically
@@ -176,7 +180,7 @@ Breezy will automatically update all pages using information about fragment usag
 For example, if you had this in your `cart.js.props`:
 
 ```ruby
-json.header partial: ['header', fragment: true]
+json.header partial: ['header', fragment_name: 'header']
 ```
 
 And you dispatch a visit to `/cart`

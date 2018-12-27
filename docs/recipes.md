@@ -524,51 +524,25 @@ export default connect(
 ```
 
 ## Custom reducers
-
-If you find yourself needing functionality beyond what the default reducers provide, take a look at how [Breezy shapes it store](react-redux.md#how-does-it-look-like) and add your own reducers:
-
-```javascript
-yarn add reduce-reducers immer
-```
-
-and modify your `application.js`
+Breezy generators will `yarn add reduce-reducers` and set up a `reducers.js` to use to manipulate `pages`. If you find yourself needing additional functionality beyond what the generated reducers provide, just add your own reducers:
 
 ```javascript
 ....
 import reduceReducers from 'reduce-reducers'
 import {getIn} from '@jho406/breezy'
-import {
-  forEachFragmentPathAcrossAllPages,
-} from '@jho406/breezy/dist/utils/helpers'
 import produce from "immer"
 
 function myCustomReducer(state = {}, action) {
-  switch(action.type) {
-  case 'USER_CHANGES_EMAIL': {
-    const {email} = action
-    return produce(state, draft => {
-      forEachFragmentPathAcrossAllPages(state, 'header', (pathToFragment) => {
-        const headerNode = getIn(draft, pathToFragment)
-        header.email = email
-      })
-    })
-  }
-  default:
-    return state
-  }
+  ....
 }
 
-const {reducer, ...otherStuff} = Breezy.start({...})
-
-const {
-  breezy: breezyReducer,
-  pages: pagesReducer,
-} = reducer
+...
 
 const store = createStore(
   combineReducers({
     breezy: breezyReducer,
-    pages: reduceReducers(pagesReducer, myCustomReducer),
+    pages: reduceReducers(pagesReducer, applicationReducer),
+    additionalFoobar: myCustomReducer
   }),
   initialState,
   applyMiddleware(thunk)

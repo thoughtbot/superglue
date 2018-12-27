@@ -118,7 +118,7 @@ The above will fetch the `json.header` node in `index.js.props`, noop the `json.
 
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 
-Breezy's answer is to leave the business model to where they belong, on the backend, and just deal with denormalized cross-cutting presentational aspects. In other words, lets talk in terms of "updating the user email at each page header", instead of "updating the email in the user model".
+Breezy's answer is to leave the business model to where they belong, on the backend, and just deal with cross-cutting presentational fragments. In other words, lets talk in terms of "updating the user email at each page header", instead of "updating the email in the user model".
 
 Why?
 

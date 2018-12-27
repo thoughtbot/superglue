@@ -2,7 +2,7 @@
 
 ## The BreezyTemplate DSL
 
-BreezyTemplate is a queryable Server-generated Javascript Response \(SJR\) templating library based on JBuilder that you use to bulid the props that your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key [differences](breezy-template.md#differences-from-jbuilder).
+BreezyTemplate is a queryable Server-generated Javascript Response \(SJR\) templating library based on JBuilder that builds the props your container components receive. It has support for partials, russian-doll caching, and can selectively render paths of your props tree without executing others. It supports most of JBuilder syntax, but it does have a few key [differences](breezy-template.md#differences-from-jbuilder).
 
 Example:
 
@@ -166,23 +166,32 @@ json.array! @posts, partial: ["blog_post", as: :blog_post]
 
 ### Partial Fragments
 
-Breezy does not normalize your store, instead it relies on your partial's metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `fragment` option.
+Breezy does not normalize your store, instead it relies on your partial's metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `fragment_name` option.
 
-For example, to update all your headers across all pages like so:
+A fragment helps to identify a rendered partial across the all pages. For example, to update all your headers across all pages like so:
 
 ```javascript
-extendInFragment({
-  name: 'header',
-  keypath: 'profile.address',
-  value: {zip_code: 11214}
-})
+switch(action.type) {
+case SOME_ACTION: {
+  return produce(state, draft => {
+    Object.entries(state).forEach(([pageKey, {fragments=[]}]) => {
+      fragments['header'].forEach(pathToFragment => {
+        const node = getIn(draft, ['data', pathToFragment].join('.'))
+        node.profile.address = '123 new st.'
+      })
+    })
+  })
+}
+default:
+  return state
+}
 ```
 
-You would need use partials and add the option `fragment: true`. Then the key `header` will be accessible by `extendInFragment`.
+You would need use partials and add the option `fragment_name: 'header'`. Then the key `header` will be accessible in your page's fragments.
 
 ```ruby
 # index.js.breezy
-json.header null, partial: ["profile", fragment: true]
+json.header null, partial: ["header", fragment_name: 'header']
 
 
 # _profile.js.breezy
@@ -193,23 +202,15 @@ json.profile do
 end
 ```
 
-A fragment uniquely identifies a rendered partial across the application. When enabled with `fragment: true`, the name of the fragment is the key where the partial is used. You can also give a custom name:
 
-```ruby
-# index.js.breezy
-
-json.header null, partial: ["profile", fragment: 'super_header']
-```
 
 When using fragments with Arrays, the argument **MUST** be a lamda that returns a string:
 
 ```ruby
 require 'breezy_template/core_ext' #See (lists)[#Lists]
 
-json.array! ['foo', 'bar'], partial: ["footer", fragment: ->(x){"somefoo_#{x}"}]
+json.array! ['foo', 'bar'], partial: ["footer", fragment_name: ->(x){"somefoo_#{x}"}]
 ```
-
-Use fragments sparingly, and only if you are sure a partial is a cross-cutting concern. Headers, footers, and partials for list elements are good candidates, while a partial containing lists is not.
 
 ### Caching
 

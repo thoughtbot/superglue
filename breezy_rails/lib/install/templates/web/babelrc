@@ -18,7 +18,9 @@
     ["module-resolver", {
       "root": ["./app"],
       "alias": {
-        "views": "./app/views"
+        "views": "./app/views",
+        "components": "./app/components",
+        "javascript": "./app/javascript"
       }
     }],
     "transform-object-rest-spread",

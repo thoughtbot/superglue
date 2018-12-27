@@ -75,6 +75,15 @@ end
 say "Copying application.js file to #{Webpacker.config.source_entry_path}"
 copy_file "#{__dir__}/templates/web/application.js", "#{Webpacker.config.source_entry_path}/application.js"
 
+say "Copying reducer.js file to #{Webpacker.config.source_entry_path}"
+copy_file "#{__dir__}/templates/web/reducer.js", "#{Webpacker.config.source_entry_path}/reducer.js"
+
+say "Copying action_creators.js file to #{Webpacker.config.source_entry_path}"
+copy_file "#{__dir__}/templates/web/action_creators.js", "#{Webpacker.config.source_entry_path}/action_creators.js"
+
+say "Copying actions.js file to #{Webpacker.config.source_entry_path}"
+copy_file "#{__dir__}/templates/web/actions.js", "#{Webpacker.config.source_entry_path}/actions.js"
+
 say "Copying Breezy initializer"
 copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/breezy.rb"
 
@@ -85,7 +94,7 @@ say "Adding required member methods to ApplicationRecord"
 add_member_methods
 
 say "Installing React, Redux, and Breezy"
-run "yarn add babel-plugin-module-resolver babel-preset-react formik history prop-types react-redux redux-thunk redux react react-dom @jho406/breezy --save"
+run "yarn add babel-plugin-module-resolver babel-preset-react formik history prop-types react-redux redux-thunk redux reduce-reducers react react-dom immer @jho406/breezy --save"
 
 say "Updating webpack paths to include .jsx file extension"
 insert_into_file Webpacker.config.config_path, "    - .jsx\n", after: /extensions:\n/

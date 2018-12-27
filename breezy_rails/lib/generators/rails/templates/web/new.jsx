@@ -3,12 +3,13 @@ import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import {connect} from 'react-redux'
 import BaseScreen from 'components/BaseScreen'
 import <%= plural_table_name.camelize %>Form from 'components/<%= plural_table_name.camelize %>Form'
+import * as applicationActionCreators from 'javascript/packs/action_creators'
 
 class <%= plural_table_name.camelize %>New extends BaseScreen {
   formRef = React.createRef()
 
   handleSubmit = (values, {setSubmitting}) => {
-    this.props.delInPage({pageKey: this.props.pageKey, keypath: 'errors'})
+    this.props.clearFormErrors(this.props.pageKey)
 
     const options = {
       method:'POST',
@@ -38,6 +39,6 @@ class <%= plural_table_name.camelize %>New extends BaseScreen {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {...mapDispatchToProps, ...applicationActionCreators}
 )(<%= plural_table_name.camelize %>New)
 

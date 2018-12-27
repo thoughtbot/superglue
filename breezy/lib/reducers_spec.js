@@ -192,7 +192,7 @@ describe('reducers', () => {
         })
       })
 
-      fit('throws cant find page if the page does not exist for grafting', () => {
+      it('throws cant find page if the page does not exist for grafting', () => {
         const prevState = {
         }
 

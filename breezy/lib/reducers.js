@@ -3,7 +3,6 @@ import {
   forEachJointInPage,
   forEachJointPathInPage,
   forEachJointPathAcrossAllPages,
-  pagePath,
 } from './utils/helpers'
 import {setIn, getIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
@@ -59,7 +58,7 @@ function copyInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function updateJointsInPageToMatch(state, pageKey, jointName, pathToJoint) {
+function updateJointsInPageToMatch (state, pageKey, jointName, pathToJoint) {
   const currentPage = state[pageKey]
   if (!currentPage) {
     const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
@@ -96,7 +95,7 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
 
     joints[name] = [
       ...new Set([...joints[name],
-      ...currentPage.joints[name]])
+        ...currentPage.joints[name]])
     ]
   })
 

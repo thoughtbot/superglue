@@ -1,7 +1,7 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
-const isSearchable = /^[\da-zA-Z\-\_\=\.]+$/
+const isSearchable = /^[\da-zA-Z\-_=.]+$/
 
 function getIn (obj, path) {
   const keyPath = normalizeKeyPath(path)

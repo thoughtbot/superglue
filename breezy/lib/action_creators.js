@@ -108,7 +108,7 @@ function updateAllJointsToMatch (pageKey) {
   }
 }
 
-function updateJointsInPageToMatch({pageKey, lastJointName, lastJointPath}) {
+function updateJointsInPageToMatch ({pageKey, lastJointName, lastJointPath}) {
   pageKey = withoutBZParams(pageKey)
 
   return {

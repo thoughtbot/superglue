@@ -131,7 +131,7 @@ describe('navigation', () => {
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
             pageKey: '/bar',
-            joints: {}
+            fragments: {}
           },
           '/foo':{
             data: { heading: 'Some heading 2' },
@@ -143,7 +143,7 @@ describe('navigation', () => {
             positionY: jasmine.any(Number),
             positionX: jasmine.any(Number),
             pageKey: '/foo',
-            joints: {}
+            fragments: {}
           }
         }
       }

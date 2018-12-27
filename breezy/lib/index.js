@@ -14,9 +14,9 @@ export {mapStateToProps, mapDispatchToProps, enhanceVisitWithBrowserBehavior} fr
 export {breezyReducer, pageReducer, rootReducer} from './reducers'
 export {getIn} from './utils/immutability.js'
 export {
-  forEachJointPathAcrossAllPages,
-  forEachJointPathInPage,
-  jointPathsInPage,
+  forEachFragmentPathAcrossAllPages,
+  forEachFragmentPathInPage,
+  fragmentPathsInPage,
 } from './utils/helpers'
 export {setWindow, unsetWindow}
 export function stop () {

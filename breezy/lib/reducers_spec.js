@@ -93,7 +93,7 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {}
+            fragments: {}
           }
         }
 
@@ -127,12 +127,12 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {}
+            fragments: {}
           }
         })
       })
 
-      it('takes any new joints and merges them', () => {
+      it('takes any new fragments and merges them', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -144,7 +144,7 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {
+            fragments: {
               info: ['header.cart']
             }
           }
@@ -156,7 +156,7 @@ describe('reducers', () => {
           path: 'header.cart',
           title: 'foobar',
           csrfToken: 'token',
-          joints: {
+          fragments: {
             info: ['header.cart.cat', 'header.cart.cat'],
             footer: ['footer']
           },
@@ -169,7 +169,7 @@ describe('reducers', () => {
             pageKey: '/foo',
             node: graftResponse.data,
             pathToNode: graftResponse.path,
-            joints: graftResponse.joints
+            fragments: graftResponse.fragments
           }
         })
 
@@ -184,7 +184,7 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {
+            fragments: {
               info: ['header.cart.cat', 'header.cart'],
               footer: ['footer']
             }
@@ -202,7 +202,7 @@ describe('reducers', () => {
           path: 'header.cart',
           title: 'foobar',
           csrfToken: 'token',
-          joints: {
+          fragments: {
             info: ['header.cart.cat', 'header.cart.cat'],
             footer: ['footer']
           },
@@ -216,7 +216,7 @@ describe('reducers', () => {
               pageKey: '/foo',
               node: graftResponse.data,
               pathToNode: graftResponse.path,
-              joints: graftResponse.joints
+              fragments: graftResponse.fragments
             }
           })
         }).toThrow(new Error("Breezy was looking for /foo in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?"))
@@ -244,13 +244,13 @@ describe('reducers', () => {
           cachedAt: jasmine.any(Number),
           assets: [ 'application-123.js' ],
           pageKey: '/foo',
-          joints: {}
+          fragments: {}
         }))
       })
     })
 
     describe('BREEZY_UPDATE_ALL_JOINTS', () => {
-      it('updates all joints using the selected page as reference', () => {
+      it('updates all fragments using the selected page as reference', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -262,7 +262,7 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {
+            fragments: {
               info: ['header.cart']
             }
           },
@@ -278,7 +278,7 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {
+            fragments: {
               info: ['profile.header.cart']
             }
           }
@@ -297,7 +297,7 @@ describe('reducers', () => {
     })
 
     describe('MATCH_JOINTS_IN_PAGE', () => {
-      it('updates all joints in a page using the selected joint as reference', () => {
+      it('updates all fragments in a page using the selected fragment as reference', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -321,7 +321,7 @@ describe('reducers', () => {
             },
             csrfToken: 'token',
             assets: ['application-123.js'],
-            joints: {
+            fragments: {
               info: [
                 'header.cart',
                 'body.menu.sideCart',
@@ -335,8 +335,8 @@ describe('reducers', () => {
           type: '@@breezy/MATCH_JOINTS_IN_PAGE',
           payload: {
             pageKey: '/foo',
-            lastJointName: 'info',
-            lastJointPath: 'header.cart'
+            lastFragmentName: 'info',
+            lastFragmentPath: 'header.cart'
           }
         })
 

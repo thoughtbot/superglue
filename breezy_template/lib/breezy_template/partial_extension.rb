@@ -55,8 +55,8 @@ class BreezyTemplate
       options = _normalize_options_for_partial(options)
 
       partial, partial_opts = options[:partial]
-      if partial_opts[:joint] == true
-        partial_opts[:joint] = name
+      if partial_opts[:fragment] == true
+        partial_opts[:fragment] = name
       end
 
       value = if object.nil? && partial.empty?
@@ -77,12 +77,12 @@ class BreezyTemplate
 
     def _render_partial(options)
       partial, options = options[:partial]
-      joint = options[:joint]
-      if joint
-        joint = joint.to_sym
+      fragment = options[:fragment]
+      if fragment
+        fragment = fragment.to_sym
         path = @path.dup.join('.')
-        @js.push "joints['#{joint}'] = joints['#{joint}'] || []; joints['#{joint}'].push('#{path}'); lastJointName='#{joint}'; lastJointPath='#{path}';"
-        @joints[joint]
+        @js.push "fragments['#{fragment}'] = fragments['#{fragment}'] || []; fragments['#{fragment}'].push('#{path}'); lastFragmentName='#{fragment}'; lastFragmentPath='#{path}';"
+        @fragments[fragment]
       end
 
       options[:locals].merge! json: self
@@ -98,7 +98,7 @@ class BreezyTemplate
       partial_opts.reverse_merge! ::BreezyTemplate.template_lookup_options
       as = partial_opts[:as]
 
-      extract_joint_name = partial_opts.delete(:joint)
+      extract_fragment_name = partial_opts.delete(:fragment)
       locals = partial_opts.delete(:locals)
 
       array_opts.delete(:partial)
@@ -108,8 +108,8 @@ class BreezyTemplate
         member_locals.merge! as.to_sym => member if as
         partial_opts.merge!(locals: member_locals)
 
-        if extract_joint_name.respond_to?(:call)
-          partial_opts.merge!(joint: extract_joint_name.call(member))
+        if extract_fragment_name.respond_to?(:call)
+          partial_opts.merge!(fragment: extract_fragment_name.call(member))
         end
         _render_partial options
       end

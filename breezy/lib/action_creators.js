@@ -38,7 +38,7 @@ export function saveResponse ({pageKey, page}) {
   }
 }
 
-export function handleGraft ({pageKey, node, pathToNode, joints={}}) {
+export function handleGraft ({pageKey, node, pathToNode, fragments={}}) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -47,7 +47,7 @@ export function handleGraft ({pageKey, node, pathToNode, joints={}}) {
       pageKey,
       node,
       pathToNode,
-      joints
+      fragments
     }
   }
 }
@@ -97,7 +97,7 @@ function fetchDeferments (pageKey, {defers = []}) {
   }
 }
 
-function updateAllJointsToMatch (pageKey) {
+function updateAllFragmentsToMatch (pageKey) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -108,15 +108,15 @@ function updateAllJointsToMatch (pageKey) {
   }
 }
 
-function updateJointsInPageToMatch ({pageKey, lastJointName, lastJointPath}) {
+function updateFragmentsInPageToMatch ({pageKey, lastFragmentName, lastFragmentPath}) {
   pageKey = withoutBZParams(pageKey)
 
   return {
     type: MATCH_JOINTS_IN_PAGE,
     payload: {
       pageKey,
-      lastJointName,
-      lastJointPath,
+      lastFragmentName,
+      lastFragmentPath,
     }
   }
 }
@@ -126,27 +126,27 @@ export function saveAndProcessPage (pageKey, page) {
     pageKey = withoutBZParams(pageKey)
 
     const {
-      joints,
-      lastJointName,
-      lastJointPath
+      fragments,
+      lastFragmentName,
+      lastFragmentPath
     } = page
 
     if (isGraft(page)) {
       const {node, pathToNode} = extractNodeAndPath(page)
-      dispatch(handleGraft({joints, pageKey, node, pathToNode}))
+      dispatch(handleGraft({fragments, pageKey, node, pathToNode}))
 
-      if (lastJointName) {
-        dispatch(updateJointsInPageToMatch({
+      if (lastFragmentName) {
+        dispatch(updateFragmentsInPageToMatch({
           pageKey,
-          lastJointName,
-          lastJointPath,
+          lastFragmentName,
+          lastFragmentPath,
         }))
       }
     } else {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    dispatch(updateAllJointsToMatch(pageKey))
+    dispatch(updateAllFragmentsToMatch(pageKey))
     return dispatch(fetchDeferments(pageKey, page))
   }
 }

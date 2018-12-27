@@ -142,7 +142,7 @@ Shares the same arguments as `visit` with a few key differences:
 
 ### saveAndProcessSJRPage
 
-Save and process a rendered view from BreezyTemplate. It will also handle any deferment, and joint updating. Useful if you want to stream a fully rendered `your_template.js.props` to preload, or graft nodes via websockets.
+Save and process a rendered view from BreezyTemplate. It will also handle any deferment, and fragment updating. Useful if you want to stream a fully rendered `your_template.js.props` to preload, or graft nodes via websockets.
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
@@ -151,7 +151,7 @@ Save and process a rendered view from BreezyTemplate. It will also handle any de
 
 ## Filtering nodes
 
-Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Joints will also automatically be updated where needed.
+Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
 
 For example:
 
@@ -159,24 +159,24 @@ For example:
 store.dispatch(visit('/?_bz=header.shopping_cart'))
 ```
 
-## Updating Joints
+## Updating Fragments
 
-A Joint is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [BreezyTemplate](breezy-template.md#partial-joints)
+A Fragment is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [BreezyTemplate](breezy-template.md#partial-fragments)
 
 For example:
 
 ```ruby
-json.header partial: ['header', joint: true]
+json.header partial: ['header', fragment: true]
 ```
 
 ### Automatically
 
-Breezy will automatically update all pages using information about joint usage from the last request.
+Breezy will automatically update all pages using information about fragment usage from the last request.
 
 For example, if you had this in your `cart.js.props`:
 
 ```ruby
-json.header partial: ['header', joint: true]
+json.header partial: ['header', fragment: true]
 ```
 
 And you dispatch a visit to `/cart`
@@ -185,9 +185,9 @@ And you dispatch a visit to `/cart`
   this.enhancedVisit('/cart')
 ```
 
-Breezy will track all joints used in `cart.js.props` and use it to update the equivalent joints across all pages in your store.
+Breezy will track all fragments used in `cart.js.props` and use it to update the equivalent fragments across all pages in your store.
 
-### Manually updating joints
+### Manually updating fragments
 
 If you want finer control, or want to perform optimistic updates, use [custom reducers](recipes.md#custom-reducers) along side with breezy [helpers](utility.md).
 

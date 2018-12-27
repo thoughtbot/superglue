@@ -60,18 +60,18 @@ getIn(state, 'posts.post_id=0.comment.0.body')
 
 The above would find the first occurance where `post_id=1` before continuing traversing.
 
-### forEachJointPathAcrossAllPages
-Iterates through each key path of where the joint is located across all pages.
+### forEachFragmentPathAcrossAllPages
+Iterates through each key path of where the fragment is located across all pages.
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | pages | `Object` | The pages object from your root Redux state
-| name | `String ` | The name of the joint, e.g, header
+| name | `String ` | The name of the fragment, e.g, header
 | callback | `Function` | The function to call while iterating
 
 | Callback options | Type | Notes |
 | :--- | :--- | :--- |
-| keypath | `String` | The path to the joint from the `pages` root, use with (getIn)[#getIn]
+| keypath | `String` | The path to the fragment from the `pages` root, use with (getIn)[#getIn]
 
 For example, say we have a partial:
 
@@ -85,20 +85,20 @@ and two pages that uses it.
 ```ruby
 #index.js.props
 
-json.header nil, partial: ['header', joint: true]
+json.header nil, partial: ['header', fragment: true]
 ```
 
 ```ruby
 #edit.js.props
 
-json.header nil, partial: ['header', joint: true]
+json.header nil, partial: ['header', fragment: true]
 ```
 
-To update the email optimistically, just iterate through all the `header` joints and update the email on the client side:
+To update the email optimistically, just iterate through all the `header` fragments and update the email on the client side:
 
 ```javascript
 import {
-  forEachJointPathAcrossAllPages,
+  forEachFragmentPathAcrossAllPages,
 } from '@jho406/breezy/dist/utils/helpers'
 import produce from "immer"
 
@@ -107,8 +107,8 @@ function myCustomReducer(state = {}, action) {
   case 'USER_CHANGES_EMAIL': {
     const {email} = action
     return produce(state, draft => {
-      forEachJointPathAcrossAllPages(state, 'header', (pathToJoint) => {
-        const headerNode = getIn(draft, pathToJoint)
+      forEachFragmentPathAcrossAllPages(state, 'header', (pathToFragment) => {
+        const headerNode = getIn(draft, pathToFragment)
         header.email = email
       })
     })
@@ -119,16 +119,16 @@ function myCustomReducer(state = {}, action) {
 }
 ```
 
-### forEachJointPathInPage
-Iterates through each key path of where the joint is located in a single page.
+### forEachFragmentPathInPage
+Iterates through each key path of where the fragment is located in a single page.
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | page | `Object` | A page object from the `pages` root.
-| name | `String ` | The name of the joint, e.g, header
+| name | `String ` | The name of the fragment, e.g, header
 | callback | `Function` | The function to call while iterating
 
 | Callback options | Type | Notes |
 | :--- | :--- | :--- |
-| keypath | `String` | The path to the joint from the chosen page root, use with (getIn)[#getIn].
+| keypath | `String` | The path to the fragment from the chosen page root, use with (getIn)[#getIn].
 

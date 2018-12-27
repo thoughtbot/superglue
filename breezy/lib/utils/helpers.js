@@ -22,33 +22,33 @@ export function pagePath (pageKey, keyPath) {
   return fullPath.join('.')
 }
 
-export function forEachJointPathAcrossAllPages (pages, name, fn = ()=>{}) {
+export function forEachFragmentPathAcrossAllPages (pages, name, fn = ()=>{}) {
   Object.entries(pages)
     .forEach(([pageKey, page]) => {
-      forEachJointPathInPage(page, name, (path) => {
-        const pathToJoint = [pageKey, 'data', path].join('.')
-        fn(pathToJoint)
+      forEachFragmentPathInPage(page, name, (path) => {
+        const pathToFragment = [pageKey, 'data', path].join('.')
+        fn(pathToFragment)
       })
     })
 }
 
-export function forEachJointPathInPage (page, name, fn = ()=>{}) {
-  const keyPaths = jointPathsInPage(page, name)
+export function forEachFragmentPathInPage (page, name, fn = ()=>{}) {
+  const keyPaths = fragmentPathsInPage(page, name)
   keyPaths.forEach((path) => {
     fn(path)
   })
 }
 
-export function jointPathsInPage (page, name) {
-  return page.joints[name] || []
+export function fragmentPathsInPage (page, name) {
+  return page.fragments[name] || []
 }
 
-export function forEachJointInPage ({joints}, fn = () => {}) {
-  Object.entries(joints)
-    .forEach(([jointName, paths]) => {
+export function forEachFragmentInPage ({fragments}, fn = () => {}) {
+  Object.entries(fragments)
+    .forEach(([fragmentName, paths]) => {
       paths.forEach((path) => {
-        const jointPath = ['data', path].join('.')
-        fn(jointName, jointPath)
+        const fragmentPath = ['data', path].join('.')
+        fn(fragmentName, fragmentPath)
       })
     })
 }

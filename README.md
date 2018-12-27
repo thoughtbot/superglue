@@ -126,7 +126,7 @@ Business logic is complex and diverse across industry verticals, but the present
 
 Breezy's store shape is a unidirectional tree and falls on the extreme end of denormalization, every page is given a node in the redux tree. There is duplication of state across children for example, a shared `User` header. To update something like a shared header, you need to iterate over each page, find the header, and make updates.
 
-This might seem tedious, and prone to error, but thankfully Breezy give you tools that make it [easy](utility.md#forEachJointPathAcrossAllPages) to update and manage cross-cutting aspects like a shared header.
+This might seem tedious, and prone to error, but thankfully Breezy give you tools that make it [easy](utility.md#forEachFragmentPathAcrossAllPages) to update and manage cross-cutting aspects like a shared header.
 
 ### How does it look like
 

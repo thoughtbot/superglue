@@ -538,7 +538,7 @@ and modify your `application.js`
 import reduceReducers from 'reduce-reducers'
 import {getIn} from '@jho406/breezy'
 import {
-  forEachJointPathAcrossAllPages,
+  forEachFragmentPathAcrossAllPages,
 } from '@jho406/breezy/dist/utils/helpers'
 import produce from "immer"
 
@@ -547,8 +547,8 @@ function myCustomReducer(state = {}, action) {
   case 'USER_CHANGES_EMAIL': {
     const {email} = action
     return produce(state, draft => {
-      forEachJointPathAcrossAllPages(state, 'header', (pathToJoint) => {
-        const headerNode = getIn(draft, pathToJoint)
+      forEachFragmentPathAcrossAllPages(state, 'header', (pathToFragment) => {
+        const headerNode = getIn(draft, pathToFragment)
         header.email = email
       })
     })

@@ -72,13 +72,13 @@ describe('action creators', () => {
       const pageKey = '/test'
       const node = {d: 'foo'}
       const pathToNode = 'a.b'
-      const joints = {'foo': ['bar']}
+      const fragments = {'foo': ['bar']}
 
       const action = handleGraft({
         pageKey,
         node,
         pathToNode,
-        joints,
+        fragments,
       })
 
       expect(action).toEqual({
@@ -87,7 +87,7 @@ describe('action creators', () => {
           pageKey,
           node,
           pathToNode,
-          joints,
+          fragments,
         }
       })
     })
@@ -197,7 +197,7 @@ describe('action creators', () => {
             pageKey:"/foo",
             node:"success",
             pathToNode:"body",
-            joints: {}
+            fragments: {}
           },
         },
         {
@@ -253,7 +253,7 @@ describe('action creators', () => {
             pageKey: '/foo',
             node: 'success',
             pathToNode: 'heading.cart',
-            joints: {}
+            fragments: {}
           }
         },
         {
@@ -269,7 +269,7 @@ describe('action creators', () => {
       })
     })
 
-    it ('fires HANDLE_GRAFT, and process a page with a joint',  () => {
+    it ('fires HANDLE_GRAFT, and process a page with a fragment',  () => {
       const store = mockStore({...initialState(), pages: {
         '/foo': {}
       }})
@@ -281,11 +281,11 @@ describe('action creators', () => {
         csrfToken: '',
         assets: [],
         defers: [],
-        joints: {
+        fragments: {
           info: ['header.email']
         },
-        lastJointName: 'info',
-        lastJointPath: 'header.email',
+        lastFragmentName: 'info',
+        lastFragmentPath: 'header.email',
       }
 
       const expectedActions = [
@@ -295,7 +295,7 @@ describe('action creators', () => {
             pageKey: '/foo',
             node: 'success',
             pathToNode: 'heading.cart',
-            joints: {
+            fragments: {
               info: ['header.email']
             }
           }
@@ -304,8 +304,8 @@ describe('action creators', () => {
           type: '@@breezy/MATCH_JOINTS_IN_PAGE',
           payload: {
             pageKey: '/foo',
-            lastJointName: 'info',
-            lastJointPath: 'header.email'
+            lastFragmentName: 'info',
+            lastFragmentPath: 'header.email'
           }
         },
         {

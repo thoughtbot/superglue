@@ -40,7 +40,7 @@ class BreezyTemplate
     @context = context
     @js = []
     @path = []
-    @joints = {}
+    @fragments = {}
 
     @attributes = {}
     @key_formatter = KeyFormatter.new({camelize: :lower})
@@ -178,7 +178,7 @@ class BreezyTemplate
     js = _breezy_return(@attributes)
 
     @js.push(js)
-    "(function(){var joints={};var lastJointName;var lastJointPath;var cache={};var defers=[];#{@js.join}})()"
+    "(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];#{@js.join}})()"
   end
 
   # Merges hash or array into current builder.

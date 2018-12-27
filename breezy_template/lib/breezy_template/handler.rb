@@ -57,9 +57,9 @@ class BreezyTemplate
               .join('.')
           end
 
-          json.joints ::BreezyTemplate::Var.new('joints')
-          json.last_joint_name ::BreezyTemplate::Var.new('lastJointName')
-          json.last_joint_path ::BreezyTemplate::Var.new('lastJointPath')
+          json.fragments ::BreezyTemplate::Var.new('fragments')
+          json.last_fragment_name ::BreezyTemplate::Var.new('lastFragmentName')
+          json.last_fragment_path ::BreezyTemplate::Var.new('lastFragmentPath')
           json.defers ::BreezyTemplate::Var.new('defers')
 
           json.target!

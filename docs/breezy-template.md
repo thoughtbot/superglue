@@ -164,25 +164,25 @@ json.post @big_post, partial: ["blog_post", locals: {email: 'tests@test.com'}]
 json.array! @posts, partial: ["blog_post", as: :blog_post]
 ```
 
-### Partial Joints
+### Partial Fragments
 
-Breezy does not normalize your store, instead it relies on your partial's metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `joint` option.
+Breezy does not normalize your store, instead it relies on your partial's metadata to make it easy to update cross cutting concerns like a shared header. To enable this behavior, we use the `fragment` option.
 
 For example, to update all your headers across all pages like so:
 
 ```javascript
-extendInJoint({
+extendInFragment({
   name: 'header',
   keypath: 'profile.address',
   value: {zip_code: 11214}
 })
 ```
 
-You would need use partials and add the option `joint: true`. Then the key `header` will be accessible by `extendInJoint`.
+You would need use partials and add the option `fragment: true`. Then the key `header` will be accessible by `extendInFragment`.
 
 ```ruby
 # index.js.breezy
-json.header null, partial: ["profile", joint: true]
+json.header null, partial: ["profile", fragment: true]
 
 
 # _profile.js.breezy
@@ -193,23 +193,23 @@ json.profile do
 end
 ```
 
-A joint uniquely identifies a rendered partial across the application. When enabled with `joint: true`, the name of the joint is the key where the partial is used. You can also give a custom name:
+A fragment uniquely identifies a rendered partial across the application. When enabled with `fragment: true`, the name of the fragment is the key where the partial is used. You can also give a custom name:
 
 ```ruby
 # index.js.breezy
 
-json.header null, partial: ["profile", joint: 'super_header']
+json.header null, partial: ["profile", fragment: 'super_header']
 ```
 
-When using joints with Arrays, the argument **MUST** be a lamda that returns a string:
+When using fragments with Arrays, the argument **MUST** be a lamda that returns a string:
 
 ```ruby
 require 'breezy_template/core_ext' #See (lists)[#Lists]
 
-json.array! ['foo', 'bar'], partial: ["footer", joint: ->(x){"somefoo_#{x}"}]
+json.array! ['foo', 'bar'], partial: ["footer", fragment: ->(x){"somefoo_#{x}"}]
 ```
 
-Use joints sparingly, and only if you are sure a partial is a cross-cutting concern. Headers, footers, and partials for list elements are good candidates, while a partial containing lists is not.
+Use fragments sparingly, and only if you are sure a partial is a cross-cutting concern. Headers, footers, and partials for list elements are good candidates, while a partial containing lists is not.
 
 ### Caching
 

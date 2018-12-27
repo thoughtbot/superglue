@@ -3,10 +3,10 @@ import {
   extractNodeAndPath,
   parseSJR,
   pagePath,
-  forEachJointInPage,
-  forEachJointPathAcrossAllPages,
-  forEachJointPathInPage,
-  jointPathsInPage
+  forEachFragmentInPage,
+  forEachFragmentPathAcrossAllPages,
+  forEachFragmentPathInPage,
+  fragmentPathsInPage
 } from './helpers'
 
 describe('pagePath', () => {
@@ -16,14 +16,14 @@ describe('pagePath', () => {
   })
 })
 
-describe('jointPathsInPage', () => {
-  it('returns the joint paths in page', () => {
+describe('fragmentPathsInPage', () => {
+  it('returns the fragment paths in page', () => {
     const page = {
-      joints: {
+      fragments: {
         'header': ['a.b.c', 'd.e.f']
       }
     }
-    const paths = jointPathsInPage(page, 'header')
+    const paths = fragmentPathsInPage(page, 'header')
 
     expect(paths).toEqual([
       'a.b.c',
@@ -32,16 +32,16 @@ describe('jointPathsInPage', () => {
   })
 })
 
-describe('forEachPathToJointInPage', () => {
-  it('iterates through each named joint in the current page', () => {
+describe('forEachPathToFragmentInPage', () => {
+  it('iterates through each named fragment in the current page', () => {
     const page = {
-      joints: {
+      fragments: {
         'header': ['a.b.c', 'd.e.f']
       }
     }
     const iters = []
-    forEachJointPathInPage(page, 'header', (pathToJoint)=>{
-      iters.push(pathToJoint)
+    forEachFragmentPathInPage(page, 'header', (pathToFragment)=>{
+      iters.push(pathToFragment)
     })
 
     expect(iters).toEqual([
@@ -51,16 +51,16 @@ describe('forEachPathToJointInPage', () => {
   })
 })
 
-describe('forEachJointPathAcrossAllPages', () => {
-  it('iterates through each named joint across all pages', () => {
+describe('forEachFragmentPathAcrossAllPages', () => {
+  it('iterates through each named fragment across all pages', () => {
     const pages = {
       '/foo': {
-        joints: {
+        fragments: {
           'header': ['a.b.c', 'd.e.f']
         }
       },
       '/bar': {
-        joints: {
+        fragments: {
           'header': ['g.h.i', 'j.k.l'],
           'footer': ['g.h.i', 'j.k.l']
         }
@@ -68,8 +68,8 @@ describe('forEachJointPathAcrossAllPages', () => {
     }
 
     const iters = []
-    forEachJointPathAcrossAllPages(pages, 'header', (pathToJoint)=>{
-      iters.push(pathToJoint)
+    forEachFragmentPathAcrossAllPages(pages, 'header', (pathToFragment)=>{
+      iters.push(pathToFragment)
     })
 
     expect(iters).toEqual([
@@ -81,18 +81,18 @@ describe('forEachJointPathAcrossAllPages', () => {
   })
 })
 
-describe('forEachJointInPage', () => {
-  it('iterates through each joint in the current pages', () => {
+describe('forEachFragmentInPage', () => {
+  it('iterates through each fragment in the current pages', () => {
     const page = {
-      joints: {
+      fragments: {
         'header': ['g.h.i', 'j.k.l'],
         'footer': ['m.n.o', 'q.r.s']
       }
     }
 
     const iters = []
-    forEachJointInPage(page, (jointName, jointPath)=>{
-      iters.push([jointName, jointPath])
+    forEachFragmentInPage(page, (fragmentName, fragmentPath)=>{
+      iters.push([fragmentName, fragmentPath])
     })
 
     expect(iters).toEqual([

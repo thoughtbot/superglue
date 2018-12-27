@@ -1,8 +1,8 @@
 import {
   reverseMerge,
-  forEachJointInPage,
-  forEachJointPathInPage,
-  forEachJointPathAcrossAllPages,
+  forEachFragmentInPage,
+  forEachFragmentPathInPage,
+  forEachFragmentPathAcrossAllPages,
 } from './utils/helpers'
 import {setIn, getIn} from'./utils/immutability'
 import {pageYOffset, pageXOffset} from'./window'
@@ -18,11 +18,11 @@ import {
   MATCH_JOINTS_IN_PAGE,
 } from './actions'
 
-function updateAllJoints (state, pageKey) {
+function updateAllFragments (state, pageKey) {
   const selectedPage = state[pageKey]
-  forEachJointInPage(selectedPage, (jointName, jointPath) => {
-    const updatedNode = getIn(selectedPage, jointPath)
-    state = copyInByJoint(state, jointName, updatedNode)
+  forEachFragmentInPage(selectedPage, (fragmentName, fragmentPath) => {
+    const updatedNode = getIn(selectedPage, fragmentPath)
+    state = copyInByFragment(state, fragmentName, updatedNode)
   })
 
   return state
@@ -36,7 +36,7 @@ function saveResponse (state, pageKey, page) {
     positionY: pageYOffset(),
     positionX: pageXOffset(),
     pageKey,
-    joints: {},
+    fragments: {},
   })
 
   state[pageKey] = page
@@ -44,11 +44,11 @@ function saveResponse (state, pageKey, page) {
   return state
 }
 
-function copyInByJoint (state, name, value, subpath = null) {
+function copyInByFragment (state, name, value, subpath = null) {
   state = {...state}
   const copy = JSON.stringify(value)
-  forEachJointPathAcrossAllPages(state, name, (pathToJoint) =>{
-    const fullpath = [pathToJoint]
+  forEachFragmentPathAcrossAllPages(state, name, (pathToFragment) =>{
+    const fullpath = [pathToFragment]
     if (subpath) {
       fullpath.push(subpath)
     }
@@ -58,27 +58,27 @@ function copyInByJoint (state, name, value, subpath = null) {
   return state
 }
 
-function updateJointsInPageToMatch (state, pageKey, jointName, pathToJoint) {
+function updateFragmentsInPageToMatch (state, pageKey, fragmentName, pathToFragment) {
   const currentPage = state[pageKey]
   if (!currentPage) {
     const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
     throw error
   }
 
-  const node = getIn(state, [pageKey, 'data', pathToJoint].join('.'))
+  const node = getIn(state, [pageKey, 'data', pathToFragment].join('.'))
   const copy = JSON.stringify(node)
   let nextState = state
 
-  forEachJointPathInPage(currentPage, jointName, (path) => {
+  forEachFragmentPathInPage(currentPage, fragmentName, (path) => {
     nextState = setIn(nextState, [pageKey, 'data', path].join('.'), JSON.parse(copy))
   })
 
   return nextState
 }
 
-function handleGraft (state, pageKey, node, pathToNode, joints={}) {
+function handleGraft (state, pageKey, node, pathToNode, fragments={}) {
   state = {...state}
-  joints = {...joints}
+  fragments = {...fragments}
 
   const currentPage = state[pageKey]
 
@@ -88,18 +88,18 @@ function handleGraft (state, pageKey, node, pathToNode, joints={}) {
   }
   let nextState = setIn(state, [pageKey, 'data', pathToNode].join('.'), node)
 
-  Object.keys(currentPage.joints).forEach((name) => {
-    if(!joints[name]) {
-      joints[name] = []
+  Object.keys(currentPage.fragments).forEach((name) => {
+    if(!fragments[name]) {
+      fragments[name] = []
     }
 
-    joints[name] = [
-      ...new Set([...joints[name],
-        ...currentPage.joints[name]])
+    fragments[name] = [
+      ...new Set([...fragments[name],
+        ...currentPage.fragments[name]])
     ]
   })
 
-  nextState = setIn(nextState, [pageKey, 'joints'].join('.'), joints)
+  nextState = setIn(nextState, [pageKey, 'fragments'].join('.'), fragments)
   return nextState
 }
 
@@ -111,26 +111,26 @@ export function pageReducer (state = {}, action) {
   }
   case UPDATE_ALL_JOINTS: {
     const {pageKey} = action.payload
-    return updateAllJoints(state, pageKey)
+    return updateAllFragments(state, pageKey)
   }
   case MATCH_JOINTS_IN_PAGE: {
     const {
       pageKey,
-      lastJointName,
-      lastJointPath,
+      lastFragmentName,
+      lastFragmentPath,
     } = action.payload
 
-    return updateJointsInPageToMatch(state, pageKey, lastJointName, lastJointPath)
+    return updateFragmentsInPageToMatch(state, pageKey, lastFragmentName, lastFragmentPath)
   }
   case HANDLE_GRAFT: {
     const {
       pageKey,
       node,
       pathToNode,
-      joints,
+      fragments,
     } = action.payload
 
-    return handleGraft(state, pageKey, node, pathToNode, joints)
+    return handleGraft(state, pageKey, node, pathToNode, fragments)
   }
   case REMOVE_PAGE: {
     const {pageKey} = action.payload

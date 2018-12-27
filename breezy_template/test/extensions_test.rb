@@ -163,12 +163,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":"hello"},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -189,12 +189,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"content":{"hit":123}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":{"hit":123}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -211,12 +211,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({\"data\":{\"content\":[3,4]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({\"data\":{\"content\":[3,4]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -233,12 +233,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","assets":["/test.js","/test.css","test_pack.js","test_pack.css"],"joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":"hello"},"screen":"test","assets":["/test.js","/test.css","test_pack.js","test_pack.css"],"fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -257,12 +257,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","csrfToken":"secret","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":"hello"},"screen":"test","csrfToken":"secret","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -279,12 +279,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"content":"hello"},"screen":"test","title":"this is fun","assets":["/test.js","/test.css"],"joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":"hello"},"screen":"test","title":"this is fun","assets":["/test.js","/test.css"],"fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -296,80 +296,80 @@ class BreezyTemplateTest < ActionView::TestCase
     Rails.cache.clear
 
     result = jbuild(<<-JBUILDER)
-      json.post @post, partial: ["blog_post", as: :blog_post, joint: :header]
+      json.post @post, partial: ["blog_post", as: :blog_post, fragment: :header]
     JBUILDER
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        joints['header'] = joints['header'] || []; joints['header'].push('post'); lastJointName='header'; lastJointPath='post';
+        fragments['header'] = fragments['header'] || []; fragments['header'].push('post'); lastFragmentName='header'; lastFragmentPath='post';
         return ({"data":{"post":{
           "id":1,
           "body":"post body 1",
           "author":{"firstName":"David","lastName":"Heinemeier Hansson"}
-        }},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        }},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
     assert_equal expected, result
   end
 
-  test "renders a partial with implicit joint" do
+  test "renders a partial with implicit fragment" do
     result = jbuild(<<-JBUILDER)
-      json.footer nil, partial: ["footer", joint: true]
+      json.footer nil, partial: ["footer", fragment: true]
     JBUILDER
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        joints['footer'] = joints['footer'] || []; joints['footer'].push('footer'); lastJointName='footer'; lastJointPath='footer';
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        fragments['footer'] = fragments['footer'] || []; fragments['footer'].push('footer'); lastFragmentName='footer'; lastFragmentPath='footer';
+        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
   end
 
-  test "renders a partial with explicit joint" do
+  test "renders a partial with explicit fragment" do
     result = jbuild(<<-JBUILDER)
-      json.footer nil, partial: ["footer", joint: 'hello']
+      json.footer nil, partial: ["footer", fragment: 'hello']
     JBUILDER
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        joints['hello'] = joints['hello'] || []; joints['hello'].push('footer'); lastJointName='hello'; lastJointPath='footer';
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        fragments['hello'] = fragments['hello'] || []; fragments['hello'].push('footer'); lastFragmentName='hello'; lastFragmentPath='footer';
+        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
   end
 
-  test "render array of partials with unique joints" do
+  test "render array of partials with unique fragments" do
     result = jbuild(<<-JBUILDER)
-      json.array! [1,2], partial: ["footer", joint: ->(x){"somefoo"+x.to_s}]
+      json.array! [1,2], partial: ["footer", fragment: ->(x){"somefoo"+x.to_s}]
     JBUILDER
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        joints['somefoo1'] = joints['somefoo1'] || []; joints['somefoo1'].push('0'); lastJointName='somefoo1'; lastJointPath='0';joints['somefoo2'] = joints['somefoo2'] || []; joints['somefoo2'].push('1'); lastJointName='somefoo2'; lastJointPath='1';
-        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        fragments['somefoo1'] = fragments['somefoo1'] || []; fragments['somefoo1'].push('0'); lastFragmentName='somefoo1'; lastFragmentPath='0';fragments['somefoo2'] = fragments['somefoo2'] || []; fragments['somefoo2'].push('1'); lastFragmentName='somefoo2'; lastFragmentPath='1';
+        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -383,12 +383,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -401,12 +401,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"profile":{"email":"test@test.com"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"profile":{"email":"test@test.com"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -423,13 +423,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"email":"test@test.com"};
-        return ({"data":{"profile":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"profile":cache["#{cache_keys[0]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -443,12 +443,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"profile":{"email":"test@test.com"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"profile":{"email":"test@test.com"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -462,12 +462,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":[{"terms":"You agree"},{"terms":"You agree"}],"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -481,14 +481,14 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"terms":"You agree"};
         cache["#{cache_keys[1]}"]={"terms":"You agree"};
-        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]],"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]],"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -502,9 +502,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return ({"data":[
@@ -518,7 +518,7 @@ class BreezyTemplateTest < ActionView::TestCase
           {"id":8,"body":"post body 8","author":{"firstName":"Pavel","lastName":"Pravosud"}},
           {"id":9,"body":"post body 9","author":{"firstName":"David","lastName":"Heinemeier Hansson"}},
           {"id":10,"body":"post body 10","author":{"firstName":"Pavel","lastName":"Pravosud"}}
-        ],"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        ],"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -532,12 +532,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":[],"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":[],"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -551,12 +551,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"posts":{"terms":"You agree"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"posts":{"terms":"You agree"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -569,12 +569,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"posts":[1,2]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"posts":[1,2]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -592,13 +592,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]=32;
-        return ({"data":{"hello":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"hello":cache["#{cache_keys[0]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -621,14 +621,14 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"top":"hello4"};
         cache["#{cache_keys[1]}"]={"top":"hello5"};
-        return ({"data":{"hello":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"hello":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"]]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -651,15 +651,15 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"subcontent":"inner"};
         cache["#{cache_keys[1]}"]={"subcontent":"other"};
         cache["#{cache_keys[2]}"]={"content":cache["#{cache_keys[0]}"],"other":cache["#{cache_keys[1]}"]};
-        return ({"data":{"hello":cache["#{cache_keys[2]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"hello":cache["#{cache_keys[2]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -682,12 +682,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({\"data\":{\"hello\":[]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({\"data\":{\"hello\":[]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -733,13 +733,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"name":"Cache"};
-        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -757,13 +757,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]=["a","b","c"];
-        return ({"data":{"content":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":cache["#{cache_keys[0]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -830,12 +830,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"content":{"name":"Cache"}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":{"name":"Cache"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -851,13 +851,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
-        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -890,13 +890,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"id":1,"body":"hit","author":{"firstName":"John","lastName":"Smith"}};
-        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"post":cache["#{cache_keys[0]}"]},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -916,9 +916,9 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"id":1,"body":"post body 1","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
@@ -931,7 +931,7 @@ class BreezyTemplateTest < ActionView::TestCase
         cache["#{cache_keys[7]}"]={"id":8,"body":"post body 8","author":{"firstName":"Pavel","lastName":"Pravosud"}};
         cache["#{cache_keys[8]}"]={"id":9,"body":"post body 9","author":{"firstName":"David","lastName":"Heinemeier Hansson"}};
         cache["#{cache_keys[9]}"]={"id":10,"body":"post body 10","author":{"firstName":"Pavel","lastName":"Pravosud"}};
-        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"],cache["#{cache_keys[2]}"],cache["#{cache_keys[3]}"],cache["#{cache_keys[4]}"],cache["#{cache_keys[5]}"],cache["#{cache_keys[6]}"],cache["#{cache_keys[7]}"],cache["#{cache_keys[8]}"],cache["#{cache_keys[9]}"]],"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":[cache["#{cache_keys[0]}"],cache["#{cache_keys[1]}"],cache["#{cache_keys[2]}"],cache["#{cache_keys[3]}"],cache["#{cache_keys[4]}"],cache["#{cache_keys[5]}"],cache["#{cache_keys[6]}"],cache["#{cache_keys[7]}"],cache["#{cache_keys[8]}"],cache["#{cache_keys[9]}"]],"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
     assert_equal expected, result
@@ -956,13 +956,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hit.hit2","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -982,13 +982,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hitOne.hitTwo","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hitOne.hitTwo","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1030,13 +1030,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":23,"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":23,"screen":"test","action":"graft","path":"hit.hit2","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1053,13 +1053,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":"You agree","screen":"test","action":"graft","path":"hit.hit2.nested.terms","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":"You agree","screen":"test","action":"graft","path":"hit.hit2.nested.terms","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1085,13 +1085,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hit.hit2","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1112,13 +1112,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         cache["#{cache_keys[0]}"]={"greeting":"hello world"};
-        return ({"data":cache["#{cache_keys[0]}"],"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":cache["#{cache_keys[0]}"],"screen":"test","action":"graft","path":"hit.hit2","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
 
 
@@ -1143,13 +1143,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":{"name":"hit"},"screen":"test","action":"graft","path":"hit.hit2.id=1","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"name":"hit"},"screen":"test","action":"graft","path":"hit.hit2.id=1","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1173,13 +1173,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":{"name":"hit"},"screen":"test","action":"graft","path":"hit.hit2.0","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"name":"hit"},"screen":"test","action":"graft","path":"hit.hit2.0","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1204,14 +1204,14 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2'});
         return (
-          {"data":{"hit":{"hit2":undefined}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":undefined}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1236,13 +1236,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         return (
-          {"data":{"hit":{"hit2":undefined}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":undefined}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1276,14 +1276,14 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
         return (
-          {"data":{"hit":{"hit2":[{"name":"foo"},{"id":2}]}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":[{"name":"foo"},{"id":2}]}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1315,14 +1315,14 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
         return (
-          {"data":{"hit":{"hit2":[{"email":"foo"},{"id":2}]}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":[{"email":"foo"},{"id":2}]}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1348,15 +1348,15 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D1'});
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
         return (
-          {"data":{"hit":{"hit2":[{"id":1},{"id":2}]}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":[{"id":1},{"id":2}]}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1382,15 +1382,15 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2.0'});
         defers.push({url:'/some_url?_bz=hit.hit2.1'});
         return (
-          {"data":{"hit":{"hit2":[undefined,undefined]}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":[undefined,undefined]}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1418,15 +1418,15 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D1.greeting'});
         defers.push({url:'/some_url?_bz=hit.hit2.id%3D2.greeting'});
         return (
-          {"data":{"hit":{"hit2":[{"greeting":undefined},{"greeting":undefined}]}},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"hit":{"hit2":[{"greeting":undefined},{"greeting":undefined}]}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}
         );
       })()
     JS
@@ -1443,12 +1443,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":{"hello":32},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"hello":32},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -1465,12 +1465,12 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
-        return ({"data":32,"screen":"test","action":"graft","path":"hello.world","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":32,"screen":"test","action":"graft","path":"hello.world","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 
@@ -1490,13 +1490,13 @@ class BreezyTemplateTest < ActionView::TestCase
 
     expected = strip_format(<<-JS)
       (function(){
-        var joints={};
-        var lastJointName;
-        var lastJointPath;
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
         var cache={};
         var defers=[];
         defers.push({url:'?_bz=hello.content'});
-        return ({"data":{"content":undefined},"screen":"test","action":"graft","path":"hello","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers});
+        return ({"data":{"content":undefined},"screen":"test","action":"graft","path":"hello","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
       })()
     JS
 

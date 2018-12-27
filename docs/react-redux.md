@@ -159,45 +159,6 @@ For example:
 store.dispatch(visit('/?_bz=header.shopping_cart'))
 ```
 
-## The Breezy store shape
-
-How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
-
-Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [easy](utility.md#forEachJointPathAcrossAllPages) to update and manage cross-cutting concerns like a shared header.
-
-Breezy's opinion is that its much saner to leave the business models to the backend, and shape state on the frontend for ~~only~~ mostly presentational purposes. In other words, there is no `User` model on the front end, just pages with `User`-like data.
-
-### How does it look like
-
-Breezy occupies 2 nodes in your Redux state tree.
-
-```javascript
-{
-  breezy, // <-breezy's private store.
-  pages, // where the results of your props live
-  ...yourStuff
-}
-```
-
-`pages` is where the results of your props templates live. Its a hash where the keys are the path of your visited url. Internally, it looks like this:
-
-```javascript
-pages: {
-  '/bar': {
-    data:{...propsFromBreezyTemplates},
-    ...otherMetaInfoLikeCSRFTokensOrPartials
-  },
-  '/bar?foo=123': {
-    data:{...propsFromBreezyTemplates},
-    ...otherMetaInfoLikeCSRFTokensOrPartials
-  },
-  '/foo':{
-    data:{...propsFromBreezyTemplates},
-    ...otherMetaInfoLikeCSRFTokensOrPartials
-  }
-}
-```
-
 ## Updating Joints
 
 A Joint is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [BreezyTemplate](breezy-template.md#partial-joints)

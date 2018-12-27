@@ -14,8 +14,8 @@ import {
   HISTORY_CHANGE,
   SET_BASE_URL,
   SET_CSRF_TOKEN,
-  UPDATE_ALL_JOINTS,
-  MATCH_JOINTS_IN_PAGE,
+  UPDATE_ALL_FRAGMENTS,
+  MATCH_FRAGMENTS_IN_PAGE,
 } from './actions'
 
 function updateAllFragments (state, pageKey) {
@@ -47,12 +47,15 @@ function saveResponse (state, pageKey, page) {
 function copyInByFragment (state, name, value, subpath = null) {
   state = {...state}
   const copy = JSON.stringify(value)
-  forEachFragmentPathAcrossAllPages(state, name, (pathToFragment) =>{
-    const fullpath = [pathToFragment]
-    if (subpath) {
-      fullpath.push(subpath)
-    }
-    state = setIn(state, fullpath.join('.'), JSON.parse(copy))
+
+  Object.entries(pages).forEach(([pageKey, {fragments=[]}]) => {
+    fragments[name].forEach(pathToFragment => {
+      const fullpath = [pathToFragment]
+      if (subpath) {
+        fullpath.push(subpath)
+      }
+      state = setIn(state, fullpath.join('.'), JSON.parse(copy))
+    })
   })
 
   return state
@@ -109,11 +112,11 @@ export function pageReducer (state = {}, action) {
     const {pageKey, page} = action.payload
     return saveResponse(state, pageKey, page)
   }
-  case UPDATE_ALL_JOINTS: {
+  case UPDATE_ALL_FRAGMENTS: {
     const {pageKey} = action.payload
     return updateAllFragments(state, pageKey)
   }
-  case MATCH_JOINTS_IN_PAGE: {
+  case MATCH_FRAGMENTS_IN_PAGE: {
     const {
       pageKey,
       lastFragmentName,

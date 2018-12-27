@@ -147,7 +147,7 @@ describe('action creators', () => {
           }
         },
         {
-          type: '@@breezy/UPDATE_ALL_JOINTS',
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             pageKey: '/foo',
           }
@@ -182,7 +182,7 @@ describe('action creators', () => {
           }
         },
         {
-          type:"@@breezy/UPDATE_ALL_JOINTS",
+          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
           payload: {
             pageKey:"/foo"
           }
@@ -201,7 +201,7 @@ describe('action creators', () => {
           },
         },
         {
-          type:"@@breezy/UPDATE_ALL_JOINTS",
+          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
           payload: {
             pageKey:"/foo"
           }
@@ -257,7 +257,7 @@ describe('action creators', () => {
           }
         },
         {
-          type: '@@breezy/UPDATE_ALL_JOINTS',
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             pageKey: '/foo',
           }
@@ -301,7 +301,7 @@ describe('action creators', () => {
           }
         },
         {
-          type: '@@breezy/MATCH_JOINTS_IN_PAGE',
+          type: '@@breezy/MATCH_FRAGMENTS_IN_PAGE',
           payload: {
             pageKey: '/foo',
             lastFragmentName: 'info',
@@ -309,7 +309,7 @@ describe('action creators', () => {
           }
         },
         {
-          type: '@@breezy/UPDATE_ALL_JOINTS',
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             pageKey: '/foo',
           }
@@ -344,7 +344,7 @@ describe('action creators', () => {
           }
         },
         {
-          type:"@@breezy/UPDATE_ALL_JOINTS",
+          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
           payload: {
             pageKey:"/foo"
           }
@@ -413,7 +413,7 @@ describe('action creators', () => {
           }
         },
         {
-          type: '@@breezy/UPDATE_ALL_JOINTS',
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             pageKey: '/foo',
           }
@@ -702,13 +702,13 @@ describe('action creators', () => {
         { type: '@@breezy/SAVE_RESPONSE',
           payload: jasmine.any(Object)
         },
-        { type: '@@breezy/UPDATE_ALL_JOINTS',
+        { type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: jasmine.any(Object)
         },
         { type: '@@breezy/SAVE_RESPONSE',
           payload: jasmine.any(Object)
         },
-        { type: '@@breezy/UPDATE_ALL_JOINTS',
+        { type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: jasmine.any(Object)
         }
       ]

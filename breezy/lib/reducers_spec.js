@@ -249,7 +249,7 @@ describe('reducers', () => {
       })
     })
 
-    describe('BREEZY_UPDATE_ALL_JOINTS', () => {
+    describe('BREEZY_UPDATE_ALL_FRAGMENTS', () => {
       it('updates all fragments using the selected page as reference', () => {
         const prevState = {
           '/foo': {
@@ -285,7 +285,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: '@@breezy/UPDATE_ALL_JOINTS',
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             pageKey: '/bar',
           }
@@ -296,7 +296,7 @@ describe('reducers', () => {
       })
     })
 
-    describe('MATCH_JOINTS_IN_PAGE', () => {
+    describe('MATCH_FRAGMENTS_IN_PAGE', () => {
       it('updates all fragments in a page using the selected fragment as reference', () => {
         const prevState = {
           '/foo': {
@@ -332,7 +332,7 @@ describe('reducers', () => {
         }
 
         const nextState = reducer(prevState, {
-          type: '@@breezy/MATCH_JOINTS_IN_PAGE',
+          type: '@@breezy/MATCH_FRAGMENTS_IN_PAGE',
           payload: {
             pageKey: '/foo',
             lastFragmentName: 'info',

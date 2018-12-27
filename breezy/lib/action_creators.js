@@ -21,9 +21,9 @@ import {
   BEFORE_FETCH,
   BREEZY_ERROR,
   BREEZY_GRAFTING_ERROR,
-  MATCH_JOINTS_IN_PAGE,
+  MATCH_FRAGMENTS_IN_PAGE,
   OVERRIDE_VISIT_SEQ,
-  UPDATE_ALL_JOINTS,
+  UPDATE_ALL_FRAGMENTS,
 } from './actions'
 
 export function saveResponse ({pageKey, page}) {
@@ -101,7 +101,7 @@ function updateAllFragmentsToMatch (pageKey) {
   pageKey = withoutBZParams(pageKey)
 
   return {
-    type: UPDATE_ALL_JOINTS,
+    type: UPDATE_ALL_FRAGMENTS,
     payload: {
       pageKey
     }
@@ -112,7 +112,7 @@ function updateFragmentsInPageToMatch ({pageKey, lastFragmentName, lastFragmentP
   pageKey = withoutBZParams(pageKey)
 
   return {
-    type: MATCH_JOINTS_IN_PAGE,
+    type: MATCH_FRAGMENTS_IN_PAGE,
     payload: {
       pageKey,
       lastFragmentName,

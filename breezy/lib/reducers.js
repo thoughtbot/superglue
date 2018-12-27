@@ -1,6 +1,7 @@
 import {
   reverseMerge,
   forEachJointInPage,
+  forEachJointPathInPage,
   forEachJointPathAcrossAllPages,
   pagePath,
 } from './utils/helpers'
@@ -69,8 +70,8 @@ function updateJointsInPageToMatch(state, pageKey, jointName, pathToJoint) {
   const copy = JSON.stringify(node)
   let nextState = state
 
-  forEachJointPathInPage(currentPage, name, (path) => {
-    nextState = setIn(nextState, [pageKey, path].join('.'), JSON.parse(copy))
+  forEachJointPathInPage(currentPage, jointName, (path) => {
+    nextState = setIn(nextState, [pageKey, 'data', path].join('.'), JSON.parse(copy))
   })
 
   return nextState

@@ -26,7 +26,7 @@ export function forEachJointPathAcrossAllPages (pages, name, fn = ()=>{}) {
   Object.entries(pages)
     .forEach(([pageKey, page]) => {
       forEachJointPathInPage(page, name, (path) => {
-        const pathToJoint = [pageKey, path].join('.')
+        const pathToJoint = [pageKey, 'data', path].join('.')
         fn(pathToJoint)
       })
     })
@@ -35,8 +35,7 @@ export function forEachJointPathAcrossAllPages (pages, name, fn = ()=>{}) {
 export function forEachJointPathInPage (page, name, fn = ()=>{}) {
   const keyPaths = jointPathsInPage(page, name)
   keyPaths.forEach((path) => {
-    const pathToJoint = ['data', path].join('.')
-    fn(pathToJoint)
+    fn(path)
   })
 }
 

@@ -45,8 +45,8 @@ describe('forEachPathToJointInPage', () => {
     })
 
     expect(iters).toEqual([
-      'data.a.b.c',
-      'data.d.e.f',
+      'a.b.c',
+      'd.e.f',
     ])
   })
 })

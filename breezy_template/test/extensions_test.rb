@@ -938,8 +938,7 @@ class BreezyTemplateTest < ActionView::TestCase
   end
 
   test "filtering for a node in the tree" do
-    result = jbuild(<<-JBUILDER)
-      json._set_search_path_once('hit.hit2')
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
       json.hit do
         json.hit2 do
           json.greeting 'hello world'
@@ -963,7 +962,33 @@ class BreezyTemplateTest < ActionView::TestCase
         var cache={};
         var defers=[];
         return (
-          {"data":{"greeting":"hello world"},"screen":"test","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hit.hit2","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
+        );
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "filtering for a node in the tree with camelized keys" do
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit_one.hit_two')
+      json.hit_one do
+        json.hit_two do
+          json.greeting 'hello world'
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var joints={};
+        var lastJointName;
+        var lastJointPath;
+        var cache={};
+        var defers=[];
+        return (
+          {"data":{"greeting":"hello world"},"screen":"test","action":"graft","path":"hitOne.hitTwo","joints":joints,"lastJointName":lastJointName,"lastJointPath":lastJointPath,"defers":defers}
         );
       })()
     JS

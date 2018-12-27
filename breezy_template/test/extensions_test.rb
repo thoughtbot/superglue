@@ -296,7 +296,7 @@ class BreezyTemplateTest < ActionView::TestCase
     Rails.cache.clear
 
     result = jbuild(<<-JBUILDER)
-      json.post @post, partial: ["blog_post", as: :blog_post, fragment: :header]
+      json.post @post, partial: ["blog_post", as: :blog_post, fragment_name: :header]
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -318,28 +318,9 @@ class BreezyTemplateTest < ActionView::TestCase
     assert_equal expected, result
   end
 
-  test "renders a partial with implicit fragment" do
-    result = jbuild(<<-JBUILDER)
-      json.footer nil, partial: ["footer", fragment: true]
-    JBUILDER
-
-    expected = strip_format(<<-JS)
-      (function(){
-        var fragments={};
-        var lastFragmentName;
-        var lastFragmentPath;
-        var cache={};
-        var defers=[];
-        fragments['footer'] = fragments['footer'] || []; fragments['footer'].push('footer'); lastFragmentName='footer'; lastFragmentPath='footer';
-        return ({"data":{"footer":{"terms":"You agree"}},"screen":"test","fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});
-      })()
-    JS
-    assert_equal expected, result
-  end
-
   test "renders a partial with explicit fragment" do
     result = jbuild(<<-JBUILDER)
-      json.footer nil, partial: ["footer", fragment: 'hello']
+      json.footer nil, partial: ["footer", fragment_name: 'hello']
     JBUILDER
 
     expected = strip_format(<<-JS)
@@ -358,7 +339,7 @@ class BreezyTemplateTest < ActionView::TestCase
 
   test "render array of partials with unique fragments" do
     result = jbuild(<<-JBUILDER)
-      json.array! [1,2], partial: ["footer", fragment: ->(x){"somefoo"+x.to_s}]
+      json.array! [1,2], partial: ["footer", fragment_name: ->(x){"somefoo"+x.to_s}]
     JBUILDER
 
     expected = strip_format(<<-JS)

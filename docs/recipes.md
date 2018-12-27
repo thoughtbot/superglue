@@ -16,7 +16,7 @@ json.dashboard do
 end
 ```
 
-To make the dashboard of the page to load in typical async fashion. You would just enable deferment:
+To make the dashboard of the page to load in typical async fashion, enable deferment on the node:
 
 ```ruby
 json.dashboard(defer: :auto) do
@@ -25,7 +25,7 @@ json.dashboard(defer: :auto) do
 end
 ```
 
-When you `visit('/orders')` , BreezyTemplates will return `orders.js.props` without the dashboard, and when the page is received by the frontend, Breezy will auto-request for the missing node:
+When you `visit('/orders')` , BreezyTemplates render `orders.js.props` without the dashboard, and when the page is received by the frontend, Breezy will auto-request for the missing node:
 
 ```javascript
 remote('/orders?_bz=dashboard', ....otherOpts...)
@@ -46,17 +46,19 @@ Its up to you to handle both cases in your Component. For example:
   }
 ```
 
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/412eff42835703e5279dfb21015ea5d048c6b8cc)
+
 ## Loading tab content OnClick
 
 Say you have a 2 tabs, and you only want to show the tab 1 content on load. The tab 2 content should load only when a user clicks on tab 2.
 
 ```ruby
-# /survey.js.props
+# /posts.js.props
 
-json.questions do
-  json.question_set_1 do
+json.posts do
+  json.all do
   end
-  json.question_set_2(defer: :manual) do
+  json.pending (defer: :manual) do
   end
 end
 ```
@@ -66,14 +68,15 @@ In your component
 ```javascript
 // survey.jsx
 //...in your component
-  handleTab2Click = () => {
-    this.props.remote('/survey?_bz=questions.question_set_2')
+  handleClick = () => {
+    this.props.remote('/posts?_bz=posts.pending')
   }
+
   render() {
     return (
       <ol className='tabs'>
         <li> tab1 </li>
-        <li> <a onClick={this.handleTab2Click}>tab2</a> </li>
+        <li> <a onClick={this.handleClick}>tab2</a> </li>
       <ol>
       ....
     )
@@ -82,9 +85,31 @@ In your component
 
 In this example, `defer: :manual` is used on the node. BreezyTemplate will render without that node, and you need to manual request it with [node filtering](api/react-redux.md#filtering-nodes) like the example above.
 
+If you need to send over a list of fake line items, you can use the following approach:
+
+```ruby
+json.posts do
+  json.all do
+  ...
+  end
+
+  if request.format.html?
+    # The pending tab will initially be fake
+    json.pending nil, partial: 'fake_posts_list'
+  else
+    # Then a manual this.props.remote for the real thing
+    json.pending do
+    ...
+    end
+end
+```
+
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/103c0201ce156d3b7fc787b94559af4c5a439c31)
+
+
 ## Preloading content
 
-You can also preload other pages in a single request with the help of [Rails 5 renderers](http://blog.bigbinary.com/2016/01/08/rendering-views-outside-of-controllers-in-rails-5.html). If you do so, you should create a `PreloadController` controller and redirect when finished loading in your component.
+You can also preload other pages in a single request with the help of [Rails 5 renderers](http://blog.bigbinary.com/2016/01/08/rendering-views-outside-of-controllers-in-rails-5.html). If you do so, make sure you clear out the initial preloads in your page state in `componentDidMount`.
 
 For example:
 
@@ -98,48 +123,58 @@ end
 
 ```ruby
 # /preload/index.js.props
-last_post = Post.last
-json.next_path posts_path
+if request.format.html?
+  json.preloaded_pages [
+    [edit_post_path(last_updated_post), @renderer.render(:edit, assigns: {post: last_updated_post})],
+  ]
+end
+```
 
-json.preloaded_pages [
-  [edit_post_path(last_post), @renderer.render(:edit, assigns: {post: last_post})],
-  [post_path(last_post), @renderer.render(:show, assigns: {post: last_post})]
-]
+Add a reducer to remove the preloaded_pages:
+
+```javascript
+
+  //Somewhere in your reducer
+   import {getIn} from '@jho406/breezy'
+   ...
+   case 'CLEAR_PRELOADED': {
+     const { pageKey } = action.payload
+     const keyPath = [pageKey, 'data'].join('.')
+
+      return produce(state, draft => {
+       const node = getIn(draft, keyPath)
+       delete node['preloadedPages']
+     })
+   }
 ```
 
 Then in your page component:
 
 ```javascript
-import {
-  mapStateToProps,
-  mapDispatchToProps,
-  enhanceVisitWithBrowserBehavior
-} from '@jho406/breezy'
+ preloadThenClear = () => {
+   const {
+     preloadedPages,
+     pageKey,
+     saveAndProcessSJRPage,
+     clearPreloaded
+   } = this.props
 
-class PreloadIndex extends React.Component {
-  constructor (props) {
-    super()
-    const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.enhancedVisit = visit.bind(this)
-  }
+    if (preloadedPages) {
+     preloadedPages.forEach(([preloadPageKey, renderedView])=>{
+       saveAndProcessSJRPage(preloadPageKey, renderedView)
+     })
 
-  componentDidMount() {
-    this.props.preloaded_page.forEach(([pageKey, renderedView])=>{
-        this.props.saveAndProcessSJRPage(pageKey, renderedView)
-    })
+      clearPreloaded(pageKey)
+   }
+ }
 
-    this.enhancedVisit(this.props.next_path) //Redirect
-  }
-  render () {
-    return <div className='loading'>loading other resources</div>
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PreloadIndex)
+ componentDidMount() {
+   this.preloadThenClear()
+ }
 ```
+
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/d58218e82b95af51c49b2a22a42969a15a81fb01)
+
 
 ## Replicating Turbolinks behavior
 
@@ -174,6 +209,8 @@ export default connect(
   mapDispatchToProps
 )(PreloadIndex)
 ```
+
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/3496f5359bbdcceaae1af4e06cda3196aef420af)
 
 ## Usage with Devise
 
@@ -347,6 +384,8 @@ export default connect(
 
 ```
 
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/2c6820e31dd7fb0102bae585b93ea93dcf22d71a)
+
 ## Streaming Updates
 
 ### Short-polling
@@ -387,89 +426,37 @@ Then when you build the component
 
 ### Long-polling
 
-Let's grab [react-actioncable-provider](https://github.com/cpunion/react-actioncable-provider/)
+#### Updating nodes
+You can use a combination of Rails 5 renderers, ActionCable and preloading to stream updates to your users without much effort.
 
-```text
-yarn add react-actioncable-provider
-```
-
-#### Appending chat messages
+For example, if you already have a ActionCable channel setup, simply render the props and send it over the wire:
 
 ```ruby
-class ChatChannel < ApplicationCable::Channel
-  def subscribed
-    stream_from 'messages'
-  end
+renderer = PostsController.renderer.new(
+  "action_dispatch.request.parameters"=>{_bz: 'posts.all.items.0'},
+  "action_dispatch.request.formats"=>[Mime[:js]]
+)
 
-  def speak(body)
-    msg = Messages.create(body: body)
+msg = renderer.render(:index)
 
-    ActionCable.server.broadcast('messages',
-      message: render_message(msg.id))
-  end
-
-  private
-
-  def render_message(message_id)
-    ChatController.render(
-      :index,
-      assigns: {
-        breezy_filter: "messages.id=#{msg.id}"
-      })
-  end
-end
+ActionCable.server.broadcast('web_notifications_channel', message: msg)
 ```
 
-
 ```javascript
-...
-import {
-  mapStateToProps,
-  mapDispatchToProps,
-  enhanceVisitWithBrowserBehavior
-} from '@jho406/breezy'
-
-import {ActionCable} from 'react-actioncable-provider'
 import {
   extractNodeAndPath,
   parseSJR
 } from '@jho406/breezy/dist/utils/helpers'
 
-export default class ChatRoom extends React.Component {
-  onReceived (rendered) {
-    //first we extract the node
-    const {node, pathToNode} =  extractNodeAndPath(parseSJR(rendered))
-
-    //pathToNode is "messages.id=1", but we won't use it. Instead, we'll extend it to "messages"
-
-    //then we extend the existing array and a new single element array
-    this.props.extendInJoint({
-      pageKey: this.props.pageKey,
-      keypath: 'messages',
-      value: [node],
+window.App.cable.subscriptions.create("WebNotificationsChannel", {
+  received: function({message}) {
+    const {node} =  extractNodeAndPath(parseSJR(message))
+    store.dispatch({
+      type: 'UPDATE_ALL_POST_FRAGMENTS',
+      payload: node
     })
   }
-
-  render () {
-    return (
-      <div>
-        <ActionCable channel={'messages'} onReceived={this.onReceived} />
-        <ul>
-            {this.props.messages.map((message) =>
-                <li key={message.id}>{message.body}</li>
-            )}
-        </ul>
-        <input ref='newMessage' type='text' />
-        <button onClick={this.sendMessage}>Send</button>
-      </div>
-    )
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ChatRoom)
+})
 ```
 
 ## Replicating Instantclick

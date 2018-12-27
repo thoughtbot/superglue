@@ -118,9 +118,15 @@ The above will fetch the `json.header` node in `index.js.props`, noop the `json.
 
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 
-Breezy's store shape falls on the extreme end of denormalization, every page is given a node in the redux tree. There is likely duplication of state across children for example, a shared `User` header. Instead of normalizing state, Breezy give you tools that make it [easy](utility.md#forEachJointPathAcrossAllPages) to update and manage cross-cutting concerns like a shared header.
+Breezy's answer is to leave the business model to where they belong, on the backend, and just deal with denormalized cross-cutting presentational aspects. In other words, lets talk in terms of "updating the user email at each page header", instead of "updating the email in the user model".
 
-Breezy's opinion is that its much saner to leave the business models to the backend, and shape state on the frontend for ~~only~~ mostly presentational purposes. In other words, there is no `User` model on the front end, just pages with `User`-like data.
+Why?
+
+Business logic is complex and diverse across industry verticals, but the presentational aspects remain largely unchanged, there will always be a user header, a footer, a menu, a body with a list of items, etc. Breezy shapes its store with this observation in mind so that **a developer can look at a running application, easily guess the shape of the store, and make close-to-correct assumptions on how to update the store without looking at any code.**
+
+Breezy's store shape is a unidirectional tree and falls on the extreme end of denormalization, every page is given a node in the redux tree. There is duplication of state across children for example, a shared `User` header. To update something like a shared header, you need to iterate over each page, find the header, and make updates.
+
+This might seem tedious, and prone to error, but thankfully Breezy give you tools that make it [easy](utility.md#forEachJointPathAcrossAllPages) to update and manage cross-cutting aspects like a shared header.
 
 ### How does it look like
 

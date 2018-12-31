@@ -48,7 +48,11 @@ describe('reducers', () => {
         const action = {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
-            page: {csrfToken: 'some_token'}
+            page: {
+              privateOpts: {
+                csrfToken: 'some_token'
+              }
+            }
           }
         }
         const nextState = metaReducer(prevState, action)
@@ -232,17 +236,20 @@ describe('reducers', () => {
             pageKey: '/foo',
             page: {
               data: {},
-              csrfToken: 'token',
-              assets: ['application-123.js']
+              privateOpts: {
+                csrfToken: 'token',
+                assets: ['application-123.js']
+              }
             }
           }
         })
 
         expect(nextState['/foo']).toEqual(jasmine.objectContaining({
           data: {},
-          csrfToken: 'token',
-          cachedAt: jasmine.any(Number),
-          assets: [ 'application-123.js' ],
+          privateOpts: {
+            csrfToken: 'token',
+            assets: [ 'application-123.js' ],
+          },
           pageKey: '/foo',
           fragments: {}
         }))
@@ -260,8 +267,10 @@ describe('reducers', () => {
                 }
               }
             },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
+            privateOpts: {
+              csrfToken: 'token',
+              assets: ['application-123.js'],
+            },
             fragments: {
               info: ['header.cart']
             }
@@ -276,8 +285,10 @@ describe('reducers', () => {
                 }
               }
             },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
+            privateOpts: {
+              csrfToken: 'token',
+              assets: ['application-123.js'],
+            },
             fragments: {
               info: ['profile.header.cart']
             }

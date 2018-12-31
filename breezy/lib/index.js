@@ -40,7 +40,7 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
   }
 
   const initialPageKey = withoutBZParams(parse(url).href)
-  const csrfToken = initialPage.csrfToken
+  const {privateOpts: {csrfToken} = {}} = initialPage
 
   return {
     reducer: rootReducer,

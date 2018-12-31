@@ -32,9 +32,6 @@ function saveResponse (state, pageKey, page) {
   state = {...state}
 
   reverseMerge(page, {
-    cachedAt: new Date().getTime(),
-    positionY: pageYOffset(),
-    positionX: pageXOffset(),
     pageKey,
     fragments: {},
   })
@@ -48,13 +45,14 @@ function copyInByFragment (state, name, value, subpath = null) {
   state = {...state}
   const copy = JSON.stringify(value)
 
-  Object.entries(pages).forEach(([pageKey, {fragments=[]}]) => {
+  Object.entries(state).forEach(([pageKey, {fragments=[]}]) => {
     fragments[name].forEach(pathToFragment => {
       const fullpath = [pathToFragment]
       if (subpath) {
         fullpath.push(subpath)
       }
-      state = setIn(state, fullpath.join('.'), JSON.parse(copy))
+
+      state = setIn(state, [pageKey, 'data', fullpath].join('.'), JSON.parse(copy))
     })
   })
 
@@ -158,8 +156,9 @@ export function metaReducer (state = {}, action) {
     return {...state, baseUrl}
   }
   case SAVE_RESPONSE: {
-    const {page} = action.payload
-    return {...state, csrfToken: page.csrfToken}
+    const {page: {privateOpts = {}}} = action.payload
+    const {csrfToken} = privateOpts
+    return {...state, csrfToken}
   }
   case SET_CSRF_TOKEN: {
     const {csrfToken} = action.payload

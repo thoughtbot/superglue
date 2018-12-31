@@ -59,6 +59,7 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
+        privateOpts: {},
         screen: 'home'
       }
 
@@ -127,21 +128,17 @@ describe('navigation', () => {
           '/bar': {
             data: { heading: 'this is page 1' },
             screen: 'home',
-            cachedAt: jasmine.any(Number),
-            positionY: jasmine.any(Number),
-            positionX: jasmine.any(Number),
+            privateOpts: {},
             pageKey: '/bar',
             fragments: {}
           },
           '/foo':{
             data: { heading: 'Some heading 2' },
-            title: 'title 2',
-            csrfToken: 'token',
+            privateOpts: {
+              csrfToken: 'token',
+              assets: ['application-123.js', 'application-123.js'],
+            },
             screen: 'about',
-            assets: ['application-123.js', 'application-123.js'],
-            cachedAt: jasmine.any(Number),
-            positionY: jasmine.any(Number),
-            positionX: jasmine.any(Number),
             pageKey: '/foo',
             fragments: {}
           }
@@ -161,6 +158,7 @@ describe('navigation', () => {
           heading: 'this is page 1',
           address: undefined
         },
+        privateOpts: {},
         screen: 'home'
       }
 

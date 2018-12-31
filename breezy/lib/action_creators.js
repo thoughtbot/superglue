@@ -73,7 +73,7 @@ export function saveAndProcessSJRPage (pageKey, pageSJR) {
   return saveAndProcessPage(pageKey, page)
 }
 
-function fetchDeferments (pageKey, {defers = []}) {
+function fetchDeferments (pageKey, defers = []) {
   pageKey = withoutBZParams(pageKey)
   return (dispatch) => {
     const fetches = defers.map(function ({url}){
@@ -126,12 +126,17 @@ export function saveAndProcessPage (pageKey, page) {
     pageKey = withoutBZParams(pageKey)
 
     const {
-      fragments,
-      lastFragmentName,
-      lastFragmentPath
+      fragments = {},
+      privateOpts = {}
     } = page
 
-    if (isGraft(page)) {
+    const {
+      lastFragmentName,
+      lastFragmentPath,
+      defers,
+    } = privateOpts
+
+    if (isGraft(privateOpts)) {
       const {node, pathToNode} = extractNodeAndPath(page)
       dispatch(handleGraft({fragments, pageKey, node, pathToNode}))
 
@@ -147,7 +152,7 @@ export function saveAndProcessPage (pageKey, page) {
     }
 
     dispatch(updateAllFragmentsToMatch(pageKey))
-    return dispatch(fetchDeferments(pageKey, page))
+    return dispatch(fetchDeferments(pageKey, defers))
   }
 }
 
@@ -175,16 +180,19 @@ export function wrappedFetch (fetchArgs) {
     })
 }
 
-function buildMeta (pageKey, page, {assets}) {
-  const prevAssets = assets
-  const newAssets = page.assets
+function buildMeta (pageKey, page, state) {
+  const {assets: prevAssets} = state
+  const {
+    privateOpts: {assets: nextAssets} = {}
+  } = page
+
   pageKey = withoutBZParams(pageKey)
 
   return {
     pageKey,
     page,
     screen: page.screen,
-    needsRefresh: needsRefresh(prevAssets, newAssets)
+    needsRefresh: needsRefresh(prevAssets, nextAssets)
   }
 }
 

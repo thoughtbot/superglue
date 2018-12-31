@@ -4,7 +4,6 @@ import {
   parseSJR,
   pagePath,
   forEachFragmentInPage,
-  forEachFragmentPathAcrossAllPages,
   forEachFragmentPathInPage,
   fragmentPathsInPage
 } from './helpers'
@@ -51,36 +50,6 @@ describe('forEachPathToFragmentInPage', () => {
   })
 })
 
-describe('forEachFragmentPathAcrossAllPages', () => {
-  it('iterates through each named fragment across all pages', () => {
-    const pages = {
-      '/foo': {
-        fragments: {
-          'header': ['a.b.c', 'd.e.f']
-        }
-      },
-      '/bar': {
-        fragments: {
-          'header': ['g.h.i', 'j.k.l'],
-          'footer': ['g.h.i', 'j.k.l']
-        }
-      }
-    }
-
-    const iters = []
-    forEachFragmentPathAcrossAllPages(pages, 'header', (pathToFragment)=>{
-      iters.push(pathToFragment)
-    })
-
-    expect(iters).toEqual([
-      '/foo.data.a.b.c',
-      '/foo.data.d.e.f',
-      '/bar.data.g.h.i',
-      '/bar.data.j.k.l',
-    ])
-  })
-})
-
 describe('forEachFragmentInPage', () => {
   it('iterates through each fragment in the current pages', () => {
     const page = {
@@ -122,9 +91,11 @@ describe('isGraft', () => {
 describe('extractNodeAndPath', () => {
   it('returns the node and the keypath to it', () => {
     const page = {
-      action: 'graft',
       data: 'this is a node',
-      path: 'path.to.node'
+      privateOpts: {
+        path: 'path.to.node',
+        action: 'graft',
+      }
     }
 
     expect(extractNodeAndPath(page)).toEqual({
@@ -136,7 +107,9 @@ describe('extractNodeAndPath', () => {
   it('errors out if action is anything else', () => {
     const page = {
       data: 'this is a node',
-      path: 'path.to.node'
+      privateOpts: {
+        path: 'path.to.node'
+      }
     }
 
     expect(() => {

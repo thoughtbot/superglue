@@ -22,45 +22,49 @@ class BreezyTemplate
             end
           end
 
-          if protect_against_forgery?
-            json.csrf_token form_authenticity_token
-          end
-
-          __sprockets_assets = (::BreezyTemplate.configuration.track_sprockets_assets || []).map do |asset|
-            asset_path(asset)
-          end
-
-          __pack_assets = []
-          if defined?(asset_pack_path)
-            __pack_assets = (::BreezyTemplate.configuration.track_pack_assets || []).map do |asset|
-              asset_pack_path(asset)
-            end
-          end
-
-          if __sprockets_assets.any? || __pack_assets.any?
-            json.assets (__sprockets_assets + __pack_assets)
-          end
-
-          if defined?(breezy_filter) && !!breezy_filter
-            json.action 'graft'
-            __formatter = ::BreezyTemplate::KeyFormatter.new({camelize: :lower})
-            json.path breezy_filter
-              .split('.')
-              .map {|part|
-                if part.include? '='
-                  k, v = part.split('=')
-                  [__formatter.format(k),v].join('=')
-                else
-                  __formatter.format(part)
-                end
-              }
-              .join('.')
-          end
-
           json.fragments ::BreezyTemplate::Var.new('fragments')
-          json.last_fragment_name ::BreezyTemplate::Var.new('lastFragmentName')
-          json.last_fragment_path ::BreezyTemplate::Var.new('lastFragmentPath')
-          json.defers ::BreezyTemplate::Var.new('defers')
+
+          json.private_opts do
+            if protect_against_forgery?
+              json.csrf_token form_authenticity_token
+            end
+
+            __sprockets_assets = (::BreezyTemplate.configuration.track_sprockets_assets || []).map do |asset|
+              asset_path(asset)
+            end
+
+            __pack_assets = []
+            if defined?(asset_pack_path)
+              __pack_assets = (::BreezyTemplate.configuration.track_pack_assets || []).map do |asset|
+                asset_pack_path(asset)
+              end
+            end
+
+            if __sprockets_assets.any? || __pack_assets.any?
+              json.assets (__sprockets_assets + __pack_assets)
+            end
+
+            if defined?(breezy_filter) && !!breezy_filter
+              json.action 'graft'
+              __formatter = ::BreezyTemplate::KeyFormatter.new({camelize: :lower})
+              json.path breezy_filter
+                .split('.')
+                .map {|part|
+                  if part.include? '='
+                    k, v = part.split('=')
+                    [__formatter.format(k),v].join('=')
+                  else
+                    __formatter.format(part)
+                  end
+                }
+                .join('.')
+            end
+
+            json.last_fragment_name ::BreezyTemplate::Var.new('lastFragmentName')
+            json.last_fragment_path ::BreezyTemplate::Var.new('lastFragmentPath')
+
+            json.defers ::BreezyTemplate::Var.new('defers')
+          end
 
           json.target!
         end

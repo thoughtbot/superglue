@@ -3,10 +3,11 @@ export const visitSuccess = () => {
     body: `(function() {
           return {
             data: { heading: 'Some heading 2' },
-            title: 'title 2',
-            csrfToken: 'token',
-            screen: 'about',
-            assets: ['application-123.js', 'application-123.js']
+            privateOpts: {
+              csrfToken: 'token',
+              assets: ['application-123.js', 'application-123.js']
+            },
+            screen: 'about'
           };
         })();`,
     headers: {
@@ -21,11 +22,12 @@ export const graftSuccessWithNewZip = () => {
     body: `(function() {
           return {
             data: { zip: 91210 },
-            action: 'graft',
-            path: 'address',
-            title: 'foobar',
-            csrfToken: 'token',
-            assets: ['application-new123.js', 'application-new123.js']
+            privateOpts: {
+              action: 'graft',
+              path: 'address',
+              csrfToken: 'token',
+              assets: ['application-new123.js', 'application-new123.js']
+            }
           };
         })();`,
     headers: {

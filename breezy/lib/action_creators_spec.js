@@ -168,9 +168,11 @@ describe('action creators', () => {
 
      const page = {
         data: { heading: 'Some heading 2' },
-        csrfToken: 'token',
-        assets: [],
-        defers: [{url: '/some_defered_request?_bz=body'}]
+        privateOpts: {
+          csrfToken: 'token',
+          assets: [],
+          defers: [{url: '/some_defered_request?_bz=body'}]
+        }
       }
 
       const expectedActions = [
@@ -213,11 +215,13 @@ describe('action creators', () => {
           body: `(function() {
             return {
               data: 'success',
-              action: 'graft',
-              path: 'body',
-              csrfToken: 'token',
-              assets: [],
-              defers: []
+              privateOpts: {
+                action: 'graft',
+                path: 'body',
+                csrfToken: 'token',
+                assets: [],
+                defers: []
+              }
             };
           })();`,
           headers: {
@@ -239,11 +243,13 @@ describe('action creators', () => {
 
       const page = {
         data: 'success',
-        action: 'graft',
-        path: 'heading.cart',
-        csrfToken: '',
-        assets: [],
-        defers: []
+        privateOpts: {
+          action: 'graft',
+          path: 'heading.cart',
+          csrfToken: '',
+          assets: [],
+          defers: []
+        }
       }
 
       const expectedActions = [
@@ -276,16 +282,18 @@ describe('action creators', () => {
 
       const page = {
         data: 'success',
-        action: 'graft',
-        path: 'heading.cart',
-        csrfToken: '',
-        assets: [],
-        defers: [],
         fragments: {
           info: ['header.email']
         },
-        lastFragmentName: 'info',
-        lastFragmentPath: 'header.email',
+        privateOpts: {
+          action: 'graft',
+          path: 'heading.cart',
+          csrfToken: '',
+          assets: [],
+          defers: [],
+          lastFragmentName: 'info',
+          lastFragmentPath: 'header.email',
+        }
       }
 
       const expectedActions = [
@@ -330,9 +338,11 @@ describe('action creators', () => {
 
      const page = {
         data: { heading: 'Some heading 2' },
-        csrfToken: 'token',
-        assets: [],
-        defers: [{url: '/some_defered_request?_bz=body'}]
+        privateOpts: {
+          csrfToken: 'token',
+          assets: [],
+          defers: [{url: '/some_defered_request?_bz=body'}]
+        }
       }
 
       const expectedActions = [
@@ -626,11 +636,13 @@ describe('action creators', () => {
             var defers=[];
             return {
               data: 'success',
-              action: 'graft',
-              path: 'heading.cart',
-              csrfToken: 'token',
-              assets: [],
-              defers: defers
+              privateOpts: {
+                action: 'graft',
+                path: 'heading.cart',
+                csrfToken: 'token',
+                assets: [],
+                defers: defers
+              }
             };
           })();`,
           headers: {

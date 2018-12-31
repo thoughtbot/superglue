@@ -58,10 +58,15 @@ export function isGraft (page) {
 }
 
 export function extractNodeAndPath (page) {
-  if(page.action === 'graft') {
-    const node = page.data
-    const pathToNode = page.path
+  const {
+    data: node,
+    privateOpts: {
+      action,
+      path: pathToNode,
+    }
+  } = page
 
+  if(action === 'graft') {
     return {node, pathToNode}
   } else {
     const errMsg = 'Expected page to be a graft response rendered from node filtering.'

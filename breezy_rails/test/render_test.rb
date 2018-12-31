@@ -108,7 +108,7 @@ class RenderTest < ActionController::TestCase
     rendered = <<~HTML
       <html>
         <head>
-          <script>(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];return ({"data":#{content.to_json},"screen":"#{opts[:screen]}","csrfToken":"secret","assets":["/app.js"],"fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});})();</script>
+          <script>(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];return ({"data":#{content.to_json},"screen":"#{opts[:screen]}","fragments":fragments,"privateOpts":{"csrfToken":"secret","assets":["/app.js"],"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});})();</script>
         </head>
         <body></body>
       </html>
@@ -120,7 +120,7 @@ class RenderTest < ActionController::TestCase
 
   def assert_breezy_js(content)
     assert_response 200
-    assert_equal '(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];return ({"data":' + content.to_json + ',"screen":"render/action","csrfToken":"secret","assets":["/app.js"],"fragments":fragments,"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers});})()', @response.body
+    assert_equal '(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];return ({"data":' + content.to_json + ',"screen":"render/action","fragments":fragments,"privateOpts":{"csrfToken":"secret","assets":["/app.js"],"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});})()', @response.body
     assert_equal 'text/javascript', @response.content_type
   end
 

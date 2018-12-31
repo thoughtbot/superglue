@@ -99,7 +99,7 @@ export default connect(
 When the user lands on the `/posts` the `index.jsx` is rendered with `index.js.props`. SPA navigation is handled just like Turbolinks:
 
 ```javascript
-this.enhancedVisit("/posts/1") //if you've used `enhanceWithBrowserBehavior`
+this.enhancedVisit("/posts/1") //if you've used `enhanceVisitWithBrowserBehavior`
 ```
 
 The above will request the `show.js.props`, pass it to `show.jsx` and update the browser history.
@@ -118,7 +118,7 @@ The above will fetch the `json.header` node in `index.js.props`, noop the `json.
 
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 
-Breezy's answer is to leave the business model to where they belong, on the backend, and just deal with cross-cutting presentational fragments. In other words, lets talk in terms of "updating the user email at each page header", instead of "updating the email in the user model".
+Breezy's answer is to leave most of your business logic to the backend, and instead, deal with cross-cutting presentational fragments on the frontend. In other words, lets talk in terms of "updating the user email at each page header", instead of "updating the email in the user model".
 
 Why?
 
@@ -126,7 +126,7 @@ Business logic is complex and diverse across industry verticals, but the present
 
 Breezy's store shape is a unidirectional tree and falls on the extreme end of denormalization, every page is given a node in the redux tree. There is duplication of state across children for example, a shared `User` header. To update something like a shared header, you need to iterate over each page, find the header, and make updates.
 
-This might seem tedious, and prone to error, but thankfully Breezy give you tools that make it [easy](utility.md#forEachFragmentPathAcrossAllPages) to update and manage cross-cutting aspects like a shared header.
+This might seem tedious and prone to error, but Breezy give you tools that make it [easy](breezy-template.md#partial-fragments) to update and manage cross-cutting aspects like a shared header.
 
 ### How does it look like
 
@@ -145,16 +145,19 @@ Breezy occupies 2 nodes in your Redux state tree.
 ```javascript
 pages: {
   '/bar': {
-    data:{...propsFromBreezyTemplates},
-    ...otherMetaInfoLikeCSRFTokensOrPartials
+    data: {...propsFromBreezyTemplates},
+    screen: 'matchesThisPageToAComponent',
+    privateOpts: {...usedByBreezyInternally} //don't touch
   },
   '/bar?foo=123': {
-    data:{...propsFromBreezyTemplates},
-    ...otherMetaInfoLikeCSRFTokensOrPartials
+    data: {...propsFromBreezyTemplates},
+    screen: 'matchesThisPageToAComponent',
+    privateOpts: {...usedByBreezyInternally}
   },
   '/foo':{
-    data:{...propsFromBreezyTemplates},
-    ...otherMetaInfoLikeCSRFTokensOrPartials
+    data: {...propsFromBreezyTemplates},
+    screen: 'matchesThisPageToAComponent',
+    privateOpts: {...usedByBreezyInternally}
   }
 }
 ```

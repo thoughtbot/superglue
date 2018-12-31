@@ -25,7 +25,7 @@ Enhances `visit` with navigation behavior on the returned Promises. For example,
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | obj | `Object` | Typically the redux state.
-| path | `String ` | A keypath to the node in your state, 'posts.post_id=1.comment.0.body'
+| path | `String ` | A keypath to the node in your state, `posts.post_id=1.comment.0.body`
 
 Traverses to the node using a keypath. For example, given a page that looks like this:
 
@@ -55,8 +55,8 @@ getIn(state, 'posts.0.comment.0.body')
 or find first by its attribute and value
 
 ```text
-getIn(state, 'posts.post_id=0.comment.0.body')
+getIn(state, 'posts.postId=0.comment.0.body')
 ```
 
-The above would find the first occurance where `post_id=1` before continuing traversing.
+The above would find the first occurance where `postId=1` before continuing traversing.
 

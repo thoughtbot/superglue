@@ -174,10 +174,12 @@ A fragment helps to identify a rendered partial across the all pages. For exampl
 switch(action.type) {
 case SOME_ACTION: {
   return produce(state, draft => {
-    Object.entries(state).forEach(([pageKey, {fragments=[]}]) => {
-      fragments['header'].forEach(pathToFragment => {
-        const node = getIn(draft, ['data', pathToFragment].join('.'))
-        node.profile.address = '123 new st.'
+    Object.entries(state).forEach(([pageKey, {fragments}]) => {
+      (fragments[fragment_name] || []).forEach(pathToFragment => {
+        const {data} = draft[pageKey]
+        const node = getIn(data, pathToFragment)
+
+        node.body = body
       })
     })
   })

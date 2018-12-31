@@ -67,6 +67,7 @@ class App extends React.Component {
   render() {
     return <Provider store={store}>
       <Nav
+        store={store}
         mapping={this.props.mapping}
         history={history}
         initialPageKey={initialPageKey}
@@ -114,7 +115,7 @@ class PostsController < ApplicationController
   before_action :use_breezy
 
   def new
-    render :new, breezy:{screen: 'helloworld'}
+    render :new, breezy:{screen: 'helloworld'} #fix this
   end
 end
 ```

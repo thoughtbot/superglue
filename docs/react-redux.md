@@ -44,7 +44,7 @@ export const mapDispatchToProps = {
 }
 ```
 
-You will also receive the following when using `<NavComponent>`
+You will also receive the following when using the `<NavComponent>`
 
 | actionCreator | Notes |
 | :--- | :--- |
@@ -59,6 +59,7 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 ...
 <Provider store={store}>
   <Nav
+    store={store}
     mapping={this.props.mapping}
     history={history}
     initialPageKey={initialPageKey}
@@ -91,7 +92,7 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use `v
 
 For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](react-redux.md#enhancevisitwithbrowserbehavior)
 
-**Note** `visit` will strip any `_bz` filtering parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
+**Note** `visit` will strip any `_bz` query parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})

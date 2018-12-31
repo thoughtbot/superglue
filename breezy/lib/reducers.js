@@ -2,10 +2,8 @@ import {
   reverseMerge,
   forEachFragmentInPage,
   forEachFragmentPathInPage,
-  forEachFragmentPathAcrossAllPages,
 } from './utils/helpers'
 import {setIn, getIn} from'./utils/immutability'
-import {pageYOffset, pageXOffset} from'./window'
 import {
   REMOVE_PAGE,
   SAVE_RESPONSE,

@@ -22,16 +22,6 @@ export function pagePath (pageKey, keyPath) {
   return fullPath.join('.')
 }
 
-export function forEachFragmentPathAcrossAllPages (pages, name, fn = ()=>{}) {
-  Object.entries(pages)
-    .forEach(([pageKey, page]) => {
-      forEachFragmentPathInPage(page, name, (path) => {
-        const pathToFragment = [pageKey, 'data', path].join('.')
-        fn(pathToFragment)
-      })
-    })
-}
-
 export function forEachFragmentPathInPage (page, name, fn = ()=>{}) {
   const keyPaths = fragmentPathsInPage(page, name)
   keyPaths.forEach((path) => {

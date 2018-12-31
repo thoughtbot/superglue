@@ -5,8 +5,6 @@ export const setWindow = (win) => window = win
 export const unsetWindow = () => window = null
 
 export const hasWindow = () => typeof window !== 'undefined' && window !== null
-export const pageYOffset = () => window && window.pageYOffset
-export const pageXOffset = () => window && window.pageXOffset
 
 export function refreshBrowser () {
   const window = getWindow()

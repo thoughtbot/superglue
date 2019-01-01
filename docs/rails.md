@@ -44,7 +44,7 @@ On non-GET requests, Breezy uses the response's `content-location` to create the
 
 It is recommended that set this header in your `create` and `update` methods.
 
-```text
+```ruby
 def create
   @post = Post.new(post_params)
 

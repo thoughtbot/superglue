@@ -90,7 +90,7 @@ If there is an existing page in your store `navigateTo` will restore the props, 
 
 Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.There can only ever be one visit at a time. If you happen to call `visit` while another visit is taking place, only the most recent visit will callback with `canNavigate: true`.
 
-For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](react-redux.md#enhancevisitwithbrowserbehavior)
+For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](utility.md#enhancevisitwithbrowserbehavior)
 
 **Note** `visit` will strip any `_bz` query parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
 

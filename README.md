@@ -6,7 +6,7 @@ Inspired by Turbolinks, Breezy is an Ajax library and opinionated state shape fo
 
 # Features
 
-1. **The Best of Rails, React, and Redux** Use your convienent URL helpers, bring in [out-of-the-box](https://ant.design/components/button/) React components, and, when you need to, get down and dirty with Redux.
+1. **The Best of Rails, React, and Redux** Use your convienent URL helpers, bring in [out-of-the-box](https://github.com/Shopify/polaris-react/) React components, and, when you need to, get down and dirty with Redux.
 2. **Batteries Included** Be productive with Rails, React and Redux from day one with easy-to-use thunks, an opinionated store shape, and scaffolds for minimal setup.
 3. **API** ~~**first**~~ **later development** Save the work for when you actually need it. With Breezy, you can build SPAs without APIs and skip the hassle of building another set of routes/controllers/serializers/tests.
 4. **All your resources in a single request** Move over GraphQL, classic multi-page applications already achieves this. Breezy just enhances your Rails views to make it work for React and Redux.
@@ -112,9 +112,9 @@ You can also refresh a node inside of `index.jsx`.
 this.props.remote("/posts?_bz=header")
 ```
 
-The above will fetch the `json.header` node in `index.js.props`, noop the `json.posts` node, immutably graft it in your store, before handling it to React to render.
+The above will fetch the `json.header` node in `index.js.props`, noop the `json.posts` node, immutably graft it in your store, before handing it over to React to render.
 
-## The Breezy store shape
+# The Breezy store shape
 
 How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
 

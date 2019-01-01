@@ -72,7 +72,7 @@ end
 
 To support [filtering nodes](breezy-template.md#filtering-nodes), any list passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. For example, if you were using a delegate:
 
-```text
+```ruby
 class ObjectCollection < SimpleDelegator
   def member_at(index)
     at(index)
@@ -88,7 +88,7 @@ end
 
 Then in your template:
 
-```text
+```ruby
 data = ObjectCollection.new([{id: 1, name: 'foo'}, {id: 2, name: 'bar'}])
 
 json.array! data do
@@ -98,10 +98,10 @@ end
 
 Similarly for ActiveRecord:
 
-```text
+```ruby
 class ApplicationRecord < ActiveRecord::Base
   def self.member_at(index)
-    offset(index).limit(1)
+    offset(index).limit(1).first
   end
 
   def self.member_by(attr, value)
@@ -112,7 +112,7 @@ end
 
 Then in your template:
 
-```text
+```ruby
 json.array! Post.all do
   ...
 end
@@ -122,7 +122,7 @@ end
 
 For convenience, BreezyTemplate includes a core\_ext that adds these methods to `Array`. For example:
 
-```text
+```ruby
 require 'breezy_template/core_ext'
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
@@ -395,7 +395,7 @@ json.set! :nested, to_nest
 
 Any collection passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. See [lists](breezy-template.md#lists)
 
-### key format defaulted to camelCase
+### key formatted to camelCase
 
-Key formatting is defaulted to `camelCase`
+Key formatting is formatted to `camelCase`. You cannot change this.
 

@@ -305,6 +305,45 @@ describe('reducers', () => {
         const nextStateCartTotal = nextState['/foo'].data.header.cart.total;
         expect(nextStateCartTotal).toEqual(10)
       })
+
+      it('skips over pages without any fragments when using the selected page as reference', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                cart: {
+                  total: 30
+                }
+              }
+            },
+            privateOpts: {
+              csrfToken: 'token',
+              assets: ['application-123.js'],
+            },
+            fragments: {
+              info: ['header.cart']
+            }
+          },
+          '/bar': {
+            data: {},
+            privateOpts: {
+              csrfToken: 'token',
+              assets: ['application-123.js'],
+            },
+            fragments: {}
+          }
+        }
+
+        const nextState = reducer(prevState, {
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
+          payload: {
+            pageKey: '/bar',
+          }
+        })
+
+        const nextStateCartTotal = nextState['/bar'].data
+        expect(nextStateCartTotal).toEqual({})
+      })
     })
 
     describe('MATCH_FRAGMENTS_IN_PAGE', () => {
@@ -328,7 +367,7 @@ describe('reducers', () => {
                     status: 'old'
                   }
                 }
-              } 
+              }
             },
             csrfToken: 'token',
             assets: ['application-123.js'],

@@ -43,8 +43,8 @@ function copyInByFragment (state, name, value, subpath = null) {
   state = {...state}
   const copy = JSON.stringify(value)
 
-  Object.entries(state).forEach(([pageKey, {fragments=[]}]) => {
-    fragments[name].forEach(pathToFragment => {
+  Object.entries(state).forEach(([pageKey, {fragments} = {}]) => {
+    (fragments[name] || []).forEach(pathToFragment => {
       const fullpath = [pathToFragment]
       if (subpath) {
         fullpath.push(subpath)

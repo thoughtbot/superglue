@@ -28,4 +28,11 @@ class BreezyTemplate
       new(message)
     end
   end
+
+  class LeafTraversalError < ::StandardError
+    def self.build(key, value, options, search_path)
+      message = "Attempted to traverse into node named #{key} but got a value. This may happen if you forgot to use nil as a first value if you're using a partial, e.g, json.foo nil, partial: 'footer'. Key: #{key} Value: #{value} Options: #{options} Remaining search path: #{search_path}."
+      new(message)
+    end
+  end
 end

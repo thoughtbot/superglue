@@ -77,6 +77,22 @@ class SearchExtensionTest < BreezyTemplateTestCase
 
     Rails.cache.clear
   end
+
+  test "filtering for a node but forgetting to use nil as the first param" do
+    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
+
+    begin
+      result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+        json.hit do
+          json.hit2 cache: 'a', partial: 'footer'
+        end
+      JBUILDER
+    rescue => e
+      assert_equal e.cause.class, BreezyTemplate::LeafTraversalError
+      assert_equal e.message, "Attempted to traverse into node named hit2 but got a value. This may happen if you forgot to use nil as a first value if you're using a partial, e.g, json.foo nil, partial: 'footer'. Key: hit2 Value: {:cache=>\"a\", :partial=>\"footer\"} Options: {} Remaining search path: [\"terms\"]."
+    end
+  end
+
   test "filtering for a raw value is also possble" do
     result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
       json.hit do

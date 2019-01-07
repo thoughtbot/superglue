@@ -75,7 +75,7 @@ class BreezyTemplate
 
               super(key, value, without)
             else
-              ::Kernel.raise 'This should not happen'
+              ::Kernel.raise LeafTraversalError.build(key, value, options, @search_path)
             end
           end
 

@@ -41,7 +41,7 @@ end
 
 json.flash flash.to_h
 
-json.footer nil, partial: 'footer'
+json.footer nil, partial: 'shared/footer'
 ```
 
 In general, BreezyTemplate functionality like partials or deferment, can only be enabled as options on a node.
@@ -140,28 +140,28 @@ Unfortunately, BreezyTemplate doesn't know what the elements are in your collect
 Partials are supported. The following will render the file `views/posts/_blog_posts.js.props`, and set a local variable `foo` assigned with @post, which you can use inside the partial.
 
 ```ruby
-json.posts @post, partial: ["blog_post", as: 'foo']
+json.posts @post, partial: ["posts/blog_post", as: 'foo']
 ```
 
 More usage:
 
 ```ruby
 # We use a `nil` because of the last argument hash. The contents of the partial is what becomes the value.
-json.post nil, partial: "blog_post"
+json.post nil, partial: "posts/blog_post"
 
 #or
 
 # Set @post as a local `article` within the `blog_post` partial.
-json.post @post, partial: ["blog_post", as: 'article']
+json.post @post, partial: ["posts/blog_post", as: 'article']
 
 #or
 # Add more locals
-json.post @big_post, partial: ["blog_post", locals: {email: 'tests@test.com'}]
+json.post @big_post, partial: ["posts/blog_post", locals: {email: 'tests@test.com'}]
 
 #or
 
 # Use a partial for each element in an array
-json.array! @posts, partial: ["blog_post", as: :blog_post]
+json.array! @posts, partial: ["posts/blog_post", as: :blog_post]
 ```
 
 ### Partial Fragments

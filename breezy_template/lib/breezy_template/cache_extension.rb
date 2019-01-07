@@ -81,7 +81,7 @@ class BreezyTemplate
     end
 
     def _cache_options(options)
-      return nil if !options
+      return nil if !options || options.blank?
       options = [*options[:cache]]
       key, options = options
 

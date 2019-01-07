@@ -64,12 +64,10 @@ class BreezyTemplate
         locals.merge!(partial_opts[:locals]) if partial_opts.key? :locals
         partial_opts.merge!(locals: locals)
 
-        _scope{ _render_partial(options) }
+        _result(BLANK, options){ _render_partial(options) }
       end
 
-      options = options.dup
-      options.delete(:partial)
-      set! name, value, options
+      set! name, value
     end
 
     def _render_partial(options)

@@ -17,7 +17,7 @@ class BreezyTemplate
       options = _normalize_options_for_partial(options)
 
       if attributes.one? && _partial_options?(options)
-        _render_partial_with_options(collection, options)
+        _render_partial_with_collection(collection, options)
       else
         super
       end
@@ -86,7 +86,7 @@ class BreezyTemplate
       @context.render options.merge(partial: partial)
     end
 
-    def _render_partial_with_options(collection, options)
+    def _render_partial_with_collection(collection, options)
       options = _normalize_options_for_partial(options)
       partial, partial_opts = options[:partial]
       array_opts = options.dup

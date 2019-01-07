@@ -70,8 +70,10 @@ class BreezyTemplate
             if ::Kernel.block_given?
               yield self
             elsif _partial_options?(options)
-              without_track = args.dup
-              super(key, value, *without_track)
+              without = options.dup
+              without.delete(:cache)
+
+              super(key, value, without)
             else
               ::Kernel.raise 'This should not happen'
             end

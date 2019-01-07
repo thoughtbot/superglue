@@ -70,7 +70,7 @@ end
 
 ### Lists
 
-To support [filtering nodes](breezy-template.md#filtering-nodes), any list passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. For example, if you were using a delegate:
+To support [filtering nodes](react-redux.md#filtering-nodes), any list passed to `array!` must implement `member_at(index)` and `member_by(attr, value)`. For example, if you were using a delegate:
 
 ```ruby
 class ObjectCollection < SimpleDelegator

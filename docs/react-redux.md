@@ -158,6 +158,8 @@ Save and process a rendered view from BreezyTemplate. It will also handle any de
 
 Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
 
+Note that all ancestors of the node you are targeting will have their caching turned off.
+
 For example:
 
 ```javascript

@@ -47,7 +47,7 @@ class BreezyTemplate
 
     def _partial_digest(partial)
       lookup_context = @context.lookup_context
-      name = lookup_context.find(partial, lookup_context.prefixes, true).virtual_path
+      name = lookup_context.find(partial, [], true).virtual_path
       _partial_digestor({name: name, finder: lookup_context})
     end
 

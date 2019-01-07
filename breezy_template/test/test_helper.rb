@@ -33,6 +33,12 @@ class ObjectCollection < SimpleDelegator
   end
 end
 
+RAISE_IF_USED_PARTIAL = <<-JBUILDER
+  if used
+    raise 'No hit expected here'
+  end
+JBUILDER
+
 BLOG_POST_PARTIAL = <<-JBUILDER
   json.extract! blog_post, :id, :body
   json.author do
@@ -78,7 +84,8 @@ PARTIALS = {
   "_footer.js.breezy" => FOOTER_PARTIAL,
   "_nested.js.breezy" => NESTED_PARTIAL,
   "_collection.js.breezy" => COLLECTION_PARTIAL,
-  "_flattened.js.breezy" => FLATTENED_PARTIAL
+  "_flattened.js.breezy" => FLATTENED_PARTIAL,
+  "_raise_if_used.js.breezy" => RAISE_IF_USED_PARTIAL
 }
 
 ActionView::Template.register_template_handler :breezy, BreezyTemplate::Handler

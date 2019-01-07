@@ -184,8 +184,70 @@ class SearchExtensionTest < BreezyTemplateTestCase
         cache["#{cache_keys[0]}"]={"greeting":"hello world"};
         return ({"data":cache["#{cache_keys[0]}"],"screen":"test","fragments":fragments,"privateOpts":{"action":"graft","path":"hit.hit2","lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});
       })()
+    JS
 
+    assert_equal expected, result
+  end
 
+  test "filtering disables all ancestor cache of target node" do
+    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
+    jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+      json.hit do
+        json.hit2 cache: 'a' do
+          json.greeting 'stale'
+        end
+      end
+    JBUILDER
+
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.greeting')
+      json.hit do
+        json.hit2 cache: 'a' do
+          json.greeting 'fresh hit'
+        end
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
+        var cache={};
+        var defers=[];
+        return ({"data":"fresh hit","screen":"test","fragments":fragments,"privateOpts":{"action":"graft","path":"hit.hit2.greeting","lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});
+      })()
+    JS
+
+    assert_equal expected, result
+  end
+
+  test "filtering disables all ancestor cache of target node with partial options" do
+    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
+    jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+      json.hit do
+        json.hit2 cache: 'a' do
+          json.greeting 'stale'
+        end
+      end
+    JBUILDER
+
+    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+      json.hit do
+        json.hit2 nil, cache: 'a', partial: 'footer'
+      end
+    JBUILDER
+    Rails.cache.clear
+
+    expected = strip_format(<<-JS)
+      (function(){
+        var fragments={};
+        var lastFragmentName;
+        var lastFragmentPath;
+        var cache={};
+        var defers=[];
+        return ({"data":"You agree","screen":"test","fragments":fragments,"privateOpts":{"action":"graft","path":"hit.hit2.terms","lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});
+      })()
     JS
 
     assert_equal expected, result

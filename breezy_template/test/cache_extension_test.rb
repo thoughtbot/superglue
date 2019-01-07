@@ -1,5 +1,6 @@
 require "test_helper"
 
+
 class CacheExtensionTest < BreezyTemplateTestCase
   test "caching a value at a node" do
     undef_context_methods :fragment_name_with_digest, :cache_fragment_name
@@ -170,7 +171,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
 
     assert_equal expected, result
   end
-  #
+
   test "fragment caching works with previous version of cache digests" do
     undef_context_methods :cache_fragment_name
 
@@ -224,6 +225,13 @@ class CacheExtensionTest < BreezyTemplateTestCase
     JS
 
     assert_equal expected, result
+  end
+
+  test "caches and runs a partial exactly once" do
+    jbuild(<<-JBUILDER)
+      json.hit nil, partial: ["raise_if_used", locals: {used: false}], cache: 'once'
+      json.miss nil, partial: ["raise_if_used", locals: {used: true}], cache: 'once'
+    JBUILDER
   end
 
   test "invokes templates via params via set! and caches" do

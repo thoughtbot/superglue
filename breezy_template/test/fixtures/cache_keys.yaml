@@ -132,3 +132,19 @@ test_filtering_a_cached_node_returns_just_that:
     - 707a735da2923a44d0911a6cdf30828e
   rails52:
     - 707a735da2923a44d0911a6cdf30828e
+
+test_filtering_disables_all_ancestor_cache_of_target_node:
+  rails50:
+    - 707a735da2923a44d0911a6cdf30828e
+  rails51:
+    - 707a735da2923a44d0911a6cdf30828e
+  rails52:
+    - 707a735da2923a44d0911a6cdf30828e
+
+test_filtering_disables_all_ancestor_cache_of_target_node_with_partial_options:
+  rails50:
+    - 707a735da2923a44d0911a6cdf30828e
+  rails51:
+    - 707a735da2923a44d0911a6cdf30828e
+  rails52:
+    - 707a735da2923a44d0911a6cdf30828e

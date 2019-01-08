@@ -171,7 +171,7 @@ describe('action creators', () => {
         privateOpts: {
           csrfToken: 'token',
           assets: [],
-          defers: [{url: '/some_defered_request?_bz=body'}]
+          defers: [{url: '/some_defered_request?bzq=body'}]
         }
       }
 
@@ -211,7 +211,7 @@ describe('action creators', () => {
       ]
 
       fetchMock
-        .mock('/some_defered_request?_bz=body&__=0', {
+        .mock('/some_defered_request?bzq=body&__=0', {
           body: `(function() {
             return {
               data: 'success',
@@ -341,7 +341,7 @@ describe('action creators', () => {
         privateOpts: {
           csrfToken: 'token',
           assets: [],
-          defers: [{url: '/some_defered_request?_bz=body'}]
+          defers: [{url: '/some_defered_request?bzq=body'}]
         }
       }
 
@@ -370,7 +370,7 @@ describe('action creators', () => {
         {
           type: '@@breezy/GRAFTING_ERROR',
           payload: {
-            url: '/some_defered_request?_bz=body',
+            url: '/some_defered_request?bzq=body',
             pageKey:"/foo",
             err: jasmine.any(Object),
             keyPath: "body",
@@ -379,7 +379,7 @@ describe('action creators', () => {
       ]
 
       fetchMock
-        .mock('/some_defered_request?_bz=body&__=0', 500)
+        .mock('/some_defered_request?bzq=body&__=0', 500)
 
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
@@ -473,8 +473,8 @@ describe('action creators', () => {
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-      fetchMock.mock('/first?_bz=foo&__=0', rsp.visitSuccess())
-      store.dispatch(remote('/first?_bz=foo&__=bar&_=baz')).then((meta)=>{
+      fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
+      store.dispatch(remote('/first?bzq=foo&__=bar&_=baz')).then((meta)=>{
         done()
       })
     })
@@ -732,7 +732,7 @@ describe('action creators', () => {
       })
     })
 
-    it('cleans any _bz, __, and - params', (done) => {
+    it('cleans any bzq, __, and - params', (done) => {
       const initialState = {
         breezy: {
           assets:[],
@@ -747,7 +747,7 @@ describe('action creators', () => {
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
-      store.dispatch(visit('/first?_bz=foo&__=bar&_=baz')).then((meta)=>{
+      store.dispatch(visit('/first?bzq=foo&__=bar&_=baz')).then((meta)=>{
         done()
       })
     })

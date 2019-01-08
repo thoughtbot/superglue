@@ -12,7 +12,7 @@ module Breezy
     end
 
     def breezy_filter
-      filter = request.params[:_bz]
+      filter = request.params[:bzq]
 
       if filter
         filter.gsub(/[^\da-zA-Z\_\=\.]+/, '')

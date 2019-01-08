@@ -79,7 +79,7 @@ function fetchDeferments (pageKey, defers = []) {
     const fetches = defers.map(function ({url}){
       return dispatch(remote(url, {}, pageKey)).catch((err) => {
         let parsedUrl = new parse(url, true)
-        const keyPath = parsedUrl.query._bz
+        const keyPath = parsedUrl.query.bzq
 
         dispatch({
           type: BREEZY_GRAFTING_ERROR,

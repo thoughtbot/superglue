@@ -18,7 +18,7 @@ class BreezyTemplate
 
     def _breezy_visit_current(path)
       uri = ::URI.parse(@request_path)
-      qry = ::URI.decode_www_form(uri.query || '') << ["_bz", path.join('.')]
+      qry = ::URI.decode_www_form(uri.query || '') << ["bzq", path.join('.')]
       uri.query = ::URI.encode_www_form(qry)
       "defers.push({url:'#{uri}'});"
     end

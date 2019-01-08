@@ -28,7 +28,7 @@ end
 When you `visit('/orders')` , BreezyTemplates render `orders.js.props` without the dashboard, and when the page is received by the frontend, Breezy will auto-request for the missing node:
 
 ```javascript
-remote('/orders?_bz=dashboard', ....otherOpts...)
+remote('/orders?bzq=dashboard', ....otherOpts...)
 ```
 
 Its up to you to handle both cases in your Component. For example:
@@ -69,7 +69,7 @@ In your component
 // survey.jsx
 //...in your component
   handleClick = () => {
-    this.props.remote('/posts?_bz=posts.pending')
+    this.props.remote('/posts?bzq=posts.pending')
   }
 
   render() {
@@ -353,7 +353,7 @@ class PostsIndex extends React.Component {
     const pagination_path = this.props.posts
     let url = new parse(pagination_path, true)
     url.query.page_num = page
-    url.query._bz = 'shoots'
+    url.query.bzq = 'shoots'
 
     this.enhancedVisit(pagination_path)
   }
@@ -419,7 +419,7 @@ Then when you build the component
 ```javascript
   componentDidMount() {
     this.polling = setInterval(() => {
-      this.props.remote('/posts?_bz=dashboard.visitors')
+      this.props.remote('/posts?bzq=dashboard.visitors')
     })
   }
 ```
@@ -433,7 +433,7 @@ For example, if you already have a ActionCable channel setup, simply render the 
 
 ```ruby
 renderer = PostsController.renderer.new(
-  "action_dispatch.request.parameters"=>{_bz: 'posts.all.items.0'},
+  "action_dispatch.request.parameters"=>{bzq: 'posts.all.items.0'},
   "action_dispatch.request.formats"=>[Mime[:js]]
 )
 

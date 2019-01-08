@@ -109,7 +109,7 @@ The above will request the `show.js.props`, pass it to `show.jsx` and update the
 You can also refresh a node inside of `index.jsx`.
 
 ```javascript
-this.props.remote("/posts?_bz=header")
+this.props.remote("/posts?bzq=header")
 ```
 
 The above will fetch the `json.header` node in `index.js.props`, noop the `json.posts` node, immutably graft it in your store, before handing it over to React to render.

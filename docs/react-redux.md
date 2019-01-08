@@ -92,7 +92,7 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use `v
 
 For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](utility.md#enhancevisitwithbrowserbehavior)
 
-**Note** `visit` will strip any `_bz` query parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
+**Note** `visit` will strip any `bzq` query parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
@@ -129,7 +129,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#filtering-nodes) of the current page or preload other pages.
 
-**Note** `remote` will respect `_bz` filtering parameters.
+**Note** `remote` will respect `bzq` filtering parameters.
 
 ```javascript
 remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
@@ -156,14 +156,14 @@ Save and process a rendered view from BreezyTemplate. It will also handle any de
 
 ## Filtering nodes
 
-Breezy can filter your content tree for a specific node. This is done by adding a `_bz=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
+Breezy can filter your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
 
 Note that all ancestors of the node you are targeting will have their caching turned off.
 
 For example:
 
 ```javascript
-store.dispatch(remote('/?_bz=header.shopping_cart'))
+store.dispatch(remote('/?bzq=header.shopping_cart'))
 ```
 
 ## Updating Fragments

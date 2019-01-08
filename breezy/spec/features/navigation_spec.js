@@ -178,7 +178,7 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.remote('/foo?_bz=address')
+          this.props.remote('/foo?bzq=address')
         }
 
         componentDidUpdate() {
@@ -209,7 +209,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.graftSuccessWithNewZip()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('/foo?_bz=address&__=0', mockResponse)
+      fetchMock.mock('/foo?bzq=address&__=0', mockResponse)
 
       target.getElementsByTagName('button')[0].click()
     })

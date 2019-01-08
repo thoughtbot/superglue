@@ -133,7 +133,7 @@ json.posts
 end
 ```
 
-Unfortunately, BreezyTemplate doesn't know what the elements are in your collection. The example above will be fine for [filtering](breezy-template.md#filtering_nodes) by index `\posts?_bz=posts.0`, but will raise a `NotImplementedError` if you filter by attribute `/posts?_bz=posts.id=1`. So you may still have to provide your own delegator.
+Unfortunately, BreezyTemplate doesn't know what the elements are in your collection. The example above will be fine for [filtering](breezy-template.md#filtering_nodes) by index `\posts?bzq=posts.0`, but will raise a `NotImplementedError` if you filter by attribute `/posts?bzq=posts.id=1`. So you may still have to provide your own delegator.
 
 ### Partials
 
@@ -302,7 +302,7 @@ json.posts
 end
 ```
 
-When Breezy receives the response, it will automatically kick off `remote(?_bz=posts.some_id=1.contact)` and `remote(?_bz=posts.some_id=2.contact)`.
+When Breezy receives the response, it will automatically kick off `remote(?bzq=posts.some_id=1.contact)` and `remote(?bzq=posts.some_id=2.contact)`.
 
 ## Differences from JBuilder
 

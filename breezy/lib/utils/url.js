@@ -42,7 +42,7 @@ export function withoutBZParams (url) {
   let query = url.query
   delete query['__']
   delete query['_']
-  delete query['_bz']
+  delete query['bzq']
   url.query = query
   return pathQuery(url.toString())
 }

@@ -23,7 +23,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'/some_url?_bz=hit.hit2'});
+        defers.push({url:'/some_url?bzq=hit.hit2'});
         return (
           {"data":{"hit":{"hit2":undefined}},"screen":"test","fragments":fragments,"privateOpts":{"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}}
         );
@@ -95,7 +95,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
+        defers.push({url:'/some_url?bzq=hit.hit2.id%3D2'});
         return (
           {"data":{"hit":{"hit2":[{"name":"foo"},{"id":2}]}},"screen":"test","fragments":fragments,"privateOpts":{"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}}
         );
@@ -134,7 +134,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
+        defers.push({url:'/some_url?bzq=hit.hit2.id%3D2'});
         return (
           {"data":{"hit":{"hit2":[{"email":"foo"},{"id":2}]}},"screen":"test","fragments":fragments,"privateOpts":{"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}}
         );
@@ -167,8 +167,8 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'/some_url?_bz=hit.hit2.id%3D1'});
-        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2'});
+        defers.push({url:'/some_url?bzq=hit.hit2.id%3D1'});
+        defers.push({url:'/some_url?bzq=hit.hit2.id%3D2'});
         return (
           {"data":{"hit":{"hit2":[{"id":1},{"id":2}]}},"screen":"test","fragments":fragments,"privateOpts":{"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}}
         );
@@ -201,8 +201,8 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'/some_url?_bz=hit.hit2.0'});
-        defers.push({url:'/some_url?_bz=hit.hit2.1'});
+        defers.push({url:'/some_url?bzq=hit.hit2.0'});
+        defers.push({url:'/some_url?bzq=hit.hit2.1'});
         return (
           {"data":{"hit":{"hit2":[undefined,undefined]}},"screen":"test","fragments":fragments,"privateOpts":{"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}}
         );
@@ -237,8 +237,8 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'/some_url?_bz=hit.hit2.id%3D1.greeting'});
-        defers.push({url:'/some_url?_bz=hit.hit2.id%3D2.greeting'});
+        defers.push({url:'/some_url?bzq=hit.hit2.id%3D1.greeting'});
+        defers.push({url:'/some_url?bzq=hit.hit2.id%3D2.greeting'});
         return (
           {"data":{"hit":{"hit2":[{"greeting":undefined},{"greeting":undefined}]}},"screen":"test","fragments":fragments,"privateOpts":{"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}}
         );
@@ -309,7 +309,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
         var lastFragmentPath;
         var cache={};
         var defers=[];
-        defers.push({url:'?_bz=hello.content'});
+        defers.push({url:'?bzq=hello.content'});
         return ({"data":{"content":undefined},"screen":"test","fragments":fragments,"privateOpts":{"action":"graft","path":"hello","lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});
       })()
     JS

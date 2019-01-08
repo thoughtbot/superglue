@@ -46,7 +46,7 @@ Its up to you to handle both cases in your Component. For example:
   }
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/412eff42835703e5279dfb21015ea5d048c6b8cc)
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/3160ee5151a92c0a0ac7073ffbcfe07d9f15abbc)
 
 ## Loading tab content OnClick
 
@@ -104,7 +104,7 @@ json.posts do
 end
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/103c0201ce156d3b7fc787b94559af4c5a439c31)
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/b3781efeeb9a020d21695cdd50c121533262348b)
 
 
 ## Preloading content
@@ -173,7 +173,7 @@ Then in your page component:
  }
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/d58218e82b95af51c49b2a22a42969a15a81fb01)
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/01c0a03df9f6836753dac4f2870a6a3a0370b4fd)
 
 
 ## Replicating Turbolinks behavior
@@ -210,7 +210,7 @@ export default connect(
 )(PreloadIndex)
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/3496f5359bbdcceaae1af4e06cda3196aef420af)
+[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/3a4c4d2e78ad543b6d330a281ffa9e0906e97e15)
 
 ## Usage with Devise
 

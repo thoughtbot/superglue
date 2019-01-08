@@ -21,3 +21,10 @@ All notable changes to this project will be documented in this file.
 - BREAKING CHANGE: rename joints to fragments. Makes more sense conceptually.
 - BREAKING CHANGE: remove `forEachPathToJointAcrossAllPages` and encourage the users to just iterate through each page and make the changes on their own. There are some attributes that are now moved to `privateOpts`, a key/value meant for internal use only.
 - FIX: Deferment wasn't working on multiple nested partials
+
+## v0.11.0
+BREAKING CHANGE: partial rendering was passed existing context prefixes when it wasn't supposed to, this broke some parts of caching, and generated the wrong fragment cache key.
+Fix: When using node filtering eg. `_bz=foo.bar.my_node`, caching on the targest ancestors is disabled.
+Fix: Inline partials were not caching properly, it ran and saved the partial in the cache every time.
+BREAKING CHANGE: Rename `_bz` param to `bzq`
+

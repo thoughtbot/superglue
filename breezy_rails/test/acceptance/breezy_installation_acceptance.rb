@@ -70,6 +70,13 @@ class BreezyInstallationTest < Minitest::Test
       successfully "yarn run build"
     end
 
+    if `rails -v` =~ /^Rails 5\.0/
+      # New sqlite versions don't seem to work with Rails 5.0 autogen Gemfile
+      successfully "mv Gemfile Gemfile.backup"
+      system "sed s/^.*sqlite.*$//g Gemfile.backup > Gemfile"
+      successfully "echo \"gem 'sqlite3', '~> 1.3.0'\" >> Gemfile"
+    end
+
     successfully "echo \"gem 'breezy_template', path: '#{BREEZY_TEMPLATE_PATH}'\" >> Gemfile"
     successfully "echo \"gem 'breezy', path: '#{BREEZY_RAILS_PATH}'\" >> Gemfile"
     successfully "bundle install"

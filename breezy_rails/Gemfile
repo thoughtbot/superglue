@@ -1,4 +1,0 @@
-source 'http://www.rubygems.org'
-gemspec
-
-gem "breezy_template", path:'../breezy_template'

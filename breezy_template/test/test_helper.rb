@@ -1,4 +1,5 @@
 require 'rails'
+require 'sqlite3'
 require 'abstract_controller'
 require 'abstract_controller/railties/routes_helpers'
 require 'action_controller'

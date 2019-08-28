@@ -5,7 +5,7 @@ require 'abstract_controller/railties/routes_helpers'
 require 'action_controller'
 require "active_support"
 require 'active_record'
-require 'active_support/testing/autorun' if Rails.version >= '4'
+require 'active_support/testing/autorun'
 require 'active_support/test_case'
 
 require "mocha"
@@ -154,14 +154,10 @@ class BreezyTemplateTestCase < ActionView::TestCase
   end
 
   def action_controller_test_request
-    if ::Rails.version.start_with?('5.2')
-      ::ActionController::TestRequest.create({})
-    elsif ::Rails.version.start_with?('5.1')
-      ::ActionController::TestRequest.create({})
-    elsif ::Rails.version.start_with?('5')
+    if ::Rails.version.start_with?('5.0')
       ::ActionController::TestRequest.create
     else
-      ::ActionController::TestRequest.new
+      ::ActionController::TestRequest.create({})
     end
   end
 

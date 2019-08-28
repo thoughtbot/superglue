@@ -5,7 +5,7 @@ require 'action_controller'
 require 'breezy'
 require "active_support"
 require 'active_record'
-require 'active_support/testing/autorun' if Rails.version >= '4'
+require 'active_support/testing/autorun'
 require 'active_support/test_case'
 
 require 'breezy_template'

@@ -16,7 +16,7 @@ class <%= plural_table_name.camelize %>Edit extends BaseScreen {
       body: JSON.stringify(values),
     }
 
-    this.enhancedVisit(this.props.<%= singular_table_name.camelize(:lower) %>, options).then( rsp => {
+    this.enhancedVisit(this.props.<%= singular_table_name.camelize(:lower) %>Path, options).then( rsp => {
       setSubmitting(false)
       if (this.props.errors) {
         this.formRef.current.setErrors(this.props.errors)

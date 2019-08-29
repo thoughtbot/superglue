@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'breezy_template', version
   s.add_dependency 'webpacker', '>= 3.0'
 
-  s.add_development_dependency 'activerecord', '~> 5.0'
+  s.add_development_dependency 'activerecord', '>= 5.0'
   s.add_development_dependency 'rake', ' ~> 12.0'
   s.add_development_dependency 'byebug', '~> 9.0'
   s.add_development_dependency 'sqlite3', '~> 1.3'

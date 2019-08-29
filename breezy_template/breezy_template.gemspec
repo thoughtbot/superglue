@@ -12,12 +12,11 @@ Gem::Specification.new do |s|
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 
-  s.required_ruby_version = '~> 2.3'
-
-  s.add_dependency 'actionpack', '~> 5.0'
-  s.add_dependency 'activesupport', '~> 5.0'
   s.add_dependency 'multi_json',    '~> 1.2'
+  s.required_ruby_version = '>= 2.3'
+  s.add_dependency 'activesupport', '>= 5.0.0'
 
+  s.add_development_dependency 'actionpack', '>= 5.0.0'
   s.add_development_dependency 'mocha', '1.2'
   s.add_development_dependency 'rake', ' ~> 12.0'
 end

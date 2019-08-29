@@ -19,6 +19,7 @@ matrix:
 
     <%gemfiles.each do |gemfile|%>
       <%ruby_versions.each do |ver|%>
+        <%next if gemfile == 'Gemfile.rails60' && ver < '2.5'%>
     - language: ruby
       rvm: <%=ver%>
       gemfile: breezy_rails/<%=gemfile%>

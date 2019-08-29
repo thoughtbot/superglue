@@ -3,7 +3,7 @@
 require 'erubis'
 
 ROOT_DIR = File.expand_path('..', File.dirname(__FILE__))
-TEMPLATE_PATH = File.join(ROOT_DIR, '.travis.yml.erb')
+TEMPLATE_PATH = File.join(ROOT_DIR, 'travis.yml.erb')
 YML_PATH = File.join(ROOT_DIR, '.travis.yml')
 
 template = File.read(TEMPLATE_PATH)

@@ -1,12 +1,13 @@
+<%ruby_versions = %w(2.3 2.4 2.5)%>
+<%gemfiles = %w(Gemfile.rails50 Gemfile.rails51 Gemfile.rails52 Gemfile.rails60)%>
+
 matrix:
   include:
-    <%ruby_versions = %w(2.3 2.4 2.5)%>
-    <%gemfiles = ['breezy_template/Gemfile.rails50', 'breezy_template/Gemfile.rails51', 'breezy_template/Gemfile.rails52']%>
     <%gemfiles.each do |gemfile|%>
       <%ruby_versions.each do |ver|%>
     - language: ruby
       rvm: <%=ver%>
-      gemfile: <%=gemfile%>
+      gemfile: breezy_template/<%=gemfile%>
       before_install:
         - cd breezy_template
       install:
@@ -16,13 +17,11 @@ matrix:
       <%end%>
     <%end%>
 
-    <%ruby_versions = %w(2.3 2.4 2.5)%>
-    <%gemfiles = ['breezy_rails/Gemfile.rails50', 'breezy_rails/Gemfile.rails51', 'breezy_rails/Gemfile.rails52']%>
     <%gemfiles.each do |gemfile|%>
       <%ruby_versions.each do |ver|%>
     - language: ruby
       rvm: <%=ver%>
-      gemfile: <%=gemfile%>
+      gemfile: breezy_rails/<%=gemfile%>
       addons:
         chrome: stable
       before_install:

@@ -17,7 +17,7 @@ require 'breezy_template/search_extension'
 require 'digest/md5'
 require 'action_view'
 require 'active_support'
-require 'multi_json'
+require 'json'
 require 'ostruct'
 
 class BreezyTemplate
@@ -311,7 +311,7 @@ class BreezyTemplate
   end
 
   def _dump(value)
-    ::MultiJson.dump(value)
+    ::JSON.dump(value)
   end
 
   def _logger

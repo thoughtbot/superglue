@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 
-  s.add_dependency 'multi_json',    '~> 1.2'
   s.required_ruby_version = '>= 2.3'
   s.add_dependency 'activesupport', '>= 5.0.0'
 

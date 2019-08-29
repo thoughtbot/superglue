@@ -83,24 +83,6 @@ matrix:
       script:
         - bundle exec rake test
     - language: ruby
-      rvm: 2.3
-      gemfile: breezy_template/Gemfile.rails60
-      before_install:
-        - cd breezy_template
-      install:
-        - bundle install
-      script:
-        - bundle exec rake test
-    - language: ruby
-      rvm: 2.4
-      gemfile: breezy_template/Gemfile.rails60
-      before_install:
-        - cd breezy_template
-      install:
-        - bundle install
-      script:
-        - bundle exec rake test
-    - language: ruby
       rvm: 2.5
       gemfile: breezy_template/Gemfile.rails60
       before_install:

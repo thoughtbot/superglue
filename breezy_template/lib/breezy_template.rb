@@ -49,7 +49,7 @@ class BreezyTemplate
     yield self if ::Kernel.block_given?
   end
 
-    # Yields a builder and automatically turns the result into a JSON string
+  # Yields a builder and automatically turns the result into a JSON string
   def self.encode(*args, &block)
     new(*args, &block).target!
   end
@@ -63,13 +63,8 @@ class BreezyTemplate
     else
       if _is_collection?(value) && !args.last.is_a?(::Hash)
         _scope{ array! value, *args }
-      # elsif args.empty?
-      #   _result(value, *args)
-      # elsif !args.last.is_a? ::Hash
-      #   _merge_block(key){ extract! value, *args }
       else
         _result(value, *args)
-        # value
       end
     end
 
@@ -144,7 +139,7 @@ class BreezyTemplate
       collection.to_a
     end
 
-    merge! array #remove this depednacy
+    merge! array
   end
 
   def extract!(object, *attributes)
@@ -154,14 +149,6 @@ class BreezyTemplate
       _extract_method_values(object, attributes)
     end
   end
-
-  # def call(object, *attributes)
-  #   if ::Kernel.block_given?
-  #     array! object, &::Proc.new
-  #   else
-  #     extract! object, *attributes
-  #   end
-  # end
 
   # Returns the nil JSON.
   def nil!
@@ -276,10 +263,8 @@ class BreezyTemplate
   end
 
   def _args_for_set_with_block(*args)
-    # return args
     key = args[0]
-    # #todo: check this
-    # #
+
     if ::Hash === args[1] && _extended_options?(args[1])
       options = args[1]
       [key, BLANK, options]
@@ -290,16 +275,6 @@ class BreezyTemplate
 
   def _args_for_set(*args)
     return args
-    # if args.length >= 3
-    #   return args
-    #   # key, value, options = args
-    #   #
-    #   # [key, value, options]
-    # else
-    #   key, value = args
-    #
-    #   [key, value]
-    # end
   end
 
   def _extended_options?(value)

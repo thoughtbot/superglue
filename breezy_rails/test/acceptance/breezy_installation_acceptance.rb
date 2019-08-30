@@ -126,9 +126,14 @@ class BreezyInstallationTest < Minitest::Test
       FileUtils.rm_rf("testapp")
       generate_test_app "testapp"
       Dir.chdir('testapp') do
-        successfully "echo 'gem \"webpacker\", \"~> 3.5\"' >> Gemfile"
+        if Rails.version < '6.0'
+          successfully "echo 'gem \"webpacker\", \"~> 3.5\"' >> Gemfile"
+        end
         successfully 'bundle install'
-        successfully 'bundle exec rails webpacker:install'
+
+        if Rails.version < '6.0'
+          successfully 'bundle exec rails webpacker:install'
+        end
         successfully 'bundle exec rails webpacker:install:react'
 
         FileUtils.rm_f("public/index.html")

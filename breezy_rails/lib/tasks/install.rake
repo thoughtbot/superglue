@@ -27,12 +27,6 @@ namespace :breezy do
       template = File.expand_path("../install/web.rb", __dir__)
       exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
     end
-
-    desc "Install everything needed for breezy mobile"
-    task 'mobile' => ["breezy:verify_yarn"] do
-      template = File.expand_path("../install/mobile.rb", __dir__)
-      exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
-    end
   end
 end
 

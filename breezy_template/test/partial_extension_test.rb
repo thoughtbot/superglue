@@ -2,14 +2,14 @@ require "test_helper"
 
 class PartialExtensionTest < BreezyTemplateTestCase
   test "renders partial via the option through set!" do
-    @post = BLOG_POST_COLLECTION.first
+    post = BLOG_POST_COLLECTION.first
     Rails.cache.clear
 
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER, assigns: {post: post})
       json.post @post, partial: ["blog_post", as: :blog_post, fragment_name: :header]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -29,11 +29,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders a partial with explicit fragment" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.footer nil, partial: ["footer", fragment_name: 'hello']
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -48,11 +48,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "render array of partials with unique fragments" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.array! [1,2], partial: ["footer", fragment_name: ->(x){"somefoo"+x.to_s}]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -68,11 +68,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders a partial with no locals" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.footer nil, partial: "footer"
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -86,11 +86,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders a partial with locals" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.profile nil, partial: ["profile", locals: {email: "test@test.com"}]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -104,7 +104,7 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders a partial with locals and caches" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       opts = {
         cache: 'cachekey',
         partial: ["profile", locals: {email: "test@test.com"}]
@@ -112,7 +112,7 @@ class PartialExtensionTest < BreezyTemplateTestCase
       json.profile 32, opts
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -128,11 +128,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders a partial even without a :as to the value, this usage is rare" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.profile 32, partial: ["profile", locals: {email: "test@test.com"}]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -147,11 +147,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "render array of partials without an :as to a member, this usage is very rare" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.array! [1,2], partial: "footer"
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -166,11 +166,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "render array of partials without an :as to a member and cache" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.array! [1,2], partial: "footer", cache: ->(i){ ['a', i] }
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -187,11 +187,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "render array of partials" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.array! BLOG_POST_COLLECTION, partial: ["blog_post", as: :blog_post]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -217,11 +217,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders array of partials as empty array with an empty collection" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.array! [], partial: ["blog_post", as: :blog_post]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -236,11 +236,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders the partial and ignores the value" do
-    result = jbuild <<-JBUILDER
+    result = jbuild <<~JBUILDER
       json.posts nil, partial: "footer"
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -254,11 +254,11 @@ class PartialExtensionTest < BreezyTemplateTestCase
   end
 
   test "renders the partial as an array and ignores the value" do
-    result = jbuild <<-JBUILDER
+    result = jbuild <<~JBUILDER
       json.posts nil, partial: "flattened"
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;

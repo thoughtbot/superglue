@@ -2,7 +2,9 @@ require "test_helper"
 
 class SearchExtensionTest < BreezyTemplateTestCase
   test "filtering for a node in the tree" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+    @view.stubs(:breezy_filter).returns('hit.hit2')
+
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 do
           json.greeting 'hello world'
@@ -18,7 +20,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -35,7 +37,9 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering for a node in the tree with camelized keys" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit_one.hit_two')
+    @view.stubs(:breezy_filter).returns('hit_one.hit_two')
+
+    result = jbuild(<<~JBUILDER)
       json.hit_one do
         json.hit_two do
           json.greeting 'hello world'
@@ -44,7 +48,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -62,7 +66,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
 
   test "filtering for a nonexistant node in the tree" do
     begin
-      jbuild(<<-JBUILDER)
+      jbuild(<<~JBUILDER)
         json._set_search_path_once('miss.miss.miss.miss')
         json.hit do
           json.hit2 do
@@ -72,29 +76,30 @@ class SearchExtensionTest < BreezyTemplateTestCase
       JBUILDER
     rescue => e
       assert_equal e.cause.class, BreezyTemplate::NotFoundError
-      assert_equal e.message, 'Could not find node at ["miss", "miss", "miss", "miss"]'
+      assert_equal e.cause.message, 'Could not find node at ["miss", "miss", "miss", "miss"]'
     end
 
     Rails.cache.clear
   end
 
   test "filtering for a node but forgetting to use nil as the first param" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
+    @view.stubs(:breezy_filter).returns('hit.hit2.terms')
 
     begin
-      result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+      result = jbuild(<<~JBUILDER)
         json.hit do
           json.hit2 cache: 'a', partial: 'footer'
         end
       JBUILDER
     rescue => e
       assert_equal e.cause.class, BreezyTemplate::LeafTraversalError
-      assert_equal e.message, "Attempted to traverse into node named hit2 but got a value. This may happen if you forgot to use nil as a first value if you're using a partial, e.g, json.foo nil, partial: 'footer'. Key: hit2 Value: {:cache=>\"a\", :partial=>\"footer\"} Options: {} Remaining search path: [\"terms\"]."
+      assert_equal e.cause.message, "Attempted to traverse into node named hit2 but got a value. This may happen if you forgot to use nil as a first value if you're using a partial, e.g, json.foo nil, partial: 'footer'. Key: hit2 Value: {:cache=>\"a\", :partial=>\"footer\"} Options: {} Remaining search path: [\"terms\"]."
     end
   end
 
   test "filtering for a raw value is also possble" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+    @view.stubs(:breezy_filter).returns('hit.hit2')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 23
       end
@@ -108,7 +113,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -125,13 +130,14 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filter with partials" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.nested.terms')
+    @view.stubs(:breezy_filter).returns('hit.hit2.nested.terms')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 nil, partial: "nested"
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -147,7 +153,8 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering for a node in the tree via breezy_filter helper" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+    @view.stubs(:breezy_filter).returns('hit.hit2')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 do
           json.greeting 'hello world'
@@ -163,7 +170,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -180,8 +187,8 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering a cached node returns just that" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+    @view.stubs(:breezy_filter).returns('hit.hit2')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 cache: 'a' do
           json.greeting 'hello world'
@@ -190,7 +197,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -206,8 +213,8 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering disables all ancestor cache of target node" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-    jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+    @view.stubs(:breezy_filter).returns('hit.hit2')
+    jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 cache: 'a' do
           json.greeting 'stale'
@@ -215,7 +222,8 @@ class SearchExtensionTest < BreezyTemplateTestCase
       end
     JBUILDER
 
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.greeting')
+    @view.stubs(:breezy_filter).returns('hit.hit2.greeting')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 cache: 'a' do
           json.greeting 'fresh hit'
@@ -224,7 +232,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -239,8 +247,8 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering disables all ancestor cache of target node with partial options" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-    jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2')
+    @view.stubs(:breezy_filter).returns('hit.hit2')
+    jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 cache: 'a' do
           json.greeting 'stale'
@@ -248,14 +256,15 @@ class SearchExtensionTest < BreezyTemplateTestCase
       end
     JBUILDER
 
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.terms')
+    @view.stubs(:breezy_filter).returns('hit.hit2.terms')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 nil, cache: 'a', partial: 'footer'
       end
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -270,7 +279,8 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering for a node in an array of a tree by id" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.id=1')
+    @view.stubs(:breezy_filter).returns('hit.hit2.id=1')
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 do
           data = ObjectCollection.new([{id: 1, name: 'hit' }, {id:2, name: 'miss'}])
@@ -283,7 +293,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -300,7 +310,9 @@ class SearchExtensionTest < BreezyTemplateTestCase
   end
 
   test "filtering for a node in an array of a tree by index" do
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hit.hit2.0')
+    @view.stubs(:breezy_filter).returns('hit.hit2.0')
+
+    result = jbuild(<<~JBUILDER)
       data = [{id: 1, name: 'hit' }, {id:2, name: 'miss'}]
       json.hit do
         json.hit2 do
@@ -313,7 +325,7 @@ class SearchExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;

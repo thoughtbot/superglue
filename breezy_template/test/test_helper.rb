@@ -97,68 +97,65 @@ blog_authors = [ "David Heinemeier Hansson", "Pavel Pravosud" ].cycle
 BLOG_POST_COLLECTION = Array.new(10){ |i| BlogPost.new(i+1, "post body #{i+1}", blog_authors.next) }
 COLLECTION_COLLECTION = Array.new(5){ |i| Collection.new(i+1, "collection #{i+1}") }
 
-class BreezyTemplateTestCase < ActionView::TestCase
+class FakeView < ActionView::Base
+  undef_method :fragment_name_with_digest if method_defined? :fragment_name_with_digest
+  undef_method :cache_fragment_name if method_defined? :cache_fragment_name
+
+  # For Rails 6
+  if ActionView::Base.respond_to?(:with_empty_template_cache)
+    with_empty_template_cache
+  end
+
+  # this is a stub. Normally this would be set by the
+  # controller locals
+  cattr_accessor :request_forgery, :breezy
+  self.breezy = {}
+  self.request_forgery = false
+
+  def view_cache_dependencies; []; end
+  def protect_against_forgery?; false; end
+
+  def form_authenticity_token
+    "secret"
+  end
+
+  def asset_pack_path(asset)
+    asset
+  end
+end
+
+class BreezyTemplateTestCase < ActiveSupport::TestCase
   setup do
-    self.request_forgery = false
     BreezyTemplate.configuration.track_sprockets_assets = []
     BreezyTemplate.configuration.track_pack_assets = []
 
-    # this is a stub. Normally this would be set by the
-    # controller locals
-    self.breezy = {}
+    @controller =ActionView::TestCase::TestController.new
+    partials = PARTIALS.clone
+    resolver = ActionView::FixtureResolver.new(partials)
+    @lookup_context = ActionView::LookupContext.new([ resolver ], {}, [""])
+    @lookup_context.formats = [:js]
+    @view = FakeView.new(@lookup_context, {}, @controller)
 
-    @context = self
     Rails.cache.clear
   end
 
   teardown do
+    @controller = nil
+    @lookup_context = nil
+    @view = nil
+
     # Mocha didn't auto teardown??
     Mocha::Mockery.teardown
   end
 
-  cattr_accessor :request_forgery, :breezy
-  self.request_forgery = false
-
-  def breezy_filter
-    @breezy_filter
-  end
-
-  def asset_pack_path(asset)
-    return asset
-  end
-
   def strip_format(str)
-    str.strip_heredoc.gsub(/\n\s*/, "")
+    str.gsub(/\n\s*/, "")
   end
 
-  def request
-    @request
-  end
-
-  # Stub out a couple of methods that'll get called from cache_fragment_name
-  def view_cache_dependencies
-    []
-  end
-
-  def jbuild(source, opts={})
-    @breezy_filter = opts[:breezy_filter]
-    @request = opts[:request] || action_controller_test_request
-    @rendered = []
-    partials = PARTIALS.clone
-    partials["test.js.breezy"] = source
-    resolver = ActionView::FixtureResolver.new(partials)
-    lookup_context.view_paths = [resolver]
-    lookup_context.formats = [:js]
-    template = ActionView::Template.new(source, "test", BreezyTemplate::Handler, virtual_path: "test")
-    template.render(self, {}).strip
-  end
-
-  def action_controller_test_request
-    if ::Rails.version.start_with?('5.0')
-      ::ActionController::TestRequest.create
-    else
-      ::ActionController::TestRequest.create({})
-    end
+  def jbuild(source, options={})
+    @view.assign(options.fetch(:assigns, {}))
+    template = ActionView::Template.new(source, "test", BreezyTemplate::Handler, virtual_path: "test", locals: [])
+    template.render(@view, {}).strip
   end
 
   def cache_keys
@@ -168,18 +165,6 @@ class BreezyTemplateTestCase < ActionView::TestCase
     path = File.expand_path("../fixtures/cache_keys.yaml", __FILE__)
     keys = YAML.load_file(path)
     keys[method_name][rails_v]
-  end
-
-  def undef_context_methods(*names)
-    self.class_eval do
-      names.each do |name|
-        undef_method name.to_sym if method_defined?(name.to_sym)
-      end
-    end
-  end
-
-  def form_authenticity_token
-    "secret"
   end
 end
 

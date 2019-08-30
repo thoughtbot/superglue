@@ -3,16 +3,14 @@ require "test_helper"
 
 class CacheExtensionTest < BreezyTemplateTestCase
   test "caching a value at a node" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       opts = {
         cache: [['b', 'c']]
       }
       json.hello 32, opts
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -28,9 +26,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "caching elements in a list" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.hello do
         opts = {
           cache: ->(i){ ['a', i] }
@@ -41,7 +37,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -58,9 +54,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "nested caching generates a depth-first list of cache nodes" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.hello cache: [['a', 'b']] do
         json.content cache: [['d', 'z']] do
           json.subcontent 'inner'
@@ -71,7 +65,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -89,20 +83,18 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "caching an empty block generates no cache and no errors" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
     result = nil
 
     assert_nothing_raised do
-        result = jbuild(<<-JBUILDER)
-          json.hello do
-            json.array! [4,5], cache: ->(i){['a', i]} do |x|
-            end
+      result = jbuild(<<~JBUILDER)
+        json.hello do
+          json.array! [4,5], cache: ->(i){['a', i]} do |x|
           end
-        JBUILDER
+        end
+      JBUILDER
     end
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -117,23 +109,21 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "fragment caching" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    jbuild(<<-JBUILDER)
+    jbuild(<<~JBUILDER)
       opts = {cache: ['cachekey']}
       json.post opts do
         json.name "Cache"
       end
     JBUILDER
 
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       opts = {cache: ['cachekey']}
       json.post opts do
         json.name "Miss"
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -149,15 +139,13 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "fragment caching deserializes an array" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    result = jbuild <<-JBUILDER
+    result = jbuild <<~JBUILDER
       json.content cache: "cachekey" do
         json.array! %w[a b c]
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -173,47 +161,47 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "fragment caching works with previous version of cache digests" do
-    undef_context_methods :cache_fragment_name
-
-    if !@context.class.method_defined? :fragment_name_with_digest
-      @context.class_eval do
-        def fragment_name_with_digest
-        end
-      end
+    method_was_called = false
+    @view.define_singleton_method(:fragment_name_with_digest) do |key|
+      method_was_called = true
+      key
     end
 
-    @context.expects :fragment_name_with_digest
-
-    jbuild <<-JBUILDER
+    jbuild <<~JBUILDER
       json.content cache: 'cachekey' do
         json.name "Cache"
       end
     JBUILDER
+
+    assert_equal method_was_called, true
   end
 
   test "fragment caching works with current cache digests" do
-    undef_context_methods :fragment_name_with_digest
+    method_was_called = false
+    @view.define_singleton_method(:cache_fragment_name) do |key, options|
+      method_was_called = true
+      key
+    end
 
-    @context.expects :cache_fragment_name
-    ActiveSupport::Cache.expects :expand_cache_key
-
-    jbuild <<-JBUILDER
+    jbuild <<~JBUILDER
       json.content cache: 'cachekey' do
         json.name "Cache"
       end
     JBUILDER
+
+    assert_equal method_was_called, true
   end
 
   test "does not perform caching when controller.perform_caching is false" do
-    controller.perform_caching = false
+    @controller.perform_caching = false
 
-    result = jbuild <<-JBUILDER
+    result = jbuild(<<~JBUILDER, disable_caching: true)
       json.content cache: 'cachekey' do
         json.name "Cache"
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -228,20 +216,22 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "caches and runs a partial exactly once" do
-    jbuild(<<-JBUILDER)
-      json.hit nil, partial: ["raise_if_used", locals: {used: false}], cache: 'once'
-      json.miss nil, partial: ["raise_if_used", locals: {used: true}], cache: 'once'
-    JBUILDER
+    assert_nothing_raised do
+      jbuild(<<~JBUILDER)
+        json.hit nil, partial: ["raise_if_used", locals: {used: false}], cache: 'once'
+        json.miss nil, partial: ["raise_if_used", locals: {used: true}], cache: 'once'
+      JBUILDER
+    end
   end
 
   test "invokes templates via params via set! and caches" do
-    @post = BLOG_POST_COLLECTION.first
+    post = BLOG_POST_COLLECTION.first
 
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER, assigns: {post: post})
       json.post @post, partial: ["blog_post", as: :blog_post], cache: [['a', 'b']]
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -257,12 +247,10 @@ class CacheExtensionTest < BreezyTemplateTestCase
   end
 
   test "shares partial caches (via the partial's digest) across multiple templates" do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
+    hit = BlogPost.new(1, "hit", "John Smith")
+    miss = BlogPost.new(2, "miss", "John Smith")
 
-    @hit = BlogPost.new(1, "hit", "John Smith")
-    @miss = BlogPost.new(2, "miss", "John Smith")
-
-    cat =  jbuild(<<-JBUILDER)
+    cat =  jbuild(<<~JBUILDER, assigns: {hit: hit})
       opts = {
         cache: [['a', 'b']],
         partial: ["blog_post", as: :blog_post]
@@ -271,7 +259,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
       json.post @hit, opts
     JBUILDER
 
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER, assigns: {miss: miss})
       opts = {
         cache: [['a', 'b']],
         partial: ["blog_post", as: :blog_post]
@@ -280,7 +268,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
       json.post @miss, opts
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -295,9 +283,8 @@ class CacheExtensionTest < BreezyTemplateTestCase
     assert_equal expected, result
   end
 
-
   test "render array of partials and caches" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       opts = {
         cache: (->(d){ ['a', d.id] }),
         partial: ["blog_post", as: :blog_post]
@@ -306,7 +293,7 @@ class CacheExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;

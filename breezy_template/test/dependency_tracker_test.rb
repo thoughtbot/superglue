@@ -23,7 +23,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'jbuilder direct partial! feature are not allowed' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       json.partial! 'path/to/partial', foo: bar
       json.partial! 'path/to/another/partial', :fizz => buzz
     RUBY
@@ -32,7 +32,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'detects partial with no options (1.9 style)' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       json.content hello: 'world', partial: 'path/to/partial'
     RUBY
 
@@ -40,7 +40,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'detects partial with no options (1.8 style)' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       json.content :hello => 'world', :partial => 'path/to/partial'
     RUBY
 
@@ -48,7 +48,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'detects partial with options (1.9 style)' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       json.content hello: 'world', partial: ['path/to/partial', foo: :bar]
     RUBY
 
@@ -56,7 +56,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'detects partial with options (1.8 style)' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       json.content :hello => 'world', :partial => ['path/to/partial', :foo => :bar]
     RUBY
 
@@ -64,7 +64,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'detects partial in indirect collecton calls' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       json.comments @post.comments, partial: ['comments/comment', as: :comment]
     RUBY
 
@@ -72,7 +72,7 @@ class BreezyTemplateDependencyTrackerTest < ActiveSupport::TestCase
   end
 
   test 'detects explicit depedency' do
-    dependencies = track_dependencies <<-RUBY
+    dependencies = track_dependencies <<~RUBY
       # Template Dependency: path/to/partial
       json.foo 'bar'
     RUBY

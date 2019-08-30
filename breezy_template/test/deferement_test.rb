@@ -2,10 +2,9 @@ require "test_helper"
 
 class DefermentExtensionTest < BreezyTemplateTestCase
   test "rendering with node deferement" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2(defer: :auto)do
           json.hit3 do
@@ -16,7 +15,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -34,10 +33,9 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test "rendering with manual node deferement" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 defer: :manual do
           json.hit3 do
@@ -48,7 +46,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -65,10 +63,9 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test "rendering with selective array node deferment" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       keep_first = lambda do |item|
         if item[:id] == 1
           false
@@ -88,7 +85,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -106,10 +103,9 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test "rendering with node array partial deferment" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       keep_first = lambda do |item|
         if item[:id] == 1
           false
@@ -127,7 +123,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -145,10 +141,9 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test "rendering with node array deferment" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 do
           data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
@@ -160,7 +155,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -179,10 +174,9 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test "rendering with node array deferment using index" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 do
           data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
@@ -194,7 +188,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -213,10 +207,9 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test "rendering with node array deferment on nested node" do
-    req = action_controller_test_request
-    req.path = '/some_url'
+    @controller.request.path = '/some_url'
 
-    result = jbuild(<<-JBUILDER, request: req)
+    result = jbuild(<<~JBUILDER)
       json.hit do
         json.hit2 do
           data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
@@ -230,7 +223,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
     JBUILDER
     Rails.cache.clear
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -249,13 +242,11 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test 'deferment does not work on values' do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.hello(32, defer: :auto)
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -270,14 +261,14 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test 'deferment is disabled when filtering by keypath' do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hello.world')
+    @view.stubs(:breezy_filter).returns('hello.world')
+    result = jbuild(<<~JBUILDER)
       json.hello defer: :auto do
         json.world 32
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -293,8 +284,8 @@ class DefermentExtensionTest < BreezyTemplateTestCase
   end
 
   test 'deferment is enabled at the end of a keypath when filtering' do
-    undef_context_methods :fragment_name_with_digest, :cache_fragment_name
-    result = jbuild(<<-JBUILDER, breezy_filter: 'hello')
+    @view.stubs(:breezy_filter).returns('hello')
+    result = jbuild(<<~JBUILDER)
       json.hello do
         json.content defer: :auto do
           json.world 32
@@ -302,7 +293,7 @@ class DefermentExtensionTest < BreezyTemplateTestCase
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;

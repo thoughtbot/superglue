@@ -2,11 +2,11 @@ require "test_helper"
 
 class ExtensionsTest < BreezyTemplateTestCase
   test "rendering" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.content "hello"
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -21,7 +21,7 @@ class ExtensionsTest < BreezyTemplateTestCase
   end
 
   test "when rendering with duplicate keys, the last one wins" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.content do
         json.miss 123
       end
@@ -32,7 +32,7 @@ class ExtensionsTest < BreezyTemplateTestCase
     JBUILDER
 
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -47,14 +47,14 @@ class ExtensionsTest < BreezyTemplateTestCase
   end
 
   test "when rendering with duplicate array values, the last one wins" do
-    result = jbuild(<<-JBUILDER)
+    result = jbuild(<<~JBUILDER)
       json.content do
         json.array! [1,2]
         json.array! [3,4]
       end
     JBUILDER
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -72,11 +72,11 @@ class ExtensionsTest < BreezyTemplateTestCase
     BreezyTemplate.configuration.track_sprockets_assets = ['test.js', 'test.css']
     BreezyTemplate.configuration.track_pack_assets = ['test_pack.js', 'test_pack.css']
 
-    result = jbuild(<<-TEMPLATE)
+    result = jbuild(<<~TEMPLATE)
       json.content "hello"
     TEMPLATE
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -91,16 +91,16 @@ class ExtensionsTest < BreezyTemplateTestCase
   end
 
   test "render with csrf token when request forgery is on" do
-    self.stubs(:protect_against_forgery?).returns(true)
+    @view.stubs(:protect_against_forgery?).returns(true)
 
     # csrf_meta_tags also delegate authenticity tokens to the controller
     # here we provide a simple mock to the context
 
-    result = jbuild(<<-TEMPLATE)
+    result = jbuild(<<~TEMPLATE)
       json.content "hello"
     TEMPLATE
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;
@@ -116,13 +116,13 @@ class ExtensionsTest < BreezyTemplateTestCase
 
   test "wrapping jbuilder contents inside Breezy with additional options" do
     BreezyTemplate.configuration.track_sprockets_assets = ['test.js', 'test.css']
-    self.breezy = { title: 'this is fun' }
+    @view.stubs(:breezy).returns({ title: 'this is fun'})
 
-    result = jbuild(<<-TEMPLATE)
+    result = jbuild(<<~TEMPLATE)
       json.content "hello"
     TEMPLATE
 
-    expected = strip_format(<<-JS)
+    expected = strip_format(<<~JS)
       (function(){
         var fragments={};
         var lastFragmentName;

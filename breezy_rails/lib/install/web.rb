@@ -1,6 +1,7 @@
 require "webpacker/configuration"
 
 babelrc = Rails.root.join(".babelrc")
+babel_config = Rails.root.join("babel.config.js")
 
 def append_js_tags
   app_html = 'app/views/layouts/application.html.erb'
@@ -35,38 +36,40 @@ def add_member_methods
   end
 end
 
-
 if File.exist?(babelrc)
   react_babelrc = JSON.parse(File.read(babelrc))
   react_babelrc["presets"] ||= []
   react_babelrc["plugins"] ||= []
 
-  if !react_babelrc["presets"].include?("react")
-    react_babelrc["presets"].push("react")
-    say "Copying react preset to your .babelrc file"
+  react_babelrc["plugins"].push(["module-resolver", {
+    "root": ["./app"],
+    "alias": {
+      "views": "./app/views",
+      "components": "./app/components",
+      "javascript": "./app/javascript"
+    }
+  }])
 
-    File.open(babelrc, "w") do |f|
-      f.puts JSON.pretty_generate(react_babelrc)
-    end
+  say "Copying module-resolver preset to your .babelrc file"
+
+  File.open(babelrc, "w") do |f|
+    f.puts JSON.pretty_generate(react_babelrc)
   end
-
-  if !react_babelrc["plugins"].any?{|plugin| Array(plugin).include?("module-resolver")}
-    react_babelrc["plugins"].push(["module-resolver", {
-      "root": ["./app"],
-      "alias": {
-        "views": "./app/views",
-        "components": "./app/components",
-        "javascript": "./app/javascript"
-      }
-    }])
-
-    say "Copying module-resolver preset to your .babelrc file"
-
-    File.open(babelrc, "w") do |f|
-      f.puts JSON.pretty_generate(react_babelrc)
-    end
-  end
-
+elsif File.exist?(babel_config)
+  say "Copying module-resolver preset to your babel.config.js"
+  resolver_snippet = <<~PLUGIN
+        [
+          require('babel-plugin-module-resolver').default, {
+            "root": ["./app"],
+            "alias": {
+              "views": "./app/views",
+              "components": "./app/components",
+              "javascript": "./app/javascript"
+            }
+          }
+        ],
+  PLUGIN
+  insert_into_file "babel.config.js", resolver_snippet, after: /plugins: \[\n/
 else
   say "Copying .babelrc to app root directory"
   copy_file "#{__dir__}/templates/web/babelrc", ".babelrc"
@@ -96,7 +99,8 @@ add_member_methods
 say "Installing React, Redux, and Breezy"
 run "yarn add babel-plugin-module-resolver babel-preset-react formik history prop-types react-redux redux-thunk redux reduce-reducers react react-dom immer @jho406/breezy --save"
 
-say "Updating webpack paths to include .jsx file extension"
+say "Updating webpack config to include .jsx file extension and resolved_paths"
 insert_into_file Webpacker.config.config_path, "    - .jsx\n", after: /extensions:\n/
+insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /resolved_paths: \[/
 
 say "Webpacker now supports breezy.js 🎉", :green

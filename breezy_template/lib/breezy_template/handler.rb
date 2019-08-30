@@ -9,7 +9,8 @@ class BreezyTemplate
       template.identifier.sub("#{Rails.root}/app/views/", "").split('.')[0]
     end
 
-    def self.call(template)
+    def self.call(template, source = nil)
+
       # this juggling is required to keep line numbers right in the error
       %{__already_defined = defined?(json);json||=::BreezyTemplate.new(self);json._set_search_path_once(breezy_filter) if defined?(breezy_filter); json._set_request_url_once(request.fullpath);#{template.source}
         if !(__already_defined && __already_defined != "method")

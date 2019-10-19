@@ -1,4 +1,6 @@
 json.flash flash.to_h
-json.errors @<%= singular_table_name %>.errors.to_h
+if @<%= singular_table_name %>.errors
+  json.errors @<%= singular_table_name %>.errors.to_h
+end
 
 json.<%= plural_table_name %>_path <%= plural_table_name %>_path

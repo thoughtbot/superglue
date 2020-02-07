@@ -1,0 +1,4 @@
+json.title 'some title'
+json.details do
+  json.body 'hello world'
+end

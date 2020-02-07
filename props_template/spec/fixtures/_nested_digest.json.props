@@ -1,0 +1,4 @@
+json.foo1 json.fragment_digest!
+
+json.foo2(partial: ['digest', fragment: true, locals: {foo: 1}]) do
+end

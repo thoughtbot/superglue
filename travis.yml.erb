@@ -1,5 +1,5 @@
-<%ruby_versions = %w(2.3 2.4 2.5)%>
-<%gemfiles = %w(Gemfile.rails50 Gemfile.rails51 Gemfile.rails52 Gemfile.rails60)%>
+<%ruby_versions = %w(2.5)%>
+<%gemfiles = %w(Gemfile.rails60)%>
 
 matrix:
   include:
@@ -8,9 +8,9 @@ matrix:
         <%next if gemfile == 'Gemfile.rails60' && ver < '2.5'%>
     - language: ruby
       rvm: <%=ver%>
-      gemfile: breezy_template/<%=gemfile%>
+      gemfile: props_template/<%=gemfile%>
       before_install:
-        - cd breezy_template
+        - cd props_template
       install:
         - bundle install
       script:

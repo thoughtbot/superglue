@@ -1,7 +1,11 @@
 import {
-  pageReducer as reducer,
+  pageReducer,
   metaReducer,
-  controlFlowReducer
+  controlFlowReducer,
+  graftNodeOntoPage,
+  updateSameFragmentsOnPage,
+  appendReceivedFragmentsOntoPage,
+  handleGraft,
 } from '../lib/reducers'
 
 describe('reducers', () => {
@@ -49,9 +53,7 @@ describe('reducers', () => {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
             page: {
-              privateOpts: {
-                csrfToken: 'some_token'
-              }
+              csrfToken: 'some_token'
             }
           }
         }
@@ -85,179 +87,458 @@ describe('reducers', () => {
 
   describe('page reducer', () => {
     describe('BREEZY_HANDLE_GRAFT', () => {
-      it('takes a grafting response and grafts it', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 30
-                }
-              }
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            fragments: {}
-          }
-        }
-
-        const graftResponse = {
-          data: { total: 100},
-          action: 'graft',
-          path: 'header.cart',
-          title: 'foobar',
-          csrfToken: 'token',
-          assets: ['application-123.js']
-        }
-
-        const nextState = reducer(prevState, {
-          type: '@@breezy/HANDLE_GRAFT',
-          payload: {
-            pageKey: '/foo',
-            node: graftResponse.data,
-            pathToNode: graftResponse.path,
-          }
-        })
-
-        expect(nextState).not.toBe(prevState)
-        expect(nextState).toEqual({
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 100
-                }
-              }
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            fragments: {}
-          }
-        })
-      })
-
-      it('takes any new fragments and merges them', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 30
-                }
-              }
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            fragments: {
-              info: ['header.cart']
+      describe('when receiving a page with fragments to append', () => {
+        it('pushes new fragments into the current pages empty fragment', () => {
+          const prevState = {
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+              },
+              fragments: {}
             }
           }
-        }
 
-        const graftResponse = {
-          data: { total: 100},
-          action: 'graft',
-          path: 'header.cart',
-          title: 'foobar',
-          csrfToken: 'token',
-          fragments: {
-            info: ['header.cart.cat', 'header.cart.cat'],
-            footer: ['footer']
-          },
-          assets: ['application-123.js']
-        }
-
-        const nextState = reducer(prevState, {
-          type: '@@breezy/HANDLE_GRAFT',
-          payload: {
-            pageKey: '/foo',
-            node: graftResponse.data,
-            pathToNode: graftResponse.path,
-            fragments: graftResponse.fragments
-          }
-        })
-
-        expect(nextState).toEqual({
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 100
-                }
-              }
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
+          const receivedPage = {
+            data: {},
+            path: 'data.a.b.c',
             fragments: {
-              info: ['header.cart.cat', 'header.cart'],
-              footer: ['footer']
+              header: ['data.a.b.c']
             }
           }
-        })
-      })
 
-      it('throws cant find page if the page does not exist for grafting', () => {
-        const prevState = {
-        }
-
-        const graftResponse = {
-          data: { total: 100},
-          action: 'graft',
-          path: 'header.cart',
-          title: 'foobar',
-          csrfToken: 'token',
-          fragments: {
-            info: ['header.cart.cat', 'header.cart.cat'],
-            footer: ['footer']
-          },
-          assets: ['application-123.js']
-        }
-
-        expect(() => {
-          const nextState = reducer(prevState, {
+          const nextState = pageReducer(prevState, {
             type: '@@breezy/HANDLE_GRAFT',
             payload: {
               pageKey: '/foo',
-              node: graftResponse.data,
-              pathToNode: graftResponse.path,
-              fragments: graftResponse.fragments
+              page: receivedPage
             }
           })
-        }).toThrow(new Error("Breezy was looking for /foo in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?"))
+
+          expect(nextState).toEqual({
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+              },
+              fragments: {
+                'header': ['data.a.b.c'],
+              }
+            }
+          })
+        })
+
+        it('ignore duplicates when pushing a new fragment', () => {
+          const prevState = {
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+              },
+              fragments: {
+                header: ['data.a.b.c']
+              }
+            }
+          }
+          const receivedPage = {
+            data: {},
+            path: 'data.a.b.c',
+            fragments: {
+              header: ['data.a.b.c']
+            }
+          }
+
+          const nextState = pageReducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              page: receivedPage
+            }
+          })
+
+          expect(nextState).toEqual({
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+              },
+              fragments: {
+                header: ['data.a.b.c']
+              }
+            }
+          })
+        })
+      })
+
+      describe('Updating fragments on the current page with the same name as the received page', () => {
+        it('does no additional update if there is no fragments in the current page', () => {
+          const prevState = {
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+                d: { e: { f: {}}},
+              },
+              fragments: {}
+            }
+          }
+
+          const receivedPage = {
+            data: {},
+            path: 'data.d.e.f',
+            fragments: {
+              header: ['data.d.e.f'],
+            }
+          }
+
+          const nextState = pageReducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              page: receivedPage
+            }
+          })
+
+          expect(nextState).toEqual({
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+                d: { e: { f: {}}},
+              },
+              fragments: {
+                header: ['data.d.e.f'],
+              }
+            }
+         })
+        })
+
+        it('updates no fragment when there is no new fragment in the received graft', () => {
+          const prevState = {
+            '/foo': {
+              data: {
+                a: { b: { c: {}}},
+                d: { e: { f: {}}},
+              },
+              fragments: { header: ['data.d.e.f'] },
+            }
+          }
+
+          const receivedPage = {
+            data: {},
+            path: 'data.a.b.c',
+            fragments: {}
+          }
+
+          const nextState = pageReducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              page: receivedPage
+            }
+          })
+
+          expect(nextState).toEqual(nextState)
+        })
+      })
+
+      describe('grafting a received node onto the page', () => {
+        it('returns the state when pathToNode is empty', () => {
+          const prevState = {
+            '/foo': {
+              data: {a: { b: { c: {}}}},
+              fragments: {}
+            }
+          }
+          const receivedPage = {
+            data: {foo: 1},
+            fragments: {}
+          }
+          const pageKey = '/foo'
+
+          const nextState = pageReducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              page: receivedPage
+            }
+          })
+          expect(nextState).toEqual(prevState)
+        })
+
+        it('grafts a received node onto the current page', () => {
+          const pageKey = '/foo'
+          const prevState = {
+            '/foo': {
+              data: {a: { b: { c: {}}}},
+              fragments: {}
+            },
+          }
+
+          const receivedPage = {
+            data: {foo: 1},
+            path: 'data.a.b.c',
+            fragments: {}
+          }
+
+          const nextState = pageReducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              page: receivedPage
+            }
+          })
+
+          expect(nextState).toEqual({
+            '/foo': {
+              data: {a: {b: {c: {foo: 1}}}},
+              fragments: {}
+            }
+          })
+        })
+
+        it('throws cant find page if the page does not exist for grafting', () => {
+          const prevState = {
+          }
+
+          const receivedPage = {
+            data: {foo: 1},
+            path: 'data.a.b.c'
+          }
+
+          expect(() => {
+            pageReducer(prevState, {
+              type: '@@breezy/HANDLE_GRAFT',
+              payload: {
+                pageKey: '/foo',
+                page: receivedPage
+              }
+            })
+          }).toThrow(new Error("Breezy was looking for /foo in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?"))
+        })
+
+        it('does not mutate the state when search results are empty', () => {
+          spyOn(console, 'warn')
+
+          const prevState = {
+            '/foo': {
+              data: {a: { b: { c: {}}}},
+              fragments: {}
+            },
+          }
+
+          const receivedPage = {
+            path: 'data.a.b.c'
+          }
+
+          const nextState = pageReducer(prevState, {
+            type: '@@breezy/HANDLE_GRAFT',
+            payload: {
+              pageKey: '/foo',
+              page: receivedPage
+            }
+          })
+
+          expect(console.warn).toHaveBeenCalledWith('There was no node returned in the response. Do you have the correct key path in your bzq?')
+          expect(nextState).toEqual(prevState)
+        })
       })
     })
 
     describe('BREEZY_SAVE_RESPONSE', () => {
       it('saves page', () => {
         const prevState = {}
-        const nextState = reducer(prevState, {
+        const nextState = pageReducer(prevState, {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
             pageKey: '/foo',
             page: {
               data: {},
-              privateOpts: {
-                csrfToken: 'token',
-                assets: ['application-123.js']
-              }
+              csrfToken: 'token',
+              assets: ['application-123.js']
             }
           }
         })
 
         expect(nextState['/foo']).toEqual(jasmine.objectContaining({
           data: {},
-          privateOpts: {
-            csrfToken: 'token',
-            assets: [ 'application-123.js' ],
-          },
+          csrfToken: 'token',
+          assets: [ 'application-123.js' ],
           pageKey: '/foo',
-          fragments: {}
+          fragments: []
         }))
       })
+
+      it('uses existing deferred nodes as placeholders when there is already a page in the store', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              foo: {
+                bar: {
+                  greetings: 'hello world'
+                }
+              }
+            },
+            pageKey: '/foo',
+            defers : [
+              {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+            ],
+            fragments: []
+          }
+        }
+
+        const receivedPage = {
+          data: {
+            foo: {
+              baz: {name: 'john'},
+              bar: {}
+            }
+          },
+          defers : [
+            {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+          ],
+          fragments: []
+        }
+
+        const nextState = pageReducer(prevState, {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: receivedPage
+          }
+        })
+
+        expect(nextState['/foo']).toEqual({
+          data: {
+            foo: {
+              baz: {name: 'john'},
+              bar: {
+                greetings: 'hello world'
+              }
+            }
+          },
+          pageKey: '/foo',
+          defers : [
+            {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+          ],
+          fragments: []
+        })
+      })
+
+      it('uses existing fragment nodes as placeholders for deferred fragments', () => {
+        const prevState = {
+          '/bar': {
+            data: {
+              foo: {
+                bar: {
+                  greetings: 'hello world'
+                }
+              }
+            },
+            pageKey: '/bar',
+            defers : [
+              {url:'/bar?bzq=data.foo.bar' , path: 'data.foo.bar'}
+            ],
+            fragments: [
+              ['info', 'data.foo.bar']
+            ]
+          }
+        }
+
+        const receivedPage = {
+          data: {
+            foo: {
+              bar: {}
+            }
+          },
+          defers : [
+            {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+          ],
+          fragments: [
+            ['info', 'data.foo.bar']
+          ]
+        }
+
+        const nextState = pageReducer(prevState, {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: receivedPage
+          }
+        })
+
+        expect(nextState['/foo']).toEqual({
+          data: {
+            foo: {
+              bar: {
+                greetings: 'hello world'
+              }
+            }
+          },
+          pageKey: '/foo',
+          defers : [
+            {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+          ],
+          fragments: [
+            ['info', 'data.foo.bar']
+          ]
+        })
+      })
+
+      it('does nothing when there are no prev fragments to use as placeholder', () => {
+        const prevState = {
+          '/bar': {
+            data: {
+              foo: {
+                bar: {
+                  greetings: 'hello world'
+                }
+              }
+            },
+            pageKey: '/bar',
+            defers : [
+              {url:'/bar?bzq=data.foo.bar' , path: 'data.foo.bar'}
+            ],
+            fragments: []
+          }
+        }
+
+        const receivedPage = {
+          data: {
+            foo: {
+              bar: {}
+            }
+          },
+          defers : [
+            {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+          ],
+          fragments: [
+            ['info', 'data.foo.bar']
+          ]
+        }
+
+        const nextState = pageReducer(prevState, {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: receivedPage
+          }
+        })
+
+        expect(nextState['/foo']).toEqual({
+          data: {
+            foo: {
+              bar: {}
+            }
+          },
+          pageKey: '/foo',
+          defers : [
+            {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
+          ],
+          fragments: [
+            ['info', 'data.foo.bar']
+          ]
+        })
+      })
+
     })
 
     describe('BREEZY_UPDATE_ALL_FRAGMENTS', () => {
-      it('updates all fragments using the selected page as reference', () => {
+      it('updates all fragments using a map of names to node', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -267,38 +548,22 @@ describe('reducers', () => {
                 }
               }
             },
-            privateOpts: {
-              csrfToken: 'token',
-              assets: ['application-123.js'],
-            },
+            csrfToken: 'token',
+            assets: ['application-123.js'],
             fragments: {
-              info: ['header.cart']
+              info: ['data.header.cart']
             }
           },
-          '/bar': {
-            data: {
-              profile: {
-                header: {
-                  cart: {
-                    total: 10
-                  }
-                }
-              }
-            },
-            privateOpts: {
-              csrfToken: 'token',
-              assets: ['application-123.js'],
-            },
-            fragments: {
-              info: ['profile.header.cart']
-            }
-          }
         }
 
-        const nextState = reducer(prevState, {
+        const nextState = pageReducer(prevState, {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            pageKey: '/bar',
+            fragments: {
+              info: {
+                total: 10
+              }
+            }
           }
         })
 
@@ -306,7 +571,7 @@ describe('reducers', () => {
         expect(nextStateCartTotal).toEqual(10)
       })
 
-      it('skips over pages without any fragments when using the selected page as reference', () => {
+      it('skips over pages without any fragments', () => {
         const prevState = {
           '/foo': {
             data: {
@@ -316,86 +581,36 @@ describe('reducers', () => {
                 }
               }
             },
-            privateOpts: {
-              csrfToken: 'token',
-              assets: ['application-123.js'],
-            },
+            csrfToken: 'token',
+            assets: ['application-123.js'],
             fragments: {
-              info: ['header.cart']
+              info: ['data.header.cart']
             }
           },
           '/bar': {
             data: {},
-            privateOpts: {
-              csrfToken: 'token',
-              assets: ['application-123.js'],
-            },
+            csrfToken: 'token',
+            assets: ['application-123.js'],
             fragments: {}
           }
         }
 
-        const nextState = reducer(prevState, {
+        const nextState = pageReducer(prevState, {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            pageKey: '/bar',
-          }
-        })
-
-        const nextStateCartTotal = nextState['/bar'].data
-        expect(nextStateCartTotal).toEqual({})
-      })
-    })
-
-    describe('MATCH_FRAGMENTS_IN_PAGE', () => {
-      it('updates all fragments in a page using the selected fragment as reference', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  status: 'new'
-                }
-              },
-              body : {
-                menu: {
-                  sideCart: {
-                    status: 'old'
-                  }
-                },
-                miniMenu: {
-                  sideCart: {
-                    status: 'old'
-                  }
-                }
-              }
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
             fragments: {
-              info: [
-                'header.cart',
-                'body.menu.sideCart',
-                'body.miniMenu.sideCart'
-              ]
+              info: {
+                total: 10
+              }
             }
           }
-        }
-
-        const nextState = reducer(prevState, {
-          type: '@@breezy/MATCH_FRAGMENTS_IN_PAGE',
-          payload: {
-            pageKey: '/foo',
-            lastFragmentName: 'info',
-            lastFragmentPath: 'header.cart'
-          }
         })
 
-        const page = nextState['/foo'].data
-        expect(page.header.cart.status).toEqual('new')
-        expect(page.body.menu.sideCart.status).toEqual('new')
-        expect(page.body.miniMenu.sideCart.status).toEqual('new')
+        const skippedPage = nextState['/bar'].data
+        expect(skippedPage).toEqual({})
 
-        expect(page.body.menu.sideCart).not.toBe(page.body.miniMenu.sideCart.status)
+        const nextStateCartTotal = nextState['/foo'].data.header.cart.total;
+        expect(nextStateCartTotal).toEqual(10)
       })
     })
   })

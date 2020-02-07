@@ -81,12 +81,13 @@ class Nav extends React.Component {
     }
   }
 
+  // TODO: parse without bzq??
   onHistoryChange (location, action) {
     const {store} = this.props
     store.dispatch({
       type: HISTORY_CHANGE,
       payload: {
-        url: parse(location.pathname).href
+        url: parse(location.pathname + location.search).href
       }
     })
 
@@ -103,14 +104,14 @@ class Nav extends React.Component {
     }
   }
 
-  notFound (screen) {
+  notFound (identifier) {
     const {store} = this.props
     let reminder = ''
-    if (!screen) {
-      reminder = 'Did you forget to use_breezy in your controllers?'
+    if (!identifier) {
+      reminder = 'Did you forget to add `json.component_identifier` in your application.json.props layout?'
     }
 
-    const error = new Error(`Breezy Nav component was looking for ${screen} but could not find it in your mapping. ${reminder}`)
+    const error = new Error(`Breezy Nav component was looking for ${identifier} but could not find it in your mapping. ${reminder}`)
 
     store.dispatch({
       type: BREEZY_ERROR,
@@ -129,13 +130,13 @@ class Nav extends React.Component {
     } = this.props
 
     const {pageKey, ownProps} = this.state
-    const {screen} = store.getState().pages[pageKey]
-    const Component = mapping[screen]
+    const {componentIdentifier} = store.getState().pages[pageKey]
+    const Component = mapping[componentIdentifier]
 
     if (Component) {
       return <Component pageKey={pageKey} navigateTo={this.navigateTo} {...ownProps}/>
     } else {
-      this.notFound(screen)
+      this.notFound(componentIdentifier)
     }
   }
 }

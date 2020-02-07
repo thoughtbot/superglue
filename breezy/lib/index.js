@@ -11,7 +11,7 @@ import {
 } from './actions'
 
 export {mapStateToProps, mapDispatchToProps, enhanceVisitWithBrowserBehavior} from './utils/react'
-export {breezyReducer, pageReducer, rootReducer} from './reducers'
+export {breezyReducer, pageReducer, rootReducer, updateFragments} from './reducers'
 export {getIn} from './utils/immutability.js'
 export {setWindow, unsetWindow}
 export function stop () {
@@ -25,8 +25,6 @@ function pageToInitialState (key, page) {
 }
 
 export function start ({window, baseUrl='', url, initialPage={}}) {
-  let nav
-
   if (window) {
     setWindow(window)
     if (!url) {
@@ -35,11 +33,10 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
   }
 
   const initialPageKey = withoutBZParams(parse(url).href)
-  const {privateOpts: {csrfToken} = {}} = initialPage
+  const {csrfToken} = initialPage
 
   return {
     reducer: rootReducer,
-    Nav: nav,
     connect: function (store){
       connect(store)
 

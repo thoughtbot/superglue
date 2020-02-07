@@ -59,8 +59,8 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore(
         {pages: {
-          '/foo': {screen:'about'},
-          '/bar': {screen:'home'}
+          '/foo': {componentIdentifier:'about'},
+          '/bar': {componentIdentifier:'home'}
         }}
       )
 
@@ -93,7 +93,7 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore(
         {pages: {
-          '/bar': {screen:'home'}
+          '/bar': {componentIdentifier:'home'}
         }}
       )
 
@@ -118,8 +118,8 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore(
         {pages: {
-          '/foo': {screen:'about'},
-          '/bar': {screen:'home'}
+          '/foo': {componentIdentifier:'about'},
+          '/bar': {componentIdentifier:'home'}
         }}
       )
 
@@ -155,8 +155,8 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': {screen: 'home'},
-          '/foo': {screen: 'about'}
+          '/bar': {componentIdentifier: 'home'},
+          '/foo': {componentIdentifier: 'about'}
         }
       })
 

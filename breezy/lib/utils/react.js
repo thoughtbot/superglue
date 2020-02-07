@@ -1,7 +1,7 @@
 import {
   visit,
   remote,
-  saveAndProcessSJRPage,
+  saveAndProcessPage,
   ensureSingleVisit,
 } from '../action_creators'
 import {withoutBZParams} from './url'
@@ -27,7 +27,7 @@ export const mapDispatchToProps = {
   visit,
   ensureSingleVisit,
   remote,
-  saveAndProcessSJRPage,
+  saveAndProcessPage,
 }
 
 export function enhanceVisitWithBrowserBehavior (visit) {

@@ -1,17 +1,9 @@
 import {
   isGraft,
   extractNodeAndPath,
-  parseSJR,
   pagePath,
 } from './helpers'
-
-describe('pagePath', () => {
-  it('returns the full keypath relative to the breezy store', () => {
-    const path = pagePath('/foo', 'a.b.c')
-    expect(path).toBe('/foo.data.a.b.c')
-  })
-})
-
+//TODO: camelized path, also camelize this some_id=1 in path
 describe('isGraft', () => {
   it('returns true if page is a graft', () => {
     const page = {
@@ -31,10 +23,8 @@ describe('extractNodeAndPath', () => {
   it('returns the node and the keypath to it', () => {
     const page = {
       data: 'this is a node',
-      privateOpts: {
-        path: 'path.to.node',
-        action: 'graft',
-      }
+      path: 'path.to.node',
+      action: 'graft',
     }
 
     expect(extractNodeAndPath(page)).toEqual({
@@ -46,9 +36,7 @@ describe('extractNodeAndPath', () => {
   it('errors out if action is anything else', () => {
     const page = {
       data: 'this is a node',
-      privateOpts: {
-        path: 'path.to.node'
-      }
+      path: 'path.to.node'
     }
 
     expect(() => {

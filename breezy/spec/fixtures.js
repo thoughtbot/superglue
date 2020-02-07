@@ -1,17 +1,13 @@
 export const visitSuccess = () => {
   return {
-    body: `(function() {
-          return {
-            data: { heading: 'Some heading 2' },
-            privateOpts: {
-              csrfToken: 'token',
-              assets: ['application-123.js', 'application-123.js']
-            },
-            screen: 'about'
-          };
-        })();`,
+    body: JSON.stringify({
+      data: { heading: 'Some heading 2' },
+      csrfToken: 'token',
+      assets: ['application-123.js', 'application-123.js'],
+      componentIdentifier: 'about'
+    }),
     headers: {
-      'content-type': 'application/javascript',
+      'content-type': 'application/json',
       'content-disposition': 'inline',
     }
   }
@@ -19,19 +15,15 @@ export const visitSuccess = () => {
 
 export const graftSuccessWithNewZip = () => {
   return {
-    body: `(function() {
-          return {
-            data: { zip: 91210 },
-            privateOpts: {
-              action: 'graft',
-              path: 'address',
-              csrfToken: 'token',
-              assets: ['application-new123.js', 'application-new123.js']
-            }
-          };
-        })();`,
+    body: JSON.stringify({
+      data: { zip: 91210 },
+      action: 'graft',
+      path: 'data.address',
+      csrfToken: 'token',
+      assets: ['application-new123.js', 'application-new123.js']
+    }),
     headers: {
-      'content-type': 'application/javascript',
+      'content-type': 'application/json',
       'content-disposition': 'inline'
     }
   }

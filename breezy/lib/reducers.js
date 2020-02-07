@@ -1,6 +1,3 @@
-import {
-  reverseMerge,
-} from './utils/helpers'
 import {setIn, getIn} from'./utils/immutability'
 import {
   REMOVE_PAGE,
@@ -11,99 +8,175 @@ import {
   SET_BASE_URL,
   SET_CSRF_TOKEN,
   UPDATE_ALL_FRAGMENTS,
-  MATCH_FRAGMENTS_IN_PAGE,
 } from './actions'
 
-function updateAllFragments (state, pageKey) {
-  const selectedPage = state[pageKey]
-  const {fragments} = selectedPage
-
-  Object.entries(fragments)
-    .forEach(([fragmentName, paths]) => {
-      paths.forEach((path) => {
-        const fullPath = ['data', path].join('.')
-        const updatedNode = getIn(selectedPage, fullPath)
-        state = copyInByFragment(state, fragmentName, updatedNode)
-      })
-    })
+export function updateFragments (state, namesToNodes) {
+  for (const fragmentName in namesToNodes) {
+    const updatedNode = namesToNodes[fragmentName]
+    state = copyIntoAllPagesByFragment(state, fragmentName, updatedNode)
+  }
 
   return state
+}
+
+function addPlaceholdersToDeferredNodes(existingPage, page) {
+  const {
+    defers = []
+  } = existingPage
+
+  const prevDefers = defers.map(({path}) => {
+    const node = getIn(existingPage, path)
+    const copy = JSON.stringify(node)
+    return [path, JSON.parse(copy)]
+  })
+
+  return prevDefers.reduce((memo, [path, node]) => {
+    return setIn(page, path, node)
+  }, page)
+}
+
+function addPlaceholdersToDeferredFragments(state, page) {
+  const deferredPaths = {}
+  const {defers, fragments} = page
+
+  if (!defers || !fragments) {
+    return page
+  }
+
+  defers.forEach(({path}) => {
+    if (!deferredPaths[path]) {
+      deferredPaths[path] = true
+    }
+  })
+  const deferredFragments = fragments.filter(([name, path]) => deferredPaths[path])
+
+  const allExistingFragments = {}
+
+  Object.entries(state).forEach(([key, prevPage]) => {
+    prevPage.fragments.forEach((frag) => {
+      const [name, path] = frag
+      if (!allExistingFragments[name]) {
+        allExistingFragments[name] = getIn(prevPage, path)
+      }
+    })
+  })
+
+  deferredFragments.forEach(([name, path]) => {
+    if(allExistingFragments[name]) {
+      const node = allExistingFragments[name]
+      const copy = JSON.stringify(node)
+      page = setIn(page, path, JSON.parse(copy))
+    }
+  })
+
+  return page
 }
 
 function saveResponse (state, pageKey, page) {
   state = {...state}
 
-  reverseMerge(page, {
+  page = {
     pageKey,
-    fragments: {},
-  })
+    fragments: [],
+    ...page
+  }
+
+  const existingPage = state[pageKey]
+
+  if (existingPage) {
+    //TODO: consider renaming defers to deferments??
+    page = addPlaceholdersToDeferredNodes(existingPage, page)
+  }
+
+  page = addPlaceholdersToDeferredFragments(state, page)
 
   state[pageKey] = page
 
   return state
 }
 
-function copyInByFragment (state, name, value, subpath = null) {
+function copyIntoAllPagesByFragment (state, name, node) {
   state = {...state}
-  const copy = JSON.stringify(value)
+  const copy = JSON.stringify(node)
 
   Object.entries(state).forEach(([pageKey, {fragments} = {}]) => {
-    (fragments[name] || []).forEach(pathToFragment => {
-      const fullpath = [pathToFragment]
-      if (subpath) {
-        fullpath.push(subpath)
-      }
+    const paths = fragments[name] || []
 
-      state = setIn(state, [pageKey, 'data', fullpath].join('.'), JSON.parse(copy))
+    paths.forEach(pathToFragment => {
+      state = setIn(state, [pageKey, pathToFragment].join('.'), JSON.parse(copy))
     })
   })
 
   return state
 }
 
-function updateFragmentsInPageToMatch (state, pageKey, fragmentName, pathToFragment) {
-  const currentPage = state[pageKey]
-  if (!currentPage) {
-    const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
-    throw error
+export function appendReceivedFragmentsOntoPage(state, pageKey, receivedFragments) {
+  if (!pageKey) {
+    return state
   }
 
-  const node = getIn(state, [pageKey, 'data', pathToFragment].join('.'))
-  const copy = JSON.stringify(node)
+  if (receivedFragments.length === 0) {
+    return state
+  }
 
-  const fragmentPaths = currentPage.fragments[fragmentName] || []
-  fragmentPaths.forEach((path) => {
-    state = setIn(state, [pageKey, 'data', path].join('.'), JSON.parse(copy))
+  const currentPage = state[pageKey]
+  const {fragments: prevFragments = {}} = currentPage
+  const nextFragments = {...prevFragments}
+  Object.keys(receivedFragments).forEach((key) => {
+    const values = receivedFragments[key]
+
+    if(nextFragments.hasOwnProperty(key)) {
+      nextFragments[key].push(...values)
+
+      nextFragments[key] = [...new Set(
+        [...nextFragments[key], ...values]
+      )]
+    } else {
+      nextFragments[key] = values
+    }
   })
 
-  return state
+  const nextPage = {
+    ...currentPage,
+    fragments: nextFragments
+  }
+
+  const nextState = {...state}
+  nextState[pageKey] = nextPage
+
+  return nextState
 }
 
-function handleGraft (state, pageKey, node, pathToNode, fragments={}) {
-  state = {...state}
-  fragments = {...fragments}
+export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
+  if (!node) {
+    console.warn('There was no node returned in the response. Do you have the correct key path in your bzq?')
+    return state
+  }
 
+  if (!pathToNode || !pageKey) {
+    return state
+  }
+  const fullPathToNode = [pageKey, pathToNode].join('.')
+  return setIn(state, fullPathToNode, node)
+}
+
+export function handleGraft (state, pageKey, page) {
   const currentPage = state[pageKey]
-
   if (!currentPage) {
     const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
     throw error
   }
-  let nextState = setIn(state, [pageKey, 'data', pathToNode].join('.'), node)
+  const {
+    data: receivedNode,
+    path: pathToNode,
+    fragments: receivedFragments = {},
+  } = page
 
-  Object.keys(currentPage.fragments).forEach((name) => {
-    if(!fragments[name]) {
-      fragments[name] = []
-    }
 
-    fragments[name] = [
-      ...new Set([...fragments[name],
-        ...currentPage.fragments[name]])
-    ]
-  })
-
-  nextState = setIn(nextState, [pageKey, 'fragments'].join('.'), fragments)
-  return nextState
+  return [
+    nextState => graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
+    nextState => appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
+  ].reduce((memo, fn) => fn(memo), state)
 }
 
 export function pageReducer (state = {}, action) {
@@ -113,27 +186,16 @@ export function pageReducer (state = {}, action) {
     return saveResponse(state, pageKey, page)
   }
   case UPDATE_ALL_FRAGMENTS: {
-    const {pageKey} = action.payload
-    return updateAllFragments(state, pageKey)
-  }
-  case MATCH_FRAGMENTS_IN_PAGE: {
-    const {
-      pageKey,
-      lastFragmentName,
-      lastFragmentPath,
-    } = action.payload
-
-    return updateFragmentsInPageToMatch(state, pageKey, lastFragmentName, lastFragmentPath)
+    const {fragments} = action.payload
+    return updateFragments(state, fragments)
   }
   case HANDLE_GRAFT: {
     const {
       pageKey,
-      node,
-      pathToNode,
-      fragments,
+      page
     } = action.payload
 
-    return handleGraft(state, pageKey, node, pathToNode, fragments)
+    return handleGraft(state, pageKey, page)
   }
   case REMOVE_PAGE: {
     const {pageKey} = action.payload
@@ -158,8 +220,7 @@ export function metaReducer (state = {}, action) {
     return {...state, baseUrl}
   }
   case SAVE_RESPONSE: {
-    const {page: {privateOpts = {}}} = action.payload
-    const {csrfToken} = privateOpts
+    const {page: {csrfToken }} = action.payload
     return {...state, csrfToken}
   }
   case SET_CSRF_TOKEN: {
@@ -171,9 +232,7 @@ export function metaReducer (state = {}, action) {
   }
 }
 
-export function controlFlowReducer (state = {
-}, action) {
-
+export function controlFlowReducer (state = {}, action) {
   switch(action.type) {
   case OVERRIDE_VISIT_SEQ: {
     const {seqId} = action.payload

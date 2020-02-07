@@ -1,6 +1,5 @@
 import parse from 'url-parse'
 import {formatForXHR} from './url'
-import {parseSJR} from './helpers'
 
 export function isValidResponse (xhr) {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -8,7 +7,7 @@ export function isValidResponse (xhr) {
 
 export function isValidContent (rsp) {
   const contentType = rsp.headers.get('content-type')
-  const jsContent = /^(?:text\/javascript|application\/x-javascript|application\/javascript)(?:;|$)/
+  const jsContent = /^(?:application\/json)(?:;|$)/
 
   return !!(contentType !== undefined && contentType.match(jsContent))
 }
@@ -44,7 +43,7 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
 
   const currentState = getState().breezy || {}
 
-  const jsAccept = 'text/javascript, application/x-javascript, application/javascript'
+  const jsAccept = 'application/json'
   headers = {
     ...headers,
     'accept': jsAccept,
@@ -81,28 +80,18 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
   return [formatForXHR(href), options]
 }
 
-export function extractText (rsp) {
-  return rsp.text().then((txt) => {
-    return {rsp, txt}
+export function extractJSON (rsp) {
+  return rsp.json().then((json) => {
+    return {rsp, json}
+  }).catch(e => {
+    e.response = rsp
+    throw e
   })
-}
-
-export function extractSJR ({rsp, txt}) {
-  const page = parseSJR(txt)
-  if (page) {
-    return Promise.resolve({rsp, page})
-  } else {
-    const error = new Error('Could not parse Server Generated Javascript Response for Breezy')
-    error.response = rsp
-
-    throw error
-  }
 }
 
 export function parseResponse (prm) {
   return Promise.resolve(prm)
-    .then(extractText)
+    .then(extractJSON)
     .then(handleServerErrors)
     .then(validateResponse)
-    .then(extractSJR)
 }

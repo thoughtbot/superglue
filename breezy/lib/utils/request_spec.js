@@ -8,7 +8,7 @@ import Headers from 'fetch-headers'
 describe('isValidResponse', () => {
   it('returns true if valid', () => {
     const headers = new Headers([
-      ['content-type', 'text/javascript'],
+      ['content-type', 'application/json'],
       ['content-disposition', 'inline']
     ])
 
@@ -60,7 +60,7 @@ describe('argsForFetch', () => {
     expect(args).toEqual(['/foo?__=0', {
       method: 'GET',
       headers: {
-        accept: 'text/javascript, application/x-javascript, application/javascript',
+        accept: 'application/json',
         'x-requested-with': 'XMLHttpRequest',
         'x-breezy-request': true
       },
@@ -80,7 +80,7 @@ describe('argsForFetch', () => {
     expect(args).toEqual(['/foo?__=0', {
       method: 'POST',
       headers: {
-        accept: 'text/javascript, application/x-javascript, application/javascript',
+        accept: 'application/json',
         'x-requested-with': 'XMLHttpRequest',
         'x-breezy-request': true,
         'content-type': 'application/json',
@@ -105,7 +105,7 @@ describe('argsForFetch', () => {
     expect(args).toEqual(['/foo?__=0', {
       method: 'GET',
       headers: {
-        accept: 'text/javascript, application/x-javascript, application/javascript',
+        accept: 'application/json',
         'x-requested-with': 'XMLHttpRequest',
         'x-breezy-request': true,
         'x-xhr-referer': '/some_current_url'
@@ -124,7 +124,7 @@ describe('argsForFetch', () => {
     expect(argsForFetch(getState, '/foo', {body: 'ignored'})).toEqual(['/foo?__=0', {
       method: 'GET',
       headers: {
-        accept: 'text/javascript, application/x-javascript, application/javascript',
+        accept: 'application/json',
         'x-requested-with': 'XMLHttpRequest',
         'x-breezy-request': true,
       },
@@ -134,7 +134,7 @@ describe('argsForFetch', () => {
     expect(argsForFetch(getState, '/foo', {method: 'HEAD', body: 'ignored'})).toEqual(['/foo?__=0', {
       method: 'HEAD',
       headers: {
-        accept: 'text/javascript, application/x-javascript, application/javascript',
+        accept: 'application/json',
         'x-requested-with': 'XMLHttpRequest',
         'x-breezy-request': true,
       },

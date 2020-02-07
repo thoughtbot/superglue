@@ -59,8 +59,7 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        privateOpts: {},
-        screen: 'home'
+        componentIdentifier: 'home'
       }
 
       const bz = start({
@@ -127,20 +126,17 @@ describe('navigation', () => {
         pages: {
           '/bar': {
             data: { heading: 'this is page 1' },
-            screen: 'home',
-            privateOpts: {},
+            componentIdentifier: 'home',
             pageKey: '/bar',
-            fragments: {}
+            fragments: []
           },
           '/foo':{
             data: { heading: 'Some heading 2' },
-            privateOpts: {
-              csrfToken: 'token',
-              assets: ['application-123.js', 'application-123.js'],
-            },
-            screen: 'about',
+            csrfToken: 'token',
+            assets: ['application-123.js', 'application-123.js'],
+            componentIdentifier: 'about',
             pageKey: '/foo',
-            fragments: {}
+            fragments: []
           }
         }
       }
@@ -158,8 +154,7 @@ describe('navigation', () => {
           heading: 'this is page 1',
           address: undefined
         },
-        privateOpts: {},
-        screen: 'home'
+        componentIdentifier: 'home'
       }
 
       const bz = start({

@@ -2,13 +2,13 @@ import {
   argsForFetch,
   parseResponse
 } from './utils/request'
+import {getIn} from'./utils/immutability'
 import parse from 'url-parse'
 import 'cross-fetch'
 import {
   uuidv4,
   isGraft,
   extractNodeAndPath,
-  parseSJR,
 } from './utils/helpers'
 import {needsRefresh} from './window'
 import {
@@ -21,7 +21,6 @@ import {
   BEFORE_FETCH,
   BREEZY_ERROR,
   BREEZY_GRAFTING_ERROR,
-  MATCH_FRAGMENTS_IN_PAGE,
   OVERRIDE_VISIT_SEQ,
   UPDATE_ALL_FRAGMENTS,
 } from './actions'
@@ -38,16 +37,14 @@ export function saveResponse ({pageKey, page}) {
   }
 }
 
-export function handleGraft ({pageKey, node, pathToNode, fragments={}}) {
+export function handleGraft ({pageKey, page}) {
   pageKey = withoutBZParams(pageKey)
 
   return {
     type: HANDLE_GRAFT,
     payload: {
       pageKey,
-      node,
-      pathToNode,
-      fragments
+      page,
     }
   }
 }
@@ -68,15 +65,10 @@ function handleError (err) {
   }
 }
 
-export function saveAndProcessSJRPage (pageKey, pageSJR) {
-  const page = parseSJR(pageSJR)
-  return saveAndProcessPage(pageKey, page)
-}
-
 function fetchDeferments (pageKey, defers = []) {
   pageKey = withoutBZParams(pageKey)
   return (dispatch) => {
-    const fetches = defers.map(function ({url}){
+    const fetches = defers.filter(({type}) => type === 'auto').map(function ({url}){
       return dispatch(remote(url, {}, pageKey)).catch((err) => {
         let parsedUrl = new parse(url, true)
         const keyPath = parsedUrl.query.bzq
@@ -97,28 +89,42 @@ function fetchDeferments (pageKey, defers = []) {
   }
 }
 
-function updateAllFragmentsToMatch (pageKey) {
-  pageKey = withoutBZParams(pageKey)
+function updateAllFragmentsWith(fragments) {
 
   return {
     type: UPDATE_ALL_FRAGMENTS,
     payload: {
-      pageKey
+      fragments
     }
   }
 }
 
-function updateFragmentsInPageToMatch ({pageKey, lastFragmentName, lastFragmentPath}) {
-  pageKey = withoutBZParams(pageKey)
+function receivedPagetoFragmentList({fragments = {}, data, path, action}) {
+  const fragmentNameToNode = {}
 
-  return {
-    type: MATCH_FRAGMENTS_IN_PAGE,
-    payload: {
-      pageKey,
-      lastFragmentName,
-      lastFragmentPath,
-    }
+  if (action) {
+    Object.keys(fragments).forEach((digest) => {
+      fragments[digest].forEach((fpath) => {
+        if (!fragmentNameToNode[digest]) {
+          const start = path.split('.').length
+          const actualPath = fpath.split('.').slice(start).join('.')
+          const updatedNode = getIn(data, actualPath)
+          fragmentNameToNode[digest] = updatedNode
+        }
+      })
+    })
+  } else {
+    Object.keys(fragments).forEach((digest) => {
+      fragments[digest].forEach((fpath) => {
+        if (!fragmentNameToNode[digest]) {
+          const updatedNode = getIn({data}, fpath)
+          fragmentNameToNode[digest] = updatedNode
+        }
+      })
+    })
   }
+
+  return fragmentNameToNode
 }
 
 export function saveAndProcessPage (pageKey, page) {
@@ -126,32 +132,21 @@ export function saveAndProcessPage (pageKey, page) {
     pageKey = withoutBZParams(pageKey)
 
     const {
-      fragments = {},
-      privateOpts = {}
+      fragments = [],
+      defers = [],
     } = page
 
-    const {
-      lastFragmentName,
-      lastFragmentPath,
-      defers,
-    } = privateOpts
-
-    if (isGraft(privateOpts)) {
-      const {node, pathToNode} = extractNodeAndPath(page)
-      dispatch(handleGraft({fragments, pageKey, node, pathToNode}))
-
-      if (lastFragmentName) {
-        dispatch(updateFragmentsInPageToMatch({
-          pageKey,
-          lastFragmentName,
-          lastFragmentPath,
-        }))
+    if (isGraft(page)) {
+      if (pageKey) {
+        dispatch(handleGraft({pageKey, page}))
       }
     } else {
       dispatch(saveResponse({pageKey, page}))
     }
 
-    dispatch(updateAllFragmentsToMatch(pageKey))
+    const receivedFragments = receivedPagetoFragmentList(page)
+
+    dispatch(updateAllFragmentsWith(receivedFragments))
     return dispatch(fetchDeferments(pageKey, defers))
   }
 }
@@ -180,23 +175,22 @@ export function wrappedFetch (fetchArgs) {
     })
 }
 
+//TODO: Provide a connected component for refresh
 function buildMeta (pageKey, page, state) {
   const {assets: prevAssets} = state
-  const {
-    privateOpts: {assets: nextAssets} = {}
-  } = page
+  const {assets: nextAssets} = page
 
   pageKey = withoutBZParams(pageKey)
-
+  //TODO: needs refresh should dispatch, to get a nice, you need to reload your page
   return {
     pageKey,
     page,
-    screen: page.screen,
+    componentIdentifier: page.componentIdentifier,
     needsRefresh: needsRefresh(prevAssets, nextAssets)
   }
 }
 
-export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+export function remote (pathQuery, {method = 'GET', headers, body = '', beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}, pageKey) {
   pathQuery = withoutBusters(pathQuery)
 
   return (dispatch, getState) => {
@@ -206,16 +200,17 @@ export function remote (pathQuery, {method = 'GET', headers, body = ''} = {}, pa
 
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
-      .then(({rsp, page}) => {
+      .then(({rsp, json}) => {
         pageKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
         pageKey = withoutBZParams(pageKey)
-        const {breezy} = getState()
+        const {breezy, pages = {}} = getState()
         const meta = {
-          ...buildMeta(pageKey, page, breezy),
+          ...buildMeta(pageKey, json, breezy),
           redirected: rsp._redirected,
           rsp,
           fetchArgs,
         }
+        const page = beforeSave(pages[pageKey], json)
         dispatch(saveAndProcessPage(pageKey, page))
 
         return meta
@@ -260,14 +255,14 @@ export function ensureSingleVisit (fn) {
   }
 }
 
-export function visit (pathQuery, {method = 'GET', headers, body = ''} = {}, pageKey) {
+export function visit (pathQuery, {method = 'GET', headers, body = '', beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}, pageKey) {
   pathQuery = withoutBZParams(pathQuery)
 
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
 
     return ensureSingleVisit(() => {
-      return remote(pathQuery, {method, headers, body}, pageKey)(dispatch, getState)
+      return remote(pathQuery, {method, headers, body, beforeSave}, pageKey)(dispatch, getState)
     })(dispatch, getState).catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }
 }

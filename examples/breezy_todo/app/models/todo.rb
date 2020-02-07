@@ -1,2 +1,0 @@
-class Todo < ApplicationRecord
-end

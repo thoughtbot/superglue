@@ -2,47 +2,43 @@
 
 [![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
-Inspired by Turbolinks, Breezy is an Ajax library and opinionated state shape for React, Redux, and Rails. It brings sanity to your frontend development while returning you to the productivity and happiness of classic Rails.
+Breezy is a "Deliver everything first, update later" library for React, Redux and *classic* Rails.
 
 # Features
 
-1. **The Best of Rails, React, and Redux** Use your convienent URL helpers, bring in [out-of-the-box](https://github.com/Shopify/polaris-react/) React components, and, when you need to, get down and dirty with Redux.
-2. **Batteries Included** Be productive with Rails, React and Redux from day one with easy-to-use thunks, an opinionated store shape, and scaffolds for minimal setup.
-3. **API** ~~**first**~~ **later development** Save the work for when you actually need it. With Breezy, you can build SPAs without APIs and skip the hassle of building another set of routes/controllers/serializers/tests.
-4. **All your resources in a single request** Move over GraphQL, classic multi-page applications already achieves this. Breezy just enhances your Rails views to make it work for React and Redux.
-5. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
+1. **It "is" classic Rails**. Breezy does *NOT* try to bring Rails conventions to React and Redux. Rather, it creates a conceptual match between Rails and Rails/Redux such that "it IS classic Rails". For example:
+```
+views/
+  posts/
+    index.json.props
+    index.jsx
+```
+2. **The Best of Rails, React, and Redux** Use your convienent URL helpers, bring in [out-of-the-box](https://github.com/Shopify/polaris-react/) React components, and, when you need to, get down and dirty with Redux.
+3. **Batteries Included** Be productive with Rails, React and Redux from day one with easy-to-use thunks, an opinionated store shape, and scaffolds for minimal setup.
+4. **API** ~~**first**~~ **later development** Save the work for when you actually need it. With Breezy, you can build SPAs without APIs and skip the hassle of building another set of routes/controllers/serializers/tests.
+5. **All your resources in a single request** Move over GraphQL, classic multi-page applications already achieves this. Breezy just enhances your Rails views to make it work for React and Redux.
+6. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
 
 # Documentation
 
 Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure to select the correct version. `master` will always be in development.
 
 # At a glance
+## Deliver everything first
 
 ```text
 views/
   posts/
-    index.js.props
+    index.json.props
     index.jsx
-    show.js.props
+    show.json.props
     show.jsx
 ```
 
-Enable it on your controller
+Build your props in `index.json.props`
 
 ```ruby
-class PostsController < ApplicationController
-  before_action :use_breezy
-
-  def index
-    @posts = Post.all
-  end
-end
-```
-
-Build your props in `index.js.props`
-
-```ruby
-# index.js.props
+# index.json.props
 json.flash flash.to_h
 
 json.header do
@@ -94,25 +90,25 @@ export default connect(
 )(PostsIndex)
 ```
 
-## SPA Navigation
+### SPA Navigation
 
-When the user lands on the `/posts` the `index.jsx` is rendered with `index.js.props`. SPA navigation is handled just like Turbolinks:
+When the user lands on the `/posts`, `index.jsx` is rendered with `index.json.props`, and `show.jsx` and `index.jsx` is packaged together in your webpack. SPA navigation is handled just like Turbolinks:
 
 ```javascript
 this.enhancedVisit("/posts/1") //if you've used `enhanceVisitWithBrowserBehavior`
 ```
 
-The above will request the `show.js.props`, pass it to `show.jsx` and update the browser history.
+The above will request the `show.json.props`, pass it to `show.jsx`, swap out the current `index.jsx` and update the browser history.
 
-## Refreshing a node
+## Update Later
 
-You can also refresh a node inside of `index.jsx`.
+Update parts of your appication later. For example, inside of `index.jsx`.
 
 ```javascript
 this.props.remote("/posts?bzq=header")
 ```
 
-The above will fetch the `json.header` node in `index.js.props`, noop the `json.posts` node, immutably graft it in your store, before handing it over to React to render.
+The above will fetch the `json.header` node in `index.json.props`, skip rendering of the `json.posts`, immutably graft it in your Redux store, before leaving it to React to re-render.
 
 # The Breezy store shape
 
@@ -125,8 +121,6 @@ Why?
 Business logic is complex and diverse across industry verticals, but the presentational aspects remain largely unchanged, there will always be a user header, a footer, a menu, a body with a list of items, etc. Breezy shapes its store with this observation in mind so that **a developer can look at a running application, easily guess the shape of the store, and make close-to-correct assumptions on how to update the store without looking at any code.**
 
 Breezy's store shape is a unidirectional tree and falls on the extreme end of denormalization, every page is given a node in the redux tree. There is duplication of state across children for example, a shared `User` header. To update something like a shared header, you need to iterate over each page, find the header, and make updates.
-
-This might seem tedious and prone to error, but Breezy give you tools that make it [easy](breezy-template.md#partial-fragments) to update and manage cross-cutting aspects like a shared header.
 
 ### How does it look like
 
@@ -145,17 +139,17 @@ Breezy occupies 2 nodes in your Redux state tree.
 ```javascript
 pages: {
   '/bar': {
-    data: {...propsFromBreezyTemplates},
+    data: {...propsFromPropsTemplates},
     screen: 'matchesThisPageToAComponent',
     privateOpts: {...usedByBreezyInternally} //don't touch
   },
   '/bar?foo=123': {
-    data: {...propsFromBreezyTemplates},
+    data: {...propsFromPropsTemplates},
     screen: 'matchesThisPageToAComponent',
     privateOpts: {...usedByBreezyInternally}
   },
   '/foo':{
-    data: {...propsFromBreezyTemplates},
+    data: {...propsFromPropsTemplates},
     screen: 'matchesThisPageToAComponent',
     privateOpts: {...usedByBreezyInternally}
   }

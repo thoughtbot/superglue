@@ -18,7 +18,7 @@ export default connect(
 
 ### mapStateToProps
 
-Breezy will include all props you build in your `xyz.js.props` and the following:
+Breezy will include all props you build in your `xyz.json.props` and the following:
 
 | prop | Notes |
 | :--- | :--- |
@@ -28,7 +28,7 @@ You will also receive additional props from the use of the `<NavComponent>`
 
 | prop | Notes |
 | :--- | :--- |
-| pageKey | The pageKey Breezy used to fetch your `xyz.js.props` from the store. |
+| pageKey | The pageKey Breezy used to fetch your `xyz.json.props` from the store. |
 | {...ownProps} | Any props that you passed from the use of `navigateTo`, see [navigateTo](react-redux.md#navigateto) |
 
 ### mapDispatchToProps
@@ -40,7 +40,7 @@ export const mapDispatchToProps = {
   ensureSingleVisit,
   visit,
   remote,
-  saveAndProcessSJRPage,
+  saveAndProcessPage,
 }
 ```
 
@@ -92,7 +92,7 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use `v
 
 For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](utility.md#enhancevisitwithbrowserbehavior)
 
-**Note** `visit` will strip any `bzq` query parameters from your pathQuery. If you need to use filtering, use [remote](#remote) instead.
+**Note** `visit` will strip any `bzq` query parameters from your pathQuery. If you need to use traversals, use [remote](#remote) instead.
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
@@ -115,7 +115,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | canNavigate | `Boolean` | There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback. |
 | needsRefresh | `Boolean` | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true. |
 | screen | `String` | The screen that your react application should render next. |
-| page | `Object` | The full parsed page response from your `foobar.js.props` template. |
+| page | `Object` | The full parsed page response from your `foobar.json.props` template. |
 | rsp | `Object` | The raw response object |
 | pageKey | `String` | Location in the Breezy store where `page` is stored. |
 
@@ -127,9 +127,9 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 ### remote
 
-Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#filtering-nodes) of the current page or preload other pages.
+Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#traversing-nodes) of the current page or preload other pages.
 
-**Note** `remote` will respect `bzq` filtering parameters.
+**Note** Unlike `visit`, `remote` will retain any `bzq` url parameters.
 
 ```javascript
 remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
@@ -145,20 +145,18 @@ Shares the same arguments as `visit` with a few key differences:
 
 * `canNavigate` is not available as an option passed to your then-able function.
 
-### saveAndProcessSJRPage
+### saveAndProcessPage
 
-Save and process a rendered view from BreezyTemplate. It will also handle any deferment, and fragment updating. Useful if you want to stream a fully rendered `your_template.js.props` to preload, or graft nodes via websockets.
+Save and process a rendered view from PropsTemplate. It will also handle any deferment, and fragment updating. Useful if you want to stream a fully rendered `your_template.json.props` to preload, or graft nodes via websockets.
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | pageKey | `String` | The page key where you want template to be saved in. Use your rails `foo_path` helpers. |
-| pageSJR | `String` | A rendered BreezyTemplate |
+| page | `String` | A rendered PropsTemplate|
 
-## Filtering nodes
+## Search nodes
 
-Breezy can filter your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param and setting the content type to `.js`. BreezyTemplates will no-op all node blocks that are not in the keypath, ignore deferment and caching while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
-
-Note that all ancestors of the node you are targeting will have their caching turned off.
+Breezy can search your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param, then passing that variable in your `application.json.props`. PropsTempalte will ignore all node blocks that are not in the keypath, ignore deferment and caching options while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
 
 For example:
 
@@ -166,35 +164,28 @@ For example:
 store.dispatch(remote('/?bzq=header.shopping_cart'))
 ```
 
+and in your `appication.json.props`
+
+```ruby
+path = param_to_search_path(params[:bzq])
+
+json.data(search: path) do
+  yield json
+end
+
+...
+
+```
+
 ## Updating Fragments
 
-A Fragment is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [BreezyTemplate](breezy-template.md#partial-fragments)
+A Fragment is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [PropsTemplate](props-template.md#partial-fragments)
 
 For example:
 
 ```ruby
-json.header partial: ['header', fragment_name: 'header']
+json.header partial: ['header', fragment: true] do
+end
 ```
 
-### Automatically
-
-Breezy will automatically update all pages using information about fragment usage from the last request.
-
-For example, if you had this in your `cart.js.props`:
-
-```ruby
-json.header partial: ['header', fragment_name: 'header']
-```
-
-And you dispatch a visit to `/cart`
-
-```javascript
-  this.enhancedVisit('/cart')
-```
-
-Breezy will track all fragments used in `cart.js.props` and use it to update the equivalent fragments across all pages in your store.
-
-### Manually updating fragments
-
-If you want finer control, or want to perform optimistic updates, use [custom reducers](recipes.md#custom-reducers) along side with breezy [helpers](utility.md).
-
+Breezy will automatically update all pages across your store using information about fragment usage from the last request.

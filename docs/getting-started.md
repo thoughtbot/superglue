@@ -43,7 +43,7 @@ const screenToComponentMapping = {
 }
 
 const history = createHistory({}) // you will need the history library
-const initialPage = window.BREEZY_INITIAL_PAGE_STATE // gets populated automatically
+const initialPage = window.BREEZY_INITIAL_PAGE_STATE // gets populated from application.html.erb
 const baseUrl = '' //Normally blank, but you can change this if you are using react-native
 
 const {reducer, initialState, initialPageKey, connect} = Breezy.start({
@@ -78,51 +78,30 @@ class App extends React.Component {
 
 
 document.addEventListener("DOMContentLoaded", function() {
-  render(<App mapping={screenToComponentMapping}/>, document.getElementById('app'))
+  render(<App mapping={identifierToComponentMapping}/>, document.getElementById('app'))
 })
 ```
 
 ### The Nav Mapping
 
 ```javascript
-const screenToComponentMapping = {
+const identifierToComponentMapping = {
 }
 ```
 
-Breezy uses a mapping that you configure to determine which set of props to render \(the `screen`\) with which component. By default, the template's id \(path to file sans the Rails.root and any extensions\) is used as the screen. For example:
+Breezy uses a mapping that you configure to determine which set of props to render with which component. If you used the generator, this is configured in `application.json.props` as a combination name of the controller and action.
 
 ```ruby
-class PostsController < ApplicationController
-  before_action :use_breezy
+# application.json.props
 
-  def new
-  end
-end
+json.component_identifier "#{params[:controller]}/#{params[:action]}"
 ```
 
-To link `new.js.props` with `new.jsx`, you would need to add the following to your mapping:
+To link `new.json.props` with `new.jsx`, you would need to add the following to your mapping:
 
 ```javascript
-const screenToComponentMapping = {
+const identifierToComponentMapping = {
   'posts/new': PostNew
-}
-```
-
-You can override this in the controller using the screen option:
-
-```ruby
-class PostsController < ApplicationController
-  before_action :use_breezy
-
-  def new
-    render :new, breezy:{screen: 'helloworld'} #fix this
-  end
-end
-```
-
-```javascript
-const screenToComponentMapping = {
-  'helloworld': PostNew
 }
 ```
 

@@ -1,11 +1,13 @@
 # Solving Problems
 
+#TODO: Some of the below is outdated.
+
 ## Loading content later
 
 Say you add a dashboard to you page, and eventually that part of the page becomes a bottleneck. For example:
 
 ```ruby
-# /orders.js.props
+# /orders.json.props
 json.header do
  ...
 end
@@ -25,7 +27,7 @@ json.dashboard(defer: :auto) do
 end
 ```
 
-When you `visit('/orders')` , BreezyTemplates render `orders.js.props` without the dashboard, and when the page is received by the frontend, Breezy will auto-request for the missing node:
+When you `visit('/orders')` , PropsTemplate render `orders.json.props` without the dashboard, and when the page is received by the frontend, Breezy will auto-request for the missing node:
 
 ```javascript
 remote('/orders?bzq=dashboard', ....otherOpts...)
@@ -46,14 +48,13 @@ Its up to you to handle both cases in your Component. For example:
   }
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/3160ee5151a92c0a0ac7073ffbcfe07d9f15abbc)
 
 ## Loading tab content OnClick
 
 Say you have a 2 tabs, and you only want to show the tab 1 content on load. The tab 2 content should load only when a user clicks on tab 2.
 
 ```ruby
-# /posts.js.props
+# /posts.json.props
 
 json.posts do
   json.all do
@@ -83,7 +84,7 @@ In your component
   }
 ```
 
-In this example, `defer: :manual` is used on the node. BreezyTemplate will render without that node, and you need to manual request it with [node filtering](api/react-redux.md#filtering-nodes) like the example above.
+In this example, `defer: :manual` is used on the node. PropsTemplate will render without that node, and you need to manually request it using [traversals](api/react-redux.md#traversing-nodes) like the example above.
 
 If you need to send over a list of fake line items, you can use the following approach:
 
@@ -95,7 +96,8 @@ json.posts do
 
   if request.format.html?
     # The pending tab will initially be fake
-    json.pending nil, partial: 'fake_posts_list'
+    json.pending partial: 'fake_posts_list' do
+    end
   else
     # Then a manual this.props.remote for the real thing
     json.pending do
@@ -104,7 +106,6 @@ json.posts do
 end
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/b3781efeeb9a020d21695cdd50c121533262348b)
 
 
 ## Preloading content
@@ -122,7 +123,7 @@ end
 ```
 
 ```ruby
-# /preload/index.js.props
+# /preload/index.json.props
 if request.format.html?
   json.preloaded_pages [
     [edit_post_path(last_updated_post), @renderer.render(:edit, assigns: {post: last_updated_post})],
@@ -155,13 +156,13 @@ Then in your page component:
    const {
      preloadedPages,
      pageKey,
-     saveAndProcessSJRPage,
+     saveAndProcessPage,
      clearPreloaded
    } = this.props
 
     if (preloadedPages) {
      preloadedPages.forEach(([preloadPageKey, renderedView])=>{
-       saveAndProcessSJRPage(preloadPageKey, renderedView)
+       saveAndProcessPage(preloadPageKey, renderedView)
      })
 
       clearPreloaded(pageKey)
@@ -173,7 +174,6 @@ Then in your page component:
  }
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/01c0a03df9f6836753dac4f2870a6a3a0370b4fd)
 
 
 ## Replicating Turbolinks behavior
@@ -210,7 +210,6 @@ export default connect(
 )(PreloadIndex)
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/3a4c4d2e78ad543b6d330a281ffa9e0906e97e15)
 
 ## Usage with Devise
 
@@ -299,7 +298,7 @@ end
 SPA Pagination is pretty easy to add with Kaminari and component from [antd](https://ant.design/components/pagination/)
 
 ```ruby
-# index.js.props
+# index.json.props
 page_num = params[:page_num]
 items_per_page = 20
 
@@ -384,7 +383,6 @@ export default connect(
 
 ```
 
-[See this in action](https://github.com/jho406/polaris-breezy-kitchen-sink/commit/2c6820e31dd7fb0102bae585b93ea93dcf22d71a)
 
 ## Streaming Updates
 
@@ -393,7 +391,7 @@ export default connect(
 Say you have a dashboard screen, and you want to periodically fetch updates for a specific metric. Here's a simple way to do that with just a simple `setTimeout`:
 
 ```ruby
-# post/index.js.props
+# post/index.json.props
 
 json.header do
 ...
@@ -434,7 +432,7 @@ For example, if you already have a ActionCable channel setup, simply render the 
 ```ruby
 renderer = PostsController.renderer.new(
   "action_dispatch.request.parameters"=>{bzq: 'posts.all.items.0'},
-  "action_dispatch.request.formats"=>[Mime[:js]]
+  "action_dispatch.request.formats"=>[Mime[:json]]
 )
 
 msg = renderer.render(:index)
@@ -443,18 +441,9 @@ ActionCable.server.broadcast('web_notifications_channel', message: msg)
 ```
 
 ```javascript
-import {
-  extractNodeAndPath,
-  parseSJR
-} from '@jho406/breezy/dist/utils/helpers'
-
 window.App.cable.subscriptions.create("WebNotificationsChannel", {
   received: function({message}) {
-    const {node} =  extractNodeAndPath(parseSJR(message))
-    store.dispatch({
-      type: 'UPDATE_ALL_POST_FRAGMENTS',
-      payload: node
-    })
+    this.props.saveAndProcessPage(null, message),
   }
 })
 ```
@@ -524,7 +513,7 @@ export default connect(
 ```
 
 ## Custom reducers
-Breezy generators will `yarn add reduce-reducers` and set up a `reducers.js` to use to manipulate `pages`. If you find yourself needing additional functionality beyond what the generated reducers provide, just add your own reducers:
+Breezy generators will `yarn add reduce-reducers` and set up a `reducers.js`. If you find yourself needing additional functionality beyond what the generated reducers provide, just add your own reducers:
 
 ```javascript
 ....

@@ -7,7 +7,7 @@ require 'rails/version'
 ROOT_DIR = File.expand_path('../../../../', __FILE__)
 TMP_DIR = File.join(ROOT_DIR, 'tmp')
 BREEZY_RAILS_PATH = File.join(ROOT_DIR, 'breezy_rails')
-BREEZY_TEMPLATE_PATH = File.join(ROOT_DIR, 'breezy_template')
+PROPS_TEMPLATE_PATH = File.join(ROOT_DIR, 'props_template')
 BREEZY_BREEZY_PATH = File.join(ROOT_DIR, 'breezy')
 
 SERVER_PORT = '3000'
@@ -71,14 +71,7 @@ class BreezyInstallationTest < Minitest::Test
       successfully "yarn run build"
     end
 
-    if `rails -v` =~ /^Rails 5\.0/
-      # New sqlite versions don't seem to work with Rails 5.0 autogen Gemfile
-      successfully "mv Gemfile Gemfile.backup"
-      system "sed s/^.*sqlite.*$//g Gemfile.backup > Gemfile"
-      successfully "echo \"gem 'sqlite3', '~> 1.3.0'\" >> Gemfile"
-    end
-
-    successfully "echo \"gem 'breezy_template', path: '#{BREEZY_TEMPLATE_PATH}'\" >> Gemfile"
+    successfully "echo \"gem 'props_template', path: '#{PROPS_TEMPLATE_PATH}'\" >> Gemfile"
     successfully "echo \"gem 'breezy', path: '#{BREEZY_RAILS_PATH}'\" >> Gemfile"
     successfully "bundle install"
     successfully "yarn install"
@@ -127,14 +120,7 @@ class BreezyInstallationTest < Minitest::Test
       FileUtils.rm_rf("testapp")
       generate_test_app "testapp"
       Dir.chdir('testapp') do
-        if Rails.version < '6.0'
-          successfully "echo 'gem \"webpacker\", \"~> 3.5\"' >> Gemfile"
-        end
         successfully 'bundle install'
-
-        if Rails.version < '6.0'
-          successfully 'bundle exec rails webpacker:install'
-        end
         successfully 'bundle exec rails webpacker:install:react'
 
         FileUtils.rm_f("public/index.html")

@@ -8,7 +8,7 @@ require 'active_record'
 require 'active_support/testing/autorun'
 require 'active_support/test_case'
 
-require 'breezy_template'
+require 'props_template'
 
 ActiveSupport::TestCase.test_order = :random if ActiveSupport::TestCase.respond_to?(:test_order=)
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"

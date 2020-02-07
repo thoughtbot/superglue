@@ -4,14 +4,14 @@ class RenderController < TestController
   require 'action_view/testing/resolvers'
 
   append_view_path(ActionView::FixtureResolver.new(
-    'render/action.js.breezy' => 'json.author "john smith"',
-    'render/action.html.erb' => 'john smith',
-    'render/implied_render_with_breezy.js.breezy' => 'json.author "john smith"',
-    'render/implied_render_with_breezy.html.erb' => 'john smith',
+    'render/simple_render_with_breezy.json.props' => 'json.author "john smith"',
+    'render/simple_render_with_breezy_with_bad_layout.json.props' => 'json.author "john smith"',
+    'layouts/application.json.props' => 'json.data {yield json}',
+    'layouts/does_not_exist.html.erb' => '',
     'layouts/application.html.erb' => <<~HTML
       <html>
         <head>
-          <script><%= breezy_snippet %></script>
+          <script><%= @initial_state.strip.html_safe %></script>
         </head>
         <body><%=yield%></body>
       </html>
@@ -20,21 +20,18 @@ class RenderController < TestController
 
   layout 'application'
 
-  before_action :use_breezy, only: [:simple_render_with_breezy, :implied_render_with_breezy]
-
   def render_action
     render :action
   end
 
   def simple_render_with_breezy
-    render :action
+    @initial_state = render_to_string(formats: [:json], layout: true)
+    render inline: '', layout: true
   end
 
-  def implied_render_with_breezy
-  end
-
-  def render_action_with_breezy_false
-    render :action
+  def simple_render_with_breezy_with_bad_layout
+    @initial_state = render_to_string(formats: [:json], layout: 'does_not_exist')
+    render inline: '', layout: true
   end
 
   def form_authenticity_token
@@ -50,74 +47,21 @@ class RenderTest < ActionController::TestCase
     if Rails.version >= '6'
       # In rails 6, the fixture orders the templates based on their appearance in the handler
       # This doesn't happen IRL, so I'm going to explicitly set the handler here.
-      # 
+      #
       # Note that the original is the following
       # @controller.lookup_context.handlers = [:raw, :breezy, :erb, :js, :html, :builder, :ruby]
-      @controller.lookup_context.handlers = [:breezy, :erb]
+      @controller.lookup_context.handlers = [:props, :erb]
     end
-
-    Breezy.configuration.track_sprockets_assets = ['app.js']
-    Breezy.configuration.track_pack_assets = ['app.js']
-  end
-
-  teardown do
-    Breezy.configuration.track_sprockets_assets = []
-    Breezy.configuration.track_pack_assets = []
-  end
-
-  test "render action via get" do
-    get :render_action
-    assert_normal_render 'john smith'
   end
 
   test "simple render with breezy" do
     get :simple_render_with_breezy
-    assert_breezy_html({author: "john smith"}, screen: 'render/action')
-  end
 
-  test "implied render with breezy" do
-    get :implied_render_with_breezy
-    assert_breezy_html({author: "john smith"}, screen: 'render/implied_render_with_breezy')
-  end
-
-  test "simple render with breezy via get js" do
-    @request.accept = 'application/javascript'
-    get :simple_render_with_breezy
-    assert_breezy_js({author: "john smith"})
-  end
-
-  test "render action via xhr and get js" do
-    @request.accept = 'application/javascript'
-    get :simple_render_with_breezy, xhr: true
-    assert_breezy_js({author: "john smith"})
-  end
-
-  test "render with breezy false" do
-    get :render_action_with_breezy_false
-    assert_normal_render("john smith")
-  end
-
-  test "render with breezy false via xhr get" do
-    @request.accept = 'text/html'
-    get :render_action_with_breezy_false, xhr: true
-    assert_normal_render("john smith")
-  end
-
-  test "render action via xhr and put" do
-    @request.accept = 'text/html'
-    put :render_action, xhr: true
-    assert_normal_render 'john smith'
-  end
-
-  private
-
-  def assert_breezy_html(content, opts={})
     assert_response 200
-
     rendered = <<~HTML
       <html>
         <head>
-          <script>(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];return ({"data":#{content.to_json},"screen":"#{opts[:screen]}","fragments":fragments,"privateOpts":{"csrfToken":"secret","assets":["/app.js"],"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});})();</script>
+          <script>{"data":{"author":"john smith"}}</script>
         </head>
         <body></body>
       </html>
@@ -127,31 +71,11 @@ class RenderTest < ActionController::TestCase
     assert_equal 'text/html', @response.content_type
   end
 
-  def assert_breezy_js(content)
-    assert_response 200
-    assert_equal '(function(){var fragments={};var lastFragmentName;var lastFragmentPath;var cache={};var defers=[];return ({"data":' + content.to_json + ',"screen":"render/action","fragments":fragments,"privateOpts":{"csrfToken":"secret","assets":["/app.js"],"lastFragmentName":lastFragmentName,"lastFragmentPath":lastFragmentPath,"defers":defers}});})()', @response.body
-    assert_equal 'text/javascript', @response.content_type
-  end
+  test "simple render when the layout doesn't exist" do
+    err = assert_raise ActionView::MissingTemplate do |e|
+      get :simple_render_with_breezy_with_bad_layout
+    end
 
-  def assert_breezy_replace_js(content)
-    assert_response 200
-    assert_equal 'Breezy.replace((function(){return ({"data":' + content.to_json + ',"csrfToken":"secret","assets":["/app.js"]});})());', @response.body
-    assert_equal 'text/javascript', @response.content_type
-  end
-
-  def assert_normal_render(content)
-    assert_response 200
-
-    rendered = <<~HTML
-      <html>
-        <head>
-          <script></script>
-        </head>
-        <body>#{content}</body>
-      </html>
-    HTML
-
-    assert_equal rendered, @response.body
-    assert_equal 'text/html', @response.content_type
+    assert_equal(true, err.message.starts_with?('Missing template layouts/does_not_exist with {:locale=>[:en], :formats=>[:json], :variants=>[], :handlers=>[:props, :erb]}.'))
   end
 end

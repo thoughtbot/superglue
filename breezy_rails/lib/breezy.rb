@@ -1,14 +1,12 @@
 require 'breezy/xhr_headers'
 require 'breezy/xhr_url_for'
 require 'breezy/x_domain_blocker'
-require 'breezy/render'
 require 'breezy/helpers'
-require 'breezy/configuration'
-require 'breezy_template'
+require 'props_template'
 
 module Breezy
   module Controller
-    include XHRHeaders, XDomainBlocker, Render, Helpers
+    include XHRHeaders, XDomainBlocker, Helpers
 
     def self.included(base)
       if base.respond_to?(:before_action)
@@ -20,9 +18,8 @@ module Breezy
       end
 
       if base.respond_to?(:helper_method)
-        base.helper_method :breezy_snippet
-        base.helper_method :use_breezy
-        base.helper_method :breezy_filter
+        base.helper_method :param_to_search_path
+        base.helper_method :search_path_to_camelized_param
       end
     end
   end

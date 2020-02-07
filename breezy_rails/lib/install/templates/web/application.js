@@ -12,7 +12,7 @@ import applicationReducer from './reducer'
 
 // Mapping between your props template to Component
 // e.g {'posts/new': PostNew}
-const screenToComponentMapping = {
+const identifierToComponentMapping = {
 }
 
 const history = createHistory({})
@@ -60,5 +60,5 @@ class App extends React.Component {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  render(<App mapping={screenToComponentMapping}/>, document.getElementById('app'))
+  render(<App mapping={identifierToComponentMapping}/>, document.getElementById('app'))
 })

@@ -1,22 +1,29 @@
 module Breezy
   module Helpers
-    def breezy_snippet
-      if defined?(@_breezy_snippet) && @_breezy_snippet
-        snippet = @_breezy_snippet.gsub(/\;$/, '')
-        "#{snippet};".html_safe
+    def param_to_search_path(param)
+      if param
+        param.gsub(/[^\da-zA-Z\_\=\.]+/, '')
+          .gsub(/\.+/, '.')
+          .split('.')
+          .map do |part|
+            if part =~ /^-?[0-9]+$/
+              part.to_i
+            else
+              part
+            end
+          end
       end
     end
 
-    def use_breezy
-      @_use_breezy = true
-    end
-
-    def breezy_filter
-      filter = request.params[:bzq]
-
-      if filter
-        filter.gsub(/[^\da-zA-Z\_\=\.]+/, '')
-      end
+    def search_path_to_camelized_param(path)
+      path.map do |part|
+        if part.include? '='
+          key, rest = part.split('=')
+          [key.camelize(:lower), rest].join('=')
+        else
+          part.camelize(:lower)
+        end
+      end.join('.')
     end
   end
 end

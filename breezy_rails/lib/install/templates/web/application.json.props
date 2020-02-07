@@ -1,0 +1,23 @@
+path = param_to_search_path(params[:bzq])
+
+json.data(search: path) do
+  yield json
+end
+
+json.component_identifier "#{params[:controller]}/#{params[:action]}"
+json.defers json.deferred!
+json.fragments json.fragments!
+json.assets [
+  asset_pack_path('application.js'),
+  asset_path('application.css')
+]
+
+if protect_against_forgery?
+  json.csrf_token form_authenticity_token
+end
+
+if path
+  json.action 'graft'
+  json.path search_path_to_camelized_param(path)
+end
+

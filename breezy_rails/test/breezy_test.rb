@@ -1,12 +1,8 @@
 require 'test_helper'
 
 class BreezyController < TestController
-  before_action do
-    @_use_breezy = false
-  end
-
   def simple_action
-    render plain: ''
+    render inline: ''
   end
 
   def redirect_to_same_origin

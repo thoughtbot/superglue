@@ -10,6 +10,16 @@ namespace :breezy do
     end
   end
 
+  desc "Verifies if any version of react is in package.json"
+  task :verify_react do
+    package_json = JSON.parse(File.read(Rails.root.join("package.json")))
+
+    if package_json['dependencies']['react'].nil?
+      $stderr.puts "React not installed. Did you run `rails webpacker:install:react`?"
+      $stderr.puts "Exiting!" && exit!
+    end
+  end
+
   desc "Verifies webpacker has been installed"
   task "verify_webpacker" do
     begin
@@ -23,7 +33,7 @@ namespace :breezy do
 
   namespace :install do
     desc "Install everything needed for breezy web"
-    task 'web' => ["breezy:verify_webpacker", "webpacker:verify_install"] do
+    task 'web' => ["breezy:verify_webpacker", "webpacker:verify_install", "breezy:verify_react"] do
       template = File.expand_path("../install/web.rb", __dir__)
       exec "#{RbConfig.ruby} ./bin/rails app:template LOCATION=#{template}"
     end

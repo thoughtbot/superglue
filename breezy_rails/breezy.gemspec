@@ -12,11 +12,11 @@ Gem::Specification.new do |s|
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']
   s.test_files = Dir["test/*"]
 
-  s.add_dependency 'actionpack', '>= 5.0.0'
-  s.add_dependency 'breezy_template', version
+  s.add_dependency 'actionpack', '>= 6.0.0'
+  s.add_dependency 'props_template', version
   s.add_dependency 'webpacker', '>= 3.0'
 
-  s.add_development_dependency 'activerecord', '>= 5.0'
+  s.add_development_dependency 'activerecord', '>= 6.0'
   s.add_development_dependency 'rake', ' ~> 12.0'
   s.add_development_dependency 'byebug', '~> 9.0'
   s.add_development_dependency 'sqlite3', '~> 1.3'

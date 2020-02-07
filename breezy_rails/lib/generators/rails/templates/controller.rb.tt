@@ -5,26 +5,51 @@ require_dependency "<%= namespaced_path %>/application_controller"
 <% module_namespacing do -%>
 class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy]
-  # `use_breezy` enables breezy functionality
-  # on application.html.erb
-  before_action :use_breezy
 
   # GET <%= route_url %>
   def index
     @<%= plural_table_name %> = <%= orm_class.all(class_name) %>
+    respond_to do |format|
+      format.html {
+        @initial_state = render_to_string(formats: [:json], layout: true)
+        render inline: '', layout: true
+      }
+      format.json { render layout: true }
+    end
   end
 
   # GET <%= route_url %>/1
   def show
+    respond_to do |format|
+      format.html {
+        @initial_state = render_to_string(formats: [:json], layout: true)
+        render inline: '', layout: true
+      }
+      format.json { render layout: true }
+    end
   end
 
   # GET <%= route_url %>/new
   def new
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
+    respond_to do |format|
+      format.html {
+        @initial_state = render_to_string(formats: [:json], layout: true)
+        render inline: '', layout: true
+      }
+      format.json { render layout: true }
+    end
   end
 
   # GET <%= route_url %>/1/edit
   def edit
+    respond_to do |format|
+      format.html {
+        @initial_state = render_to_string(formats: [:json], layout: true)
+        render inline: '', layout: true
+      }
+      format.json { render layout: true }
+    end
   end
 
   # POST <%= route_url %>

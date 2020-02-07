@@ -1,6 +1,5 @@
 require "webpacker/configuration"
 
-babelrc = Rails.root.join(".babelrc")
 babel_config = Rails.root.join("babel.config.js")
 
 def append_js_tags
@@ -8,7 +7,7 @@ def append_js_tags
   js_tag = <<-JS_TAG
 
     <script type="text/javascript">
-      window.BREEZY_INITIAL_PAGE_STATE=<%= breezy_snippet %>;
+      window.BREEZY_INITIAL_PAGE_STATE=<%= @initial_state.html_safe %>;
     </script>
   JS_TAG
 
@@ -21,6 +20,7 @@ def append_js_tags
   end
 end
 
+#TODO: add member_key
 def add_member_methods
   inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
     <<-RUBY
@@ -29,51 +29,31 @@ def add_member_methods
   end
 
   def self.member_by(attr, value)
-    find_by(Hash[attr, val])
+    find_by(Hash[attr, value])
+  end
+
+  def self.member_key
+    "id"
   end
 
     RUBY
   end
 end
 
-if File.exist?(babelrc)
-  react_babelrc = JSON.parse(File.read(babelrc))
-  react_babelrc["presets"] ||= []
-  react_babelrc["plugins"] ||= []
-
-  react_babelrc["plugins"].push(["module-resolver", {
-    "root": ["./app"],
-    "alias": {
-      "views": "./app/views",
-      "components": "./app/components",
-      "javascript": "./app/javascript"
+say "Copying module-resolver preset to your babel.config.js"
+resolver_snippet = <<~JAVASCRIPT
+  [
+    require('babel-plugin-module-resolver').default, {
+      "root": ["./app"],
+      "alias": {
+        "views": "./app/views",
+        "components": "./app/components",
+        "javascript": "./app/javascript"
+      }
     }
-  }])
-
-  say "Copying module-resolver preset to your .babelrc file"
-
-  File.open(babelrc, "w") do |f|
-    f.puts JSON.pretty_generate(react_babelrc)
-  end
-elsif File.exist?(babel_config)
-  say "Copying module-resolver preset to your babel.config.js"
-  resolver_snippet = <<~PLUGIN
-        [
-          require('babel-plugin-module-resolver').default, {
-            "root": ["./app"],
-            "alias": {
-              "views": "./app/views",
-              "components": "./app/components",
-              "javascript": "./app/javascript"
-            }
-          }
-        ],
-  PLUGIN
-  insert_into_file "babel.config.js", resolver_snippet, after: /plugins: \[\n/
-else
-  say "Copying .babelrc to app root directory"
-  copy_file "#{__dir__}/templates/web/babelrc", ".babelrc"
-end
+  ],
+JAVASCRIPT
+insert_into_file "babel.config.js", resolver_snippet, after: /plugins: \[\n/
 
 say "Copying application.js file to #{Webpacker.config.source_entry_path}"
 copy_file "#{__dir__}/templates/web/application.js", "#{Webpacker.config.source_entry_path}/application.js"
@@ -87,8 +67,8 @@ copy_file "#{__dir__}/templates/web/action_creators.js", "#{Webpacker.config.sou
 say "Copying actions.js file to #{Webpacker.config.source_entry_path}"
 copy_file "#{__dir__}/templates/web/actions.js", "#{Webpacker.config.source_entry_path}/actions.js"
 
-say "Copying Breezy initializer"
-copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/breezy.rb"
+say "Copying application.json.props"
+copy_file "#{__dir__}/templates/web/application.json.props", "app/views/layouts/application.json.props"
 
 say "Appending js tags to your application.html.erb"
 append_js_tags

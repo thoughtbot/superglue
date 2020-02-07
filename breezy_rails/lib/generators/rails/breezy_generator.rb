@@ -48,7 +48,7 @@ module Rails
             "\nimport #{component_name} from 'views/#{controller_file_path}/#{action}'"
           end
 
-          inject_into_file app_js, after: 'const screenToComponentMapping = {' do
+          inject_into_file app_js, after: 'const identifierToComponentMapping = {' do
             "\n  '#{[controller_file_path, action].join('/')}': #{component_name},"
           end
         end
@@ -62,7 +62,7 @@ module Rails
         end
 
         def filename_with_extensions(name)
-          [name, :js, :props] * '.'
+          [name, :json, :props] * '.'
         end
 
         def filename_with_jsx_extensions(name)

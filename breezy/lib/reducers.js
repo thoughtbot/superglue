@@ -48,13 +48,22 @@ function addPlaceholdersToDeferredFragments(state, page) {
       deferredPaths[path] = true
     }
   })
-  const deferredFragments = fragments.filter(([name, path]) => deferredPaths[path])
+
+  const deferredFragments = []
+
+  Object.entries(fragments).forEach(([name, keyPaths]) => {
+    keyPaths.forEach(path => {
+      if(deferredPaths[path]) {
+        deferredFragments.push([name, path])
+      }
+    })
+  })
 
   const allExistingFragments = {}
 
   Object.entries(state).forEach(([key, prevPage]) => {
-    prevPage.fragments.forEach((frag) => {
-      const [name, path] = frag
+    Object.entries(prevPage.fragments).forEach(([name, keyPaths]) => {
+      const path = keyPaths[0]
       if (!allExistingFragments[name]) {
         allExistingFragments[name] = getIn(prevPage, path)
       }
@@ -77,7 +86,7 @@ function saveResponse (state, pageKey, page) {
 
   page = {
     pageKey,
-    fragments: [],
+    fragments: {},
     ...page
   }
 

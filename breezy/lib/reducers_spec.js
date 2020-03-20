@@ -359,7 +359,7 @@ describe('reducers', () => {
           csrfToken: 'token',
           assets: [ 'application-123.js' ],
           pageKey: '/foo',
-          fragments: []
+          fragments: {}
         }))
       })
 
@@ -377,7 +377,7 @@ describe('reducers', () => {
             defers : [
               {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
             ],
-            fragments: []
+            fragments: {}
           }
         }
 
@@ -391,7 +391,7 @@ describe('reducers', () => {
           defers : [
             {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
           ],
-          fragments: []
+          fragments: {}
         }
 
         const nextState = pageReducer(prevState, {
@@ -415,7 +415,7 @@ describe('reducers', () => {
           defers : [
             {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
           ],
-          fragments: []
+          fragments: {}
         })
       })
 
@@ -433,9 +433,9 @@ describe('reducers', () => {
             defers : [
               {url:'/bar?bzq=data.foo.bar' , path: 'data.foo.bar'}
             ],
-            fragments: [
-              ['info', 'data.foo.bar']
-            ]
+            fragments: {
+              info: ['data.foo.bar']
+            }
           }
         }
 
@@ -448,9 +448,9 @@ describe('reducers', () => {
           defers : [
             {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
           ],
-          fragments: [
-            ['info', 'data.foo.bar']
-          ]
+          fragments: {
+            info: ['data.foo.bar']
+          }
         }
 
         const nextState = pageReducer(prevState, {
@@ -473,9 +473,9 @@ describe('reducers', () => {
           defers : [
             {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
           ],
-          fragments: [
-            ['info', 'data.foo.bar']
-          ]
+          fragments: {
+            info: ['data.foo.bar']
+          }
         })
       })
 
@@ -493,7 +493,7 @@ describe('reducers', () => {
             defers : [
               {url:'/bar?bzq=data.foo.bar' , path: 'data.foo.bar'}
             ],
-            fragments: []
+            fragments: {}
           }
         }
 
@@ -506,9 +506,9 @@ describe('reducers', () => {
           defers : [
             {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
           ],
-          fragments: [
-            ['info', 'data.foo.bar']
-          ]
+          fragments: {
+            info: ['data.foo.bar']
+          }
         }
 
         const nextState = pageReducer(prevState, {
@@ -529,9 +529,9 @@ describe('reducers', () => {
           defers : [
             {url:'/foo?bzq=data.foo.bar' , path: 'data.foo.bar'}
           ],
-          fragments: [
-            ['info', 'data.foo.bar']
-          ]
+          fragments: {
+            info: ['data.foo.bar']
+          }
         })
       })
 

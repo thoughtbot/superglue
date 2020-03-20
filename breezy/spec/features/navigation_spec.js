@@ -128,7 +128,7 @@ describe('navigation', () => {
             data: { heading: 'this is page 1' },
             componentIdentifier: 'home',
             pageKey: '/bar',
-            fragments: []
+            fragments: {}
           },
           '/foo':{
             data: { heading: 'Some heading 2' },
@@ -136,7 +136,7 @@ describe('navigation', () => {
             assets: ['application-123.js', 'application-123.js'],
             componentIdentifier: 'about',
             pageKey: '/foo',
-            fragments: []
+            fragments: {}
           }
         }
       }

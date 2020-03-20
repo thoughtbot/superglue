@@ -8,7 +8,6 @@ import 'cross-fetch'
 import {
   uuidv4,
   isGraft,
-  extractNodeAndPath,
 } from './utils/helpers'
 import {needsRefresh} from './window'
 import {
@@ -89,7 +88,7 @@ function fetchDeferments (pageKey, defers = []) {
   }
 }
 
-function updateAllFragmentsWith(fragments) {
+function updateAllFragmentsWith (fragments) {
 
   return {
     type: UPDATE_ALL_FRAGMENTS,
@@ -99,7 +98,7 @@ function updateAllFragmentsWith(fragments) {
   }
 }
 
-function receivedPagetoFragmentList({fragments = {}, data, path, action}) {
+function receivedPagetoFragmentList ({fragments = {}, data, path, action}) {
   const fragmentNameToNode = {}
 
   if (action) {
@@ -132,7 +131,6 @@ export function saveAndProcessPage (pageKey, page) {
     pageKey = withoutBZParams(pageKey)
 
     const {
-      fragments = [],
       defers = [],
     } = page
 

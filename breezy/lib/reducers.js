@@ -19,7 +19,7 @@ export function updateFragments (state, namesToNodes) {
   return state
 }
 
-function addPlaceholdersToDeferredNodes(existingPage, page) {
+function addPlaceholdersToDeferredNodes (existingPage, page) {
   const {
     defers = []
   } = existingPage
@@ -35,7 +35,7 @@ function addPlaceholdersToDeferredNodes(existingPage, page) {
   }, page)
 }
 
-function addPlaceholdersToDeferredFragments(state, page) {
+function addPlaceholdersToDeferredFragments (state, page) {
   const deferredPaths = {}
   const {defers, fragments} = page
 
@@ -61,7 +61,7 @@ function addPlaceholdersToDeferredFragments(state, page) {
 
   const allExistingFragments = {}
 
-  Object.entries(state).forEach(([key, prevPage]) => {
+  Object.values(state).forEach(prevPage => {
     Object.entries(prevPage.fragments).forEach(([name, keyPaths]) => {
       const path = keyPaths[0]
       if (!allExistingFragments[name]) {
@@ -119,7 +119,7 @@ function copyIntoAllPagesByFragment (state, name, node) {
   return state
 }
 
-export function appendReceivedFragmentsOntoPage(state, pageKey, receivedFragments) {
+export function appendReceivedFragmentsOntoPage (state, pageKey, receivedFragments) {
   if (!pageKey) {
     return state
   }
@@ -156,7 +156,7 @@ export function appendReceivedFragmentsOntoPage(state, pageKey, receivedFragment
   return nextState
 }
 
-export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
+export function graftNodeOntoPage (state, pageKey, node, pathToNode) {
   if (!node) {
     console.warn('There was no node returned in the response. Do you have the correct key path in your bzq?')
     return state
@@ -229,7 +229,7 @@ export function metaReducer (state = {}, action) {
     return {...state, baseUrl}
   }
   case SAVE_RESPONSE: {
-    const {page: {csrfToken }} = action.payload
+    const {page: {csrfToken}} = action.payload
     return {...state, csrfToken}
   }
   case SET_CSRF_TOKEN: {

@@ -14,7 +14,7 @@ matrix:
       install:
         - bundle install
       script:
-        - bundle exec rake test
+        - bundle exec rspec
       <%end%>
     <%end%>
 
@@ -23,16 +23,20 @@ matrix:
         <%next if gemfile == 'Gemfile.rails60' && ver < '2.5'%>
     - language: ruby
       rvm: <%=ver%>
+      env:
+        - NODE_VERSION="10.13.0"
       gemfile: breezy_rails/<%=gemfile%>
       addons:
         chrome: stable
       before_install:
-        - wget -N http://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip -P ~/
+        - wget -N http://chromedriver.storage.googleapis.com/80.0.3987.16/chromedriver_linux64.zip -P ~/
         - unzip ~/chromedriver_linux64.zip -d ~/
         - rm ~/chromedriver_linux64.zip
         - sudo mv -f ~/chromedriver /usr/local/share/
         - sudo chmod +x /usr/local/share/chromedriver
         - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+        - nvm install $NODE_VERSION
+        - node --version
         - cd breezy_rails
       install:
         - bundle install

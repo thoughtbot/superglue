@@ -87,7 +87,6 @@ class BreezyInstallationTest < Minitest::Test
        --skip-git \
        --skip-turbolinks \
        --skip-spring \
-       --skip-keeps \
        --no-rc"
   end
 

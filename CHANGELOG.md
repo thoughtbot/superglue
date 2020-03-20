@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- Unreleased changes should go to UNRELEASED.md -->
 
+## v0.20.0
+- Breezy only supports rail 6 and on.
+- BreezyTemplate is now replaced with PropsTemplate. Notable improvements over BreezyTemplate:
+  - Support for application layouts, e.g `application.json.props`
+  - Mutli-fetch on `json.array!`
+  - `render_collection` like behavior (single lookup for a partial) for `json.array!(partial: 'foobar)'`
+  - Explicit control over node traversal via search options e.g `json.foobar(search:'foobar.posts.id=1')`
+  - Renders `json` instead of `js`
+- BreezyJS no longer uses Server Generated Javascript Responses. It uses JSON and is now easier to use your favorite JSON browser plugin to see the JSON version of your page, for example: `localhost:3000/posts.json`
+- Breezy Rails controller requirements is simplified, no macros needed just plain Rails, be sure to `rails generate scaffold post` or `rails breezy:install:web` to see what changed.
+
 ---
 ## v0.12.0
 

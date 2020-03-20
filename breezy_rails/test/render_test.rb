@@ -68,7 +68,7 @@ class RenderTest < ActionController::TestCase
     HTML
 
     assert_equal rendered, @response.body
-    assert_equal 'text/html', @response.content_type
+    assert_equal 'text/html', @response.media_type
   end
 
   test "simple render when the layout doesn't exist" do

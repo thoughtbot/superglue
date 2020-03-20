@@ -6,7 +6,7 @@ class HelpersTest < ActiveSupport::TestCase
   test 'clean_bzq returns nil if qry is nil' do
     qry = nil
 
-    assert_equal param_to_search_path(qry), nil
+    assert_nil param_to_search_path(qry)
   end
 
   test 'clean_bzq returns a refined qry' do

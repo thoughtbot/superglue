@@ -18,7 +18,7 @@ export default connect(
 
 ### mapStateToProps
 
-Breezy will include all props you build in your `xyz.json.props` and the following:
+Breezy will pass the props you created in your `xyz.json.props` and the following:
 
 | prop | Notes |
 | :--- | :--- |
@@ -33,7 +33,7 @@ You will also receive additional props from the use of the `<NavComponent>`
 
 ### mapDispatchToProps
 
-A map of handy thunks.
+A map of handy [thunks](#thunks).
 
 ```javascript
 export const mapDispatchToProps = {
@@ -52,7 +52,7 @@ You will also receive the following when using the `<NavComponent>`
 
 ## NavComponent
 
-A nav component for your redux application.
+A nav component for your application.
 
 ```javascript
 import Nav from '@jho406/breezy/dist/NavComponent'
@@ -73,7 +73,7 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 this.props.navigateTo('/posts', {ownProps:{restored: true}})
 ```
 
-If there is an existing page in your store `navigateTo` will restore the props, render the correct component, and return `true`. Otherwise it will return `false`. This is useful if you want to restore an existing page before making a call to `visit` or `remote`.
+If there is an existing page in your store `navigateTo` will restore the props, render the correct component, and return `true`. Otherwise it will return `false`. This is [useful](recipes#replicating-turbolinks-behavior) if you want to restore an existing page before making a call to `visit` or `remote`.
 
 | Parameter | Notes |
 | :--- | :--- |
@@ -88,7 +88,7 @@ If there is an existing page in your store `navigateTo` will restore the props, 
 
 ### visit
 
-Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click.There can only ever be one visit at a time. If you happen to call `visit` while another visit is taking place, only the most recent visit will callback with `canNavigate: true`.
+Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click. There can only ever be one visit at a time. If you happen to call `visit` while another visit is taking place, only the most recent visit will callback with `canNavigate: true`.
 
 For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](utility.md#enhancevisitwithbrowserbehavior)
 
@@ -108,7 +108,6 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | :--- | :--- | :--- |
 | pathQuery | `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure. |
 | fetchRequestOptions | `Object` | Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`. |
-| pageKey | `String` | Optional. The key that breezy will use to store the recieved page. If not specified, Breezy will use the response's `content-location` headers. See [setting the content location](rails.md#setting-the-content-location) |
 
 | Callback options | Type | Notes |
 | :--- | :--- | :--- |
@@ -117,7 +116,6 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | screen | `String` | The screen that your react application should render next. |
 | page | `Object` | The full parsed page response from your `foobar.json.props` template. |
 | rsp | `Object` | The raw response object |
-| pageKey | `String` | Location in the Breezy store where `page` is stored. |
 
 | Additional `.catch` error attributes\* | Type | Notes |
 | :--- | :--- | :--- |
@@ -132,39 +130,43 @@ Remote makes an ajax call and saves the response to the `pages` store in async f
 **Note** Unlike `visit`, `remote` will retain any `bzq` url parameters.
 
 ```javascript
-remote(pathQuery, {}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
+remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
 
-remote(pathQuery, {...fetchRequestOptions}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
-
-remote(pathQuery, {...fetchRequestOptions}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
-
-remote(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, url, pageKey}) => {})
+remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).catch(({message, fetchArgs, url, pageKey}) => {})
 ```
 
-Shares the same arguments as `visit` with a few key differences:
+Shares the same arguments as `visit` with a few differences:
 
 * `canNavigate` is not available as an option passed to your then-able function.
+* You can override where the response is saved with a `pageKey` options
+
+| fetchRequestOptionsAndMore options | Type | Notes |
+| :--- | :--- | :--- |
+| pageKey | `String` | Where the response should be saved, by default its the current url.
 
 ### saveAndProcessPage
 
-Save and process a rendered view from PropsTemplate. It will also handle any deferment, and fragment updating. Useful if you want to stream a fully rendered `your_template.json.props` to preload, or graft nodes via websockets.
+Save and process a rendered view from PropsTemplate. It will also handle any deferment, and fragment updating. Useful if you want to [stream](recipes#chat-app-long-polling) a fully rendered `your_template.json.props` to via websockets.
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
-| pageKey | `String` | The page key where you want template to be saved in. Use your rails `foo_path` helpers. |
+| pageKey | `String` | Optional, but recommended. The page key where you want template to be saved in. Use your rails url helpers. If this is skipped, only [fragments](props_template/README.md#partial-fragments) will be updated|
 | page | `String` | A rendered PropsTemplate|
+
+### Behavior with Fragments
+If a fragment was rendered in any response to a `visit` or `remote`, all fragments across all pages in Breey's Redux store are automatically updated. For more information see [PropsTemplate](props_template/README.md#partial-fragments)
 
 ## Search nodes
 
-Breezy can search your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param, then passing that variable in your `application.json.props`. PropsTempalte will ignore all node blocks that are not in the keypath, ignore deferment and caching options while traversing, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed.
+Breezy can search your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param, then passing the params in your `application.json.props`. PropsTemplate will ignore blocks that are not in the keypath, disable deferment and caching, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed. See our [traversal guide](docs/traversal-guide) for more examples.
 
 For example:
 
 ```javascript
-store.dispatch(remote('/?bzq=header.shopping_cart'))
+this.props.remote('/?bzq=header.shopping_cart')
 ```
 
-and in your `appication.json.props`
+and in your `application.json.props`
 
 ```ruby
 path = param_to_search_path(params[:bzq])

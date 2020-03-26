@@ -2,161 +2,67 @@
 
 [![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
-Breezy is a "Deliver everything first, update later" library for React, Redux and *classic* Rails.
+Build modern React/Redux applications using classic Rails. Batteries included. Turbolinks inspired. APIs not required.
 
-# Features
+## At a Glance
+Breezy is a set of libraries that helps with data and navigation. It comes with thunks, an opinonated redux state shape, a JBuilder inspired traversable templating library, and many more tools that compliments classic Rails.
 
-1. **It "is" classic Rails**. Breezy does *NOT* try to bring Rails conventions to React and Redux. Rather, it creates a conceptual match between Rails and Rails/Redux such that "it IS classic Rails". For example:
+
+### No APIs
+
+Instead of APIs, Breezy leans on Rail's ability to respond to different [mime types](https://apidock.com/rails/ActionController/MimeResponds/InstanceMethods/respond_to) on the same route. In a Breezy application, if you directed your browser to `/dashboard.html`, you would see the HTML version of the content, and if you went to `/dashboard.json` you would see the JSON version of the exact same content down to the footer.
+
+The end result would be something like this:
+
+![No Apis](docs/images/no_apis.png)
+
+### Powered by Classic Rails
+Breezy is mostly classic Rails. Features like the flash, cookie auth, and url helpers continue to be useful. Here's a look at the directory structure of a typical Rails application with Breezy.
+
 ```
-views/
-  posts/
-    index.json.props
-    index.jsx
+MyRailsApp/
+  app/
+    views/
+      dashboard/
+        index.jsx <- Gets packaged with application.js
+        index.json.props
 ```
-2. **The Best of Rails, React, and Redux** Use your convienent URL helpers, bring in [out-of-the-box](https://github.com/Shopify/polaris-react/) React components, and, when you need to, get down and dirty with Redux.
-3. **Batteries Included** Be productive with Rails, React and Redux from day one with easy-to-use thunks, an opinionated store shape, and scaffolds for minimal setup.
-4. **API** ~~**first**~~ **later development** Save the work for when you actually need it. With Breezy, you can build SPAs without APIs and skip the hassle of building another set of routes/controllers/serializers/tests.
-5. **All your resources in a single request** Move over GraphQL, classic multi-page applications already achieves this. Breezy just enhances your Rails views to make it work for React and Redux.
-6. **No Javascript Router** You do not need a javascript router for SPA functionality. Breezy uses lessons learned from `Turbolinks` and just re-uses the client facing Rails routes.
 
-# Documentation
+### PropsTemplate
+Powering these JSON responses is PropsTemplate, a traversable JSON templating language inspired by JBuilder. With PropsTemplate you can specify a path of the node you want, and PropsTemplate will walk the tree to it, skipping execution of nodes that don't match the keypath.
+
+### All together now!
+Breezy comes with batteries that bring all the above concepts together to make building popular SPA features easy, painless, and as productive.
+
+#### SPA Navigation
+A popular ask of SPAs is page-to-page navigation without reloading. If you were on `/dashboard` and you wanted to click on a link to go to `/posts` without a hard reload, you would use the `visit` thunk in your `onClick` handler:
+
+```
+  this.visit('/posts')
+```
+
+The above will request for `/posts` with an accept of `application/json`, and when the client receives the response, swap out the current component for the component the response asks for, and `pushState` on history.
+
+#### Same-page updates
+Other features of SPA rely on updating some part of the existing page. Breezy provides `remote`, a thunk you can use to update parts of your content in async fashion.
+
+Imagine having to implement search, where you enter some text, hit enter, and results would show without reloading the screen. In traditional applications, you may need a new controller, routes, a discussion over versioning, JSON serializer, plenty of new JS code, etc.
+
+![haircuts](docs/images/haircuts.png)
+
+With Breezy, one line of code is enough:
+```
+  this.remote('/dashboard?qry=haircut&bzq=data.header.search')
+```
+
+The above will make a request to `/dashboard?qry=haircut`, walk your props to the `data.header.search` node, return it in a response, and immutably graft it in the exact same path on the redux store before finally letting React re-render.
+
+For more on what you can do, checkout our documentation.
+
+## Documentation
 
 Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure to select the correct version. `master` will always be in development.
-
-# At a glance
-## Deliver everything first
-
-```text
-views/
-  posts/
-    index.json.props
-    index.jsx
-    show.json.props
-    show.jsx
-```
-
-Build your props in `index.json.props`
-
-```ruby
-# index.json.props
-json.flash flash.to_h
-
-json.header do
-  json.total_posts @post.count
-end
-
-json.posts do
-  json.array! @posts do |post|
-    json.title post.title
-    json.post_path post_path(post)
-  end
-end
-```
-
-And inject it to your screen component with the provided `mapStateToProps`
-
-```javascript
-import {
-    mapStateToProps,
-    mapDispatchToProps,
-    enhanceVisitWithBrowserBehavior
-  } from '@jho406/breezy'
-
-class PostsIndex extends React.Component {
-  constructor(props) {
-    super(props)
-    const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.enhancedVisit = visit.bind(this)
-  }
-
-  render() {
-    <ul>
-    {this.props.posts.map((post) => {
-       return (
-         <li>
-           <a onClick={() => this.enhancedVisit(post.postPath)}>
-             {post.title}
-           </a>
-         </li>
-       )
-     })}
-   </ul>
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostsIndex)
-```
-
-### SPA Navigation
-
-When the user lands on the `/posts`, `index.jsx` is rendered with `index.json.props`, and `show.jsx` and `index.jsx` is packaged together in your webpack. SPA navigation is handled just like Turbolinks:
-
-```javascript
-this.enhancedVisit("/posts/1") //if you've used `enhanceVisitWithBrowserBehavior`
-```
-
-The above will request the `show.json.props`, pass it to `show.jsx`, swap out the current `index.jsx` and update the browser history.
-
-## Update Later
-
-Update parts of your appication later. For example, inside of `index.jsx`.
-
-```javascript
-this.props.remote("/posts?bzq=header")
-```
-
-The above will fetch the `json.header` node in `index.json.props`, skip rendering of the `json.posts`, immutably graft it in your Redux store, before leaving it to React to re-render.
-
-# The Breezy store shape
-
-How should you structure your store? Should I replicate my business models, like `User`, on the client side? Use an [ORM](https://github.com/tommikaikkonen/redux-orm) to manage it? How much should I denormalize or normalize? How much business logic should I bring over?
-
-Breezy's answer is to leave most of your business logic to the backend, and instead, deal with cross-cutting presentational fragments on the frontend. In other words, lets talk in terms of "updating the user email at each page header", instead of "updating the email in the user model".
-
-Why?
-
-Business logic is complex and diverse across industry verticals, but the presentational aspects remain largely unchanged, there will always be a user header, a footer, a menu, a body with a list of items, etc. Breezy shapes its store with this observation in mind so that **a developer can look at a running application, easily guess the shape of the store, and make close-to-correct assumptions on how to update the store without looking at any code.**
-
-Breezy's store shape is a unidirectional tree and falls on the extreme end of denormalization, every page is given a node in the redux tree. There is duplication of state across children for example, a shared `User` header. To update something like a shared header, you need to iterate over each page, find the header, and make updates.
-
-### How does it look like
-
-Breezy occupies 2 nodes in your Redux state tree.
-
-```javascript
-{
-  breezy, // <-breezy's private store.
-  pages, // where the results of your props live
-  ...yourStuff
-}
-```
-
-`pages` is where the results of your props templates live. Its a hash where the keys are the path of your visited url. Internally, it looks like this:
-
-```javascript
-pages: {
-  '/bar': {
-    data: {...propsFromPropsTemplates},
-    screen: 'matchesThisPageToAComponent',
-    privateOpts: {...usedByBreezyInternally} //don't touch
-  },
-  '/bar?foo=123': {
-    data: {...propsFromPropsTemplates},
-    screen: 'matchesThisPageToAComponent',
-    privateOpts: {...usedByBreezyInternally}
-  },
-  '/foo':{
-    data: {...propsFromPropsTemplates},
-    screen: 'matchesThisPageToAComponent',
-    privateOpts: {...usedByBreezyInternally}
-  }
-}
-```
 
 ## Special Thanks
 
 Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/)
-

@@ -1,39 +1,38 @@
 # Solving Problems
 
-#TODO: Some of the below is outdated.
-
 ## Loading content later
 
-Say you add a dashboard to you page, and eventually that part of the page becomes a bottleneck. For example:
+When parts of your page becomes slow, for example a metrics table that takes a long time to generate because of some expensive operation:
 
 ```ruby
-# /orders.json.props
+# /dashboard.json.props
 json.header do
  ...
 end
 
-json.dashboard do
-  sleep 10 # extremely slow content
+json.metrics do
+  sleep 10 # expensive operation
   json.total_visitors 30
 end
 ```
 
-To make the dashboard of the page to load in typical async fashion, enable deferment on the node:
+A common approach is to load content in async fashion by building out another set of routes, controllers, tests, with more work on the frontend to manage state, call fetch, etc. With Breezy, we can load async content in a single setting.
 
 ```ruby
-json.dashboard(defer: :auto) do
-  sleep 10
+json.metrics(defer: :auto) do
+  sleep 10 # expensive operation
   json.total_visitors 30
 end
 ```
 
-When you `visit('/orders')` , PropsTemplate render `orders.json.props` without the dashboard, and when the page is received by the frontend, Breezy will auto-request for the missing node:
+With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but without `json.metrics`, then when the content is recieved by the client, Breezy will automatically make an `remote` request for anything that was skipped:
 
 ```javascript
-remote('/orders?bzq=dashboard', ....otherOpts...)
+remote('/dashboard?bzq=data.metrics')
 ```
 
-Its up to you to handle both cases in your Component. For example:
+
+Its up to you to handle the case when `metrics` starts out empty. For example:
 
 ```javascript
 // orders.jsx
@@ -42,16 +41,27 @@ Its up to you to handle both cases in your Component. For example:
   render() {
     return (
       <div>
-        {this.props.dashboard ? this.renderLoading() : this.renderDashboard()}
+        {_.isEmpty(this.props.metrics) ? this.renderLoading() : this.renderDashboard()}
       </div>
     )
   }
 ```
 
+Note that you can add a placeholder like so:
 
-## Loading tab content OnClick
+```ruby
+json.metrics(defer: [:auto, placeholder: {}]) do
+  sleep 10 # expensive operation
+  json.total_visitors 30
+end
+```
 
-Say you have a 2 tabs, and you only want to show the tab 1 content on load. The tab 2 content should load only when a user clicks on tab 2.
+
+## Loading tab content `onClick`
+
+Say you have a 2 tabs of content, and the content from the second tab takes a bit of time to load. Since the 2nd tab is inactive on a first visit anyway, you decided to load the 2nd tab only if a user clicks it.
+
+With Breezy, this is a few lines of code:
 
 ```ruby
 # /posts.json.props
@@ -59,18 +69,15 @@ Say you have a 2 tabs, and you only want to show the tab 1 content on load. The 
 json.posts do
   json.all do
   end
-  json.pending (defer: :manual) do
+  json.pending(defer: :manual) do
   end
 end
 ```
 
-In your component
-
 ```javascript
-// survey.jsx
 //...in your component
   handleClick = () => {
-    this.props.remote('/posts?bzq=posts.pending')
+    this.props.remote('/posts?bzq=data.posts.pending')
   }
 
   render() {
@@ -84,101 +91,97 @@ In your component
   }
 ```
 
-In this example, `defer: :manual` is used on the node. PropsTemplate will render without that node, and you need to manually request it using [traversals](api/react-redux.md#traversing-nodes) like the example above.
+In this example, `defer: :manual` is used on the node. PropsTemplate will render without that node, and you need to manually request it using [traversals](docs/traversal-guide.md) like the example above.
 
-If you need to send over a list of fake line items, you can use the following approach:
+
+## Shopping cart
+
+You want to update a cart count located in the header when a user clicks on 'Add to cart' on a product listing
+
+```javascript
+//...in your submit handler
+handleSubmit = () => {
+  this.props.remote('/add_to_cart?bzq=data.header.cart', {method: 'POST', body: {.....}})
+}
+```
 
 ```ruby
-json.posts do
-  json.all do
+def create
+  redirect_to :back, bzq: params[:bzq]
+end
+```
+
+Recall that since Breezy makes an immutable update to the store, your component will update as appropriate.
+
+## Chat app (Short-polling)
+
+Say you have a list of chat messages that you want to periodically update. Here's a simple way to do that with a simple `setTimeout`:
+
+```javascript
+  componentDidMount() {
+    this.polling = setInterval(() => {
+      this.props.remote('/messages?bzq=data.messages')
+    })
+  }
+```
+
+And corresponding  `messages/index.json.props`
+
+```ruby
+json.data(search: params['bzq'])
+  json.header do
   ...
   end
 
-  if request.format.html?
-    # The pending tab will initially be fake
-    json.pending partial: 'fake_posts_list' do
+  json.messages do
+    json.array! @messages do |msg|
+      json.body msg.body
     end
-  else
-    # Then a manual this.props.remote for the real thing
-    json.pending do
-    ...
-    end
-end
-```
-
-
-
-## Preloading content
-
-You can also preload other pages in a single request with the help of [Rails 5 renderers](http://blog.bigbinary.com/2016/01/08/rendering-views-outside-of-controllers-in-rails-5.html). If you do so, make sure you clear out the initial preloads in your page state in `componentDidMount`.
-
-For example:
-
-```ruby
-class PreloadController < ApplicationController
-  def index
-    @renderer = self.class.renderer.new(request.env)
   end
 end
 ```
 
+
+## Chat app (Long-polling)
+
+You can use a combination of Rails 5 renderers, ActionCable, PropsTemplate  [fragments](props_template/README.md#partial-fragments) and preloading to stream updates to your users without much effort.
+
+For example, if you already have a ActionCable channel setup, simply render the props and send it over the wire:
+
 ```ruby
-# /preload/index.json.props
-if request.format.html?
-  json.preloaded_pages [
-    [edit_post_path(last_updated_post), @renderer.render(:edit, assigns: {post: last_updated_post})],
-  ]
-end
-```
+renderer = PostsController.renderer.new(
+  "action_dispatch.request.parameters"=>{bzq: 'data.posts.0'},
+  "action_dispatch.request.formats"=>[Mime[:json]]
+)
 
-Add a reducer to remove the preloaded_pages:
+msg = renderer.render(:index)
+
+ActionCable.server.broadcast('web_notifications_channel', message: msg)
+```
 
 ```javascript
-
-  //Somewhere in your reducer
-   import {getIn} from '@jho406/breezy'
-   ...
-   case 'CLEAR_PRELOADED': {
-     const { pageKey } = action.payload
-     const keyPath = [pageKey, 'data'].join('.')
-
-      return produce(state, draft => {
-       const node = getIn(draft, keyPath)
-       delete node['preloadedPages']
-     })
-   }
+window.App.cable.subscriptions.create("WebNotificationsChannel", {
+  received: function({message}) {
+    this.props.saveAndProcessPage(null, message),
+  }
+})
 ```
 
-Then in your page component:
-
-```javascript
- preloadThenClear = () => {
-   const {
-     preloadedPages,
-     pageKey,
-     saveAndProcessPage,
-     clearPreloaded
-   } = this.props
-
-    if (preloadedPages) {
-     preloadedPages.forEach(([preloadPageKey, renderedView])=>{
-       saveAndProcessPage(preloadPageKey, renderedView)
-     })
-
-      clearPreloaded(pageKey)
-   }
- }
-
- componentDidMount() {
-   this.preloadThenClear()
- }
+```ruby
+  json.data(search: params[:bzq]) do
+    json.posts do
+      json.array! @posts, partial: ['post', fragment: true] do
+      end
+    end
+  end
 ```
 
+`saveAndProcessPage(pageKey, page)` is the function that `remote` sends a recieved payload to. However, because we don't know what pageKey to save this streamed response, we set it to `null`. Breezy will still update any cross cutting [fragments](props_template/README.md#partial-fragments)
 
 
 ## Replicating Turbolinks behavior
 
-The old Turbolinks 3 behavior is to load the page from cache if you have it, if not, make a request for the missing page.
+With `visit`, Breezy will always wait for a response before a navigation transition. Turbolink's behavior is to transition first if possible while waiting for the response. To replicate this behavior:
 
 ```javascript
 import {
@@ -195,8 +198,10 @@ class SurveyIndex extends React.Component {
   }
 
   turboVisit = () => {
+    // Navigate if possible
     if(this.props.navigateTo('/next_page')) {
-      // do nothing and let navigateTo just load and transition
+      //load the latest page async
+      this.props.remote('/next_page')
     } else {
       // can't navigate due to missing cache, attempt to visit instead
       this.enhancedVisit('/next_page')
@@ -224,11 +229,11 @@ class BreezyDeviseFailureApp < Devise::FailureApp
   include Breezy::XHRHeaders
 
   def skip_format?
-    %w(html js */*).include? request_format.to_s
+    %w(html jsson */*).include? request_format.to_s
   end
 
   def http_auth?
-    if request.xhr? && request.format != :js
+    if request.xhr? && request.format != :json
       Devise.http_authenticatable_on_xhr
     else
       !(request_format && is_navigational_format?)
@@ -275,8 +280,7 @@ class Users::PasswordsController < Devise::PasswordsController
   layout 'application'
   self.responder = BreezyResponder
 
-  before_action :use_breezy
-  respond_to :html, :js
+  respond_to :html, :json
 end
 
 ```
@@ -381,71 +385,6 @@ export default connect(
   mapDispatchToProps
 )(PostsIndex)
 
-```
-
-
-## Streaming Updates
-
-### Short-polling
-
-Say you have a dashboard screen, and you want to periodically fetch updates for a specific metric. Here's a simple way to do that with just a simple `setTimeout`:
-
-```ruby
-# post/index.json.props
-
-json.header do
-...
-end
-
-json.dashboard do
-  json.visitors do
-    json.total rand(1..30)
-  end
-
-  json.page_views do
-    json.total rand(1..30)
-  end
-end
-
-json.posts do
- ...
-end
-```
-
-Then when you build the component
-
-```javascript
-  componentDidMount() {
-    this.polling = setInterval(() => {
-      this.props.remote('/posts?bzq=dashboard.visitors')
-    })
-  }
-```
-
-### Long-polling
-
-#### Updating nodes
-You can use a combination of Rails 5 renderers, ActionCable and preloading to stream updates to your users without much effort.
-
-For example, if you already have a ActionCable channel setup, simply render the props and send it over the wire:
-
-```ruby
-renderer = PostsController.renderer.new(
-  "action_dispatch.request.parameters"=>{bzq: 'posts.all.items.0'},
-  "action_dispatch.request.formats"=>[Mime[:json]]
-)
-
-msg = renderer.render(:index)
-
-ActionCable.server.broadcast('web_notifications_channel', message: msg)
-```
-
-```javascript
-window.App.cable.subscriptions.create("WebNotificationsChannel", {
-  received: function({message}) {
-    this.props.saveAndProcessPage(null, message),
-  }
-})
 ```
 
 ## Replicating Instantclick

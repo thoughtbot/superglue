@@ -1,13 +1,17 @@
 # Table of contents
 
-* [Breezy](README.md)
-* [Getting Started](docs/getting-started.md)
-* [Solving Problems](docs/recipes.md)
+* [Introduction](README.md)
+* [Installation](docs/getting-started.md)
+* [Configuration](docs/configuration.md)
+* [Recipes](docs/recipes.md)
 
-## API
+# Concepts
+* [The Redux state shape] (docs/redux-state-shape.md)
+* [Travering your tree] (docs/traversing.md)
+* [The spec] (the-spec.md)
 
+# The API
 * [React Redux](docs/react-redux.md)
 * [Rails](docs/rails.md)
 * [Utility](docs/utility.md)
-* [BreezyTemplate](docs/breezy-template.md)
-
+* [PropsTemplate](props_template/README.md)

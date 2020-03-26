@@ -132,7 +132,7 @@ end
 | collection | A collection that responds to `member_at` and `member_by` |
 | options | Additional [options](#options)|
 
-To support [traversing nodes](react-redux.md#traversing-nodes), any list passed to `array!` MUST implement `member_at(index)` and `member_by(attr, value)`. Optionally, you MAY implement `member_key`, which would give the node a unique name in its tree path based on its `member_key` and corresponding value.
+To support [traversing nodes](react-redux.md#traversing-nodes), any list passed to `array!` MUST implement `member_at(index)` and `member_by(attr, value)`.
 
 For example, if you were using a delegate:
 
@@ -146,10 +146,6 @@ class ObjectCollection < SimpleDelegator
     find do |ele|
       ele[attr] == val
     end
-  end
-
-  def member_key
-    :id
   end
 end
 ```
@@ -411,22 +407,24 @@ If `:manual` is used, PropsTemplate will no-op the block and will not populate `
 #### Working with arrays
 The default behavior for deferements is to use the index of the collection to identify an element. PropsTemplate will generate `?_bzq=a.b.c.0.title` in its metadata.
 
-If you wish to use an attribute to identify the element. You should:
-1. Implement `member_key` to specify which attribute you want to use to uniquely identify the element in the collection. PropsTemplate will generate `?_bzq=a.b.c.some_id=some_value.title`
-2. Ensure the chosen `member_key` is in the body of the element
+If you wish to use an attribute to identify the element. You must:
+1. Implement `:key` to specify which attribute you want to use to uniquely identify the element in the collection. PropsTemplate will generate `?_bzq=a.b.c.some_id=some_value.title`
+2. Implement `member_at`, and `member_key` on the collection to allow for BreezyJS to traverse the tree based on key value attributes.
 
 For example:
 
 ```ruby
 require 'props_template/core_ext' #See (lists)[#Lists]
+
 data = [{id: 1, name: 'foo'}, {id: 2, name: 'bar'}]
 
 json.posts
   json.array! data, key: :some_id do |item|
-    json.some_id item.id # the attribute i want to use as `key`.
     json.contact(defer: :auto) do
       json.address '123 example drive'
     end
+
+   # json.some_id item.some_id will be appended automatically to the end of the block
   end
 end
 ```

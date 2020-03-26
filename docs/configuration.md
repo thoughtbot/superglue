@@ -1,34 +1,4 @@
-# Getting Started
-
-## Installation
-
-Make sure you have webpacker installed on your Rails application.
-
-```text
-bundle exec rails webpacker:install:react
-```
-
-Remove Turbolinks from your project. Breezy is actually a fork of Turbolinks 3/Turbograft, and shares many of the same strategies for page-to-page transitions. Unfortunately, this means it conflicts with Turbolinks at the moment.
-
-Add the following to your Gemfile and run bundle
-
-```text
-gem 'breezy'
-```
-
-Run the installation generator
-
-```text
-rails breezy:install:web
-```
-
-Generate a scaffold
-
-```text
-rails generate scaffold post body:string --force --no-template-engine --breezy
-```
-
-## Configuration
+# Configuration
 
 The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare bones `Nav` component.
 
@@ -82,28 +52,36 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 ```
 
-### The Nav Mapping
+## The Nav Mapping
 
 ```javascript
-const identifierToComponentMapping = {
+// Mapping between your props template to Component
+// e.g, {'posts/new': PostNew}
+const screenToComponentMapping = {
 }
 ```
 
-Breezy uses a mapping that you configure to determine which set of props to render with which component. If you used the generator, this is configured in `application.json.props` as a combination name of the controller and action.
+Breezy uses a mapping that you configure to determine which set of props to render with which page component. If you used the generator, this is configured in `application.json.props` as a combination name of the controller and action.
 
 ```ruby
 # application.json.props
-
 json.component_identifier "#{params[:controller]}/#{params[:action]}"
 ```
 
-To link `new.json.props` with `new.jsx`, you would need to add the following to your mapping:
+To link `new.json.props` with `new.jsx`, add the following to your mapping:
 
 ```javascript
 const identifierToComponentMapping = {
   'posts/new': PostNew
 }
 ```
+
+## The Base url
+```
+const baseUrl = '' //Normally blank, but you can change this if you are using react-native
+```
+
+The Base url that will be prefixed to all requests using `visit` and `remote`.
 
 ## Configuring Reloads
 

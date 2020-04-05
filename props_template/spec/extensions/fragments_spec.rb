@@ -98,19 +98,16 @@ RSpec.describe 'Props::Template fragments' do
     })
   end
 
-  it 'renders an array of partials with fragments using the member_key as the hash key' do
+  it 'renders an array of partials with fragments using the :key as the hash key' do
     json = render(<<~PROPS)
       users = [
         { name: 'joe', id: 1},
         { name: 'foo', id: 2}
       ]
 
-      def users.member_key
-        :id
-      end
-
       json.data do
         opts = {
+          key: :id,
           partial: ['customer', fragment: ->(i) { 'user_' + i[:id].to_s}]
         }
         json.array! users, opts do
@@ -122,8 +119,14 @@ RSpec.describe 'Props::Template fragments' do
 
     expect(json).to eql_json({
       data: [
-        {firstName: 'joe'},
-        {firstName: 'foo'}
+        {
+          firstName: 'joe',
+          id: 1
+        },
+        {
+          firstName: 'foo',
+          id: 2
+        }
       ],
       fragments: {
         user_1: ['data.id=1'],
@@ -132,7 +135,7 @@ RSpec.describe 'Props::Template fragments' do
     })
   end
 
-  it 'renders an array of partials with fragments using the member_key as the method_name' do
+  it 'renders an array of partials with fragments using the :key as the method_name' do
     json = render(<<~PROPS)
       klass = Struct.new(:email, :id)
 
@@ -141,12 +144,9 @@ RSpec.describe 'Props::Template fragments' do
         klass.new('foo@red.com', 2)
       ]
 
-      def users.member_key
-        :id
-      end
-
       json.data do
         opts = {
+          key: :id,
           partial: ['person', fragment: ->(i) { 'user_' + i.id.to_s}]
         }
         json.array! users, opts do
@@ -158,8 +158,14 @@ RSpec.describe 'Props::Template fragments' do
 
     expect(json).to eql_json({
       data: [
-        {email: 'joe@red.com'},
-        {email: 'foo@red.com'}
+        {
+          email: 'joe@red.com',
+          id: 1
+        },
+        {
+          email: 'foo@red.com',
+          id: 2
+        }
       ],
       fragments: {
         user_1: ['data.id=1'],

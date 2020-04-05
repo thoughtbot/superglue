@@ -78,23 +78,15 @@ module Props
     end
 
     def handle_collection_item(collection, item, index, options)
-      if collection.respond_to? :member_key
-        member_key = collection.member_key
-      end
-
-      if !member_key
+      if !options[:key]
         @traveled_path.push(index)
       else
-        id = if item.respond_to? member_key
-          item.send(member_key)
-        elsif item.is_a? Hash
-          item[member_key] || item[member_key.to_sym]
-        end
+        id, val = options[:key]
 
         if id.nil?
           @traveled_path.push(index)
         else
-          @traveled_path.push("#{member_key.to_s}=#{id}")
+          @traveled_path.push("#{id.to_s}=#{val}")
         end
       end
 
@@ -110,6 +102,16 @@ module Props
 
 
     def refine_item_options(item, options)
+      if key = options[:key]
+        val = if item.respond_to? key
+          item.send(key)
+        elsif item.is_a? Hash
+          item[key] || item[key.to_sym]
+        end
+
+        options[:key] = [options[:key], val]
+      end
+
       @em.refine_options(options, item)
     end
   end

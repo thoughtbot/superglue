@@ -35,6 +35,12 @@ module Props
       type, rest = options[:defer]
       placeholder = rest[:placeholder]
 
+      if type.to_sym == :auto && options[:key]
+        key, val = options[:key]
+        placeholder = {}
+        placeholder[key] = val
+      end
+
       request_path = @base.context.controller.request.fullpath
       path = @base.traveled_path.join('.')
       uri = ::URI.parse(request_path)

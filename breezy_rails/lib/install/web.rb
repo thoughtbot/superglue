@@ -20,7 +20,6 @@ def append_js_tags
   end
 end
 
-#TODO: add member_key
 def add_member_methods
   inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
     <<-RUBY
@@ -31,11 +30,6 @@ def add_member_methods
   def self.member_by(attr, value)
     find_by(Hash[attr, value])
   end
-
-  def self.member_key
-    "id"
-  end
-
     RUBY
   end
 end

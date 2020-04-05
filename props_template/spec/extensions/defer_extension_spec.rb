@@ -1,6 +1,6 @@
 require_relative '../support/helper'
 require_relative '../support/rails_helper'
-require 'byebug'
+
 RSpec.describe 'Props::Template' do
   before do
     Rails.cache.clear
@@ -152,21 +152,18 @@ RSpec.describe 'Props::Template' do
     })
   end
 
-  it 'defers array elements from loading, populating with a id=xyz when collection responds_to member_key and the array element is a hash' do
+  it 'defers array elements from loading, populating with a id=xyz when collection responds_to :key and the array element is a hash' do
     json = render(<<~PROPS)
       collection = [
         {id: 1},
         {id: 2}
       ]
 
-      def collection.member_key
-        :id
-      end
-
       json.outer do
         json.inner do
           opts = {
-            defer: :auto
+            defer: :auto,
+            key: :id
           }
           json.array! collection, opts do |item|
             json.foo 'bar'
@@ -180,8 +177,8 @@ RSpec.describe 'Props::Template' do
     expect(json).to eql_json({
       outer: {
         inner: [
-          {},
-          {}
+          {id: 1},
+          {id: 2}
         ]
       },
       deferred: [
@@ -191,7 +188,7 @@ RSpec.describe 'Props::Template' do
     })
   end
 
-  it 'defers array elements from loading, populating with a id=xyz when collection responds_to member_key and the array element is an object' do
+  it 'defers array elements from loading, populating with a id=xyz when collection responds_to :key and the array element is an object' do
     json = render(<<~PROPS)
       klass = Struct.new(:id)
       collection = [
@@ -199,14 +196,11 @@ RSpec.describe 'Props::Template' do
         klass.new(2)
       ]
 
-      def collection.member_key
-        :id
-      end
-
       json.outer do
         json.inner do
           opts = {
-            defer: :auto
+            defer: :auto,
+            key: :id,
           }
           json.array! collection, opts do |item|
             json.foo 'bar'
@@ -220,8 +214,8 @@ RSpec.describe 'Props::Template' do
     expect(json).to eql_json({
       outer: {
         inner: [
-          {},
-          {}
+          {id: 1},
+          {id: 2}
         ]
       },
       deferred: [

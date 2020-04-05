@@ -43,7 +43,7 @@ module Props
     end
 
     def has_extensions(options)
-      options[:defer] || options[:cache] || options[:partial]
+      options[:defer] || options[:cache] || options[:partial] || options[:key]
     end
 
     def handle(commands, options)
@@ -63,6 +63,11 @@ module Props
               @fragment.name = current_digest
             else
               yield
+            end
+
+            if options[:key]
+              id, val = options[:key]
+              base.set!(id, val)
             end
           end
         end

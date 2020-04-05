@@ -19,10 +19,5 @@ module Breezy
 
       url
     end
-
-    private
-      def set_response_url
-        response.headers['X-RESPONSE-URL'] = request.fullpath
-      end
   end
 end

@@ -168,7 +168,7 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{url: '/some_defered_request?bzq=body', type: 'auto'}]
+        defers: [{url: '/foo?bzq=body', type: 'auto'}]
       }
 
       const expectedActions = [
@@ -212,7 +212,7 @@ describe('action creators', () => {
       ]
 
       fetchMock
-        .mock('/some_defered_request?bzq=body&__=0', {
+        .mock('/foo?bzq=body&__=0', {
           body: JSON.stringify({
             data: 'success',
             action: 'graft',
@@ -223,7 +223,6 @@ describe('action creators', () => {
           }),
           headers: {
             'content-type': 'application/json',
-            'x-response-url': '/some_defered_request'
           }
         })
 
@@ -457,7 +456,6 @@ describe('action creators', () => {
           body: successfulBody(),
           headers: {
             'content-type': 'application/json',
-            'x-response-url': '/foo'
           }
         })
 
@@ -483,7 +481,7 @@ describe('action creators', () => {
         }
       ]
 
-      return store.dispatch(remote('/foo')).then(() => {
+      return store.dispatch(remote('/foo', {pageKey: '/foo'})).then(() => {
         const requestheaders = fetchMock.lastCall('/foo?__=0')[1].headers
 
         expect(requestheaders).toEqual({
@@ -569,28 +567,65 @@ describe('action creators', () => {
         return receivedPage
       }
 
-      return store.dispatch(remote('/foo', {beforeSave})).then(() => {
+      return store.dispatch(remote('/foo', {beforeSave, pageKey: '/foo'})).then(() => {
         expect(store.getActions()).toEqual((expectedActions))
       })
     })
 
+    it('defaults to the currentUrl as the pageKey', (done) => {
+      const store = mockStore({
+        breezy: {
+          currentUrl: '/current_url',
+          csrfToken: 'token',
+          controlFlows: {
+            visit: 'fakeUUID'
+          }
+        }})
 
-    it('uses the override as the pageKey on non-GET requests', (done) => {
-      const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock
-        .mock('/with_pagekey_override?__=0', {
+        .mock('/foobar?__=0', {
           body: successfulBody(),
           headers: {
             'content-type': 'application/json',
-            'x-response-url': '/foo'
           }
         })
 
 
-      return store.dispatch(remote('/with_pagekey_override', {method: 'POST'}, '/bar_override')).then((meta) => {
+      return store.dispatch(remote('/foobar', {method: 'POST'})).then((meta) => {
+        expect(meta).toEqual(jasmine.objectContaining({
+          pageKey: '/current_url'
+        }))
+
+        done()
+      })
+    })
+
+    it('uses the pageKey option to override the currentUrl as the preferred pageKey', (done) => {
+      const store = mockStore({
+        breezy: {
+          currentUrl: '/url_to_be_overridden',
+          csrfToken: 'token',
+          controlFlows: {
+            visit: 'fakeUUID'
+          }
+        }})
+
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock
+        .mock('/foobar?__=0', {
+          body: successfulBody(),
+          headers: {
+            'content-type': 'application/json',
+          }
+        })
+
+
+      return store.dispatch(remote('/foobar', {method: 'POST', pageKey: '/bar_override'})).then((meta) => {
         expect(meta).toEqual(jasmine.objectContaining({
           pageKey: '/bar_override'
         }))
@@ -606,31 +641,6 @@ describe('action creators', () => {
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
       store.dispatch(remote('/first?bzq=foo&__=bar&_=baz')).then((meta)=>{
-        done()
-      })
-    })
-
-    it('uses the content-location over x-response-url as the pageKey if no explicit key was set on non-GET requests', (done) => {
-      const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
-
-      fetchMock
-        .mock('/foo?__=0', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/json',
-            'x-response-url': '/will_NOT_be_used',
-            'content-location': '/will_be_used',
-          }
-        })
-
-
-      return store.dispatch(remote('/foo', {method: 'POST'})).then((meta) => {
-        expect(meta).toEqual(jasmine.objectContaining({
-          pageKey: '/will_be_used'
-        }))
-
         done()
       })
     })
@@ -661,29 +671,6 @@ describe('action creators', () => {
       return store.dispatch(remote('/redirecting_url')).then((meta) => {
         expect(meta).toEqual(jasmine.objectContaining({
           redirected: true
-        }))
-
-        done()
-      })
-    })
-
-    it('uses the x-response-url as the pageKey if no explicit key was set on non-GET requests and content-location is not avail', (done) => {
-      const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
-
-      fetchMock
-        .mock('/foo?__=0', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/json',
-            'x-response-url': '/will_be_used',
-          }
-        })
-
-      return store.dispatch(remote('/foo', {method: 'POST'})).then((meta) => {
-        expect(meta).toEqual(jasmine.objectContaining({
-          pageKey: '/will_be_used'
         }))
 
         done()
@@ -778,7 +765,6 @@ describe('action creators', () => {
           }),
           headers: {
             'content-type': 'application/json',
-            'x-response-url': '/foo'
           }
         })
 
@@ -805,7 +791,7 @@ describe('action creators', () => {
         }
       })
 
-      store.dispatch(remote('/foo'))
+      store.dispatch(remote('/foo', {pageKey: '/foo'}))
     })
   })
 

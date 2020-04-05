@@ -68,7 +68,7 @@ function fetchDeferments (pageKey, defers = []) {
   pageKey = withoutBZParams(pageKey)
   return (dispatch) => {
     const fetches = defers.filter(({type}) => type === 'auto').map(function ({url}){
-      return dispatch(remote(url, {}, pageKey)).catch((err) => {
+      return dispatch(remote(url, {pageKey})).catch((err) => {
         let parsedUrl = new parse(url, true)
         const keyPath = parsedUrl.query.bzq
 
@@ -190,43 +190,44 @@ function buildMeta (pageKey, page, state) {
   }
 }
 
-export function remote (pathQuery, {method = 'GET', headers, body = '', beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}, pageKey) {
+export function remote (pathQuery, {method = 'GET', headers, body = '', pageKey, beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}) {
   pathQuery = withoutBusters(pathQuery)
 
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {method, headers, body})
+    pageKey = pageKey || getState().breezy.currentUrl
 
     dispatch(beforeFetch({fetchArgs}))
 
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
       .then(({rsp, json}) => {
-        pageKey = pageKey || extractPageKey(...[...fetchArgs, rsp])
-        pageKey = withoutBZParams(pageKey)
-        const {breezy, pages = {}} = getState()
+        const {
+          breezy,
+          pages = {}
+        } = getState()
+
         const meta = {
           ...buildMeta(pageKey, json, breezy),
           redirected: !!rsp._redirectedToUrl,
           rsp,
           fetchArgs,
         }
+
+        if (method !== 'GET') {
+          const contentLocation = rsp.headers.get('content-location')
+          pageKey = contentLocation || pageKey
+        }
+
+        pageKey = rsp._redirectedToUrl || pageKey
+
+        pageKey = withoutBZParams(pageKey)
         const page = beforeSave(pages[pageKey], json)
         dispatch(saveAndProcessPage(pageKey, page))
 
         return meta
       })
       .catch(e => handleFetchErr(e, fetchArgs, dispatch))
-  }
-}
-
-function extractPageKey (pathQuery, {method = 'GET'}, rsp) {
-  if (method === 'GET') {
-    return pathQuery
-  } else {
-    const responseUrl = rsp.headers.get('x-response-url')
-    const contentLocation = rsp.headers.get('content-location')
-
-    return contentLocation || responseUrl
   }
 }
 
@@ -255,14 +256,15 @@ export function ensureSingleVisit (fn) {
   }
 }
 
-export function visit (pathQuery, {method = 'GET', headers, body = '', beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}, pageKey) {
+export function visit (pathQuery, {method = 'GET', headers, body = '', beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}) {
   pathQuery = withoutBZParams(pathQuery)
+  const pageKey = pathQuery
 
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
 
     return ensureSingleVisit(() => {
-      return remote(pathQuery, {method, headers, body, beforeSave}, pageKey)(dispatch, getState)
+      return remote(pathQuery, {method, headers, body, beforeSave, pageKey})(dispatch, getState)
     })(dispatch, getState).catch(e => handleFetchErr(e, fetchArgs, dispatch))
   }
 }

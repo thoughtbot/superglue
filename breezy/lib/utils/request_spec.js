@@ -64,7 +64,8 @@ describe('argsForFetch', () => {
         'x-requested-with': 'XMLHttpRequest',
         'x-breezy-request': true
       },
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      redirect: 'manual'
     }])
   })
 
@@ -87,7 +88,8 @@ describe('argsForFetch', () => {
         'x-http-method-override': 'PUT'
       },
       credentials: 'same-origin',
-      body: ''
+      body: '',
+      redirect: 'manual'
     }])
   })
 
@@ -111,6 +113,7 @@ describe('argsForFetch', () => {
         'x-xhr-referer': '/some_current_url'
       },
       credentials: 'same-origin',
+      redirect: 'manual'
     }])
   })
 
@@ -129,6 +132,7 @@ describe('argsForFetch', () => {
         'x-breezy-request': true,
       },
       credentials: 'same-origin',
+      redirect: 'manual'
     }])
 
     expect(argsForFetch(getState, '/foo', {method: 'HEAD', body: 'ignored'})).toEqual(['/foo?__=0', {
@@ -139,6 +143,7 @@ describe('argsForFetch', () => {
         'x-breezy-request': true,
       },
       credentials: 'same-origin',
+      redirect: 'manual'
     }])
   })
 })

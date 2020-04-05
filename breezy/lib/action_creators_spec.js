@@ -642,9 +642,11 @@ describe('action creators', () => {
 
       fetchMock
         .mock('/redirecting_url?__=0', {
+          redirectUrl: '/foo',
+          status: 302,
           headers: {
             'content-type': 'application/json',
-            'x-breezy-location': '/foo'
+            'location': '/foo',
           }
         })
 
@@ -653,7 +655,6 @@ describe('action creators', () => {
           body: successfulBody(),
           headers: {
             'content-type': 'application/json',
-            'x-response-url': '/foo'
           }
         })
 
@@ -711,9 +712,13 @@ describe('action creators', () => {
     it('fires BREEZY_REQUEST_ERROR on a invalid response', () => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
-      fetchMock.mock('/foo?__=0', {status: 200, headers: {
-        'content-type': 'text/bad'
-      }})
+      fetchMock.mock('/foo?__=0', {
+        status: 200, 
+        headers: {
+          'content-type': 'text/bad'
+        },
+        body: ''
+      })
 
       const expectedActions = [
         { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},

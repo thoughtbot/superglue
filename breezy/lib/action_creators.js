@@ -158,15 +158,17 @@ function handleFetchErr (err, fetchArgs, dispatch) {
 }
 
 export function wrappedFetch (fetchArgs) {
+
   return fetch(...fetchArgs)
     .then((response) => {
-      const location = response.headers.get('x-breezy-location')
+      const location = response.headers.get('location')
       const nextOpts = {...fetchArgs[1], body: undefined}
-      if (location) {
-        return wrappedFetch([location, {...nextOpts, method: 'GET', _redirected: true}])
+
+      if (response.redirected) {
+        return wrappedFetch([location, {...nextOpts, method: 'GET', _redirectedToUrl: location}])
       } else {
-        if (fetchArgs[1] && fetchArgs[1]._redirected) {
-          response._redirected = true
+        if (fetchArgs[1] && fetchArgs[1]._redirectedToUrl) {
+          response._redirectedToUrl = fetchArgs[1]._redirectedToUrl
         }
         return response
       }
@@ -204,7 +206,7 @@ export function remote (pathQuery, {method = 'GET', headers, body = '', beforeSa
         const {breezy, pages = {}} = getState()
         const meta = {
           ...buildMeta(pageKey, json, breezy),
-          redirected: rsp._redirected,
+          redirected: !!rsp._redirectedToUrl,
           rsp,
           fetchArgs,
         }

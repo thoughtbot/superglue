@@ -28,7 +28,7 @@
     "babel-register": "~6.26.0",
     "eslint": "~4.11.0",
     "eslint-plugin-react": "~7.4.0",
-    "fetch-mock": "~5.13.1",
+    "fetch-mock": "~9.3.1",
     "history": "~4.7.2",
     "jasmine": "~2.8.0",
     "jasmine-expect": "~3.7.1",

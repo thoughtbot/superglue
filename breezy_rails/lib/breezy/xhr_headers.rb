@@ -17,11 +17,6 @@ module Breezy
         end
       end
 
-      if request.xhr? && request.headers["X-BREEZY-REQUEST"]
-        self.status = 200
-        response.headers["X-BREEZY-LOCATION"] = url
-      end
-
       url
     end
 

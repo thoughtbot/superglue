@@ -5,11 +5,11 @@
 * [Configuration](docs/configuration.md)
 * [Recipes](docs/recipes.md)
 
-# Concepts
+## Concepts
 * [The Redux state shape](docs/redux-state-shape.md)
 * [Travering your tree](docs/traversal-guide.md)
 
-# The API
+## The API
 * [React Redux](docs/react-redux.md)
 * [Rails](docs/rails.md)
 * [Utility](docs/utility.md)

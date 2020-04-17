@@ -30,6 +30,7 @@ MyRailsApp/
 
 ### PropsTemplate
 Powering these JSON responses is PropsTemplate, a traversable JSON templating language inspired by JBuilder. With PropsTemplate you can specify a path of the node you want, and PropsTemplate will walk the tree to it, skipping execution of nodes that don't match the keypath.
+![No Apis](docs/images/props_template.png)
 
 ### All together now!
 Breezy comes with batteries that bring all the above concepts together to make building popular SPA features easy, painless, and as productive.

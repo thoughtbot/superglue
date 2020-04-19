@@ -1,25 +1,29 @@
 import parse from 'url-parse'
-import {formatForXHR} from './url'
+import { formatForXHR } from './url'
 
-export function isValidResponse (xhr) {
+export function isValidResponse(xhr) {
   return isValidContent(xhr) && !downloadingFile(xhr)
 }
 
-export function isValidContent (rsp) {
+export function isValidContent(rsp) {
   const contentType = rsp.headers.get('content-type')
   const jsContent = /^(?:application\/json)(?:;|$)/
 
   return !!(contentType !== undefined && contentType.match(jsContent))
 }
 
-function downloadingFile (xhr) {
+function downloadingFile(xhr) {
   const disposition = xhr.headers.get('content-disposition')
-  return disposition !== undefined && disposition !== null && disposition.match(/^attachment/)
+  return (
+    disposition !== undefined &&
+    disposition !== null &&
+    disposition.match(/^attachment/)
+  )
 }
 
-export function validateResponse (args) {
-  const {rsp} = args
-  if(isValidResponse(rsp)) {
+export function validateResponse(args) {
+  const { rsp } = args
+  if (isValidResponse(rsp)) {
     return args
   } else {
     const error = new Error('Invalid Breezy Response')
@@ -28,8 +32,8 @@ export function validateResponse (args) {
   }
 }
 
-export function handleServerErrors (args){
-  const {rsp} = args
+export function handleServerErrors(args) {
+  const { rsp } = args
   if (!rsp.ok) {
     const error = new Error(rsp.statusText)
     error.response = rsp
@@ -38,7 +42,11 @@ export function handleServerErrors (args){
   return args
 }
 
-export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, body=''} = {}) {
+export function argsForFetch(
+  getState,
+  pathQuery,
+  { method = 'GET', headers = {}, body = '' } = {}
+) {
   method = method.toUpperCase()
 
   const currentState = getState().breezy || {}
@@ -46,12 +54,12 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
   const jsAccept = 'application/json'
   headers = {
     ...headers,
-    'accept': jsAccept,
+    accept: jsAccept,
     'x-requested-with': 'XMLHttpRequest',
     'x-breezy-request': true,
   }
 
-  if(method != 'GET' && method!= 'HEAD') {
+  if (method != 'GET' && method != 'HEAD') {
     headers['content-type'] = 'application/json'
   }
 
@@ -71,7 +79,7 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
     method = 'POST'
   }
 
-  const options = {method, headers, body, credentials, redirect: 'manual'}
+  const options = { method, headers, body, credentials, redirect: 'manual' }
 
   if (method == 'GET' || method == 'HEAD') {
     delete options.body
@@ -80,16 +88,19 @@ export function argsForFetch (getState, pathQuery, {method='GET', headers = {}, 
   return [formatForXHR(href), options]
 }
 
-export function extractJSON (rsp) {
-  return rsp.json().then((json) => {
-    return {rsp, json}
-  }).catch(e => {
-    e.response = rsp
-    throw e
-  })
+export function extractJSON(rsp) {
+  return rsp
+    .json()
+    .then((json) => {
+      return { rsp, json }
+    })
+    .catch((e) => {
+      e.response = rsp
+      throw e
+    })
 }
 
-export function parseResponse (prm) {
+export function parseResponse(prm) {
   return Promise.resolve(prm)
     .then(extractJSON)
     .then(handleServerErrors)

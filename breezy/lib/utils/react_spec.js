@@ -5,15 +5,15 @@ import fetchMock from 'fetch-mock'
 import * as rsp from '../../spec/fixtures'
 import React from 'react'
 import getStore from '../connector'
-import {mapStateToProps, mapDispatchToProps} from './react'
+import { mapStateToProps, mapDispatchToProps } from './react'
 import { Provider, connect } from 'react-redux'
 import { createMemoryHistory } from 'history'
 import configureMockStore from 'redux-mock-store'
 import Nav from '../../lib/NavComponent.js'
 
 const createScene = (html) => {
-  const dom = new JSDOM(`${html}`, {runScripts: 'dangerously'})
-  return {dom, target: dom.window.document.body.firstElementChild}
+  const dom = new JSDOM(`${html}`, { runScripts: 'dangerously' })
+  return { dom, target: dom.window.document.body.firstElementChild }
 }
 
 class Home extends React.Component {
@@ -29,8 +29,8 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-      Home Page
-      <button onClick={this.enhancedVisit}> click </button>
+        Home Page
+        <button onClick={this.enhancedVisit}> click </button>
       </div>
     )
   }
@@ -38,25 +38,29 @@ class Home extends React.Component {
 
 class About extends React.Component {
   render() {
-    return <h1>About Page</h1>;
+    return <h1>About Page</h1>
   }
 }
 
-describe('mapStateToToProps', ()=>{
+describe('mapStateToToProps', () => {
   it('returns the state of the url and the csrfToken', () => {
     let dispatch = jasmine.createSpy('dispatch')
     let slice = {
-      pages:{
+      pages: {
         '/foo': {
-          data: {heading: 'hi'}
-        }
+          data: { heading: 'hi' },
+        },
       },
       breezy: {
-        csrfToken: 'token123'
-      }
+        csrfToken: 'token123',
+      },
     }
 
-    let props = mapStateToProps(slice, {pageKey: '/foo'})
-    expect(props).toEqual({heading: 'hi', pageKey: '/foo', csrfToken: 'token123'})
+    let props = mapStateToProps(slice, { pageKey: '/foo' })
+    expect(props).toEqual({
+      heading: 'hi',
+      pageKey: '/foo',
+      csrfToken: 'token123',
+    })
   })
 })

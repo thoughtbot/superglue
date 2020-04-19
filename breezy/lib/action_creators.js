@@ -1,19 +1,10 @@
-import {
-  argsForFetch,
-  parseResponse
-} from './utils/request'
-import {getIn} from'./utils/immutability'
+import { argsForFetch, parseResponse } from './utils/request'
+import { getIn } from './utils/immutability'
 import parse from 'url-parse'
 import 'cross-fetch'
-import {
-  uuidv4,
-  isGraft,
-} from './utils/helpers'
-import {needsRefresh} from './window'
-import {
-  withoutBZParams,
-  withoutBusters,
-} from './utils/url'
+import { uuidv4, isGraft } from './utils/helpers'
+import { needsRefresh } from './window'
+import { withoutBZParams, withoutBusters } from './utils/url'
 import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
@@ -24,7 +15,7 @@ import {
   UPDATE_ALL_FRAGMENTS,
 } from './actions'
 
-export function saveResponse ({pageKey, page}) {
+export function saveResponse({ pageKey, page }) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -32,11 +23,11 @@ export function saveResponse ({pageKey, page}) {
     payload: {
       pageKey,
       page,
-    }
+    },
   }
 }
 
-export function handleGraft ({pageKey, page}) {
+export function handleGraft({ pageKey, page }) {
   pageKey = withoutBZParams(pageKey)
 
   return {
@@ -44,61 +35,62 @@ export function handleGraft ({pageKey, page}) {
     payload: {
       pageKey,
       page,
-    }
+    },
   }
 }
 
-function beforeFetch (payload) {
+function beforeFetch(payload) {
   return {
     type: BEFORE_FETCH,
     payload,
   }
 }
 
-function handleError (err) {
+function handleError(err) {
   return {
     type: BREEZY_ERROR,
     payload: {
-      message: err.message
-    }
+      message: err.message,
+    },
   }
 }
 
-function fetchDeferments (pageKey, defers = []) {
+function fetchDeferments(pageKey, defers = []) {
   pageKey = withoutBZParams(pageKey)
   return (dispatch) => {
-    const fetches = defers.filter(({type}) => type === 'auto').map(function ({url}){
-      return dispatch(remote(url, {pageKey})).catch((err) => {
-        let parsedUrl = new parse(url, true)
-        const keyPath = parsedUrl.query.bzq
+    const fetches = defers
+      .filter(({ type }) => type === 'auto')
+      .map(function ({ url }) {
+        return dispatch(remote(url, { pageKey })).catch((err) => {
+          let parsedUrl = new parse(url, true)
+          const keyPath = parsedUrl.query.bzq
 
-        dispatch({
-          type: BREEZY_GRAFTING_ERROR,
-          payload: {
-            url,
-            err,
-            pageKey,
-            keyPath,
-          }
+          dispatch({
+            type: BREEZY_GRAFTING_ERROR,
+            payload: {
+              url,
+              err,
+              pageKey,
+              keyPath,
+            },
+          })
         })
       })
-    })
 
     return Promise.all(fetches)
   }
 }
 
-function updateAllFragmentsWith (fragments) {
-
+function updateAllFragmentsWith(fragments) {
   return {
     type: UPDATE_ALL_FRAGMENTS,
     payload: {
-      fragments
-    }
+      fragments,
+    },
   }
 }
 
-function receivedPagetoFragmentList ({fragments = {}, data, path, action}) {
+function receivedPagetoFragmentList({ fragments = {}, data, path, action }) {
   const fragmentNameToNode = {}
 
   if (action) {
@@ -116,7 +108,7 @@ function receivedPagetoFragmentList ({fragments = {}, data, path, action}) {
     Object.keys(fragments).forEach((digest) => {
       fragments[digest].forEach((fpath) => {
         if (!fragmentNameToNode[digest]) {
-          const updatedNode = getIn({data}, fpath)
+          const updatedNode = getIn({ data }, fpath)
           fragmentNameToNode[digest] = updatedNode
         }
       })
@@ -126,20 +118,18 @@ function receivedPagetoFragmentList ({fragments = {}, data, path, action}) {
   return fragmentNameToNode
 }
 
-export function saveAndProcessPage (pageKey, page) {
+export function saveAndProcessPage(pageKey, page) {
   return (dispatch) => {
     pageKey = withoutBZParams(pageKey)
 
-    const {
-      defers = [],
-    } = page
+    const { defers = [] } = page
 
     if (isGraft(page)) {
       if (pageKey) {
-        dispatch(handleGraft({pageKey, page}))
+        dispatch(handleGraft({ pageKey, page }))
       }
     } else {
-      dispatch(saveResponse({pageKey, page}))
+      dispatch(saveResponse({ pageKey, page }))
     }
 
     const receivedFragments = receivedPagetoFragmentList(page)
@@ -149,7 +139,7 @@ export function saveAndProcessPage (pageKey, page) {
   }
 }
 
-function handleFetchErr (err, fetchArgs, dispatch) {
+function handleFetchErr(err, fetchArgs, dispatch) {
   err.fetchArgs = fetchArgs
   err.url = fetchArgs[0]
   err.pageKey = withoutBZParams(fetchArgs[0])
@@ -157,28 +147,29 @@ function handleFetchErr (err, fetchArgs, dispatch) {
   throw err
 }
 
-export function wrappedFetch (fetchArgs) {
+export function wrappedFetch(fetchArgs) {
+  return fetch(...fetchArgs).then((response) => {
+    const location = response.headers.get('location')
+    const nextOpts = { ...fetchArgs[1], body: undefined }
 
-  return fetch(...fetchArgs)
-    .then((response) => {
-      const location = response.headers.get('location')
-      const nextOpts = {...fetchArgs[1], body: undefined}
-
-      if (response.redirected) {
-        return wrappedFetch([location, {...nextOpts, method: 'GET', _redirectedToUrl: location}])
-      } else {
-        if (fetchArgs[1] && fetchArgs[1]._redirectedToUrl) {
-          response._redirectedToUrl = fetchArgs[1]._redirectedToUrl
-        }
-        return response
+    if (response.redirected) {
+      return wrappedFetch([
+        location,
+        { ...nextOpts, method: 'GET', _redirectedToUrl: location },
+      ])
+    } else {
+      if (fetchArgs[1] && fetchArgs[1]._redirectedToUrl) {
+        response._redirectedToUrl = fetchArgs[1]._redirectedToUrl
       }
-    })
+      return response
+    }
+  })
 }
 
 //TODO: Provide a connected component for refresh
-function buildMeta (pageKey, page, state) {
-  const {assets: prevAssets} = state
-  const {assets: nextAssets} = page
+function buildMeta(pageKey, page, state) {
+  const { assets: prevAssets } = state
+  const { assets: nextAssets } = page
 
   pageKey = withoutBZParams(pageKey)
   //TODO: needs refresh should dispatch, to get a nice, you need to reload your page
@@ -186,26 +177,36 @@ function buildMeta (pageKey, page, state) {
     pageKey,
     page,
     componentIdentifier: page.componentIdentifier,
-    needsRefresh: needsRefresh(prevAssets, nextAssets)
+    needsRefresh: needsRefresh(prevAssets, nextAssets),
   }
 }
 
-export function remote (pathQuery, {method = 'GET', headers, body = '', pageKey, beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}) {
+export function remote(
+  pathQuery,
+  {
+    method = 'GET',
+    headers,
+    body = '',
+    pageKey,
+    beforeSave = (prevPage, receivedPage) => receivedPage,
+  } = {}
+) {
   pathQuery = withoutBusters(pathQuery)
 
   return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, pathQuery, {method, headers, body})
+    const fetchArgs = argsForFetch(getState, pathQuery, {
+      method,
+      headers,
+      body,
+    })
     pageKey = pageKey || getState().breezy.currentUrl
 
-    dispatch(beforeFetch({fetchArgs}))
+    dispatch(beforeFetch({ fetchArgs }))
 
     return wrappedFetch(fetchArgs)
       .then(parseResponse)
-      .then(({rsp, json}) => {
-        const {
-          breezy,
-          pages = {}
-        } = getState()
+      .then(({ rsp, json }) => {
+        const { breezy, pages = {} } = getState()
 
         const meta = {
           ...buildMeta(pageKey, json, breezy),
@@ -227,44 +228,59 @@ export function remote (pathQuery, {method = 'GET', headers, body = '', pageKey,
 
         return meta
       })
-      .catch(e => handleFetchErr(e, fetchArgs, dispatch))
+      .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
 }
 
-function canNavigate (seqId, {controlFlows}) {
-  if (controlFlows['visit'] === seqId ) {
+function canNavigate(seqId, { controlFlows }) {
+  if (controlFlows['visit'] === seqId) {
     return true
   } else {
     return false
   }
 }
 
-export function ensureSingleVisit (fn) {
+export function ensureSingleVisit(fn) {
   return (dispatch, getState) => {
     const seqId = uuidv4()
     dispatch({
       type: OVERRIDE_VISIT_SEQ,
       payload: {
-        seqId
-      }
+        seqId,
+      },
     })
 
     return fn().then((obj) => {
-      const {breezy} = getState()
-      return {...obj, canNavigate: canNavigate(seqId, breezy)}
+      const { breezy } = getState()
+      return { ...obj, canNavigate: canNavigate(seqId, breezy) }
     })
   }
 }
 
-export function visit (pathQuery, {method = 'GET', headers, body = '', beforeSave = (prevPage, receivedPage) => (receivedPage)} = {}) {
+export function visit(
+  pathQuery,
+  {
+    method = 'GET',
+    headers,
+    body = '',
+    beforeSave = (prevPage, receivedPage) => receivedPage,
+  } = {}
+) {
   pathQuery = withoutBZParams(pathQuery)
   const pageKey = pathQuery
 
   return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, pathQuery, {headers, body, method})
+    const fetchArgs = argsForFetch(getState, pathQuery, {
+      headers,
+      body,
+      method,
+    })
 
     return ensureSingleVisit(() => {
-      return remote(pathQuery, {method, headers, body, beforeSave, pageKey})(dispatch, getState)
-    })(dispatch, getState).catch(e => handleFetchErr(e, fetchArgs, dispatch))
+      return remote(pathQuery, { method, headers, body, beforeSave, pageKey })(
+        dispatch,
+        getState
+      )
+    })(dispatch, getState).catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
 }

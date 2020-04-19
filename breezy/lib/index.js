@@ -1,30 +1,35 @@
 import parse from 'url-parse'
-import {rootReducer} from './reducers'
-import {setWindow, unsetWindow, hasWindow} from './window'
+import { rootReducer } from './reducers'
+import { setWindow, unsetWindow, hasWindow } from './window'
 import connect from './connector'
-import {withoutBZParams} from './utils/url'
-import {saveAndProcessPage} from './action_creators'
-import {
-  HISTORY_CHANGE,
-  SET_CSRF_TOKEN,
-  SET_BASE_URL,
-} from './actions'
+import { withoutBZParams } from './utils/url'
+import { saveAndProcessPage } from './action_creators'
+import { HISTORY_CHANGE, SET_CSRF_TOKEN, SET_BASE_URL } from './actions'
 
-export {mapStateToProps, mapDispatchToProps, enhanceVisitWithBrowserBehavior} from './utils/react'
-export {breezyReducer, pageReducer, rootReducer, updateFragments} from './reducers'
-export {getIn} from './utils/immutability.js'
-export {setWindow, unsetWindow}
-export function stop () {
+export {
+  mapStateToProps,
+  mapDispatchToProps,
+  enhanceVisitWithBrowserBehavior,
+} from './utils/react'
+export {
+  breezyReducer,
+  pageReducer,
+  rootReducer,
+  updateFragments,
+} from './reducers'
+export { getIn } from './utils/immutability.js'
+export { setWindow, unsetWindow }
+export function stop() {
   unsetWindow()
 }
 
-function pageToInitialState (key, page) {
+function pageToInitialState(key, page) {
   return {
-    pages: {[key]: page}
+    pages: { [key]: page },
   }
 }
 
-export function start ({window, baseUrl='', url, initialPage={}}) {
+export function start({ window, baseUrl = '', url, initialPage = {} }) {
   if (window) {
     setWindow(window)
     if (!url) {
@@ -33,29 +38,26 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
   }
 
   const initialPageKey = withoutBZParams(parse(url).href)
-  const {csrfToken} = initialPage
+  const { csrfToken } = initialPage
 
   return {
     reducer: rootReducer,
-    connect: function (store){
+    connect: function (store) {
       connect(store)
 
-      if(hasWindow()) {
+      if (hasWindow()) {
         store.dispatch({
           type: HISTORY_CHANGE,
           payload: {
-            url:  parse(url).href
-          }
+            url: parse(url).href,
+          },
         })
       }
 
-      store.dispatch(saveAndProcessPage(
-        initialPageKey,
-        initialPage
-      ))
+      store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
 
-      store.dispatch({type: SET_BASE_URL, payload: {baseUrl}})
-      store.dispatch({type: SET_CSRF_TOKEN, payload: {csrfToken}})
+      store.dispatch({ type: SET_BASE_URL, payload: { baseUrl } })
+      store.dispatch({ type: SET_CSRF_TOKEN, payload: { csrfToken } })
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,
@@ -64,5 +66,5 @@ export function start ({window, baseUrl='', url, initialPage={}}) {
 
 export default {
   start,
-  stop
+  stop,
 }

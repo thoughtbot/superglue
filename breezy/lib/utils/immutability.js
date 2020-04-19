@@ -3,33 +3,33 @@
 
 const isSearchable = /^[\da-zA-Z\-_=.]+$/
 
-function getIn (obj, path) {
+function getIn(obj, path) {
   const keyPath = normalizeKeyPath(path)
   let result = obj
 
   for (let i = 0; i < keyPath.length; i++) {
     const key = keyPath[i]
-    if (!result) { break }
+    if (!result) {
+      break
+    }
     result = atKey(result, key)
   }
 
   return result
 }
 
-function clone (object) {
-  return Array.isArray(object)
-    ? [].slice.call(object)
-    : {... object}
+function clone(object) {
+  return Array.isArray(object) ? [].slice.call(object) : { ...object }
 }
 
-function getKey (node, key) {
+function getKey(node, key) {
   if (Array.isArray(node) && isNaN(key)) {
     const key_parts = Array.from(key.split('='))
     const attr = key_parts[0]
     const id = key_parts[1]
     let i, child
 
-    if(!id) {
+    if (!id) {
       return key
     }
 
@@ -46,31 +46,35 @@ function getKey (node, key) {
   }
 }
 
-function isArray (ary) {
+function isArray(ary) {
   return Array.isArray(ary)
 }
 
-function isObject (obj) {
+function isObject(obj) {
   return !isArray(obj) && obj === Object(obj)
 }
 
-function atKey (node, key) {
+function atKey(node, key) {
   let id, attr
 
   if (isSearchable.test(key)) {
-    [attr, id] = Array.from(key.split('='))
+    ;[attr, id] = Array.from(key.split('='))
   }
 
-  if(!isArray(node) && !isObject(node)) {
-    throw new Error(`Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`)
+  if (!isArray(node) && !isObject(node)) {
+    throw new Error(
+      `Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`
+    )
   }
 
-  if(isObject(node) && id) {
+  if (isObject(node) && id) {
     throw new Error(`Expected to find an Array when using the key: ${key}`)
   }
 
-  if(isObject(node) && !node.hasOwnProperty(key)) {
-    throw new Error(`Expected to find key: ${key} in object ${JSON.stringify(node)}`)
+  if (isObject(node) && !node.hasOwnProperty(key)) {
+    throw new Error(
+      `Expected to find key: ${key} in object ${JSON.stringify(node)}`
+    )
   }
 
   if (Array.isArray(node) && id) {
@@ -92,9 +96,9 @@ function atKey (node, key) {
   }
 }
 
-function normalizeKeyPath (path) {
+function normalizeKeyPath(path) {
   if (typeof path === 'string') {
-    path = path.replace(/ /g,'')
+    path = path.replace(/ /g, '')
     if (path === '') {
       return []
     }
@@ -105,7 +109,7 @@ function normalizeKeyPath (path) {
   }
 }
 
-function setIn (object, keypath, value) {
+function setIn(object, keypath, value) {
   keypath = normalizeKeyPath(keypath)
 
   let results = {}
@@ -114,7 +118,7 @@ function setIn (object, keypath, value) {
 
   parents[0] = object
 
-  for (i = 0; i < keypath.length ; i++) {
+  for (i = 0; i < keypath.length; i++) {
     parents[i + 1] = atKey(parents[i], keypath[i])
   }
 
@@ -129,4 +133,4 @@ function setIn (object, keypath, value) {
   return results[0]
 }
 
-export {getIn, setIn}
+export { getIn, setIn }

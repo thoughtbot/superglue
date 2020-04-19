@@ -10,7 +10,7 @@ import {
   handleError,
   saveResponse,
   ensureSingleVisit,
-  saveAndProcessPage
+  saveAndProcessPage,
 } from './action_creators'
 import * as helpers from './utils/helpers'
 import * as connect from './connector'
@@ -27,9 +27,9 @@ const initialState = () => {
       currentUrl: '/bar',
       csrfToken: 'token',
       controlFlows: {
-        visit: 'fakeUUID'
-      }
-    }
+        visit: 'fakeUUID',
+      },
+    },
   }
 }
 
@@ -38,7 +38,7 @@ const successfulBody = () => {
     data: { heading: 'Some heading 2' },
     csrfToken: 'token',
     assets: [],
-    defers: []
+    defers: [],
   })
 }
 
@@ -46,7 +46,7 @@ describe('action creators', () => {
   describe('saveResponse', () => {
     it('fires SAVE_RESPONSE', () => {
       const pageKey = '/test'
-      const page = {'foo': 'bar'}
+      const page = { foo: 'bar' }
 
       const action = saveResponse({
         pageKey,
@@ -58,7 +58,7 @@ describe('action creators', () => {
         payload: {
           pageKey,
           page,
-        }
+        },
       })
     })
   })
@@ -66,27 +66,25 @@ describe('action creators', () => {
   describe('handleGraft', () => {
     it('fires HANDLE_GRAFT', () => {
       const pageKey = '/test'
-      const node = {d: 'foo'}
+      const node = { d: 'foo' }
       const pathToNode = 'a.b'
-      const fragments = ['foo': ['bar']]
+      const fragments = [('foo': ['bar'])]
       const page = {
         data: {
-          d: 'foo'
+          d: 'foo',
         },
         path: 'a.b',
-        fragments: [
-          ['foo', 'bar']
-        ]
+        fragments: [['foo', 'bar']],
       }
 
       const action = handleGraft({
         pageKey,
-        page
+        page,
       })
 
       expect(action).toEqual({
         type: '@@breezy/HANDLE_GRAFT',
-        payload: { pageKey, page }
+        payload: { pageKey, page },
       })
     })
   })
@@ -98,22 +96,20 @@ describe('action creators', () => {
     })
 
     it('follows x-breezy-location redirects', (done) => {
-      fetchMock
-        .mock('/redirecting_url', {
-          headers: {
-            'content-type': 'application/javascript',
-            'x-breezy-location': '/foo'
-          }
-        })
+      fetchMock.mock('/redirecting_url', {
+        headers: {
+          'content-type': 'application/javascript',
+          'x-breezy-location': '/foo',
+        },
+      })
 
-      fetchMock
-        .mock('/foo', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/javascript',
-            'x-response-url': '/foo'
-          }
-        })
+      fetchMock.mock('/foo', {
+        body: successfulBody(),
+        headers: {
+          'content-type': 'application/javascript',
+          'x-response-url': '/foo',
+        },
+      })
 
       wrappedFetch(['/redirecting_url', {}], {}).then(done)
     })
@@ -126,10 +122,10 @@ describe('action creators', () => {
     })
 
     it('fires SAVE_RESPONSE and process a page', () => {
-     const page = {
+      const page = {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
-        assets: []
+        assets: [],
       }
       const store = mockStore(initialState())
       const expectedActions = [
@@ -140,35 +136,38 @@ describe('action creators', () => {
             page: {
               data: { heading: 'Some heading 2' },
               csrfToken: 'token',
-              assets: []
-            }
-          }
+              assets: [],
+            },
+          },
         },
         {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             fragments: {},
-          }
-        }
+          },
+        },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
-    it ('handles deferments on the page and fires HANDLE_GRAFT',  () => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+    it('handles deferments on the page and fires HANDLE_GRAFT', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-     const page = {
+      const page = {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{url: '/foo?bzq=body', type: 'auto'}]
+        defers: [{ url: '/foo?bzq=body', type: 'auto' }],
       }
 
       const expectedActions = [
@@ -177,17 +176,17 @@ describe('action creators', () => {
           payload: {
             pageKey: '/foo',
             page: page,
-          }
+          },
         },
         {
-          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             fragments: {},
-          }
+          },
         },
         {
           type: '@@breezy/BEFORE_FETCH',
-          payload: jasmine.any(Object)
+          payload: jasmine.any(Object),
         },
         {
           type: '@@breezy/HANDLE_GRAFT',
@@ -199,51 +198,52 @@ describe('action creators', () => {
               path: 'body',
               csrfToken: 'token',
               assets: [],
-              defers: []
-            }
+              defers: [],
+            },
           },
         },
         {
-          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            fragments: {}
-          }
-        }
+            fragments: {},
+          },
+        },
       ]
 
-      fetchMock
-        .mock('/foo?bzq=body&__=0', {
-          body: JSON.stringify({
-            data: 'success',
-            action: 'graft',
-            path: 'body',
-            csrfToken: 'token',
-            assets: [],
-            defers: []
-          }),
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
-
+      fetchMock.mock('/foo?bzq=body&__=0', {
+        body: JSON.stringify({
+          data: 'success',
+          action: 'graft',
+          path: 'body',
+          csrfToken: 'token',
+          assets: [],
+          defers: [],
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
-    it ('ignores manual deferments on the page',  () => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+    it('ignores manual deferments on the page', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-     const page = {
+      const page = {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{url: '/some_defered_request?bzq=body', type: 'manual'}]
+        defers: [{ url: '/some_defered_request?bzq=body', type: 'manual' }],
       }
 
       const expectedActions = [
@@ -252,25 +252,28 @@ describe('action creators', () => {
           payload: {
             pageKey: '/foo',
             page: page,
-          }
+          },
         },
         {
-          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            fragments: {}
-          }
+            fragments: {},
+          },
         },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
-    it ('fires HANDLE_GRAFT and process a page',  () => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+    it('fires HANDLE_GRAFT and process a page', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
 
       const page = {
         data: 'success',
@@ -278,7 +281,7 @@ describe('action creators', () => {
         path: 'heading.cart',
         csrfToken: '',
         assets: [],
-        defers: []
+        defers: [],
       }
 
       const expectedActions = [
@@ -286,35 +289,38 @@ describe('action creators', () => {
           type: '@@breezy/HANDLE_GRAFT',
           payload: {
             pageKey: '/foo',
-            page
-          }
+            page,
+          },
         },
         {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            fragments: {}
-          }
-        }
+            fragments: {},
+          },
+        },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
-    it ('fires HANDLE_GRAFT, and process a page with a fragment',  () => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+    it('fires HANDLE_GRAFT, and process a page with a fragment', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
 
       const page = {
-        data: {status: 'success'},
+        data: { status: 'success' },
         action: 'graft',
         path: 'data.heading.cart',
         csrfToken: '',
         fragments: {
-          'info': ['data.header.cart']
-        }
+          info: ['data.header.cart'],
+        },
       }
 
       const expectedActions = [
@@ -322,38 +328,41 @@ describe('action creators', () => {
           type: '@@breezy/HANDLE_GRAFT',
           payload: {
             pageKey: '/foo',
-            page
-          }
+            page,
+          },
         },
         {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             fragments: {
-              info: {status: 'success'}
-            }
-          }
-        }
+              info: { status: 'success' },
+            },
+          },
+        },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
     //TODO: add tests for when type is mannual
 
-    it ('fires a GRAFTING_ERROR when a fetch fails',  () => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+    it('fires a GRAFTING_ERROR when a fetch fails', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-     const page = {
+      const page = {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{url: '/some_defered_request?bzq=body', type: 'auto'}]
+        defers: [{ url: '/some_defered_request?bzq=body', type: 'auto' }],
       }
 
       const expectedActions = [
@@ -362,17 +371,17 @@ describe('action creators', () => {
           payload: {
             pageKey: '/foo',
             page: page,
-          }
+          },
         },
         {
-          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            fragments: {}
-          }
+            fragments: {},
+          },
         },
         {
           type: '@@breezy/BEFORE_FETCH',
-          payload: jasmine.any(Object)
+          payload: jasmine.any(Object),
         },
         {
           type: '@@breezy/ERROR',
@@ -382,34 +391,35 @@ describe('action creators', () => {
           type: '@@breezy/GRAFTING_ERROR',
           payload: {
             url: '/some_defered_request?bzq=body',
-            pageKey:"/foo",
+            pageKey: '/foo',
             err: jasmine.any(Object),
-            keyPath: "body",
+            keyPath: 'body',
           },
         },
       ]
 
-      fetchMock
-        .mock('/some_defered_request?bzq=body&__=0', 500)
-
+      fetchMock.mock('/some_defered_request?bzq=body&__=0', 500)
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
-    it ('When passed an empty url but fragments are available',  () => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+    it('When passed an empty url but fragments are available', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
         data: {
           header: {
-            email: 'j@j.com'
-          }
+            email: 'j@j.com',
+          },
         },
         action: 'graft',
         csrfToken: 'token',
@@ -417,25 +427,25 @@ describe('action creators', () => {
         defers: [],
         path: 'data.top',
         fragments: {
-          'abc123': ['data.top.header']
-        }
+          abc123: ['data.top.header'],
+        },
       }
 
       const expectedActions = [
         {
-          type:"@@breezy/UPDATE_ALL_FRAGMENTS",
+          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
             fragments: {
               abc123: {
-                email: 'j@j.com'
-              }
-            }
-          }
+                email: 'j@j.com',
+              },
+            },
+          },
         },
       ]
 
       return store.dispatch(saveAndProcessPage(null, page)).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
   })
@@ -451,16 +461,18 @@ describe('action creators', () => {
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-      fetchMock
-        .mock('/foo?__=0', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
+      fetchMock.mock('/foo?__=0', {
+        body: successfulBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: { fetchArgs: ['/foo?__=0', jasmine.any(Object)] },
+        },
         {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
@@ -470,29 +482,29 @@ describe('action creators', () => {
               csrfToken: 'token',
               assets: [],
               defers: [],
-            }
-          }
+            },
+          },
         },
         {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            fragments: {}
-          }
-        }
+            fragments: {},
+          },
+        },
       ]
 
-      return store.dispatch(remote('/foo', {pageKey: '/foo'})).then(() => {
+      return store.dispatch(remote('/foo', { pageKey: '/foo' })).then(() => {
         const requestheaders = fetchMock.lastCall('/foo?__=0')[1].headers
 
         expect(requestheaders).toEqual({
-          accept: "application/json",
+          accept: 'application/json',
           'x-xhr-referer': '/bar',
-          'x-requested-with': "XMLHttpRequest",
+          'x-requested-with': 'XMLHttpRequest',
           'x-breezy-request': true,
-          'x-csrf-token': 'token'
+          'x-csrf-token': 'token',
         })
 
-        expect(store.getActions()).toEqual((expectedActions))
+        expect(store.getActions()).toEqual(expectedActions)
       })
     })
 
@@ -501,17 +513,17 @@ describe('action creators', () => {
         pages: {
           '/foo': {
             data: {
-              posts: ['post 1']
-            }
-          }
+              posts: ['post 1'],
+            },
+          },
         },
         breezy: {
           currentUrl: '/bar',
           csrfToken: 'token',
           controlFlows: {
-            visit: 'fakeUUID'
-          }
-        }
+            visit: 'fakeUUID',
+          },
+        },
       }
       const store = mockStore(initialState)
       spyOn(connect, 'getStore').and.returnValue(store)
@@ -519,44 +531,44 @@ describe('action creators', () => {
 
       const body = {
         data: {
-          posts: ['post 2']
+          posts: ['post 2'],
         },
         csrfToken: 'token',
         assets: [],
-        defers: []
+        defers: [],
       }
 
-      fetchMock
-        .mock('/foo?__=0', {
-          body,
-          headers: {
-            'content-type': 'application/json',
-            'x-response-url': '/foo'
-          }
-        })
+      fetchMock.mock('/foo?__=0', {
+        body,
+        headers: {
+          'content-type': 'application/json',
+          'x-response-url': '/foo',
+        },
+      })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: { fetchArgs: ['/foo?__=0', jasmine.any(Object)] },
+        },
         {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
             pageKey: '/foo',
             page: {
-              data: { posts: [
-                'post 1', 'post 2'
-              ]},
+              data: { posts: ['post 1', 'post 2'] },
               csrfToken: 'token',
               assets: [],
               defers: [],
-            }
-          }
+            },
+          },
         },
         {
           type: '@@breezy/UPDATE_ALL_FRAGMENTS',
           payload: {
-            fragments: {}
-          }
-        }
+            fragments: {},
+          },
+        },
       ]
 
       const beforeSave = (prevPage, receivedPage) => {
@@ -567,9 +579,11 @@ describe('action creators', () => {
         return receivedPage
       }
 
-      return store.dispatch(remote('/foo', {beforeSave, pageKey: '/foo'})).then(() => {
-        expect(store.getActions()).toEqual((expectedActions))
-      })
+      return store
+        .dispatch(remote('/foo', { beforeSave, pageKey: '/foo' }))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('defaults to the currentUrl as the pageKey', (done) => {
@@ -578,29 +592,32 @@ describe('action creators', () => {
           currentUrl: '/current_url',
           csrfToken: 'token',
           controlFlows: {
-            visit: 'fakeUUID'
-          }
-        }})
+            visit: 'fakeUUID',
+          },
+        },
+      })
 
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-      fetchMock
-        .mock('/foobar?__=0', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
-
-
-      return store.dispatch(remote('/foobar', {method: 'POST'})).then((meta) => {
-        expect(meta).toEqual(jasmine.objectContaining({
-          pageKey: '/current_url'
-        }))
-
-        done()
+      fetchMock.mock('/foobar?__=0', {
+        body: successfulBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
       })
+
+      return store
+        .dispatch(remote('/foobar', { method: 'POST' }))
+        .then((meta) => {
+          expect(meta).toEqual(
+            jasmine.objectContaining({
+              pageKey: '/current_url',
+            })
+          )
+
+          done()
+        })
     })
 
     it('uses the pageKey option to override the currentUrl as the preferred pageKey', (done) => {
@@ -609,29 +626,34 @@ describe('action creators', () => {
           currentUrl: '/url_to_be_overridden',
           csrfToken: 'token',
           controlFlows: {
-            visit: 'fakeUUID'
-          }
-        }})
+            visit: 'fakeUUID',
+          },
+        },
+      })
 
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-      fetchMock
-        .mock('/foobar?__=0', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
-
-
-      return store.dispatch(remote('/foobar', {method: 'POST', pageKey: '/bar_override'})).then((meta) => {
-        expect(meta).toEqual(jasmine.objectContaining({
-          pageKey: '/bar_override'
-        }))
-
-        done()
+      fetchMock.mock('/foobar?__=0', {
+        body: successfulBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
       })
+
+      return store
+        .dispatch(
+          remote('/foobar', { method: 'POST', pageKey: '/bar_override' })
+        )
+        .then((meta) => {
+          expect(meta).toEqual(
+            jasmine.objectContaining({
+              pageKey: '/bar_override',
+            })
+          )
+
+          done()
+        })
     })
 
     it('cleans any __ and - params', (done) => {
@@ -640,7 +662,7 @@ describe('action creators', () => {
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
-      store.dispatch(remote('/first?bzq=foo&__=bar&_=baz')).then((meta)=>{
+      store.dispatch(remote('/first?bzq=foo&__=bar&_=baz')).then((meta) => {
         done()
       })
     })
@@ -650,28 +672,28 @@ describe('action creators', () => {
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
-      fetchMock
-        .mock('/redirecting_url?__=0', {
-          redirectUrl: '/foo',
-          status: 302,
-          headers: {
-            'content-type': 'application/json',
-            'location': '/foo',
-          }
-        })
+      fetchMock.mock('/redirecting_url?__=0', {
+        redirectUrl: '/foo',
+        status: 302,
+        headers: {
+          'content-type': 'application/json',
+          location: '/foo',
+        },
+      })
 
-      fetchMock
-        .mock('/foo', {
-          body: successfulBody(),
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
+      fetchMock.mock('/foo', {
+        body: successfulBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
 
       return store.dispatch(remote('/redirecting_url')).then((meta) => {
-        expect(meta).toEqual(jasmine.objectContaining({
-          redirected: true
-        }))
+        expect(meta).toEqual(
+          jasmine.objectContaining({
+            redirected: true,
+          })
+        )
 
         done()
       })
@@ -679,20 +701,25 @@ describe('action creators', () => {
 
     it('fires BREEZY_REQUEST_ERROR on a bad server response status', () => {
       const store = mockStore(initialState())
-      fetchMock.mock('/foo?__=0', {body: '{}' ,status: 500})
+      fetchMock.mock('/foo?__=0', { body: '{}', status: 500 })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload: {fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: { fetchArgs: ['/foo?__=0', jasmine.any(Object)] },
+        },
         {
           type: '@@breezy/ERROR',
-          payload:{message: "Internal Server Error" }
-        }
+          payload: { message: 'Internal Server Error' },
+        },
       ]
 
       return store.dispatch(remote('/foo')).catch((err) => {
         expect(err.message).toEqual('Internal Server Error')
         expect(err.response.status).toEqual(500)
-        expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
+        expect(store.getActions()).toEqual(
+          jasmine.objectContaining(expectedActions)
+        )
       })
     })
 
@@ -700,81 +727,104 @@ describe('action creators', () => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
       fetchMock.mock('/foo?__=0', {
-        status: 200, 
+        status: 200,
         headers: {
-          'content-type': 'text/bad'
+          'content-type': 'text/bad',
         },
-        body: ''
+        body: '',
       })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: { fetchArgs: ['/foo?__=0', jasmine.any(Object)] },
+        },
         {
           type: '@@breezy/ERROR',
-          payload:{message: "invalid json response body at /foo?__=0 reason: Unexpected end of JSON input" }
-        }
+          payload: {
+            message:
+              'invalid json response body at /foo?__=0 reason: Unexpected end of JSON input',
+          },
+        },
       ]
 
       return store.dispatch(remote('/foo')).catch((err) => {
-        expect(err.message).toEqual('invalid json response body at /foo?__=0 reason: Unexpected end of JSON input')
+        expect(err.message).toEqual(
+          'invalid json response body at /foo?__=0 reason: Unexpected end of JSON input'
+        )
         expect(err.response.status).toEqual(200)
-        expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
+        expect(store.getActions()).toEqual(
+          jasmine.objectContaining(expectedActions)
+        )
       })
     })
-
 
     it('fires BREEZY_REQUEST_ERROR when the SJR returns nothing', () => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
 
-      fetchMock
-        .mock('/foo?__=0', {
-          body: ``,
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
+      fetchMock.mock('/foo?__=0', {
+        body: ``,
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
 
       const expectedActions = [
-        { type: '@@breezy/BEFORE_FETCH', payload:{fetchArgs: ['/foo?__=0', jasmine.any(Object)]}},
-        { type: '@@breezy/ERROR', payload:{message: 'invalid json response body at /foo?__=0 reason: Unexpected end of JSON input' }}
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: { fetchArgs: ['/foo?__=0', jasmine.any(Object)] },
+        },
+        {
+          type: '@@breezy/ERROR',
+          payload: {
+            message:
+              'invalid json response body at /foo?__=0 reason: Unexpected end of JSON input',
+          },
+        },
       ]
 
       return store.dispatch(remote('/foo')).catch((err) => {
-        expect(err.message).toEqual('invalid json response body at /foo?__=0 reason: Unexpected end of JSON input')
+        expect(err.message).toEqual(
+          'invalid json response body at /foo?__=0 reason: Unexpected end of JSON input'
+        )
         expect(err.response.status).toEqual(200)
-        expect(store.getActions()).toEqual(jasmine.objectContaining(expectedActions))
+        expect(store.getActions()).toEqual(
+          jasmine.objectContaining(expectedActions)
+        )
       })
     })
 
     it('fires BREEZY_HANDLE_GRAFT when the response is a graft', (done) => {
-      const store = mockStore({...initialState(), pages: {
-        '/foo': {}
-      }})
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
-      fetchMock
-        .mock('/foo?__=0', {
-          body: JSON.stringify({
-            data: 'success',
-            action: 'graft',
-            path: 'heading.cart',
-            csrfToken: 'token',
-            assets: [],
-            defers: []
-          }),
-          headers: {
-            'content-type': 'application/json',
-          }
-        })
+      fetchMock.mock('/foo?__=0', {
+        body: JSON.stringify({
+          data: 'success',
+          action: 'graft',
+          path: 'heading.cart',
+          csrfToken: 'token',
+          assets: [],
+          defers: [],
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
 
       store.subscribe(() => {
         const state = store.getState()
         const actions = store.getActions()
         const lastAction = actions[actions.length - 1]
-        const {type, payload} = lastAction
+        const { type, payload } = lastAction
 
-        if(type === '@@breezy/HANDLE_GRAFT') {
+        if (type === '@@breezy/HANDLE_GRAFT') {
           expect(payload).toEqual({
             pageKey: '/foo',
             page: {
@@ -783,15 +833,15 @@ describe('action creators', () => {
               path: 'heading.cart',
               csrfToken: 'token',
               assets: [],
-              defers: []
-            }
+              defers: [],
+            },
           })
 
           done()
         }
       })
 
-      store.dispatch(remote('/foo', {pageKey: '/foo'}))
+      store.dispatch(remote('/foo', { pageKey: '/foo' }))
     })
   })
 
@@ -804,11 +854,11 @@ describe('action creators', () => {
     it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
       const initialState = {
         breezy: {
-          assets:[],
+          assets: [],
           controlFlows: {
-            visit: 'firstId'
-          }
-        }
+            visit: 'firstId',
+          },
+        },
       }
 
       const store = mockStore(initialState)
@@ -816,15 +866,21 @@ describe('action creators', () => {
 
       let mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/first'
-      fetchMock.mock('/first?__=0', delay(500).then(() => mockResponse))
+      fetchMock.mock(
+        '/first?__=0',
+        delay(500).then(() => mockResponse)
+      )
 
       let mockResponse2 = rsp.visitSuccess()
       mockResponse2.headers['x-response-url'] = '/second'
-      fetchMock.mock('/second?__=0', delay(2000).then(() => mockResponse2))
+      fetchMock.mock(
+        '/second?__=0',
+        delay(2000).then(() => mockResponse2)
+      )
 
       const spy = spyOn(helpers, 'uuidv4')
       spy.and.returnValue('firstId')
-      store.dispatch(visit('/first')).then((meta)=>{
+      store.dispatch(visit('/first')).then((meta) => {
         expect(meta.canNavigate).toEqual(false)
       })
 
@@ -832,22 +888,14 @@ describe('action creators', () => {
       initialState.breezy.controlFlows.visit = 'secondId'
 
       const expectedActions = [
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'firstId' }},
-        { type: '@@breezy/BEFORE_FETCH' , payload: jasmine.any(Object)},
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: {seqId: 'secondId' }},
-        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object)},
-        { type: '@@breezy/SAVE_RESPONSE',
-          payload: jasmine.any(Object)
-        },
-        { type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: jasmine.any(Object)
-        },
-        { type: '@@breezy/SAVE_RESPONSE',
-          payload: jasmine.any(Object)
-        },
-        { type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: jasmine.any(Object)
-        }
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'firstId' } },
+        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'secondId' } },
+        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
+        { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },
+        { type: '@@breezy/UPDATE_ALL_FRAGMENTS', payload: jasmine.any(Object) },
+        { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },
+        { type: '@@breezy/UPDATE_ALL_FRAGMENTS', payload: jasmine.any(Object) },
       ]
 
       store.dispatch(visit('/second')).then((meta) => {
@@ -860,11 +908,11 @@ describe('action creators', () => {
     it('cleans any bzq, __, and - params', (done) => {
       const initialState = {
         breezy: {
-          assets:[],
+          assets: [],
           controlFlows: {
-            visit: 'firstId'
-          }
-        }
+            visit: 'firstId',
+          },
+        },
       }
 
       const store = mockStore(initialState)
@@ -872,7 +920,7 @@ describe('action creators', () => {
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
-      store.dispatch(visit('/first?bzq=foo&__=bar&_=baz')).then((meta)=>{
+      store.dispatch(visit('/first?bzq=foo&__=bar&_=baz')).then((meta) => {
         done()
       })
     })
@@ -883,9 +931,9 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           controlFlows: {
-            visit: 'nextId'
-          }
-        }
+            visit: 'nextId',
+          },
+        },
       }
 
       const store = mockStore(initialState)
@@ -907,9 +955,9 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           controlFlows: {
-            visit: 'nextId'
-          }
-        }
+            visit: 'nextId',
+          },
+        },
       }
 
       const store = mockStore(initialState)
@@ -918,7 +966,8 @@ describe('action creators', () => {
 
       const customVisit = ensureSingleVisit(() => {
         const meta = {}
-        initialState.breezy.controlFlows.visit = 'uuid_of_visit_that_got_initiated_elsewhere_while_this_was_resolving'
+        initialState.breezy.controlFlows.visit =
+          'uuid_of_visit_that_got_initiated_elsewhere_while_this_was_resolving'
         return Promise.resolve(meta)
       })
 
@@ -929,4 +978,3 @@ describe('action creators', () => {
     })
   })
 })
-

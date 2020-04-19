@@ -1,20 +1,15 @@
-import {
-  isGraft,
-  extractNodeAndPath,
-  pagePath,
-} from './helpers'
+import { isGraft, extractNodeAndPath, pagePath } from './helpers'
 //TODO: camelized path, also camelize this some_id=1 in path
 describe('isGraft', () => {
   it('returns true if page is a graft', () => {
     const page = {
-      action: 'graft'
+      action: 'graft',
     }
     expect(isGraft(page)).toBe(true)
   })
 
   it('returns true if page is a graft', () => {
-    const page = {
-    }
+    const page = {}
     expect(isGraft(page)).toBe(false)
   })
 })
@@ -29,18 +24,22 @@ describe('extractNodeAndPath', () => {
 
     expect(extractNodeAndPath(page)).toEqual({
       node: 'this is a node',
-      pathToNode: 'path.to.node'
+      pathToNode: 'path.to.node',
     })
   })
 
   it('errors out if action is anything else', () => {
     const page = {
       data: 'this is a node',
-      path: 'path.to.node'
+      path: 'path.to.node',
     }
 
     expect(() => {
       extractNodeAndPath(page)
-    }).toThrow(new Error("Expected page to be a graft response rendered from node filtering."))
+    }).toThrow(
+      new Error(
+        'Expected page to be a graft response rendered from node filtering.'
+      )
+    )
   })
 })

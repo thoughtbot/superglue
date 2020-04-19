@@ -1,36 +1,32 @@
 import React from 'react'
-import {withoutBZParams} from './utils/url'
-import {uuidv4} from './utils/helpers'
+import { withoutBZParams } from './utils/url'
+import { uuidv4 } from './utils/helpers'
 import parse from 'url-parse'
-import {
-  BREEZY_ERROR,
-  OVERRIDE_VISIT_SEQ,
-  HISTORY_CHANGE,
-} from './actions'
+import { BREEZY_ERROR, OVERRIDE_VISIT_SEQ, HISTORY_CHANGE } from './actions'
 
-function argsForHistory (url) {
+function argsForHistory(url) {
   const pageKey = withoutBZParams(url)
 
-  return [pageKey, {
-    breezy: true,
+  return [
     pageKey,
-  }]
+    {
+      breezy: true,
+      pageKey,
+    },
+  ]
 }
 
-function argsForNavInitialState (url) {
+function argsForNavInitialState(url) {
   return {
     pageKey: withoutBZParams(url),
-    ownProps: {}
+    ownProps: {},
   }
 }
 
 class Nav extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    const {
-      history,
-      initialPageKey,
-    } = this.props
+    const { history, initialPageKey } = this.props
 
     this.history = history
     this.navigateTo = this.navigateTo.bind(this)
@@ -38,31 +34,32 @@ class Nav extends React.Component {
     this.state = argsForNavInitialState(initialPageKey)
   }
 
-  componentDidMount () {
-    const {
-      initialPageKey,
-    } = this.props
+  componentDidMount() {
+    const { initialPageKey } = this.props
 
     this.unsubscribeHistory = this.history.listen(this.onHistoryChange)
     this.history.replace(...argsForHistory(initialPageKey))
   }
 
-  navigateTo (pageKey, {action, ownProps} = {action: 'push', ownProps: {}}) {
+  navigateTo(pageKey, { action, ownProps } = { action: 'push', ownProps: {} }) {
     pageKey = withoutBZParams(pageKey)
-    const {store} = this.props
+    const { store } = this.props
     const hasPage = !!store.getState().pages[pageKey]
 
     if (hasPage) {
-      const historyArgs = [pageKey, {
+      const historyArgs = [
         pageKey,
-        breezy: true
-      }]
+        {
+          pageKey,
+          breezy: true,
+        },
+      ]
 
-      if(action === 'push') {
+      if (action === 'push') {
         this.history.push(...historyArgs)
       }
 
-      if(action === 'replace') {
+      if (action === 'replace') {
         this.history.replace(...historyArgs)
       }
 
@@ -70,11 +67,11 @@ class Nav extends React.Component {
       store.dispatch({
         type: OVERRIDE_VISIT_SEQ,
         payload: {
-          seqId
-        }
+          seqId,
+        },
       })
 
-      this.setState({pageKey, ownProps})
+      this.setState({ pageKey, ownProps })
       return true
     } else {
       return false
@@ -82,21 +79,21 @@ class Nav extends React.Component {
   }
 
   // TODO: parse without bzq??
-  onHistoryChange (location, action) {
-    const {store} = this.props
+  onHistoryChange(location, action) {
+    const { store } = this.props
     store.dispatch({
       type: HISTORY_CHANGE,
       payload: {
-        url: parse(location.pathname + location.search).href
-      }
+        url: parse(location.pathname + location.search).href,
+      },
     })
 
     if (action === 'POP') {
-      const {pageKey} = location.state
+      const { pageKey } = location.state
       const wasNotRefreshed = !!store.getState().pages[pageKey]
 
-      if(location.state && location.state.breezy && wasNotRefreshed) {
-        this.setState({pageKey})
+      if (location.state && location.state.breezy && wasNotRefreshed) {
+        this.setState({ pageKey })
       } else {
         // load previous page
         window.location = location.pathname
@@ -104,37 +101,43 @@ class Nav extends React.Component {
     }
   }
 
-  notFound (identifier) {
-    const {store} = this.props
+  notFound(identifier) {
+    const { store } = this.props
     let reminder = ''
     if (!identifier) {
-      reminder = 'Did you forget to add `json.component_identifier` in your application.json.props layout?'
+      reminder =
+        'Did you forget to add `json.component_identifier` in your application.json.props layout?'
     }
 
-    const error = new Error(`Breezy Nav component was looking for ${identifier} but could not find it in your mapping. ${reminder}`)
+    const error = new Error(
+      `Breezy Nav component was looking for ${identifier} but could not find it in your mapping. ${reminder}`
+    )
 
     store.dispatch({
       type: BREEZY_ERROR,
       payload: {
-        message: error.message
-      }
+        message: error.message,
+      },
     })
 
     throw error
   }
 
-  render () {
-    const {
-      mapping,
-      store
-    } = this.props
+  render() {
+    const { mapping, store } = this.props
 
-    const {pageKey, ownProps} = this.state
-    const {componentIdentifier} = store.getState().pages[pageKey]
+    const { pageKey, ownProps } = this.state
+    const { componentIdentifier } = store.getState().pages[pageKey]
     const Component = mapping[componentIdentifier]
 
     if (Component) {
-      return <Component pageKey={pageKey} navigateTo={this.navigateTo} {...ownProps}/>
+      return (
+        <Component
+          pageKey={pageKey}
+          navigateTo={this.navigateTo}
+          {...ownProps}
+        />
+      )
     } else {
       this.notFound(componentIdentifier)
     }

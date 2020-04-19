@@ -1,11 +1,11 @@
 import * as helpers from './window'
 
 describe('needsRefresh', () => {
-  beforeEach(() =>{
+  beforeEach(() => {
     helpers.setWindow(true)
   })
 
-  beforeEach(() =>{
+  beforeEach(() => {
     helpers.unsetWindow()
   })
 

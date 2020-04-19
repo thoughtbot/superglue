@@ -4,12 +4,12 @@ export const visitSuccess = () => {
       data: { heading: 'Some heading 2' },
       csrfToken: 'token',
       assets: ['application-123.js', 'application-123.js'],
-      componentIdentifier: 'about'
+      componentIdentifier: 'about',
     }),
     headers: {
       'content-type': 'application/json',
       'content-disposition': 'inline',
-    }
+    },
   }
 }
 
@@ -20,11 +20,11 @@ export const graftSuccessWithNewZip = () => {
       action: 'graft',
       path: 'data.address',
       csrfToken: 'token',
-      assets: ['application-new123.js', 'application-new123.js']
+      assets: ['application-new123.js', 'application-new123.js'],
     }),
     headers: {
       'content-type': 'application/json',
-      'content-disposition': 'inline'
-    }
+      'content-disposition': 'inline',
+    },
   }
 }

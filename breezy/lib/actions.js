@@ -10,5 +10,5 @@ export const UPDATE_ALL_FRAGMENTS = '@@breezy/UPDATE_ALL_FRAGMENTS'
 
 export const HISTORY_CHANGE = '@@breezy/HISTORY_CHANGE'
 export const SET_BASE_URL = '@@breezy/SET_BASE_URL'
-export const SET_CSRF_TOKEN= '@@breezy/SET_CSRF_TOKEN'
+export const SET_CSRF_TOKEN = '@@breezy/SET_CSRF_TOKEN'
 export const REMOVE_PAGE = '@@breezy/REMOVE_PAGE'

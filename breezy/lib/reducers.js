@@ -1,4 +1,4 @@
-import {setIn, getIn} from'./utils/immutability'
+import { setIn, getIn } from './utils/immutability'
 import {
   REMOVE_PAGE,
   SAVE_RESPONSE,
@@ -10,7 +10,7 @@ import {
   UPDATE_ALL_FRAGMENTS,
 } from './actions'
 
-export function updateFragments (state, namesToNodes) {
+export function updateFragments(state, namesToNodes) {
   for (const fragmentName in namesToNodes) {
     const updatedNode = namesToNodes[fragmentName]
     state = copyIntoAllPagesByFragment(state, fragmentName, updatedNode)
@@ -19,12 +19,10 @@ export function updateFragments (state, namesToNodes) {
   return state
 }
 
-function addPlaceholdersToDeferredNodes (existingPage, page) {
-  const {
-    defers = []
-  } = existingPage
+function addPlaceholdersToDeferredNodes(existingPage, page) {
+  const { defers = [] } = existingPage
 
-  const prevDefers = defers.map(({path}) => {
+  const prevDefers = defers.map(({ path }) => {
     const node = getIn(existingPage, path)
     const copy = JSON.stringify(node)
     return [path, JSON.parse(copy)]
@@ -35,15 +33,15 @@ function addPlaceholdersToDeferredNodes (existingPage, page) {
   }, page)
 }
 
-function addPlaceholdersToDeferredFragments (state, page) {
+function addPlaceholdersToDeferredFragments(state, page) {
   const deferredPaths = {}
-  const {defers, fragments} = page
+  const { defers, fragments } = page
 
   if (!defers || !fragments) {
     return page
   }
 
-  defers.forEach(({path}) => {
+  defers.forEach(({ path }) => {
     if (!deferredPaths[path]) {
       deferredPaths[path] = true
     }
@@ -52,8 +50,8 @@ function addPlaceholdersToDeferredFragments (state, page) {
   const deferredFragments = []
 
   Object.entries(fragments).forEach(([name, keyPaths]) => {
-    keyPaths.forEach(path => {
-      if(deferredPaths[path]) {
+    keyPaths.forEach((path) => {
+      if (deferredPaths[path]) {
         deferredFragments.push([name, path])
       }
     })
@@ -61,7 +59,7 @@ function addPlaceholdersToDeferredFragments (state, page) {
 
   const allExistingFragments = {}
 
-  Object.values(state).forEach(prevPage => {
+  Object.values(state).forEach((prevPage) => {
     Object.entries(prevPage.fragments).forEach(([name, keyPaths]) => {
       const path = keyPaths[0]
       if (!allExistingFragments[name]) {
@@ -71,7 +69,7 @@ function addPlaceholdersToDeferredFragments (state, page) {
   })
 
   deferredFragments.forEach(([name, path]) => {
-    if(allExistingFragments[name]) {
+    if (allExistingFragments[name]) {
       const node = allExistingFragments[name]
       const copy = JSON.stringify(node)
       page = setIn(page, path, JSON.parse(copy))
@@ -81,13 +79,13 @@ function addPlaceholdersToDeferredFragments (state, page) {
   return page
 }
 
-function saveResponse (state, pageKey, page) {
-  state = {...state}
+function saveResponse(state, pageKey, page) {
+  state = { ...state }
 
   page = {
     pageKey,
     fragments: {},
-    ...page
+    ...page,
   }
 
   const existingPage = state[pageKey]
@@ -104,22 +102,30 @@ function saveResponse (state, pageKey, page) {
   return state
 }
 
-function copyIntoAllPagesByFragment (state, name, node) {
-  state = {...state}
+function copyIntoAllPagesByFragment(state, name, node) {
+  state = { ...state }
   const copy = JSON.stringify(node)
 
-  Object.entries(state).forEach(([pageKey, {fragments} = {}]) => {
+  Object.entries(state).forEach(([pageKey, { fragments } = {}]) => {
     const paths = fragments[name] || []
 
-    paths.forEach(pathToFragment => {
-      state = setIn(state, [pageKey, pathToFragment].join('.'), JSON.parse(copy))
+    paths.forEach((pathToFragment) => {
+      state = setIn(
+        state,
+        [pageKey, pathToFragment].join('.'),
+        JSON.parse(copy)
+      )
     })
   })
 
   return state
 }
 
-export function appendReceivedFragmentsOntoPage (state, pageKey, receivedFragments) {
+export function appendReceivedFragmentsOntoPage(
+  state,
+  pageKey,
+  receivedFragments
+) {
   if (!pageKey) {
     return state
   }
@@ -129,17 +135,15 @@ export function appendReceivedFragmentsOntoPage (state, pageKey, receivedFragmen
   }
 
   const currentPage = state[pageKey]
-  const {fragments: prevFragments = {}} = currentPage
-  const nextFragments = {...prevFragments}
+  const { fragments: prevFragments = {} } = currentPage
+  const nextFragments = { ...prevFragments }
   Object.keys(receivedFragments).forEach((key) => {
     const values = receivedFragments[key]
 
-    if(nextFragments.hasOwnProperty(key)) {
+    if (nextFragments.hasOwnProperty(key)) {
       nextFragments[key].push(...values)
 
-      nextFragments[key] = [...new Set(
-        [...nextFragments[key], ...values]
-      )]
+      nextFragments[key] = [...new Set([...nextFragments[key], ...values])]
     } else {
       nextFragments[key] = values
     }
@@ -147,18 +151,20 @@ export function appendReceivedFragmentsOntoPage (state, pageKey, receivedFragmen
 
   const nextPage = {
     ...currentPage,
-    fragments: nextFragments
+    fragments: nextFragments,
   }
 
-  const nextState = {...state}
+  const nextState = { ...state }
   nextState[pageKey] = nextPage
 
   return nextState
 }
 
-export function graftNodeOntoPage (state, pageKey, node, pathToNode) {
+export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
   if (!node) {
-    console.warn('There was no node returned in the response. Do you have the correct key path in your bzq?')
+    console.warn(
+      'There was no node returned in the response. Do you have the correct key path in your bzq?'
+    )
     return state
   }
 
@@ -169,10 +175,12 @@ export function graftNodeOntoPage (state, pageKey, node, pathToNode) {
   return setIn(state, fullPathToNode, node)
 }
 
-export function handleGraft (state, pageKey, page) {
+export function handleGraft(state, pageKey, page) {
   const currentPage = state[pageKey]
   if (!currentPage) {
-    const error = new Error(`Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`)
+    const error = new Error(
+      `Breezy was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`
+    )
     throw error
   }
   const {
@@ -181,85 +189,85 @@ export function handleGraft (state, pageKey, page) {
     fragments: receivedFragments = {},
   } = page
 
-
   return [
-    nextState => graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
-    nextState => appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
+    (nextState) =>
+      graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
+    (nextState) =>
+      appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
   ].reduce((memo, fn) => fn(memo), state)
 }
 
-export function pageReducer (state = {}, action) {
-  switch(action.type) {
-  case SAVE_RESPONSE: {
-    const {pageKey, page} = action.payload
-    return saveResponse(state, pageKey, page)
-  }
-  case UPDATE_ALL_FRAGMENTS: {
-    const {fragments} = action.payload
-    return updateFragments(state, fragments)
-  }
-  case HANDLE_GRAFT: {
-    const {
-      pageKey,
-      page
-    } = action.payload
+export function pageReducer(state = {}, action) {
+  switch (action.type) {
+    case SAVE_RESPONSE: {
+      const { pageKey, page } = action.payload
+      return saveResponse(state, pageKey, page)
+    }
+    case UPDATE_ALL_FRAGMENTS: {
+      const { fragments } = action.payload
+      return updateFragments(state, fragments)
+    }
+    case HANDLE_GRAFT: {
+      const { pageKey, page } = action.payload
 
-    return handleGraft(state, pageKey, page)
-  }
-  case REMOVE_PAGE: {
-    const {pageKey} = action.payload
-    const nextState = {...state}
-    delete nextState[pageKey]
+      return handleGraft(state, pageKey, page)
+    }
+    case REMOVE_PAGE: {
+      const { pageKey } = action.payload
+      const nextState = { ...state }
+      delete nextState[pageKey]
 
-    return nextState
-  }
-  default:
-    return state
+      return nextState
+    }
+    default:
+      return state
   }
 }
 
-export function metaReducer (state = {}, action) {
-  switch(action.type) {
-  case HISTORY_CHANGE: {
-    const {url} = action.payload
-    return {...state, currentUrl: url}
-  }
-  case SET_BASE_URL: {
-    const {baseUrl} = action.payload
-    return {...state, baseUrl}
-  }
-  case SAVE_RESPONSE: {
-    const {page: {csrfToken}} = action.payload
-    return {...state, csrfToken}
-  }
-  case SET_CSRF_TOKEN: {
-    const {csrfToken} = action.payload
-    return {...state, csrfToken: csrfToken}
-  }
-  default:
-    return state
-  }
-}
-
-export function controlFlowReducer (state = {}, action) {
-  switch(action.type) {
-  case OVERRIDE_VISIT_SEQ: {
-    const {seqId} = action.payload
-    return {...state, visit: seqId}
-  }
-  default:
-    return state
+export function metaReducer(state = {}, action) {
+  switch (action.type) {
+    case HISTORY_CHANGE: {
+      const { url } = action.payload
+      return { ...state, currentUrl: url }
+    }
+    case SET_BASE_URL: {
+      const { baseUrl } = action.payload
+      return { ...state, baseUrl }
+    }
+    case SAVE_RESPONSE: {
+      const {
+        page: { csrfToken },
+      } = action.payload
+      return { ...state, csrfToken }
+    }
+    case SET_CSRF_TOKEN: {
+      const { csrfToken } = action.payload
+      return { ...state, csrfToken: csrfToken }
+    }
+    default:
+      return state
   }
 }
 
-export function breezyReducer (state = {}, action) {
+export function controlFlowReducer(state = {}, action) {
+  switch (action.type) {
+    case OVERRIDE_VISIT_SEQ: {
+      const { seqId } = action.payload
+      return { ...state, visit: seqId }
+    }
+    default:
+      return state
+  }
+}
+
+export function breezyReducer(state = {}, action) {
   let meta = metaReducer(state, action)
   let controlFlows = controlFlowReducer(meta.controlFlows, action)
 
-  return {...meta, controlFlows}
+  return { ...meta, controlFlows }
 }
 
 export const rootReducer = {
   breezy: breezyReducer,
-  pages: pageReducer
+  pages: pageReducer,
 }

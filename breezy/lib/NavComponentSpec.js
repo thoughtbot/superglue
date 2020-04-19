@@ -5,15 +5,15 @@ import fetchMock from 'fetch-mock'
 import * as rsp from '../spec/fixtures'
 import React from 'react'
 import getStore from './connector'
-import {mapStateToProps, mapDispatchToProps} from './utils/react'
+import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import { Provider, connect } from 'react-redux'
 import { createMemoryHistory } from 'history'
 import configureMockStore from 'redux-mock-store'
 import Nav from './NavComponent.js'
 
 const createScene = (html) => {
-  const dom = new JSDOM(`${html}`, {runScripts: 'dangerously'})
-  return {dom, target: dom.window.document.body.firstElementChild}
+  const dom = new JSDOM(`${html}`, { runScripts: 'dangerously' })
+  return { dom, target: dom.window.document.body.firstElementChild }
 }
 
 class Home extends React.Component {
@@ -29,8 +29,8 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-      Home Page
-      <button onClick={this.enhancedVisit}> click </button>
+        Home Page
+        <button onClick={this.enhancedVisit}> click </button>
       </div>
     )
   }
@@ -38,18 +38,18 @@ class Home extends React.Component {
 
 class About extends React.Component {
   render() {
-    return <h1>About Page</h1>;
+    return <h1>About Page</h1>
   }
 }
 
 describe('Nav', () => {
   describe('navigateTo', () => {
     it('navigates to the specified page', (done) => {
-      const history = createMemoryHistory({});
-      const {dom, target} = createScene('<div></div>')
+      const history = createMemoryHistory({})
+      const { dom, target } = createScene('<div></div>')
 
       class ExampleAbout extends About {
-        componentDidMount(){
+        componentDidMount() {
           let expected = '<div><h1>About Page</h1></div>'
           expect(dom.window.document.body.innerHTML).toEqual(expected)
           done()
@@ -57,18 +57,18 @@ describe('Nav', () => {
       }
 
       const mockStore = configureMockStore()
-      const store = mockStore(
-        {pages: {
-          '/foo': {componentIdentifier:'about'},
-          '/bar': {componentIdentifier:'home'}
-        }}
-      )
+      const store = mockStore({
+        pages: {
+          '/foo': { componentIdentifier: 'about' },
+          '/bar': { componentIdentifier: 'home' },
+        },
+      })
 
       render(
         <Provider store={store}>
           <Nav
             store={store}
-            mapping={{'home': Home, 'about': ExampleAbout}}
+            mapping={{ home: Home, about: ExampleAbout }}
             initialPageKey={'/bar'}
             history={history}
           />
@@ -79,8 +79,8 @@ describe('Nav', () => {
     })
 
     it('does not navigates to the specified page if the page is not in the store', (done) => {
-      const history = createMemoryHistory({});
-      const {dom, target} = createScene('<div></div>')
+      const history = createMemoryHistory({})
+      const { dom, target } = createScene('<div></div>')
 
       class ExampleHome extends Home {
         visit() {
@@ -91,17 +91,17 @@ describe('Nav', () => {
       }
 
       const mockStore = configureMockStore()
-      const store = mockStore(
-        {pages: {
-          '/bar': {componentIdentifier:'home'}
-        }}
-      )
+      const store = mockStore({
+        pages: {
+          '/bar': { componentIdentifier: 'home' },
+        },
+      })
 
       render(
         <Provider store={store}>
           <Nav
             store={store}
-            mapping={{'home': ExampleHome, 'about': About}}
+            mapping={{ home: ExampleHome, about: About }}
             initialPageKey={'/bar'}
             history={history}
           />
@@ -112,23 +112,26 @@ describe('Nav', () => {
     })
 
     it('navigates to the specified page and calls the action when used with react-redux', (done) => {
-      const history = createMemoryHistory({});
-      const {dom, target} = createScene('<div></div>')
+      const history = createMemoryHistory({})
+      const { dom, target } = createScene('<div></div>')
 
       const mockStore = configureMockStore()
-      const store = mockStore(
-        {pages: {
-          '/foo': {componentIdentifier:'about'},
-          '/bar': {componentIdentifier:'home'}
-        }}
-      )
+      const store = mockStore({
+        pages: {
+          '/foo': { componentIdentifier: 'about' },
+          '/bar': { componentIdentifier: 'home' },
+        },
+      })
 
       class ExampleAbout extends About {
-        componentDidMount(){
+        componentDidMount() {
           const expectedActions = [
-            { type: '@@breezy/HISTORY_CHANGE', payload:{url: '/bar' }},
-            { type: '@@breezy/HISTORY_CHANGE', payload:{url: '/foo' }},
-            { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload:{seqId: jasmine.any(String)}},
+            { type: '@@breezy/HISTORY_CHANGE', payload: { url: '/bar' } },
+            { type: '@@breezy/HISTORY_CHANGE', payload: { url: '/foo' } },
+            {
+              type: '@@breezy/OVERRIDE_VISIT_SEQ',
+              payload: { seqId: jasmine.any(String) },
+            },
           ]
           expect(store.getActions()).toEqual(expectedActions)
           done()
@@ -139,10 +142,10 @@ describe('Nav', () => {
         <Provider store={store}>
           <Nav
             store={store}
-            mapping={{'home': Home, 'about': ExampleAbout}}
+            mapping={{ home: Home, about: ExampleAbout }}
             initialPageKey={'/bar'}
             history={history}
-            />
+          />
         </Provider>,
         target
       )
@@ -151,13 +154,13 @@ describe('Nav', () => {
 
     it('navigates to the page when history changes', (done) => {
       const history = createMemoryHistory({})
-      const {dom, target} = createScene('<div></div>')
+      const { dom, target } = createScene('<div></div>')
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': {componentIdentifier: 'home'},
-          '/foo': {componentIdentifier: 'about'}
-        }
+          '/bar': { componentIdentifier: 'home' },
+          '/foo': { componentIdentifier: 'about' },
+        },
       })
 
       let mountTimes = 0
@@ -165,7 +168,8 @@ describe('Nav', () => {
       class ExampleHome extends Home {
         componentDidMount() {
           if (mountTimes == 1) {
-            let expected = '<div><div>Home Page<button> click </button></div></div>'
+            let expected =
+              '<div><div>Home Page<button> click </button></div></div>'
             expect(dom.window.document.body.innerHTML).toEqual(expected)
             done()
           }
@@ -174,7 +178,7 @@ describe('Nav', () => {
       }
 
       class ExampleAbout extends About {
-        componentDidMount(){
+        componentDidMount() {
           history.goBack()
         }
       }
@@ -183,10 +187,10 @@ describe('Nav', () => {
         <Provider store={store}>
           <Nav
             store={store}
-            mapping={{'home': ExampleHome, 'about': ExampleAbout}}
+            mapping={{ home: ExampleHome, about: ExampleAbout }}
             initialPageKey={'/bar'}
             history={history}
-            />
+          />
         </Provider>,
         target
       )

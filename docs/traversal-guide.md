@@ -1,6 +1,6 @@
 # Traversals
 
-Breezy's thunks works hand-in-hand with PropsTemplate to query your JSON template for nodes. This guide helps you understand how the tools work with each other.
+Breezy's thunks work hand-in-hand with PropsTemplate to query your JSON template for nodes. This guide helps you understand how the tools work with each other.
 
 ## The bzq param
 The `bzq` param is a keypath to nodes in your tree and is used exclusively with the `remote` thunk. On the PropsTemplate side, we pass that param over to an internal node in order to walk your templates.
@@ -60,9 +60,9 @@ To enable this functionality, you are required to implement `member_at(index)` o
 
 PropsTemplate includes a `Array` extension which delegates to `at`. If you've used the Breezy generators, it will be included in an initializer.
 
-While traversing by index works fine, it can lead the wrong post being updated if your Redux state has changed by the the time the request comes back.
+While traversing by index works fine, it can lead the wrong post being updated if your Redux state has changed by the time the request comes back.
 
-### Attribute based keys
+### Attribute-based keys
 Attribute based keys for collections look like this:
 
 ```
@@ -116,4 +116,4 @@ end
 ```
 
 
-Thats the basics of traversing with Breezy. A lot of modern SPA functionality can be achieved by just a few lines of code. Head over to (recipes)[#recipes] to learn more.
+That's the basics of traversing with Breezy. A lot of modern SPA functionality can be achieved by just a few lines of code. Head over to (recipes)[#recipes] to learn more.

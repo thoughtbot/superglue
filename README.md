@@ -5,12 +5,11 @@
 Build modern React/Redux applications using classic Rails. Batteries included. Turbolinks inspired. APIs not required.
 
 ## At a Glance
-Breezy is a set of libraries that helps with data and navigation. It comes with thunks, an opinonated redux state shape, a JBuilder inspired traversable templating library, and many more tools that compliments classic Rails.
-
+Breezy is a set of libraries that helps with data and navigation. It comes with thunks, an opinionated redux state shape, a JBuilder inspired traversable templating library and many more tools that compliment classic Rails.
 
 ### No APIs
 
-Instead of APIs, Breezy leans on Rail's ability to respond to different [mime types](https://apidock.com/rails/ActionController/MimeResponds/InstanceMethods/respond_to) on the same route. In a Breezy application, if you directed your browser to `/dashboard.html`, you would see the HTML version of the content, and if you went to `/dashboard.json` you would see the JSON version of the exact same content down to the footer.
+Instead of APIs, Breezy leans on Rail's ability to respond to different [mime types](https://apidock.com/rails/ActionController/MimeResponds/InstanceMethods/respond_to) on the same route. In a Breezy application, if you direct your browser to `/dashboard.html`, you would see the HTML version of the content, and if you went to `/dashboard.json` you would see the JSON version of the exact same content down to the footer.
 
 The end result would be something like this:
 
@@ -30,6 +29,7 @@ MyRailsApp/
 
 ### PropsTemplate
 Powering these JSON responses is PropsTemplate, a traversable JSON templating language inspired by JBuilder. With PropsTemplate you can specify a path of the node you want, and PropsTemplate will walk the tree to it, skipping execution of nodes that don't match the keypath.
+
 ![No Apis](docs/images/props_template.png)
 
 ### All together now!
@@ -45,7 +45,7 @@ A popular ask of SPAs is page-to-page navigation without reloading. If you were 
 The above will request for `/posts` with an accept of `application/json`, and when the client receives the response, swap out the current component for the component the response asks for, and `pushState` on history.
 
 #### Same-page updates
-Other features of SPA rely on updating some part of the existing page. Breezy provides `remote`, a thunk you can use to update parts of your content in async fashion.
+Other features of SPA rely on updating some parts of the existing page. Breezy provides `remote`, a thunk you can use to update parts of your content in async fashion.
 
 Imagine having to implement search, where you enter some text, hit enter, and results would show without reloading the screen. In traditional applications, you may need a new controller, routes, a discussion over versioning, JSON serializer, plenty of new JS code, etc.
 
@@ -58,7 +58,7 @@ With Breezy, one line of code is enough:
 
 The above will make a request to `/dashboard?qry=haircut`, walk your props to the `data.header.search` node, return it in a response, and immutably graft it in the exact same path on the redux store before finally letting React re-render.
 
-For more on what you can do, checkout our documentation.
+For more on what you can do, check out our documentation.
 
 ## Documentation
 

@@ -1,6 +1,6 @@
 # Configuration
 
-The `rails breezy:install:web` step adds a preconfigured entrypoint to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare bones `Nav` component.
+The `rails breezy:install:web` step adds a preconfigured entry point to `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare-bones `Nav` component.
 
 The relevant parts to configuring Breezy is as follows:
 
@@ -81,7 +81,7 @@ const identifierToComponentMapping = {
 const baseUrl = '' //Normally blank, but you can change this if you are using react-native
 ```
 
-The Base url that will be prefixed to all requests using `visit` and `remote`.
+The base url that will be prefixed to all requests using `visit` and `remote`.
 
 ## Configuring Reloads
 

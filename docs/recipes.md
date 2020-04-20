@@ -2,7 +2,7 @@
 
 ## Loading content later
 
-When parts of your page becomes slow, for example a metrics table that takes a long time to generate because of some expensive operation:
+When parts of your page become slow, for example, a metrics table that takes a long time to generate because of some expensive operation:
 
 ```ruby
 # /dashboard.json.props
@@ -25,14 +25,14 @@ json.metrics(defer: :auto) do
 end
 ```
 
-With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but without `json.metrics`, then when the content is recieved by the client, Breezy will automatically make an `remote` request for anything that was skipped:
+With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but without `json.metrics`, then when the content is received by the client, Breezy will automatically make an `remote` request for anything that was skipped:
 
 ```javascript
 remote('/dashboard?bzq=data.metrics')
 ```
 
 
-Its up to you to handle the case when `metrics` starts out empty. For example:
+It is up to you to handle the case when `metrics` starts out empty. For example:
 
 ```javascript
 // orders.jsx
@@ -59,7 +59,7 @@ end
 
 ## Loading tab content `onClick`
 
-Say you have a 2 tabs of content, and the content from the second tab takes a bit of time to load. Since the 2nd tab is inactive on a first visit anyway, you decided to load the 2nd tab only if a user clicks it.
+Say you have two tabs of content, and the content from the second tab takes a bit of time to load. Since the 2nd tab is inactive on a first visit anyway, you decided to load the 2nd tab only if a user clicks it.
 
 With Breezy, this is a few lines of code:
 
@@ -176,7 +176,7 @@ window.App.cable.subscriptions.create("WebNotificationsChannel", {
   end
 ```
 
-`saveAndProcessPage(pageKey, page)` is the function that `remote` sends a recieved payload to. However, because we don't know what pageKey to save this streamed response, we set it to `null`. Breezy will still update any cross cutting [fragments](props_template/README.md#partial-fragments)
+`saveAndProcessPage(pageKey, page)` is the function that `remote` uses to sends a payload to. However, because we don't know what pageKey to save this streamed response, we set it to `null`. Breezy will still update any cross-cutting [fragments](props_template/README.md#partial-fragments)
 
 
 ## Replicating Turbolinks behavior
@@ -218,7 +218,7 @@ export default connect(
 
 ## Usage with Devise
 
-For Breezy to work with devise, you'll need the following:
+For Breezy to work with Devise, you'll need the following:
 
 A custom failure app:
 
@@ -376,70 +376,6 @@ class PostsIndex extends React.Component {
           onChange={this.onPaginateChange}
         />
       </ul>
-    )
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostsIndex)
-
-```
-
-## Replicating Instantclick
-[InstantClick](http://instantclick.io) is a neat javascript utility that speeds up your website by preloading the next page on hover. To make this work for Breezy:
-
-```
-yarn add react-hoverintent
-```
-
-Then create your own visit function with instaclick behavior like the below. Note that we are using the `ensureSingleVisit` action creator (which powers Breezy's `visit`) and the unenhanced version of the `visit` that you receive through the props.
-
-```javascript
-import {
-  mapStateToProps,
-  mapDispatchToProps,
-  enhanceVisitWithBrowserBehavior
-} from '@jho406/breezy'
-import HoverIntent from 'react-hoverintent'
-
-class PostsIndex extends React.Component {
-  constructor (props) {
-    super()
-    const {
-      visit,
-      remote,
-      pageKey
-    } = props
-
-    this.enhancedVisit = enhanceVisitWithBrowserBehavior(visit)
-
-    this.instaVisit = enhanceWithBrowserBehavior(() => {
-      return this.props.ensureSingleVisit(()=> {
-        // return a copy of the promise
-        return this.state.instaPromise.then((v) => v)
-      })
-    })
-  }
-
-  prefetch = (...fetchArgs) => {
-    // Here we use the unwrapped visit from props
-    this.setState({
-      instaPromise: this.props.visit(...fetchArgs)
-    })
-  }
-
-  render () {
-    return (
-      <HoverIntent
-        onMouseOver={() => this.prefetch('/foo')}
-        sensitivity={10}
-        interval={1000}
-        timeout={250}
-      >
-        <a onClick={this.instaVisit}> </a>
-      </HoverIntent>
     )
   }
 }

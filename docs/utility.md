@@ -64,5 +64,5 @@ or find first by its attribute and value
 getIn(state, '/posts.data.postId=0.comment.0.body')
 ```
 
-The above would find the first occurance where `postId=1` before continuing traversing.
+The above would find the first occurrence where `postId=1` before continuing traversing.
 

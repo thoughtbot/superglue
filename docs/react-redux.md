@@ -73,11 +73,11 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 this.props.navigateTo('/posts', {ownProps:{restored: true}})
 ```
 
-If there is an existing page in your store `navigateTo` will restore the props, render the correct component, and return `true`. Otherwise it will return `false`. This is [useful](recipes#replicating-turbolinks-behavior) if you want to restore an existing page before making a call to `visit` or `remote`.
+If there is an existing page in your store `navigateTo` will restore the props, render the correct component, and return `true`. Otherwise, it will return `false`. This is [useful](recipes#replicating-turbolinks-behavior) if you want to restore an existing page before making a call to `visit` or `remote`.
 
 | Parameter | Notes |
 | :--- | :--- |
-| pageKey | Use your rails `foo_path` helpers. This is the location where your props are stored in stored in breezy. |
+| pageKey | Use your rails `foo_path` helpers. This is the location where your props are stored in breezy. |
 | options | Additional options, see below. |
 
 | Options | Notes |
@@ -111,7 +111,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 | Callback options | Type | Notes |
 | :--- | :--- | :--- |
-| canNavigate | `Boolean` | There can only be one visit anytime. If 2 visits happen at the same time, both will be fufilled, but only the last one will be passed a `canNavigate = true` in its callback. |
+| canNavigate | `Boolean` | There can only be one visit anytime. If 2 visits happen at the same time, both will be fulfilled, but only the last one will be passed a `canNavigate = true` in its callback. |
 | needsRefresh | `Boolean` | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true. |
 | screen | `String` | The screen that your react application should render next. |
 | page | `Object` | The full parsed page response from your `foobar.json.props` template. |
@@ -150,7 +150,7 @@ Save and process a rendered view from PropsTemplate. It will also handle any def
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
-| pageKey | `String` | Optional, but recommended. The page key where you want template to be saved in. Use your rails url helpers. If this is skipped, only [fragments](props_template/README.md#partial-fragments) will be updated|
+| pageKey | `String` | Optional, but recommended. The page key where you want a rendered response to be saved in. Use your rails url helpers. If this is skipped, only [fragments](props_template/README.md#partial-fragments) will be updated|
 | page | `String` | A rendered PropsTemplate|
 
 ### Behavior with Fragments
@@ -158,7 +158,7 @@ If a fragment was rendered in any response to a `visit` or `remote`, all fragmen
 
 ## Search nodes
 
-Breezy can search your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param, then passing the params in your `application.json.props`. PropsTemplate will ignore blocks that are not in the keypath, disable deferment and caching, and return the node. Breezy will then immutably set that node back onto its tree on the client side. Fragments will also automatically be updated where needed. See our [traversal guide](docs/traversal-guide) for more examples.
+Breezy can search your content tree for a specific node. This is done by adding a `bzq=keypath.to.node` in your URL param, then passing the params in your `application.json.props`. PropsTemplate will ignore blocks that are not in the keypath, disable deferment and caching, and return the node. Breezy will then immutably set that node back onto its tree on the client-side. Fragments will also automatically be updated where needed. See our [traversal guide](docs/traversal-guide) for more examples.
 
 For example:
 
@@ -181,7 +181,7 @@ end
 
 ## Updating Fragments
 
-A Fragment is a way for breezy to know that this node in your page is linked across all pages. They can only be enabled as an option on partials using [PropsTemplate](props-template.md#partial-fragments)
+A Fragment is a way for breezy to know that this node on your page is linked across all pages. They can only be enabled as an option on partials using [PropsTemplate](props-template.md#partial-fragments)
 
 For example:
 

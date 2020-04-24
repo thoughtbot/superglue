@@ -351,7 +351,7 @@ end
 
 When used with arrays, PropsTemplate will use `Rails.cache.read_multi`.
 
-```
+```ruby
 require 'props_template/core_ext' #See (lists)[#Lists]
 
 opts = {

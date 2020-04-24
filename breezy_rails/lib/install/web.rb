@@ -61,6 +61,9 @@ copy_file "#{__dir__}/templates/web/action_creators.js", "#{Webpacker.config.sou
 say "Copying actions.js file to #{Webpacker.config.source_entry_path}"
 copy_file "#{__dir__}/templates/web/actions.js", "#{Webpacker.config.source_entry_path}/actions.js"
 
+say "Copying Breezy initializer"
+copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/breezy.rb"
+
 say "Copying application.json.props"
 copy_file "#{__dir__}/templates/web/application.json.props", "app/views/layouts/application.json.props"
 

@@ -4,7 +4,7 @@ import reduceReducers from 'reduce-reducers'
 import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
-import createHistory from 'history/createBrowserHistory'
+import { createBrowserHistory } from 'history'
 import Breezy from '@jho406/breezy'
 import Nav from '@jho406/breezy/dist/NavComponent'
 import applicationReducer from './reducer'
@@ -15,7 +15,7 @@ import applicationReducer from './reducer'
 const identifierToComponentMapping = {
 }
 
-const history = createHistory({})
+const history = createBrowserHistory({})
 const initialPage = window.BREEZY_INITIAL_PAGE_STATE
 const baseUrl = ''
 

@@ -1,6 +1,7 @@
 import { setIn, getIn } from './utils/immutability'
 import {
   REMOVE_PAGE,
+  CLEAR_FLASHES,
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   OVERRIDE_VISIT_SEQ,
@@ -160,6 +161,15 @@ export function appendReceivedFragmentsOntoPage(
   return nextState
 }
 
+export function addFlashes(state, pageKey, receivedFlashes) {
+  const nextState = {...state}
+  const nextPage = {...state[pageKey]}
+  nextPage.flashes = [...nextPage.flashes, ...receivedFlashes]
+  nextState[pageKey] = nextPage
+
+  return nextState
+}
+
 export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
   if (!node) {
     console.warn(
@@ -187,6 +197,7 @@ export function handleGraft(state, pageKey, page) {
     data: receivedNode,
     path: pathToNode,
     fragments: receivedFragments = {},
+    flashes: receivedFlashes,
   } = page
 
   return [
@@ -194,6 +205,8 @@ export function handleGraft(state, pageKey, page) {
       graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
     (nextState) =>
       appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
+    (nextState) =>
+      addFlashes(nextState, pageKey, receivedFlashes),
   ].reduce((memo, fn) => fn(memo), state)
 }
 
@@ -211,6 +224,16 @@ export function pageReducer(state = {}, action) {
       const { pageKey, page } = action.payload
 
       return handleGraft(state, pageKey, page)
+    }
+    case CLEAR_FLASHES: {
+      const { pageKey } = action.payload
+      const nextState = { ...state }
+      const nextPage = {...state[pageKey]}
+
+      nextPage.flashes = []
+      nextState[pageKey] = nextPage
+
+      return nextState
     }
     case REMOVE_PAGE: {
       const { pageKey } = action.payload

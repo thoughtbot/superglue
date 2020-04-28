@@ -25,8 +25,8 @@ export function mapStateToProps(state = { pages: {}, breezy: {} }, ownProps) {
   }
   const csrfToken = state.breezy.csrfToken
   pageKey = withoutBZParams(pageKey)
-  const { data } = state.pages[pageKey] || { data: {} }
-  return { ...data, ...params, pageKey, csrfToken }
+  const { data, flashes } = state.pages[pageKey] || { data: {}, flashes: [] }
+  return { ...data, ...params, pageKey, csrfToken, flashes }
 }
 
 export const mapDispatchToProps = {

@@ -58,6 +58,7 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
+        flashes: [],
         componentIdentifier: 'home',
       }
 
@@ -120,12 +121,14 @@ describe('navigation', () => {
         pages: {
           '/bar': {
             data: { heading: 'this is page 1' },
+            flashes: [],
             componentIdentifier: 'home',
             pageKey: '/bar',
             fragments: {},
           },
           '/foo': {
             data: { heading: 'Some heading 2' },
+            flashes: [],
             csrfToken: 'token',
             assets: ['application-123.js', 'application-123.js'],
             componentIdentifier: 'about',
@@ -148,6 +151,7 @@ describe('navigation', () => {
           heading: 'this is page 1',
           address: undefined,
         },
+        flashes: [],
         componentIdentifier: 'home',
       }
 

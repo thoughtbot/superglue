@@ -293,7 +293,6 @@ export function visit(
 
           return meta
         })
-        .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
 
     })(dispatch, getState).catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }

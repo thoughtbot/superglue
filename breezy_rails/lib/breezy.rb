@@ -2,11 +2,12 @@ require 'breezy/xhr_headers'
 require 'breezy/xhr_url_for'
 require 'breezy/x_domain_blocker'
 require 'breezy/helpers'
+require 'breezy/redirection'
 require 'props_template'
 
 module Breezy
   module Controller
-    include XHRHeaders, XDomainBlocker, Helpers
+    include XHRHeaders, XDomainBlocker, Helpers, Redirection
 
     def self.included(base)
       if base.respond_to?(:before_action)

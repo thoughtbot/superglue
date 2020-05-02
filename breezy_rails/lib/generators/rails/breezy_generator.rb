@@ -28,6 +28,12 @@ module Rails
           template 'web/' + filename, File.join('app/views', controller_file_path, filename)
         end
 
+        %w(index show new edit).each do |view|
+          @action_name = view
+          filename = filename_with_html_extensions(view)
+          template 'web/' + filename, File.join('app/views', controller_file_path, filename)
+        end
+
         js_filename = [plural_table_name, 'form.jsx'].map(&:camelcase).join
         template 'web/form.jsx', File.join('app/components', js_filename)
         template 'web/base.jsx', File.join('app/components', 'BaseScreen.jsx')
@@ -67,6 +73,10 @@ module Rails
 
         def filename_with_jsx_extensions(name)
           [name, :jsx] * '.'
+        end
+
+        def filename_with_html_extensions(name)
+          [name, :html, :erb] * '.'
         end
 
         def attributes_list_with_timestamps

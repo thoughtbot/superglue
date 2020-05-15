@@ -10,7 +10,6 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 import ujsHandlers from '@jho406/breezy/dist/utils/ujs'
 import applicationReducer from './reducer'
 
-
 // Mapping between your props template to Component
 // e.g {'posts/new': PostNew}
 const identifierToComponentMapping = {

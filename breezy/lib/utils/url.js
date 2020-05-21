@@ -37,7 +37,7 @@ export function withoutBusters(url) {
   return pathQuery(url.toString())
 }
 
-export function withoutBZParams(url) {
+export function urlToPageKey(url) {
   url = new parse(url, true)
   let query = url.query
   delete query['__']

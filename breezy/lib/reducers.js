@@ -1,5 +1,5 @@
 import { setIn, getIn } from './utils/immutability'
-import { withoutBZParams } from './utils/url'
+import { urlToPageKey } from './utils/url'
 import {
   REMOVE_PAGE,
   CLEAR_FLASHES,
@@ -244,7 +244,7 @@ export function pageReducer(state = {}, action) {
         to
       } = action.payload
 
-      nextState[withoutBZParams(to)] = JSON.parse(JSON.stringify(nextState[from]))
+      nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
 
       return nextState
     }

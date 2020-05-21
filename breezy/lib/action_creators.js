@@ -4,7 +4,7 @@ import parse from 'url-parse'
 import 'cross-fetch'
 import { uuidv4, isGraft } from './utils/helpers'
 import { needsRefresh } from './window'
-import { withoutBZParams, withoutBusters } from './utils/url'
+import { urlToPageKey, withoutBusters } from './utils/url'
 import {
   CLEAR_FLASHES,
   SAVE_RESPONSE,
@@ -28,7 +28,7 @@ export function copyPage({ from, to }) {
 }
 
 export function saveResponse({ pageKey, page }) {
-  pageKey = withoutBZParams(pageKey)
+  pageKey = urlToPageKey(pageKey)
 
   return {
     type: SAVE_RESPONSE,
@@ -49,7 +49,7 @@ export function clearFlashes({ pageKey }) {
 }
 
 export function handleGraft({ pageKey, page }) {
-  pageKey = withoutBZParams(pageKey)
+  pageKey = urlToPageKey(pageKey)
 
   return {
     type: HANDLE_GRAFT,
@@ -77,7 +77,7 @@ function handleError(err) {
 }
 
 function fetchDeferments(pageKey, defers = []) {
-  pageKey = withoutBZParams(pageKey)
+  pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers
       .filter(({ type }) => type === 'auto')
@@ -141,7 +141,7 @@ function receivedPagetoFragmentList({ fragments = {}, data, path, action }) {
 
 export function saveAndProcessPage(pageKey, page) {
   return (dispatch) => {
-    pageKey = withoutBZParams(pageKey)
+    pageKey = urlToPageKey(pageKey)
 
     const { defers = [] } = page
 
@@ -163,7 +163,7 @@ export function saveAndProcessPage(pageKey, page) {
 function handleFetchErr(err, fetchArgs, dispatch) {
   err.fetchArgs = fetchArgs
   err.url = fetchArgs[0]
-  err.pageKey = withoutBZParams(fetchArgs[0])
+  err.pageKey = urlToPageKey(fetchArgs[0])
   dispatch(handleError(err))
   throw err
 }
@@ -173,7 +173,7 @@ function buildMeta(pageKey, page, state) {
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
-  pageKey = withoutBZParams(pageKey)
+  pageKey = urlToPageKey(pageKey)
   //TODO: needs refresh should dispatch, to get a nice, you need to reload your page
   return {
     pageKey,
@@ -217,7 +217,7 @@ export function remote(
           fetchArgs,
         }
 
-        pageKey = withoutBZParams(pageKey)
+        pageKey = urlToPageKey(pageKey)
         const page = beforeSave(pages[pageKey], json)
         dispatch(saveAndProcessPage(pageKey, page))
 
@@ -261,7 +261,7 @@ export function visit(
     beforeSave = (prevPage, receivedPage) => receivedPage,
   } = {}
 ) {
-  pathQuery = withoutBZParams(pathQuery)
+  pathQuery = urlToPageKey(pathQuery)
   let pageKey = pathQuery
 
   return (dispatch, getState) => {
@@ -271,7 +271,7 @@ export function visit(
       method,
     })
 
-    const currentKey = withoutBZParams(getState().breezy.currentUrl)
+    const currentKey = urlToPageKey(getState().breezy.currentUrl)
     dispatch(clearFlashes({ pageKey: currentKey }))
 
     return ensureSingleVisit(() => {
@@ -297,7 +297,7 @@ export function visit(
           }
 
           pageKey = rsp.redirected ? rsp.url : pageKey
-          pageKey = withoutBZParams(pageKey)
+          pageKey = urlToPageKey(pageKey)
 
           const page = beforeSave(pages[pageKey], json)
           dispatch(saveAndProcessPage(pageKey, page))

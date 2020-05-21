@@ -5,7 +5,7 @@ import {
   copyPage,
   ensureSingleVisit,
 } from '../action_creators'
-import { withoutBZParams } from './url'
+import { urlToPageKey } from './url'
 
 export function mapStateToProps(state = { pages: {}, breezy: {} }, ownProps) {
   let pageKey
@@ -25,7 +25,7 @@ export function mapStateToProps(state = { pages: {}, breezy: {} }, ownProps) {
     params = ownProps
   }
   const csrfToken = state.breezy.csrfToken
-  pageKey = withoutBZParams(pageKey)
+  pageKey = urlToPageKey(pageKey)
   const { data, flashes } = state.pages[pageKey] || { data: {}, flashes: [] }
   return { ...data, ...params, pageKey, csrfToken, flashes }
 }

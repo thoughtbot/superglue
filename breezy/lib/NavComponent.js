@@ -1,11 +1,11 @@
 import React from 'react'
-import { withoutBZParams } from './utils/url'
+import { urlToPageKey } from './utils/url'
 import { uuidv4 } from './utils/helpers'
 import parse from 'url-parse'
 import { BREEZY_ERROR, OVERRIDE_VISIT_SEQ, HISTORY_CHANGE } from './actions'
 
 function argsForHistory(url) {
-  const pageKey = withoutBZParams(url)
+  const pageKey = urlToPageKey(url)
 
   return [
     pageKey,
@@ -18,7 +18,7 @@ function argsForHistory(url) {
 
 function argsForNavInitialState(url) {
   return {
-    pageKey: withoutBZParams(url),
+    pageKey: urlToPageKey(url),
     ownProps: {},
   }
 }
@@ -42,7 +42,7 @@ class Nav extends React.Component {
   }
 
   navigateTo(pageKey, { action, ownProps } = { action: 'push', ownProps: {} }) {
-    pageKey = withoutBZParams(pageKey)
+    pageKey = urlToPageKey(pageKey)
     const { store } = this.props
     const hasPage = !!store.getState().pages[pageKey]
 

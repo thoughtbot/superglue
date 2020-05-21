@@ -2,7 +2,7 @@ import parse from 'url-parse'
 import { rootReducer } from './reducers'
 import { setWindow, unsetWindow, hasWindow } from './window'
 import connect from './connector'
-import { withoutBZParams } from './utils/url'
+import { urlToPageKey } from './utils/url'
 import { saveAndProcessPage } from './action_creators'
 import { HISTORY_CHANGE, SET_CSRF_TOKEN, SET_BASE_URL } from './actions'
 
@@ -37,7 +37,7 @@ export function start({ window, baseUrl = '', url, initialPage = {} }) {
     }
   }
 
-  const initialPageKey = withoutBZParams(parse(url).href)
+  const initialPageKey = urlToPageKey(parse(url).href)
   const { csrfToken } = initialPage
 
   return {

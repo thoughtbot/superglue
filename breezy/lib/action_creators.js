@@ -14,7 +14,18 @@ import {
   BREEZY_GRAFTING_ERROR,
   OVERRIDE_VISIT_SEQ,
   UPDATE_ALL_FRAGMENTS,
+  COPY_PAGE,
 } from './actions'
+
+export function copyPage({ from, to }) {
+  return {
+    type: COPY_PAGE,
+    payload: {
+      from,
+      to,
+    },
+  }
+}
 
 export function saveResponse({ pageKey, page }) {
   pageKey = withoutBZParams(pageKey)

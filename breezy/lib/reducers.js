@@ -1,4 +1,5 @@
 import { setIn, getIn } from './utils/immutability'
+import { withoutBZParams } from './utils/url'
 import {
   REMOVE_PAGE,
   CLEAR_FLASHES,
@@ -9,6 +10,7 @@ import {
   SET_BASE_URL,
   SET_CSRF_TOKEN,
   UPDATE_ALL_FRAGMENTS,
+  COPY_PAGE,
 } from './actions'
 
 export function updateFragments(state, namesToNodes) {
@@ -232,6 +234,17 @@ export function pageReducer(state = {}, action) {
 
       nextPage.flashes = []
       nextState[pageKey] = nextPage
+
+      return nextState
+    }
+    case COPY_PAGE: {
+      const nextState = { ...state }
+      const {
+        from,
+        to
+      } = action.payload
+
+      nextState[withoutBZParams(to)] = JSON.parse(JSON.stringify(nextState[from]))
 
       return nextState
     }

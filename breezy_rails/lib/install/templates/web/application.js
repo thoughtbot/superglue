@@ -7,6 +7,7 @@ import { render } from 'react-dom'
 import { createBrowserHistory } from 'history'
 import Breezy from '@jho406/breezy'
 import Nav from '@jho406/breezy/dist/NavComponent'
+import ujsHandlers from '@jho406/breezy/dist/utils/ujs'
 import applicationReducer from './reducer'
 
 
@@ -44,6 +45,8 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunk))
 )
 
+const navigatorRef = React.createRef()
+
 connect(store)
 
 class App extends React.Component {
@@ -51,6 +54,7 @@ class App extends React.Component {
     return <Provider store={store}>
       <Nav
         store={store}
+        ref={navigatorRef}
         mapping={this.props.mapping}
         history={history}
         initialPageKey={initialPageKey}
@@ -60,5 +64,15 @@ class App extends React.Component {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  render(<App mapping={identifierToComponentMapping}/>, document.getElementById('app'))
+  const appEl = document.getElementById('app')
+  const {onClick, onSubmit} = ujsHandlers({
+    navigatorRef,
+    store,
+    ujsVisitAttribute: 'data-bz-visit'
+  })
+
+  appEl.addEventListener('click', onClick)
+  appEl.addEventListener('submit', onSubmit)
+
+  render(<App mapping={identifierToComponentMapping}/>, appEl)
 })

@@ -60,7 +60,11 @@ export function argsForFetch(
   }
 
   if (method != 'GET' && method != 'HEAD') {
-    headers['content-type'] = 'application/json'
+    if (headers['content-type'] === null) {
+      delete headers['content-type']
+    } else {
+      headers['content-type'] = 'application/json'
+    }
   }
 
   if (currentState.currentUrl) {

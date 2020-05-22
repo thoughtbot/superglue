@@ -79,7 +79,7 @@ export function argsForFetch(
     method = 'POST'
   }
 
-  const options = { method, headers, body, credentials, redirect: 'manual' }
+  const options = { method, headers, body, credentials }
 
   if (method == 'GET' || method == 'HEAD') {
     delete options.body

@@ -63,7 +63,6 @@ describe('argsForFetch', () => {
           'x-breezy-request': true,
         },
         credentials: 'same-origin',
-        redirect: 'manual',
       },
     ])
   })
@@ -90,7 +89,6 @@ describe('argsForFetch', () => {
         },
         credentials: 'same-origin',
         body: '',
-        redirect: 'manual',
       },
     ])
   })
@@ -117,7 +115,6 @@ describe('argsForFetch', () => {
           'x-xhr-referer': '/some_current_url',
         },
         credentials: 'same-origin',
-        redirect: 'manual',
       },
     ])
   })
@@ -139,7 +136,6 @@ describe('argsForFetch', () => {
           'x-breezy-request': true,
         },
         credentials: 'same-origin',
-        redirect: 'manual',
       },
     ])
 
@@ -155,7 +151,6 @@ describe('argsForFetch', () => {
           'x-breezy-request': true,
         },
         credentials: 'same-origin',
-        redirect: 'manual',
       },
     ])
   })

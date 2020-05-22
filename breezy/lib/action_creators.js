@@ -147,25 +147,6 @@ function handleFetchErr(err, fetchArgs, dispatch) {
   throw err
 }
 
-export function wrappedFetch(fetchArgs) {
-  return fetch(...fetchArgs).then((response) => {
-    const location = response.headers.get('location')
-    const nextOpts = { ...fetchArgs[1], body: undefined }
-
-    if (response.redirected) {
-      return wrappedFetch([
-        location,
-        { ...nextOpts, method: 'GET', _redirectedToUrl: location },
-      ])
-    } else {
-      if (fetchArgs[1] && fetchArgs[1]._redirectedToUrl) {
-        response._redirectedToUrl = fetchArgs[1]._redirectedToUrl
-      }
-      return response
-    }
-  })
-}
-
 //TODO: Provide a connected component for refresh
 function buildMeta(pageKey, page, state) {
   const { assets: prevAssets } = state
@@ -203,24 +184,17 @@ export function remote(
 
     dispatch(beforeFetch({ fetchArgs }))
 
-    return wrappedFetch(fetchArgs)
+    return fetch(...fetchArgs)
       .then(parseResponse)
       .then(({ rsp, json }) => {
         const { breezy, pages = {} } = getState()
 
         const meta = {
           ...buildMeta(pageKey, json, breezy),
-          redirected: !!rsp._redirectedToUrl,
+          redirected: rsp.redirected,
           rsp,
           fetchArgs,
         }
-
-        if (method !== 'GET') {
-          const contentLocation = rsp.headers.get('content-location')
-          pageKey = contentLocation || pageKey
-        }
-
-        pageKey = rsp._redirectedToUrl || pageKey
 
         pageKey = withoutBZParams(pageKey)
         const page = beforeSave(pages[pageKey], json)
@@ -267,7 +241,7 @@ export function visit(
   } = {}
 ) {
   pathQuery = withoutBZParams(pathQuery)
-  const pageKey = pathQuery
+  let pageKey = pathQuery
 
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, pathQuery, {
@@ -277,10 +251,37 @@ export function visit(
     })
 
     return ensureSingleVisit(() => {
-      return remote(pathQuery, { method, headers, body, beforeSave, pageKey })(
-        dispatch,
-        getState
-      )
+      pageKey = pageKey || getState().breezy.currentUrl
+
+      dispatch(beforeFetch({ fetchArgs }))
+
+      return fetch(...fetchArgs)
+        .then(parseResponse)
+        .then(({ rsp, json }) => {
+          const { breezy, pages = {} } = getState()
+
+          const meta = {
+            ...buildMeta(pageKey, json, breezy),
+            redirected: rsp.redirected,
+            rsp,
+            fetchArgs,
+          }
+
+          if (method !== 'GET') {
+            const contentLocation = rsp.headers.get('content-location')
+            pageKey = contentLocation || pageKey
+          }
+
+          pageKey = rsp.redirected ? rsp.url : pageKey
+          pageKey = withoutBZParams(pageKey)
+
+          const page = beforeSave(pages[pageKey], json)
+          dispatch(saveAndProcessPage(pageKey, page))
+
+          return meta
+        })
+        .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
+
     })(dispatch, getState).catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
 }

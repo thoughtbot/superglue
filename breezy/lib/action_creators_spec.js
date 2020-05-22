@@ -3,7 +3,6 @@ import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
 import {
   visit,
-  wrappedFetch,
   remote,
   handleGraft,
   beforeFetch,
@@ -42,7 +41,7 @@ const successfulBody = () => {
   })
 }
 
-describe('action creators', () => {
+fdescribe('action creators', () => {
   describe('saveResponse', () => {
     it('fires SAVE_RESPONSE', () => {
       const pageKey = '/test'
@@ -86,32 +85,6 @@ describe('action creators', () => {
         type: '@@breezy/HANDLE_GRAFT',
         payload: { pageKey, page },
       })
-    })
-  })
-
-  describe('wrappedFetch', () => {
-    afterEach(() => {
-      fetchMock.reset()
-      fetchMock.restore()
-    })
-
-    it('follows x-breezy-location redirects', (done) => {
-      fetchMock.mock('/redirecting_url', {
-        headers: {
-          'content-type': 'application/javascript',
-          'x-breezy-location': '/foo',
-        },
-      })
-
-      fetchMock.mock('/foo', {
-        body: successfulBody(),
-        headers: {
-          'content-type': 'application/javascript',
-          'x-response-url': '/foo',
-        },
-      })
-
-      wrappedFetch(['/redirecting_url', {}], {}).then(done)
     })
   })
 
@@ -667,35 +640,23 @@ describe('action creators', () => {
       })
     })
 
-    it('returns a meta with redirected true if was redirected', (done) => {
+    it('returns a meta with redirected true if was redirected', () => {
       const store = mockStore(initialState())
       spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/redirecting_url?__=0', {
+        status: 200,
         redirectUrl: '/foo',
-        status: 302,
         headers: {
           'content-type': 'application/json',
           location: '/foo',
         },
-      })
-
-      fetchMock.mock('/foo', {
         body: successfulBody(),
-        headers: {
-          'content-type': 'application/json',
-        },
       })
 
       return store.dispatch(remote('/redirecting_url')).then((meta) => {
-        expect(meta).toEqual(
-          jasmine.objectContaining({
-            redirected: true,
-          })
-        )
-
-        done()
+        expect(meta.redirected).toEqual(true)
       })
     })
 
@@ -855,6 +816,7 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           assets: [],
+          currentUrl: '/current',
           controlFlows: {
             visit: 'firstId',
           },

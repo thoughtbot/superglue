@@ -5,10 +5,7 @@ babel_config = Rails.root.join("babel.config.js")
 def append_js_tags
   app_html = 'app/views/layouts/application.html.erb'
   js_tag = <<-JS_TAG
-
-    <script type="text/javascript">
-      window.BREEZY_INITIAL_PAGE_STATE=<%= @initial_state.html_safe %>;
-    </script>
+    <%= yield :initial_state %>
   JS_TAG
 
   inject_into_file app_html, after: '<head>' do

@@ -1,41 +1,20 @@
 {
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "node": true
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": "prettier",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
     },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "experimentalObjectRestSpread": true,
-            "jsx": true
-        },
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "indent": [
-            "error",
-            2
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ],
-        "space-before-function-paren": ["error", "always"],
-        "react/jsx-uses-vars": 2,
-        "no-console": ["error", { "allow": ["info", "warn", "error"] }],
-        "object-curly-spacing": ["error", "never"]
-    }
+    "sourceType": "module"
+  },
+  "plugins": [ "prettier" ],
+  "rules": {
+    "prettier/prettier": ["error"]
+  }
 }

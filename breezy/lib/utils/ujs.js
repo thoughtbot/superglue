@@ -7,7 +7,17 @@ export class HandlerBuilder {
     this.attributeName = ujsVisitAttribute
     this.isUJS = this.isUJS.bind(this)
     this.props = {
-      navigateTo: (...args) => navigatorRef.current.navigateTo(...args),
+      navigateTo: (...args) => {
+        const successfulNav = navigatorRef.current.navigateTo(...args)
+
+        if(!successfulNav) {
+          console.error(
+            `\`navigateTo\` was called via UJS, but could not find.
+            the pageKey in the store. This may happen when the wrong
+            content_location was set in your non-get controller action.`
+          )
+        }
+      },
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClick = this.handleClick.bind(this)

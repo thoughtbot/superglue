@@ -64,14 +64,16 @@ class App extends React.Component {
 
 document.addEventListener("DOMContentLoaded", function() {
   const appEl = document.getElementById('app')
-  const {onClick, onSubmit} = ujsHandlers({
-    navigatorRef,
-    store,
-    ujsAttributePrefix: 'data-bz'
-  })
+  if (appEl) {
+    const {onClick, onSubmit} = ujsHandlers({
+      navigatorRef,
+      store,
+      ujsAttributePrefix: 'data-bz'
+    })
 
-  appEl.addEventListener('click', onClick)
-  appEl.addEventListener('submit', onSubmit)
+    appEl.addEventListener('click', onClick)
+    appEl.addEventListener('submit', onSubmit)
 
-  render(<App mapping={identifierToComponentMapping}/>, appEl)
+    render(<App mapping={identifierToComponentMapping}/>, appEl)
+  }
 })

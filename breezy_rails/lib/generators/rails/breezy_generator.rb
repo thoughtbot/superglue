@@ -21,6 +21,7 @@ module Rails
           filename = filename_with_extensions(view)
           template filename, File.join('app/views', controller_file_path, filename)
         end
+        template '_form.json.props', File.join('app/views', controller_file_path, '_form.json.props')
 
         %w(index show new edit).each do |view|
           @action_name = view
@@ -34,8 +35,6 @@ module Rails
           template 'web/' + filename, File.join('app/views', controller_file_path, filename)
         end
 
-        js_filename = [plural_table_name, 'form.jsx'].map(&:camelcase).join
-        template 'web/form.jsx', File.join('app/components', js_filename)
         template 'web/base.jsx', File.join('app/components', 'BaseScreen.jsx')
 
         %w(index show new edit).each do |view|

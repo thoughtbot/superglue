@@ -21,8 +21,5 @@ if path
   json.path search_path_to_camelized_param(path)
 end
 
-flashes = flash.to_a.map do |key, value|
-  {key: key, value: value}
-end
+json.flash flash.to_h
 
-json.flashes flashes

@@ -1,18 +1,13 @@
-json.flash flash.to_h
+if @post.errors.any?
+  content = {
+    explanation: "#{pluralize(@<%= singular_table_name %>.errors.count, "error")} prohibited this post from being saved:",
+    messages: @<%= singular_table_name %>.errors.full_messages.map{|msg| {body: msg}}
+  }
 
-if @<%= singular_table_name %>.errors
-  json.errors @<%= singular_table_name %>.errors.to_h
+  flash.now[:form_error] = content
 end
 
-<%- attributes_list_with_timestamps.each do |attr| -%>
-json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
-<%- end -%>
-
-
-json.attributes_for_form do
-<%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-  json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
-<%- end -%>
+json.form(partial: 'form') do
 end
 
 json.<%= singular_table_name%>_path <%= singular_table_name%>_path(@<%=singular_table_name%>)

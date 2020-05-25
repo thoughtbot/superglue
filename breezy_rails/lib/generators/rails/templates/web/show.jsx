@@ -14,8 +14,8 @@ class <%= plural_table_name.camelize %>Show extends BaseScreen {
           {this.props.<%=attr.camelize(:lower)%>}
         </p>
         <%- end -%>
-        <a onClick={ e => this.enhancedVisit(this.props.edit<%= singular_table_name.camelize %>Path)}>Edit</a>
-        <a onClick={ e => this.enhancedVisit(this.props.<%= plural_table_name.camelize(:lower) %>Path )}>Back</a>
+        <a href={ this.props.edit<%= singular_table_name.camelize %>Path } data-bz-visit={true}>Edit</a>
+        <a href={ this.props.<%= plural_table_name.camelize(:lower) %>Path } data-bz-visit={true}>Back</a>
       </div>
     )
   }

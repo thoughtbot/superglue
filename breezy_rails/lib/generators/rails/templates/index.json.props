@@ -1,5 +1,3 @@
-json.flash flash.to_h
-
 json.<%= plural_table_name %> do
   json.array! @<%= plural_table_name %> do |<%= singular_table_name %>|
     <%- attributes_list_with_timestamps.each do |attr| -%>
@@ -7,6 +5,7 @@ json.<%= plural_table_name %> do
     <%- end -%>
     json.edit_<%=singular_table_name%>_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
     json.<%=singular_table_name%>_path <%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.delete_<%=singular_table_name%>_path <%=singular_table_name%>_path(<%=singular_table_name%>)
   end
 end
 

@@ -1,6 +1,15 @@
-json.flash flash.to_h
-if @<%= singular_table_name %>.errors
-  json.errors @<%= singular_table_name %>.errors.to_h
+if @post.errors.any?
+  content = {
+    explanation: "#{pluralize(@<%= singular_table_name %>.errors.count, "error")} prohibited this post from being saved:",
+    messages: @<%= singular_table_name %>.errors.full_messages.map{|msg| {body: msg}}
+  }
+
+  flash.now[:form_error] = content
+end
+
+json.form(partial: 'form') do
 end
 
 json.<%= plural_table_name %>_path <%= plural_table_name %>_path
+
+

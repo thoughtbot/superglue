@@ -1,5 +1,3 @@
-json.flash flash.to_h
-
 <%- attributes_list_with_timestamps.each do |attr|-%>
 json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
 <%- end -%>

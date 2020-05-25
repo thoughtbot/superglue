@@ -57,14 +57,6 @@ class BreezyInstallationTest < Minitest::Test
     File.open('package.json', "w") {|file| file.puts content }
   end
 
-  def update_application_html_erb
-    content = File.read('app/views/layouts/application.html.erb').gsub(
-      /<\/head>/,
-      "<%= javascript_pack_tag \"application\" %></head>"
-    )
-    File.open('app/views/layouts/application.html.erb', "w") {|file| file.puts content }
-  end
-
   def install_breezy
     Dir.chdir(BREEZY_BREEZY_PATH) do
       successfully "yarn install"
@@ -79,7 +71,6 @@ class BreezyInstallationTest < Minitest::Test
     successfully "bundle exec rails breezy:install:web"
     update_package_json
     successfully "yarn install"
-    update_application_html_erb
   end
 
   def generate_test_app(app_name)
@@ -137,15 +128,15 @@ class BreezyInstallationTest < Minitest::Test
     find("a", :text => "New Post").click
     assert page.has_content?('Back')
 
-    fill_in 'body', with: 'foobar'
-    click_button 'Submit'
+    fill_in 'post_body', with: 'foobar'
+    click_button 'Create Post'
     successfully "ls #{TMP_DIR}/testapp/log/"
     sleep 30
     assert page.has_content?('Post was successfully created.')
     find("a", :text => "Edit").click
 
-    fill_in 'body', with: 'another edit'
-    click_button 'Submit'
+    fill_in 'post_body', with: 'foobar'
+    click_button 'Update Post'
     assert page.has_content?('Post was successfully updated.')
 
     Process.kill 'TERM', pid

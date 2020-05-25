@@ -9,22 +9,26 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
   }
 
   render () {
+    const {
+      flash,
+      new<%= singular_table_name.camelize %>Path,
+    } = this.props
     const <%= singular_table_name.camelize(:lower) %>Items = this.props.<%= plural_table_name.camelize(:lower) %>.map((<%= singular_table_name.camelize(:lower) %>, key) => {
       return (
         <tr key={<%= singular_table_name.camelize(:lower) %>.id}>
           <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
           <td>{<%=singular_table_name.camelize(:lower)%>.<%=attr.camelize(:lower)%>}</td>
           <%- end -%>
-          <td><a onClick={ e => this.enhancedVisit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path)}>Show</a></td>
-          <td><a onClick={ e => this.enhancedVisit(<%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path)}>Edit</a></td>
-          <td><a onClick={ e => this.enhancedVisit(<%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path, {method: 'DELETE'})}>Delete</a></td>
+          <td><a href={ <%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path } data-bz-visit={true}>Show</a></td>
+          <td><a href={ <%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path } data-bz-visit={true}>Edit</a></td>
+          <td><a href={ <%=singular_table_name%>.delete<%=singular_table_name.camelize%>Path }data-bz-visit={true} data-bz-method={"DELETE"}>Delete</a></td>
         </tr>
       )
     })
 
     return (
       <div>
-        <p id="notice">{this.props.flash && this.props.flash.notice}</p>
+        <p id="notice">{flash.notice}</p>
 
         <h1><%= plural_table_name.capitalize %></h1>
 
@@ -43,7 +47,7 @@ class <%= plural_table_name.camelize %>Index extends BaseScreen {
           </tbody>
         </table>
         <br />
-        <a onClick={ e => this.enhancedVisit(this.props.new<%= singular_table_name.camelize %>Path)}>New <%= singular_table_name.capitalize %></a>
+        <a href={new<%= singular_table_name.camelize %>Path} data-bz-visit={true}>New <%= singular_table_name.capitalize %></a>
       </div>
     )
   }

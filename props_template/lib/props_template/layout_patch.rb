@@ -18,9 +18,9 @@ module Props
     def render_props_template(view, template, path, locals)
       layout_locals = locals.dup
       layout_locals.delete(:json)
+      layout_locals[:virtual_path_of_template] = template.virtual_path
 
-      layout = resolve_props_layout(path, layout_locals, [formats.first])
-
+      layout = resolve_props_layout(path, layout_locals.keys, [formats.first])
       body = layout.render(view, layout_locals) do |json|
         locals[:json] = json
         template.render(view, locals)

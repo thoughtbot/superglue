@@ -75,7 +75,8 @@ export function argsForFetch(
     headers['x-csrf-token'] = currentState.csrfToken
   }
 
-  const href = new parse(pathQuery, currentState.baseUrl || '', false).href
+  const href = new parse(pathQuery, currentState.baseUrl || '', false)
+    .href
   const credentials = 'same-origin'
 
   if (!(method == 'GET' || method == 'HEAD')) {

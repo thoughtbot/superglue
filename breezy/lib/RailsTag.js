@@ -486,14 +486,14 @@ const possibleStandardNames = {
   ychannelselector: 'yChannelSelector',
   z: 'z',
   zoomandpan: 'zoomAndPan',
-};
+}
 
 var ELEMENT_ATTRIBUTE_MAPPING = {
-  'input': {
-    'checked': 'defaultChecked',
-    'value': 'defaultValue'
-  }
-};
+  input: {
+    checked: 'defaultChecked',
+    value: 'defaultValue',
+  },
+}
 
 // Reference: https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements
 var ELEMENT_TAG_NAME_MAPPING = {
@@ -590,17 +590,17 @@ var ELEMENT_TAG_NAME_MAPPING = {
   use: 'use',
   video: 'video',
   view: 'view',
-  vkern: 'vkern'
-};
+  vkern: 'vkern',
+}
 
 function jsxTagName(tagName) {
-  var name = tagName.toLowerCase();
+  var name = tagName.toLowerCase()
 
   if (ELEMENT_TAG_NAME_MAPPING.hasOwnProperty(name)) {
-    name = ELEMENT_TAG_NAME_MAPPING[name];
+    name = ELEMENT_TAG_NAME_MAPPING[name]
   }
 
-  return name;
+  return name
 }
 
 /**
@@ -610,27 +610,27 @@ function jsxTagName(tagName) {
  * @return {string}
  */
 
-var StyleParser = function(rawStyle) {
-  this.parse(rawStyle);
-};
+var StyleParser = function (rawStyle) {
+  this.parse(rawStyle)
+}
 StyleParser.prototype = {
   /**
    * Parse the specified inline style attribute value
    * @param {string} rawStyle Raw style attribute
    */
-  parse: function(rawStyle) {
-    this.styles = {};
-    rawStyle.split(';').forEach(function(style) {
-      style = style.trim();
-      var firstColon = style.indexOf(':');
-      var key = style.substr(0, firstColon);
-      var value = style.substr(firstColon + 1).trim();
+  parse: function (rawStyle) {
+    this.styles = {}
+    rawStyle.split(';').forEach(function (style) {
+      style = style.trim()
+      var firstColon = style.indexOf(':')
+      var key = style.substr(0, firstColon)
+      var value = style.substr(firstColon + 1).trim()
       if (key !== '') {
         // Style key should be case insensitive
-        key = key.toLowerCase();
-        this.styles[key] = value;
+        key = key.toLowerCase()
+        this.styles[key] = value
       }
-    }, this);
+    }, this)
   },
 
   /**
@@ -639,12 +639,18 @@ StyleParser.prototype = {
    *
    * @return {string}
    */
-  toJSXString: function() {
-    var output = [];
-    eachObj(this.styles, function(key, value) {
-      output.push(this.toJSXKey(key) + ': ' + this.toJSXValue(value));
-    }, this);
-    return output.join(', ');
+  toJSXString: function () {
+    var output = []
+    eachObj(
+      this.styles,
+      function (key, value) {
+        output.push(
+          this.toJSXKey(key) + ': ' + this.toJSXValue(value)
+        )
+      },
+      this
+    )
+    return output.join(', ')
   },
 
   /**
@@ -653,12 +659,12 @@ StyleParser.prototype = {
    * @param {string} key CSS style key
    * @return {string} JSX style key
    */
-  toJSXKey: function(key) {
+  toJSXKey: function (key) {
     // Don't capitalize -ms- prefix
-    if(/^-ms-/.test(key)) {
-      key = key.substr(1);
+    if (/^-ms-/.test(key)) {
+      key = key.substr(1)
     }
-    return hyphenToCamelCase(key);
+    return hyphenToCamelCase(key)
   },
 
   /**
@@ -667,39 +673,42 @@ StyleParser.prototype = {
    * @param {string} value CSS style value
    * @return {string} JSX style value
    */
-  toJSXValue: function(value) {
+  toJSXValue: function (value) {
     if (isNumeric(value)) {
       // If numeric, no quotes
-      return value;
+      return value
     } else {
       // Probably a string, wrap it in quotes
-      return '\'' + value.replace(/'/g, '"') + '\'';
+      return "'" + value.replace(/'/g, '"') + "'"
     }
-  }
-};
+  },
+}
 
 const getElementAttribute = (node, attribute) => {
   switch (attribute.name) {
     case 'style':
-      var jsxStyles = new StyleParser(styles).toJSXString();
-      return {key: 'style', value: jsxStyles}
+      var jsxStyles = new StyleParser(styles).toJSXString()
+      return { key: 'style', value: jsxStyles }
     default:
-      var tagName = jsxTagName(node.tagName);
+      var tagName = jsxTagName(node.tagName)
       var name =
         (ELEMENT_ATTRIBUTE_MAPPING[tagName] &&
           ELEMENT_ATTRIBUTE_MAPPING[tagName][attribute.name]) ||
         possibleStandardNames[attribute.name] ||
-        attribute.name;
+        attribute.name
 
-      return {key: name, value: attribute.value}
+      return { key: name, value: attribute.value }
   }
 }
 
 const getTagAndPropsFromHTMLNode = (node) => {
-  var tagName = jsxTagName(node.tagName);
-  var attributes = {};
+  var tagName = jsxTagName(node.tagName)
+  var attributes = {}
   for (var i = 0, count = node.attributes.length; i < count; i++) {
-    const {key, value} = getElementAttribute(node, node.attributes[i])
+    const { key, value } = getElementAttribute(
+      node,
+      node.attributes[i]
+    )
     attributes[key] = value
   }
 
@@ -709,10 +718,12 @@ const getTagAndPropsFromHTMLNode = (node) => {
   }
   if (tagName === 'style') {
     // Hax: style tag contents need to be dangerously set due to liberal curly brace usage
-    attribute.dangerouslySetInnerHTML = {__html: JSON.stringify(node.textContent) }
+    attribute.dangerouslySetInnerHTML = {
+      __html: JSON.stringify(node.textContent),
+    }
   }
 
-  return {tagName, props: attributes}
+  return { tagName, props: attributes }
 }
 
 export default class extends React.Component {
@@ -721,23 +732,21 @@ export default class extends React.Component {
   }
 
   render() {
-    let nextProps = {...this.props}
+    let nextProps = { ...this.props }
     const { html } = nextProps
     const parser = new DOMParser()
     const railsEl = parser
       .parseFromString(html, 'text/html')
-      .querySelector('body')
-      .firstElementChild
+      .querySelector('body').firstElementChild
     const innerHTML = railsEl.innerHTML
-    const {tagName, props} = getTagAndPropsFromHTMLNode(railsEl)
+    const { tagName, props } = getTagAndPropsFromHTMLNode(railsEl)
 
     delete nextProps.html
-    nextProps = {...props, ...nextProps}
-    if(innerHTML !== "") {
-      nextProps.dangerouslySetInnerHTML = {__html: innerHTML}
+    nextProps = { ...props, ...nextProps }
+    if (innerHTML !== '') {
+      nextProps.dangerouslySetInnerHTML = { __html: innerHTML }
     }
 
     return React.createElement(tagName, nextProps)
   }
 }
-

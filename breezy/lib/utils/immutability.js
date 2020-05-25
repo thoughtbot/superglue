@@ -63,12 +63,16 @@ function atKey(node, key) {
 
   if (!isArray(node) && !isObject(node)) {
     throw new Error(
-      `Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`
+      `Expected to traverse an Array or Obj, got ${JSON.stringify(
+        node
+      )}`
     )
   }
 
   if (isObject(node) && id) {
-    throw new Error(`Expected to find an Array when using the key: ${key}`)
+    throw new Error(
+      `Expected to find an Array when using the key: ${key}`
+    )
   }
 
   if (isObject(node) && !node.hasOwnProperty(key)) {

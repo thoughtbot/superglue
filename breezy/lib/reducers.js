@@ -16,7 +16,11 @@ import {
 export function updateFragments(state, namesToNodes) {
   for (const fragmentName in namesToNodes) {
     const updatedNode = namesToNodes[fragmentName]
-    state = copyIntoAllPagesByFragment(state, fragmentName, updatedNode)
+    state = copyIntoAllPagesByFragment(
+      state,
+      fragmentName,
+      updatedNode
+    )
   }
 
   return state
@@ -146,7 +150,9 @@ export function appendReceivedFragmentsOntoPage(
     if (nextFragments.hasOwnProperty(key)) {
       nextFragments[key].push(...values)
 
-      nextFragments[key] = [...new Set([...nextFragments[key], ...values])]
+      nextFragments[key] = [
+        ...new Set([...nextFragments[key], ...values]),
+      ]
     } else {
       nextFragments[key] = values
     }
@@ -164,9 +170,9 @@ export function appendReceivedFragmentsOntoPage(
 }
 
 export function addFlash(state, pageKey, receivedFlash) {
-  const nextState = {...state}
-  const nextPage = {...state[pageKey]}
-  nextPage.flash = {...nextPage.flash, ...receivedFlash}
+  const nextState = { ...state }
+  const nextPage = { ...state[pageKey] }
+  nextPage.flash = { ...nextPage.flash, ...receivedFlash }
   nextState[pageKey] = nextPage
 
   return nextState
@@ -206,9 +212,12 @@ export function handleGraft(state, pageKey, page) {
     (nextState) =>
       graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
     (nextState) =>
-      appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
-    (nextState) =>
-      addFlash(nextState, pageKey, receivedFlash),
+      appendReceivedFragmentsOntoPage(
+        nextState,
+        pageKey,
+        receivedFragments
+      ),
+    (nextState) => addFlash(nextState, pageKey, receivedFlash),
   ].reduce((memo, fn) => fn(memo), state)
 }
 
@@ -230,7 +239,7 @@ export function pageReducer(state = {}, action) {
     case CLEAR_FLASH: {
       const { pageKey } = action.payload
       const nextState = { ...state }
-      const nextPage = {...state[pageKey]}
+      const nextPage = { ...state[pageKey] }
 
       nextPage.flash = {}
       nextState[pageKey] = nextPage
@@ -239,12 +248,11 @@ export function pageReducer(state = {}, action) {
     }
     case COPY_PAGE: {
       const nextState = { ...state }
-      const {
-        from,
-        to
-      } = action.payload
+      const { from, to } = action.payload
 
-      nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
+      nextState[urlToPageKey(to)] = JSON.parse(
+        JSON.stringify(nextState[from])
+      )
 
       return nextState
     }

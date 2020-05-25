@@ -4,7 +4,11 @@ import { setWindow, unsetWindow, hasWindow } from './window'
 import connect from './connector'
 import { urlToPageKey } from './utils/url'
 import { saveAndProcessPage } from './action_creators'
-import { HISTORY_CHANGE, SET_CSRF_TOKEN, SET_BASE_URL } from './actions'
+import {
+  HISTORY_CHANGE,
+  SET_CSRF_TOKEN,
+  SET_BASE_URL,
+} from './actions'
 
 export {
   mapStateToProps,
@@ -29,7 +33,12 @@ function pageToInitialState(key, page) {
   }
 }
 
-export function start({ window, baseUrl = '', url, initialPage = {} }) {
+export function start({
+  window,
+  baseUrl = '',
+  url,
+  initialPage = {},
+}) {
   if (window) {
     setWindow(window)
     if (!url) {

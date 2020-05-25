@@ -2,7 +2,11 @@ import React from 'react'
 import { urlToPageKey } from './utils/url'
 import { uuidv4 } from './utils/helpers'
 import parse from 'url-parse'
-import { BREEZY_ERROR, OVERRIDE_VISIT_SEQ, HISTORY_CHANGE } from './actions'
+import {
+  BREEZY_ERROR,
+  OVERRIDE_VISIT_SEQ,
+  HISTORY_CHANGE,
+} from './actions'
 
 function argsForHistory(url) {
   const pageKey = urlToPageKey(url)
@@ -37,11 +41,16 @@ class Nav extends React.Component {
   componentDidMount() {
     const { initialPageKey } = this.props
 
-    this.unsubscribeHistory = this.history.listen(this.onHistoryChange)
+    this.unsubscribeHistory = this.history.listen(
+      this.onHistoryChange
+    )
     this.history.replace(...argsForHistory(initialPageKey))
   }
 
-  navigateTo(pageKey, { action, ownProps } = { action: 'push', ownProps: {} }) {
+  navigateTo(
+    pageKey,
+    { action, ownProps } = { action: 'push', ownProps: {} }
+  ) {
     pageKey = urlToPageKey(pageKey)
     const { store } = this.props
     const hasPage = !!store.getState().pages[pageKey]
@@ -92,7 +101,11 @@ class Nav extends React.Component {
       const { pageKey } = location.state
       const wasNotRefreshed = !!store.getState().pages[pageKey]
 
-      if (location.state && location.state.breezy && wasNotRefreshed) {
+      if (
+        location.state &&
+        location.state.breezy &&
+        wasNotRefreshed
+      ) {
         this.setState({ pageKey })
       } else {
         // load previous page

@@ -111,7 +111,12 @@ function updateAllFragmentsWith(fragments) {
   }
 }
 
-function receivedPagetoFragmentList({ fragments = {}, data, path, action }) {
+function receivedPagetoFragmentList({
+  fragments = {},
+  data,
+  path,
+  action,
+}) {
   const fragmentNameToNode = {}
 
   if (action) {
@@ -293,7 +298,9 @@ export function visit(
           }
 
           if (method !== 'GET') {
-            const contentLocation = rsp.headers.get('content-location')
+            const contentLocation = rsp.headers.get(
+              'content-location'
+            )
             pageKey = contentLocation || pageKey
           }
 
@@ -306,7 +313,8 @@ export function visit(
 
           return meta
         })
-
-    })(dispatch, getState).catch((e) => handleFetchErr(e, fetchArgs, dispatch))
+    })(dispatch, getState).catch((e) =>
+      handleFetchErr(e, fetchArgs, dispatch)
+    )
   }
 }

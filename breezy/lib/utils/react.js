@@ -7,7 +7,10 @@ import {
 } from '../action_creators'
 import { urlToPageKey } from './url'
 
-export function mapStateToProps(state = { pages: {}, breezy: {} }, ownProps) {
+export function mapStateToProps(
+  state = { pages: {}, breezy: {} },
+  ownProps
+) {
   let pageKey
   // support for react navigation
   let params
@@ -26,7 +29,10 @@ export function mapStateToProps(state = { pages: {}, breezy: {} }, ownProps) {
   }
   const csrfToken = state.breezy.csrfToken
   pageKey = urlToPageKey(pageKey)
-  const { data, flash } = state.pages[pageKey] || { data: {}, flash: {} }
+  const { data, flash } = state.pages[pageKey] || {
+    data: {},
+    flash: {},
+  }
   return { ...data, ...params, pageKey, csrfToken, flash }
 }
 

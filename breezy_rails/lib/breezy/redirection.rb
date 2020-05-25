@@ -1,5 +1,17 @@
 module Breezy
   module Redirection
+    def _compute_redirect_to_location(request, options)
+      computed_location = URI.parse(super)
+      next_param = Rack::Utils
+          .parse_nested_query(computed_location.query)
+
+      if request.params[:__] == "0"
+        computed_location.query = next_param.merge({__: "0"}).to_query
+      end
+
+      computed_location.to_s
+    end
+
     def redirect_back_with_bzq(opts)
       if request.referrer && params[:bzq]
         referrer_url = URI.parse(request.referrer)

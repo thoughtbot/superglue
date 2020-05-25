@@ -27,6 +27,25 @@ describe('ujs', () => {
     }
   }
 
+  function createFakeRemoteEvent() {
+    return {
+      preventDefault: () => {},
+      target: {
+        nodeName: 'A',
+        parentNode: 'DIV',
+        href: '/foo',
+        getAttribute: (attr) => {
+          if(attr === 'href') {
+            return '/foo'
+          }
+          if(attr === 'data-remote') {
+            return true
+          }
+        }
+      }
+    }
+  }
+
   describe('onClick', () => {
     it('calls visit on a valid link', () => {
       const ujsAttributePrefix = 'data'
@@ -49,6 +68,29 @@ describe('ujs', () => {
       onClick(createFakeEvent())
 
       expect(builder.visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+    })
+
+    it('calls remote if a link is enabled with remote', () => {
+      const ujsAttributePrefix = 'data'
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {}
+        }
+      }
+      const store = {}
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        navigatorRef
+      })
+
+      spyOn(builder, 'remote')
+
+      const {onClick} = builder.handlers()
+      onClick(createFakeRemoteEvent())
+
+      expect(builder.remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
     it('does not call visit on an link does not have the visit attribute data-visit', () => {
@@ -155,7 +197,28 @@ describe('ujs', () => {
       }
     }
 
-    it('succssfully posts a form', () => {
+    function createFakeRemoteFormEvent() {
+      return {
+        preventDefault: () => {},
+        target: {
+          nodeName: 'FORM',
+          href: '/foo',
+          getAttribute: (attr) => {
+            if(attr === 'action') {
+              return '/foo'
+            }
+            if(attr === 'method') {
+              return 'POST'
+            }
+            if(attr === 'data-remote') {
+              return true
+            }
+          }
+        }
+      }
+    }
+
+    it('succssfully posts a form with a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const navigatorRef = {
@@ -179,6 +242,38 @@ describe('ujs', () => {
 
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(builder.visit).toHaveBeenCalledWith('/foo', {
+        method: 'POST',
+        headers: {
+          "content-type": null,
+        },
+        body: {some: 'Body'}
+      })
+    })
+
+    it('succssfully posts a form with a remote attribut', () => {
+      const store = {}
+      const ujsAttributePrefix = 'data'
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {}
+        }
+      }
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        navigatorRef
+      })
+      spyOn(builder, 'remote')
+      global.FormData = () => {}
+      spyOn(global, 'FormData').and.returnValue({some: 'Body'})
+
+      const {onSubmit} = builder.handlers()
+      const fakeFormEvent = createFakeRemoteFormEvent()
+      onSubmit(fakeFormEvent)
+
+      expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
+      expect(builder.remote).toHaveBeenCalledWith('/foo', {
         method: 'POST',
         headers: {
           "content-type": null,

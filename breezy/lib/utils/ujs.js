@@ -1,4 +1,4 @@
-import { withoutBusters } from './url'
+import { withoutBusters, hasBzq, urlToPageKey } from './url'
 import { visit, remote } from '../action_creators'
 import { enhanceVisitWithBrowserBehavior } from './react'
 
@@ -56,7 +56,14 @@ export class HandlerBuilder {
   }
 
   isUJS(node) {
-    return !!node.getAttribute(this.attributePrefix + '-visit')
+    const hasVisit = !!node.getAttribute(
+      this.attributePrefix + '-visit'
+    )
+    const hasRemote = !!node.getAttribute(
+      this.attributePrefix + '-remote'
+    )
+
+    return hasVisit || hasRemote
   }
 
   handleSubmit(event) {
@@ -72,7 +79,7 @@ export class HandlerBuilder {
     let method = (form.getAttribute('method') || 'POST').toUpperCase()
     url = withoutBusters(url)
 
-    this.visitOrRemote(url, {
+    this.visitOrRemote(form, url, {
       method,
       headers: {
         'content-type': null,
@@ -91,18 +98,30 @@ export class HandlerBuilder {
     event.preventDefault()
     let url = link.getAttribute('href')
     url = withoutBusters(url)
-    let method =
+
+    const method =
       link.getAttribute(this.attributePrefix + '-method') || 'GET'
-    this.visitOrRemote(url, { method })
+    this.visitOrRemote(link, url, { method })
   }
 
-  visitOrRemote(url, opts = {}) {
-    const isRemote = url.includes('bzq=')
+  visitOrRemote(linkOrForm, url, opts = {}) {
+    let target
 
-    if (isRemote) {
-      return this.remote(url, opts)
+    if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
+      target = this.visit
+      if (hasBzq(url) && target == this.visit) {
+        opts.placeholder = urlToPageKey(url)
+      }
+    }
+
+    if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {
+      target = this.remote
+    }
+
+    if (!target) {
+      return
     } else {
-      return this.visit(url, opts)
+      return target(url, opts)
     }
   }
 

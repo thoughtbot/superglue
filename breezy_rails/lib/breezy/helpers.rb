@@ -518,7 +518,7 @@ module Breezy
       html_options.delete("enforce_utf8")
 
       key_vals = html_options.map { |k, v|
-        [POSSIBLE_STANDARD_NAMES[k] || k.camelize(:lower), v]
+        [POSSIBLE_STANDARD_NAMES[k.to_sym] || k.camelize(:lower), v]
       }
       Hash[key_vals]
     end

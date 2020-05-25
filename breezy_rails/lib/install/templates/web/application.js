@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const {onClick, onSubmit} = ujsHandlers({
     navigatorRef,
     store,
-    ujsVisitAttribute: 'data-bz-visit'
+    ujsAttributePrefix: 'data-bz'
   })
 
   appEl.addEventListener('click', onClick)

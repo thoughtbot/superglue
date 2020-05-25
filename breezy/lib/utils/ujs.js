@@ -3,8 +3,8 @@ import {visit, remote} from '../action_creators'
 import {enhanceVisitWithBrowserBehavior} from './react'
 
 export class HandlerBuilder {
-  constructor ({ujsVisitAttribute, store, navigatorRef}) {
-    this.attributeName = ujsVisitAttribute
+  constructor ({ujsAttributePrefix, store, navigatorRef}) {
+    this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
     this.props = {
       navigateTo: (...args) => {
@@ -53,7 +53,7 @@ export class HandlerBuilder {
   }
 
   isUJS (node) {
-    return !!node.getAttribute(this.attributeName)
+    return !!node.getAttribute(this.attributePrefix + '-visit')
   }
 
   handleSubmit (event) {
@@ -88,7 +88,8 @@ export class HandlerBuilder {
     event.preventDefault()
     let url = link.getAttribute('href')
     url = withoutBusters(url)
-    this.visitOrRemote(url)
+    let method = link.getAttribute(this.attributePrefix + '-method') || 'GET'
+    this.visitOrRemote(url, {method})
   }
 
   visitOrRemote(url, opts = {}) {
@@ -109,8 +110,8 @@ export class HandlerBuilder {
   }
 }
 
-const ujsHandlers = ({navigatorRef, store, ujsVisitAttribute}) => {
-  const builder = new HandlerBuilder({navigatorRef, store, ujsVisitAttribute})
+const ujsHandlers = ({navigatorRef, store, ujsAttributePrefix}) => {
+  const builder = new HandlerBuilder({navigatorRef, store, ujsAttributePrefix})
 
   return builder.handlers()
 }

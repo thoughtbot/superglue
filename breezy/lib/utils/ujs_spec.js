@@ -19,7 +19,7 @@ describe('ujs', () => {
           if(attr === 'href') {
             return '/foo'
           }
-          if(attr === 'data-remote') {
+          if(attr === 'data-visit') {
             return true
           }
         }
@@ -29,7 +29,7 @@ describe('ujs', () => {
 
   describe('onClick', () => {
     it('calls visit on a valid link', () => {
-      const ujsVisitAttribute = 'data-remote'
+      const ujsAttributePrefix = 'data'
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -38,7 +38,7 @@ describe('ujs', () => {
       const store = {}
 
       const builder = new HandlerBuilder({
-        ujsVisitAttribute,
+        ujsAttributePrefix,
         store,
         navigatorRef
       })
@@ -48,12 +48,12 @@ describe('ujs', () => {
       const {onClick} = builder.handlers()
       onClick(createFakeEvent())
 
-      expect(builder.visit).toHaveBeenCalledWith('/foo', {})
+      expect(builder.visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
-    it('does not call visit on an link does not have the visit attribute data-remote', () => {
+    it('does not call visit on an link does not have the visit attribute data-visit', () => {
       const store = {}
-      const ujsVisitAttribute = 'data-remote'
+      const ujsAttributePrefix = 'data'
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -61,7 +61,7 @@ describe('ujs', () => {
       }
 
       const builder = new HandlerBuilder({
-        ujsVisitAttribute,
+        ujsAttributePrefix,
         store,
         navigatorRef
       })
@@ -81,7 +81,7 @@ describe('ujs', () => {
 
     it('does not call visit on an non-standard link', () => {
       const store = {}
-      const ujsVisitAttribute = 'data-remote'
+      const ujsAttributePrefix = 'data'
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -89,7 +89,7 @@ describe('ujs', () => {
       }
 
       const builder = new HandlerBuilder({
-        ujsVisitAttribute,
+        ujsAttributePrefix,
         store,
         navigatorRef
       })
@@ -129,7 +129,7 @@ describe('ujs', () => {
 
       fakeEvent = createFakeEvent()
       onClick(fakeEvent)
-      expect(builder.visit).toHaveBeenCalledWith('/foo', {})
+      expect(builder.visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
   })
 
@@ -147,7 +147,7 @@ describe('ujs', () => {
             if(attr === 'method') {
               return 'POST'
             }
-            if(attr === 'data-remote') {
+            if(attr === 'data-visit') {
               return true
             }
           }
@@ -157,7 +157,7 @@ describe('ujs', () => {
 
     it('succssfully posts a form', () => {
       const store = {}
-      const ujsVisitAttribute = 'data-remote'
+      const ujsAttributePrefix = 'data'
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -165,7 +165,7 @@ describe('ujs', () => {
       }
 
       const builder = new HandlerBuilder({
-        ujsVisitAttribute,
+        ujsAttributePrefix,
         store,
         navigatorRef
       })
@@ -189,7 +189,7 @@ describe('ujs', () => {
 
     it('does not posts a form without a visit attribute', () => {
       const store = {}
-      const ujsVisitAttribute = 'data-remote'
+      const ujsAttributePrefix = 'data'
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -197,7 +197,7 @@ describe('ujs', () => {
       }
 
       const builder = new HandlerBuilder({
-        ujsVisitAttribute,
+        ujsAttributePrefix,
         store,
         navigatorRef
       })
@@ -214,7 +214,7 @@ describe('ujs', () => {
         if(attr === 'method') {
           return 'POST'
         }
-        if(attr === 'data-remote') {
+        if(attr === 'data-visit') {
           return false
         }
       }

@@ -8,6 +8,13 @@ export function pathQuery(url) {
   return pathname + query
 }
 
+export function hasBzq(url) {
+  url = new parse(url, true)
+  let query = url.query
+
+  return !!query['bzq']
+}
+
 export function withAntiCache(url) {
   url = new parse(url, true)
   if (url.query.hasOwnProperty('_')) {

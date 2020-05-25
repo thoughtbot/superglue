@@ -4,7 +4,7 @@ import parse from 'url-parse'
 import 'cross-fetch'
 import { uuidv4, isGraft } from './utils/helpers'
 import { needsRefresh } from './window'
-import { urlToPageKey, withoutBusters } from './utils/url'
+import { urlToPageKey, withoutBusters, hasBzq } from './utils/url'
 import {
   CLEAR_FLASH,
   SAVE_RESPONSE,
@@ -264,21 +264,43 @@ export function visit(
     method = 'GET',
     headers,
     body = '',
+    placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
   } = {}
 ) {
-  pathQuery = urlToPageKey(pathQuery)
-  let pageKey = pathQuery
+  pathQuery = withoutBusters(pathQuery)
+  let pageKey = urlToPageKey(pathQuery)
 
   return (dispatch, getState) => {
+    const currentKey = urlToPageKey(getState().breezy.currentUrl)
+    dispatch(clearFlash({ pageKey: currentKey }))
+
+    if (placeholderKey) {
+      const hasPlaceholder = !!getState().pages[placeholderKey]
+      if (hasPlaceholder) {
+        dispatch(copyPage({ from: placeholderKey, to: pageKey }))
+      } else {
+        console.warn(
+          `Could not find placeholder with key ${placeholderKey} in state. The bzq param will be ignored`
+        )
+
+        pathQuery = pageKey
+      }
+    } else {
+      if (hasBzq(pathQuery)) {
+        console.warn(
+          `visit was called with bzq param in the path ${pathQuery}, this will be ignore unless you provide a placeholder.`
+        )
+      }
+
+      pathQuery = pageKey
+    }
+
     const fetchArgs = argsForFetch(getState, pathQuery, {
       headers,
       body,
       method,
     })
-
-    const currentKey = urlToPageKey(getState().breezy.currentUrl)
-    dispatch(clearFlash({ pageKey: currentKey }))
 
     return ensureSingleVisit(() => {
       pageKey = pageKey || getState().breezy.currentUrl

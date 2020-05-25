@@ -889,6 +889,135 @@ describe('action creators', () => {
         done()
       })
     })
+
+    it('warns when a placeholder is passed but does not exist in state', (done) => {
+      spyOn(console, 'warn')
+      const initialState = {
+        breezy: {
+          assets: [],
+          controlFlows: {
+            visit: 'firstId',
+          },
+        },
+        pages: {}
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock.mock('/first?__=0', rsp.visitSuccess())
+
+      const expectedFetchUrl = '/first?bzq=foo&__=bar&_=baz'
+      store.dispatch(visit(expectedFetchUrl, { placeholderKey: '/does-not-exist' })).then((meta) => {
+        expect(console.warn).toHaveBeenCalledWith(
+          'Could not find placeholder with key /does-not-exist in state. The bzq param will be ignored'
+        )
+        done()
+      })
+    })
+
+    it('keeps the bzq parameter when a placeholder is passed and exists in state', (done) => {
+      const initialState = {
+        breezy: {
+          assets: [],
+          controlFlows: {
+            visit: 'firstId',
+          },
+        },
+        pages: {
+          '/does-exist': {}
+        }
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
+
+      const expectedFetchUrl = '/first?bzq=foo&__=bar&_=baz'
+      store.dispatch(visit(expectedFetchUrl, { placeholderKey: '/does-exist' })).then((meta) => {
+        done()
+      })
+    })
+
+    it('warns when bzq is included but a placeholder was not passed', (done) => {
+      spyOn(console, 'warn')
+      const initialState = {
+        breezy: {
+          assets: [],
+          controlFlows: {
+            visit: 'firstId',
+          },
+        },
+        pages: {
+          '/does-exist': {}
+        }
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      fetchMock.mock('/first?__=0', rsp.visitSuccess())
+
+      const expectedFetchUrl = '/first?bzq=foo'
+      store.dispatch(visit(expectedFetchUrl)).then((meta) => {
+        expect(console.warn).toHaveBeenCalledWith(
+          'visit was called with bzq param in the path /first?bzq=foo, this will be ignore unless you provide a placeholder.'
+        )
+        done()
+      })
+    })
+
+    it('uses a placeholder when attempting to graft', (done) => {
+      const initialState = {
+        breezy: {
+          assets: [],
+          currentUrl: '/current',
+          controlFlows: {
+            visit: 'firstId',
+          },
+        },
+        pages: {
+          '/current': {
+            data: {
+              address: {}
+            },
+            flash: {},
+            csrfToken: 'token',
+            assets: ['application-new123.js', 'application-new123.js'],
+          }
+        }
+      }
+
+      const store = mockStore(initialState)
+      spyOn(connect, 'getStore').and.returnValue(store)
+
+      let mockResponse = rsp.graftSuccessWithNewZip()
+      fetchMock.mock(
+        '/details?bzq=data.address&__=0', mockResponse
+      )
+
+      const spy = spyOn(helpers, 'uuidv4')
+      spy.and.returnValue('firstId')
+
+      const expectedActions = [
+        { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
+        { type: '@@breezy/COPY_PAGE', payload: { from: '/current', to: '/details' } },
+        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'firstId' } },
+        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
+        { type: '@@breezy/HANDLE_GRAFT', payload: jasmine.any(Object) },
+        { type: '@@breezy/UPDATE_ALL_FRAGMENTS', payload: jasmine.any(Object) },
+      ]
+
+      store.dispatch(visit('/details?bzq=data.address', {placeholderKey: '/current'})).then((meta) => {
+        expect(meta.canNavigate).toEqual(true)
+        expect(store.getActions()).toEqual(expectedActions)
+        done()
+      })
+    })
   })
 
   describe('ensureSingleVisit', () => {

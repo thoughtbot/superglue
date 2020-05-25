@@ -220,6 +220,7 @@ export function remote(
         pageKey = urlToPageKey(pageKey)
         const page = beforeSave(pages[pageKey], json)
         dispatch(saveAndProcessPage(pageKey, page))
+        meta.pageKey = pageKey
 
         return meta
       })
@@ -301,6 +302,7 @@ export function visit(
 
           const page = beforeSave(pages[pageKey], json)
           dispatch(saveAndProcessPage(pageKey, page))
+          meta.pageKey = pageKey
 
           return meta
         })

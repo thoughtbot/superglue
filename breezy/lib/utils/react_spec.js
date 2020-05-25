@@ -49,7 +49,7 @@ describe('mapStateToToProps', () => {
       pages: {
         '/foo': {
           data: { heading: 'hi' },
-          flashes: [],
+          flash: {},
         },
       },
       breezy: {
@@ -62,7 +62,7 @@ describe('mapStateToToProps', () => {
       heading: 'hi',
       pageKey: '/foo',
       csrfToken: 'token123',
-      flashes: [],
+      flash: {},
     })
   })
 })

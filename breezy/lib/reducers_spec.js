@@ -95,7 +95,7 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
               },
               fragments: {},
-              flashes: [],
+              flash: {},
             },
           }
 
@@ -105,7 +105,7 @@ describe('reducers', () => {
             fragments: {
               header: ['data.a.b.c'],
             },
-            flashes: [],
+            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -124,7 +124,7 @@ describe('reducers', () => {
               fragments: {
                 header: ['data.a.b.c'],
               },
-              flashes: [],
+              flash: {},
             },
           })
         })
@@ -138,7 +138,7 @@ describe('reducers', () => {
               fragments: {
                 header: ['data.a.b.c'],
               },
-              flashes: [],
+              flash: {},
             },
           }
           const receivedPage = {
@@ -147,7 +147,7 @@ describe('reducers', () => {
             fragments: {
               header: ['data.a.b.c'],
             },
-            flashes: [],
+            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -166,7 +166,7 @@ describe('reducers', () => {
               fragments: {
                 header: ['data.a.b.c'],
               },
-              flashes: []
+              flash: {}
             },
           })
         })
@@ -181,7 +181,7 @@ describe('reducers', () => {
                 d: { e: { f: {} } },
               },
               fragments: {},
-              flashes: [],
+              flash: {},
             },
           }
 
@@ -191,7 +191,7 @@ describe('reducers', () => {
             fragments: {
               header: ['data.d.e.f'],
             },
-            flashes: [],
+            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -211,7 +211,7 @@ describe('reducers', () => {
               fragments: {
                 header: ['data.d.e.f'],
               },
-              flashes: []
+              flash: {}
             },
           })
         })
@@ -224,7 +224,7 @@ describe('reducers', () => {
                 d: { e: { f: {} } },
               },
               fragments: { header: ['data.d.e.f'] },
-              flashes: []
+              flash: {}
             },
           }
 
@@ -232,7 +232,7 @@ describe('reducers', () => {
             data: {},
             path: 'data.a.b.c',
             fragments: {},
-            flashes: []
+            flash: {}
           }
 
           const nextState = pageReducer(prevState, {
@@ -253,13 +253,13 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: {} } } },
               fragments: {},
-              flashes: [],
+              flash: {},
             },
           }
           const receivedPage = {
             data: { foo: 1 },
             fragments: {},
-            flashes: [],
+            flash: {},
           }
           const pageKey = '/foo'
 
@@ -279,7 +279,7 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: {} } } },
               fragments: {},
-              flashes: [],
+              flash: {},
             },
           }
 
@@ -287,7 +287,7 @@ describe('reducers', () => {
             data: { foo: 1 },
             path: 'data.a.b.c',
             fragments: {},
-            flashes: [],
+            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -302,7 +302,7 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: { foo: 1 } } } },
               fragments: {},
-              flashes: []
+              flash: {}
             },
           })
         })
@@ -337,13 +337,13 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: {} } } },
               fragments: {},
-              flashes: [],
+              flash: {},
             },
           }
 
           const receivedPage = {
             path: 'data.a.b.c',
-            flashes: [],
+            flash: {},
           }
 
           const nextState = pageReducer(prevState, {

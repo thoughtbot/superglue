@@ -6,7 +6,7 @@ import { uuidv4, isGraft } from './utils/helpers'
 import { needsRefresh } from './window'
 import { urlToPageKey, withoutBusters } from './utils/url'
 import {
-  CLEAR_FLASHES,
+  CLEAR_FLASH,
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   BEFORE_FETCH,
@@ -39,9 +39,9 @@ export function saveResponse({ pageKey, page }) {
   }
 }
 
-export function clearFlashes({ pageKey }) {
+export function clearFlash({ pageKey }) {
   return {
-    type: CLEAR_FLASHES,
+    type: CLEAR_FLASH,
     payload: {
       pageKey,
     },
@@ -272,7 +272,7 @@ export function visit(
     })
 
     const currentKey = urlToPageKey(getState().breezy.currentUrl)
-    dispatch(clearFlashes({ pageKey: currentKey }))
+    dispatch(clearFlash({ pageKey: currentKey }))
 
     return ensureSingleVisit(() => {
       pageKey = pageKey || getState().breezy.currentUrl

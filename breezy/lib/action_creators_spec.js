@@ -850,10 +850,10 @@ describe('action creators', () => {
       initialState.breezy.controlFlows.visit = 'secondId'
 
       const expectedActions = [
-        { type: '@@breezy/CLEAR_FLASHES', payload: { pageKey: '/current' } },
+        { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'firstId' } },
         { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
-        { type: '@@breezy/CLEAR_FLASHES', payload: { pageKey: '/current' } },
+        { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'secondId' } },
         { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
         { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },

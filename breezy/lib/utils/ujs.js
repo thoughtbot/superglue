@@ -4,6 +4,7 @@ import { enhanceVisitWithBrowserBehavior } from './react'
 
 export class HandlerBuilder {
   constructor({ ujsAttributePrefix, store, navigatorRef }) {
+    this.store = store
     this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
     this.props = {
@@ -29,6 +30,8 @@ export class HandlerBuilder {
     this.remote = (...args) => {
       return store.dispatch(remote(...args))
     }
+
+    this.visitOrRemote = this.visitOrRemote.bind(this)
   }
 
   retrieveLink(target) {
@@ -109,8 +112,8 @@ export class HandlerBuilder {
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
       target = this.visit
-      if (hasBzq(url) && target == this.visit) {
-        opts.placeholder = urlToPageKey(url)
+      if (hasBzq(url)) {
+        opts.placeholderKey = urlToPageKey(this.store.getState().breezy.currentUrl)
       }
     }
 

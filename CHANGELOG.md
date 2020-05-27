@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 <!-- Unreleased changes should go to UNRELEASED.md -->
 
-## v0.20.0
+## v0.13.0
 - Breezy only supports rail 6 and on.
 - BreezyTemplate is now replaced with PropsTemplate. Notable improvements over BreezyTemplate:
   - Support for application layouts, e.g `application.json.props`

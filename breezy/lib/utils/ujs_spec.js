@@ -7,7 +7,7 @@ import { JSDOM } from 'jsdom'
 import { render } from 'react-dom'
 import * as helpers from './helpers'
 
-describe('ujs', () => {
+fdescribe('ujs', () => {
   function createFakeEvent() {
     return {
       preventDefault: () => {},
@@ -18,6 +18,25 @@ describe('ujs', () => {
         getAttribute: (attr) => {
           if(attr === 'href') {
             return '/foo'
+          }
+          if(attr === 'data-visit') {
+            return true
+          }
+        }
+      }
+    }
+  }
+
+  function createFakeVisitGraftEvent() {
+    return {
+      preventDefault: () => {},
+      target: {
+        nodeName: 'A',
+        parentNode: 'DIV',
+        href: '/foo',
+        getAttribute: (attr) => {
+          if(attr === 'href') {
+            return '/foo?bzq=data.hello'
           }
           if(attr === 'data-visit') {
             return true
@@ -68,6 +87,37 @@ describe('ujs', () => {
       onClick(createFakeEvent())
 
       expect(builder.visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+    })
+
+    it('calls visit with a placeholder when bzq is present on a valid link', () => {
+      const ujsAttributePrefix = 'data'
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {}
+        }
+      }
+      const store = {
+        getState: () => {
+          return {
+            breezy: {
+              currentUrl: '/current'
+            }
+          }
+        }
+      }
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        navigatorRef
+      })
+
+      spyOn(builder, 'visit')
+
+      const {onClick} = builder.handlers()
+      onClick(createFakeVisitGraftEvent())
+
+      expect(builder.visit).toHaveBeenCalledWith('/foo?bzq=data.hello', {method: 'GET', placeholderKey: '/current'})
     })
 
     it('calls remote if a link is enabled with remote', () => {

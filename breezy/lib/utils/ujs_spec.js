@@ -7,7 +7,7 @@ import { JSDOM } from 'jsdom'
 import { render } from 'react-dom'
 import * as helpers from './helpers'
 
-fdescribe('ujs', () => {
+describe('ujs', () => {
   function createFakeEvent() {
     return {
       preventDefault: () => {},

@@ -23,6 +23,7 @@ export {
 } from './reducers'
 export { getIn } from './utils/immutability.js'
 export { setWindow, unsetWindow }
+export { urlToPageKey }
 export function stop() {
   unsetWindow()
 }

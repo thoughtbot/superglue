@@ -4,7 +4,6 @@ import { enhanceVisitWithBrowserBehavior } from './react'
 
 export class HandlerBuilder {
   constructor({ ujsAttributePrefix, store, navigatorRef }) {
-    this.store = store
     this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
     this.props = {
@@ -112,8 +111,9 @@ export class HandlerBuilder {
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
       target = this.visit
-      if (hasBzq(url)) {
-        opts.placeholderKey = urlToPageKey(this.store.getState().breezy.currentUrl)
+      const placeholderKey = linkOrForm.getAttribute(this.attributePrefix + '-placeholder')
+      if (placeholderKey) {
+        opts.placeholderKey = urlToPageKey(placeholderKey)
       }
     }
 

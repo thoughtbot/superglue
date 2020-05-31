@@ -38,6 +38,9 @@ fdescribe('ujs', () => {
           if(attr === 'href') {
             return '/foo?bzq=data.hello'
           }
+          if(attr === 'data-placeholder') {
+            return '/current'
+          }
           if(attr === 'data-visit') {
             return true
           }

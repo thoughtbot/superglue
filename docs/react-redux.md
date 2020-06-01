@@ -33,13 +33,15 @@ You will also receive additional props from the use of the `<NavComponent>`
 
 ### mapDispatchToProps
 
-A map of handy [thunks](#thunks).
+A map of handy [action creators](#action-creators).
 
 ```javascript
 export const mapDispatchToProps = {
   ensureSingleVisit,
   visit,
   remote,
+  pageKey,
+  copyPage,
   saveAndProcessPage,
 }
 ```
@@ -84,7 +86,7 @@ If there is an existing page in your store `navigateTo` will restore the props, 
 | :--- | :--- |
 | ownProps | Any additional props to be passed to the next page component. |
 
-## Thunks
+## Action Creators
 
 ### visit
 
@@ -107,7 +109,12 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | pathQuery | `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure. |
-| fetchRequestOptions | `Object` | Any fetch request options. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`. |
+| fetchRequestOptionsAndMore | `Object` | Any fetch request options plus extras. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`. |
+
+| fetchRequestOptionsAndMore | Type | Notes
+| :--- | :--- | :--- |
+| placeholderKey | `String` | When passing a url that has a `bzq` param, you can provide a `placeholderKey`, which breezy will use to copy the state over to the new url before making a request. If you do not provide this param, Breezy will remove any `bzq` param from the url.
+|      |      | Other options are passed on to `fetch`|
 
 | Callback options | Type | Notes |
 | :--- | :--- | :--- |
@@ -122,6 +129,24 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | fetchArgs | `Array` | The arguments passed to `fetch`, as tuple `[url, {req}]`. You can use this to implement your own retry logic. |
 | url | `String` | The full url, passed to `fetch`. |
 | pageKey | `String` | Location in the Breezy store where `page` is stored |
+
+### `data-bz-visit`
+
+A UJS equivalent of visit is available. For example:
+
+```
+  <a href='/some_url' data-bz-visit={true}>
+```
+
+or if you're using a form
+
+```
+<form action='/some_url' data-bz-visit={true}>
+```
+
+`data-bz-visit` also has 2 companion attributes:
+1. `data-bz-placeholder` will allow you to add a placeholder.
+2. `data-bz-method` will set the method of the request (GET, POST, PUT, DELETE) for a `<a>` tag.
 
 ### remote
 
@@ -138,11 +163,13 @@ remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).catch(({message, fet
 Shares the same arguments as `visit` with a few differences:
 
 * `canNavigate` is not available as an option passed to your then-able function.
+* `placeholder` is not available
 * You can override where the response is saved with a `pageKey` options
 
 | fetchRequestOptionsAndMore options | Type | Notes |
 | :--- | :--- | :--- |
 | pageKey | `String` | Where the response should be saved, by default its the current url.
+|      |      | Other options are passed on to `fetch`|
 
 ### saveAndProcessPage
 
@@ -152,6 +179,23 @@ Save and process a rendered view from PropsTemplate. It will also handle any def
 | :--- | :--- | :--- |
 | pageKey | `String` | Optional, but recommended. The page key where you want a rendered response to be saved in. Use your rails url helpers. If this is skipped, only [fragments](props_template/README.md#partial-fragments) will be updated|
 | page | `String` | A rendered PropsTemplate|
+
+### copyPage
+
+Copies an existing page in the store, and sets it to a different `pageKey`. Useful for optimistic updates on the next page before you navigate.
+
+```
+this.props.copyPage({
+  from: '/current_page',
+  to '/next_page'
+})
+```
+
+| Arguments | Type | Notes |
+| :--- | :--- | :--- |
+| {from} | `String` | The key of the page you want to copy from.
+| {to} | `String` | The key of the page you want to copy to.
+
 
 ### Behavior with Fragments
 If a fragment was rendered in any response to a `visit` or `remote`, all fragments across all pages in Breey's Redux store are automatically updated. For more information see [PropsTemplate](props_template/README.md#partial-fragments)

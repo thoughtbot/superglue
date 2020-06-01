@@ -31,7 +31,6 @@ With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but 
 remote('/dashboard?bzq=data.metrics')
 ```
 
-
 It is up to you to handle the case when `metrics` starts out empty. For example:
 
 ```javascript

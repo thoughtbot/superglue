@@ -111,7 +111,9 @@ export class HandlerBuilder {
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
       target = this.visit
-      const placeholderKey = linkOrForm.getAttribute(this.attributePrefix + '-placeholder')
+      const placeholderKey = linkOrForm.getAttribute(
+        this.attributePrefix + '-placeholder'
+      )
       if (placeholderKey) {
         opts.placeholderKey = urlToPageKey(placeholderKey)
       }

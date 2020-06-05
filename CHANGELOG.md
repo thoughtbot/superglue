@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- Unreleased changes should go to UNRELEASED.md -->
 
+## v0.14.0
+- Add UJS attributes data-bz-remote and data-bz-visit
+- Add copyPage action to allow optimistic updates
+- Allow visit thunks to use urls with bzq by allowing a placeholder option
+- Ensure all requests made by breezy gets a __=0 cache buster retained through redirect
+- Remove formik and use Rails forms
+- Add RailsTag component to use Rails innerhtml without a container tag
+- Updated generators
+- Add props_from_form_with to generate props for forms from Rails
+- Add redirect_back_with_bzq to redirect back while retaining the bzq param
+
 ## v0.13.0
 - Breezy only supports rail 6 and on.
 - BreezyTemplate is now replaced with PropsTemplate. Notable improvements over BreezyTemplate:
@@ -15,7 +26,6 @@ All notable changes to this project will be documented in this file.
 - BreezyJS no longer uses Server Generated Javascript Responses. It uses JSON and is now easier to use your favorite JSON browser plugin to see the JSON version of your page, for example: `localhost:3000/posts.json`
 - Breezy Rails controller requirements is simplified, no macros needed just plain Rails, be sure to `rails generate scaffold post` or `rails breezy:install:web` to see what changed.
 
----
 ## v0.12.0
 
 - Update tests for rails 6

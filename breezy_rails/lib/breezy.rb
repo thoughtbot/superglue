@@ -18,7 +18,7 @@ module Breezy
 
       if base.respond_to?(:helper_method)
         base.helper_method :param_to_search_path
-        base.helper_method :props_for_form_with
+        base.helper_method :props_from_form_with
         base.helper_method :search_path_to_camelized_param
       end
     end

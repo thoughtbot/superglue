@@ -8,5 +8,5 @@
 - Remove formik and use Rails forms
 - Add RailsTag component to use Rails innerhtml without a container tag
 - Updated generators
-- Add props_for_form_with to generate props for forms from Rails
+- Add props_from_form_with to generate props for forms from Rails
 - Add redirect_back_with_bzq to redirect back while retaining the bzq param

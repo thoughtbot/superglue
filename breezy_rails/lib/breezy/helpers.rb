@@ -502,7 +502,7 @@ module Breezy
       end
     end
 
-    def props_for_form_with(model: nil, scope: nil, url: nil, format: nil, **options)
+    def props_from_form_with(model: nil, scope: nil, url: nil, format: nil, **options)
       options[:allow_method_names_outside_object] = true
       options[:skip_default_ids] = !helpers.send(:form_with_generates_ids)
 

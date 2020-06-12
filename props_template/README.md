@@ -45,6 +45,15 @@ json.footer partial: 'shared/footer' do
 end
 ```
 
+## Installation
+If you plan to use PropsTemplate alone just add it to your Gemfile.
+
+```
+gem 'props_template'
+```
+
+and run `bundle`
+
 ## API
 
 ### json.set! or json.<your key here>

@@ -35,7 +35,7 @@ remote('/dashboard?bzq=data.header.search&some_search_str=haircuts')
 ```
 
 ## Collections
-You can traverse collections.
+There are two ways to query collections. Looking at the following example:
 
 ```ruby
 json.data(search: params[:bzq]) do
@@ -49,8 +49,8 @@ json.data(search: params[:bzq]) do
 end
 ```
 
-### Index based keys
-To update the first post in a list, you could do something like:
+### Index based selection
+You may use an index based key to fetch an item in a list like so:
 
 ```
 remote('/dashboard?bzq=data.posts.0.details')
@@ -62,7 +62,7 @@ PropsTemplate includes a `Array` extension which delegates to `at`. If you've us
 
 While traversing by index works fine, it can lead the wrong post being updated if your Redux state has changed by the time the request comes back.
 
-### Attribute-based keys
+### Attribute-based selection
 Attribute based keys for collections look like this:
 
 ```
@@ -76,7 +76,7 @@ To enable this, you are required to implement `member_by(attribute, value)` on t
 ```ruby
 json.data(search: params[:bzq]) do
   json.posts do
-    json.array! @posts , key: :some_id do |post|
+    json.array! @posts, key: :some_id do |post|
       json.details do
         json.title post.title
       end
@@ -90,7 +90,7 @@ end
 
 ## Partials
 
-You can even traverse into partials!
+You can even query into partials.
 
 ```
 remote('/dashboard?bzq=data.posts.some_id=1.details')
@@ -115,5 +115,9 @@ json.array! @posts , key: :some_id do |post|
 end
 ```
 
+## Behavior with Caching and Deferment
 
-That's the basics of traversing with Breezy. A lot of modern SPA functionality can be achieved by just a few lines of code. Head over to (recipes)[#recipes] to learn more.
+When querying, Breezy will disable (caching)[../props_template/README.md#caching] and (deferement)[../props_template/README.md#deferment] until the target node is reached.
+
+
+That's the basics of traversing with Breezy. A lot of modern SPA functionality can be achieved by just a few lines of code. Head over to (recipes)[#recipes] for examples.

@@ -61,8 +61,10 @@ getIn(state, '/posts.data.posts.0.comment.0.body')
 or find first by its attribute and value
 
 ```javascript
-getIn(state, '/posts.data.postId=0.comment.0.body')
+getIn(state, '/posts.data.post_id=0.comment.0.body')
 ```
 
-The above would find the first occurrence where `postId=1` before continuing traversing.
+The above would find the first occurrence where `post_id=1` before continuing traversing.
+
+
 

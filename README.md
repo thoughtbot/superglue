@@ -5,9 +5,9 @@
 Build modern React/Redux applications using classic Rails. Batteries included. Turbolinks inspired. APIs and client-side routing not required.
 
 ## At a Glance
-Breezy is a set of libraries that helps with data and navigation. It makes page-to-page transitions and partial page updates painless to implement, and doesn't require any APIs or client-side routing.
+Breezy bootstraps your Rails and React application, and helps with data and navigation. It makes page-to-page transitions and partial page updates painless to implement, and doesn't require any APIs or client-side routing.
 
-Additionally, it offers deep integration with Rails and makes React feel like a view replacement for ERB. Features you enjoyed when working in classic Rails; such as form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
+Additionally, it offers deep integration with Rails and makes React feel like a view replacement for ERB. Features you enjoyed when working in classic Rails; form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
 
 
 ### No APIs
@@ -37,20 +37,20 @@ Powering these JSON responses is PropsTemplate, a traversable JSON templating la
 ![No Apis](docs/images/props_template.png)
 
 ### All together now!
-Breezy comes with batteries that bring all the above concepts together to make building popular SPA features easy, painless, and as productive.
+Breezy comes with batteries that bring all the above concepts together to make building popular SPA features easy, painless, and productive.
 
 #### SPA Navigation
-A popular ask of SPAs is page-to-page navigation without reloading. If you were on `/dashboard` and you wanted to click on a link to go to `/posts` without a hard reload, you can use Breey's own UJS attributes:
+A popular ask of SPAs is page-to-page navigation without reloading. If you were on `/dashboard` and you wanted to click on a link to go to `/posts` without a hard reload, you can use Breezy's own UJS attributes:
 
 ```jsx
-  <a href='/posts' data-bz-visit={true}>
+  <a href='/posts' data-bz-visit={true} />
 ```
 
 
 The above will request for `/posts` with an accept of `application/json`, and when the client receives the response, swap out the current component for the component the response asks for, and `pushState` on history.
 
 #### Same-page updates
-Other features of SPA rely on updating some part of the existing page. In addition to `data-bz-visit` and its equivalent `this.props.visit`, Breezy also provides `data-bz-remote` or `this.props.visit`, which you can use to update parts of your page in async fashion without changing `window.history`.
+Other features of SPA rely on updating some part of the existing page. In addition to `data-bz-visit` and its equivalent `this.props.visit`, Breezy also provides `data-bz-remote` or `this.props.remote`, which you can use to update parts of your page in async fashion without changing `window.history`.
 
 Imagine having to implement search, where you enter some text, hit enter, and results would show without reloading the screen. In traditional applications, you may need a new controller, routes, a discussion over versioning, JSON serializer, plenty of new JS code, etc.
 
@@ -59,7 +59,7 @@ Imagine having to implement search, where you enter some text, hit enter, and re
 With Breezy, one line of code enough:
 
 ```javascript
-  this.remote('/dashboard?qry=haircut&bzq=data.header.search')
+  this.props.remote('/dashboard?qry=haircut&bzq=data.header.search')
 ```
 
 The above will make a request to `/dashboard?qry=haircut`, walk your props to the `data.header.search` node, return it in a response, and immutably graft it in the exact same path on the redux store before finally letting React re-render.

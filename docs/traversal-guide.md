@@ -117,7 +117,7 @@ end
 
 ## Behavior with Caching and Deferment
 
-When querying, Breezy will disable (caching)[../props_template/README.md#caching] and (deferement)[../props_template/README.md#deferment] until the target node is reached.
+When querying, Breezy will disable [caching](../props_template/README.md#caching) and [deferement](../props_template/README.md#deferment) until the target node is reached.
 
 
 That's the basics of traversing with Breezy. A lot of modern SPA functionality can be achieved by just a few lines of code. Head over to (recipes)[#recipes] for examples.

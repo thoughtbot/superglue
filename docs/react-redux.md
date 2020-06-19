@@ -134,14 +134,14 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 A UJS equivalent of visit is available. For example:
 
-```
-  <a href='/some_url' data-bz-visit={true}>
+```javascript
+<a href='/some_url' data-bz-visit={true} />
 ```
 
 or if you're using a form
 
-```
-<form action='/some_url' data-bz-visit={true}>
+```javascript
+<form action='/some_url' data-bz-visit={true} />
 ```
 
 `data-bz-visit` also has 2 companion attributes:
@@ -170,6 +170,14 @@ Shares the same arguments as `visit` with a few differences:
 | :--- | :--- | :--- |
 | pageKey | `String` | Where the response should be saved, by default its the current url.
 |      |      | Other options are passed on to `fetch`|
+
+### `data-bz-remote`
+
+A UJS equivalent of remote is available. Use this if you want to update parts of the current page, or another page in the Redux store without updating `window.history` for example:
+
+```javascript
+<a href='/some_url' data-bz-remote={true} />
+```
 
 ### saveAndProcessPage
 

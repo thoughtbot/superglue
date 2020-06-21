@@ -280,9 +280,10 @@ export function metaReducer(state = {}, action) {
     }
     case SAVE_RESPONSE: {
       const {
-        page: { csrfToken },
+        page: { csrfToken, assets },
       } = action.payload
-      return { ...state, csrfToken }
+
+      return { ...state, csrfToken, assets }
     }
     case SET_CSRF_TOKEN: {
       const { csrfToken } = action.payload

@@ -117,6 +117,7 @@ describe('navigation', () => {
           controlFlows: {
             visit: jasmine.any(String),
           },
+          assets: [ 'application-123.js', 'application-123.js' ]
         },
         pages: {
           '/bar': {

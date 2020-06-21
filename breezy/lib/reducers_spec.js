@@ -54,6 +54,7 @@ describe('reducers', () => {
           payload: {
             page: {
               csrfToken: 'some_token',
+              assets: ['abc123.js']
             },
           },
         }
@@ -62,6 +63,7 @@ describe('reducers', () => {
         expect(nextState).toEqual({
           foo: 'bar',
           csrfToken: 'some_token',
+          assets: ['abc123.js']
         })
       })
     })

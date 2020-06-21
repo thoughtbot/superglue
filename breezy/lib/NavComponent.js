@@ -8,7 +8,7 @@ import {
   HISTORY_CHANGE,
 } from './actions'
 
-function argsForHistory(url) {
+function argsForHistory(url, assets) {
   const pageKey = urlToPageKey(url)
 
   return [
@@ -16,6 +16,7 @@ function argsForHistory(url) {
     {
       breezy: true,
       pageKey,
+      assets,
     },
   ]
 }

@@ -1,35 +1,15 @@
 import { withoutBusters, hasBzq, urlToPageKey } from './url'
-import { visit, remote } from '../action_creators'
-import { enhanceVisitWithBrowserBehavior } from './react'
 
 export class HandlerBuilder {
-  constructor({ ujsAttributePrefix, store, navigatorRef }) {
+  constructor({ ujsAttributePrefix, store, visit, remote }) {
     this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
-    this.props = {
-      navigateTo: (...args) => {
-        const successfulNav = navigatorRef.current.navigateTo(...args)
 
-        if (!successfulNav) {
-          console.error(
-            `\`navigateTo\` was called via UJS, but could not find.
-            the pageKey in the store. This may happen when the wrong
-            content_location was set in your non-get controller action.`
-          )
-        }
-      },
-    }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClick = this.handleClick.bind(this)
 
-    this.visit = enhanceVisitWithBrowserBehavior((...args) => {
-      return store.dispatch(visit(...args))
-    }).bind(this)
-
-    this.remote = (...args) => {
-      return store.dispatch(remote(...args))
-    }
-
+    this.visit = visit
+    this.remote = remote
     this.visitOrRemote = this.visitOrRemote.bind(this)
   }
 
@@ -138,10 +118,12 @@ export class HandlerBuilder {
   }
 }
 
-const ujsHandlers = ({ navigatorRef, store, ujsAttributePrefix }) => {
+const ujsHandlers = ({ navigatorRef, store, ujsAttributePrefix, visit, remote }) => {
   const builder = new HandlerBuilder({
     navigatorRef,
     store,
+    visit,
+    remote,
     ujsAttributePrefix,
   })
 

@@ -35,8 +35,6 @@ module Rails
           template 'web/' + filename, File.join('app/views', controller_file_path, filename)
         end
 
-        template 'web/base.jsx', File.join('app/components', 'BaseScreen.jsx')
-
         %w(index show new edit).each do |view|
           append_mapping(view)
         end

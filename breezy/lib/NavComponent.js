@@ -90,7 +90,7 @@ class Nav extends React.Component {
 
   // TODO: parse without bzq??
   onHistoryChange(location, action) {
-    const { store } = this.props
+    const { store, visit } = this.props
     store.dispatch({
       type: HISTORY_CHANGE,
       payload: {
@@ -138,7 +138,7 @@ class Nav extends React.Component {
   }
 
   render() {
-    const { mapping, store } = this.props
+    const { mapping, store, visit, remote } = this.props
 
     const { pageKey, ownProps } = this.state
     const { componentIdentifier } = store.getState().pages[pageKey]
@@ -149,6 +149,8 @@ class Nav extends React.Component {
         <Component
           pageKey={pageKey}
           navigateTo={this.navigateTo}
+          visit={visit}
+          remote={remote}
           {...ownProps}
         />
       )

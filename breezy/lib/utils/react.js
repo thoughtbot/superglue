@@ -36,15 +36,25 @@ export function mapStateToProps(
   return { ...data, ...params, pageKey, csrfToken, flash }
 }
 
-export const mapDispatchToProps = {
-  visit,
-  ensureSingleVisit,
-  remote,
-  saveAndProcessPage,
-  copyPage,
+export function mapDispatchToProps(dispatch, ownProps = {}) {
+  const mappedVisit = (...args) => dispatch(visit(...args))
+  const mappedRemote = (...args) => dispatch(remote(...args))
+
+  const usedVisit = ownProps.visit || mappedVisit
+  const usedRemote = ownProps.remote || mappedRemote
+
+  return {
+    visit: usedVisit,
+    remote: usedRemote,
+    ensureSingleVisit: (...args) =>
+      dispatch(ensureSingleVisit(...args)),
+    saveAndProcessPage: (...args) =>
+      dispatch(saveAndProcessPage(...args)),
+    copyPage: (...args) => dispatch(copyPage(...args)),
+  }
 }
 
-export function enhanceVisitWithBrowserBehavior(visit) {
+export function enhanceVisitWithBrowserBehavior(ref, visit) {
   const wrappedVisit = function (...args) {
     return visit(...args)
       .then((rsp) => {
@@ -59,7 +69,20 @@ export function enhanceVisitWithBrowserBehavior(visit) {
         }
 
         if (rsp.canNavigate) {
-          return this.props.navigateTo(rsp.pageKey, { action })
+          const successfulNav = ref.current.navigateTo(rsp.pageKey, {
+            action,
+          })
+
+          if (!successfulNav) {
+            console.warn(
+              `\`navigateTo\` was called via UJS, but could not find.
+              the pageKey in the store. This may happen when the wrong
+              content_location was set in your non-get controller action.
+              No navigation will take place`
+            )
+          }
+
+          return successfulNav
         } else {
           // There can only be one visit at a time, if `canNavigate`
           // is false, then this request is being ignored for a more

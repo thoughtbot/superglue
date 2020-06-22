@@ -11,6 +11,8 @@ import ujsHandlers from '@jho406/breezy/dist/utils/ujs'
 import { applicationRootReducer, applicationPagesReducer } from './reducer'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { visit, remote } from '@jho406/breezy/dist/action_creators'
+import { enhanceVisitWithBrowserBehavior } from '@jho406/breezy/dist/utils/react'
 
 // Mapping between your props template to Component, you must add to this
 // to register any new page level component you create. If you are using the
@@ -73,6 +75,16 @@ const navigatorRef = React.createRef()
 
 connect(store)
 
+// Wrap the visit thunk with your own implementation.
+const applicationVisit = enhanceVisitWithBrowserBehavior(navigatorRef, (...args) => {
+  return store.dispatch((dispatch, getState) => {
+    // Do something before
+    return visit(...args)(dispatch, getState).finally(() => {
+    // Do something after
+    })
+  })
+})
+
 class App extends React.Component {
   //The Nav is bare bones. Feel free to inherit or replace the implementation.
   render() {
@@ -80,6 +92,8 @@ class App extends React.Component {
       <Nav
         store={store}
         ref={navigatorRef}
+        visit={applicationVisit}
+        remote={remote}
         mapping={this.props.mapping}
         history={history}
         initialPageKey={initialPageKey}
@@ -94,7 +108,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Create the ujs event handlers. You can change the ujsAttributePrefix
     // in the event the data attribute conflicts with another.
     const {onClick, onSubmit} = ujsHandlers({
-      navigatorRef,
+      visit: applicationVisit,
+      remote,
       store,
       ujsAttributePrefix: 'data-bz'
     })

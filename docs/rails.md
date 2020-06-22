@@ -27,7 +27,7 @@ end
 Your Rails flash will work as expected. On the React side, you recieve the flash in the `props` of your connected component:
 
 ```
-class PostsIndex extends BaseScreen {
+class PostsIndex extends React.Component {
   render () {
     const {
       flash,

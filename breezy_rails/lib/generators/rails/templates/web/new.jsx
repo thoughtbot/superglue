@@ -1,11 +1,10 @@
 import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import {connect} from 'react-redux'
-import BaseScreen from 'components/BaseScreen'
 import RailsTag from '@jho406/breezy/dist/RailsTag'
 import * as applicationActionCreators from 'javascript/packs/action_creators'
 
-class <%= plural_table_name.camelize %>New extends BaseScreen {
+class <%= plural_table_name.camelize %>New extends React.Component {
   render () {
     const {
       form,

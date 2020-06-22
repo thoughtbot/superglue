@@ -1,9 +1,8 @@
 import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import { connect } from 'react-redux'
-import BaseScreen from 'components/BaseScreen'
 
-class <%= plural_table_name.camelize %>Show extends BaseScreen {
+class <%= plural_table_name.camelize %>Show extends React.Component {
   render () {
     return (
       <div>

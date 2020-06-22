@@ -71,6 +71,7 @@ describe('ujs', () => {
   describe('onClick', () => {
     it('calls visit on a valid link', () => {
       const ujsAttributePrefix = 'data'
+      const visit = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -81,19 +82,19 @@ describe('ujs', () => {
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
+        visit,
         navigatorRef
       })
-
-      spyOn(builder, 'visit')
 
       const {onClick} = builder.handlers()
       onClick(createFakeEvent())
 
-      expect(builder.visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
     it('calls visit with a placeholder when bzq is present on a valid link', () => {
       const ujsAttributePrefix = 'data'
+      const visit = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -112,19 +113,19 @@ describe('ujs', () => {
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
+        visit,
         navigatorRef
       })
-
-      spyOn(builder, 'visit')
 
       const {onClick} = builder.handlers()
       onClick(createFakeVisitGraftEvent())
 
-      expect(builder.visit).toHaveBeenCalledWith('/foo?bzq=data.hello', {method: 'GET', placeholderKey: '/current'})
+      expect(visit).toHaveBeenCalledWith('/foo?bzq=data.hello', {method: 'GET', placeholderKey: '/current'})
     })
 
     it('calls remote if a link is enabled with remote', () => {
       const ujsAttributePrefix = 'data'
+      const remote = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -135,20 +136,20 @@ describe('ujs', () => {
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
+        remote,
         navigatorRef
       })
-
-      spyOn(builder, 'remote')
 
       const {onClick} = builder.handlers()
       onClick(createFakeRemoteEvent())
 
-      expect(builder.remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
     it('does not call visit on an link does not have the visit attribute data-visit', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
+      const visit = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -158,9 +159,10 @@ describe('ujs', () => {
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
+        visit,
         navigatorRef
       })
-      spyOn(builder, 'visit')
+
       const fakeEvent = createFakeEvent()
       fakeEvent.target.getAttribute = (attr) => {
         if(attr === 'href') {
@@ -171,12 +173,13 @@ describe('ujs', () => {
       const {onClick} = builder.handlers()
       onClick(fakeEvent)
 
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
     })
 
     it('does not call visit on an non-standard link', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
+      const visit = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -185,46 +188,46 @@ describe('ujs', () => {
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
+        visit,
         store,
         navigatorRef
       })
-      spyOn(builder, 'visit')
 
       const {onClick} = builder.handlers()
 
       let fakeEvent = createFakeEvent()
       fakeEvent.which = 2
       onClick(fakeEvent)
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       fakeEvent.metaKey = 1
       onClick(fakeEvent)
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       fakeEvent.metaKey = 1
       onClick(fakeEvent)
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       fakeEvent.ctrlKey= 1
       onClick(fakeEvent)
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       fakeEvent.shiftKey= 1
       onClick(fakeEvent)
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       fakeEvent.altKey= 1
       onClick(fakeEvent)
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       onClick(fakeEvent)
-      expect(builder.visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
   })
 
@@ -274,6 +277,7 @@ describe('ujs', () => {
     it('succssfully posts a form with a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
+      const visit = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -282,10 +286,10 @@ describe('ujs', () => {
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
+        visit,
         store,
         navigatorRef
       })
-      spyOn(builder, 'visit')
       global.FormData = () => {}
       spyOn(global, 'FormData').and.returnValue({some: 'Body'})
 
@@ -294,7 +298,7 @@ describe('ujs', () => {
       onSubmit(fakeFormEvent)
 
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
-      expect(builder.visit).toHaveBeenCalledWith('/foo', {
+      expect(visit).toHaveBeenCalledWith('/foo', {
         method: 'POST',
         headers: {
           "content-type": null,
@@ -306,6 +310,7 @@ describe('ujs', () => {
     it('succssfully posts a form with a remote attribut', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
+      const remote = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -315,9 +320,9 @@ describe('ujs', () => {
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
+        remote,
         navigatorRef
       })
-      spyOn(builder, 'remote')
       global.FormData = () => {}
       spyOn(global, 'FormData').and.returnValue({some: 'Body'})
 
@@ -326,7 +331,7 @@ describe('ujs', () => {
       onSubmit(fakeFormEvent)
 
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
-      expect(builder.remote).toHaveBeenCalledWith('/foo', {
+      expect(remote).toHaveBeenCalledWith('/foo', {
         method: 'POST',
         headers: {
           "content-type": null,
@@ -338,6 +343,7 @@ describe('ujs', () => {
     it('does not posts a form without a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
+      const visit = jasmine.createSpy()
       const navigatorRef = {
         current: {
           navigateTo: () => {}
@@ -347,9 +353,9 @@ describe('ujs', () => {
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
+        visit,
         navigatorRef
       })
-      spyOn(builder, 'visit')
       global.FormData = () => {}
       spyOn(global, 'FormData').and.returnValue({some: 'Body'})
 
@@ -368,7 +374,7 @@ describe('ujs', () => {
       }
       onSubmit(fakeFormEvent)
 
-      expect(builder.visit).not.toHaveBeenCalledWith('/foo', {
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
         method: 'POST',
         body: {some: 'Body'}
       })

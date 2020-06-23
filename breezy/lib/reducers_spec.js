@@ -11,19 +11,24 @@ import {
 describe('reducers', () => {
   describe('meta reducer', () => {
     describe('BREEZY_HISTORY_CHANGE', () => {
-      it('sets the currentUrl', () => {
+      it('sets the currentPageKey', () => {
         const prevState = { foo: 'bar' }
         const action = {
           type: '@@breezy/HISTORY_CHANGE',
           payload: {
-            url: '/some_url',
+            pathname: '/some_url',
+            search: '?foo=123',
+            hash: '#title',
           },
         }
         const nextState = metaReducer(prevState, action)
 
         expect(nextState).toEqual({
           foo: 'bar',
-          currentUrl: '/some_url',
+          pathname: '/some_url',
+          search: '?foo=123',
+          hash: '#title',
+          currentPageKey: '/some_url?foo=123',
         })
       })
     })

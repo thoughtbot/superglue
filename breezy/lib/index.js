@@ -34,14 +34,10 @@ function pageToInitialState(key, page) {
   }
 }
 
-export function start({
-  window,
-  baseUrl = '',
-  url,
-  initialPage = {},
-}) {
+export function start({ window, initialPage, baseUrl, url }) {
   if (window) {
     setWindow(window)
+    // reconder the naming of URL to path
     if (!url) {
       url = window.location.href
     }
@@ -49,17 +45,20 @@ export function start({
 
   const initialPageKey = urlToPageKey(parse(url).href)
   const { csrfToken } = initialPage
+  const location = parse(url)
+  const { pathname, query, hash } = location
 
   return {
     reducer: rootReducer,
     connect: function (store) {
       connect(store)
-
       if (hasWindow()) {
         store.dispatch({
           type: HISTORY_CHANGE,
           payload: {
-            url: parse(url).href,
+            pathname: location.pathname,
+            search: location.query,
+            hash: location.hash,
           },
         })
       }

@@ -271,8 +271,16 @@ export function pageReducer(state = {}, action) {
 export function metaReducer(state = {}, action) {
   switch (action.type) {
     case HISTORY_CHANGE: {
-      const { url } = action.payload
-      return { ...state, currentUrl: url }
+      const { pathname, search, hash } = action.payload
+      const currentPageKey = urlToPageKey(pathname + search)
+
+      return {
+        ...state,
+        currentPageKey,
+        pathname,
+        search,
+        hash,
+      }
     }
     case SET_BASE_URL: {
       const { baseUrl } = action.payload

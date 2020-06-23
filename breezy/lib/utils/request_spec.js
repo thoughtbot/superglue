@@ -93,11 +93,11 @@ describe('argsForFetch', () => {
     ])
   })
 
-  it('returns fetch arguments x-xhr-referer when currentUrl is set in state', () => {
+  it('returns fetch arguments x-xhr-referer when currentPageKey is set in state', () => {
     const getState = () => {
       return {
         breezy: {
-          currentUrl: '/some_current_url',
+          currentPageKey: '/some_current_url',
         },
       }
     }

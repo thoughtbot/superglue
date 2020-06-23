@@ -67,8 +67,14 @@ export function argsForFetch(
     }
   }
 
-  if (currentState.currentUrl) {
-    headers['x-xhr-referer'] = currentState.currentUrl
+  if (currentState.currentPageKey) {
+    const referrer = new parse(
+      currentState.currentPageKey,
+      currentState.baseUrl || '',
+      false
+    ).href
+
+    headers['x-xhr-referer'] = referrer
   }
 
   if (currentState.csrfToken) {

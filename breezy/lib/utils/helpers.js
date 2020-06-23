@@ -1,5 +1,7 @@
 import uuidv4 from 'uuid/v4'
+import { urlToPageKey } from './url'
 export { uuidv4 }
+
 
 export function isGraft(page) {
   return page.action === 'graft'
@@ -15,4 +17,16 @@ export function extractNodeAndPath(page) {
       'Expected page to be a graft response rendered from node filtering.'
     throw new Error(errMsg)
   }
+}
+
+export function argsForHistory(path, assets) {
+  const pageKey = urlToPageKey(path)
+
+  return [
+    path,
+    {
+      breezy: true,
+      pageKey,
+    },
+  ]
 }

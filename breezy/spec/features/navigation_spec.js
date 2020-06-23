@@ -10,7 +10,8 @@ import React from 'react'
 import { mapStateToProps, mapDispatchToProps } from '../../lib/utils/react'
 import { getStore } from '../../lib/connector'
 import { createMemoryHistory } from 'history'
-import Nav from '../../lib/NavComponent.js'
+import Nav from '../../lib/NavComponent'
+import * as win from '../../lib/window'
 
 process.on('unhandledRejection', (r) => console.log(r))
 
@@ -26,7 +27,9 @@ class Home extends React.Component {
   }
 
   visit() {
-    this.props.visit('/foo').then(() => this.props.navigateTo('/foo'))
+    this.props.visit('/foo').then(() => {
+      this.props.navigateTo('/foo')
+    })
   }
 
   render() {
@@ -45,44 +48,117 @@ class About extends React.Component {
   }
 }
 
+describe('start', () => {
+  it('sets the stage', () => {
+    const { dom, target } = createScene(`<div></div>`, 'http://localhost/bar')
+    const initialPage = {
+      data: {
+        heading: 'this is page 1',
+      },
+      flash: {},
+      componentIdentifier: 'home',
+      assets: ['123.js', '123.css'],
+      csrfToken: 'token'
+    }
+
+    const bz = start({
+      window: dom.window,
+      initialPage,
+      baseUrl: 'http://example.com/base/',
+      url: 'http://example.com/bar?some=123#title',
+    })
+    const { reducer, initialState, initialPageKey } = bz
+    const store = createStore(
+      combineReducers(reducer),
+      initialState,
+      applyMiddleware(thunk)
+    )
+
+    bz.connect(store)
+
+    expect(store.getState()).toEqual({
+      breezy:{
+        controlFlows: {},
+        currentPageKey: '/bar?some=123',
+        pathname: '/bar',
+        search: '?some=123',
+        hash: '#title',
+        csrfToken: 'token',
+        assets: [ '123.js', '123.css' ],
+        baseUrl: 'http://example.com/base/',
+      },
+      pages:{
+        '/bar?some=123':{
+          pageKey: '/bar?some=123',
+          fragments: {},
+          data: {
+            heading: 'this is page 1',
+          },
+          flash: {},
+          componentIdentifier: 'home',
+          assets: [ '123.js', '123.css' ],
+          csrfToken: 'token',
+        }
+      }
+    })
+  })
+})
+
+function createBreezyApp({history} = {}) {
+  history = history ? history : createMemoryHistory({})
+
+  const { dom, target } = createScene(`<div></div>`, 'http://localhost/bar')
+  const initialPage = {
+    data: {
+      heading: 'this is page 1',
+    },
+    flash: {},
+    componentIdentifier: 'home',
+    assets: ['123.js', '123.css'],
+    csrfToken: 'token'
+  }
+
+  const bz = start({
+    window: dom.window,
+    initialPage,
+    history,
+    baseUrl: '',
+    url: '/bar',
+  })
+  const { reducer, initialState, initialPageKey } = bz
+  const store = createStore(
+    combineReducers(reducer),
+    initialState,
+    applyMiddleware(thunk)
+  )
+  bz.connect(store)
+
+  return {history, initialPageKey, store, dom, target}
+}
+
 describe('navigation', () => {
   beforeEach(() => {
     fetchMock.restore()
   })
 
-  describe('when successfully visiting', () => {
-    it('saves the page', (done) => {
-      let history = createMemoryHistory({})
-      let { dom, target } = createScene(`<div></div>`, 'http://localhost/bar')
-      let initialPage = {
-        data: {
-          heading: 'this is page 1',
-        },
-        flash: {},
-        componentIdentifier: 'home',
-      }
-
-      const bz = start({
-        window: dom.window,
-        initialPage,
-        url: '/bar',
-      })
-      const { reducer, initialState, initialPageKey } = bz
-
-      const store = createStore(
-        combineReducers(reducer),
-        initialState,
-        applyMiddleware(thunk)
-      )
-
-      bz.connect(store)
+  describe('when an action pushes history', () => {
+    it('saves the page and updates history', (done) => {
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp()
 
       const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(Home)
 
       class ExampleAbout extends About {
         componentDidMount() {
           const state = getStore().getState()
-          expect(state).toEqual(newState)
+          expect(state.pages['/foo']).toEqual(pageState)
+          expect(history.location.pathname).toEqual('/foo')
+          expect(history.location.search).toEqual('')
+          expect(history.location.hash).toEqual('')
           stop()
           done()
         }
@@ -109,44 +185,283 @@ describe('navigation', () => {
       mockResponse.headers['x-response-url'] = '/foo'
       fetchMock.mock('/foo?__=0', mockResponse)
 
-      const newState = {
-        breezy: {
-          currentUrl: '/foo',
-          baseUrl: '',
-          csrfToken: 'token',
-          controlFlows: {
-            visit: jasmine.any(String),
-          },
-          assets: [ 'application-123.js', 'application-123.js' ]
-        },
-        pages: {
-          '/bar': {
-            data: { heading: 'this is page 1' },
-            flash: {},
-            componentIdentifier: 'home',
-            pageKey: '/bar',
-            fragments: {},
-          },
-          '/foo': {
-            data: { heading: 'Some heading 2' },
-            flash: {},
-            csrfToken: 'token',
-            assets: ['application-123.js', 'application-123.js'],
-            componentIdentifier: 'about',
-            pageKey: '/foo',
-            fragments: {},
-          },
-        },
+      const pageState = {
+        data: { heading: 'Some heading 2' },
+        flash: {},
+        csrfToken: 'token',
+        assets: ['application-123.js', 'application-123.js'],
+        componentIdentifier: 'about',
+        pageKey: '/foo',
+        fragments: {},
       }
 
       target.getElementsByTagName('button')[0].click()
     })
+
+    it('saves the page and updates history with hash', (done) => {
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp()
+
+      class ExampleHome extends Home {
+        visit() {
+          this.props.visit('/foo#title').then(() => this.props.navigateTo('/foo#title'))
+        }
+      }
+
+      class ExampleAbout extends About {
+        componentDidMount() {
+          const state = getStore().getState()
+          expect(state.pages['/foo']).toEqual(pageState)
+          expect(history.location.pathname).toEqual('/foo')
+          expect(history.location.search).toEqual('')
+          expect(history.location.hash).toEqual('#title')
+          stop()
+          done()
+        }
+      }
+
+      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+      const VisibleAbout = connect(
+        mapStateToProps,
+        mapDispatchToProps
+      )(ExampleAbout)
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            mapping={{ home: VisibleHome, about: VisibleAbout }}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
+        </Provider>,
+        target
+      )
+
+      const mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?__=0', mockResponse)
+
+      const pageState = {
+        data: { heading: 'Some heading 2' },
+        flash: {},
+        csrfToken: 'token',
+        assets: ['application-123.js', 'application-123.js'],
+        componentIdentifier: 'about',
+        pageKey: '/foo',
+        fragments: {},
+      }
+
+      target.getElementsByTagName('button')[0].click()
+    })
+
+    describe('and the action is to a non-breezy app', () => {
+      it('does nothing to the store', (done) => {
+        const {
+          store,
+          history,
+          initialPageKey,
+          target
+        } = createBreezyApp()
+        const navigatorRef = React.createRef()
+
+        history.listen(({pathname}) => {
+          if (pathname == '/some_html_page') {
+            const state = getStore().getState()
+            expect(state.breezy.currentPageKey).toEqual('/bar')
+            expect(navigatorRef.current.state.pageKey).toEqual('/bar')
+            expect(pathname).toEqual('/some_html_page')
+            done()
+          }
+        })
+
+        class ExampleHome extends Home {
+          componentDidMount() {
+            process.nextTick(() => history.push('/some_html_page'))
+          }
+        }
+
+        const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+        render(
+          <Provider store={store}>
+            <Nav
+              store={store}
+              ref={navigatorRef}
+              mapping={{ home: VisibleHome }}
+              history={history}
+              initialPageKey={initialPageKey}
+            />
+          </Provider>,
+          target
+        )
+      })
+    })
   })
 
-  describe('when successfully grafting', () => {
+  describe('when an action pops history', () => {
+    it('loads the page from the store', (done) => {
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp()
+      let mountNum = 0
+      const navigatorRef = React.createRef()
+
+      class ExampleHome extends Home {
+        componentDidMount() {
+          if(mountNum == 1) {
+            const state = getStore().getState()
+            expect(state.breezy.currentPageKey).toEqual('/bar')
+            expect(history.location.pathname).toEqual('/bar')
+            expect(history.location.search).toEqual('')
+            expect(history.location.hash).toEqual('')
+            expect(navigatorRef.current.state.pageKey).toEqual('/bar')
+
+            stop()
+            done()
+          }
+          mountNum ++
+        }
+      }
+
+      class ExampleAbout extends About {
+        componentDidMount() {
+          process.nextTick(() => history.goBack() )
+        }
+      }
+
+      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+      const VisibleAbout = connect(mapStateToProps, mapDispatchToProps)(ExampleAbout)
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            ref={navigatorRef}
+            mapping={{ home: VisibleHome, about: VisibleAbout }}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
+        </Provider>,
+        target
+      )
+
+      const mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?__=0', mockResponse)
+
+      target.getElementsByTagName('button')[0].click()
+    })
+
+    it('does not change current page when the hash changes', (done) => {
+      const existingHistory = createMemoryHistory({})
+      existingHistory.push("/bar#title", {
+        breezy: true,
+        pageKey: '/bar',
+      })
+      existingHistory.push("/bar") // Gets replaced on Breezy.start
+
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp({history: existingHistory})
+
+      const navigatorRef = React.createRef()
+
+      history.listen(({pathname, hash}) => {
+        if (hash === '#title') {
+          const state = getStore().getState()
+          expect(state.breezy.currentPageKey).toEqual('/bar')
+          expect(navigatorRef.current.state.pageKey).toEqual('/bar')
+          expect(pathname).toEqual('/bar')
+          expect(hash).toEqual('#title')
+          done()
+        }
+      })
+
+      class ExampleHome extends Home {
+        componentDidMount() {
+          process.nextTick(() => history.goBack())
+        }
+      }
+
+      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            ref={navigatorRef}
+            mapping={{ home: VisibleHome }}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
+        </Provider>,
+        target
+      )
+    })
+
+    it('refreshes when the page has been evicted', (done) => {
+      spyOn(win, 'refreshBrowser')
+      const existingHistory = createMemoryHistory({})
+      existingHistory.push("/evicited", {
+        breezy: true,
+        pageKey: '/no_longer_exist',
+      })
+      existingHistory.push("/bar") // Gets replaced on Breezy.start
+
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp({history: existingHistory})
+      const navigatorRef = React.createRef()
+
+
+      class ExampleHome extends Home {
+        componentDidMount() {
+          history.listen(({pathname, hash}) => {
+            process.nextTick(() => {
+              expect(win.refreshBrowser).toHaveBeenCalled()
+              done()
+            })
+          })
+
+          process.nextTick(() => history.goBack())
+        }
+      }
+
+      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            ref={navigatorRef}
+            mapping={{ home: VisibleHome }}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
+        </Provider>,
+        target
+      )
+    })
+  })
+
+  describe('when an action results in a graft', () => {
     it('grafts the node', (done) => {
       let history = createMemoryHistory({})
       let { dom, target } = createScene(`<div></div>`, 'http://localhost/foo')
+
       let initialPage = {
         data: {
           heading: 'this is page 1',
@@ -159,8 +474,11 @@ describe('navigation', () => {
       const bz = start({
         window: dom.window,
         initialPage,
+        history,
+        baseUrl: '',
         url: '/foo',
       })
+
       const { reducer, initialState, initialPageKey } = bz
       const store = createStore(
         combineReducers(reducer),

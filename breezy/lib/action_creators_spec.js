@@ -23,7 +23,7 @@ const delay = (duration) => {
 const initialState = () => {
   return {
     breezy: {
-      currentUrl: '/bar',
+      currentPageKey: '/bar',
       csrfToken: 'token',
       controlFlows: {
         visit: 'fakeUUID',
@@ -491,7 +491,7 @@ describe('action creators', () => {
           },
         },
         breezy: {
-          currentUrl: '/bar',
+          currentPageKey: '/bar',
           csrfToken: 'token',
           controlFlows: {
             visit: 'fakeUUID',
@@ -559,10 +559,10 @@ describe('action creators', () => {
         })
     })
 
-    it('defaults to the currentUrl as the pageKey', (done) => {
+    it('defaults to the currentPageKey as the pageKey', (done) => {
       const store = mockStore({
         breezy: {
-          currentUrl: '/current_url',
+          currentPageKey: '/current_url',
           csrfToken: 'token',
           controlFlows: {
             visit: 'fakeUUID',
@@ -593,10 +593,10 @@ describe('action creators', () => {
         })
     })
 
-    it('uses the pageKey option to override the currentUrl as the preferred pageKey', (done) => {
+    it('uses the pageKey option to override the currentPageKey as the preferred pageKey', (done) => {
       const store = mockStore({
         breezy: {
-          currentUrl: '/url_to_be_overridden',
+          currentPageKey: '/url_to_be_overridden',
           csrfToken: 'token',
           controlFlows: {
             visit: 'fakeUUID',
@@ -816,7 +816,7 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           assets: [],
-          currentUrl: '/current',
+          currentPageKey: '/current',
           controlFlows: {
             visit: 'firstId',
           },
@@ -975,7 +975,7 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           assets: [],
-          currentUrl: '/current',
+          currentPageKey: '/current',
           controlFlows: {
             visit: 'firstId',
           },

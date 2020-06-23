@@ -1,25 +1,13 @@
 import React from 'react'
 import { urlToPageKey } from './utils/url'
-import { uuidv4 } from './utils/helpers'
+import { uuidv4, argsForHistory } from './utils/helpers'
 import parse from 'url-parse'
 import {
   BREEZY_ERROR,
   OVERRIDE_VISIT_SEQ,
   HISTORY_CHANGE,
 } from './actions'
-
-function argsForHistory(url, assets) {
-  const pageKey = urlToPageKey(url)
-
-  return [
-    pageKey,
-    {
-      breezy: true,
-      pageKey,
-      assets,
-    },
-  ]
-}
+import { refreshBrowser } from './window'
 
 function argsForNavInitialState(url) {
   return {
@@ -49,16 +37,16 @@ class Nav extends React.Component {
   }
 
   navigateTo(
-    pageKey,
+    path,
     { action, ownProps } = { action: 'push', ownProps: {} }
   ) {
-    pageKey = urlToPageKey(pageKey)
+    const pageKey = urlToPageKey(path)
     const { store } = this.props
     const hasPage = !!store.getState().pages[pageKey]
 
     if (hasPage) {
       const historyArgs = [
-        pageKey,
+        path,
         {
           pageKey,
           breezy: true,
@@ -88,29 +76,23 @@ class Nav extends React.Component {
     }
   }
 
-  // TODO: parse without bzq??
   onHistoryChange(location, action) {
-    const { store, visit } = this.props
-    store.dispatch({
-      type: HISTORY_CHANGE,
-      payload: {
-        url: parse(location.pathname + location.search).href,
-      },
-    })
+    const { store } = this.props
+    const { pathname, search, hash, state } = location
 
-    if (action === 'POP') {
-      const { pageKey } = location.state
-      const wasNotRefreshed = !!store.getState().pages[pageKey]
+    if (state && state.breezy) {
+      store.dispatch({
+        type: HISTORY_CHANGE,
+        payload: { pathname, search, hash },
+      })
 
-      if (
-        location.state &&
-        location.state.breezy &&
-        wasNotRefreshed
-      ) {
+      const { pageKey } = state
+      const containsKey = !!store.getState().pages[pageKey]
+
+      if (containsKey) {
         this.setState({ pageKey })
       } else {
-        // load previous page
-        window.location = location.pathname
+        refreshBrowser()
       }
     }
   }

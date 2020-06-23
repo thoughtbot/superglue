@@ -4,7 +4,13 @@ import parse from 'url-parse'
 import 'cross-fetch'
 import { uuidv4, isGraft } from './utils/helpers'
 import { needsRefresh } from './window'
-import { urlToPageKey, withoutBusters, hasBzq } from './utils/url'
+import {
+  urlToPageKey,
+  withoutBusters,
+  hasBzq,
+  urlWithoutBZParams,
+  removeBzq
+} from './utils/url'
 import {
   CLEAR_FLASH,
   SAVE_RESPONSE,
@@ -178,7 +184,6 @@ function buildMeta(pageKey, page, state) {
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
-  pageKey = urlToPageKey(pageKey)
   //TODO: needs refresh should dispatch, to get a nice, you need to reload your page
   return {
     pageKey,
@@ -189,7 +194,7 @@ function buildMeta(pageKey, page, state) {
 }
 
 export function remote(
-  pathQuery,
+  path,
   {
     method = 'GET',
     headers,
@@ -198,15 +203,16 @@ export function remote(
     beforeSave = (prevPage, receivedPage) => receivedPage,
   } = {}
 ) {
-  pathQuery = withoutBusters(pathQuery)
+  path = withoutBusters(path)
+  pageKey = urlToPageKey(pageKey)
 
   return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, pathQuery, {
+    const fetchArgs = argsForFetch(getState, path, {
       method,
       headers,
       body,
     })
-    pageKey = pageKey || getState().breezy.currentUrl
+    pageKey = pageKey || getState().breezy.currentPageKey
 
     dispatch(beforeFetch({ fetchArgs }))
 
@@ -222,7 +228,6 @@ export function remote(
           fetchArgs,
         }
 
-        pageKey = urlToPageKey(pageKey)
         const page = beforeSave(pages[pageKey], json)
         dispatch(saveAndProcessPage(pageKey, page))
         meta.pageKey = pageKey
@@ -259,7 +264,7 @@ export function ensureSingleVisit(fn) {
 }
 
 export function visit(
-  pathQuery,
+  path,
   {
     method = 'GET',
     headers,
@@ -268,14 +273,15 @@ export function visit(
     beforeSave = (prevPage, receivedPage) => receivedPage,
   } = {}
 ) {
-  pathQuery = withoutBusters(pathQuery)
-  let pageKey = urlToPageKey(pathQuery)
+  path = withoutBusters(path)
+  let pageKey = urlToPageKey(path)
 
   return (dispatch, getState) => {
-    const currentKey = urlToPageKey(getState().breezy.currentUrl)
+    const currentKey = getState().breezy.currentPageKey
     dispatch(clearFlash({ pageKey: currentKey }))
 
     if (placeholderKey) {
+      placeholderKey = urlToPageKey(placeholderKey)
       const hasPlaceholder = !!getState().pages[placeholderKey]
       if (hasPlaceholder) {
         dispatch(copyPage({ from: placeholderKey, to: pageKey }))
@@ -284,27 +290,25 @@ export function visit(
           `Could not find placeholder with key ${placeholderKey} in state. The bzq param will be ignored`
         )
 
-        pathQuery = pageKey
+        path = removeBzq(path)
       }
     } else {
-      if (hasBzq(pathQuery)) {
+      if (hasBzq(path)) {
         console.warn(
-          `visit was called with bzq param in the path ${pathQuery}, this will be ignore unless you provide a placeholder.`
+          `visit was called with bzq param in the path ${path}, this will be ignore unless you provide a placeholder.`
         )
       }
 
-      pathQuery = pageKey
+      path = removeBzq(path)
     }
 
-    const fetchArgs = argsForFetch(getState, pathQuery, {
+    const fetchArgs = argsForFetch(getState, path, {
       headers,
       body,
       method,
     })
 
     return ensureSingleVisit(() => {
-      pageKey = pageKey || getState().breezy.currentUrl
-
       dispatch(beforeFetch({ fetchArgs }))
 
       return fetch(...fetchArgs)
@@ -323,11 +327,15 @@ export function visit(
             const contentLocation = rsp.headers.get(
               'content-location'
             )
-            pageKey = contentLocation || pageKey
+
+            if (contentLocation) {
+              pageKey = urlToPageKey(contentLocation)
+            }
           }
 
-          pageKey = rsp.redirected ? rsp.url : pageKey
-          pageKey = urlToPageKey(pageKey)
+          if (rsp.redirected) {
+            pageKey = urlToPageKey(rsp.url)
+          }
 
           const page = beforeSave(pages[pageKey], json)
           dispatch(saveAndProcessPage(pageKey, page))

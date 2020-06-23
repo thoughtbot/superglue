@@ -104,7 +104,7 @@ describe('ujs', () => {
         getState: () => {
           return {
             breezy: {
-              currentUrl: '/current'
+              currentPageKey: '/current'
             }
           }
         }

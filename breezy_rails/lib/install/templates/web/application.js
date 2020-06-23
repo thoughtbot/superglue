@@ -87,12 +87,12 @@ connect(store)
 const applicationVisit = enhanceVisitWithBrowserBehavior(navigatorRef, (...args) => {
   return store.dispatch((dispatch, getState) => {
 // Do something before
-// e.g, show loading state, you can access the current path
-// via getState().breezy.currentUrl
+// e.g, show loading state, you can access the current pageKey
+// via getState().breezy.currentPageKey
     return visit(...args)(dispatch, getState).finally(() => {
 // Do something after
-// e.g, hide loading state, you can access the current path
-// via getState().breezy.currentUrl
+// e.g, hide loading state, you can access the changed pageKey
+// via getState().breezy.currentPageKey
     })
   })
 })

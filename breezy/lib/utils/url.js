@@ -44,13 +44,37 @@ export function withoutBusters(url) {
   return pathQuery(url.toString())
 }
 
-export function urlToPageKey(url) {
+export function urlWithoutBZParams(url) {
   url = new parse(url, true)
   let query = url.query
+
   delete query['__']
   delete query['_']
   delete query['bzq']
   url.query = query
+
+  return url.toString()
+}
+
+export function removeBzq(url) {
+  url = new parse(url, true)
+  let query = url.query
+
+  delete query['bzq']
+  url.query = query
+
+  return url.toString()
+}
+
+export function urlToPageKey(url) {
+  url = new parse(url, true)
+  let query = url.query
+
+  delete query['__']
+  delete query['_']
+  delete query['bzq']
+  url.query = query
+
   return pathQuery(url.toString())
 }
 

@@ -126,8 +126,22 @@ describe('Nav', () => {
       class ExampleAbout extends About {
         componentDidMount() {
           const expectedActions = [
-            { type: '@@breezy/HISTORY_CHANGE', payload: { url: '/bar' } },
-            { type: '@@breezy/HISTORY_CHANGE', payload: { url: '/foo' } },
+            {
+              type: '@@breezy/HISTORY_CHANGE',
+              payload: {
+                pathname: '/bar',
+                search: '',
+                hash: '',
+              }
+            },
+            {
+              type: '@@breezy/HISTORY_CHANGE',
+              payload: {
+                pathname: '/foo',
+                search: '',
+                hash: '',
+              }
+            },
             {
               type: '@@breezy/OVERRIDE_VISIT_SEQ',
               payload: { seqId: jasmine.any(String) },

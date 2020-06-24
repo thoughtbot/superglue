@@ -9,7 +9,7 @@ import {
   withoutBusters,
   hasBzq,
   urlWithoutBZParams,
-  removeBzq
+  removeBzq,
 } from './utils/url'
 import {
   CLEAR_FLASH,

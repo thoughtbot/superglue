@@ -118,7 +118,13 @@ export class HandlerBuilder {
   }
 }
 
-const ujsHandlers = ({ navigatorRef, store, ujsAttributePrefix, visit, remote }) => {
+const ujsHandlers = ({
+  navigatorRef,
+  store,
+  ujsAttributePrefix,
+  visit,
+  remote,
+}) => {
   const builder = new HandlerBuilder({
     navigatorRef,
     store,

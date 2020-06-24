@@ -2,7 +2,6 @@ import uuidv4 from 'uuid/v4'
 import { urlToPageKey } from './url'
 export { uuidv4 }
 
-
 export function isGraft(page) {
   return page.action === 'graft'
 }

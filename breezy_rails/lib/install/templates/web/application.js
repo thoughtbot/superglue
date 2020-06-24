@@ -29,6 +29,9 @@ const initialPage = window.BREEZY_INITIAL_PAGE_STATE
 // `remote` thunks
 const baseUrl = ''
 
+// By using start Breezy will return a reducer, the `initialState` to pass
+// to redux, the `initialPageKey` to pass to the NavComponent to render the
+// right page, and a `connect` function to connec the Breezy lib to the store
 const {reducer, initialState, initialPageKey, connect} = Breezy.start({
   window,
   initialPage,
@@ -38,6 +41,7 @@ const {reducer, initialState, initialPageKey, connect} = Breezy.start({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
+// Extract the reducers so that we can add reduceReducers on the pagesReducer
 const {
   breezy: breezyReducer,
   pages: pagesReducer,
@@ -70,23 +74,36 @@ const store = createStore(
 
 persistStore(store)
 
-// This ref is for Breezy's UJS handlers
+// Create a navigator Ref for UJS attributes and to enhance the base visit
+// implementation with browser like functionality with
+// enhanceVisitWithBrowserBehavior
 const navigatorRef = React.createRef()
 
+// Connect the Breezy internally requires access to the store, use the
+// provided connect function and pass the created store
 connect(store)
 
 // Wrap the visit thunk with your own implementation.
 const applicationVisit = enhanceVisitWithBrowserBehavior(navigatorRef, (...args) => {
   return store.dispatch((dispatch, getState) => {
-    // Do something before
+// Do something before
+// e.g, show loading state, you can access the current path
+// via getState().breezy.currentUrl
     return visit(...args)(dispatch, getState).finally(() => {
-    // Do something after
+// Do something after
+// e.g, hide loading state, you can access the current path
+// via getState().breezy.currentUrl
     })
   })
 })
 
+// This is the root component that hold your component. The Nav component is
+// pretty bare, and you're welcome to replace the implmementation.
+//
+// Your modified `visit` and `remote` will get passed to your components through
+// mapDispatchToProps. You can access them via `this.props.visit` or
+// `this.props.remote`.
 class App extends React.Component {
-  //The Nav is bare bones. Feel free to inherit or replace the implementation.
   render() {
     return <Provider store={store}>
       <Nav
@@ -105,8 +122,8 @@ class App extends React.Component {
 document.addEventListener("DOMContentLoaded", function() {
   const appEl = document.getElementById('app')
   if (appEl) {
-    // Create the ujs event handlers. You can change the ujsAttributePrefix
-    // in the event the data attribute conflicts with another.
+// Create the ujs event handlers. You can change the ujsAttributePrefix
+// in the event the data attribute conflicts with another.
     const {onClick, onSubmit} = ujsHandlers({
       visit: applicationVisit,
       remote,

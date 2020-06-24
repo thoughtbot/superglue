@@ -1,7 +1,7 @@
 import parse from 'url-parse'
 import { rootReducer } from './reducers'
 import { setWindow, unsetWindow, hasWindow } from './window'
-import connect from './connector'
+import { connect, disconnect } from './connector'
 import { urlToPageKey } from './utils/url'
 import { saveAndProcessPage } from './action_creators'
 import {
@@ -26,6 +26,7 @@ export { setWindow, unsetWindow }
 export { urlToPageKey }
 export function stop() {
   unsetWindow()
+  disconnect()
 }
 
 function pageToInitialState(key, page) {

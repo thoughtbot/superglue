@@ -8,7 +8,9 @@ import { createBrowserHistory } from 'history'
 import Breezy from '@jho406/breezy'
 import Nav from '@jho406/breezy/dist/NavComponent'
 import ujsHandlers from '@jho406/breezy/dist/utils/ujs'
-import applicationReducer from './reducer'
+import { applicationRootReducer, applicationPagesReducer } from './reducer'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 // Mapping between your props template to Component, you must add to this
 // to register any new page level component you create. If you are using the
@@ -39,14 +41,32 @@ const {
   pages: pagesReducer,
 } = reducer
 
+// Redux Persist settings
+// The key is set to the stringified JS asset path to remove the need for
+// migrations when hydrating.
+const persistKey = window.BREEZY_INITIAL_PAGE_STATE.assets.filter( asset => asset.endsWith('.js'))
+const persistConfig = {
+  key: JSON.stringify(persistKey),
+  storage,
+}
+
+// Create the store
+// See `./reducer.js` for an explaination of the two included reducers
 const store = createStore(
-  combineReducers({
-    breezy: breezyReducer,
-    pages: reduceReducers(pagesReducer, applicationReducer),
-  }),
+  persistReducer( persistConfig,
+    reduceReducers(
+      combineReducers({
+        breezy: breezyReducer,
+        pages: reduceReducers(pagesReducer, applicationPagesReducer),
+      }),
+      applicationRootReducer
+    )
+  ),
   initialState,
   composeEnhancers(applyMiddleware(thunk))
 )
+
+persistStore(store)
 
 // This ref is for Breezy's UJS handlers
 const navigatorRef = React.createRef()

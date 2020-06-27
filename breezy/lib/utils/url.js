@@ -8,6 +8,12 @@ export function pathQuery(url) {
   return pathname + query
 }
 
+export function pathQueryHash(url) {
+  const { pathname, query, hash } = new parse(url)
+
+  return pathname + query + hash
+}
+
 export function hasBzq(url) {
   url = new parse(url, true)
   let query = url.query
@@ -44,7 +50,7 @@ export function withoutBusters(url) {
   return pathQuery(url.toString())
 }
 
-export function urlWithoutBZParams(url) {
+export function pathWithoutBZParams(url) {
   url = new parse(url, true)
   let query = url.query
 
@@ -53,7 +59,7 @@ export function urlWithoutBZParams(url) {
   delete query['bzq']
   url.query = query
 
-  return url.toString()
+  return pathQueryHash(url.toString())
 }
 
 export function removeBzq(url) {

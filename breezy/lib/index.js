@@ -13,6 +13,7 @@ import {
 export {
   mapStateToProps,
   mapDispatchToProps,
+  mapDispatchToPropsIncludingVisitAndRemote,
   enhanceVisitWithBrowserBehavior,
 } from './utils/react'
 export {

@@ -1,14 +1,12 @@
 import { argsForFetch, parseResponse } from './utils/request'
 import { getIn } from './utils/immutability'
 import parse from 'url-parse'
-import 'cross-fetch'
 import { uuidv4, isGraft } from './utils/helpers'
 import { needsRefresh } from './window'
 import {
   urlToPageKey,
   withoutBusters,
   hasBzq,
-  urlWithoutBZParams,
   removeBzq,
 } from './utils/url'
 import {

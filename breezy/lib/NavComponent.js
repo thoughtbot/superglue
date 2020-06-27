@@ -1,5 +1,5 @@
 import React from 'react'
-import { urlToPageKey } from './utils/url'
+import { urlToPageKey, pathWithoutBZParams } from './utils/url'
 import { uuidv4, argsForHistory } from './utils/helpers'
 import parse from 'url-parse'
 import {
@@ -40,6 +40,7 @@ class Nav extends React.Component {
     path,
     { action, ownProps } = { action: 'push', ownProps: {} }
   ) {
+    path = pathWithoutBZParams(path)
     const pageKey = urlToPageKey(path)
     const { store } = this.props
     const hasPage = !!store.getState().pages[pageKey]

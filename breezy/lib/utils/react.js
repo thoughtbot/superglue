@@ -36,22 +36,18 @@ export function mapStateToProps(
   return { ...data, ...params, pageKey, csrfToken, flash }
 }
 
-export function mapDispatchToProps(dispatch, ownProps = {}) {
-  const mappedVisit = (...args) => dispatch(visit(...args))
-  const mappedRemote = (...args) => dispatch(remote(...args))
+export const mapDispatchToProps = {
+  ensureSingleVisit,
+  saveAndProcessPage,
+  copyPage,
+}
 
-  const usedVisit = ownProps.visit || mappedVisit
-  const usedRemote = ownProps.remote || mappedRemote
-
-  return {
-    visit: usedVisit,
-    remote: usedRemote,
-    ensureSingleVisit: (...args) =>
-      dispatch(ensureSingleVisit(...args)),
-    saveAndProcessPage: (...args) =>
-      dispatch(saveAndProcessPage(...args)),
-    copyPage: (...args) => dispatch(copyPage(...args)),
-  }
+export const mapDispatchToPropsIncludingVisitAndRemote = {
+  visit,
+  remote,
+  ensureSingleVisit,
+  saveAndProcessPage,
+  copyPage,
 }
 
 export function enhanceVisitWithBrowserBehavior(ref, visit) {

@@ -52,16 +52,16 @@ export const applicationRootReducer = (state = {}, action) => {
         pages: hydratedPages
       } = action.payload
       const { pages } = state
-      const nextState = { ...state, pages: hydratedPages }
+      const nextPages = { ...pages, ...hydratedPages }
 
       for (const key in pages) {
-        if (pages[key].renderedAt > hydratedPages[key].renderedAt) {
-          nextState.pages[key] = { ...pages[key] }
+        if (pages[key] && hydratedPages[key] &&
+          pages[key].renderedAt > hydratedPages[key].renderedAt) {
+          nextPages[key] = { ...pages[key] }
         }
       }
 
-      return nextState
-
+      return { ...state, pages: nextPages }
     } else {
       return state
     }

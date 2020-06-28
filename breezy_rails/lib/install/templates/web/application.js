@@ -35,7 +35,6 @@ const {reducer, initialState, initialPageKey, connect} = Breezy.start({
   window,
   initialPage,
   baseUrl,
-  history
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

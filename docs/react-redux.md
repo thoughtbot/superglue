@@ -23,13 +23,16 @@ Breezy will pass the props you created in your `xyz.json.props` and the followin
 | prop | Notes |
 | :--- | :--- |
 | csrfToken | Breezy will automatically append this to your `POST`, `PUT`, and `DELETE` requests, but if you need to write your own fetch, this prop is available to your components. |
+| flash | This is the flash you set on the server side. See [rails flash](rails.md#rails-flash)|
 
 You will also receive additional props from the use of the `<NavComponent>`
 
 | prop | Notes |
 | :--- | :--- |
 | pageKey | The pageKey Breezy used to fetch your `xyz.json.props` from the store. |
-| {...ownProps} | Any props that you passed from the use of `navigateTo`, see [navigateTo](react-redux.md#navigateto) |
+| visit | The `visit` function you passed to the NavComponent props. See [visit](#visit).|
+| remote | The `remote` function you passed to the NavComponent props. See [remote](#remote)|
+| ...ownProps | Any props that you passed from the use of `navigateTo` will also get merged, see [navigateTo](react-redux.md#navigateto) |
 
 ### mapDispatchToProps
 
@@ -38,8 +41,6 @@ A map of handy [action creators](#action-creators).
 ```javascript
 export const mapDispatchToProps = {
   ensureSingleVisit,
-  visit,
-  remote,
   pageKey,
   copyPage,
   saveAndProcessPage,
@@ -52,6 +53,21 @@ You will also receive the following when using the `<NavComponent>`
 | :--- | :--- |
 | navigateTo | See [navigateTo](react-redux.md#navigateto). |
 
+### mapDispatchToPropsIncludingVisitAndRemote
+
+A map of handy [action creators](#action-creators) including the original `visit` and `remote` implementations that Breezy provides.
+
+```javascript
+export const mapDispatchToProps = {
+  ensureSingleVisit,
+  visit,
+  remote,
+  pageKey,
+  copyPage,
+  saveAndProcessPage,
+}
+```
+
 ## NavComponent
 
 A nav component for your application.
@@ -62,6 +78,8 @@ import Nav from '@jho406/breezy/dist/NavComponent'
 <Provider store={store}>
   <Nav
     store={store}
+    visit={myVisit}
+    remote={myRemote}
     mapping={this.props.mapping}
     history={history}
     initialPageKey={initialPageKey}
@@ -120,8 +138,11 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | :--- | :--- | :--- |
 | canNavigate | `Boolean` | There can only be one visit anytime. If 2 visits happen at the same time, both will be fulfilled, but only the last one will be passed a `canNavigate = true` in its callback. |
 | needsRefresh | `Boolean` | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true. |
-| screen | `String` | The screen that your react application should render next. |
+| componentIdentifier | `String` | The screen that your react application should render next. |
 | page | `Object` | The full parsed page response from your `foobar.json.props` template. |
+| pageKey | `String` | The pageKey that the Breezy used to store the response |
+| suggestedAction | `String` | `push` or `replace`, to be used to `navigateTo`|
+| redirected | `Boolean` | `true` if the response was the result of a redirect, `false` otherwise|
 | rsp | `Object` | The raw response object |
 
 | Additional `.catch` error attributes\* | Type | Notes |
@@ -163,6 +184,7 @@ remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).catch(({message, fet
 Shares the same arguments as `visit` with a few differences:
 
 * `canNavigate` is not available as an option passed to your then-able function.
+* `suggestedAction` is not available as an option passed to your then-able function.
 * `placeholder` is not available
 * You can override where the response is saved with a `pageKey` options
 

@@ -2,24 +2,6 @@
 
 ## API
 
-### enhanceVisitWithBrowserBehavior
-
-Enhances `visit` with navigation behavior on the returned Promises. For example, if the request `500`s, Breezy will navigate to '/500.html'. You can read the full behavior [here](https://github.com/jho406/Breezy/blob/master/breezy/lib/utils/react.js#L131).
-
-```javascript
-  import {enhanceVisitWithBrowserBehavior} from '@jho406/breezy'
-
-  constructor (props) {
-    const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.enhancedVisit = visit.bind(this)
-  }
-```
-
-| Arguments | Type | Notes |
-| :--- | :--- | :--- |
-| visit | `Function` | The visit function injected by `mapDispatchToProps` |
-| remote | `Function` | The remote function injected by `mapDispatchToProps`. The wrapped `remote` function will add the `pageKey` argument automatically for you. |
-
 ### getIn
 ```javascript
   import {getIn} from '@jho406/breezy'

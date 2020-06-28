@@ -7,7 +7,7 @@ import thunk from 'redux-thunk'
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import { Provider, connect } from 'react-redux'
 import React from 'react'
-import { mapStateToProps, mapDispatchToProps } from '../../lib/utils/react'
+import { mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote } from '../../lib/utils/react'
 import { getStore } from '../../lib/connector'
 import { createMemoryHistory } from 'history'
 import Nav from '../../lib/NavComponent'
@@ -150,7 +150,7 @@ describe('navigation', () => {
         target
       } = createBreezyApp()
 
-      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(Home)
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(Home)
 
       class ExampleAbout extends About {
         componentDidMount() {
@@ -166,7 +166,7 @@ describe('navigation', () => {
 
       const VisibleAbout = connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToPropsIncludingVisitAndRemote
       )(ExampleAbout)
 
       render(
@@ -224,10 +224,10 @@ describe('navigation', () => {
         }
       }
 
-      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
       const VisibleAbout = connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToPropsIncludingVisitAndRemote
       )(ExampleAbout)
 
       render(
@@ -285,7 +285,7 @@ describe('navigation', () => {
           }
         }
 
-        const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+        const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
         render(
           <Provider store={store}>
             <Nav
@@ -336,8 +336,8 @@ describe('navigation', () => {
         }
       }
 
-      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
-      const VisibleAbout = connect(mapStateToProps, mapDispatchToProps)(ExampleAbout)
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
+      const VisibleAbout = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleAbout)
 
       render(
         <Provider store={store}>
@@ -393,7 +393,7 @@ describe('navigation', () => {
         }
       }
 
-      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
 
       render(
         <Provider store={store}>
@@ -440,7 +440,7 @@ describe('navigation', () => {
         }
       }
 
-      const VisibleHome = connect(mapStateToProps, mapDispatchToProps)(ExampleHome)
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
 
       render(
         <Provider store={store}>
@@ -503,7 +503,7 @@ describe('navigation', () => {
 
       const VisibleHome = connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToPropsIncludingVisitAndRemote
       )(ExampleHome)
 
       render(

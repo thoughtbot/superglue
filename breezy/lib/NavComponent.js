@@ -73,6 +73,12 @@ class Nav extends React.Component {
       this.setState({ pageKey, ownProps })
       return true
     } else {
+      console.warn(
+        `\`navigateTo\` was called , but could not find.
+        the pageKey in the store. This may happen when the wrong
+        content_location was set in your non-get controller action.
+        No navigation will take place`
+      )
       return false
     }
   }

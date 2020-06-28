@@ -321,6 +321,11 @@ export function visit(
             fetchArgs,
           }
 
+          meta.suggestedAction = 'push'
+          if (!rsp.redirected && fetchArgs[1].method != 'GET') {
+            meta.suggestedAction = 'replace'
+          }
+
           if (method !== 'GET') {
             const contentLocation = rsp.headers.get(
               'content-location'

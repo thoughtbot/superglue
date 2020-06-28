@@ -8,11 +8,10 @@ import { createBrowserHistory } from 'history'
 import Breezy from '@jho406/breezy'
 import Nav from '@jho406/breezy/dist/NavComponent'
 import ujsHandlers from '@jho406/breezy/dist/utils/ujs'
-import { applicationRootReducer, applicationPagesReducer } from './reducer'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { visit, remote } from '@jho406/breezy/dist/action_creators'
-import { enhanceVisitWithBrowserBehavior } from '@jho406/breezy/dist/utils/react'
+import { applicationRootReducer, applicationPagesReducer } from './reducer'
+import { buildVisitAndRemote } from './application_visit'
 
 // Mapping between your props template to Component, you must add to this
 // to register any new page level component you create. If you are using the
@@ -82,23 +81,10 @@ const navigatorRef = React.createRef()
 // Connect the Breezy internally requires access to the store, use the
 // provided connect function and pass the created store
 connect(store)
-
-// Wrap the visit thunk with your own implementation.
-const applicationVisit = enhanceVisitWithBrowserBehavior(navigatorRef, (...args) => {
-  return store.dispatch((dispatch, getState) => {
-// Do something before
-// e.g, show loading state, you can access the current pageKey
-// via getState().breezy.currentPageKey
-    return visit(...args)(dispatch, getState).finally(() => {
-// Do something after
-// e.g, hide loading state, you can access the changed pageKey
-// via getState().breezy.currentPageKey
-    })
-  })
-})
+const {visit, remote} = buildVisitAndRemote(navigatorRef, store)
 
 // This is the root component that hold your component. The Nav component is
-// pretty bare, and you're welcome to replace the implmementation.
+// pretty bare, and you're welcome to replace the implementation.
 //
 // Your modified `visit` and `remote` will get passed to your components through
 // mapDispatchToProps. You can access them via `this.props.visit` or
@@ -109,7 +95,7 @@ class App extends React.Component {
       <Nav
         store={store}
         ref={navigatorRef}
-        visit={applicationVisit}
+        visit={visit}
         remote={remote}
         mapping={this.props.mapping}
         history={history}
@@ -122,10 +108,10 @@ class App extends React.Component {
 document.addEventListener("DOMContentLoaded", function() {
   const appEl = document.getElementById('app')
   if (appEl) {
-// Create the ujs event handlers. You can change the ujsAttributePrefix
-// in the event the data attribute conflicts with another.
+    // Create the ujs event handlers. You can change the ujsAttributePrefix
+    // in the event the data attribute conflicts with another.
     const {onClick, onSubmit} = ujsHandlers({
-      visit: applicationVisit,
+      visit,
       remote,
       store,
       ujsAttributePrefix: 'data-bz'

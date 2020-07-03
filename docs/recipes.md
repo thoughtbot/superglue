@@ -57,12 +57,9 @@ json.metrics(defer: [:auto, placeholder: {}]) do
 end
 ```
 
-
 ## Loading tab content `onClick`
 
-Say you have two tabs of content, and the content from the second tab takes a bit of time to load. Since the 2nd tab is inactive on a first visit anyway, you decided to load the 2nd tab only if a user clicks it.
-
-With Breezy, this is a few lines of code:
+Your UI has two tabs, the first tabs loads fine,but the second tab takes a bit of time to load. Since the 2nd tab is inactive on the first visit, you decided to load the 2nd tab only when a user clicks it.
 
 ```ruby
 # /posts.json.props
@@ -70,6 +67,7 @@ With Breezy, this is a few lines of code:
 json.posts do
   json.all do
   end
+
   json.pending(defer: :manual) do
   end
 end
@@ -77,15 +75,11 @@ end
 
 ```javascript
 //...in your component
-  handleClick = () => {
-    this.props.remote('/posts?bzq=data.posts.pending')
-  }
-
   render() {
     return (
       <ol className='tabs'>
         <li> tab1 </li>
-        <li> <a onClick={this.handleClick}>tab2</a> </li>
+        <li> <a href="/posts?bzq=data.posts.pending" data-bz-remote={true}>tab2</a> </li>
       <ol>
       ....
     )
@@ -94,21 +88,18 @@ end
 
 In this example, `defer: :manual` is used on the node. PropsTemplate will render without that node, and you need to manually request it using [traversals](docs/traversal-guide.md) like the example above.
 
-
 ## Shopping cart
 
 You want to update a cart count located in the header when a user clicks on 'Add to cart' on a product listing
 
 ```javascript
 //...in your submit handler
-handleSubmit = () => {
-  this.props.remote('/add_to_cart?bzq=data.header.cart', {method: 'POST', body: {.....}})
-}
+<form action='/add_to_cart?bzq=data.header.cart' method='POST' data-bz-remote={true}>
 ```
 
 ```ruby
 def create
-  redirect_to :back, bzq: params[:bzq]
+  redirect_back_with_bzq fallback_url: '/'
 end
 ```
 
@@ -141,7 +132,6 @@ json.data(search: params['bzq'])
   end
 end
 ```
-
 
 ## Chat app (Long-polling)
 
@@ -179,128 +169,28 @@ window.App.cable.subscriptions.create("WebNotificationsChannel", {
 
 `saveAndProcessPage(pageKey, page)` is the function that `remote` uses to sends a payload to. However, because we don't know what pageKey to save this streamed response, we set it to `null`. Breezy will still update any cross-cutting [fragments](props_template/README.md#partial-fragments)
 
-
 ## Replicating Turbolinks behavior
 
 With `visit`, Breezy will always wait for a response before a navigation transition. Turbolink's behavior is to transition first if possible while waiting for the response. To replicate this behavior:
 
+In your `application_visit.js` file:
+
 ```javascript
-import {
-  mapStateToProps,
-  mapDispatchToProps,
-  enhanceVisitWithBrowserBehavior
-} from '@jho406/breezy'
 
-class SurveyIndex extends React.Component {
-  constructor (props) {
-    super()
-    const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.enhancedVisit = visit.bind(this)
-  }
+import { urlToPageKey } from '@jho406/breezy/dist/utils/url'
 
-  turboVisit = () => {
-    // Navigate if possible
-    if(this.props.navigateTo('/next_page')) {
-      //load the latest page async
-      this.props.remote('/next_page')
-    } else {
-      // can't navigate due to missing cache, attempt to visit instead
-      this.enhancedVisit('/next_page')
-    }
-  }
-}
+const appVisit = (...args) => {
+  // Do something before
+  // e.g, show loading state, you can access the current pageKey
+  // via store.getState().breezy.currentPageKey
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PreloadIndex)
-```
-
-
-## Usage with Devise
-
-For Breezy to work with Devise, you'll need the following:
-
-A custom failure app:
-
-```ruby
-require 'breezy/xhr_headers'
-
-class BreezyDeviseFailureApp < Devise::FailureApp
-  include Breezy::XHRHeaders
-
-  def skip_format?
-    %w(html jsson */*).include? request_format.to_s
-  end
-
-  def http_auth?
-    if request.xhr? && request.format != :json
-      Devise.http_authenticatable_on_xhr
-    else
-      !(request_format && is_navigational_format?)
-    end
-  end
-end
-```
-
-A custom responder to use in your devise controllers
-
-```ruby
-
-class BreezyResponder < ActionController::Responder
-  include Responders::FlashResponder
-  include Responders::HttpCacheResponder
-
-  def to_js
-    set_flash_message! if set_flash_message?
-    default_render
-  rescue ActionView::MissingTemplate => e
-    breezy_behavior(e)
-  end
-
-  def breezy_behavior(e)
-    if get?
-      raise error
-    elsif has_errors? && default_action
-      action = rendering_options[:action]
-      controller_name = @controller.controller_name
-      content_location = @controller.url_for(action: action, controller: controller_name, only_path: true)
-      @controller.response.set_header("content-location", content_location)
-
-      render rendering_options
-    else
-      redirect_to navigation_location
-    end
-  end
-end
-```
-
-In your Devise controllers
-```ruby
-class Users::PasswordsController < Devise::PasswordsController
-  layout 'application'
-  self.responder = BreezyResponder
-
-  respond_to :html, :json
-end
-
-```
-
-And finally, in your Devise initializer
-
-```ruby
-Devise.setup do |config|
-  config.navigational_formats = ['*/*', :html, :js]
-
-  config.warden do |manager|
-    manager.failure_app = BreezyDeviseFailureApp
-  end
-end
+  const pageKey = urlToPageKey(args[0])
+  this.ref.current.navigateTo(pageKey)
 ```
 
 ## Usage with Kaminari
 
-SPA Pagination is pretty easy to add with Kaminari and component from [antd](https://ant.design/components/pagination/)
+SPA Pagination is pretty easy to add with Kaminari and any component library you wish to use. Lets use [antd](https://ant.design/components/pagination/) as an example:
 
 ```ruby
 # index.json.props
@@ -347,19 +237,13 @@ import { Pagination } from 'antd'
 import parse from 'url-parse'
 
 class PostsIndex extends React.Component {
-  constructor (props) {
-    super()
-    const visit = enhanceVisitWithBrowserBehavior(props.visit)
-    this.enhancedVisit = visit.bind(this)
-  }
-
   onPaginateChange = (page) => {
     const pagination_path = this.props.posts
     let url = new parse(pagination_path, true)
     url.query.page_num = page
     url.query.bzq = 'shoots'
 
-    this.enhancedVisit(pagination_path)
+    this.props.visit(pagination_path)
   }
 
   render () {

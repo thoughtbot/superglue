@@ -5,7 +5,6 @@
 ### getIn
 ```javascript
   import {getIn} from '@jho406/breezy'
-
 ```
 
 | Arguments | Type | Notes |

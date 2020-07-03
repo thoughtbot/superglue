@@ -1,6 +1,6 @@
 # Configuration
 
-The `rails breezy:install:web` step adds a [preconfigured entry point][https://github.com/jho406/Breezy/blob/master/breezy_rails/lib/install/templates/web/application.js] in `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare-bones `Nav` component.
+The `rails breezy:install:web` step adds a [preconfigured entry point](https://github.com/jho406/Breezy/blob/master/breezy_rails/lib/install/templates/web/application.js) in `app/javascript/packs/application.js`. It sets up Breezy, Redux, and comes with a bare-bones `Nav` component.
 
 ## The Nav Mapping
 
@@ -11,12 +11,7 @@ const identifierToComponentMapping = {
 }
 ```
 
-Breezy uses a mapping that you configure to determine which set of props to render with which page component. If you used the generator, this is configured in `application.json.props` as the virtual path of the template. For example: `posts/new`
-
-```ruby
-# application.json.props
-json.component_identifier local_assigns[:virtual_path_of_template]
-```
+Breezy uses a mapping that you configure to tie `componentIdentifier` of [your props template](./redux-state-shape.md#componentidentifier) with your page component.
 
 To link `new.json.props` with `new.jsx`, add the following to your mapping:
 
@@ -56,7 +51,7 @@ const persistConfig = {
 The persist key is set to the JS asset fingerprint, this prevents the need to migrate data stored in storage.
 
 ## Custom Reducers
-The generator will also add a `reducer.js` file for any custom reducer you'd like to add. Included in the reducer are a `pagesReducer` for any cross page updates and a `applicationRootReducer` for the entire store. The latter is used for Redux-Persist, which you can customize to your needs.
+The generator will also add a `reducer.js` file for any custom reducer you'd like to add. Included in the reducer is a `pagesReducer` for any cross page updates, and a `applicationRootReducer` for the entire store. The latter is used for Redux-Persist, which you can customize to your needs.
 
 ## Custom Visit and Remote
 

@@ -1,12 +1,7 @@
 <%% initial_state = controller.render_to_string(@virtual_path ,formats: [:json], locals: local_assigns, layout: true) %>
 
-<%% content_for :initial_state do %>
-  <script type="text/javascript">
-    window.BREEZY_INITIAL_PAGE_STATE=<%%= initial_state.html_safe %>;
-  </script>
-<%% end %>
+<script type="text/javascript">
+  window.BREEZY_INITIAL_PAGE_STATE=<%%= initial_state.html_safe %>;
+</script>
 
-
-
-
-
+<div id="app"></div>

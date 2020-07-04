@@ -2,21 +2,6 @@ require "webpacker/configuration"
 
 babel_config = Rails.root.join("babel.config.js")
 
-def append_js_tags
-  app_html = 'app/views/layouts/application.html.erb'
-  js_tag = <<-JS_TAG
-    <%= yield :initial_state %>
-  JS_TAG
-
-  inject_into_file app_html, after: '<head>' do
-    js_tag
-  end
-
-  inject_into_file app_html, after: '<body>' do
-    "\n    <div id='app'></div>"
-  end
-end
-
 def add_member_methods
   inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
     <<-RUBY
@@ -66,9 +51,6 @@ copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/breezy
 
 say "Copying application.json.props"
 copy_file "#{__dir__}/templates/web/application.json.props", "app/views/layouts/application.json.props"
-
-say "Appending js tags to your application.html.erb"
-append_js_tags
 
 say "Adding required member methods to ApplicationRecord"
 add_member_methods

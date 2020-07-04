@@ -2,7 +2,7 @@ import { argsForFetch, parseResponse } from './utils/request'
 import { getIn } from './utils/immutability'
 import parse from 'url-parse'
 import { uuidv4, isGraft } from './utils/helpers'
-import { needsRefresh } from './window'
+import { needsRefresh, getFetch } from './window'
 import {
   urlToPageKey,
   withoutBusters,
@@ -83,6 +83,10 @@ function handleError(err) {
 function fetchDeferments(pageKey, defers = []) {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
+    if (typeof getFetch() !== 'function') {
+      return Promise.resolve()
+    }
+
     const fetches = defers
       .filter(({ type }) => type === 'auto')
       .map(function ({ url }) {
@@ -214,6 +218,7 @@ export function remote(
 
     dispatch(beforeFetch({ fetchArgs }))
 
+    const fetch = getFetch()
     return fetch(...fetchArgs)
       .then(parseResponse)
       .then(({ rsp, json }) => {
@@ -309,6 +314,7 @@ export function visit(
     return ensureSingleVisit(() => {
       dispatch(beforeFetch({ fetchArgs }))
 
+      const fetch = getFetch()
       return fetch(...fetchArgs)
         .then(parseResponse)
         .then(({ rsp, json }) => {

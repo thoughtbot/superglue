@@ -102,7 +102,7 @@ describe('start', () => {
   })
 })
 
-function createBreezyApp({history} = {}) {
+function createBreezyApp({history, fetch} = {}) {
   history = history ? history : createMemoryHistory({})
 
   const { dom, target } = createScene(`<div></div>`, 'http://localhost/bar')
@@ -117,6 +117,7 @@ function createBreezyApp({history} = {}) {
   }
 
   const bz = start({
+    fetch,
     initialPage,
     history,
     baseUrl: '',
@@ -133,6 +134,8 @@ function createBreezyApp({history} = {}) {
   return {history, initialPageKey, store, dom, target}
 }
 
+fetchMock.mock()
+
 describe('navigation', () => {
   beforeEach(() => {
     fetchMock.restore()
@@ -145,7 +148,7 @@ describe('navigation', () => {
         history,
         initialPageKey,
         target
-      } = createBreezyApp()
+      } = createBreezyApp({fetch})
 
       const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(Home)
 
@@ -201,7 +204,7 @@ describe('navigation', () => {
         history,
         initialPageKey,
         target
-      } = createBreezyApp()
+      } = createBreezyApp({fetch})
 
       class ExampleHome extends Home {
         visit() {
@@ -306,7 +309,7 @@ describe('navigation', () => {
         history,
         initialPageKey,
         target
-      } = createBreezyApp()
+      } = createBreezyApp({fetch})
       let mountNum = 0
       const navigatorRef = React.createRef()
 
@@ -470,6 +473,7 @@ describe('navigation', () => {
       }
 
       const bz = start({
+        fetch,
         initialPage,
         history,
         baseUrl: '',

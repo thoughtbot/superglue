@@ -188,6 +188,85 @@ const appVisit = (...args) => {
   this.ref.current.navigateTo(pageKey)
 ```
 
+## Server Side Rendering
+Breezy does not include server side rendering out of the box, but you can add it with (react-rails)[https://github.com/reactjs/react-rails].
+
+1) Add react-rails and mini_racer to your Gemfile
+```
+gem 'react-rails'
+gem 'mini_racer'
+```
+2) Run the install
+
+```
+$ bundle install
+$ rails generate react:install
+```
+
+3) Remove the appended lines from `application.js`.
+
+You don't need these lines because Breezy's `application.js` already does the job of mounting React to the DOM. If you decide to use react-rails instead, you are welcomed to modify `application.js` as you see fit.
+
+4) Modify `app/javascript/packs/server_rendering.js`
+
+```
+// Notice we use `packs` instead of the react-rails defaults of `components`
+var componentRequireContext = require.context("packs", true);
+var ReactRailsUJS = require("react_ujs");
+ReactRailsUJS.useContext(componentRequireContext);
+```
+
+4) Modify your webpack config
+React-Rails uses ExecJS which uses a stripped down Javascript runtime. Your code won't have access to browser methods and the Node API. For some packages, you have to selectively choose which `index.js` to use. For example:
+
+```
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+const environment = require('./environment')
+const path = require('path')
+const ConfigObject = require('@rails/webpacker/package/config_types/config_object')
+
+const webConfig = environment.toWebpackConfig()
+const ssrConfig = new ConfigObject(webConfig.toObject())
+
+ssrConfig.delete('entry')
+ssrConfig.merge({
+  entry: {
+    server_rendering: webConfig.entry.server_rendering
+  },
+  resolve: {
+    alias: {
+      'html-dom-parser': path.resolve(__dirname, '../../node_modules/html-dom-parser/lib/html-to-dom-server')
+    }
+  }
+})
+
+delete webConfig.entry.server_rendering
+
+module.exports = [ssrConfig, webConfig]
+```
+
+5) Replace `<div id="app">` in your ERB templates with:
+
+```
+<%
+  props = "{\"initialPage\":#{initial_state}, \"href\":\"#{request.original_url}\"}"
+%>
+<%= react_component("application", props, prerender: true, id: :app) %>
+```
+
+6) Use ReactDOM.hydrate
+In `application.js` change this:
+```
+import { render } from 'react-dom'
+```
+to this
+
+```
+import { hydrate } from 'react-dom'
+```
+
+and change the rest of `application.js` accordingly.
+
 ## Usage with Kaminari
 
 SPA Pagination is pretty easy to add with Kaminari and any component library you wish to use. Lets use [antd](https://ant.design/components/pagination/) as an example:

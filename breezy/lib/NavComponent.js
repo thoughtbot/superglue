@@ -35,6 +35,10 @@ class Nav extends React.Component {
     this.history.replace(...argsForHistory(initialPageKey))
   }
 
+  componentWillUnmount() {
+    this.unsubscribeHistory()
+  }
+
   navigateTo(
     path,
     { action, ownProps } = { action: 'push', ownProps: {} }

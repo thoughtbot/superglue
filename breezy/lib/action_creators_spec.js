@@ -13,7 +13,6 @@ import {
   saveAndProcessPage,
 } from './action_creators'
 import * as helpers from './utils/helpers'
-import * as connect from './connector'
 import * as rsp from '../spec/fixtures'
 
 const middlewares = [thunk]
@@ -144,7 +143,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
@@ -220,7 +218,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
@@ -339,7 +336,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
@@ -396,7 +392,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
@@ -442,7 +437,6 @@ describe('action creators', () => {
 
     it('fetches with correct headers and fires SAVE_RESPONSE', () => {
       const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/foo?__=0', {
@@ -510,7 +504,6 @@ describe('action creators', () => {
         },
       }
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const body = {
@@ -581,7 +574,6 @@ describe('action creators', () => {
         },
       })
 
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/foobar?__=0', {
@@ -615,7 +607,6 @@ describe('action creators', () => {
         },
       })
 
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/foobar?__=0', {
@@ -642,7 +633,6 @@ describe('action creators', () => {
 
     it('cleans any __ and - params', (done) => {
       const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
@@ -653,7 +643,6 @@ describe('action creators', () => {
 
     it('returns a meta with redirected true if was redirected', () => {
       const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/redirecting_url?__=0', {
@@ -697,7 +686,6 @@ describe('action creators', () => {
 
     it('fires BREEZY_REQUEST_ERROR on a invalid response', () => {
       const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
       fetchMock.mock('/foo?__=0', {
         status: 200,
         headers: {
@@ -733,7 +721,6 @@ describe('action creators', () => {
 
     it('fires BREEZY_REQUEST_ERROR when the SJR returns nothing', () => {
       const store = mockStore(initialState())
-      spyOn(connect, 'getStore').and.returnValue(store)
 
       fetchMock.mock('/foo?__=0', {
         body: ``,
@@ -774,7 +761,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
       fetchMock.mock('/foo?__=0', {
         body: JSON.stringify({
@@ -835,7 +821,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
 
       let mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/first'
@@ -892,7 +877,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
@@ -914,7 +898,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
@@ -942,7 +925,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
@@ -968,7 +950,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
@@ -1004,7 +985,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
 
       let mockResponse = rsp.graftSuccessWithNewZip()
       fetchMock.mock(
@@ -1042,7 +1022,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'nextId')
 
       const customVisit = ensureSingleVisit(() => {
@@ -1066,7 +1045,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(connect, 'getStore').and.returnValue(store)
       spyOn(helpers, 'uuidv4').and.callFake(() => 'nextId')
 
       const customVisit = ensureSingleVisit(() => {

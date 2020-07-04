@@ -1,6 +1,5 @@
 import parse from 'url-parse'
 import { rootReducer } from './reducers'
-import { connect, disconnect } from './connector'
 import { urlToPageKey } from './utils/url'
 import { saveAndProcessPage } from './action_creators'
 import { setFetch, unsetFetch } from './window'
@@ -27,7 +26,6 @@ export { urlToPageKey }
 
 export function stop() {
   unsetFetch()
-  disconnect()
 }
 
 function pageToInitialState(key, page) {
@@ -45,9 +43,7 @@ export function start({ initialPage, fetch, baseUrl, url }) {
 
   return {
     reducer: rootReducer,
-    connect: function (store) {
-      connect(store)
-
+    prepareStore: function (store) {
       store.dispatch({
         type: HISTORY_CHANGE,
         payload: {

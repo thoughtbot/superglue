@@ -8,7 +8,6 @@ import { combineReducers, createStore, applyMiddleware } from 'redux'
 import { Provider, connect } from 'react-redux'
 import React from 'react'
 import { mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote } from '../../lib/utils/react'
-import { getStore } from '../../lib/connector'
 import { createMemoryHistory } from 'history'
 import Nav from '../../lib/NavComponent'
 
@@ -72,7 +71,7 @@ describe('start', () => {
       applyMiddleware(thunk)
     )
 
-    bz.connect(store)
+    bz.prepareStore(store)
 
     expect(store.getState()).toEqual({
       breezy:{
@@ -129,7 +128,7 @@ function createBreezyApp({history, fetch} = {}) {
     initialState,
     applyMiddleware(thunk)
   )
-  bz.connect(store)
+  bz.prepareStore(store)
 
   return {history, initialPageKey, store, dom, target}
 }
@@ -154,7 +153,7 @@ describe('navigation', () => {
 
       class ExampleAbout extends About {
         componentDidMount() {
-          const state = getStore().getState()
+          const state = store.getState()
           expect(state.pages['/foo']).toEqual(pageState)
           expect(history.location.pathname).toEqual('/foo')
           expect(history.location.search).toEqual('')
@@ -214,7 +213,7 @@ describe('navigation', () => {
 
       class ExampleAbout extends About {
         componentDidMount() {
-          const state = getStore().getState()
+          const state = store.getState()
           expect(state.pages['/foo']).toEqual(pageState)
           expect(history.location.pathname).toEqual('/foo')
           expect(history.location.search).toEqual('')
@@ -271,7 +270,7 @@ describe('navigation', () => {
 
         history.listen(({pathname}) => {
           if (pathname == '/some_html_page') {
-            const state = getStore().getState()
+            const state = store.getState()
             expect(state.breezy.currentPageKey).toEqual('/bar')
             expect(navigatorRef.current.state.pageKey).toEqual('/bar')
             expect(pathname).toEqual('/some_html_page')
@@ -316,7 +315,7 @@ describe('navigation', () => {
       class ExampleHome extends Home {
         componentDidMount() {
           if(mountNum == 1) {
-            const state = getStore().getState()
+            const state = store.getState()
             expect(state.breezy.currentPageKey).toEqual('/bar')
             expect(history.location.pathname).toEqual('/bar')
             expect(history.location.search).toEqual('')
@@ -378,7 +377,7 @@ describe('navigation', () => {
 
       history.listen(({pathname, hash}) => {
         if (hash === '#title') {
-          const state = getStore().getState()
+          const state = store.getState()
           expect(state.breezy.currentPageKey).toEqual('/bar')
           expect(navigatorRef.current.state.pageKey).toEqual('/bar')
           expect(pathname).toEqual('/bar')
@@ -487,7 +486,7 @@ describe('navigation', () => {
         applyMiddleware(thunk)
       )
 
-      bz.connect(store)
+      bz.prepareStore(store)
 
       class ExampleHome extends Home {
         visit() {
@@ -495,7 +494,7 @@ describe('navigation', () => {
         }
 
         componentDidUpdate() {
-          const state = getStore().getState()
+          const state = store.getState()
           expect(state.pages['/foo'].data.address).toEqual({ zip: 91210 })
           stop()
           done()

@@ -62,7 +62,7 @@ export default class Application extends React.Component {
     //Build the store
     const {initialState, reducer} = breezy
     this.store = this.buildStore(initialState, reducer)
-    breezy.connect(this.store)
+    breezy.prepareStore(this.store)
 
     //Build visit and remote thunks
     const {visit, remote} = buildVisitAndRemote(this.navigatorRef, this.store)

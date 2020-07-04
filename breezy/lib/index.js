@@ -1,6 +1,5 @@
 import parse from 'url-parse'
 import { rootReducer } from './reducers'
-import { setWindow, unsetWindow, hasWindow } from './window'
 import { connect, disconnect } from './connector'
 import { urlToPageKey } from './utils/url'
 import { saveAndProcessPage } from './action_creators'
@@ -23,10 +22,8 @@ export {
   updateFragments,
 } from './reducers'
 export { getIn } from './utils/immutability.js'
-export { setWindow, unsetWindow }
 export { urlToPageKey }
 export function stop() {
-  unsetWindow()
   disconnect()
 }
 
@@ -54,19 +51,16 @@ export function start({ window, initialPage, baseUrl, url }) {
     reducer: rootReducer,
     connect: function (store) {
       connect(store)
-      if (hasWindow()) {
-        store.dispatch({
-          type: HISTORY_CHANGE,
-          payload: {
-            pathname: location.pathname,
-            search: location.query,
-            hash: location.hash,
-          },
-        })
-      }
 
+      store.dispatch({
+        type: HISTORY_CHANGE,
+        payload: {
+          pathname: location.pathname,
+          search: location.query,
+          hash: location.hash,
+        },
+      })
       store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-
       store.dispatch({ type: SET_BASE_URL, payload: { baseUrl } })
       store.dispatch({ type: SET_CSRF_TOKEN, payload: { csrfToken } })
     },

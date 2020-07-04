@@ -7,7 +7,6 @@ import {
   OVERRIDE_VISIT_SEQ,
   HISTORY_CHANGE,
 } from './actions'
-import { refreshBrowser } from './window'
 
 function argsForNavInitialState(url) {
   return {
@@ -99,9 +98,13 @@ class Nav extends React.Component {
       if (containsKey) {
         this.setState({ pageKey })
       } else {
-        refreshBrowser()
+        this.reloadPage()
       }
     }
+  }
+
+  reloadPage() {
+    window.location.reload()
   }
 
   notFound(identifier) {

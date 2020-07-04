@@ -11,7 +11,6 @@ import { mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote } from '../.
 import { getStore } from '../../lib/connector'
 import { createMemoryHistory } from 'history'
 import Nav from '../../lib/NavComponent'
-import * as win from '../../lib/window'
 
 process.on('unhandledRejection', (r) => console.log(r))
 
@@ -62,7 +61,6 @@ describe('start', () => {
     }
 
     const bz = start({
-      window: dom.window,
       initialPage,
       baseUrl: 'http://example.com/base/',
       url: 'http://example.com/bar?some=123#title',
@@ -119,7 +117,6 @@ function createBreezyApp({history} = {}) {
   }
 
   const bz = start({
-    window: dom.window,
     initialPage,
     history,
     baseUrl: '',
@@ -410,7 +407,6 @@ describe('navigation', () => {
     })
 
     it('refreshes when the page has been evicted', (done) => {
-      spyOn(win, 'refreshBrowser')
       const existingHistory = createMemoryHistory({})
       existingHistory.push("/evicited", {
         breezy: true,
@@ -422,16 +418,16 @@ describe('navigation', () => {
         store,
         history,
         initialPageKey,
-        target
+        target,
+        dom
       } = createBreezyApp({history: existingHistory})
       const navigatorRef = React.createRef()
-
 
       class ExampleHome extends Home {
         componentDidMount() {
           history.listen(({pathname, hash}) => {
             process.nextTick(() => {
-              expect(win.refreshBrowser).toHaveBeenCalled()
+              expect(Nav.prototype.reloadPage).toHaveBeenCalled()
               done()
             })
           })
@@ -439,6 +435,8 @@ describe('navigation', () => {
           process.nextTick(() => history.goBack())
         }
       }
+
+      spyOn(Nav.prototype, 'reloadPage')
 
       const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
 
@@ -472,7 +470,6 @@ describe('navigation', () => {
       }
 
       const bz = start({
-        window: dom.window,
         initialPage,
         history,
         baseUrl: '',

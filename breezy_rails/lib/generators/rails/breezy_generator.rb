@@ -51,8 +51,8 @@ module Rails
             "\nimport #{component_name} from 'views/#{controller_file_path}/#{action}'"
           end
 
-          inject_into_file app_js, after: 'const identifierToComponentMapping = {' do
-            "\n  '#{[controller_file_path, action].join('/')}': #{component_name},"
+          inject_into_file app_js, after: 'identifierToComponentMapping = {' do
+            "\n      '#{[controller_file_path, action].join('/')}': #{component_name},"
           end
         end
 

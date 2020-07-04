@@ -62,10 +62,6 @@ export function start({ initialPage, fetch, baseUrl, url }) {
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,
+    stop,
   }
-}
-
-export default {
-  start,
-  stop,
 }

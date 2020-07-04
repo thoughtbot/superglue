@@ -4,8 +4,8 @@ import reduceReducers from 'reduce-reducers'
 import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
-import { createBrowserHistory } from 'history'
-import Breezy from '@jho406/breezy'
+import { createBrowserHistory, createMemoryHistory } from 'history'
+import { start } from '@jho406/breezy'
 import Nav from '@jho406/breezy/dist/NavComponent'
 import ujsHandlers from '@jho406/breezy/dist/utils/ujs'
 import { persistStore, persistReducer } from 'redux-persist'
@@ -13,112 +13,153 @@ import storage from 'redux-persist/lib/storage'
 import { applicationRootReducer, applicationPagesReducer } from './reducer'
 import { buildVisitAndRemote } from './application_visit'
 
-// Mapping between your props template to Component, you must add to this
-// to register any new page level component you create. If you are using the
-// scaffold, it will auto append the identifers for you.
-//
-// e.g {'posts/new': PostNew}
-const identifierToComponentMapping = {
+if(typeof window !== 'undefined' ) {
+  document.addEventListener("DOMContentLoaded", function() {
+    const initialPage = window.BREEZY_INITIAL_PAGE_STATE
+    const appEl = document.getElementById('app')
+
+    if (appEl) {
+      render(
+        <Application
+          initialPage={initialPage}
+          hasWindow={true}
+          appEl={appEl}
+          href={window.location.href}
+          // The base url is an optional prefix to all calls made by the `
+          // `remote` thunks
+          baseUrl={''}
+        />, appEl)
+    }
+ })
 }
 
-const history = createBrowserHistory({})
-const initialPage = window.BREEZY_INITIAL_PAGE_STATE
+export default class Application extends React.Component {
+  constructor(props) {
+    super(props)
+    this.hasWindow = typeof window !== 'undefined' 
+    // Mapping between your props template to Component, you must add to this
+    // to register any new page level component you create. If you are using the
+    // scaffold, it will auto append the identifers for you.
+    //
+    // e.g {'posts/new': PostNew}
+    this.identifierToComponentMapping = {
+    }
 
-// The base url is an optional prefix to all calls made by the `visit` and
-// `remote` thunks
-const baseUrl = ''
+    // Create a navigator Ref for UJS attributes and to enhance the base visit
+    // implementation with browser like functionality with
+    // enhanceVisitWithBrowserBehavior
+    this.navigatorRef = React.createRef()
 
-// By using start Breezy will return a reducer, the `initialState` to pass
-// to redux, the `initialPageKey` to pass to the NavComponent to render the
-// right page, and a `connect` function to connec the Breezy lib to the store
-const {reducer, initialState, initialPageKey, connect} = Breezy.start({
-  window,
-  initialPage,
-  baseUrl,
-})
+    // Start Breezy
+    const breezy = start({
+      initialPage: this.props.initialPage,
+      baseUrl: this.props.baseUrl,
+      url: this.props.href,
+      fetch: window.fetch,
+    })
+    this.breezy = breezy
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+    //Build the store
+    const {initialState, reducer} = breezy
+    this.store = this.buildStore(initialState, reducer)
+    breezy.connect(this.store)
 
-// Extract the reducers so that we can add reduceReducers on the pagesReducer
-const {
-  breezy: breezyReducer,
-  pages: pagesReducer,
-} = reducer
+    //Build visit and remote thunks
+    const {visit, remote} = buildVisitAndRemote(this.navigatorRef, this.store)
+    this.visit = visit
+    this.remote = remote
+  }
 
-// Redux Persist settings
-// The key is set to the stringified JS asset path to remove the need for
-// migrations when hydrating.
-const persistKey = window.BREEZY_INITIAL_PAGE_STATE.assets.filter( asset => asset.endsWith('.js'))
-const persistConfig = {
-  key: JSON.stringify(persistKey),
-  storage,
-}
+  componentDidMount() {
+    const { appEl } = this.props
+    // Create the ujs event handlers. You can change the ujsAttributePrefix
+    // in the event the data attribute conflicts with another.
+    this.ujsHandlers = ujsHandlers({
+      visit: this.visit,
+      remote: this.remote,
+      store: this.store,
+      ujsAttributePrefix: 'data-bz'
+    })
+    const {onClick, onSubmit} = this.ujsHandlers
 
-// Create the store
-// See `./reducer.js` for an explaination of the two included reducers
-const store = createStore(
-  persistReducer( persistConfig,
-    reduceReducers(
-      combineReducers({
-        breezy: breezyReducer,
-        pages: reduceReducers(pagesReducer, applicationPagesReducer),
-      }),
-      applicationRootReducer
+    appEl.addEventListener('click', onClick)
+    appEl.addEventListener('submit', onSubmit)
+  }
+
+  componentWillUnmount() {
+    const { appEl } = this.props
+    const {onClick, onSubmit} = this.ujsHandlers
+
+    appEl.removeEventListener('click', onClick)
+    appEl.removeEventListener('submit', onSubmit)
+    this.breezy.stop()
+  }
+
+  buildStore(initialState, {breezy: breezyReducer, pages: pagesReducer}) {
+    // Create the store
+    // See `./reducer.js` for an explaination of the two included reducers
+    const composeEnhancers = (this.hasWindow && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+    const reducer = this.wrapWithPersistReducer(
+      reduceReducers(
+        combineReducers({
+          breezy: breezyReducer,
+          pages: reduceReducers(pagesReducer, applicationPagesReducer),
+        }),
+        applicationRootReducer
+      )
     )
-  ),
-  initialState,
-  composeEnhancers(applyMiddleware(thunk))
-)
+    const store = createStore(
+      reducer,
+      initialState,
+      composeEnhancers(applyMiddleware(thunk))
+    )
 
-persistStore(store)
+    if(this.hasWindow) {
+      persistStore(store)
+    }
 
-// Create a navigator Ref for UJS attributes and to enhance the base visit
-// implementation with browser like functionality with
-// enhanceVisitWithBrowserBehavior
-const navigatorRef = React.createRef()
+    return store
+  }
 
-// Connect the Breezy internally requires access to the store, use the
-// provided connect function and pass the created store
-connect(store)
-const {visit, remote} = buildVisitAndRemote(navigatorRef, store)
+  wrapWithPersistReducer(reducers) {
+    // Redux Persist settings
+    // The key is set to the stringified JS asset path to remove the need for
+    // migrations when hydrating.
+    if (!this.hasWindow) {
+      return reducers
+    }
+    const persistKey = this.props.initialPage.assets.filter( asset => asset.endsWith('.js'))
+    const persistConfig = {
+      key: JSON.stringify(persistKey),
+      storage,
+    }
 
-// This is the root component that hold your component. The Nav component is
-// pretty bare, and you're welcome to replace the implementation.
-//
-// Your modified `visit` and `remote` will get passed to your components through
-// mapDispatchToProps. You can access them via `this.props.visit` or
-// `this.props.remote`.
-class App extends React.Component {
+    return persistReducer(persistConfig, reducers)
+  }
+
+  createHistory() {
+    if(this.hasWindow) {
+      return createBrowserHistory({})
+    } else {
+      return createMemoryHistory({})
+    }
+  }
+
   render() {
-    return <Provider store={store}>
+    const history = this.createHistory()
+
+    return <Provider store={this.store}>
       <Nav
-        store={store}
-        ref={navigatorRef}
-        visit={visit}
-        remote={remote}
-        mapping={this.props.mapping}
+        store={this.store}
+        ref={this.navigatorRef}
+        visit={this.visit}
+        remote={this.remote}
+        mapping={this.identifierToComponentMapping}
         history={history}
-        initialPageKey={initialPageKey}
+        initialPageKey={this.breezy.initialPageKey}
       />
     </Provider>
   }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  const appEl = document.getElementById('app')
-  if (appEl) {
-    // Create the ujs event handlers. You can change the ujsAttributePrefix
-    // in the event the data attribute conflicts with another.
-    const {onClick, onSubmit} = ujsHandlers({
-      visit,
-      remote,
-      store,
-      ujsAttributePrefix: 'data-bz'
-    })
 
-    appEl.addEventListener('click', onClick)
-    appEl.addEventListener('submit', onSubmit)
-
-    render(<App mapping={identifierToComponentMapping}/>, appEl)
-  }
-})

@@ -15,19 +15,21 @@ import { buildVisitAndRemote } from './application_visit'
 
 if(typeof window !== 'undefined' ) {
   document.addEventListener("DOMContentLoaded", function() {
-    const initialPage = window.BREEZY_INITIAL_PAGE_STATE
     const appEl = document.getElementById('app')
+    const location = window.location
 
     if (appEl) {
       render(
         <Application
-          initialPage={initialPage}
-          hasWindow={true}
           appEl={appEl}
-          href={window.location.href}
-          // The base url is an optional prefix to all calls made by the `
-          // `remote` thunks
+          // The base url is an optional prefix to all calls made by the `visit`
+          // and `remote` thunks.
           baseUrl={''}
+          // The global var BREEZY_INITIAL_PAGE_STATE is set by your erb
+          // template, e.g., index.html.erb
+          initialPage={window.BREEZY_INITIAL_PAGE_STATE}
+          // The initial path of the page, e.g., /foobar
+          href={location.pathname + location.query + location.hash}
         />, appEl)
     }
  })
@@ -36,7 +38,8 @@ if(typeof window !== 'undefined' ) {
 export default class Application extends React.Component {
   constructor(props) {
     super(props)
-    this.hasWindow = typeof window !== 'undefined' 
+    this.hasWindow = typeof window !== 'undefined'
+
     // Mapping between your props template to Component, you must add to this
     // to register any new page level component you create. If you are using the
     // scaffold, it will auto append the identifers for you.
@@ -45,12 +48,11 @@ export default class Application extends React.Component {
     this.identifierToComponentMapping = {
     }
 
-    // Create a navigator Ref for UJS attributes and to enhance the base visit
-    // implementation with browser like functionality with
-    // enhanceVisitWithBrowserBehavior
+    // Create a navigator Ref for UJS attributes and to enhance the base `visit`
+    // and `visit` thunks
     this.navigatorRef = React.createRef()
 
-    // Start Breezy
+    // Start Breezy and return an object to prepare the Redux store
     const breezy = start({
       initialPage: this.props.initialPage,
       baseUrl: this.props.baseUrl,
@@ -59,12 +61,21 @@ export default class Application extends React.Component {
     })
     this.breezy = breezy
 
-    //Build the store
+    // Build the store and pass Breezy's provided reducer to be combined with
+    // your reducers located at `application_reducer.js`
     const {initialState, reducer} = breezy
     this.store = this.buildStore(initialState, reducer)
+
+    // Fire initial events and populate the store
     breezy.prepareStore(this.store)
 
-    //Build visit and remote thunks
+    // Build visit and remote thunks
+    // Your modified `visit` and `remote` will get passed below to the
+    // NavComponent then to your components through the provided
+    // mapDispatchToProps.
+    //
+    // You can access them via `this.props.visit` or `this.props.remote`. In
+    // your page components
     const {visit, remote} = buildVisitAndRemote(this.navigatorRef, this.store)
     this.visit = visit
     this.remote = remote
@@ -115,6 +126,7 @@ export default class Application extends React.Component {
     )
 
     if(this.hasWindow) {
+      // Persist the store using Redux-Persist
       persistStore(store)
     }
 
@@ -139,8 +151,10 @@ export default class Application extends React.Component {
 
   createHistory() {
     if(this.hasWindow) {
+      // This is used for client side rendering
       return createBrowserHistory({})
     } else {
+      // This is used for server side rendering
       return createMemoryHistory({})
     }
   }
@@ -148,6 +162,8 @@ export default class Application extends React.Component {
   render() {
     const history = this.createHistory()
 
+    // The Nav component is pretty bare and can be inherited from for custom
+    // behavior or replaced with your own.
     return <Provider store={this.store}>
       <Nav
         store={this.store}

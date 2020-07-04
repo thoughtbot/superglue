@@ -29,7 +29,7 @@ if(typeof window !== 'undefined' ) {
           // template, e.g., index.html.erb
           initialPage={window.BREEZY_INITIAL_PAGE_STATE}
           // The initial path of the page, e.g., /foobar
-          href={location.pathname + location.query + location.hash}
+          href={location.pathname + location.search + location.hash}
         />, appEl)
     }
  })
@@ -57,7 +57,7 @@ export default class Application extends React.Component {
       initialPage: this.props.initialPage,
       baseUrl: this.props.baseUrl,
       url: this.props.href,
-      fetch: window.fetch,
+      fetch: this.hasWindow ? window.fetch : undefined,
     })
     this.breezy = breezy
 

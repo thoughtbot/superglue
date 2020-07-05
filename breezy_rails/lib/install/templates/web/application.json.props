@@ -1,4 +1,4 @@
-path = param_to_search_path(params[:bzq])
+path = request.format.json? ? param_to_search_path(params[:bzq]) : nil
 
 json.data(search: path) do
   yield json

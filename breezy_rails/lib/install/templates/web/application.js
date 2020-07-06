@@ -140,10 +140,21 @@ export default class Application extends React.Component {
     if (!this.hasWindow) {
       return reducers
     }
-    const persistKey = this.props.initialPage.assets.filter( asset => asset.endsWith('.js'))
+    const prefix = 'breezy'
+    const persistKey = prefix + this.props.initialPage.assets.filter( asset => asset.endsWith('.js')).join(",")
     const persistConfig = {
-      key: JSON.stringify(persistKey),
+      key: persistKey,
       storage,
+    }
+
+    // Remove older storage items that were used by previous JS assets
+    if (this.hasWindow) {
+      const storedKeys = Object.keys(localStorage)
+      storedKeys.forEach((key) => {
+        if (key.startsWith(`persist:${prefix}`) && key !== persistKey) {
+          localStorage.removeItem(key)
+        }
+      })
     }
 
     return persistReducer(persistConfig, reducers)
@@ -177,5 +188,3 @@ export default class Application extends React.Component {
     </Provider>
   }
 }
-
-

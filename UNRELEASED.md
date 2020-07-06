@@ -20,3 +20,16 @@ approach outlined in the commit.
 Browser navigation with hashes are now supported. The change leans on browser
 defaults of jumping to the element. Interanally as long as the pathname and
 query match, breezy will treat them as the same pageKey.
+
+`application.js` refactored to a component. This enables better server side
+rendering of HTML using `react-rails`
+
+`RailsTag` is now powered by `html-react-parser` which includes server side
+support.
+
+`Breezy.start` expects different and better named arguments, this is a BREAKING
+CHANGE.
+
+`fetch` is now injected to Breezy. This enables server side rendering AND 
+ReactNative usecases. The latter used to be supported but was removed because of
+resources

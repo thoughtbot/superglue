@@ -9,6 +9,7 @@ TMP_DIR = File.join(ROOT_DIR, 'tmp')
 BREEZY_RAILS_PATH = File.join(ROOT_DIR, 'breezy_rails')
 PROPS_TEMPLATE_PATH = File.join(ROOT_DIR, 'props_template')
 BREEZY_BREEZY_PATH = File.join(ROOT_DIR, 'breezy')
+VERSION = File.read(File.expand_path("../../../VERSION", __dir__)).strip
 
 SERVER_PORT = '3000'
 
@@ -52,15 +53,16 @@ class BreezyInstallationTest < Minitest::Test
   def update_package_json
     content = File.read('package.json').gsub(
       /"@jho406\/breezy.*$/,
-      "\"@jho406/breezy\":\"link:#{BREEZY_BREEZY_PATH}\","
+      "\"@jho406/breezy\":\"file:#{BREEZY_BREEZY_PATH}/jho406-breezy-#{VERSION}.tgz\","
     )
     File.open('package.json', "w") {|file| file.puts content }
   end
 
   def install_breezy
     Dir.chdir(BREEZY_BREEZY_PATH) do
-      successfully "yarn install"
-      successfully "yarn run build"
+      successfully "npm install"
+      successfully "npm run build"
+      successfully "npm pack"
     end
 
     successfully "echo \"gem 'props_template', path: '#{PROPS_TEMPLATE_PATH}'\" >> Gemfile"

@@ -37,7 +37,7 @@ function pageToInitialState(key, page) {
 export function start({ initialPage, fetch, baseUrl, path }) {
   const initialPageKey = urlToPageKey(parse(path).href)
   const { csrfToken } = initialPage
-  const location = parse(url)
+  const location = parse(path)
   const { pathname, query, hash } = location
   setFetch(fetch)
 

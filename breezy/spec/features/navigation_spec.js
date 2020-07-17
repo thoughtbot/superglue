@@ -62,7 +62,7 @@ describe('start', () => {
     const bz = start({
       initialPage,
       baseUrl: 'http://example.com/base/',
-      url: 'http://example.com/bar?some=123#title',
+      path: 'http://example.com/bar?some=123#title',
     })
     const { reducer, initialState, initialPageKey } = bz
     const store = createStore(
@@ -120,7 +120,7 @@ function createBreezyApp({history, fetch} = {}) {
     initialPage,
     history,
     baseUrl: '',
-    url: '/bar',
+    path: '/bar',
   })
   const { reducer, initialState, initialPageKey } = bz
   const store = createStore(
@@ -476,7 +476,7 @@ describe('navigation', () => {
         initialPage,
         history,
         baseUrl: '',
-        url: '/foo',
+        path: '/foo',
       })
 
       const { reducer, initialState, initialPageKey } = bz

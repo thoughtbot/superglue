@@ -9,6 +9,8 @@ Breezy bootstraps your Rails and React application, and helps with data and navi
 
 Additionally, it offers deep integration with Rails and makes React feel like a view replacement for ERB. Features you enjoyed when working in classic Rails; form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
 
+## Caution
+This project is in its early phases of development. Its interface, behavior, and name are likely to change drastically before a major version release.
 
 ### No APIs
 

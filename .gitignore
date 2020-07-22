@@ -10,3 +10,4 @@ log
 blade.yml
 breezy/build/**/*.js
 *.gem
+props_template/performance/**/*.png

@@ -1,6 +1,6 @@
 # PropsTemplate
 
-PropsTemplate is a queryable JSON templating library inspired by JBuilder. It has support for layouts, partials, russian-doll caching, multi-fetch and can selectively render nodes in your tree without executing others.
+PropsTemplate is a fast queryable JSON templating library inspired by JBuilder. It has support for layouts, partials, russian-doll caching, multi-fetch and can selectively render nodes in your tree without executing others.
 
 Example:
 
@@ -53,6 +53,20 @@ gem 'props_template'
 ```
 
 and run `bundle`
+
+Then add the following to a initializer:
+
+```
+Props.reset_encoder!
+```
+
+PropsTemplate uses a single instance of `Oj::StringWriter` for a process. If you're using a forking server like puma, be sure to add this to your `config/puma.rb`.
+
+```
+on_worker_boot do
+  Props.reset_encoder!
+end
+```
 
 ## API
 

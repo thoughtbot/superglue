@@ -1,8 +1,11 @@
 require_relative '../support/helper'
 require_relative '../support/rails_helper'
-require 'byebug'
 
 RSpec.describe 'Props::Template fragments' do
+  before do
+    Props.reset_encoder!
+  end
+
   it 'renders an array of partials with fragments using the :key as the method_name' do
     json = render(<<~PROPS)
       klass = Struct.new(:email, :id)

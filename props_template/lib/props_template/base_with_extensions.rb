@@ -4,12 +4,11 @@ require 'props_template/extensions/cache'
 require 'props_template/extensions/deferment'
 require 'props_template/extension_manager'
 require 'props_template/key_formatter'
-
 require 'active_support/core_ext/string/output_safety'
 
 module Props
   class BaseWithExtensions < Base
-    attr_reader :builder, :context, :fragments, :traveled_path, :deferred, :commands
+    attr_reader :builder, :context, :fragments, :traveled_path, :deferred, :stream
 
     def initialize(builder, context = nil, options = {})
       @context = context
@@ -36,21 +35,21 @@ module Props
     def set_block_content!(options = {})
       return super if !@em.has_extensions(options)
 
-      @em.handle(@commands, options) do
+      @em.handle(options) do
         yield
       end
     end
 
     def scoped_state
-      prev_state = [@commands, @em.deferred, @em.fragments]
-      @commands = []
-      @em  = ExtensionManager.new(self)
-      yield
-      next_state = [@commands, @em.deferred, @em.fragments]
-      @commands = prev_state[0]
-      @em = ExtensionManager.new(self, prev_state[1], prev_state[2])
+      prev_state = [@stream, @em.deferred, @em.fragments]
+      @em = ExtensionManager.new(self)
+      prev_scope = @scope
+      @scope = nil
 
-      next_state
+      yield @stream, @em.deferred, @em.fragments
+
+      @scope = prev_scope
+      @em = ExtensionManager.new(self, prev_state[1], prev_state[2])
     end
 
     def set!(key, options = {}, &block)
@@ -100,8 +99,9 @@ module Props
       @em.refine_all_item_options(all_options)
     end
 
-
     def refine_item_options(item, options)
+      return options if options.empty?
+
       if key = options[:key]
         val = if item.respond_to? key
           item.send(key)

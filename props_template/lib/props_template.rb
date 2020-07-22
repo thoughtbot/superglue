@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'props_template/base_with_extensions'
 require 'props_template/searcher'
 require 'props_template/handler'
@@ -15,7 +13,6 @@ module Props
     self.template_lookup_options = { handlers: [:props] }
 
     delegate :result!, :array!,
-      :commands_to_json!,
       :deferred!,
       :fragments!,
       :set_block_content!,
@@ -49,11 +46,8 @@ module Props
       @builder
     end
 
-    private
-
-    def method_missing(*args, &block)
-      set!(*args, &block)
-    end
+    alias_method :method_missing, :set!
+    private :method_missing
   end
 end
 

@@ -25,6 +25,8 @@ module Props
     end
 
     def refine_all_item_options(all_options)
+      return all_options if all_options.empty?
+
       all_options = @partialer.find_and_add_template(all_options)
       all_options = @cache.multi_fetch_and_add_results(all_options)
       all_options
@@ -46,12 +48,12 @@ module Props
       options[:defer] || options[:cache] || options[:partial] || options[:key]
     end
 
-    def handle(commands, options)
+    def handle(options)
       return yield if !has_extensions(options)
 
       if options[:defer]
         placeholder = @deferment.handle(options)
-        commands.push([:push_value, placeholder])
+        base.stream.push_value(placeholder)
         @fragment.handle(options)
       else
         handle_cache(options) do
@@ -76,32 +78,39 @@ module Props
 
     private
 
-    def content_for_cache(commands, deferred_paths, fragment_paths)
-      suffix = [
-        [:push_value, deferred_paths],
-        [:push_value, fragment_paths],
-        [:pop]
-      ]
-
-      [[:push_array]] + commands + suffix
-    end
-
     def handle_cache(options)
       if options[:cache]
+        recently_cached = false
+
         state = @cache.cache(*options[:cache]) do
-          commands = content_for_cache(*base.scoped_state {yield})
-          base.commands_to_json!(commands).strip
+          recently_cached = true
+          result = nil
+          start = base.stream.to_s.length
+          base.scoped_state { |stream, deferred_paths, fragment_paths|
+            yield
+            meta = Oj.dump([deferred_paths, fragment_paths]).strip
+            json_in_progress = base.stream.to_s
+            if json_in_progress[start] == ','
+              start += 1
+            end
+            raw = base.stream.to_s[start..-1].strip
+            result = "#{meta}\n#{raw}"
+          }
+          result
         end
 
-        value, next_deferred, next_fragments = Oj.load(state)
-        base.commands.push([:push_value, value])
-        deferred.push(*next_deferred)
+        if !recently_cached
+          meta, raw_json = state.split("\n")
+          next_deferred, next_fragments = Oj.load(meta)
+          base.stream.push_json(raw_json)
+          deferred.push(*next_deferred)
 
-        next_fragments.each do |k, v|
-          if fragments[k]
-            fragments[k].push(*v)
-          else
-            fragments[k] = v
+          next_fragments.each do |k, v|
+            if fragments[k]
+              fragments[k].push(*v)
+            else
+              fragments[k] = v
+            end
           end
         end
       else

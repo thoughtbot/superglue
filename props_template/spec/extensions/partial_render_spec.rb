@@ -2,6 +2,10 @@ require_relative '../support/helper'
 require_relative '../support/rails_helper'
 
 RSpec.describe 'Props::Template' do
+  before do
+    Props.reset_encoder!
+  end
+
   it 'renders on actionview' do
     json = render(<<~PROPS)
       json.hello 'world'

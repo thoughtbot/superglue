@@ -38,6 +38,9 @@ CHANGE.
 ReactNative use cases. The latter used to be supported but was removed because of
 resources
 
+PropsTemplate now uses a single instance of Oj's StringWriter, be sure to update
+your rails initializer to call `Props.reset_encoder!`
+
 ## v0.14.0
 - Add UJS attributes data-bz-remote and data-bz-visit
 - Add copyPage action to allow optimistic updates

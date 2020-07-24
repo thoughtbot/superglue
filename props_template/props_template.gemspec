@@ -17,5 +17,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'activesupport', '>= 6.0.0'
   s.add_dependency 'actionview', '>= 6.0.0'
   s.add_dependency 'oj', '>= 3.9'
-  s.add_dependency 'concurrent-ruby', '>= 1.1'
 end

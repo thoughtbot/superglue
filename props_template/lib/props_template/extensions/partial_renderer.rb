@@ -1,4 +1,3 @@
-require "concurrent/map"
 require 'action_view'
 
 module Props
@@ -80,7 +79,6 @@ module Props
     def self.raise_invalid_identifier(path)
       raise ArgumentError.new(IDENTIFIER_ERROR_MESSAGE % (path))
     end
-
 
     def self.retrieve_variable(path)
       base = path[-1] == "/" ? "" : File.basename(path)

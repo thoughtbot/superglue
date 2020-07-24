@@ -38,9 +38,13 @@ module Props
       end
     end
 
-    def set!(key, value = nil)
+    def format_key(key)
       @key_cache[key] ||= key.to_s.freeze
-      key = @key_cache[key]
+      @key_cache[key]
+    end
+
+    def set!(key, value = nil)
+      key = format_key(key)
 
       if @scope == :array
         raise InvalidScopeForObjError.new('Attempted to set! on an array! scope')

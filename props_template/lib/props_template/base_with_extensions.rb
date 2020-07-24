@@ -3,8 +3,8 @@ require 'props_template/extensions/partial_renderer'
 require 'props_template/extensions/cache'
 require 'props_template/extensions/deferment'
 require 'props_template/extension_manager'
-require 'props_template/key_formatter'
 require 'active_support/core_ext/string/output_safety'
+require 'active_support/core_ext/array'
 
 module Props
   class BaseWithExtensions < Base
@@ -16,7 +16,6 @@ module Props
       #todo: refactor so deferred can be its own class
       @em = ExtensionManager.new(self)
       @traveled_path = []
-      @key_formatter = KeyFormatter.new(camelize: :lower)
       super()
     end
 
@@ -52,9 +51,12 @@ module Props
       @em = ExtensionManager.new(self, prev_state[1], prev_state[2])
     end
 
-    def set!(key, options = {}, &block)
-      key = @key_formatter.format(key)
+    def format_key(key)
+      @key_cache[key] ||= key.to_s.camelize(:lower).freeze
+      @key_cache[key]
+    end
 
+    def set!(key, options = {}, &block)
       if block_given?
         options = @em.refine_options(options)
       end

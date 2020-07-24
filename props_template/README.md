@@ -1,6 +1,13 @@
 # PropsTemplate
 
-PropsTemplate is a fast queryable JSON templating library inspired by JBuilder. It has support for layouts, partials, russian-doll caching, multi-fetch and can selectively render nodes in your tree without executing others.
+PropsTemplate is a direct-to-Oj, JBuilder-like DSL for building JSON. It has support for Russian-Doll caching, layouts, and of course, its most unique feature: your templates are queryable.
+
+PropsTemplate is fast!
+
+Most libraries would build a hash before feeding it to your serializer of choice, typically Oj. PropsTemplate writes directly to Oj using `Oj::StringWriter` as its rendering your template and skips the need for an intermediate data structure.
+
+PropsTemplate also improves caching. While other libraries spend time unmarshaling, merging, and then serializing to JSON; PropsTemplate simply takes the cached string and [push_json](http://www.ohler.com/oj/doc/Oj/StringWriter.html#push_json-instance_method).
+
 
 Example:
 
@@ -54,13 +61,13 @@ gem 'props_template'
 
 and run `bundle`
 
-Then add the following to a initializer:
+Then add the following to an initializer:
 
 ```
 Props.reset_encoder!
 ```
 
-PropsTemplate uses a single instance of `Oj::StringWriter` for a process. If you're using a forking server like puma, be sure to add this to your `config/puma.rb`.
+PropsTemplate uses a single instance of `Oj::StringWriter` per process. If you're using a forking server like puma, be sure to add this to your `config/puma.rb`.
 
 ```
 on_worker_boot do
@@ -71,7 +78,7 @@ end
 ## API
 
 ### json.set! or json.<your key here>
-Defines the attribute or stucture. All keys are automatically camelized.
+Defines the attribute or stucture. All keys are automatically camelized lower.
 
 ```ruby
 json.set! :author_details, {..options...} do

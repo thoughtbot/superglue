@@ -3,10 +3,6 @@ require_relative '../support/rails_helper'
 require 'digest'
 
 RSpec.describe 'Props::Template fragments' do
-  before do
-    Props.reset_encoder!
-  end
-
   it 'renders with a partial and populates fragments' do
     json = render(<<~PROPS)
       json.outer do

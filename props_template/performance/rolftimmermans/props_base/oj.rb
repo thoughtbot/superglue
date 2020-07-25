@@ -1,7 +1,6 @@
 require 'oj'
 require 'props_template/base'
 
-Props.reset_encoder!
 
 Props::Base.class_eval do
   def self.encode!

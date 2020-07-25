@@ -3,7 +3,6 @@ require_relative '../support/rails_helper'
 
 RSpec.describe('searching the template') do
   before do
-    Props.reset_encoder!
     @controller.request.path = '/some_url'
   end
 

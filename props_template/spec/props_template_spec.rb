@@ -1,10 +1,6 @@
 require_relative './support/helper'
 
 RSpec.describe 'Props::Base' do
-  before do
-    Props.reset_encoder!
-  end
-
   it 'initializes' do
     expect {
       Props::Base.new

@@ -6,7 +6,6 @@ RSpec.describe 'Props::Template caching' do
   include ActiveSupport::Testing::TimeHelpers
 
   before do
-    Props.reset_encoder!
     Rails.cache.clear
   end
 

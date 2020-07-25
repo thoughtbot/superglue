@@ -1,8 +1,6 @@
 require 'oj'
 require 'props_template'
 
-Props.reset_encoder!
-
 Props::Template.class_eval do
   def self.encode!(**args)
     json = new(**args)

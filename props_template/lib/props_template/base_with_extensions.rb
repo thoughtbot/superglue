@@ -16,6 +16,7 @@ module Props
       #todo: refactor so deferred can be its own class
       @em = ExtensionManager.new(self)
       @traveled_path = []
+      @key_cache = {}
       super()
     end
 
@@ -52,8 +53,8 @@ module Props
     end
 
     def format_key(key)
-      @key_cache[key] ||= key.to_s.camelize(:lower).freeze
-      @key_cache[key]
+      @key_cache[key] ||= key.to_s.camelize(:lower)
+      @key_cache[key].dup
     end
 
     def set!(key, options = {}, &block)

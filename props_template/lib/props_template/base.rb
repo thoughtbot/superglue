@@ -6,18 +6,9 @@ module Props
   class InvalidScopeForArrayError < StandardError; end
   class InvalidScopeForObjError < StandardError; end
 
-  def self.reset_encoder!
-    @@encoder = Oj::StringWriter.new(mode: :rails)
-  end
-
-  def self.encoder
-    @@encoder
-  end
-
   class Base
     def initialize(encoder = nil)
-      @stream = encoder || Props.encoder
-      @stream.reset
+      @stream = Oj::StringWriter.new(mode: :rails)
       @scope = nil
       @key_cache = {}
     end
@@ -127,7 +118,6 @@ module Props
       json = @stream.to_s
       @scope = nil
       @key_cache = {}
-      @stream.reset
       json
     end
   end

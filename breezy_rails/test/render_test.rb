@@ -44,8 +44,6 @@ class RenderTest < ActionController::TestCase
 
 
   setup do
-    Props.reset_encoder!
-
     if Rails.version >= '6'
       # In rails 6, the fixture orders the templates based on their appearance in the handler
       # This doesn't happen IRL, so I'm going to explicitly set the handler here.

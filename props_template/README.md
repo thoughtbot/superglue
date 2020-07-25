@@ -61,20 +61,6 @@ gem 'props_template'
 
 and run `bundle`
 
-Then add the following to an initializer:
-
-```
-Props.reset_encoder!
-```
-
-PropsTemplate uses a single instance of `Oj::StringWriter` per process. If you're using a forking server like puma, be sure to add this to your `config/puma.rb`.
-
-```
-on_worker_boot do
-  Props.reset_encoder!
-end
-```
-
 ## API
 
 ### json.set! or json.<your key here>

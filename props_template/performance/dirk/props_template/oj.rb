@@ -7,8 +7,6 @@ module Rails
   end
 end
 
-Props.reset_encoder!
-
 Props::Template.class_eval do
   def self.encode!(context, options)
     json = new(context, options)

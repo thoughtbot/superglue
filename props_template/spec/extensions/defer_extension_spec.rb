@@ -3,7 +3,6 @@ require_relative '../support/rails_helper'
 
 RSpec.describe 'Props::Template' do
   before do
-    Props.reset_encoder!
     Rails.cache.clear
     @controller.request.path = '/some_url'
   end

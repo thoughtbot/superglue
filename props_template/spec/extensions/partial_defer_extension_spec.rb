@@ -4,7 +4,6 @@ require_relative '../support/rails_helper'
 RSpec.describe 'Props::Template fragments' do
   before do
     Rails.cache.clear
-    Props.reset_encoder!
     @controller.request.path = '/some_url'
   end
 

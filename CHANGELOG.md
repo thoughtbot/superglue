@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- Unreleased changes should go to UNRELEASED.md -->
 
+## 0.16
+Remove reset_encoder! This strategy was not necessary and prevented 
+props_template from being used in Puma.
+
+Fix potential memory leak in OJ by dup'ing keys before push_key. This does make
+props_template a tiny bit slower.
+
 ## 0.15
 visit and remote can now be customized to place code before and after the thunk
 gets called. These thunks are pre-wrapped with a dispatch and gets passed to the

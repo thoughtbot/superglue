@@ -10,7 +10,6 @@ module Props
     def initialize(encoder = nil)
       @stream = Oj::StringWriter.new(mode: :rails)
       @scope = nil
-      @key_cache = {}
     end
 
     def set_block_content!(options = {})
@@ -30,8 +29,7 @@ module Props
     end
 
     def format_key(key)
-      @key_cache[key] ||= key.to_s.freeze
-      @key_cache[key]
+      key.to_s
     end
 
     def set!(key, value = nil)
@@ -115,7 +113,7 @@ module Props
         @stream.pop
       end
 
-      json = @stream.to_s
+      json = @stream.raw_json
       @scope = nil
       @key_cache = {}
       json

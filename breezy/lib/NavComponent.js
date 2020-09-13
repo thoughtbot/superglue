@@ -4,6 +4,7 @@ import { uuidv4, argsForHistory } from './utils/helpers'
 import parse from 'url-parse'
 import {
   BREEZY_ERROR,
+  REMOVE_PAGE,
   OVERRIDE_VISIT_SEQ,
   HISTORY_CHANGE,
 } from './actions'
@@ -44,15 +45,16 @@ class Nav extends React.Component {
     { action, ownProps } = { action: 'push', ownProps: {} }
   ) {
     path = pathWithoutBZParams(path)
-    const pageKey = urlToPageKey(path)
+    const nextPageKey = urlToPageKey(path)
     const { store } = this.props
-    const hasPage = !!store.getState().pages[pageKey]
+    const hasPage = !!store.getState().pages[nextPageKey]
 
     if (hasPage) {
+      const prevPageKey = this.history.location.state.pageKey
       const historyArgs = [
         path,
         {
-          pageKey,
+          pageKey: nextPageKey,
           breezy: true,
         },
       ]
@@ -73,7 +75,21 @@ class Nav extends React.Component {
         },
       })
 
-      this.setState({ pageKey, ownProps })
+      this.setState({ pageKey: nextPageKey, ownProps })
+
+      if (
+        action === 'replace' &&
+        prevPageKey &&
+        prevPageKey !== nextPageKey
+      ) {
+        store.dispatch({
+          type: REMOVE_PAGE,
+          payload: {
+            pageKey: prevPageKey,
+          },
+        })
+      }
+
       return true
     } else {
       console.warn(

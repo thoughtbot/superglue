@@ -301,6 +301,117 @@ describe('navigation', () => {
     })
   })
 
+  describe('when an action replaces history', ()=> {
+    it('removes the previous page in the store', (done)=> {
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp({fetch})
+      const navigatorRef = React.createRef()
+
+      class ExampleHome extends Home {
+        visit() {
+          this.props.visit('/foo').then(() => {
+            this.props.navigateTo('/foo', { action: 'replace' })
+          })
+        }
+      }
+
+      class ExampleAbout extends About {
+        componentDidMount() {
+          process.nextTick(() => {
+            const state = store.getState()
+            expect(Object.keys(state.pages)).toEqual(['/foo'])
+            expect(state.breezy.currentPageKey).toEqual('/foo')
+            expect(history.location.pathname).toEqual('/foo')
+            expect(history.location.search).toEqual('')
+            expect(history.location.hash).toEqual('')
+            expect(navigatorRef.current.state.pageKey).toEqual('/foo')
+
+            stop()
+            done()
+          })
+        }
+      }
+
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
+      const VisibleAbout = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleAbout)
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            ref={navigatorRef}
+            mapping={{ home: VisibleHome, about: VisibleAbout }}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
+        </Provider>,
+        target
+      )
+
+      const mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?__=0', mockResponse)
+
+      target.getElementsByTagName('button')[0].click()
+    })
+
+    it('does nothing when we replace the same page', (done)=> {
+      const {
+        store,
+        history,
+        initialPageKey,
+        target
+      } = createBreezyApp({fetch})
+      const navigatorRef = React.createRef()
+
+      class ExampleHome extends Home {
+        visit() {
+          this.props.navigateTo('/bar', { action: 'replace' })
+        }
+
+        componentDidMount() {
+          process.nextTick(() => {
+            const state = store.getState()
+            expect(Object.keys(state.pages)).toEqual(['/bar'])
+            expect(state.breezy.currentPageKey).toEqual('/bar')
+            expect(history.location.pathname).toEqual('/bar')
+            expect(history.location.search).toEqual('')
+            expect(history.location.hash).toEqual('')
+            expect(navigatorRef.current.state.pageKey).toEqual('/bar')
+
+            stop()
+            done()
+          })
+        }
+      }
+
+      const VisibleHome = connect(mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote)(ExampleHome)
+
+      render(
+        <Provider store={store}>
+          <Nav
+            store={store}
+            ref={navigatorRef}
+            mapping={{ home: VisibleHome }}
+            history={history}
+            initialPageKey={initialPageKey}
+          />
+        </Provider>,
+        target
+      )
+
+      const mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('/foo?__=0', mockResponse)
+
+      target.getElementsByTagName('button')[0].click()
+    })
+  })
+
   describe('when an action pops history', () => {
     it('loads the page from the store', (done) => {
       const {

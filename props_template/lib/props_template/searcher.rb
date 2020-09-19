@@ -23,9 +23,6 @@ module Props
       []
     end
 
-    def fragment_digest!
-    end
-
     def found!
       pass_opts = @found_options.clone || {}
       pass_opts.delete(:defer)

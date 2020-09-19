@@ -9,22 +9,8 @@ import {
   HISTORY_CHANGE,
   SET_BASE_URL,
   SET_CSRF_TOKEN,
-  UPDATE_ALL_FRAGMENTS,
   COPY_PAGE,
 } from './actions'
-
-export function updateFragments(state, namesToNodes) {
-  for (const fragmentName in namesToNodes) {
-    const updatedNode = namesToNodes[fragmentName]
-    state = copyIntoAllPagesByFragment(
-      state,
-      fragmentName,
-      updatedNode
-    )
-  }
-
-  return state
-}
 
 function addPlaceholdersToDeferredNodes(existingPage, page) {
   const { defers = [] } = existingPage
@@ -40,90 +26,22 @@ function addPlaceholdersToDeferredNodes(existingPage, page) {
   }, page)
 }
 
-function addPlaceholdersToDeferredFragments(state, page) {
-  const deferredPaths = {}
-  const { defers, fragments } = page
-
-  if (!defers || !fragments) {
-    return page
-  }
-
-  defers.forEach(({ path }) => {
-    if (!deferredPaths[path]) {
-      deferredPaths[path] = true
-    }
-  })
-
-  const deferredFragments = []
-
-  Object.entries(fragments).forEach(([name, keyPaths]) => {
-    keyPaths.forEach((path) => {
-      if (deferredPaths[path]) {
-        deferredFragments.push([name, path])
-      }
-    })
-  })
-
-  const allExistingFragments = {}
-
-  Object.values(state).forEach((prevPage) => {
-    Object.entries(prevPage.fragments).forEach(([name, keyPaths]) => {
-      const path = keyPaths[0]
-      if (!allExistingFragments[name]) {
-        allExistingFragments[name] = getIn(prevPage, path)
-      }
-    })
-  })
-
-  deferredFragments.forEach(([name, path]) => {
-    if (allExistingFragments[name]) {
-      const node = allExistingFragments[name]
-      const copy = JSON.stringify(node)
-      page = setIn(page, path, JSON.parse(copy))
-    }
-  })
-
-  return page
-}
-
 function saveResponse(state, pageKey, page) {
   state = { ...state }
 
   page = {
     pageKey,
-    fragments: {},
+    fragments: [],
     ...page,
   }
 
   const existingPage = state[pageKey]
 
   if (existingPage) {
-    //TODO: consider renaming defers to deferments??
     page = addPlaceholdersToDeferredNodes(existingPage, page)
   }
 
-  page = addPlaceholdersToDeferredFragments(state, page)
-
   state[pageKey] = page
-
-  return state
-}
-
-function copyIntoAllPagesByFragment(state, name, node) {
-  state = { ...state }
-  const copy = JSON.stringify(node)
-
-  Object.entries(state).forEach(([pageKey, { fragments } = {}]) => {
-    const paths = fragments[name] || []
-
-    paths.forEach((pathToFragment) => {
-      state = setIn(
-        state,
-        [pageKey, pathToFragment].join('.'),
-        JSON.parse(copy)
-      )
-    })
-  })
 
   return state
 }
@@ -142,19 +60,14 @@ export function appendReceivedFragmentsOntoPage(
   }
 
   const currentPage = state[pageKey]
-  const { fragments: prevFragments = {} } = currentPage
-  const nextFragments = { ...prevFragments }
-  Object.keys(receivedFragments).forEach((key) => {
-    const values = receivedFragments[key]
+  const { fragments: prevFragments = [] } = currentPage
+  const nextFragments = [...prevFragments]
+  const existingKeys = {}
+  prevFragments.forEach((frag) => (existingKeys[frag.path] = true))
 
-    if (nextFragments.hasOwnProperty(key)) {
-      nextFragments[key].push(...values)
-
-      nextFragments[key] = [
-        ...new Set([...nextFragments[key], ...values]),
-      ]
-    } else {
-      nextFragments[key] = values
+  receivedFragments.forEach((frag) => {
+    if (!existingKeys[frag.path]) {
+      nextFragments.push(frag)
     }
   })
 
@@ -204,7 +117,7 @@ export function handleGraft(state, pageKey, page) {
   const {
     data: receivedNode,
     path: pathToNode,
-    fragments: receivedFragments = {},
+    fragments: receivedFragments = [],
     flash: receivedFlash,
   } = page
 
@@ -226,10 +139,6 @@ export function pageReducer(state = {}, action) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload
       return saveResponse(state, pageKey, page)
-    }
-    case UPDATE_ALL_FRAGMENTS: {
-      const { fragments } = action.payload
-      return updateFragments(state, fragments)
     }
     case HANDLE_GRAFT: {
       const { pageKey, page } = action.payload

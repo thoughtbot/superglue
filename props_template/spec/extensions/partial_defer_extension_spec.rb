@@ -25,9 +25,9 @@ RSpec.describe 'Props::Template fragments' do
       defers: [
         {url: '/some_url?bzq=outer.inner', path: 'outer.inner', type: 'auto'}
       ],
-      fragments: {
-        simple: ['outer.inner']
-      }
+      fragments: [
+        {type: :simple, partial: 'simple', path: 'outer.inner'}
+      ]
     })
   end
 
@@ -51,9 +51,9 @@ RSpec.describe 'Props::Template fragments' do
       defers: [
         {url: '/some_url?bzq=outer.inner', path: 'outer.inner', type: 'auto'}
       ],
-      fragments: {
-        simple: ['outer.inner'],
-      }
+      fragments: [
+        {type: :simple, partial: 'simple', path: 'outer.inner'}
+      ]
     })
   end
 end

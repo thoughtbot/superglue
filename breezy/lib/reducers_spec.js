@@ -101,7 +101,7 @@ describe('reducers', () => {
               data: {
                 a: { b: { c: {} } },
               },
-              fragments: {},
+              fragments: [],
               flash: {},
             },
           }
@@ -109,9 +109,9 @@ describe('reducers', () => {
           const receivedPage = {
             data: {},
             path: 'data.a.b.c',
-            fragments: {
-              header: ['data.a.b.c'],
-            },
+            fragments: [
+              {type: 'header', partial: 'header', path: 'data.a.b.c'}
+            ],
             flash: {},
           }
 
@@ -128,9 +128,9 @@ describe('reducers', () => {
               data: {
                 a: { b: { c: {} } },
               },
-              fragments: {
-                header: ['data.a.b.c'],
-              },
+              fragments: [
+                {type: 'header', partial: 'header', path: 'data.a.b.c'}
+              ],
               flash: {},
             },
           })
@@ -142,18 +142,18 @@ describe('reducers', () => {
               data: {
                 a: { b: { c: {} } },
               },
-              fragments: {
-                header: ['data.a.b.c'],
-              },
+              fragments: [
+                {type: 'header', partial: 'header', path: 'data.a.b.c'}
+              ],
               flash: {},
             },
           }
           const receivedPage = {
             data: {},
             path: 'data.a.b.c',
-            fragments: {
-              header: ['data.a.b.c'],
-            },
+            fragments: [
+              {type: 'header', partial: 'header', path: 'data.a.b.c'}
+            ],
             flash: {},
           }
 
@@ -170,9 +170,9 @@ describe('reducers', () => {
               data: {
                 a: { b: { c: {} } },
               },
-              fragments: {
-                header: ['data.a.b.c'],
-              },
+              fragments: [
+                {type: 'header', partial: 'header', path: 'data.a.b.c'}
+              ],
               flash: {}
             },
           })
@@ -187,7 +187,7 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
                 d: { e: { f: {} } },
               },
-              fragments: {},
+              fragments: [],
               flash: {},
             },
           }
@@ -195,9 +195,9 @@ describe('reducers', () => {
           const receivedPage = {
             data: {},
             path: 'data.d.e.f',
-            fragments: {
-              header: ['data.d.e.f'],
-            },
+            fragments: [
+              {type: 'header', partial: 'header', path: 'data.d.e.f'}
+            ],
             flash: {},
           }
 
@@ -215,9 +215,9 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
                 d: { e: { f: {} } },
               },
-              fragments: {
-                header: ['data.d.e.f'],
-              },
+              fragments: [
+                {type: 'header', partial: 'header', path: 'data.d.e.f'}
+              ],
               flash: {}
             },
           })
@@ -230,7 +230,9 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
                 d: { e: { f: {} } },
               },
-              fragments: { header: ['data.d.e.f'] },
+              fragments: [
+                {type: 'header', partial: 'header', path: 'data.d.e.f'}
+              ],
               flash: {}
             },
           }
@@ -238,7 +240,7 @@ describe('reducers', () => {
           const receivedPage = {
             data: {},
             path: 'data.a.b.c',
-            fragments: {},
+            fragments: [],
             flash: {}
           }
 
@@ -259,13 +261,13 @@ describe('reducers', () => {
           const prevState = {
             '/foo': {
               data: { a: { b: { c: {} } } },
-              fragments: {},
+              fragments: [],
               flash: {},
             },
           }
           const receivedPage = {
             data: { foo: 1 },
-            fragments: {},
+            fragments: [],
             flash: {},
           }
           const pageKey = '/foo'
@@ -285,7 +287,7 @@ describe('reducers', () => {
           const prevState = {
             '/foo': {
               data: { a: { b: { c: {} } } },
-              fragments: {},
+              fragments: [],
               flash: {},
             },
           }
@@ -293,7 +295,7 @@ describe('reducers', () => {
           const receivedPage = {
             data: { foo: 1 },
             path: 'data.a.b.c',
-            fragments: {},
+            fragments: [],
             flash: {},
           }
 
@@ -308,7 +310,7 @@ describe('reducers', () => {
           expect(nextState).toEqual({
             '/foo': {
               data: { a: { b: { c: { foo: 1 } } } },
-              fragments: {},
+              fragments: [],
               flash: {}
             },
           })
@@ -390,7 +392,7 @@ describe('reducers', () => {
             csrfToken: 'token',
             assets: ['application-123.js'],
             pageKey: '/foo',
-            fragments: {},
+            fragments: [],
           })
         )
       })
@@ -407,7 +409,7 @@ describe('reducers', () => {
             },
             pageKey: '/foo',
             defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-            fragments: {},
+            fragments: [],
           },
         }
 
@@ -419,7 +421,7 @@ describe('reducers', () => {
             },
           },
           defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-          fragments: {},
+          fragments: [],
         }
 
         const nextState = pageReducer(prevState, {
@@ -441,7 +443,7 @@ describe('reducers', () => {
           },
           pageKey: '/foo',
           defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-          fragments: {},
+          fragments: [],
         })
       })
 
@@ -451,15 +453,15 @@ describe('reducers', () => {
             data: {
               foo: {
                 bar: {
-                  greetings: 'hello world',
+                  greetings: 'prev greeting',
                 },
               },
             },
             pageKey: '/bar',
             defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
-            fragments: {
-              info: ['data.foo.bar'],
-            },
+            fragments: [
+              { type: 'info', partial: 'info', path: 'data.foo.bar' }
+            ],
           },
         }
 
@@ -468,34 +470,36 @@ describe('reducers', () => {
             foo: {
               bar: {},
             },
+            baz: 'received',
           },
-          defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-          fragments: {
-            info: ['data.foo.bar'],
-          },
+          defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          fragments: [
+            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+          ],
         }
 
         const nextState = pageReducer(prevState, {
           type: '@@breezy/SAVE_RESPONSE',
           payload: {
-            pageKey: '/foo',
+            pageKey: '/bar',
             page: receivedPage,
           },
         })
 
-        expect(nextState['/foo']).toEqual({
+        expect(nextState['/bar']).toEqual({
           data: {
             foo: {
               bar: {
-                greetings: 'hello world',
+                greetings: 'prev greeting',
               },
             },
+            baz: 'received',
           },
-          pageKey: '/foo',
-          defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-          fragments: {
-            info: ['data.foo.bar'],
-          },
+          pageKey: '/bar',
+          defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          fragments: [
+            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+          ],
         })
       })
 
@@ -511,7 +515,7 @@ describe('reducers', () => {
             },
             pageKey: '/bar',
             defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
-            fragments: {},
+            fragments: [],
           },
         }
 
@@ -522,9 +526,9 @@ describe('reducers', () => {
             },
           },
           defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-          fragments: {
-            info: ['data.foo.bar'],
-          },
+          fragments: [
+            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+          ],
         }
 
         const nextState = pageReducer(prevState, {
@@ -543,87 +547,10 @@ describe('reducers', () => {
           },
           pageKey: '/foo',
           defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
-          fragments: {
-            info: ['data.foo.bar'],
-          },
+          fragments: [
+            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+          ],
         })
-      })
-    })
-
-    describe('BREEZY_UPDATE_ALL_FRAGMENTS', () => {
-      it('updates all fragments using a map of names to node', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 30,
-                },
-              },
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            fragments: {
-              info: ['data.header.cart'],
-            },
-          },
-        }
-
-        const nextState = pageReducer(prevState, {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {
-              info: {
-                total: 10,
-              },
-            },
-          },
-        })
-
-        const nextStateCartTotal = nextState['/foo'].data.header.cart.total
-        expect(nextStateCartTotal).toEqual(10)
-      })
-
-      it('skips over pages without any fragments', () => {
-        const prevState = {
-          '/foo': {
-            data: {
-              header: {
-                cart: {
-                  total: 30,
-                },
-              },
-            },
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            fragments: {
-              info: ['data.header.cart'],
-            },
-          },
-          '/bar': {
-            data: {},
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            fragments: {},
-          },
-        }
-
-        const nextState = pageReducer(prevState, {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {
-              info: {
-                total: 10,
-              },
-            },
-          },
-        })
-
-        const skippedPage = nextState['/bar'].data
-        expect(skippedPage).toEqual({})
-
-        const nextStateCartTotal = nextState['/foo'].data.header.cart.total
-        expect(nextStateCartTotal).toEqual(10)
       })
     })
   })

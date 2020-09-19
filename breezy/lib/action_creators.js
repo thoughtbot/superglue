@@ -17,7 +17,6 @@ import {
   BREEZY_ERROR,
   BREEZY_GRAFTING_ERROR,
   OVERRIDE_VISIT_SEQ,
-  UPDATE_ALL_FRAGMENTS,
   COPY_PAGE,
 } from './actions'
 
@@ -110,48 +109,6 @@ function fetchDeferments(pageKey, defers = []) {
   }
 }
 
-function updateAllFragmentsWith(fragments) {
-  return {
-    type: UPDATE_ALL_FRAGMENTS,
-    payload: {
-      fragments,
-    },
-  }
-}
-
-function receivedPagetoFragmentList({
-  fragments = {},
-  data,
-  path,
-  action,
-}) {
-  const fragmentNameToNode = {}
-
-  if (action) {
-    Object.keys(fragments).forEach((digest) => {
-      fragments[digest].forEach((fpath) => {
-        if (!fragmentNameToNode[digest]) {
-          const start = path.split('.').length
-          const actualPath = fpath.split('.').slice(start).join('.')
-          const updatedNode = getIn(data, actualPath)
-          fragmentNameToNode[digest] = updatedNode
-        }
-      })
-    })
-  } else {
-    Object.keys(fragments).forEach((digest) => {
-      fragments[digest].forEach((fpath) => {
-        if (!fragmentNameToNode[digest]) {
-          const updatedNode = getIn({ data }, fpath)
-          fragmentNameToNode[digest] = updatedNode
-        }
-      })
-    })
-  }
-
-  return fragmentNameToNode
-}
-
 export function saveAndProcessPage(pageKey, page) {
   return (dispatch) => {
     pageKey = urlToPageKey(pageKey)
@@ -166,9 +123,6 @@ export function saveAndProcessPage(pageKey, page) {
       dispatch(saveResponse({ pageKey, page }))
     }
 
-    const receivedFragments = receivedPagetoFragmentList(page)
-
-    dispatch(updateAllFragmentsWith(receivedFragments))
     return dispatch(fetchDeferments(pageKey, defers))
   }
 }

@@ -106,8 +106,7 @@ module Props
         locals[as] = item
 
         if fragment_name = rest[:fragment]
-          fragment_name = Proc === fragment_name ? fragment_name.call(item) : fragment_name.to_s
-          rest[:fragment] = fragment_name
+          rest[:fragment] = fragment_name.to_s
         end
       end
 

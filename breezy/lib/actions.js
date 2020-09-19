@@ -7,7 +7,6 @@ export const CLEAR_FLASH = '@@breezy/CLEAR_FLASH'
 
 export const BREEZY_ERROR = '@@breezy/ERROR'
 export const BREEZY_GRAFTING_ERROR = '@@breezy/GRAFTING_ERROR'
-export const UPDATE_ALL_FRAGMENTS = '@@breezy/UPDATE_ALL_FRAGMENTS'
 
 export const HISTORY_CHANGE = '@@breezy/HISTORY_CHANGE'
 export const SET_BASE_URL = '@@breezy/SET_BASE_URL'

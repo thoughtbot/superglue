@@ -7,7 +7,7 @@ module Props
   class ExtensionManager
     attr_reader :base, :builder, :context
 
-    def initialize(base, defered=[], fragments={})
+    def initialize(base, defered=[], fragments=[])
       @base = base
       @context = base.context
       @builder = base.builder
@@ -36,10 +36,6 @@ module Props
       @deferment.deferred
     end
 
-    def fragment_digest
-      @fragment.name
-    end
-
     def fragments
       @fragment.fragments
     end
@@ -59,10 +55,8 @@ module Props
         handle_cache(options) do
           base.set_block_content! do
             if options[:partial]
-              current_digest = @fragment.name
               @fragment.handle(options)
               @partialer.handle(options)
-              @fragment.name = current_digest
             else
               yield
             end
@@ -104,14 +98,7 @@ module Props
           next_deferred, next_fragments = Oj.load(meta)
           base.stream.push_json(raw_json)
           deferred.push(*next_deferred)
-
-          next_fragments.each do |k, v|
-            if fragments[k]
-              fragments[k].push(*v)
-            else
-              fragments[k] = v
-            end
-          end
+          fragments.push(*next_fragments)
         end
       else
         yield

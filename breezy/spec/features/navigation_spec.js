@@ -87,7 +87,7 @@ describe('start', () => {
       pages:{
         '/bar?some=123':{
           pageKey: '/bar?some=123',
-          fragments: {},
+          fragments: [],
           data: {
             heading: 'this is page 1',
           },
@@ -191,7 +191,7 @@ describe('navigation', () => {
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
         pageKey: '/foo',
-        fragments: {},
+        fragments: [],
       }
 
       target.getElementsByTagName('button')[0].click()
@@ -252,7 +252,7 @@ describe('navigation', () => {
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
         pageKey: '/foo',
-        fragments: {},
+        fragments: [],
       }
 
       target.getElementsByTagName('button')[0].click()

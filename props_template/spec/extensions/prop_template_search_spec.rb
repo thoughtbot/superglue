@@ -425,7 +425,7 @@ RSpec.describe('searching the template') do
         data: {
           body: 'hello world'
         },
-        fragments: {}
+        fragments: []
       })
     end
 

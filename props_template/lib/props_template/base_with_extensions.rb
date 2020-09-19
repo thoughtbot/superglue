@@ -28,10 +28,6 @@ module Props
       @em.fragments
     end
 
-    def fragment_digest!
-      @em.fragment_digest
-    end
-
     def set_block_content!(options = {})
       return super if !@em.has_extensions(options)
 

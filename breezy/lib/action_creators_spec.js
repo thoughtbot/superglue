@@ -123,12 +123,6 @@ describe('action creators', () => {
             },
           },
         },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
-          },
-        },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
@@ -161,12 +155,6 @@ describe('action creators', () => {
           },
         },
         {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
-          },
-        },
-        {
           type: '@@breezy/BEFORE_FETCH',
           payload: jasmine.any(Object),
         },
@@ -182,12 +170,6 @@ describe('action creators', () => {
               assets: [],
               defers: [],
             },
-          },
-        },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
           },
         },
       ]
@@ -235,12 +217,6 @@ describe('action creators', () => {
             page: page,
           },
         },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
-          },
-        },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
@@ -271,12 +247,6 @@ describe('action creators', () => {
           payload: {
             pageKey: '/foo',
             page,
-          },
-        },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
           },
         },
       ]
@@ -310,14 +280,6 @@ describe('action creators', () => {
           payload: {
             pageKey: '/foo',
             page,
-          },
-        },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {
-              info: { status: 'success' },
-            },
           },
         },
       ]
@@ -354,12 +316,6 @@ describe('action creators', () => {
           },
         },
         {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
-          },
-        },
-        {
           type: '@@breezy/BEFORE_FETCH',
           payload: jasmine.any(Object),
         },
@@ -381,49 +337,6 @@ describe('action creators', () => {
       fetchMock.mock('/some_defered_request?bzq=body&__=0', 500)
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
-    })
-
-    it('When passed an empty url but fragments are available', () => {
-      const store = mockStore({
-        ...initialState(),
-        pages: {
-          '/foo': {},
-        },
-      })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
-
-      const page = {
-        data: {
-          header: {
-            email: 'j@j.com',
-          },
-        },
-        action: 'graft',
-        csrfToken: 'token',
-        assets: [],
-        defers: [],
-        path: 'data.top',
-        fragments: {
-          abc123: ['data.top.header'],
-        },
-      }
-
-      const expectedActions = [
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {
-              abc123: {
-                email: 'j@j.com',
-              },
-            },
-          },
-        },
-      ]
-
-      return store.dispatch(saveAndProcessPage(null, page)).then(() => {
         expect(store.getActions()).toEqual(expectedActions)
       })
     })
@@ -461,12 +374,6 @@ describe('action creators', () => {
               assets: [],
               defers: [],
             },
-          },
-        },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
           },
         },
       ]
@@ -538,12 +445,6 @@ describe('action creators', () => {
               assets: [],
               defers: [],
             },
-          },
-        },
-        {
-          type: '@@breezy/UPDATE_ALL_FRAGMENTS',
-          payload: {
-            fragments: {},
           },
         },
       ]
@@ -853,9 +754,7 @@ describe('action creators', () => {
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'secondId' } },
         { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
         { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },
-        { type: '@@breezy/UPDATE_ALL_FRAGMENTS', payload: jasmine.any(Object) },
         { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },
-        { type: '@@breezy/UPDATE_ALL_FRAGMENTS', payload: jasmine.any(Object) },
       ]
 
 
@@ -1000,7 +899,6 @@ describe('action creators', () => {
         { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'firstId' } },
         { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
         { type: '@@breezy/HANDLE_GRAFT', payload: jasmine.any(Object) },
-        { type: '@@breezy/UPDATE_ALL_FRAGMENTS', payload: jasmine.any(Object) },
       ]
 
       store.dispatch(visit('/details?bzq=data.address', {placeholderKey: '/current'})).then((meta) => {

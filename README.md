@@ -1,13 +1,14 @@
 # Breezy
 
+What if Ruby on Rails kidnapped React (the view) from the JS community? Could we keep the productivity of classic Rails while benefiting from what React offers?
+
 [![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
 
-Build modern React/Redux applications using classic Rails. Batteries included. Turbolinks inspired. APIs and client-side routing not required.
+Breezy is a data and navigation library that "replaces" `.erb` views with `.jsx` components, and gives developers a way to build interative data-backed applications without any APIs, or client-side routing.
 
-## At a Glance
-Breezy bootstraps your Rails and React application, and helps with data and navigation. It makes page-to-page transitions and partial page updates painless to implement, and doesn't require any APIs or client-side routing.
+Best of all, it still feels like classic Rails. Features you enjoyed when working in classic Rails; form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
 
-Additionally, it offers deep integration with Rails and makes React feel like a view replacement for ERB. Features you enjoyed when working in classic Rails; form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
+Breezy is Turbolinks inspired, UJS friendly, and comes with batteries.
 
 ## Caution
 This project is in its early phases of development. Its interface, behavior, and name are likely to change drastically before a major version release.
@@ -34,7 +35,7 @@ MyRailsApp/
 ```
 
 ### PropsTemplate
-Powering these JSON responses is PropsTemplate, a traversable JSON templating language inspired by JBuilder. With PropsTemplate you can specify a path of the node you want, and PropsTemplate will walk the tree to it, skipping execution of nodes that don't match the keypath.
+Powering these JSON responses is PropsTemplate, a traversable JSON templating DSL inspired by JBuilder. With PropsTemplate you can specify a path of the node you want, and PropsTemplate will walk the tree to it, skipping execution of nodes that don't match the keypath.
 
 ![No Apis](docs/images/props_template.png)
 
@@ -74,4 +75,4 @@ Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure 
 
 ## Special Thanks
 
-Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/)
+Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/), [turbostreamer](https://github.com/malomalo/turbostreamer)

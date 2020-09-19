@@ -1,15 +1,20 @@
 # Table of contents
 
 * [Introduction](README.md)
-* [Installation](docs/installation.md)
-* [Configuration](docs/configuration.md)
+* [Getting Started](docs/getting-started.md)
 * [Recipes](docs/recipes.md)
 
-## Concepts
+# Concepts
+* [Philosophy](docs/concepts.md)
 * [The Redux state shape](docs/redux-state-shape.md)
-* [Travering your tree](docs/traversal-guide.md)
+* [The page response](docs/page-response.md)
 
-## The API
+# Features
+* [Navigation](docs/navigation.md)
+* [Template querying](docs/traversal-guide.md)
+* [Updating fragments](docs/updating-fragments.md)
+
+## API
 * [React Redux](docs/react-redux.md)
 * [Rails](docs/rails.md)
 * [Utility](docs/utility.md)

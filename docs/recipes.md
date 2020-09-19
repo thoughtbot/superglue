@@ -310,7 +310,6 @@ Then in your component
 import {
   mapStateToProps,
   mapDispatchToProps,
-  enhanceVisitWithBrowserBehavior
 } from '@jho406/breezy'
 import { Pagination } from 'antd'
 import parse from 'url-parse'

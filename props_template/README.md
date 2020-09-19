@@ -213,7 +213,7 @@ json.posts
 end
 ```
 
-PropsTemplate does not know what the elements are in your collection. The example above will be fine for [traversing](props-template.md#traversing_nodes) by index `\posts?bzq=posts.0`, but will raise a `NotImplementedError` if you traverse by attribute `/posts?bzq=posts.id=1`. You may still need a delegate that implements `member_by`.
+PropsTemplate does not know what the elements are in your collection. The example above will be fine for [traversing](props-template.md#traversing_nodes) by index `\posts?bzq=posts.0`, but will raise a `NotImplementedError` if you query by attribute `/posts?bzq=posts.id=1`. You may still need a delegate that implements `member_by`.
 
 ### json.deferred!
 Returns all deferred nodes used by the [#deferment](#deferment) option.
@@ -372,7 +372,7 @@ json.defers json.deferred!
 ```
 
 
-If `:manual` is used, PropsTemplate will no-op the block and will not populate `json.deferred!`. Its up to you to [traverse](props-template.md#traversing_nodes) to fetch the node seperately. A common usecase would be tab content that does not load until you click the tab.
+If `:manual` is used, PropsTemplate will no-op the block and will not populate `json.deferred!`. Its up to you to [query](props-template.md#traversing_nodes) to fetch the node seperately. A common usecase would be tab content that does not load until you click the tab.
 
 #### Working with arrays
 The default behavior for deferements is to use the index of the collection to identify an element. PropsTemplate will generate `?_bzq=a.b.c.0.title` in its metadata.

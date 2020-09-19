@@ -146,9 +146,7 @@ Then somewhere in your component
 
 Makes an ajax call to a page, and sets the response to the `pages` store. Use `visit` when you want full page-to-page transitions on the user's last click. There can only ever be one visit at a time. If you happen to call `visit` while another visit is taking place, only the most recent visit will callback with `canNavigate: true`.
 
-For a browser-like navigational experience, including History pushes, combine with [enhanceVisitWithBrowserBehavior](utility.md#enhancevisitwithbrowserbehavior)
-
-**Note** `visit` will strip any `bzq` query parameters from your pathQuery. If you need to use traversals, use [remote](#remote) instead.
+**Note** `visit` will strip any `bzq` query parameters from your pathQuery unless you pass a `placeholderKey`.
 
 ```javascript
 visit(pathQuery).then(({rsp, page, pageKey, screen, needsRefresh, canNavigate}) => {})
@@ -209,7 +207,7 @@ or if you're using a form
 
 Remote makes an ajax call and saves the response to the `pages` store in async fashion. Use this if you want to [update parts](react-redux.md#traversing-nodes) of the current page or preload other pages.
 
-**Note** Unlike `visit`, `remote` will retain any `bzq` url parameters.
+**Note** Unlike `visit`, `remote` will not strip any `bzq` url parameters.
 
 ```javascript
 remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).then(({rsp, page, screen, needsRefresh, canNavigate}) => {})
@@ -262,9 +260,6 @@ this.props.copyPage({
 | {from} | `String` | The key of the page you want to copy from.
 | {to} | `String` | The key of the page you want to copy to.
 
-
-### Behavior with Fragments
-If a fragment was rendered in any response to a `visit` or `remote`, all fragments across all pages in Breey's Redux store are automatically updated. For more information see [PropsTemplate](props_template/README.md#partial-fragments)
 
 ## Search nodes
 

@@ -53,6 +53,29 @@ RSpec.describe 'Props::Template' do
     })
   end
 
+  it 'defers a block from loading, and passes success and fail types' do
+    json = render(<<~PROPS)
+      json.outer do
+        json.inner(defer: [:auto, success_action: 'SUCCESS', fail_action: 'FAIL']) do
+          json.greeting do
+            json.foo 'hello world'
+          end
+        end
+      end
+
+      json.deferred json.deferred!
+    PROPS
+
+    expect(json).to eql_json({
+      outer: {
+        inner: nil
+      },
+      deferred: [
+        {url: '/some_url?bzq=outer.inner', path: 'outer.inner', type: 'auto', successAction: 'SUCCESS', failAction: 'FAIL'}
+      ]
+    })
+  end
+
   it 'defers a block from loading and populates with a manual type' do
     json = render(<<~PROPS)
       json.outer do

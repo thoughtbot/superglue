@@ -34,6 +34,8 @@ module Props
 
       type, rest = options[:defer]
       placeholder = rest[:placeholder]
+      success_action = rest[:success_action]
+      fail_action = rest[:fail_action]
 
       if type.to_sym == :auto && options[:key]
         key, val = options[:key]
@@ -50,11 +52,17 @@ module Props
 
       uri.query = ::URI.encode_www_form(qry)
 
-      @deferred.push(
+      deferral = {
         url: uri.to_s,
         path: path,
-        type: type.to_s
-      )
+        type: type.to_s,
+      }
+
+      # camelize for JS land
+      deferral[:successAction] = success_action if success_action
+      deferral[:failAction] = fail_action if fail_action
+
+      @deferred.push(deferral)
 
       placeholder
     end

@@ -14,8 +14,9 @@ import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   BEFORE_FETCH,
+  GRAFTING_ERROR,
   BREEZY_ERROR,
-  BREEZY_GRAFTING_ERROR,
+  GRAFTING_SUCCESS,
   OVERRIDE_VISIT_SEQ,
   COPY_PAGE,
 } from './actions'
@@ -70,15 +71,6 @@ function beforeFetch(payload) {
   }
 }
 
-function handleError(err) {
-  return {
-    type: BREEZY_ERROR,
-    payload: {
-      message: err.message,
-    },
-  }
-}
-
 function fetchDeferments(pageKey, defers = []) {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
@@ -88,21 +80,35 @@ function fetchDeferments(pageKey, defers = []) {
 
     const fetches = defers
       .filter(({ type }) => type === 'auto')
-      .map(function ({ url }) {
-        return dispatch(remote(url, { pageKey })).catch((err) => {
-          let parsedUrl = new parse(url, true)
-          const keyPath = parsedUrl.query.bzq
+      .map(function ({
+        url,
+        successAction = GRAFTING_SUCCESS,
+        failAction = GRAFTING_ERROR,
+      }) {
+        let parsedUrl = new parse(url, true)
+        const keyPath = parsedUrl.query.bzq
 
-          dispatch({
-            type: BREEZY_GRAFTING_ERROR,
-            payload: {
-              url,
-              err,
-              pageKey,
-              keyPath,
-            },
+        return dispatch(remote(url, { pageKey }))
+          .then(() => {
+            dispatch({
+              type: successAction,
+              payload: {
+                pageKey,
+                keyPath,
+              },
+            })
           })
-        })
+          .catch((err) => {
+            dispatch({
+              type: failAction,
+              payload: {
+                url,
+                err,
+                pageKey,
+                keyPath,
+              },
+            })
+          })
       })
 
     return Promise.all(fetches)
@@ -124,6 +130,15 @@ export function saveAndProcessPage(pageKey, page) {
     }
 
     return dispatch(fetchDeferments(pageKey, defers))
+  }
+}
+
+function handleError(err) {
+  return {
+    type: BREEZY_ERROR,
+    payload: {
+      message: err.message,
+    },
   }
 }
 
@@ -191,7 +206,7 @@ export function remote(
 
         return meta
       })
-      .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
+    .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
 }
 

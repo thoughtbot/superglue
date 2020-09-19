@@ -172,6 +172,77 @@ describe('action creators', () => {
             },
           },
         },
+        {
+          type: '@@breezy/GRAFTING_SUCCESS',
+          payload: jasmine.any(Object),
+        },
+      ]
+
+      fetchMock.mock('/foo?bzq=body&__=0', {
+        body: JSON.stringify({
+          data: 'success',
+          action: 'graft',
+          path: 'body',
+          csrfToken: 'token',
+          assets: [],
+          defers: [],
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
+    it('handles deferments on the page and fires user defined success', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      const page = {
+        data: { heading: 'Some heading 2' },
+        csrfToken: 'token',
+        assets: [],
+        defers: [{ url: '/foo?bzq=body', type: 'auto', successAction: 'FOOBAR' }],
+      }
+
+      const expectedActions = [
+        {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: page,
+          },
+        },
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: jasmine.any(Object),
+        },
+        {
+          type: '@@breezy/HANDLE_GRAFT',
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: 'success',
+              action: 'graft',
+              path: 'body',
+              csrfToken: 'token',
+              assets: [],
+              defers: [],
+            },
+          },
+        },
+        {
+          type: 'FOOBAR',
+          payload: jasmine.any(Object),
+        },
       ]
 
       fetchMock.mock('/foo?bzq=body&__=0', {
@@ -325,6 +396,56 @@ describe('action creators', () => {
         },
         {
           type: '@@breezy/GRAFTING_ERROR',
+          payload: {
+            url: '/some_defered_request?bzq=body',
+            pageKey: '/foo',
+            err: jasmine.any(Object),
+            keyPath: 'body',
+          },
+        },
+      ]
+
+      fetchMock.mock('/some_defered_request?bzq=body&__=0', 500)
+
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
+    it('fires a user defined error when a fetch fails', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
+      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
+
+      const page = {
+        data: { heading: 'Some heading 2' },
+        csrfToken: 'token',
+        assets: [],
+        defers: [{ url: '/some_defered_request?bzq=body', type: 'auto', failAction: 'FOOBAR' }],
+      }
+
+      const expectedActions = [
+        {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: page,
+          },
+        },
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: jasmine.any(Object),
+        },
+        {
+          type: '@@breezy/ERROR',
+          payload: jasmine.any(Object),
+        },
+        {
+          type: 'FOOBAR',
           payload: {
             url: '/some_defered_request?bzq=body',
             pageKey: '/foo',

@@ -3,7 +3,6 @@ import { urlToPageKey, pathWithoutBZParams } from './utils/url'
 import { uuidv4, argsForHistory } from './utils/helpers'
 import parse from 'url-parse'
 import {
-  BREEZY_ERROR,
   REMOVE_PAGE,
   OVERRIDE_VISIT_SEQ,
   HISTORY_CHANGE,
@@ -138,13 +137,6 @@ class Nav extends React.Component {
     const error = new Error(
       `Breezy Nav component was looking for ${identifier} but could not find it in your mapping. ${reminder}`
     )
-
-    store.dispatch({
-      type: BREEZY_ERROR,
-      payload: {
-        message: error.message,
-      },
-    })
 
     throw error
   }

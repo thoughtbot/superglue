@@ -1,14 +1,14 @@
 import { JSDOM } from 'jsdom'
 import { render } from 'react-dom'
-import start from './index'
+import start from '../../lib/index'
 import fetchMock from 'fetch-mock'
-import * as rsp from '../spec/fixtures'
+import * as rsp from '../fixtures'
 import React from 'react'
-import { mapStateToProps, mapDispatchToProps } from './utils/react'
+import { mapStateToProps, mapDispatchToProps } from '../../lib/utils/react'
 import { Provider, connect } from 'react-redux'
 import { createMemoryHistory } from 'history'
 import configureMockStore from 'redux-mock-store'
-import Nav from './NavComponent.js'
+import Nav from '../../lib/components/NavComponent.js'
 
 const createScene = (html) => {
   const dom = new JSDOM(`${html}`, { runScripts: 'dangerously' })

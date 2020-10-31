@@ -1,11 +1,11 @@
-import { HandlerBuilder } from './ujs'
+import { HandlerBuilder } from '../../../lib/utils/ujs'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import fetchMock from 'fetch-mock'
 import React from 'react'
 import { JSDOM } from 'jsdom'
 import { render } from 'react-dom'
-import * as helpers from './helpers'
+import * as helpers from '../../../lib/utils/helpers'
 
 describe('ujs', () => {
   function createFakeEvent() {

@@ -1,5 +1,4 @@
-import { setIn, getIn } from './utils/immutability'
-import { urlToPageKey } from './utils/url'
+import { setIn, getIn, urlToPageKey } from '../utils'
 import {
   REMOVE_PAGE,
   CLEAR_FLASH,
@@ -10,7 +9,7 @@ import {
   SET_BASE_URL,
   SET_CSRF_TOKEN,
   COPY_PAGE,
-} from './actions'
+} from '../actions'
 
 function addPlaceholdersToDeferredNodes(existingPage, page) {
   const { defers = [] } = existingPage

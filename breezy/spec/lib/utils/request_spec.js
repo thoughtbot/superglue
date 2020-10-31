@@ -1,4 +1,4 @@
-import { isValidResponse, argsForFetch } from './request'
+import { isValidResponse, argsForFetch } from '../../../lib/utils/request'
 import parse from 'url-parse'
 import Headers from 'fetch-headers'
 

@@ -73,7 +73,7 @@ export const mapDispatchToProps = {
 A nav component for your application.
 
 ```javascript
-import Nav from '@jho406/breezy/dist/NavComponent'
+import Nav from '@jho406/breezy/components/NavComponent'
 ...
 <Provider store={store}>
   <Nav

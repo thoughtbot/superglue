@@ -1,4 +1,4 @@
-import * as helpers from './window'
+import * as helpers from '../../../lib/utils/window'
 
 describe('needsRefresh', () => {
   it('returns false if passed in undefined', () => {

@@ -1,12 +1,16 @@
 import React from 'react'
-import { urlToPageKey, pathWithoutBZParams } from './utils/url'
-import { uuidv4, argsForHistory } from './utils/helpers'
+import {
+  urlToPageKey,
+  pathWithoutBZParams,
+  uuidv4,
+  argsForHistory,
+} from '../utils'
 import parse from 'url-parse'
 import {
   REMOVE_PAGE,
   OVERRIDE_VISIT_SEQ,
   HISTORY_CHANGE,
-} from './actions'
+} from '../actions'
 
 function argsForNavInitialState(url) {
   return {

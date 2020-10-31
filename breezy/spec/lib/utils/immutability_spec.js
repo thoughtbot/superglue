@@ -1,4 +1,4 @@
-import { getIn, setIn, delIn, extendIn } from './immutability'
+import { getIn, setIn, delIn, extendIn } from '../../../lib/utils/immutability'
 
 describe('getIn', () => {
   it('fetches the node at keypath', () => {

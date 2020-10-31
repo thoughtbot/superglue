@@ -1,7 +1,7 @@
 import React from 'react'
 import {mapStateToProps, mapDispatchToProps} from '@jho406/breezy'
 import {connect} from 'react-redux'
-import RailsTag from '@jho406/breezy/dist/RailsTag'
+import RailsTag from '@jho406/breezy/components/RailsTag'
 import * as applicationActionCreators from 'javascript/packs/action_creators'
 
 class <%= plural_table_name.camelize %>New extends React.Component {

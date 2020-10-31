@@ -6,7 +6,7 @@ import {
   updateSameFragmentsOnPage,
   appendReceivedFragmentsOntoPage,
   handleGraft,
-} from '../lib/reducers'
+} from '../../lib/reducers'
 
 describe('reducers', () => {
   describe('meta reducer', () => {

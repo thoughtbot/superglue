@@ -1,135 +1,29 @@
-import { argsForFetch, parseResponse } from './utils/request'
-import { getIn } from './utils/immutability'
-import parse from 'url-parse'
-import { uuidv4, isGraft } from './utils/helpers'
-import { needsRefresh, getFetch } from './window'
 import {
+  argsForFetch,
+  parseResponse,
+  getIn,
+  uuidv4,
+  isGraft,
+  needsRefresh,
+  getFetch,
   urlToPageKey,
   withoutBusters,
   hasBzq,
   removeBzq,
-} from './utils/url'
+} from '../utils'
+import parse from 'url-parse'
 import {
   CLEAR_FLASH,
-  SAVE_RESPONSE,
-  HANDLE_GRAFT,
   BEFORE_FETCH,
-  GRAFTING_ERROR,
   BREEZY_ERROR,
-  GRAFTING_SUCCESS,
   OVERRIDE_VISIT_SEQ,
-  COPY_PAGE,
-} from './actions'
-
-export function copyPage({ from, to }) {
-  return {
-    type: COPY_PAGE,
-    payload: {
-      from,
-      to,
-    },
-  }
-}
-
-export function saveResponse({ pageKey, page }) {
-  pageKey = urlToPageKey(pageKey)
-
-  return {
-    type: SAVE_RESPONSE,
-    payload: {
-      pageKey,
-      page,
-    },
-  }
-}
-
-export function clearFlash({ pageKey }) {
-  return {
-    type: CLEAR_FLASH,
-    payload: {
-      pageKey,
-    },
-  }
-}
-
-export function handleGraft({ pageKey, page }) {
-  pageKey = urlToPageKey(pageKey)
-
-  return {
-    type: HANDLE_GRAFT,
-    payload: {
-      pageKey,
-      page,
-    },
-  }
-}
+} from '../actions'
+import { copyPage, saveAndProcessPage } from './index'
 
 function beforeFetch(payload) {
   return {
     type: BEFORE_FETCH,
     payload,
-  }
-}
-
-function fetchDeferments(pageKey, defers = []) {
-  pageKey = urlToPageKey(pageKey)
-  return (dispatch) => {
-    if (typeof getFetch() !== 'function') {
-      return Promise.resolve()
-    }
-
-    const fetches = defers
-      .filter(({ type }) => type === 'auto')
-      .map(function ({
-        url,
-        successAction = GRAFTING_SUCCESS,
-        failAction = GRAFTING_ERROR,
-      }) {
-        let parsedUrl = new parse(url, true)
-        const keyPath = parsedUrl.query.bzq
-
-        return dispatch(remote(url, { pageKey }))
-          .then(() => {
-            dispatch({
-              type: successAction,
-              payload: {
-                pageKey,
-                keyPath,
-              },
-            })
-          })
-          .catch((err) => {
-            dispatch({
-              type: failAction,
-              payload: {
-                url,
-                err,
-                pageKey,
-                keyPath,
-              },
-            })
-          })
-      })
-
-    return Promise.all(fetches)
-  }
-}
-
-export function saveAndProcessPage(pageKey, page) {
-  return (dispatch) => {
-    pageKey = urlToPageKey(pageKey)
-
-    const { defers = [] } = page
-
-    if (isGraft(page)) {
-      if (pageKey) {
-        dispatch(handleGraft({ pageKey, page }))
-      }
-    } else {
-      dispatch(saveResponse({ pageKey, page }))
-    }
-
-    return dispatch(fetchDeferments(pageKey, defers))
   }
 }
 
@@ -161,6 +55,15 @@ function buildMeta(pageKey, page, state) {
     page,
     componentIdentifier: page.componentIdentifier,
     needsRefresh: needsRefresh(prevAssets, nextAssets),
+  }
+}
+
+export function clearFlash({ pageKey }) {
+  return {
+    type: CLEAR_FLASH,
+    payload: {
+      pageKey,
+    },
   }
 }
 
@@ -206,7 +109,7 @@ export function remote(
 
         return meta
       })
-    .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
+      .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
 }
 
@@ -252,25 +155,24 @@ export function visit(
     const currentKey = getState().breezy.currentPageKey
     dispatch(clearFlash({ pageKey: currentKey }))
 
-    if (placeholderKey) {
-      placeholderKey = urlToPageKey(placeholderKey)
-      const hasPlaceholder = !!getState().pages[placeholderKey]
-      if (hasPlaceholder) {
-        dispatch(copyPage({ from: placeholderKey, to: pageKey }))
-      } else {
-        console.warn(
-          `Could not find placeholder with key ${placeholderKey} in state. The bzq param will be ignored`
-        )
+    placeholderKey = placeholderKey && urlToPageKey(placeholderKey)
+    const hasPlaceholder = !!getState().pages[placeholderKey]
 
-        path = removeBzq(path)
-      }
-    } else {
-      if (hasBzq(path)) {
-        console.warn(
-          `visit was called with bzq param in the path ${path}, this will be ignore unless you provide a placeholder.`
-        )
-      }
+    if (placeholderKey && hasPlaceholder) {
+      dispatch(copyPage({ from: placeholderKey, to: pageKey }))
+    }
 
+    if (placeholderKey && !hasPlaceholder) {
+      console.warn(
+        `Could not find placeholder with key ${placeholderKey} in state. The bzq param will be ignored`
+      )
+      path = removeBzq(path)
+    }
+
+    if (!placeholderKey && hasBzq(path)) {
+      console.warn(
+        `visit was called with bzq param in the path ${path}, this will be ignore unless you provide a placeholder.`
+      )
       path = removeBzq(path)
     }
 

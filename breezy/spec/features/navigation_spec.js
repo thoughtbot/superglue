@@ -9,7 +9,7 @@ import { Provider, connect } from 'react-redux'
 import React from 'react'
 import { mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote } from '../../lib/utils/react'
 import { createMemoryHistory } from 'history'
-import Nav from '../../lib/NavComponent'
+import Nav from '../../lib/components/NavComponent'
 
 process.on('unhandledRejection', (r) => console.log(r))
 

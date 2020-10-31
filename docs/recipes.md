@@ -177,7 +177,7 @@ In your `application_visit.js` file:
 
 ```javascript
 
-import { urlToPageKey } from '@jho406/breezy/dist/utils/url'
+import { urlToPageKey } from '@jho406/breezy/utils/url'
 
 const appVisit = (...args) => {
   // Do something before

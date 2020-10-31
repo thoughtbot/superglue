@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom'
 import { render } from 'react-dom'
 import React from 'react'
-import RailsTag from './RailsTag'
+import RailsTag from '../../lib/components/RailsTag'
 
 const createScene = (html) => {
   const dom = new JSDOM(`${html}`, { runScripts: 'dangerously' })

@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
-import { setFetch, unsetFetch } from './window'
+import { setFetch, unsetFetch } from '../../lib/utils/window'
 import fetchMock from 'fetch-mock'
 import {
   visit,
@@ -11,9 +11,9 @@ import {
   saveResponse,
   ensureSingleVisit,
   saveAndProcessPage,
-} from './action_creators'
-import * as helpers from './utils/helpers'
-import * as rsp from '../spec/fixtures'
+} from '../../lib/action_creators'
+import * as helpers from '../../lib/utils/helpers'
+import * as rsp from '../../spec/fixtures'
 
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
@@ -833,6 +833,7 @@ describe('action creators', () => {
 
     it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
       const initialState = {
+        pages: {},
         breezy: {
           assets: [],
           currentPageKey: '/current',
@@ -888,6 +889,7 @@ describe('action creators', () => {
 
     it('cleans any bzq, __, and - params', (done) => {
       const initialState = {
+        pages: {},
         breezy: {
           assets: [],
           controlFlows: {

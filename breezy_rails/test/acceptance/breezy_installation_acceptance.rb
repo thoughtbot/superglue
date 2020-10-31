@@ -62,7 +62,7 @@ class BreezyInstallationTest < Minitest::Test
     Dir.chdir(BREEZY_BREEZY_PATH) do
       successfully "npm install"
       successfully "npm run build"
-      successfully "npm pack"
+      successfully "npm pack ./dist"
     end
 
     successfully "echo \"gem 'props_template', path: '#{PROPS_TEMPLATE_PATH}'\" >> Gemfile"
@@ -72,7 +72,7 @@ class BreezyInstallationTest < Minitest::Test
     FileUtils.rm_f("app/javascript/packs/application.js")
     successfully "bundle exec rails breezy:install:web"
     update_package_json
-    successfully "yarn install"
+    successfully "yarn install --cache-folder /tmp/.junk; rm -rf /tmp/.junk"
   end
 
   def generate_test_app(app_name)

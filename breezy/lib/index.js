@@ -1,8 +1,7 @@
 import parse from 'url-parse'
 import { rootReducer } from './reducers'
-import { urlToPageKey } from './utils/url'
+import { urlToPageKey, setFetch, unsetFetch } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { setFetch, unsetFetch } from './window'
 import {
   HISTORY_CHANGE,
   SET_CSRF_TOKEN,
@@ -13,7 +12,6 @@ export {
   mapStateToProps,
   mapDispatchToProps,
   mapDispatchToPropsIncludingVisitAndRemote,
-  enhanceVisitWithBrowserBehavior,
 } from './utils/react'
 export {
   breezyReducer,

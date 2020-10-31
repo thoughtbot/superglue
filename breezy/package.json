@@ -2,13 +2,17 @@
   "name": "@jho406/breezy",
   "version": "0.16.0",
   "description": "Use a vanilla Rails with React and Redux",
-  "main": "dist/index.js",
   "scripts": {
     "test": "nyc --reporter=html jasmine",
     "lint": "./node_modules/.bin/eslint lib",
-    "build": "./node_modules/babel-cli/bin/babel.js lib -d dist --ignore '**/*spec.js'",
+    "clean": "rm -rf ./dist",
+    "copy:package": "cat ./package.json | grep -v '\"private\":' > dist/package.json",
+    "copy:readme": "cp ../README.md dist/",
+    "build:index": "./node_modules/babel-cli/bin/babel.js lib -d dist",
+    "build": "npm run clean && npm run build:index && npm run copy:package && npm run copy:readme",
     "prepublishOnly": "npm run build"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jho406/breezy.git"

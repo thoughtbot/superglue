@@ -118,7 +118,7 @@ export class HandlerBuilder {
   }
 }
 
-const ujsHandlers = ({
+export const ujsHandlers = ({
   navigatorRef,
   store,
   ujsAttributePrefix,
@@ -135,5 +135,3 @@ const ujsHandlers = ({
 
   return builder.handlers()
 }
-
-export default ujsHandlers

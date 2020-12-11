@@ -2,7 +2,7 @@
 
 What if Ruby on Rails kidnapped React (the view) from the JS community? Could we keep the productivity of classic Rails while benefiting from what React offers?
 
-[![Build Status](https://travis-ci.org/jho406/Breezy.svg?branch=master)](https://travis-ci.org/jho406/Breezy)
+[![Build Status](https://circleci.com/gh/jho406/breezy.svg?style=svg)](https://circleci.com/gh/jho406/Breezy)
 
 Breezy is a data and navigation library that "replaces" `.erb` views with `.jsx` components, and gives developers a way to build interative data-backed applications without any APIs, or client-side routing.
 

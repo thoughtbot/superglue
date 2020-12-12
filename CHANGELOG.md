@@ -4,8 +4,37 @@ All notable changes to this project will be documented in this file.
 
 <!-- Unreleased changes should go to UNRELEASED.md -->
 
+## 0.17
+
+Added more fined grained control over deferments by allowing to specify custom 
+success and fail action creators:
+```
+json.inner(defer: [:auto, success_action: 'SUCCESS', fail_action: 'FAIL']) do
+  json.greeting do
+    json.foo 'hello world'
+  end
+end
+```
+
+Fragment auto update is removed as the feature seemed too brittle to use.
+Instead I'm encouraging users do this by themselves on the front using standard
+redux reducers. The fragment functionality has been changed to as a way to
+optionally tag your nodes with information about the partial being used, the
+path where the tag occured and the name you give to it. You can use this information to iterate across all your pages in your own reducer.:
+
+```
+fragments: [
+  {type: 'header', partial: 'header', path: 'data.a.b.c'}
+],
+```
+
+
+Using the replace action in navigateTo to change the URL will now also
+replace the state in the same location in the store.
+
+
 ## 0.16
-Remove reset_encoder! This strategy was not necessary and prevented 
+Remove reset_encoder! This strategy was not necessary and prevented
 props_template from being used in Puma.
 
 Fix potential memory leak in OJ by dup'ing keys before push_key. This does make
@@ -41,7 +70,7 @@ support.
 `Breezy.start` expects different and better named arguments, this is a BREAKING
 CHANGE.
 
-`fetch` is now injected to Breezy. This enables server side rendering AND 
+`fetch` is now injected to Breezy. This enables server side rendering AND
 ReactNative use cases. The latter used to be supported but was removed because of
 resources
 

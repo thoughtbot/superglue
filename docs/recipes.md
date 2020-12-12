@@ -1,7 +1,5 @@
 # Solving Problems
 
-The combination of being able to query your template and put it in the right location on the client at the same time makes it painless to achieving many of today's popular SPA features, here's a few examples:
-
 ## Loading content later
 
 When parts of your page become slow, for example, a metrics table that takes a long time to generate because of some expensive operation:
@@ -269,7 +267,7 @@ and change the rest of `application.js` accordingly.
 
 ## Usage with Kaminari
 
-SPA Pagination is pretty easy to add with Kaminari and any component library you wish to use. Lets use [antd](https://ant.design/components/pagination/) as an example:
+SPA pagination is pretty easy to add with Kaminari and any component library you wish to use. Lets use [antd](https://ant.design/components/pagination/) as an example:
 
 ```ruby
 # index.json.props

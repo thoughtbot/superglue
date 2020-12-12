@@ -4,11 +4,11 @@ What if Ruby on Rails kidnapped React (the view) from the JS community? Could we
 
 [![Build Status](https://circleci.com/gh/jho406/Breezy.svg?style=shield)](https://circleci.com/gh/jho406/Breezy)
 
-Breezy is a data and navigation library that "replaces" `.erb` views with `.jsx` components, and gives developers a way to build interative data-backed applications without any APIs, or client-side routing.
+Breezy is a data and navigation library for Rails, React, and Redux that helps developers build rich data-backed applications with **No APIs** or client-side routing.
 
-Best of all, it still feels like classic Rails. Features you enjoyed when working in classic Rails; form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
+Best of all, it compliments classic Rails. Features you enjoyed when working in classic Rails; form helpers, tag helpers, the flash, cookie auth; can continue to add value in your day-to-day.
 
-Breezy is Turbolinks inspired, UJS friendly, and comes with batteries.
+It's Turbolinks inspired, UJS friendly, supports partial updates, and comes with batteries.
 
 ## Caution
 This project is in its early phases of development. Its interface, behavior, and name are likely to change drastically before a major version release.
@@ -52,7 +52,7 @@ A popular ask of SPAs is page-to-page navigation without reloading. If you were 
 
 The above will request for `/posts` with an accept of `application/json`, and when the client receives the response, swap out the current component for the component the response asks for, and `pushState` on history.
 
-#### Same-page updates
+#### Partial updates
 Other features of SPA rely on updating some part of the existing page. In addition to `data-bz-visit` and its equivalent `this.props.visit`, Breezy also provides `data-bz-remote` or `this.props.remote`, which you can use to update parts of your page in async fashion without changing `window.history`.
 
 Imagine having to implement search, where you enter some text, hit enter, and results would show without reloading the screen. In traditional applications, you may need a new controller, routes, a discussion over versioning, JSON serializer, plenty of new JS code, etc.

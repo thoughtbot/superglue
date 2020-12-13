@@ -60,6 +60,9 @@ run "yarn add babel-plugin-module-resolver babel-preset-react history@\"^4\" htm
 
 say "Updating webpack config to include .jsx file extension and resolved_paths"
 insert_into_file Webpacker.config.config_path, "    - .jsx\n", after: /extensions:\n/
+# For newer webpacker
+insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /additional_paths: \[/
+# For older webpacker
 insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /resolved_paths: \[/
 
 say "Webpacker now supports breezy.js 🎉", :green

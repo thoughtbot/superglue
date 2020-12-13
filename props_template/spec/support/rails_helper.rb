@@ -13,9 +13,10 @@ class FakeView < ActionView::Base
   # undef_method :fragment_name_with_digest if method_defined? :fragment_name_with_digest
   # undef_method :cache_fragment_name if method_defined? :cache_fragment_name
 
-  # For Rails 6
-  if ActionView::Base.respond_to?(:with_empty_template_cache)
-    with_empty_template_cache
+  with_empty_template_cache
+
+  def compiled_method_container
+    self.class
   end
 
   # this is a stub. Normally this would be set by the

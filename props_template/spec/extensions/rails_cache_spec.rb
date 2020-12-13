@@ -1,6 +1,7 @@
 require_relative '../support/helper'
 require_relative '../support/rails_helper'
 require 'active_support/testing/time_helpers'
+require "active_support/core_ext/string"
 
 RSpec.describe 'Props::Template caching' do
   include ActiveSupport::Testing::TimeHelpers

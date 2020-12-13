@@ -92,6 +92,7 @@ workflows:
             parameters:
               gemfile:
                 - Gemfile.rails60
+                - Gemfile.rails61
               ruby-version:
                 - ruby26
                 - ruby27
@@ -100,6 +101,7 @@ workflows:
             parameters:
               gemfile:
                 - Gemfile.rails60
+                - Gemfile.rails61
               ruby-version:
                 - ruby26
                 - ruby27

@@ -1,11 +1,35 @@
 require 'action_view'
 
 module Props
+  class RenderedTemplate
+    attr_reader :body, :layout, :template
+
+    def initialize(body, layout, template)
+      @body = body
+      @layout = layout
+      @template = template
+    end
+
+    def format
+      template.format
+    end
+  end
+
   class Partialer
+    INVALID_PARTIAL_MESSAGE = "The partial name must be a string, but received (%s)."
+
     def initialize(base, context, builder)
       @context = context
       @builder = builder
       @base = base
+    end
+
+    def extract_details(options) # :doc:
+      @context.lookup_context.registered_details.each_with_object({}) do |key, details|
+        value = options[key]
+
+        details[key] = Array(value) if value
+      end
     end
 
     def find_and_add_template(all_options)
@@ -13,15 +37,36 @@ module Props
 
       if first_opts[:partial]
         partial_opts = block_opts_to_render_opts(@builder, first_opts)
-        renderer = PartialRenderer.new(@context, partial_opts)
+          .merge(formats: [:json])
+        partial_opts.delete(:handlers)
+        partial = partial_opts[:partial]
+
+        if !(String === partial)
+          raise ArgumentError.new(INVALID_PARTIAL_MESSAGE % (partial.inspect))
+        end
+
+        template_keys = retrieve_template_keys(partial_opts)
+        details = extract_details(partial_opts)
+        template = find_template(partial, template_keys, details)
 
         all_options.map do |opts|
-          opts[:_template] = renderer.template
+          opts[:_template] = template
           opts
         end
       else
         all_options
       end
+    end
+
+    def find_template(path, locals, details)
+      prefixes = path.include?(?/) ? [] : @context.lookup_context.prefixes
+      @context.lookup_context.find_template(path, prefixes, true, locals, details)
+    end
+
+    def retrieve_template_keys(options)
+      template_keys = options[:locals].keys
+      template_keys << options[:as] if options[:as]
+      template_keys
     end
 
     def block_opts_to_render_opts(builder, options)
@@ -45,9 +90,20 @@ module Props
 
       renderer.render(template, pass_opts)
     end
+
+    def render(template, options)
+      view = @context
+      instrument(:partial, identifier: template.identifier) do |payload|
+        locals = options[:locals]
+        content = template.render(view, locals)
+
+        payload[:cache_hit] = view.view_renderer.cache_hits[template.virtual_path]
+        build_rendered_template(content, template)
+      end
+    end
   end
 
-  class PartialRenderer < ActionView::AbstractRenderer
+  class PartialRenderer
     OPTION_AS_ERROR_MESSAGE  = "The value (%s) of the option `as` is not a valid Ruby identifier; " \
                                "make sure it starts with lowercase letter, " \
                                "and is followed by any combination of letters, numbers and underscores."
@@ -56,21 +112,6 @@ module Props
 
     INVALID_PARTIAL_MESSAGE = "The partial name must be a string, but received (%s)."
 
-    def self.find_and_add_template(builder, context, all_options)
-      first_opts = all_options[0]
-
-      if first_opts[:partial]
-        partial_opts = block_opts_to_render_opts(builder, first_opts)
-        renderer = new(context, partial_opts)
-
-        all_options.map do |opts|
-          opts[:_template] = renderer.template
-          opts
-        end
-      else
-        all_options
-      end
-    end
 
     def self.raise_invalid_option_as(as)
       raise ArgumentError.new(OPTION_AS_ERROR_MESSAGE % (as))
@@ -120,7 +161,6 @@ module Props
 
     def initialize(context, options)
       @context = context
-      super(@context.lookup_context)
       @options = options.merge(formats: [:json])
       @options.delete(:handlers)
       @details = extract_details(@options)
@@ -132,7 +172,7 @@ module Props
       end
 
       @path = partial
-      @context_prefix = @lookup_context.prefixes.first
+
       template_keys = retrieve_template_keys(@options)
       @template = find_template(@path, template_keys)
     end
@@ -144,6 +184,19 @@ module Props
     end
 
     private
+      def extract_details(options) # :doc:
+        @context.lookup_context.registered_details.each_with_object({}) do |key, details|
+          value = options[key]
+
+          details[key] = Array(value) if value
+        end
+      end
+
+      def instrument(name, **options) # :doc:
+        ActiveSupport::Notifications.instrument("render_#{name}.action_view", options) do |payload|
+          yield payload
+        end
+      end
 
       def render_partial(template, view, options)
         template ||= @template
@@ -158,17 +211,13 @@ module Props
         end
       end
 
-      # Sets up instance variables needed for rendering a partial. This method
-      # finds the options and details and extracts them. The method also contains
-      # logic that handles the type of object passed in as the partial.
-      #
-      # If +options[:partial]+ is a string, then the <tt>@path</tt> instance variable is
-      # set to that string. Otherwise, the +options[:partial]+ object must
-      # respond to +to_partial_path+ in order to setup the path.
+      def build_rendered_template(content, template, layout = nil)
+        RenderedTemplate.new content, layout, template
+      end
 
       def find_template(path, locals)
-        prefixes = path.include?(?/) ? [] : @lookup_context.prefixes
-        @lookup_context.find_template(path, prefixes, true, locals, @details)
+        prefixes = path.include?(?/) ? [] : @context.lookup_context.prefixes
+        @context.lookup_context.find_template(path, prefixes, true, locals, @details)
       end
 
       def retrieve_template_keys(options)

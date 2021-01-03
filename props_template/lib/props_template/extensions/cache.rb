@@ -25,12 +25,6 @@ module Props
       @context
     end
 
-    def instrument(name, **options)
-      ActiveSupport::Notifications.instrument(name, options) do |payload|
-        yield payload
-      end
-    end
-
     def multi_fetch(keys, options = {})
       result = {}
       key_to_ckey = {}
@@ -49,7 +43,7 @@ module Props
 
       read_caches = {}
 
-      instrument('read_multi_fragments.action_view', payload) do |payload|
+      ActiveSupport::Notifications.instrument('read_multi_fragments.action_view', payload) do |payload|
         read_caches = ::Rails.cache.read_multi(*ckeys, options)
         payload[:read_caches] = read_caches
       end
@@ -122,7 +116,7 @@ module Props
 
     def cache_key(key, options)
       name_options = options.slice(:skip_digest, :virtual_path)
-      key = fragment_name_with_digest(key, name_options)
+      key = @context.cache_fragment_name(key, **name_options)
 
       if @context.respond_to?(:combined_fragment_cache_key)
         key = @context.combined_fragment_cache_key(key)
@@ -131,19 +125,6 @@ module Props
       end
 
       ::ActiveSupport::Cache.expand_cache_key(key, :props)
-    end
-
-    def fragment_name_with_digest(key, options)
-      if @context.respond_to?(:cache_fragment_name)
-        # Current compatibility, fragment_name_with_digest is private again and cache_fragment_name
-        # should be used instead.
-        @context.cache_fragment_name(key, options)
-      elsif @context.respond_to?(:fragment_name_with_digest)
-        # Backwards compatibility for period of time when fragment_name_with_digest was made public.
-        @context.fragment_name_with_digest(key)
-      else
-        key
-      end
     end
   end
 end

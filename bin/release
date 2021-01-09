@@ -23,7 +23,7 @@ Dir.chdir(BREEZY_DIR) do
   system("npm run publish")
 end
 
-system("git tag #{version_str}")
-system("git push origin #{version_str}")
-system("git branch docs/#{version_str}")
-system("git push origin docs/#{version_str}")
+system("git tag v#{version_str}")
+system("git push origin v#{version_str}")
+system("git branch docs/v#{version_str}")
+system("git push origin docs/v#{version_str}")

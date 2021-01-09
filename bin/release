@@ -20,7 +20,7 @@ end
 
 Dir.chdir(BREEZY_DIR) do
   system("npm run build")
-  system("npm run publish")
+  system("npm publish")
 end
 
 system("git tag v#{version_str}")

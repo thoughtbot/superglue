@@ -73,6 +73,15 @@ For more on what you can do, check out our documentation.
 
 Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure to select the correct version. `master` will always be in development.
 
+## Contributing
+
+See the [CONTRIBUTING] document. Thank you, [contributors]!
+
+  [CONTRIBUTING]: CONTRIBUTING.md
+  [contributors]: https://github.com/jho406/breezy/graphs/contributors
+
 ## Special Thanks
 
 Thanks to [jbuilder](https://github.com/rails/jbuilder), [scour](https://github.com/rstacruz/scour), [turbolinks3](https://github.com/turbolinks/turbolinks-classic), [turbograft](https://github.com/Shopify/turbograft/), [turbostreamer](https://github.com/malomalo/turbostreamer)
+
+

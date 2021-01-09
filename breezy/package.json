@@ -12,7 +12,6 @@
     "build": "npm run clean && npm run build:index && npm run copy:package && npm run copy:readme",
     "prepublishOnly": "npm run build"
   },
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jho406/breezy.git"

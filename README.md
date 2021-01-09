@@ -1,6 +1,6 @@
 # Breezy
 
-What if Ruby on Rails community adopted React as a view layer for classic Rails? Could we be more productive?
+What if the Ruby on Rails community adopted React as a view layer for classic Rails? Could we be more productive?
 
 [![Build Status](https://circleci.com/gh/jho406/Breezy.svg?style=shield)](https://circleci.com/gh/jho406/Breezy)
 

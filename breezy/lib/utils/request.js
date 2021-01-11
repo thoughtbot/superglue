@@ -45,7 +45,7 @@ export function handleServerErrors(args) {
 export function argsForFetch(
   getState,
   pathQuery,
-  { method = 'GET', headers = {}, body = '' } = {}
+  { method = 'GET', headers = {}, body = '', signal } = {}
 ) {
   method = method.toUpperCase()
 
@@ -90,7 +90,7 @@ export function argsForFetch(
     method = 'POST'
   }
 
-  const options = { method, headers, body, credentials }
+  const options = { method, headers, body, credentials, signal }
 
   if (method == 'GET' || method == 'HEAD') {
     delete options.body

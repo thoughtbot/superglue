@@ -63,9 +63,37 @@ describe('argsForFetch', () => {
           'x-breezy-request': true,
         },
         credentials: 'same-origin',
+        signal: undefined,
       },
     ])
   })
+
+  it('returns fetch arguments with passed signal for aborts', () => {
+    const getState = () => {
+      return {
+        breezy: {},
+      }
+    }
+
+    const { signal } = new AbortController
+
+    const args = argsForFetch(getState, '/foo', { signal })
+
+    expect(args).toEqual([
+      '/foo?__=0',
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'x-requested-with': 'XMLHttpRequest',
+          'x-breezy-request': true,
+        },
+        signal,
+        credentials: 'same-origin',
+      },
+    ])
+  })
+
 
   it('returns fetch arguments with content-type json and method POST on non-GETs', () => {
     const getState = () => {
@@ -87,6 +115,7 @@ describe('argsForFetch', () => {
           'content-type': 'application/json',
           'x-http-method-override': 'PUT',
         },
+        signal: undefined,
         credentials: 'same-origin',
         body: '',
       },
@@ -114,6 +143,7 @@ describe('argsForFetch', () => {
           'x-breezy-request': true,
           'x-xhr-referer': '/some_current_url',
         },
+        signal: undefined,
         credentials: 'same-origin',
       },
     ])
@@ -135,6 +165,7 @@ describe('argsForFetch', () => {
           'x-requested-with': 'XMLHttpRequest',
           'x-breezy-request': true,
         },
+        signal: undefined,
         credentials: 'same-origin',
       },
     ])
@@ -150,6 +181,7 @@ describe('argsForFetch', () => {
           'x-requested-with': 'XMLHttpRequest',
           'x-breezy-request': true,
         },
+        signal: undefined,
         credentials: 'same-origin',
       },
     ])

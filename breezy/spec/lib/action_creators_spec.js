@@ -9,7 +9,6 @@ import {
   beforeFetch,
   handleError,
   saveResponse,
-  ensureSingleVisit,
   saveAndProcessPage,
 } from '../../lib/action_creators'
 import * as helpers from '../../lib/utils/helpers'
@@ -25,9 +24,6 @@ const initialState = () => {
     breezy: {
       currentPageKey: '/bar',
       csrfToken: 'token',
-      controlFlows: {
-        visit: 'fakeUUID',
-      },
     },
   }
 }
@@ -137,7 +133,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
         data: { heading: 'Some heading 2' },
@@ -204,7 +199,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
         data: { heading: 'Some heading 2' },
@@ -271,7 +265,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
         data: { heading: 'Some heading 2' },
@@ -369,7 +362,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
         data: { heading: 'Some heading 2' },
@@ -419,7 +411,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const page = {
         data: { heading: 'Some heading 2' },
@@ -471,7 +462,6 @@ describe('action creators', () => {
 
     it('fetches with correct headers and fires SAVE_RESPONSE', () => {
       const store = mockStore(initialState())
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/foo?__=0', {
         body: successfulBody(),
@@ -526,13 +516,9 @@ describe('action creators', () => {
         breezy: {
           currentPageKey: '/bar',
           csrfToken: 'token',
-          controlFlows: {
-            visit: 'fakeUUID',
-          },
         },
       }
       const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       const body = {
         data: {
@@ -590,13 +576,9 @@ describe('action creators', () => {
         breezy: {
           currentPageKey: '/current_url',
           csrfToken: 'token',
-          controlFlows: {
-            visit: 'fakeUUID',
-          },
         },
       })
 
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/foobar?__=0', {
         body: successfulBody(),
@@ -623,13 +605,9 @@ describe('action creators', () => {
         breezy: {
           currentPageKey: '/url_to_be_overridden',
           csrfToken: 'token',
-          controlFlows: {
-            visit: 'fakeUUID',
-          },
         },
       })
 
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/foobar?__=0', {
         body: successfulBody(),
@@ -655,7 +633,6 @@ describe('action creators', () => {
 
     it('cleans any __ and - params', (done) => {
       const store = mockStore(initialState())
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
       store.dispatch(remote('/first?bzq=foo&__=bar&_=baz')).then((meta) => {
@@ -665,7 +642,6 @@ describe('action creators', () => {
 
     it('returns a meta with redirected true if was redirected', () => {
       const store = mockStore(initialState())
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/redirecting_url?__=0', {
         status: 200,
@@ -783,7 +759,6 @@ describe('action creators', () => {
           '/foo': {},
         },
       })
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
       fetchMock.mock('/foo?__=0', {
         body: JSON.stringify({
           data: 'success',
@@ -831,75 +806,15 @@ describe('action creators', () => {
       fetchMock.restore()
     })
 
-    it('will only allow one navigatable visit at a time, any earlier requests just saves', (done) => {
-      const initialState = {
-        pages: {},
-        breezy: {
-          assets: [],
-          currentPageKey: '/current',
-          controlFlows: {
-            visit: 'firstId',
-          },
-        },
-      }
-
-      const store = mockStore(initialState)
-
-      let mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/first'
-      fetchMock.mock(
-        '/first?__=0',
-        delay(500).then(() => mockResponse)
-      )
-
-      let mockResponse2 = rsp.visitSuccess()
-      mockResponse2.headers['x-response-url'] = '/second'
-      fetchMock.mock(
-        '/second?__=0',
-        delay(2000).then(() => mockResponse2)
-      )
-
-      const spy = spyOn(helpers, 'uuidv4')
-      spy.and.returnValue('firstId')
-      store.dispatch(visit('/first')).then((meta) => {
-        expect(meta.canNavigate).toEqual(false)
-      })
-
-      spy.and.returnValue('secondId')
-      initialState.breezy.controlFlows.visit = 'secondId'
-
-      const expectedActions = [
-        { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'firstId' } },
-        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
-        { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'secondId' } },
-        { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
-        { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },
-        { type: '@@breezy/SAVE_RESPONSE', payload: jasmine.any(Object) },
-      ]
-
-
-      store.dispatch(visit('/second')).then((meta) => {
-        expect(meta.canNavigate).toEqual(true)
-        expect(store.getActions()).toEqual(expectedActions)
-        done()
-      })
-    })
-
     it('cleans any bzq, __, and - params', (done) => {
       const initialState = {
         pages: {},
         breezy: {
           assets: [],
-          controlFlows: {
-            visit: 'firstId',
-          },
         },
       }
 
       const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
       store.dispatch(visit('/first?bzq=foo&__=bar&_=baz')).then((meta) => {
@@ -907,20 +822,34 @@ describe('action creators', () => {
       })
     })
 
+    it('gets aborted when a new visit starts', (done) => {
+      const initialState = {
+        pages: {},
+        breezy: {
+          assets: [],
+        },
+      }
+
+      const store = mockStore(initialState)
+
+      fetchMock.mock('/first?__=0', rsp.visitSuccess())
+      store.dispatch(visit('/first')).catch((err) => {
+        expect(err.message).toEqual("The operation was aborted.")
+        done()
+      })
+      store.dispatch(visit('/first'))
+    })
+
     it('warns when a placeholder is passed but does not exist in state', (done) => {
       spyOn(console, 'warn')
       const initialState = {
         breezy: {
           assets: [],
-          controlFlows: {
-            visit: 'firstId',
-          },
         },
         pages: {}
       }
 
       const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
 
@@ -937,9 +866,6 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           assets: [],
-          controlFlows: {
-            visit: 'firstId',
-          },
         },
         pages: {
           '/does-exist': {}
@@ -947,7 +873,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
 
@@ -962,9 +887,6 @@ describe('action creators', () => {
       const initialState = {
         breezy: {
           assets: [],
-          controlFlows: {
-            visit: 'firstId',
-          },
         },
         pages: {
           '/does-exist': {}
@@ -972,7 +894,6 @@ describe('action creators', () => {
       }
 
       const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'fakeUUID')
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
 
@@ -990,9 +911,6 @@ describe('action creators', () => {
         breezy: {
           assets: [],
           currentPageKey: '/current',
-          controlFlows: {
-            visit: 'firstId',
-          },
         },
         pages: {
           '/current': {
@@ -1013,70 +931,15 @@ describe('action creators', () => {
         '/details?bzq=data.address&__=0', mockResponse
       )
 
-      const spy = spyOn(helpers, 'uuidv4')
-      spy.and.returnValue('firstId')
-
       const expectedActions = [
         { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
         { type: '@@breezy/COPY_PAGE', payload: { from: '/current', to: '/details' } },
-        { type: '@@breezy/OVERRIDE_VISIT_SEQ', payload: { seqId: 'firstId' } },
         { type: '@@breezy/BEFORE_FETCH', payload: jasmine.any(Object) },
         { type: '@@breezy/HANDLE_GRAFT', payload: jasmine.any(Object) },
       ]
 
       store.dispatch(visit('/details?bzq=data.address', {placeholderKey: '/current'})).then((meta) => {
-        expect(meta.canNavigate).toEqual(true)
         expect(store.getActions()).toEqual(expectedActions)
-        done()
-      })
-    })
-  })
-
-  describe('ensureSingleVisit', () => {
-    it('takes a fn that returns a promise and resolves it with canNavigate:true with one active visit', (done) => {
-      const initialState = {
-        breezy: {
-          controlFlows: {
-            visit: 'nextId',
-          },
-        },
-      }
-
-      const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'nextId')
-
-      const customVisit = ensureSingleVisit(() => {
-        const meta = {}
-        return Promise.resolve(meta)
-      })
-
-      store.dispatch(customVisit).then((meta) => {
-        expect(meta.canNavigate).toEqual(true)
-        done()
-      })
-    })
-
-    it('takes a fn that returns a promise and resolves it with canNavigate:false when another ensureSingleVisit is called elsewhere', (done) => {
-      const initialState = {
-        breezy: {
-          controlFlows: {
-            visit: 'nextId',
-          },
-        },
-      }
-
-      const store = mockStore(initialState)
-      spyOn(helpers, 'uuidv4').and.callFake(() => 'nextId')
-
-      const customVisit = ensureSingleVisit(() => {
-        const meta = {}
-        initialState.breezy.controlFlows.visit =
-          'uuid_of_visit_that_got_initiated_elsewhere_while_this_was_resolving'
-        return Promise.resolve(meta)
-      })
-
-      store.dispatch(customVisit).then((meta) => {
-        expect(meta.canNavigate).toEqual(false)
         done()
       })
     })

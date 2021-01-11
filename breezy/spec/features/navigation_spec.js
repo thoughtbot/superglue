@@ -75,7 +75,6 @@ describe('start', () => {
 
     expect(store.getState()).toEqual({
       breezy:{
-        controlFlows: {},
         currentPageKey: '/bar?some=123',
         pathname: '/bar',
         search: '?some=123',

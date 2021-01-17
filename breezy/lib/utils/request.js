@@ -1,5 +1,6 @@
 import parse from 'url-parse'
 import { formatForXHR } from './url'
+import { config } from '../config'
 
 export function isValidResponse(xhr) {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -70,7 +71,7 @@ export function argsForFetch(
   if (currentState.currentPageKey) {
     const referrer = new parse(
       currentState.currentPageKey,
-      currentState.baseUrl || '',
+      config.baseUrl,
       false
     ).href
 
@@ -81,8 +82,7 @@ export function argsForFetch(
     headers['x-csrf-token'] = currentState.csrfToken
   }
 
-  const href = new parse(pathQuery, currentState.baseUrl || '', false)
-    .href
+  const href = new parse(pathQuery, config.baseUrl, false).href
   const credentials = 'same-origin'
 
   if (!(method == 'GET' || method == 'HEAD')) {

@@ -5,7 +5,6 @@ import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   HISTORY_CHANGE,
-  SET_BASE_URL,
   SET_CSRF_TOKEN,
   COPY_PAGE,
 } from '../actions'
@@ -188,10 +187,6 @@ export function metaReducer(state = {}, action) {
         search,
         hash,
       }
-    }
-    case SET_BASE_URL: {
-      const { baseUrl } = action.payload
-      return { ...state, baseUrl }
     }
     case SAVE_RESPONSE: {
       const {

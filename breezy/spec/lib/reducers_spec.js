@@ -32,24 +32,6 @@ describe('reducers', () => {
       })
     })
 
-    describe('BREEZY_SET_BASE_URL', () => {
-      it('sets the base URL', () => {
-        const prevState = { foo: 'bar' }
-        const action = {
-          type: '@@breezy/SET_BASE_URL',
-          payload: {
-            baseUrl: '/some_url',
-          },
-        }
-        const nextState = metaReducer(prevState, action)
-
-        expect(nextState).toEqual({
-          foo: 'bar',
-          baseUrl: '/some_url',
-        })
-      })
-    })
-
     describe('BREEZY_SAVE_RESPONSE', () => {
       it('saves the response csrfToken', () => {
         const prevState = { foo: 'bar' }

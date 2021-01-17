@@ -10,6 +10,7 @@ import React from 'react'
 import { mapStateToProps, mapDispatchToPropsIncludingVisitAndRemote } from '../../lib/utils/react'
 import { createMemoryHistory } from 'history'
 import Nav from '../../lib/components/NavComponent'
+import { config } from '../../lib/config'
 
 process.on('unhandledRejection', (r) => console.log(r))
 
@@ -73,6 +74,7 @@ describe('start', () => {
 
     bz.prepareStore(store)
 
+    expect(config.baseUrl).toEqual("http://example.com/base/")
     expect(store.getState()).toEqual({
       breezy:{
         currentPageKey: '/bar?some=123',
@@ -81,7 +83,6 @@ describe('start', () => {
         hash: '#title',
         csrfToken: 'token',
         assets: [ '123.js', '123.css' ],
-        baseUrl: 'http://example.com/base/',
       },
       pages:{
         '/bar?some=123':{
@@ -94,6 +95,7 @@ describe('start', () => {
           componentIdentifier: 'home',
           assets: [ '123.js', '123.css' ],
           csrfToken: 'token',
+          savedAt: jasmine.any(Number),
         }
       }
     })
@@ -191,6 +193,7 @@ describe('navigation', () => {
         componentIdentifier: 'about',
         pageKey: '/foo',
         fragments: [],
+        savedAt: jasmine.any(Number),
       }
 
       target.getElementsByTagName('button')[0].click()
@@ -252,6 +255,7 @@ describe('navigation', () => {
         componentIdentifier: 'about',
         pageKey: '/foo',
         fragments: [],
+        savedAt: jasmine.any(Number),
       }
 
       target.getElementsByTagName('button')[0].click()

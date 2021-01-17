@@ -378,6 +378,37 @@ describe('reducers', () => {
         )
       })
 
+      it('saves a maximum of 20 pages', () => {
+        const prevState = {}
+
+        for (var i = 0; i < 20; i++) {
+          prevState[`/foo${i}`] = {
+            data: {},
+            csrfToken: 'token',
+            assets: ['application-123.js'],
+            pageKey: '/foo',
+            fragments: {},
+            savedAt: i,
+          }
+        }
+
+        const nextState = pageReducer(prevState, {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo21',
+            page: {
+              data: {},
+              csrfToken: 'token',
+              assets: ['application-123.js'],
+            },
+          },
+        })
+
+        expect(Object.keys(nextState).length).toEqual(20)
+        expect(nextState.hasOwnProperty('/foo21')).toEqual(true)
+        expect(nextState.hasOwnProperty('/foo0')).toEqual(false)
+      })
+
       it('uses existing deferred nodes as placeholders when there is already a page in the store', () => {
         const prevState = {
           '/foo': {
@@ -425,6 +456,7 @@ describe('reducers', () => {
           pageKey: '/foo',
           defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
           fragments: [],
+          savedAt: jasmine.any(Number),
         })
       })
 
@@ -481,6 +513,7 @@ describe('reducers', () => {
           fragments: [
             { type: 'info', partial: 'info', path: 'data.foo.bar' }
           ],
+          savedAt: jasmine.any(Number),
         })
       })
 
@@ -531,6 +564,7 @@ describe('reducers', () => {
           fragments: [
             { type: 'info', partial: 'info', path: 'data.foo.bar' }
           ],
+          savedAt: jasmine.any(Number),
         })
       })
     })

@@ -58,6 +58,8 @@ export default class Application extends React.Component {
       baseUrl: this.props.baseUrl,
       path: this.props.path,
       fetch: this.hasWindow ? window.fetch : undefined,
+      // The max number of pages to keep in the store.
+      // maxPages: 20
     })
     this.breezy = breezy
 

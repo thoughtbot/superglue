@@ -8,6 +8,7 @@ import {
   SET_CSRF_TOKEN,
   COPY_PAGE,
 } from '../actions'
+import { config } from '../config'
 
 function addPlaceholdersToDeferredNodes(existingPage, page) {
   const { defers = [] } = existingPage
@@ -23,6 +24,20 @@ function addPlaceholdersToDeferredNodes(existingPage, page) {
   }, page)
 }
 
+function constrainPagesSize(state) {
+  const { maxPages } = config
+  const allPageKeys = Object.keys(state)
+  const cacheTimesRecentFirst = allPageKeys
+    .map((key) => state[key].savedAt)
+    .sort((a, b) => b - a)
+
+  for (let key of Array.from(allPageKeys)) {
+    if (state[key].savedAt <= cacheTimesRecentFirst[maxPages - 1]) {
+      delete state[key]
+    }
+  }
+}
+
 function saveResponse(state, pageKey, page) {
   state = { ...state }
 
@@ -30,6 +45,7 @@ function saveResponse(state, pageKey, page) {
     pageKey,
     fragments: [],
     ...page,
+    savedAt: Date.now(),
   }
 
   const existingPage = state[pageKey]
@@ -37,7 +53,7 @@ function saveResponse(state, pageKey, page) {
   if (existingPage) {
     page = addPlaceholdersToDeferredNodes(existingPage, page)
   }
-
+  constrainPagesSize(state)
   state[pageKey] = page
 
   return state

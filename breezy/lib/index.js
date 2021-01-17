@@ -32,7 +32,8 @@ function pageToInitialState(key, page) {
 export function start({
   initialPage,
   fetch,
-  baseUrl,
+  baseUrl = config.baseUrl,
+  maxPages = config.maxPages,
   path,
 }) {
   const initialPageKey = urlToPageKey(parse(path).href)
@@ -43,6 +44,7 @@ export function start({
   setFetch(fetch)
 
   config.baseUrl = baseUrl
+  config.maxPages = maxPages
 
   return {
     reducer: rootReducer,

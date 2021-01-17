@@ -333,9 +333,9 @@ describe('action creators', () => {
         action: 'graft',
         path: 'data.heading.cart',
         csrfToken: '',
-        fragments: {
-          info: ['data.header.cart'],
-        },
+        fragments: [
+          {path: 'data.header.cart'}
+        ]
       }
 
       const expectedActions = [

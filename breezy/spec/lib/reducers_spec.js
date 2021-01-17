@@ -326,7 +326,7 @@ describe('reducers', () => {
           const prevState = {
             '/foo': {
               data: { a: { b: { c: {} } } },
-              fragments: {},
+              fragments: [],
               flash: {},
             },
           }
@@ -387,7 +387,7 @@ describe('reducers', () => {
             csrfToken: 'token',
             assets: ['application-123.js'],
             pageKey: '/foo',
-            fragments: {},
+            fragments: [],
             savedAt: i,
           }
         }

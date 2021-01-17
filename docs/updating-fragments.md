@@ -47,22 +47,29 @@ To help with creating reducers, Breezy provides fragments. A fragment in Breezy 
   end
 ```
 
-Using the fragment functionality will create metadata about the node. There's no magic here, its up to you to include this in your response using `json.fragments!`. This has been setup for you in `application.json.props`:
+Using the fragment functionality will create metadata about the node. This has been setup for you in `application.json.props`:
 
 ```ruby
 json.data(search: path) do
   yield json
-  json.fragments json.fragments!
 end
+json.fragments json.fragments!
 ```
 
 The resulting JSON looks like this:
 
 ```json
+data: {
+  ...
+},
 fragments: [
   { type: :some_user_side_bar_type, partial: 'application/side_bar', path: 'body.sidebar' },
 ]
 ```
+
+{% hint style="info" %}
+Fragments used in nodes that are [deferred](docs/navigation.md#deferments) do not show up inside the metadata until the deferred nodes are loaded.
+{% endhint %}
 
 # Creating reducers
 
@@ -76,7 +83,7 @@ const pagesReducer = produce((draft, action) => {
   switch (action.type) {
   case UPDATE_USER_HEADER:
     for (const key in draft) {
-      const { fragments } = draft[key].data
+      const { fragments } = draft[key]
       const { email } = action.payload
 
       fragments

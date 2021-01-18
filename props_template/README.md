@@ -216,7 +216,7 @@ end
 PropsTemplate does not know what the elements are in your collection. The example above will be fine for [traversing](props-template.md#traversing_nodes) by index `\posts?bzq=posts.0`, but will raise a `NotImplementedError` if you query by attribute `/posts?bzq=posts.id=1`. You may still need a delegate that implements `member_by`.
 
 ### json.deferred!
-Returns all deferred nodes used by the [#deferment](#deferment) option.
+Returns all deferred nodes used by the [deferment](#deferment) option.
 
 ```ruby
 json.deferred json.deferred!

@@ -151,7 +151,10 @@ ActionCable.server.broadcast('web_notifications_channel', message: msg)
 ```javascript
 window.App.cable.subscriptions.create("WebNotificationsChannel", {
   received: function({message}) {
-    this.props.saveAndProcessPage(null, message),
+    this.props.dispatch({
+      type: "UPDATE_POST_FOOBAR",
+      payload: message.data
+    })
   }
 })
 ```
@@ -164,8 +167,6 @@ window.App.cable.subscriptions.create("WebNotificationsChannel", {
     end
   end
 ```
-
-`saveAndProcessPage(pageKey, page)` is the function that `remote` uses to sends a payload to. However, because we don't know what pageKey to save this streamed response, we set it to `null`. Breezy will still update any cross-cutting [fragments](props_template/README.md#partial-fragments)
 
 ## Replicating Turbolinks behavior
 

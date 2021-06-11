@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import { ApplicationBase } from '@jho406/breezy';
-import Nav from '@jho406/breezy/components/NavComponent';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { applicationRootReducer, applicationPagesReducer } from './reducer';

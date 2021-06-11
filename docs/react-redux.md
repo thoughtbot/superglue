@@ -21,12 +21,12 @@ If you used the generators, a customizable one has been created for you in
 `application_visit.js`
 
 
-## NavComponent
+## Nav
 
 A nav component for your application.
 
 ```javascript
-import Nav from '@jho406/breezy/components/NavComponent'
+import Nav from '@jho406/breezy/components/Nav'
 ...
 <Provider store={store}>
   <Nav

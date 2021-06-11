@@ -3,7 +3,7 @@
 Use classic Rails to build rich React Redux applications with **NO APIs** and
 **NO client-side routing**.
 
-[![Build Status](https://circleci.com/gh/jho406/Breezy.svg?style=shield)](https://circleci.com/gh/jho406/Breezy)
+[![Build Status](https://circleci.com/gh/thoughtbot/breezy.svg?style=shield)](https://circleci.com/gh/thoughtbot/breezy)
 
 Breezy is a prebuilt and customizable React Redux application inspired by
 Turbolinks and designed to compliment classic Rails. Features you enjoyed

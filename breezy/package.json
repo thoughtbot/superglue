@@ -6,7 +6,7 @@
     "test": "jest",
     "lint": "eslint lib",
     "clean": "rm -rf ./dist",
-    "copy:package": "cat ./package.json | grep -v '\"private\":' > dist/package.json",
+    "copy:package": "cat ./package.json | jq 'del(.scripts)' > dist/package.json",
     "copy:readme": "cp ../README.md dist/",
     "build:index": "babel lib -d dist",
     "build": "npm run clean && npm run build:index && npm run copy:package && npm run copy:readme",

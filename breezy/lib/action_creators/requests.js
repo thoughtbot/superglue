@@ -102,7 +102,9 @@ export function remote(
   }
 }
 
-let lastVisitController = new AbortController()
+let lastVisitController = {
+  abort: () => {},
+}
 
 export function visit(
   path,

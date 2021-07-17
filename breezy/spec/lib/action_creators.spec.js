@@ -183,6 +183,40 @@ describe('action creators', () => {
       })
     })
 
+    it('does not handle deferments when using SSR', () => {
+      const prevFetch = global.fetch
+      global.fetch = undefined
+
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {},
+        },
+      })
+
+      const page = {
+        data: { heading: 'Some heading 2' },
+        csrfToken: 'token',
+        assets: [],
+        defers: [{ url: '/foo?bzq=body', type: 'auto' }],
+      }
+
+      const expectedActions = [
+        {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: page,
+          },
+        },
+      ]
+
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        global.fetch = prevFetch
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+    })
+
     it('handles deferments on the page and fires user defined success', () => {
       const store = mockStore({
         ...initialState(),

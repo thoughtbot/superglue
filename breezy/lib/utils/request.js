@@ -68,16 +68,6 @@ export function argsForFetch(
     }
   }
 
-  if (currentState.currentPageKey) {
-    const referrer = new parse(
-      currentState.currentPageKey,
-      config.baseUrl || {},
-      false
-    ).href
-
-    headers['x-xhr-referer'] = referrer
-  }
-
   if (currentState.csrfToken) {
     headers['x-csrf-token'] = currentState.csrfToken
   }
@@ -91,6 +81,16 @@ export function argsForFetch(
   }
 
   const options = { method, headers, body, credentials, signal }
+
+  if (currentState.currentPageKey) {
+    const referrer = new parse(
+      currentState.currentPageKey,
+      config.baseUrl || {},
+      false
+    ).href
+
+    options.referrer = referrer
+  }
 
   if (method == 'GET' || method == 'HEAD') {
     delete options.body

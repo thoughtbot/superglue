@@ -130,7 +130,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | pathQuery | `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure. |
-| fetchRequestOptionsAndMore | `Object` | Any fetch request options plus extras. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-xhr-referer`, `x-csrf-token`, and `x-http-method-override`. |
+| fetchRequestOptionsAndMore | `Object` | Any fetch request options plus extras. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-csrf-token`, and `x-http-method-override`. |
 
 | fetchRequestOptionsAndMore | Type | Notes
 | :--- | :--- | :--- |

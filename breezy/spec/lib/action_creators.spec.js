@@ -519,7 +519,6 @@ describe('action creators', () => {
 
         expect(requestheaders).toEqual({
           accept: 'application/json',
-          'x-xhr-referer': '/bar',
           'x-requested-with': 'XMLHttpRequest',
           'x-breezy-request': true,
           'x-csrf-token': 'token',

@@ -122,7 +122,7 @@ describe('argsForFetch', () => {
     ])
   })
 
-  it('returns fetch arguments x-xhr-referer when currentPageKey is set in state', () => {
+  it('returns fetch arguments referer when currentPageKey is set in state', () => {
     const getState = () => {
       return {
         breezy: {
@@ -141,10 +141,10 @@ describe('argsForFetch', () => {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
           'x-breezy-request': true,
-          'x-xhr-referer': '/some_current_url',
         },
         signal: undefined,
         credentials: 'same-origin',
+        referrer: '/some_current_url',
       },
     ])
   })

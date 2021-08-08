@@ -34,12 +34,10 @@ function handleFetchErr(err, fetchArgs, dispatch) {
   throw err
 }
 
-//TODO: Provide a connected component for refresh
 function buildMeta(pageKey, page, state) {
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
-  //TODO: needs refresh should dispatch, to get a nice, you need to reload your page
   return {
     pageKey,
     page,

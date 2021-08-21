@@ -25,7 +25,7 @@ module Rails
 
         %w(index show new edit).each do |view|
           @action_name = view
-          filename = filename_with_jsx_extensions(view)
+          filename = filename_with_js_extensions(view)
           template 'web/' + filename, File.join('app/views', controller_file_path, filename)
         end
 
@@ -68,8 +68,8 @@ module Rails
           [name, :json, :props] * '.'
         end
 
-        def filename_with_jsx_extensions(name)
-          [name, :jsx] * '.'
+        def filename_with_js_extensions(name)
+          [name, :js] * '.'
         end
 
         def filename_with_html_extensions(name)

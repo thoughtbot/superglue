@@ -57,7 +57,7 @@ MyRailsApp/
   views/
   dashboard/
     index.html.erb <- where index.json.props gets rendered as initial state
-    index.jsx <- Gets packaged with application.js
+    index.js <- Gets packaged with application.js
     index.json.props <- will also respond to `.json` requests
 ```
 

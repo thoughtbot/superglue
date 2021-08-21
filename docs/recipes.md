@@ -34,7 +34,7 @@ remote('/dashboard?bzq=data.metrics')
 It is up to you to handle the case when `metrics` starts out empty. For example:
 
 ```javascript
-// orders.jsx
+// orders.js
 //...in your component
 
   render() {

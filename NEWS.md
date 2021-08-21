@@ -2,11 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-<!-- Unreleased changes should go to UNRELEASED.md -->
+## 0.19
+Breezy can now be rendered on SSR using [humid](https://github.com/thoughtbot/humid).
+
+Remove helpers and methods no longer needed.
+- `props_from_form_with`
+-  Let the browser handle xdomain reqs.
+
+Renamed `master` to `main`
 
 ## 0.17
 
-Added more fined grained control over deferments by allowing to specify custom 
+Added more fined grained control over deferments by allowing to specify custom
 success and fail action creators:
 ```
 json.inner(defer: [:auto, success_action: 'SUCCESS', fail_action: 'FAIL']) do

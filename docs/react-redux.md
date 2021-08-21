@@ -14,7 +14,7 @@ perform setup of redux, ujs, and other functionality when rendered. This would
 be setup for you if you used Breezy's generators. The component would not work
 without implementing the following methods:
 
-- `mapping` override this and return a [mapping](https://github.com/thoughtbot/Breezy/blob/master/breezy_rails/lib/install/templates/web/application.js)
+- `mapping` override this and return a [mapping](https://github.com/thoughtbot/Breezy/blob/main/breezy_rails/lib/install/templates/web/application.js)
 between your props templates to component.
 - `visitAndRemote` override this and return a object with `visit` and `remote`.
 If you used the generators, a customizable one has been created for you in

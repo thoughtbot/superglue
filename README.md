@@ -98,7 +98,7 @@ For more on what you can do, check out our documentation.
 ## Documentation
 
 Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure
-to select the correct version. `master` will always be in development.
+to select the correct version. `main` will always be in development.
 
 ## Contributing
 

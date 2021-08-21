@@ -25,7 +25,7 @@ rails generate scaffold post body:string --force --no-template-engine --breezy
 ## Configuration
 
 The `rails breezy:install:web` step adds a
-[preconfigured entry point](https://github.com/thoughtbot/Breezy/blob/master/breezy_rails/lib/install/templates/web/application.js)
+[preconfigured entry point](https://github.com/thoughtbot/Breezy/blob/main/breezy_rails/lib/install/templates/web/application.js)
 in `app/javascript/packs/application.js`.
 
 ## Custom Reducers

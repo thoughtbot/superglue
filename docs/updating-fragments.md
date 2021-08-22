@@ -36,15 +36,15 @@ This results in duplicate JSON nodes across our Redux state:
 }
 ```
 
-As we mentioned in the [state shape guide](docs/redux-state-shape.md) this is by
-design. To update these cross cutting cocerns, you will have create a reducer
-to iterate through each `pages` node and immutably update them. This can be
-error prone, but Breezy provides tooling to make this easy.
+As we mentioned in the [state shape guide](docs/redux-state-shape.md) this is
+by design. To update these cross-cutting cocerns, you will have to create a
+reducer to iterate through each `pages` node and immutably update them. This
+can be error-prone, but Breezy provides tooling to make this easy.
 
 # Fragments
 
-To help with creating reducers, Breezy provides fragments. A fragment in Breezy
-is a rendered partial with a given name:
+To help with creating reducers, Breezy has a featured called fragments. A
+fragment in Breezy is a rendered partial with a given name:
 
 ```
   json.body do
@@ -53,7 +53,7 @@ is a rendered partial with a given name:
 ```
 
 Using the fragment functionality will create metadata about the node. This has
-been setup for you in `application.json.props`:
+been set up for you in `application.json.props`:
 
 ```ruby
 json.data(search: path) do
@@ -80,7 +80,7 @@ not show up inside the metadata until the deferred nodes are loaded.
 
 # Creating reducers
 
-You can use the metadata created by fragments to update cross cutting concerns
+You can use the metadata created by fragments to update cross-cutting concerns
 in your reducer:
 
 ```javascript

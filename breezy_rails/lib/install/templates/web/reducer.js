@@ -5,7 +5,7 @@
 // } from './actions'
 // import produce from "immer"
 //
-// export default function (state = {}, action) {
+// export const applicationPagesReducer = (state = {}, action) => {
 //   switch(action.type) {
 //   case CLEAR_FORM_ERRORS: {
 //     const {pageKey} = action.payload

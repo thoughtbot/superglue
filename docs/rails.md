@@ -50,13 +50,19 @@ export default connect(
 
 ```
 
-A few notes about the client's behavior with the flash:
-1. When using `data-bz-visit`, all flash in Breezy's redux state will be cleared before the request.
-2. when using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
+{% hint style="info" %}
+When using `data-bz-visit`, all flash in Breezy's redux state will be cleared before the request.
+{% endhint %}
+
+{% hint style="info" %}
+When using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
+{% endhint %}
 
 
 ## `redirect_back_with_bzq`
-A helper for your controller actions:
+
+A helper to help retain the `bzq` parameter as part of the redirect `location`.
+This helper has the same method signature as Rails own `redirect_back`.
 
 ```ruby
 def create
@@ -64,6 +70,3 @@ def create
 end
 ```
 
-This helper has the same method signature as Rails own `redirect_back`, the
-difference here is that `redirect_back_with_bzq` will retain the bzq parameter
-as part of the redirect `location`.

@@ -1,6 +1,6 @@
-# Traversals
+# Template querying
 
-Breezy's thunks work hand-in-hand with PropsTemplate to query your JSON
+Breezy's thunks work hand-in-hand with [PropsTemplate] to query your JSON
 template for nodes. This guide helps you understand how the tools work with
 each other.
 
@@ -54,8 +54,8 @@ json.data(search: params[:bzq]) do
 end
 ```
 
-### Index based selection
-You may use an index based key to fetch an item in a list like so:
+### Index-based selection
+You may use an index-based key to fetch an item in a list like so:
 
 ```
 remote('/dashboard?bzq=data.posts.0.details')
@@ -73,7 +73,7 @@ While traversing by index works fine, it can lead the wrong post being updated
 if your Redux state has changed by the time the request comes back.
 
 ### Attribute-based selection
-Attribute based keys for collections look like this:
+Attribute-based keys for collections look like this:
 
 ```
 remote('/dashboard?bzq=data.posts.some_id=1.details')
@@ -132,7 +132,7 @@ end
 
 When querying, Breezy will disable
 [caching](https://github.com/thoughtbot/props_template#caching) and
-[deferement](https://github.com/thoughtbot/props_template#deferment) until the
+[deferment](https://github.com/thoughtbot/props_template#deferment) until the
 target node is reached.
 
 {% endhint %}
@@ -140,3 +140,5 @@ target node is reached.
 That's the basics of traversing with Breezy. A lot of modern SPA functionality
 can be achieved by just a few lines of code. Head over to
 [recipes](./recipes.md) for examples.
+
+[PropsTemplate]: https://github.com/thoughtbot/props_template

@@ -2,7 +2,8 @@
 
 ## Loading content later
 
-When parts of your page become slow, for example, a metrics table that takes a long time to generate because of some expensive operation:
+When parts of your page become slow, e.g, a metrics table that is expensive to
+render:
 
 ```ruby
 # /dashboard.json.props
@@ -16,7 +17,11 @@ json.metrics do
 end
 ```
 
-A common approach is to load content in async fashion by building out another set of routes, controllers, tests, with more work on the frontend to manage state, call fetch, etc. With Breezy, we can load async content in a single setting.
+A common approach is to load content in async fashion by building out another
+set of routes, controllers, tests, with more work on the frontend to manage
+state, call fetch, etc.
+
+With Breezy, we can turn content async with a single setting.
 
 ```ruby
 json.metrics(defer: :auto) do
@@ -25,7 +30,9 @@ json.metrics(defer: :auto) do
 end
 ```
 
-With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but without `json.metrics`, then when the content is received by the client, Breezy will automatically make an `remote` request for anything that was skipped:
+With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but
+without `json.metrics`, then when the content is received by the client, Breezy
+will automatically make an `remote` request for anything that was skipped:
 
 ```javascript
 remote('/dashboard?bzq=data.metrics')
@@ -34,7 +41,6 @@ remote('/dashboard?bzq=data.metrics')
 It is up to you to handle the case when `metrics` starts out empty. For example:
 
 ```javascript
-// orders.js
 //...in your component
 
   render() {
@@ -46,10 +52,10 @@ It is up to you to handle the case when `metrics` starts out empty. For example:
   }
 ```
 
-Note that you can add a placeholder like so:
+Alternatively, you can use a placeholder like so:
 
 ```ruby
-json.metrics(defer: [:auto, placeholder: {}]) do
+json.metrics(defer: [:auto, placeholder: {total_visitors: 0}]) do
   sleep 10 # expensive operation
   json.total_visitors 30
 end
@@ -57,7 +63,8 @@ end
 
 ## Loading tab content `onClick`
 
-Your UI has two tabs, the first tabs loads fine,but the second tab takes a bit of time to load. Since the 2nd tab is inactive on the first visit, you decided to load the 2nd tab only when a user clicks it.
+Some features require loading content `onCLick`. For example, when a user clicks
+on an inactive tab to load its content async.
 
 ```ruby
 # /posts.json.props
@@ -84,28 +91,36 @@ end
   }
 ```
 
-In this example, `defer: :manual` is used on the node. PropsTemplate will render without that node, and you need to manually request it using [traversals](docs/traversal-guide.md) like the example above.
+`defer: :manual` will instruct PropsTemplate to render the page without that
+node. You need to manually request the missing content using
+[template querying][querying guide] like the example above.
 
 ## Shopping cart
 
-You want to update a cart count located in the header when a user clicks on 'Add to cart' on a product listing
+You want to update a cart count located in the header when a user clicks on "Add
+to cart" on a product listing.
 
 ```javascript
-//...in your submit handler
-<form action='/add_to_cart?bzq=data.header.cart' method='POST' data-bz-remote={true}>
+  <form action='/add_to_cart?bzq=data.header.cart' method='POST' data-bz-remote={true}>
 ```
 
 ```ruby
 def create
+  ... add to cart logic here...
+
+  # This helper will retain the `bzq` param when redirecting, which allows the
+  # partial rendering of the `show` page.
   redirect_back_with_bzq fallback_url: '/'
 end
 ```
 
-Recall that since Breezy makes an immutable update to the store, your component will update as appropriate.
+The above will POST, and get redirected back to the original page while fetching
+only the header to update.
 
 ## Chat app (Short-polling)
 
-Say you have a list of chat messages that you want to periodically update. Here's a simple way to do that with a simple `setTimeout`:
+Say you have a list of chat messages that you want to periodically update.
+Here's a simple way to do that with a simple `setTimeout`:
 
 ```javascript
   componentDidMount() {
@@ -133,33 +148,16 @@ end
 
 ## Chat app (Long-polling)
 
-You can use a combination of Rails 5 renderers, ActionCable, PropsTemplate  [fragments](https://github.com/thoughtbot/props_template#partial-fragments) and preloading to stream updates to your users without much effort.
+You can use a combination of Rails renderers, ActionCable, PropsTemplate
+[fragments](https://github.com/thoughtbot/props_template#partial-fragments), and
+preloading to stream updates to your users without much effort.
 
-For example, if you already have a ActionCable channel setup, simply render the props and send it over the wire:
-
-```ruby
-renderer = PostsController.renderer.new(
-  "action_dispatch.request.parameters"=>{bzq: 'data.posts.0'},
-  "action_dispatch.request.formats"=>[Mime[:json]]
-)
-
-msg = renderer.render(:index)
-
-ActionCable.server.broadcast('web_notifications_channel', message: msg)
-```
-
-```javascript
-window.App.cable.subscriptions.create("WebNotificationsChannel", {
-  received: function({message}) {
-    this.props.dispatch({
-      type: "UPDATE_POST_FOOBAR",
-      payload: message.data
-    })
-  }
-})
-```
+For example, if you already have an ActionCable channel setup, simply render the
+props and send the rendered node over the wire:
 
 ```ruby
+  # index.json.props
+
   json.data(search: params[:bzq]) do
     json.posts do
       json.array! @posts, partial: ['post', fragment: true] do
@@ -168,9 +166,40 @@ window.App.cable.subscriptions.create("WebNotificationsChannel", {
   end
 ```
 
+Render and broadcast via a background job:
+
+```ruby
+
+renderer = PostsController.renderer.new(
+  "action_dispatch.request.parameters"=>{bzq: 'data.posts.0'},
+  "action_dispatch.request.formats"=>[Mime[:json]]
+)
+
+message = renderer.render(:index)
+
+ActionCable.server.broadcast('web_notifications_channel', message: message)
+```
+
+Receive the JSON on the client-side and dispatch it to your reducer:
+
+```javascript
+window.App.cable.subscriptions.create("WebNotificationsChannel", {
+  received: function({message}) {
+    const response = JSON.parse(message)
+
+    this.props.dispatch({
+      type: "UPDATE_POST_FOOBAR",
+      payload: response.data
+    })
+  }
+})
+```
+
 ## Replicating Turbolinks behavior
 
-With `visit`, Breezy will always wait for a response before a navigation transition. Turbolink's behavior is to transition first if possible while waiting for the response. To replicate this behavior:
+With `visit`, Breezy will always wait for a response before a navigation
+transition. Turbolink's behavior is to transition first if possible while
+waiting for the response. To replicate this behavior:
 
 In your `application_visit.js` file:
 
@@ -179,46 +208,76 @@ In your `application_visit.js` file:
 import { urlToPageKey } from '@jho406/breezy/utils/url'
 
 const appVisit = (...args) => {
-  // Do something before
-  // e.g, show loading state, you can access the current pageKey
-  // via store.getState().breezy.currentPageKey
 
   const pageKey = urlToPageKey(args[0])
+  // attempt to navigate first
   this.ref.current.navigateTo(pageKey)
+
+  return store
+    .dispatch(visit(...args))
+    ....
 ```
 
-## Server Side Rendering
-Breezy does not include server side rendering out of the box, but you can add it with (react-rails)[https://github.com/reactjs/react-rails].
+## Server-Side Rendering
+Breezy does not include server-side rendering out of the box, but you can easily
+add it with [humid](https://github.com/thoughtbot/humid).
 
-1) Add react-rails and mini_racer to your Gemfile
+Follow the [instructions](https://github.com/thoughtbot/humid.md#installation).
+Then create a `app/javascript/packs/server_rendering.js`:
+
+```javascript
+import React from 'react';
+import { ApplicationBase } from '@jho406/breezy'
+import SeatsIndex from 'views/seats/index'
+import ReactDOMServer from 'react-dom/server';
+require("source-map-support").install({
+  retrieveSourceMap: filename => {
+    console.log('--------------------hello')
+    return {
+      url: filename,
+      map: readSourceMap(filename)
+    };
+  }
+});
+
+// Mapping between your props template to Component, you must add to this
+// to register any new page level component you create. If you are using the
+// scaffold, it will auto append the identifers for you.
+//
+// e.g {'posts/new': PostNew}
+const identifierToComponentMapping = {
+  'seats/index': SeatsIndex,
+  'seats/show': SeatsIndex,
+};
+
+export default class Application extends ApplicationBase {
+  mapping() {
+    return identifierToComponentMapping;
+  }
+
+  visitAndRemote(navRef, store) {
+    return {visit: () => {}, remote: () => {}}
+  }
+}
+
+setHumidRenderer((json) => {
+  const initialState = JSON.parse(json)
+  return ReactDOMServer.renderToString(
+    <Application
+      // baseUrl={origin}
+      // The global var BREEZY_INITIAL_PAGE_STATE is set by your erb
+      // template, e.g., index.html.erb
+      initialPage={initialState}
+      // The initial path of the page, e.g., /foobar
+      // path={path}
+    />
+  )
+})
 ```
-gem 'react-rails'
-gem 'mini_racer'
-```
-2) Run the install
 
-```
-$ bundle install
-$ rails generate react:install
-```
+Modify your webpack config
 
-3) Remove the appended lines from `application.js`.
-
-You don't need these lines because Breezy's `application.js` already does the job of mounting React to the DOM. If you decide to use react-rails instead, you are welcomed to modify `application.js` as you see fit.
-
-4) Modify `app/javascript/packs/server_rendering.js`
-
-```
-// Notice we use `packs` instead of the react-rails defaults of `components`
-var componentRequireContext = require.context("packs", true);
-var ReactRailsUJS = require("react_ujs");
-ReactRailsUJS.useContext(componentRequireContext);
-```
-
-4) Modify your webpack config
-React-Rails uses ExecJS which uses a stripped down Javascript runtime. Your code won't have access to browser methods and the Node API. For some packages, you have to selectively choose which `index.js` to use. For example:
-
-```
+```javascript
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const environment = require('./environment')
 const path = require('path')
@@ -244,20 +303,26 @@ delete webConfig.entry.server_rendering
 module.exports = [ssrConfig, webConfig]
 ```
 
-5) Replace `<div id="app">` in your ERB templates with:
+Replace `<div id="app">` in your ERB templates with:
 
-```
-<%
-  props = "{\"initialPage\":#{initial_state}, \"href\":\"#{request.original_url}\"}"
-%>
-<%= react_component("application", props, prerender: true, id: :app) %>
+```erb
+<% initial_state = controller.render_to_string(@virtual_path ,formats: [:json], locals: local_assigns, layout: true) %>
+
+<script type="text/javascript">
+  window.BREEZY_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;
+</script>
+
+<div id="app">
+  <%= Humid.render(initial_state).html_safe %>
+</div>
 ```
 
-6) Use ReactDOM.hydrate
 In `application.js` change this:
+
 ```
 import { render } from 'react-dom'
 ```
+
 to this
 
 ```
@@ -268,7 +333,8 @@ and change the rest of `application.js` accordingly.
 
 ## Usage with Kaminari
 
-SPA pagination is pretty easy to add with Kaminari and any component library you wish to use. Lets use [antd](https://ant.design/components/pagination/) as an example:
+SPA pagination is pretty easy to add with Kaminari and any component library you
+wish to use. Let's use [antd](https://ant.design/components/pagination/) as an example:
 
 ```ruby
 # index.json.props
@@ -297,7 +363,8 @@ end
 
 ```
 
-Let's grab one of those fancy pagination components from [antd](https://ant.design/components/pagination/) and some helpers
+Let's grab one of those fancy pagination components from
+[antd](https://ant.design/components/pagination/) and some helpers
 
 ```text
 yarn add antd url-parse
@@ -306,13 +373,6 @@ yarn add antd url-parse
 Then in your component
 
 ```javascript
-import {
-  mapStateToProps,
-  mapDispatchToProps,
-} from '@jho406/breezy'
-import { Pagination } from 'antd'
-import parse from 'url-parse'
-
 class PostsIndex extends React.Component {
   onPaginateChange = (page) => {
     const pagination_path = this.props.posts
@@ -342,15 +402,13 @@ class PostsIndex extends React.Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostsIndex)
-
+export default PostsIndex
 ```
 
 ## Custom reducers
-Breezy generators will `yarn add reduce-reducers` and set up a `reducers.js`. If you find yourself needing additional functionality beyond what the generated reducers provide, just add your own reducers:
+Breezy generators will `yarn add reduce-reducers` and set up a `reducers.js`. If
+you find yourself needing additional functionality beyond what the generated
+reducers provide, just add your own reducers:
 
 ```javascript
 ....
@@ -374,3 +432,5 @@ const store = createStore(
   applyMiddleware(thunk)
 )
 ```
+
+[querying guide]: ./traversal-guide.md

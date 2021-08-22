@@ -4,4 +4,9 @@
   window.BREEZY_INITIAL_PAGE_STATE=<%%= initial_state.html_safe %>;
 </script>
 
-<div id="app"></div>
+<div id="app">
+  <%%# If you need SSR follow instructions at %>
+  <%%# https://github.com/thoughtbot/breezy/blob/main/docs/recipes.md#server-side-rendering %>
+  <%%# and uncomment the following line %>
+  <%%#= Humid.render(initial_state).html_safe %>
+</div>

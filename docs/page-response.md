@@ -6,7 +6,7 @@ used Breezy's generators, this would be all set for you in
 ```
 {
   data: {
-
+    ...
   },
   componentIdentifier,
   defers,
@@ -21,10 +21,10 @@ used Breezy's generators, this would be all set for you in
 ```
 
 ### `data`
-Passed to your page component as props. In a Breezy application, this would be
-the contents of your templates, e.g., `index.json.props`. Note that `flash`,
+Passed to your page component as its props. In a Breezy application, this would
+be the contents of your templates, e.g., `index.json.props`. Note that `flash`,
 `csrfToken`, `fragments`, and `pageKey` will be merged with your props.
-`ownProps` are also merged when [navigating](docs/react-redux.md#navigateto)
+`ownProps` are also merged when [navigating](./react-redux.md#navigateto)
 
 ### `componentIdentifier`
 A `string` to instruct Breezy which component to render. The generated
@@ -48,7 +48,7 @@ const identifierToComponentMapping = {
 }
 ```
 
-Its not uncommon to have multiple indenfiers pointing to the same component.
+It's not uncommon to have multiple indentifiers pointing to the same component.
 This can be used when building `index` pages that link to `show ` modals living
 on a different URL path.
 
@@ -73,10 +73,10 @@ or `data-bz-remote` attribute.
 Only included when `bzq` is part of the request parameters. `action` is always
 set to `graft` and `path` is the camelCase keypath to the requested node.
 Breezy uses these attributes to immutably graft a node from the server-side to
-the client-size.
+the client-side.
 
 ### `renderedAt`
-An unix timestamp representing the time the response was rendered.
+An UNIX timestamp representing the time the response was rendered.
 
 ### `flash`
 A `hash` of [flash messages](./rails.md#rails-flash). In

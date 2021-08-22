@@ -1,19 +1,19 @@
 # Navigation
 
-Navigation is [inspired by turbolinks](docs/concepts#inspired-by-turbolinks).
+Navigation is [inspired by turbolinks](./concepts#inspired-by-turbolinks).
 
 ## Visit and Remote
 
 Breezy comes with two thunks that wrap around fetch:
 
-1. `visit` is used for page-to-page navigation, there can be only
-[one visit](docs/react-redux.md#visit) at a time.
-2. `remote` is used with urls that contain the `bzq` param for
-partial page updates.
+1. `visit` is used for page-to-page navigation, there can be only [one visit] at
+a time.
+2. `remote` is used with urls that contain the `bzq` param for partial page
+updates.
 
-When [configuring](docs/getting-started#configuration) your application in
-`application.js`, your page components would all recieve a `visit` and `remote`
-function that will dispatch when called.
+When [configuring] your application in `application.js`, your page components
+would all receive a `visit` and `remote` function that will dispatch when
+called.
 
 ## `application_visit.js`
 
@@ -28,8 +28,7 @@ You can add customizations to `visit` or `remote` in `application_visit.js`.
 
 ## Single page navigation using `visit`
 
-Single page navigation must be explicitly enabled using a [data
-attribute](docs/react-redux#data-bz-visit):
+Single page navigation must be explicitly enabled using a [data attribute]
 
 ```jsx
   <a href='/posts' data-bz-visit={true} />
@@ -42,14 +41,14 @@ or manually called using the `visit` thunk somewhere in your component:
     .then(...) #add navigateTo
 ```
 
-Options passed to visit are passed to `fetch`, but there are two features worth
-calling out that enables low effort interactivity.
+Options passed to `visit` are also passed to `fetch`. Additionally, there are
+two features that enable low effort interactivity.
 
 ### placeholders
 
 The idea of placeholders is to optimistically copy the current page state over
 to the next page's state before the request. This is handy if the next page
-looks almost idential to the current page. Usecases include:
+looks almost identical to the current page. Use cases include:
 
 1. Modals
 2. Providing content for manual deferments
@@ -145,7 +144,7 @@ When visiting the above, PropsTemplate will render with
 
 Then make a `remote("/dashboard?bzq=data.metrics")` call and 10 seconds later,
 `{total_visitors: 30}` will be immutably grafted into the same position on the
-Redux store and React will rerender. For more control you may providing a
+Redux store and React will rerender. For more control, you may provide a
 `success_action` or `fail_action`, and Breezy will dispatch these actions when
 the promise resolves successfully or fails.
 
@@ -158,7 +157,7 @@ end
 
 ## `manual`
 Using `manual` with deferment means that a `remote` call will not
-take place, its up to you to fetch the node using `remote` yourself.
+take place, it is up to you to fetch the node using `remote` yourself.
 
 ```ruby
 json.metrics(defer: [:manual, placeholder: {total_visitors: 0}]) do
@@ -168,3 +167,8 @@ end
 ```
 
 See [recipes](./recipes.md#loading-content-later) for more examples.
+
+[one visit]: docs/react-redux.md#visit
+[configuring]: https://github.com/rt2zz/redux-persist
+[data attribute]: docs/react-redux#data-bz-visit
+

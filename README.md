@@ -7,7 +7,7 @@ Use classic Rails to build rich React Redux applications with **NO APIs** and
 
 Breezy is a React Redux starter and library inspired by Turbolinks and designed
 to complement classic Rails. You can enjoy the benefits of Redux state
-managment and React components without giving up the productivity of Rails form
+management and React components without giving up the productivity of Rails form
 helpers, UJS, tag helpers, the flash, cookie auth, and more.
 
 ## Caution
@@ -29,7 +29,7 @@ The end result would be something like this:
 ![No Apis](docs/images/no_apis.png)
 
 ### Powered by Classic Rails
-Breezy is mostly classic Rails. Features like the flash, cookie auth, and url
+Breezy is mostly classic Rails. Features like the flash, cookie auth, and URL
 helpers continue to be useful. Here's a look at the directory structure of a
 typical Rails application with Breezy.
 
@@ -94,11 +94,11 @@ re-render.
 
 For more on what you can do, check out our documentation.
 
-#### Server Side Rendering
-Server Side Rendering is supported via [Humid](https://github.com/thoughtbot/humid).
-See the [documentation for server side rendering][ssr docs].
+#### Server-Side Rendering
+Server-Side Rendering is supported via [Humid](https://github.com/thoughtbot/humid).
+See the [documentation for server-side rendering][ssr docs].
 
-  [ssr docs]: https://github.com/thoughtbot/breezy/blob/main/docs/recipes.md#server-side-rendering
+  [ssr docs]: ./recipes/server-side-rendering.md
 
 ## Documentation
 

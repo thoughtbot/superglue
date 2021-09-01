@@ -2,7 +2,6 @@
 
 * [Introduction](README.md)
 * [Getting Started](docs/getting-started.md)
-* [Recipes](docs/recipes.md)
 
 # Concepts
 * [Philosophy](docs/concepts.md)
@@ -18,3 +17,13 @@
 * [React Redux](docs/react-redux.md)
 * [Rails](docs/rails.md)
 * [Utility](docs/utility.md)
+
+## Recipes
+* [Loading content later](docs/recipes/load-content-later.md)
+* [Loading a tab onClick](docs/recipes/load-tab-onclick.md)
+* [Updating shopping cart](docs/recipes/update-shopping-cart.md)
+* [Chat App](docs/recipes/chat-app.md)
+* [Turbolinks navigation behavior](docs/recipes/turbolinks.md)
+* [Server-Side Rendering](docs/recipes/server-side-rendering.md)
+* [Usage with Kaminari](docs/recipes/kaminari.md)
+* [Custom reducers](docs/recipes/custom-reducers.md)

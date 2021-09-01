@@ -50,7 +50,7 @@ this.props.navigateTo('/posts', {ownProps:{something: true}})
 
 If there is an existing page in your store `navigateTo` will restore the props,
 render the correct component, and return `true`. Otherwise, it will return
-`false`. This is [useful](./recipes#replicating-turbolinks-behavior) if you want
+`false`. This is [useful](./recipes/turbolinks) if you want
 to restore an existing page before making a call to `visit` or `remote`.
 
 | Parameter | Notes |
@@ -281,6 +281,6 @@ end
 ```
 
 This metadata can then be used by your reducers to make updates that span
-[across pages](docs/updating-fragments.md).
+[across pages](./updating-fragments.md).
 
 [querying guide]: ./traversal-guide.md

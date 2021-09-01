@@ -166,9 +166,7 @@ json.metrics(defer: [:manual, placeholder: {total_visitors: 0}]) do
 end
 ```
 
-See [recipes](./recipes.md#loading-content-later) for more examples.
-
-[one visit]: docs/react-redux.md#visit
+[one visit]: ./react-redux.md#visit
 [configuring]: https://github.com/rt2zz/redux-persist
-[data attribute]: docs/react-redux#data-bz-visit
+[data attribute]: ./react-redux#data-bz-visit
 

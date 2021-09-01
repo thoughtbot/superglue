@@ -36,7 +36,7 @@ This results in duplicate JSON nodes across our Redux state:
 }
 ```
 
-As we mentioned in the [state shape guide](docs/redux-state-shape.md) this is
+As we mentioned in the [state shape guide](./redux-state-shape.md) this is
 by design. To update these cross-cutting cocerns, you will have to create a
 reducer to iterate through each `pages` node and immutably update them. This
 can be error-prone, but Breezy provides tooling to make this easy.
@@ -74,7 +74,7 @@ fragments: [
 ```
 
 {% hint style="info" %}
-Fragments used in nodes that are [deferred](docs/navigation.md#deferments) do
+Fragments used in nodes that are [deferred](./navigation.md#deferments) do
 not show up inside the metadata until the deferred nodes are loaded.
 {% endhint %}
 

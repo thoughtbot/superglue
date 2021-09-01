@@ -94,7 +94,7 @@ json.data(search: params[:bzq]) do
         json.title post.title
       end
 
-      # The following will be auto appended by the key: options
+      # The following will be auto appended by the key: option
       # json.some_id post.some_id
     end
   end
@@ -123,7 +123,7 @@ json.array! @posts , key: :some_id do |post|
     json.title post.title
   end
 
-  # The following will be auto appended by the key: options
+  # The following will be auto appended by the key: option
   # json.some_id post.some_id
 end
 ```
@@ -138,7 +138,7 @@ target node is reached.
 {% endhint %}
 
 That's the basics of traversing with Breezy. A lot of modern SPA functionality
-can be achieved by just a few lines of code. Head over to
-[recipes](./recipes.md) for examples.
+can be achieved by just a few lines of code. For examples, see our recipes
+section.
 
 [PropsTemplate]: https://github.com/thoughtbot/props_template

@@ -74,7 +74,7 @@ ssrConfig.merge({
   },
   resolve: {
     alias: {
-      'html-dom-parser': path.resolve(__dirname, '../../node_modules/html-dom-parser/lib/html-to-dom-server')
+      'html-dom-parser': path.resolve(__dirname, '../../node_modules/html-dom-parser/lib/server/html-to-dom')
     }
   }
 })

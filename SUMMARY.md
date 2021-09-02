@@ -2,13 +2,14 @@
 
 * [Introduction](README.md)
 * [Getting Started](docs/getting-started.md)
+* [Demo](docs/demo.md)
 
-# Concepts
+## Concepts
 * [Philosophy](docs/concepts.md)
 * [The Redux state shape](docs/redux-state-shape.md)
 * [The page response](docs/page-response.md)
 
-# Features
+## Features
 * [Navigation](docs/navigation.md)
 * [Template querying](docs/traversal-guide.md)
 * [Updating fragments](docs/updating-fragments.md)

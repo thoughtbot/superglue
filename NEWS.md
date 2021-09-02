@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.20
+Added back the `props_from_form_with` helper and update to use latest 
+html-dom-parser.
+
 ## 0.19
 Breezy can now be rendered on SSR using [humid](https://github.com/thoughtbot/humid).
 

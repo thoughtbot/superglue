@@ -47,7 +47,7 @@ module Rails
 
           component_name = [plural_table_name, action].map(&:camelcase).join
 
-          inject_into_file app_js, after: "from '@jho406/breezy'" do
+          inject_into_file app_js, after: "from '@thoughtbot/breezy'" do
             "\nimport #{component_name} from 'views/#{controller_file_path}/#{action}'"
           end
 

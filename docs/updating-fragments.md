@@ -94,7 +94,7 @@ middleware. This is included by default when generating a breezy app:
 ```
 // packs/application.js
 
-import { ApplicationBase, fragmentMiddleware } from '@jho406/breezy'
+import { ApplicationBase, fragmentMiddleware } from '@thoughtbot/breezy'
 
 ...
 composeEnhancers(applyMiddleware(thunk, fragmentMiddleware))
@@ -109,7 +109,7 @@ If you choose to turn off the middleware. You can still use the metadata
 created by fragments to update cross-cutting concerns in your reducer:
 
 ```javascript
-import { getIn } from '@jho406/breezy'
+import { getIn } from '@thoughtbot/breezy'
 import produce from "immer"
 
 const pagesReducer = produce((draft, action) => {

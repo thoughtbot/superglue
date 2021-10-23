@@ -8,7 +8,7 @@ Then create a `app/javascript/packs/server_rendering.js`:
 
 ```javascript
 import React from 'react';
-import { ApplicationBase } from '@jho406/breezy'
+import { ApplicationBase } from '@thoughtbot/breezy'
 import SeatsIndex from 'views/seats/index'
 import ReactDOMServer from 'react-dom/server';
 require("source-map-support").install({

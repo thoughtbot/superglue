@@ -8,7 +8,7 @@ In your `application_visit.js` file:
 
 ```javascript
 
-import { urlToPageKey } from '@jho406/breezy/utils/url'
+import { urlToPageKey } from '@thoughtbot/breezy/utils/url'
 
 const appVisit = (...args) => {
 

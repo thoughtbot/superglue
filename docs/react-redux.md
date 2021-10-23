@@ -2,7 +2,7 @@
 
 ## ApplicationBase
 ```
-import { ApplicationBase } from '@jho406/breezy'
+import { ApplicationBase } from '@thoughtbot/breezy'
 
 export default class Application extends ApplicationBase {
   ...
@@ -26,7 +26,7 @@ A nav component for your application. It is used by the render method in
 `ApplicationBase`.
 
 ```javascript
-import Nav from '@jho406/breezy/components/Nav'
+import Nav from '@thoughtbot/breezy/components/Nav'
 ...
 <Provider store={store}>
   <Nav

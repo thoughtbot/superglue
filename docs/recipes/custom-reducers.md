@@ -7,7 +7,7 @@ reducers provide, just add your own reducers:
 ```javascript
 ....
 import reduceReducers from 'reduce-reducers'
-import {getIn} from '@jho406/breezy'
+import {getIn} from '@thoughtbot/breezy'
 import produce from "immer"
 
 function myCustomReducer(state = {}, action) {

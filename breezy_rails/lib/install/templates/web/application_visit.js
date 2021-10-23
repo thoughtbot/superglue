@@ -1,4 +1,4 @@
-import { visit, remote } from '@jho406/breezy/action_creators'
+import { visit, remote } from '@thoughtbot/breezy/action_creators'
 
 export function buildVisitAndRemote(ref, store) {
   const appRemote = (...args) => {

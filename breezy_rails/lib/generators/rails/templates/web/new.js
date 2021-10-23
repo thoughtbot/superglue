@@ -1,5 +1,5 @@
 import React from 'react'
-import RailsTag from '@jho406/breezy/components/RailsTag'
+import RailsTag from '@thoughtbot/breezy/components/RailsTag'
 // import * as actionCreators from 'javascript/packs/action_creators'
 // import { useDispatch } from 'react-redux'
 

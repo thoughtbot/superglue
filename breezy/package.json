@@ -1,5 +1,5 @@
 {
-  "name": "@jho406/breezy",
+  "name": "@thoughtbot/breezy",
   "version": "0.20.0",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jho406/breezy.git"
+    "url": "git+https://github.com/thoughtbot/breezy.git"
   },
   "author": "Johny Ho",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jho406/breezy/issues"
+    "url": "https://github.com/thoughtbot/breezy/issues"
   },
-  "homepage": "https://github.com/jho406/breezy#readme",
+  "homepage": "https://github.com/thoughtbot/breezy#readme",
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",

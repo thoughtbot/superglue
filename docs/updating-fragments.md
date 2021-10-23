@@ -73,10 +73,8 @@ fragments: [
 ]
 ```
 
-{% hint style="info" %}
-Fragments used in nodes that are [deferred](./navigation.md#deferments) do
+?> Fragments used in nodes that are [deferred](./navigation.md#deferments) do
 not show up inside the metadata until the deferred nodes are loaded.
-{% endhint %}
 
 ## Automatic updates
 

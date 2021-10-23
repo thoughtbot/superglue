@@ -110,12 +110,10 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use
 There can only ever be one visit at a time. If you happen to call `visit` while
 another visit is taking place, it will abort the previous one.
 
-{% hint style="info" %}
-`visit` is used for full-page transitions and will strip the `bzq` query string
+?> `visit` is used for full-page transitions and will strip the `bzq` query string
 from your pathQuery parameters that target a specific node. The exception to this
 rule is if you use a `bzq` query string with a `placeholderKey` option. This is
 allowed because `bzq` would have a page to graft onto.
-{% endhint %}
 
 
 ```javascript
@@ -181,9 +179,7 @@ Remote makes an ajax call and saves the response to the `pages` store in async
 fashion. Use this if you want to [update parts](react-redux.md#traversing-nodes)
 of the current page or preload other pages.
 
-{% hint style="info" %}
-Unlike `visit`, `remote` will not strip any `bzq` url parameters.
-{% endhint %}
+?> Unlike `visit`, `remote` will not strip any `bzq` url parameters.
 
 ```javascript
 remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).then(({rsp, page, screen, needsRefresh}) => {})

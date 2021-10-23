@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.author   = 'Johny Ho'
   s.email    = 'jho406@gmail.com'
   s.license  = 'MIT'
-  s.homepage = 'https://github.com/jho406/breezy/'
+  s.homepage = 'https://github.com/thoughtbot/breezy/'
   s.summary  = 'Rails integration for BreezyJS'
   s.description = s.summary
   s.files    =   Dir['MIT-LICENSE', 'README.md', 'lib/**/*', 'app/**/*']

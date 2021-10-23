@@ -50,13 +50,9 @@ export default connect(
 
 ```
 
-{% hint style="info" %}
-When using `data-bz-visit`, all flash in Breezy's redux state will be cleared before the request.
-{% endhint %}
+?> When using `data-bz-visit`, all flash in Breezy's redux state will be cleared before the request.
 
-{% hint style="info" %}
-When using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
-{% endhint %}
+?> When using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
 
 
 ## `redirect_back_with_bzq`

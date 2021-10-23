@@ -102,15 +102,14 @@ See the [documentation for server-side rendering][ssr docs].
 
 ## Documentation
 
-Documentation is hosted on [Gitbook](https://jho406.gitbook.io/breezy). Be sure
-to select the correct version. `main` will always be in development.
+Documentation is hosted on [Github pages](https://thoughtbot.github.io/breezy).
 
 ## Contributing
 
 See the [CONTRIBUTING] document. Thank you, [contributors]!
 
   [CONTRIBUTING]: CONTRIBUTING.md
-  [contributors]: https://github.com/jho406/breezy/graphs/contributors
+  [contributors]: https://github.com/thoughtbot/breezy/graphs/contributors
 
 ## Special Thanks
 

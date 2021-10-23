@@ -52,7 +52,7 @@ class BreezyInstallationTest < Minitest::Test
   def update_package_json
     content = File.read('package.json').gsub(
       /"@thoughtbot\/breezy.*$/,
-      "\"@thoughtbot/breezy\":\"file:#{BREEZY_BREEZY_PATH}/jho406-breezy-#{VERSION}.tgz\","
+      "\"@thoughtbot/breezy\":\"file:#{BREEZY_BREEZY_PATH}/thoughtbot-breezy-#{VERSION}.tgz\","
     )
     File.open('package.json', "w") {|file| file.puts content }
   end

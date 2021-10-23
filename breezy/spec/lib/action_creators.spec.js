@@ -33,6 +33,7 @@ const successfulBody = () => {
     csrfToken: 'token',
     assets: [],
     defers: [],
+    fragments: [],
   })
 }
 
@@ -64,7 +65,7 @@ describe('action creators', () => {
       const pageKey = '/test'
       const node = { d: 'foo' }
       const pathToNode = 'a.b'
-      const fragments = [{ 'foo': ['bar'] }]
+      const fragments = [{ foo: ['bar'] }]
       const page = {
         data: {
           d: 'foo',
@@ -96,6 +97,7 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
+        fragments: [],
       }
       const store = mockStore(initialState())
       const expectedActions = [
@@ -107,21 +109,26 @@ describe('action creators', () => {
               data: { heading: 'Some heading 2' },
               csrfToken: 'token',
               assets: [],
+              fragments: [],
             },
           },
         },
       ]
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('handles deferments on the page and fires HANDLE_GRAFT', () => {
       const store = mockStore({
         ...initialState(),
         pages: {
-          '/foo': {},
+          '/foo': {
+            fragments: [],
+          },
         },
       })
 
@@ -129,6 +136,7 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
+        fragments: [],
         defers: [{ url: '/foo?bzq=body', type: 'auto' }],
       }
 
@@ -153,6 +161,7 @@ describe('action creators', () => {
               action: 'graft',
               path: 'body',
               csrfToken: 'token',
+              fragments: [],
               assets: [],
               defers: [],
             },
@@ -170,6 +179,7 @@ describe('action creators', () => {
           action: 'graft',
           path: 'body',
           csrfToken: 'token',
+          fragments: [],
           assets: [],
           defers: [],
         }),
@@ -178,9 +188,175 @@ describe('action creators', () => {
         },
       })
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
+    })
+
+    it('handles nested deferments to complete the page before updating fragments', () => {
+      const store = mockStore({
+        ...initialState(),
+        pages: {
+          '/foo': {
+            fragments: [],
+          },
+        },
       })
+
+      const page = {
+        data: { heading: 'Some heading 2', body: {} },
+        csrfToken: 'token',
+        assets: [],
+        fragments: [{ type: 'body', path: 'data.body' }],
+        defers: [{ url: '/foo?bzq=data.body', type: 'auto' }],
+      }
+
+      fetchMock.mock('/foo?bzq=data.body&__=0', {
+        body: JSON.stringify({
+          data: {
+            aside: {
+              top: {},
+            },
+          },
+          action: 'graft',
+          path: 'data.body',
+          csrfToken: 'token',
+          fragments: [],
+          assets: [],
+          defers: [
+            { url: '/foo?bzq=data.body.aside.top', type: 'auto' },
+          ],
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      fetchMock.mock('/foo?bzq=data.body.aside.top&__=0', {
+        body: JSON.stringify({
+          data: {
+            hello: 'world',
+          },
+          action: 'graft',
+          path: 'data.body.aside.top',
+          csrfToken: 'token',
+          fragments: [],
+          assets: [],
+          defers: [],
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      const expectedActions = [
+        {
+          type: '@@breezy/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: { heading: 'Some heading 2', body: {} },
+              csrfToken: 'token',
+              assets: [],
+              fragments: [{ type: 'body', path: 'data.body' }],
+              defers: [{ url: '/foo?bzq=data.body', type: 'auto' }],
+            },
+          },
+        },
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: {
+            fetchArgs: [
+              '/foo?bzq=data.body&__=0',
+              {
+                method: 'GET',
+                headers: {
+                  accept: 'application/json',
+                  'x-requested-with': 'XMLHttpRequest',
+                  'x-breezy-request': true,
+                  'x-csrf-token': 'token',
+                },
+                credentials: 'same-origin',
+                referrer: '/bar',
+              },
+            ],
+          },
+        },
+        {
+          type: '@@breezy/HANDLE_GRAFT',
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: { aside: { top: {} } },
+              action: 'graft',
+              path: 'data.body',
+              csrfToken: 'token',
+              fragments: [],
+              assets: [],
+              defers: [
+                { url: '/foo?bzq=data.body.aside.top', type: 'auto' },
+              ],
+            },
+          },
+        },
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: {
+            fetchArgs: [
+              '/foo?bzq=data.body.aside.top&__=0',
+              {
+                method: 'GET',
+                headers: {
+                  accept: 'application/json',
+                  'x-requested-with': 'XMLHttpRequest',
+                  'x-breezy-request': true,
+                  'x-csrf-token': 'token',
+                },
+                credentials: 'same-origin',
+                referrer: '/bar',
+              },
+            ],
+          },
+        },
+        {
+          type: '@@breezy/HANDLE_GRAFT',
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: { hello: 'world' },
+              action: 'graft',
+              path: 'data.body.aside.top',
+              csrfToken: 'token',
+              fragments: [],
+              assets: [],
+              defers: [],
+            },
+          },
+        },
+        {
+          type: '@@breezy/GRAFTING_SUCCESS',
+          payload: {
+            pageKey: '/foo',
+            keyPath: 'data.body.aside.top',
+          },
+        },
+        {
+          type: '@@breezy/GRAFTING_SUCCESS',
+          payload: { pageKey: '/foo', keyPath: 'data.body' },
+        },
+        {
+          type: '@@breezy/UPDATE_FRAGMENTS',
+          payload: { changedFragments: {} },
+        },
+      ]
+
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('does not handle deferments when using SSR', () => {
@@ -211,17 +387,21 @@ describe('action creators', () => {
         },
       ]
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        global.fetch = prevFetch
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          global.fetch = prevFetch
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('handles deferments on the page and fires user defined success', () => {
       const store = mockStore({
         ...initialState(),
         pages: {
-          '/foo': {},
+          '/foo': {
+            fragments: [],
+          },
         },
       })
 
@@ -229,7 +409,14 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{ url: '/foo?bzq=body', type: 'auto', successAction: 'FOOBAR' }],
+        fragments: [],
+        defers: [
+          {
+            url: '/foo?bzq=body',
+            type: 'auto',
+            successAction: 'FOOBAR',
+          },
+        ],
       }
 
       const expectedActions = [
@@ -253,6 +440,7 @@ describe('action creators', () => {
               action: 'graft',
               path: 'body',
               csrfToken: 'token',
+              fragments: [],
               assets: [],
               defers: [],
             },
@@ -270,6 +458,7 @@ describe('action creators', () => {
           action: 'graft',
           path: 'body',
           csrfToken: 'token',
+          fragments: [],
           assets: [],
           defers: [],
         }),
@@ -278,9 +467,11 @@ describe('action creators', () => {
         },
       })
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('ignores manual deferments on the page', () => {
@@ -295,7 +486,10 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{ url: '/some_defered_request?bzq=body', type: 'manual' }],
+        fragments: [],
+        defers: [
+          { url: '/some_defered_request?bzq=body', type: 'manual' },
+        ],
       }
 
       const expectedActions = [
@@ -308,9 +502,11 @@ describe('action creators', () => {
         },
       ]
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('fires HANDLE_GRAFT and process a page', () => {
@@ -328,6 +524,7 @@ describe('action creators', () => {
         csrfToken: '',
         assets: [],
         defers: [],
+        fragments: [],
       }
 
       const expectedActions = [
@@ -340,16 +537,25 @@ describe('action creators', () => {
         },
       ]
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('fires HANDLE_GRAFT, and process a page with a fragment', () => {
       const store = mockStore({
         ...initialState(),
         pages: {
-          '/foo': {},
+          '/foo': {
+            data: {
+              heading: {
+                cart: {},
+              },
+            },
+            fragments: [],
+          },
         },
       })
 
@@ -358,11 +564,11 @@ describe('action creators', () => {
         action: 'graft',
         path: 'data.heading.cart',
         csrfToken: '',
-        fragments: [
-          {path: 'data.header.cart'}
-        ]
+        fragments: [{ path: 'data.heading.cart', type: 'cart' }],
       }
 
+      // Figure out a better way to test this, the last element in the
+      // array isn't correct because getState on a mockstore doesn't work
       const expectedActions = [
         {
           type: '@@breezy/HANDLE_GRAFT',
@@ -371,11 +577,19 @@ describe('action creators', () => {
             page,
           },
         },
+        {
+          type: '@@breezy/UPDATE_FRAGMENTS',
+          payload: {
+            changedFragments: {},
+          },
+        },
       ]
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     //TODO: add tests for when type is mannual
@@ -392,7 +606,10 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{ url: '/some_defered_request?bzq=body', type: 'auto' }],
+        fragments: [],
+        defers: [
+          { url: '/some_defered_request?bzq=body', type: 'auto' },
+        ],
       }
 
       const expectedActions = [
@@ -424,9 +641,11 @@ describe('action creators', () => {
 
       fetchMock.mock('/some_defered_request?bzq=body&__=0', 500)
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
 
     it('fires a user defined error when a fetch fails', () => {
@@ -441,7 +660,14 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{ url: '/some_defered_request?bzq=body', type: 'auto', failAction: 'FOOBAR' }],
+        fragments: [],
+        defers: [
+          {
+            url: '/some_defered_request?bzq=body',
+            type: 'auto',
+            failAction: 'FOOBAR',
+          },
+        ],
       }
 
       const expectedActions = [
@@ -473,9 +699,11 @@ describe('action creators', () => {
 
       fetchMock.mock('/some_defered_request?bzq=body&__=0', 500)
 
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
-      })
+      return store
+        .dispatch(saveAndProcessPage('/foo', page))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions)
+        })
     })
   })
 
@@ -509,23 +737,27 @@ describe('action creators', () => {
               csrfToken: 'token',
               assets: [],
               defers: [],
+              fragments: [],
             },
           },
         },
       ]
 
-      return store.dispatch(remote('/foo', { pageKey: '/foo' })).then(() => {
-        const requestheaders = fetchMock.lastCall('/foo?__=0')[1].headers
+      return store
+        .dispatch(remote('/foo', { pageKey: '/foo' }))
+        .then(() => {
+          const requestheaders =
+            fetchMock.lastCall('/foo?__=0')[1].headers
 
-        expect(requestheaders).toEqual({
-          accept: 'application/json',
-          'x-requested-with': 'XMLHttpRequest',
-          'x-breezy-request': true,
-          'x-csrf-token': 'token',
+          expect(requestheaders).toEqual({
+            accept: 'application/json',
+            'x-requested-with': 'XMLHttpRequest',
+            'x-breezy-request': true,
+            'x-csrf-token': 'token',
+          })
+
+          expect(store.getActions()).toEqual(expectedActions)
         })
-
-        expect(store.getActions()).toEqual(expectedActions)
-      })
     })
 
     it('accepts a beforeSave to modify the response before saving', () => {
@@ -535,6 +767,7 @@ describe('action creators', () => {
             data: {
               posts: ['post 1'],
             },
+            fragments: [],
           },
         },
         breezy: {
@@ -548,6 +781,7 @@ describe('action creators', () => {
         data: {
           posts: ['post 2'],
         },
+        fragments: [],
         csrfToken: 'token',
         assets: [],
         defers: [],
@@ -575,6 +809,7 @@ describe('action creators', () => {
               csrfToken: 'token',
               assets: [],
               defers: [],
+              fragments: [],
             },
           },
         },
@@ -603,7 +838,6 @@ describe('action creators', () => {
         },
       })
 
-
       fetchMock.mock('/foobar?__=0', {
         body: successfulBody(),
         headers: {
@@ -630,7 +864,6 @@ describe('action creators', () => {
         },
       })
 
-
       fetchMock.mock('/foobar?__=0', {
         body: successfulBody(),
         headers: {
@@ -640,7 +873,10 @@ describe('action creators', () => {
 
       return store
         .dispatch(
-          remote('/foobar', { method: 'POST', pageKey: '/bar_override' })
+          remote('/foobar', {
+            method: 'POST',
+            pageKey: '/bar_override',
+          })
         )
         .then((meta) => {
           expect(meta).toEqual(
@@ -655,9 +891,11 @@ describe('action creators', () => {
       const store = mockStore(initialState())
 
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
-      store.dispatch(remote('/first?bzq=foo&__=bar&_=baz')).then((meta) => {
-        done()
-      })
+      store
+        .dispatch(remote('/first?bzq=foo&__=bar&_=baz'))
+        .then((meta) => {
+          done()
+        })
     })
 
     it('returns a meta with redirected true if was redirected', () => {
@@ -673,9 +911,11 @@ describe('action creators', () => {
         body: successfulBody(),
       })
 
-      return store.dispatch(remote('/redirecting_url')).then((meta) => {
-        expect(meta.redirected).toEqual(true)
-      })
+      return store
+        .dispatch(remote('/redirecting_url'))
+        .then((meta) => {
+          expect(meta.redirected).toEqual(true)
+        })
     })
 
     it('fires BREEZY_REQUEST_ERROR on a bad server response status', () => {
@@ -837,9 +1077,11 @@ describe('action creators', () => {
       const store = mockStore(initialState)
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
-      store.dispatch(visit('/first?bzq=foo&__=bar&_=baz')).then((meta) => {
-        done()
-      })
+      store
+        .dispatch(visit('/first?bzq=foo&__=bar&_=baz'))
+        .then((meta) => {
+          done()
+        })
     })
 
     it('gets aborted when a new visit starts', (done) => {
@@ -854,7 +1096,7 @@ describe('action creators', () => {
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
       store.dispatch(visit('/first')).catch((err) => {
-        expect(err.message).toEqual("The operation was aborted.")
+        expect(err.message).toEqual('The operation was aborted.')
         done()
       })
       store.dispatch(visit('/first'))
@@ -866,7 +1108,7 @@ describe('action creators', () => {
         breezy: {
           assets: [],
         },
-        pages: {}
+        pages: {},
       }
 
       const store = mockStore(initialState)
@@ -874,12 +1116,18 @@ describe('action creators', () => {
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
 
       const expectedFetchUrl = '/first?bzq=foo&__=bar&_=baz'
-      store.dispatch(visit(expectedFetchUrl, { placeholderKey: '/does-not-exist' })).then((meta) => {
-        expect(console.warn).toHaveBeenCalledWith(
-          'Could not find placeholder with key /does-not-exist in state. The bzq param will be ignored'
+      store
+        .dispatch(
+          visit(expectedFetchUrl, {
+            placeholderKey: '/does-not-exist',
+          })
         )
-        done()
-      })
+        .then((meta) => {
+          expect(console.warn).toHaveBeenCalledWith(
+            'Could not find placeholder with key /does-not-exist in state. The bzq param will be ignored'
+          )
+          done()
+        })
     })
 
     it('keeps the bzq parameter when a placeholder is passed and exists in state', (done) => {
@@ -888,8 +1136,8 @@ describe('action creators', () => {
           assets: [],
         },
         pages: {
-          '/does-exist': {}
-        }
+          '/does-exist': {},
+        },
       }
 
       const store = mockStore(initialState)
@@ -897,9 +1145,13 @@ describe('action creators', () => {
       fetchMock.mock('/first?bzq=foo&__=0', rsp.visitSuccess())
 
       const expectedFetchUrl = '/first?bzq=foo&__=bar&_=baz'
-      store.dispatch(visit(expectedFetchUrl, { placeholderKey: '/does-exist' })).then((meta) => {
-        done()
-      })
+      store
+        .dispatch(
+          visit(expectedFetchUrl, { placeholderKey: '/does-exist' })
+        )
+        .then((meta) => {
+          done()
+        })
     })
 
     it('warns when bzq is included but a placeholder was not passed', (done) => {
@@ -909,8 +1161,8 @@ describe('action creators', () => {
           assets: [],
         },
         pages: {
-          '/does-exist': {}
-        }
+          '/does-exist': {},
+        },
       }
 
       const store = mockStore(initialState)
@@ -935,33 +1187,53 @@ describe('action creators', () => {
         pages: {
           '/current': {
             data: {
-              address: {}
+              address: {},
             },
             flash: {},
             csrfToken: 'token',
-            assets: ['application-new123.js', 'application-new123.js'],
-          }
-        }
+            assets: [
+              'application-new123.js',
+              'application-new123.js',
+            ],
+            fragments: [],
+          },
+        },
       }
 
       const store = mockStore(initialState)
 
       let mockResponse = rsp.graftSuccessWithNewZip()
-      fetchMock.mock(
-        '/details?bzq=data.address&__=0', mockResponse
-      )
+      fetchMock.mock('/details?bzq=data.address&__=0', mockResponse)
 
       const expectedActions = [
-        { type: '@@breezy/CLEAR_FLASH', payload: { pageKey: '/current' } },
-        { type: '@@breezy/COPY_PAGE', payload: { from: '/current', to: '/details' } },
-        { type: '@@breezy/BEFORE_FETCH', payload: expect.any(Object) },
-        { type: '@@breezy/HANDLE_GRAFT', payload: expect.any(Object) },
+        {
+          type: '@@breezy/CLEAR_FLASH',
+          payload: { pageKey: '/current' },
+        },
+        {
+          type: '@@breezy/COPY_PAGE',
+          payload: { from: '/current', to: '/details' },
+        },
+        {
+          type: '@@breezy/BEFORE_FETCH',
+          payload: expect.any(Object),
+        },
+        {
+          type: '@@breezy/HANDLE_GRAFT',
+          payload: expect.any(Object),
+        },
       ]
 
-      store.dispatch(visit('/details?bzq=data.address', {placeholderKey: '/current'})).then((meta) => {
-        expect(store.getActions()).toEqual(expectedActions)
-        done()
-      })
+      store
+        .dispatch(
+          visit('/details?bzq=data.address', {
+            placeholderKey: '/current',
+          })
+        )
+        .then((meta) => {
+          expect(store.getActions()).toEqual(expectedActions)
+          done()
+        })
     })
   })
 })

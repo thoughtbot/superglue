@@ -1,4 +1,4 @@
-import { isGraft, urlToPageKey } from '../utils'
+import { isGraft, urlToPageKey, getIn } from '../utils'
 import parse from 'url-parse'
 import {
   SAVE_RESPONSE,
@@ -6,6 +6,7 @@ import {
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
   COPY_PAGE,
+  UPDATE_FRAGMENTS,
 } from '../actions'
 import { remote } from './requests'
 export * from './requests'
@@ -84,23 +85,39 @@ function fetchDeferments(pageKey, defers = []) {
   }
 }
 
+function updateFragmentsUsing(page) {
+  const changedFragments = {}
+  page.fragments.forEach((fragment) => {
+    const { type, path } = fragment
+    changedFragments[type] = getIn(page, path)
+  })
+
+  return {
+    type: UPDATE_FRAGMENTS,
+    payload: { changedFragments },
+  }
+}
+
 export function saveAndProcessPage(pageKey, page) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     pageKey = urlToPageKey(pageKey)
 
     const { defers = [] } = page
 
     if (isGraft(page)) {
-      if (pageKey) {
-        dispatch(handleGraft({ pageKey, page }))
-      }
+      dispatch(handleGraft({ pageKey, page }))
     } else {
       dispatch(saveResponse({ pageKey, page }))
     }
 
     const hasFetch = typeof fetch != 'undefined'
     if (hasFetch) {
-      return dispatch(fetchDeferments(pageKey, defers))
+      return dispatch(fetchDeferments(pageKey, defers)).then(() => {
+        if (page.fragments.length > 0) {
+          const finishedPage = getState().pages[pageKey]
+          return dispatch(updateFragmentsUsing(finishedPage))
+        }
+      })
     } else {
       return Promise.resolve()
     }

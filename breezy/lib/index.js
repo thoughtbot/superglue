@@ -29,7 +29,8 @@ export {
   rootReducer,
   updateFragments,
 } from './reducers'
-export { getIn } from './utils/immutability.js'
+export { fragmentMiddleware } from './middleware'
+export { getIn } from './utils/immutability'
 export { urlToPageKey }
 
 function pageToInitialState(key, page) {

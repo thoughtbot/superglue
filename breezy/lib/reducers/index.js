@@ -7,6 +7,7 @@ import {
   HISTORY_CHANGE,
   SET_CSRF_TOKEN,
   COPY_PAGE,
+  UPDATE_FRAGMENTS,
 } from '../actions'
 import { config } from '../config'
 
@@ -157,6 +158,32 @@ export function pageReducer(state = {}, action) {
       const { pageKey, page } = action.payload
 
       return handleGraft(state, pageKey, page)
+    }
+    case UPDATE_FRAGMENTS: {
+      const { changedFragments } = action.payload
+      let nextState = state
+
+      Object.entries(state).forEach(([pageKey, page]) => {
+        page.fragments.forEach((fragment) => {
+          const { type, path } = fragment
+          const changedNode = changedFragments[type]
+          const currentNode = getIn(nextState, `${pageKey}.${path}`)
+
+          if (
+            type in changedFragments &&
+            changedNode !== currentNode
+          ) {
+            const nextNode = JSON.parse(JSON.stringify(changedNode))
+            nextState = setIn(
+              nextState,
+              `${pageKey}.${path}`,
+              nextNode
+            )
+          }
+        })
+      })
+
+      return nextState
     }
     case CLEAR_FLASH: {
       const { pageKey } = action.payload

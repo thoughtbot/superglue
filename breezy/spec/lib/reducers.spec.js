@@ -40,7 +40,7 @@ describe('reducers', () => {
           payload: {
             page: {
               csrfToken: 'some_token',
-              assets: ['abc123.js']
+              assets: ['abc123.js'],
             },
           },
         }
@@ -49,7 +49,7 @@ describe('reducers', () => {
         expect(nextState).toEqual({
           foo: 'bar',
           csrfToken: 'some_token',
-          assets: ['abc123.js']
+          assets: ['abc123.js'],
         })
       })
     })
@@ -91,7 +91,11 @@ describe('reducers', () => {
             data: {},
             path: 'data.a.b.c',
             fragments: [
-              {type: 'header', partial: 'header', path: 'data.a.b.c'}
+              {
+                type: 'header',
+                partial: 'header',
+                path: 'data.a.b.c',
+              },
             ],
             flash: {},
           }
@@ -110,7 +114,11 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
               },
               fragments: [
-                {type: 'header', partial: 'header', path: 'data.a.b.c'}
+                {
+                  type: 'header',
+                  partial: 'header',
+                  path: 'data.a.b.c',
+                },
               ],
               flash: {},
             },
@@ -124,7 +132,11 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
               },
               fragments: [
-                {type: 'header', partial: 'header', path: 'data.a.b.c'}
+                {
+                  type: 'header',
+                  partial: 'header',
+                  path: 'data.a.b.c',
+                },
               ],
               flash: {},
             },
@@ -133,7 +145,11 @@ describe('reducers', () => {
             data: {},
             path: 'data.a.b.c',
             fragments: [
-              {type: 'header', partial: 'header', path: 'data.a.b.c'}
+              {
+                type: 'header',
+                partial: 'header',
+                path: 'data.a.b.c',
+              },
             ],
             flash: {},
           }
@@ -152,9 +168,13 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
               },
               fragments: [
-                {type: 'header', partial: 'header', path: 'data.a.b.c'}
+                {
+                  type: 'header',
+                  partial: 'header',
+                  path: 'data.a.b.c',
+                },
               ],
-              flash: {}
+              flash: {},
             },
           })
         })
@@ -177,7 +197,11 @@ describe('reducers', () => {
             data: {},
             path: 'data.d.e.f',
             fragments: [
-              {type: 'header', partial: 'header', path: 'data.d.e.f'}
+              {
+                type: 'header',
+                partial: 'header',
+                path: 'data.d.e.f',
+              },
             ],
             flash: {},
           }
@@ -197,9 +221,13 @@ describe('reducers', () => {
                 d: { e: { f: {} } },
               },
               fragments: [
-                {type: 'header', partial: 'header', path: 'data.d.e.f'}
+                {
+                  type: 'header',
+                  partial: 'header',
+                  path: 'data.d.e.f',
+                },
               ],
-              flash: {}
+              flash: {},
             },
           })
         })
@@ -212,9 +240,13 @@ describe('reducers', () => {
                 d: { e: { f: {} } },
               },
               fragments: [
-                {type: 'header', partial: 'header', path: 'data.d.e.f'}
+                {
+                  type: 'header',
+                  partial: 'header',
+                  path: 'data.d.e.f',
+                },
               ],
-              flash: {}
+              flash: {},
             },
           }
 
@@ -222,7 +254,7 @@ describe('reducers', () => {
             data: {},
             path: 'data.a.b.c',
             fragments: [],
-            flash: {}
+            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -292,7 +324,7 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: { foo: 1 } } } },
               fragments: [],
-              flash: {}
+              flash: {},
             },
           })
         })
@@ -420,7 +452,9 @@ describe('reducers', () => {
               },
             },
             pageKey: '/foo',
-            defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
+            defers: [
+              { url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' },
+            ],
             fragments: [],
           },
         }
@@ -432,7 +466,9 @@ describe('reducers', () => {
               bar: {},
             },
           },
-          defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          defers: [
+            { url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' },
+          ],
           fragments: [],
         }
 
@@ -454,7 +490,9 @@ describe('reducers', () => {
             },
           },
           pageKey: '/foo',
-          defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          defers: [
+            { url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' },
+          ],
           fragments: [],
           savedAt: expect.any(Number),
         })
@@ -471,9 +509,11 @@ describe('reducers', () => {
               },
             },
             pageKey: '/bar',
-            defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
+            defers: [
+              { url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' },
+            ],
             fragments: [
-              { type: 'info', partial: 'info', path: 'data.foo.bar' }
+              { type: 'info', partial: 'info', path: 'data.foo.bar' },
             ],
           },
         }
@@ -485,9 +525,11 @@ describe('reducers', () => {
             },
             baz: 'received',
           },
-          defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          defers: [
+            { url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' },
+          ],
           fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+            { type: 'info', partial: 'info', path: 'data.foo.bar' },
           ],
         }
 
@@ -509,9 +551,11 @@ describe('reducers', () => {
             baz: 'received',
           },
           pageKey: '/bar',
-          defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          defers: [
+            { url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' },
+          ],
           fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+            { type: 'info', partial: 'info', path: 'data.foo.bar' },
           ],
           savedAt: expect.any(Number),
         })
@@ -528,7 +572,9 @@ describe('reducers', () => {
               },
             },
             pageKey: '/bar',
-            defers: [{ url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' }],
+            defers: [
+              { url: '/bar?bzq=data.foo.bar', path: 'data.foo.bar' },
+            ],
             fragments: [],
           },
         }
@@ -539,9 +585,11 @@ describe('reducers', () => {
               bar: {},
             },
           },
-          defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          defers: [
+            { url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' },
+          ],
           fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+            { type: 'info', partial: 'info', path: 'data.foo.bar' },
           ],
         }
 
@@ -560,12 +608,121 @@ describe('reducers', () => {
             },
           },
           pageKey: '/foo',
-          defers: [{ url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' }],
+          defers: [
+            { url: '/foo?bzq=data.foo.bar', path: 'data.foo.bar' },
+          ],
           fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' }
+            { type: 'info', partial: 'info', path: 'data.foo.bar' },
           ],
           savedAt: expect.any(Number),
         })
+      })
+    })
+
+    describe('UPDATE_FRAGMENTS', () => {
+      it('updates all fragments across all pages with a new node', () => {
+        const prevState = {
+          '/foo': {
+            data: {
+              header: {
+                email: 'hello@hello.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          },
+          '/bar': {
+            data: {
+              header: {
+                email: 'hello@hello.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          },
+        }
+
+        const nextState = pageReducer(prevState, {
+          type: '@@breezy/UPDATE_FRAGMENTS',
+          payload: {
+            changedFragments: {
+              header: {
+                email: "world@world.com"
+              }
+            }
+          },
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                email: 'world@world.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          },
+          '/bar': {
+            data: {
+              header: {
+                email: 'world@world.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          }
+        })
+      })
+
+      it('skips updating referentially identical fragments', () => {
+        const header = {
+          email: "world@world.com"
+        }
+
+        const prevState = {
+          '/foo': {
+            data: {
+              header,
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          },
+          '/bar': {
+            data: {
+              header: {
+                email: 'hello@hello.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          },
+        }
+
+        const nextState = pageReducer(prevState, {
+          type: '@@breezy/UPDATE_FRAGMENTS',
+          payload: {
+            changedFragments: {
+              header
+            }
+          },
+        })
+
+        expect(nextState).toEqual({
+          '/foo': {
+            data: {
+              header: {
+                email: 'world@world.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          },
+          '/bar': {
+            data: {
+              header: {
+                email: 'world@world.com',
+              },
+            },
+            fragments: [{ type: 'header', path: 'data.header' }],
+          }
+        })
+
+        expect(nextState['/foo'].data.header).toBe(header)
+        expect(nextState['/bar'].data.header).not.toBe(header)
       })
     })
   })

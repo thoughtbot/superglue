@@ -1,4 +1,4 @@
-import { getIn, setIn, delIn, extendIn } from '../../../lib/utils/immutability'
+import { getIn, setIn, KeyPathError } from '../../../lib/utils/immutability'
 
 describe('getIn', () => {
   it('fetches the node at keypath', () => {
@@ -20,7 +20,7 @@ describe('getIn', () => {
     const page = { a: { b: 2 } }
     expect(() => {
       getIn(page, 'a.b.c')
-    }).toThrow(new Error('Expected to traverse an Array or Obj, got 2'))
+    }).toThrow(new KeyPathError('Expected to traverse an Array or Obj, got 2'))
   })
 
   it('treats url-ish keys as object keys', () => {
@@ -44,14 +44,14 @@ describe('setIn', () => {
     const page = { a: { b: 2 } }
     expect(() => {
       setIn(page, 'a.c', 'foo')
-    }).toThrow(new Error('Expected to find key: c in object {"b":2}'))
+    }).toThrow(new KeyPathError('Expected to find key: c in object {"b":2}'))
   })
 
   it('throws an error when parents are untranversible', () => {
     const page = { a: { b: 2 } }
     expect(() => {
       setIn(page, 'a.b.c', 'foo')
-    }).toThrow(new Error('Expected to traverse an Array or Obj, got 2'))
+    }).toThrow(new KeyPathError('Expected to traverse an Array or Obj, got 2'))
   })
 
   it('replaces the node at keypath', () => {

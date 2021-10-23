@@ -6,6 +6,7 @@ export const visitSuccess = () => {
       assets: ['application-123.js', 'application-123.js'],
       componentIdentifier: 'about',
       flash: {},
+      fragments: [],
     }),
     headers: {
       'content-type': 'application/json',
@@ -23,6 +24,7 @@ export const graftSuccessWithNewZip = () => {
       csrfToken: 'token',
       assets: ['application-new123.js', 'application-new123.js'],
       flash: {},
+      fragments: [],
     }),
     headers: {
       'content-type': 'application/json',

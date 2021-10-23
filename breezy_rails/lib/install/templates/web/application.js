@@ -4,7 +4,7 @@ import reduceReducers from 'reduce-reducers';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
-import { ApplicationBase } from '@jho406/breezy';
+import { ApplicationBase, fragmentMiddleware } from '@jho406/breezy';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { applicationRootReducer, applicationPagesReducer } from './reducer';
@@ -70,7 +70,7 @@ export default class Application extends ApplicationBase {
     const store = createStore(
       reducer,
       initialState,
-      composeEnhancers(applyMiddleware(thunk))
+      composeEnhancers(applyMiddleware(thunk, fragmentMiddleware))
     );
 
     if (this.hasWindow) {

@@ -3,6 +3,13 @@
 
 const isSearchable = /^[\da-zA-Z\-_=.]+$/
 
+class KeyPathError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'KeyPathError'
+  }
+}
+
 function getIn(obj, path) {
   const keyPath = normalizeKeyPath(path)
   let result = obj
@@ -63,7 +70,7 @@ function atKey(node, key) {
   }
 
   if (!isArray(node) && !isObject(node)) {
-    throw new Error(
+    throw new KeyPathError(
       `Expected to traverse an Array or Obj, got ${JSON.stringify(
         node
       )}`
@@ -71,7 +78,7 @@ function atKey(node, key) {
   }
 
   if (isObject(node) && id) {
-    throw new Error(
+    throw new KeyPathError(
       `Expected to find an Array when using the key: ${key}`
     )
   }
@@ -80,7 +87,7 @@ function atKey(node, key) {
     isObject(node) &&
     !Object.prototype.hasOwnProperty.call(node, key)
   ) {
-    throw new Error(
+    throw new KeyPathError(
       `Expected to find key: ${key} in object ${JSON.stringify(node)}`
     )
   }
@@ -141,4 +148,4 @@ function setIn(object, keypath, value) {
   return results[0]
 }
 
-export { getIn, setIn }
+export { getIn, setIn, KeyPathError }

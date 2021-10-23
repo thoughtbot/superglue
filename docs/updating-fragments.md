@@ -78,10 +78,35 @@ Fragments used in nodes that are [deferred](./navigation.md#deferments) do
 not show up inside the metadata until the deferred nodes are loaded.
 {% endhint %}
 
-# Creating reducers
+## Automatic updates
 
-You can use the metadata created by fragments to update cross-cutting concerns
-in your reducer:
+Fragments are automatically updated in two cases:
+
+1. When a new page loads with a fragment Breezy will look at the page store and
+update nodes marked with the same fragment name across all pages. For example,
+a header that appears across multiple pages. This is similar to the idea of
+a [Turbo-Frame](https://turbo.hotwired.dev/handbook/frames).
+
+2. If you use a custom reducer to update the page state, fragments of the same
+name across all pages will also update. This behavior is controlled by a
+middleware. This is included by default when generating a breezy app:
+
+```
+// packs/application.js
+
+import { ApplicationBase, fragmentMiddleware } from '@jho406/breezy'
+
+...
+composeEnhancers(applyMiddleware(thunk, fragmentMiddleware))
+
+```
+
+You can turn this behavior off by removing the middleware.
+
+## Manual updates
+
+If you choose to turn off the middleware. You can still use the metadata
+created by fragments to update cross-cutting concerns in your reducer:
 
 ```javascript
 import { getIn } from '@jho406/breezy'

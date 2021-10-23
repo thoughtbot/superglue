@@ -91,10 +91,12 @@ export function remote(
         }
 
         const page = beforeSave(pages[pageKey], json)
-        dispatch(saveAndProcessPage(pageKey, page))
-        meta.pageKey = pageKey
-
-        return meta
+        return dispatch(saveAndProcessPage(pageKey, page)).then(
+          () => {
+            meta.pageKey = pageKey
+            return meta
+          }
+        )
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
@@ -186,10 +188,12 @@ export function visit(
         }
 
         const page = beforeSave(pages[pageKey], json)
-        dispatch(saveAndProcessPage(pageKey, page))
-        meta.pageKey = pageKey
-
-        return meta
+        return dispatch(saveAndProcessPage(pageKey, page)).then(
+          () => {
+            meta.pageKey = pageKey
+            return meta
+          }
+        )
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }

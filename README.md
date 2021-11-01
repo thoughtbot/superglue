@@ -26,7 +26,7 @@ content down to the footer.
 
 The end result would be something like this:
 
-![No Apis](docs/images/no_apis.png)
+![No Apis](https://thoughtbot.github.io/breezy/docs/images/no_apis.png)
 
 ### Powered by Classic Rails
 Breezy is mostly classic Rails. Features like the flash, cookie auth, and URL
@@ -49,7 +49,7 @@ inspired by JBuilder. With PropsTemplate you can specify a path of the node you
 want, and PropsTemplate will walk the tree to it, skipping the execution of nodes
 that don't match the keypath.
 
-![No Apis](docs/images/props_template.png)
+![No Apis](https://thoughtbot.github.io/breezy/docs/images/props_template.png)
 
 ### All together now!
 Breezy comes with batteries that bring all the above concepts together to make
@@ -79,7 +79,7 @@ results would show without reloading the screen. In traditional applications,
 you may need a new controller, routes, a discussion over versioning, JSON
 serializer, plenty of new JS code, etc.
 
-![haircuts](docs/images/haircuts.png)
+![haircuts](https://thoughtbot.github.io/breezy/docs/images/haircuts.png)
 
 With Breezy, this can be done in one line:
 

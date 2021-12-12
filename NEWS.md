@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.30
+Project renamed to superglue
+
 ## 0.20
 Added back the `props_from_form_with` helper and update to use latest 
 html-dom-parser.

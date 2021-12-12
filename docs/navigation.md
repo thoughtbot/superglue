@@ -4,11 +4,11 @@ Navigation is [inspired by turbolinks](./concepts#inspired-by-turbolinks).
 
 ## Visit and Remote
 
-Breezy comes with two thunks that wrap around fetch:
+Superglue comes with two thunks that wrap around fetch:
 
 1. `visit` is used for page-to-page navigation, there can be only [one visit] at
 a time.
-2. `remote` is used with urls that contain the `bzq` param for partial page
+2. `remote` is used with urls that contain the `sgq` param for partial page
 updates.
 
 When [configuring] your application in `application.js`, your page components
@@ -57,7 +57,7 @@ Example:
 
 ```jsx
   <a
-    href='/posts/new?bzq=data.body.modal'
+    href='/posts/new?sgq=data.body.modal'
     data-bz-visit={true}
     data-bz-placeholder="/new"
   />
@@ -67,7 +67,7 @@ or
 
 ```javascript
   this.props
-    .visit("/posts/new?bzq=data.body.modal", { placeholderKey: "/new"})
+    .visit("/posts/new?sgq=data.body.modal", { placeholderKey: "/new"})
     .then(...) #add navigateTo
 ```
 
@@ -94,7 +94,7 @@ Example:
 
 ## Partial page updates with `remote`
 
-`remote` combined with the `bzq` parameter can update any part of the Redux
+`remote` combined with the `sgq` parameter can update any part of the Redux
 store in the background. Most of the time, you would be using this thunk to
 update the current page the user is seeing. Like `visit`, you can
 provide a `beforeSave` callback to modify content before it gets saved to the
@@ -111,11 +111,11 @@ store.
   }
 
 
-  this.props.remote("/posts?bzq=data.header", {beforeSave})
+  this.props.remote("/posts?sgq=data.header", {beforeSave})
 ```
 
 You may also [specify](./react-redux.md#remote) a `pageKey` param to tell
-Breezy where to store the results. If you're using the thunk through a
+Superglue where to store the results. If you're using the thunk through a
 connected component, this will be set to the key of the current page for you.
 
 # Deferments
@@ -142,10 +142,10 @@ When visiting the above, PropsTemplate will render with
 }
 ```
 
-Then make a `remote("/dashboard?bzq=data.metrics")` call and 10 seconds later,
+Then make a `remote("/dashboard?sgq=data.metrics")` call and 10 seconds later,
 `{total_visitors: 30}` will be immutably grafted into the same position on the
 Redux store and React will rerender. For more control, you may provide a
-`success_action` or `fail_action`, and Breezy will dispatch these actions when
+`success_action` or `fail_action`, and Superglue will dispatch these actions when
 the promise resolves successfully or fails.
 
 ```ruby

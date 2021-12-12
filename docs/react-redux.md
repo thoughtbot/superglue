@@ -2,7 +2,7 @@
 
 ## ApplicationBase
 ```
-import { ApplicationBase } from '@thoughtbot/breezy'
+import { ApplicationBase } from '@thoughtbot/superglue'
 
 export default class Application extends ApplicationBase {
   ...
@@ -11,10 +11,10 @@ export default class Application extends ApplicationBase {
 
 Your `Application` component entry point inherits from this component. It
 performs setup of redux, UJS, and other functionality when rendered. This would
-be created for you if you used Breezy's generators. Components that inherits
+be created for you if you used Superglue's generators. Components that inherits
 from `ApplicationBase` will not work without implementing the following methods:
 
-- `mapping` override this and return a [mapping](https://github.com/thoughtbot/Breezy/blob/main/breezy_rails/lib/install/templates/web/application.js)
+- `mapping` override this and return a [mapping](https://github.com/thoughtbot/Superglue/blob/main/superglue_rails/lib/install/templates/web/application.js)
 between your `prop` templates to the page component.
 - `visitAndRemote` override this and return an object with `visit` and `remote`.
 If you used the generators, a customizable one has been created for you in
@@ -26,7 +26,7 @@ A nav component for your application. It is used by the render method in
 `ApplicationBase`.
 
 ```javascript
-import Nav from '@thoughtbot/breezy/components/Nav'
+import Nav from '@thoughtbot/superglue/components/Nav'
 ...
 <Provider store={store}>
   <Nav
@@ -55,7 +55,7 @@ to restore an existing page before making a call to `visit` or `remote`.
 
 | Parameter | Notes |
 | :--- | :--- |
-| pageKey | Use your rails `foo_path` helpers. This is the location where your props are stored in breezy. |
+| pageKey | Use your rails `foo_path` helpers. This is the location where your props are stored in superglue. |
 | options | Additional options, see below. |
 
 | Options | Notes |
@@ -110,10 +110,10 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use
 There can only ever be one visit at a time. If you happen to call `visit` while
 another visit is taking place, it will abort the previous one.
 
-?> `visit` is used for full-page transitions and will strip the `bzq` query string
+?> `visit` is used for full-page transitions and will strip the `sgq` query string
 from your pathQuery parameters that target a specific node. The exception to this
-rule is if you use a `bzq` query string with a `placeholderKey` option. This is
-allowed because `bzq` would have a page to graft onto.
+rule is if you use a `sgq` query string with a `placeholderKey` option. This is
+allowed because `sgq` would have a page to graft onto.
 
 
 ```javascript
@@ -129,11 +129,11 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
 | pathQuery | `String` | The path and query of the url you want to fetch from. The path will be prefixed with a `BASE_URL` that you configure. |
-| fetchRequestOptionsAndMore | `Object` | Any fetch request options plus extras. Note that breezy will override the following headers: `accept`, `x-requested-with`, `x-breezy-request`, `x-csrf-token`, and `x-http-method-override`. |
+| fetchRequestOptionsAndMore | `Object` | Any fetch request options plus extras. Note that superglue will override the following headers: `accept`, `x-requested-with`, `x-superglue-request`, `x-csrf-token`, and `x-http-method-override`. |
 
 | fetchRequestOptionsAndMore | Type | Notes
 | :--- | :--- | :--- |
-| placeholderKey | `String` | When passing a url that has a `bzq` param, you can provide a `placeholderKey`, which breezy will use to copy the state over to the new url before making a request. If you do not provide this param, Breezy will remove any `bzq` param from the url.
+| placeholderKey | `String` | When passing a url that has a `sgq` param, you can provide a `placeholderKey`, which superglue will use to copy the state over to the new url before making a request. If you do not provide this param, Superglue will remove any `sgq` param from the url.
 |      |      | Other options are passed on to `fetch`|
 
 | Callback options | Type | Notes |
@@ -141,7 +141,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | needsRefresh | `Boolean` | If the new request has new JS assets to get - i.e., the last fingerprint is different from the new fingerprint, then it will return true. |
 | componentIdentifier | `String` | The screen that your react application should render next. |
 | page | `Object` | The full parsed page response from your `foobar.json.props` template. |
-| pageKey | `String` | The key that Breezy uses to store the response |
+| pageKey | `String` | The key that Superglue uses to store the response |
 | suggestedAction | `String` | `push` or `replace`, to be used to `navigateTo`|
 | redirected | `Boolean` | `true` if the response was the result of a redirect, `false` otherwise|
 | rsp | `Object` | The raw response object |
@@ -150,7 +150,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | :--- | :--- | :--- |
 | fetchArgs | `Array` | The arguments passed to `fetch`, as tuple `[url, {req}]`. You can use this to implement your own retry logic. |
 | url | `String` | The full url, passed to `fetch`. |
-| pageKey | `String` | Location in the Breezy store where `page` is stored |
+| pageKey | `String` | Location in the Superglue store where `page` is stored |
 
 ### `data-bz-visit`
 
@@ -179,7 +179,7 @@ Remote makes an ajax call and saves the response to the `pages` store in async
 fashion. Use this if you want to [update parts](react-redux.md#traversing-nodes)
 of the current page or preload other pages.
 
-?> Unlike `visit`, `remote` will not strip any `bzq` url parameters.
+?> Unlike `visit`, `remote` will not strip any `sgq` url parameters.
 
 ```javascript
 remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).then(({rsp, page, screen, needsRefresh}) => {})
@@ -214,7 +214,7 @@ Save and process a rendered view from PropsTemplate and fetch any deferments.
 
 | Arguments | Type | Notes |
 | :--- | :--- | :--- |
-| pageKey | `String` | The key that Breezy uses to store the response |
+| pageKey | `String` | The key that Superglue uses to store the response |
 | page | `String` | A rendered PropsTemplate|
 
 ### copyPage
@@ -237,10 +237,10 @@ this.props.copyPage({
 
 ## Searching for nodes
 
-Breezy can search your content tree for a specific node. This is done by adding
-a `bzq=keypath.to.node` in your URL param, then passing the params in your
+Superglue can search your content tree for a specific node. This is done by adding
+a `sgq=keypath.to.node` in your URL param, then passing the params in your
 `application.json.props`. PropsTemplate will ignore blocks that are not in the
-keypath, disable deferment and caching, and return the node. Breezy will then
+keypath, disable deferment and caching, and return the node. Superglue will then
 immutably set that node back onto its tree on the client-side. Fragments will
 also automatically be updated where needed. See our [querying guide]
 for more examples.
@@ -248,13 +248,13 @@ for more examples.
 For example:
 
 ```javascript
-this.props.remote('/?bzq=header.shopping_cart')
+this.props.remote('/?sgq=header.shopping_cart')
 ```
 
 and in your `application.json.props`
 
 ```ruby
-path = param_to_search_path(params[:bzq])
+path = param_to_search_path(params[:sgq])
 
 json.data(search: path) do
   yield json

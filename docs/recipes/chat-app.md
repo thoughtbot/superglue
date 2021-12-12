@@ -8,7 +8,7 @@ Here's a simple way to do that with a simple `setTimeout`:
 ```javascript
   componentDidMount() {
     this.polling = setInterval(() => {
-      this.props.remote('/messages?bzq=data.messages')
+      this.props.remote('/messages?sgq=data.messages')
     })
   }
 ```
@@ -16,7 +16,7 @@ Here's a simple way to do that with a simple `setTimeout`:
 And corresponding  `messages/index.json.props`
 
 ```ruby
-json.data(search: params['bzq'])
+json.data(search: params['sgq'])
   json.header do
   ...
   end
@@ -41,7 +41,7 @@ props and send the rendered node over the wire:
 ```ruby
   # index.json.props
 
-  json.data(search: params[:bzq]) do
+  json.data(search: params[:sgq]) do
     json.posts do
       json.array! @posts, partial: ['post', fragment: true] do
       end
@@ -54,7 +54,7 @@ Render and broadcast via a background job:
 ```ruby
 
 renderer = PostsController.renderer.new(
-  "action_dispatch.request.parameters"=>{bzq: 'data.posts.0'},
+  "action_dispatch.request.parameters"=>{sgq: 'data.posts.0'},
   "action_dispatch.request.formats"=>[Mime[:json]]
 )
 

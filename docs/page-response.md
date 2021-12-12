@@ -1,6 +1,6 @@
 ## The `page` response
-Breezy expects your JSON responses to contain the following attributes. If you
-used Breezy's generators, this would be all set for you in
+Superglue expects your JSON responses to contain the following attributes. If you
+used Superglue's generators, this would be all set for you in
 `application.json.props`.
 
 ```
@@ -21,13 +21,13 @@ used Breezy's generators, this would be all set for you in
 ```
 
 ### `data`
-Passed to your page component as its props. In a Breezy application, this would
+Passed to your page component as its props. In a Superglue application, this would
 be the contents of your templates, e.g., `index.json.props`. Note that `flash`,
 `csrfToken`, `fragments`, and `pageKey` will be merged with your props.
 `ownProps` are also merged when [navigating](./react-redux.md#navigateto)
 
 ### `componentIdentifier`
-A `string` to instruct Breezy which component to render. The generated
+A `string` to instruct Superglue which component to render. The generated
 `application.json.props` will set this to the virtual path of the template, but
 you can customize this to fit your needs.
 
@@ -60,19 +60,19 @@ const identifierToComponentMapping = {
 ```
 
 ### `assets`
-An `array` of asset fingerprint `string`s. Used by Breezy to detect the need to
+An `array` of asset fingerprint `string`s. Used by Superglue to detect the need to
 refresh the browser due to new assets. You can control the refresh behavior in
 `application_visit.js`.
 
 ### `csrfToken`
-The authenticity token that Breezy will use for non-GET request made by using
+The authenticity token that Superglue will use for non-GET request made by using
 `visit` or `remote` thunks. This includes forms that have the `data-bz-visit`
 or `data-bz-remote` attribute.
 
 ### `action` and `path`
-Only included when `bzq` is part of the request parameters. `action` is always
+Only included when `sgq` is part of the request parameters. `action` is always
 set to `graft` and `path` is the camelCase keypath to the requested node.
-Breezy uses these attributes to immutably graft a node from the server-side to
+Superglue uses these attributes to immutably graft a node from the server-side to
 the client-side.
 
 ### `renderedAt`

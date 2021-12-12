@@ -1,6 +1,6 @@
 # Server-Side Rendering
 
-Breezy does not include server-side rendering out of the box, but you can easily
+Superglue does not include server-side rendering out of the box, but you can easily
 add it with [humid](https://github.com/thoughtbot/humid).
 
 Follow the [instructions](https://github.com/thoughtbot/humid.md#installation).
@@ -8,7 +8,7 @@ Then create a `app/javascript/packs/server_rendering.js`:
 
 ```javascript
 import React from 'react';
-import { ApplicationBase } from '@thoughtbot/breezy'
+import { ApplicationBase } from '@thoughtbot/superglue'
 import SeatsIndex from 'views/seats/index'
 import ReactDOMServer from 'react-dom/server';
 require("source-map-support").install({
@@ -46,7 +46,7 @@ setHumidRenderer((json) => {
   return ReactDOMServer.renderToString(
     <Application
       // baseUrl={origin}
-      // The global var BREEZY_INITIAL_PAGE_STATE is set by your erb
+      // The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
       // template, e.g., index.html.erb
       initialPage={initialState}
       // The initial path of the page, e.g., /foobar
@@ -90,7 +90,7 @@ Replace `<div id="app">` in your ERB templates with:
 <% initial_state = controller.render_to_string(@virtual_path ,formats: [:json], locals: local_assigns, layout: true) %>
 
 <script type="text/javascript">
-  window.BREEZY_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;
+  window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;
 </script>
 
 <div id="app">

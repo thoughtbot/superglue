@@ -4,7 +4,7 @@
 
 ### getIn
 ```javascript
-  import {getIn} from '@thoughtbot/breezy'
+  import {getIn} from '@thoughtbot/superglue'
 ```
 
 | Arguments | Type | Notes |

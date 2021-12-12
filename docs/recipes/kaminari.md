@@ -45,7 +45,7 @@ class PostsIndex extends React.Component {
     const pagination_path = this.props.posts
     let url = new parse(pagination_path, true)
     url.query.page_num = page
-    url.query.bzq = 'shoots'
+    url.query.sgq = 'shoots'
 
     this.props.visit(pagination_path)
   }

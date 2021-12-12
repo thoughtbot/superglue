@@ -1,13 +1,13 @@
 # Custom reducers
 
-Breezy generators will `yarn add reduce-reducers` and set up a `reducers.js`. If
+Superglue generators will `yarn add reduce-reducers` and set up a `reducers.js`. If
 you find yourself needing additional functionality beyond what the generated
 reducers provide, just add your own reducers:
 
 ```javascript
 ....
 import reduceReducers from 'reduce-reducers'
-import {getIn} from '@thoughtbot/breezy'
+import {getIn} from '@thoughtbot/superglue'
 import produce from "immer"
 
 function myCustomReducer(state = {}, action) {
@@ -18,7 +18,7 @@ function myCustomReducer(state = {}, action) {
 
 const store = createStore(
   combineReducers({
-    breezy: breezyReducer,
+    superglue: superglueReducer,
     pages: reduceReducers(pagesReducer, applicationReducer),
     additionalFoobar: myCustomReducer
   }),

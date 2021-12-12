@@ -1,18 +1,18 @@
 # Template querying
 
-Breezy's thunks work hand-in-hand with [PropsTemplate] to query your JSON
+Superglue's thunks work hand-in-hand with [PropsTemplate] to query your JSON
 template for nodes. This guide helps you understand how the tools work with
 each other.
 
-## The bzq param
-The `bzq` param is a keypath to nodes in your tree and is used exclusively with
+## The sgq param
+The `sgq` param is a keypath to nodes in your tree and is used exclusively with
 the `remote` thunk. On the PropsTemplate side, we pass that param over to an
 internal node in order to walk your templates.
 
 For example, with a template below.
 
 ```ruby
-json.data(search: params[:bzq]) do
+json.data(search: params[:sgq]) do
   json.header do
     json.search do
       # Results is a leaf node
@@ -33,17 +33,17 @@ end
 ```
 
 To fetch the `json.search` node, we would need to walk to `data` then `header`
-then `search`. Translating that to a remote call with a `bzq` param:
+then `search`. Translating that to a remote call with a `sgq` param:
 
 ```
-remote('/dashboard?bzq=data.header.search&some_search_str=haircuts')
+remote('/dashboard?sgq=data.header.search&some_search_str=haircuts')
 ```
 
 ## Collections
 There are two ways to query collections. Looking at the following example:
 
 ```ruby
-json.data(search: params[:bzq]) do
+json.data(search: params[:sgq]) do
   json.posts do
     json.array! @posts do |post|
       json.details do
@@ -58,14 +58,14 @@ end
 You may use an index-based key to fetch an item in a list like so:
 
 ```
-remote('/dashboard?bzq=data.posts.0.details')
+remote('/dashboard?sgq=data.posts.0.details')
 ```
 
 To enable this functionality, you are required to implement `member_at(index)`
 on the passed collection.
 
 ?> PropsTemplate includes a `Array` extension which delegates to `at`. If you've
-used the Breezy generators, it will be included in an initializer.
+used the Superglue generators, it will be included in an initializer.
 
 While traversing by index works fine, it can lead the wrong post being updated
 if your Redux state has changed by the time the request comes back.
@@ -74,7 +74,7 @@ if your Redux state has changed by the time the request comes back.
 Attribute-based keys for collections look like this:
 
 ```
-remote('/dashboard?bzq=data.posts.some_id=1.details')
+remote('/dashboard?sgq=data.posts.some_id=1.details')
 ```
 
 Notice that we're now referencing the collection member by `some_id=1` instead
@@ -85,7 +85,7 @@ To enable this, you are required to implement `member_by(attribute, value)` on
 the passed collection AND use the option `:key` in `json.array!`. For example:
 
 ```ruby
-json.data(search: params[:bzq]) do
+json.data(search: params[:sgq]) do
   json.posts do
     json.array! @posts, key: :some_id do |post|
       json.details do
@@ -104,11 +104,11 @@ end
 You can even query into partials.
 
 ```
-remote('/dashboard?bzq=data.posts.some_id=1.details')
+remote('/dashboard?sgq=data.posts.some_id=1.details')
 ```
 
 ```ruby
-json.data(search: params[:bzq]) do
+json.data(search: params[:sgq]) do
   json.posts(partial: 'list_of_posts')do
   end
 end
@@ -126,12 +126,12 @@ json.array! @posts , key: :some_id do |post|
 end
 ```
 
-!> When querying, Breezy will disable
+!> When querying, Superglue will disable
 [caching](https://github.com/thoughtbot/props_template#caching) and
 [deferment](https://github.com/thoughtbot/props_template#deferment) until the
 target node is reached.
 
-That's the basics of traversing with Breezy. A lot of modern SPA functionality
+That's the basics of traversing with Superglue. A lot of modern SPA functionality
 can be achieved by just a few lines of code. For examples, see our recipes
 section.
 

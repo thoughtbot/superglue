@@ -19,7 +19,7 @@ A common approach is to load content in async fashion by building out another
 set of routes, controllers, tests, with more work on the frontend to manage
 state, call fetch, etc.
 
-With Breezy, we can turn content async with a single setting.
+With Superglue, we can turn content async with a single setting.
 
 ```ruby
 json.metrics(defer: :auto) do
@@ -29,11 +29,11 @@ end
 ```
 
 With `defer: :auto`, PropsTemplate will render `order.json.props` as usual, but
-without `json.metrics`, then when the content is received by the client, Breezy
+without `json.metrics`, then when the content is received by the client, Superglue
 will automatically make an `remote` request for anything that was skipped:
 
 ```javascript
-remote('/dashboard?bzq=data.metrics')
+remote('/dashboard?sgq=data.metrics')
 ```
 
 It is up to you to handle the case when `metrics` starts out empty. For example:

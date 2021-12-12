@@ -1,11 +1,11 @@
-# Breezy
+# Superglue
 
 Use classic Rails to build rich React Redux applications with **NO APIs** and
 **NO client-side routing**.
 
-[![Build Status](https://circleci.com/gh/thoughtbot/breezy.svg?style=shield)](https://circleci.com/gh/thoughtbot/breezy)
+[![Build Status](https://circleci.com/gh/thoughtbot/superglue.svg?style=shield)](https://circleci.com/gh/thoughtbot/superglue)
 
-Breezy is a React Redux starter and library inspired by Turbolinks and designed
+Superglue is a React Redux starter and library inspired by Turbolinks and designed
 to complement classic Rails. You can enjoy the benefits of Redux state
 management and React components without giving up the productivity of Rails form
 helpers, UJS, tag helpers, the flash, cookie auth, and more.
@@ -17,21 +17,21 @@ and name are likely to change drastically before a major version release.
 
 ### No APIs
 
-Instead of APIs, Breezy leans on Rail's ability to respond to different
+Instead of APIs, Superglue leans on Rail's ability to respond to different
 [mime types](https://apidock.com/rails/ActionController/MimeResponds/InstanceMethods/respond_to)
-on the same route. In a Breezy application, if you direct your browser to
+on the same route. In a Superglue application, if you direct your browser to
 `/dashboard.html`, you would see the HTML version of the content, and if you
 went to `/dashboard.json` you would see the JSON version of the exact same
 content down to the footer.
 
 The end result would be something like this:
 
-![No Apis](https://thoughtbot.github.io/breezy/images/no_apis.png)
+![No Apis](https://thoughtbot.github.io/superglue/images/no_apis.png)
 
 ### Powered by Classic Rails
-Breezy is mostly classic Rails. Features like the flash, cookie auth, and URL
+Superglue is mostly classic Rails. Features like the flash, cookie auth, and URL
 helpers continue to be useful. Here's a look at the directory structure of a
-typical Rails application with Breezy.
+typical Rails application with Superglue.
 
 ```
 MyRailsApp/
@@ -49,15 +49,15 @@ inspired by JBuilder. With PropsTemplate you can specify a path of the node you
 want, and PropsTemplate will walk the tree to it, skipping the execution of nodes
 that don't match the keypath.
 
-![No Apis](https://thoughtbot.github.io/breezy/images/props_template.png)
+![No Apis](https://thoughtbot.github.io/superglue/images/props_template.png)
 
 ### All together now!
-Breezy comes with batteries that bring all the above concepts together to make
+Superglue comes with batteries that bring all the above concepts together to make
 building popular SPA features easy, painless, and productive.
 
 #### SPA Navigation
 A popular ask of SPAs is page-to-page navigation without reloading. This is
-easily done with Breezy's own UJS attributes inspired by Turbolinks:
+easily done with Superglue's own UJS attributes inspired by Turbolinks:
 
 ```jsx
   <a href='/posts' data-bz-visit={true} />
@@ -70,7 +70,7 @@ component the response asks for, and `pushState` on history.
 
 #### Partial updates
 Some features rely on updating some parts of the existing page. In
-addition to `data-bz-visit` and it's equivalent `this.props.visit`, Breezy
+addition to `data-bz-visit` and it's equivalent `this.props.visit`, Superglue
 also provides `data-bz-remote` or `this.props.remote`, which you can use to
 update parts of your page in async fashion without changing `window.history`.
 
@@ -79,12 +79,12 @@ results would show without reloading the screen. In traditional applications,
 you may need a new controller, routes, a discussion over versioning, JSON
 serializer, plenty of new JS code, etc.
 
-![haircuts](https://thoughtbot.github.io/breezy/images/haircuts.png)
+![haircuts](https://thoughtbot.github.io/superglue/images/haircuts.png)
 
-With Breezy, this can be done in one line:
+With Superglue, this can be done in one line:
 
 ```javascript
-  this.props.remote('/dashboard?qry=haircut&bzq=data.header.search')
+  this.props.remote('/dashboard?qry=haircut&sgq=data.header.search')
 ```
 
 The above will make a request to `/dashboard?qry=haircut`, walk your props to
@@ -102,14 +102,14 @@ See the [documentation for server-side rendering][ssr docs].
 
 ## Documentation
 
-Documentation is hosted on [Github pages](https://thoughtbot.github.io/breezy).
+Documentation is hosted on [Github pages](https://thoughtbot.github.io/superglue).
 
 ## Contributing
 
 See the [CONTRIBUTING] document. Thank you, [contributors]!
 
   [CONTRIBUTING]: CONTRIBUTING.md
-  [contributors]: https://github.com/thoughtbot/breezy/graphs/contributors
+  [contributors]: https://github.com/thoughtbot/superglue/graphs/contributors
 
 ## Special Thanks
 

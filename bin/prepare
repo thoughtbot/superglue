@@ -4,7 +4,7 @@ version_str = ARGV[0]
 
 ROOT_DIR = File.expand_path('..', File.dirname(__FILE__))
 VERSION_FILE = File.join(ROOT_DIR, 'VERSION')
-PACKAGE_JSON = File.join(ROOT_DIR, 'breezy/package.json')
+PACKAGE_JSON = File.join(ROOT_DIR, 'superglue/package.json')
 
 # Write new version to package.json
 package_json = File.read(PACKAGE_JSON)

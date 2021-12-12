@@ -2,7 +2,7 @@
 
 ## Setting the content location
 
-On non-GET `visit`s, Breezy uses the response's `content-location` to create
+On non-GET `visit`s, Superglue uses the response's `content-location` to create
 the key used to store your props.
 
 This is because when you render in a `create` or `update`, the returned
@@ -50,19 +50,19 @@ export default connect(
 
 ```
 
-?> When using `data-bz-visit`, all flash in Breezy's redux state will be cleared before the request.
+?> When using `data-bz-visit`, all flash in Superglue's redux state will be cleared before the request.
 
 ?> When using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
 
 
-## `redirect_back_with_bzq`
+## `redirect_back_with_sgq`
 
-A helper to help retain the `bzq` parameter as part of the redirect `location`.
+A helper to help retain the `sgq` parameter as part of the redirect `location`.
 This helper has the same method signature as Rails own `redirect_back`.
 
 ```ruby
 def create
-  redirect_back_with_bzq fallback_url: '/'
+  redirect_back_with_sgq fallback_url: '/'
 end
 ```
 

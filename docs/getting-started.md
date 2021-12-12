@@ -7,24 +7,24 @@ Gemfile and run bundle
 
 ```ruby
 # Gemfile
-gem 'breezy'
+gem 'superglue'
 ```
 
 Run the installation generator
 
 ```text
-rails breezy:install:web
+rails superglue:install:web
 ```
 
 Generate a scaffold
 
 ```text
-rails generate scaffold post body:string --force --no-template-engine --breezy
+rails generate scaffold post body:string --force --no-template-engine --superglue
 ```
 
 ## Configuration
 
-The `rails breezy:install:web` step adds a [preconfigured entry point] in
+The `rails superglue:install:web` step adds a [preconfigured entry point] in
 `app/javascript/packs/application.js`.
 
 ## Custom Reducers
@@ -41,18 +41,18 @@ indicators can be added there.
 
 ## Configuring Reloads
 
-Breezy will do a hard reload whenever a successful response returns new asset
-fingerprints. Add an initializer to control how Breezy tracks Sprockets and
+Superglue will do a hard reload whenever a successful response returns new asset
+fingerprints. Add an initializer to control how Superglue tracks Sprockets and
 Webpack assets:
 
 ```ruby
 # defaults
-Breezy.configure do |config|
+Superglue.configure do |config|
   config.track_sprockets_assets = ['application.js', 'application.css']
   config.track_pack_assets = ['application.js']
 end
 ```
 
 
-[preconfigured entry point]: https://github.com/thoughtbot/Breezy/blob/main/breezy_rails/lib/install/templates/web/application.js
+[preconfigured entry point]: https://github.com/thoughtbot/Superglue/blob/main/superglue_rails/lib/install/templates/web/application.js
 [Redux Persist]: https://github.com/rt2zz/redux-persist

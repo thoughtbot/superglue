@@ -1,0 +1,64 @@
+{
+  "name": "@thoughtbot/superglue",
+  "version": "0.20.0",
+  "description": "Use a vanilla Rails with React and Redux",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint lib",
+    "clean": "rm -rf ./dist",
+    "copy:package": "cat ./package.json | jq 'del(.scripts)' > dist/package.json",
+    "copy:readme": "cp ../README.md dist/",
+    "build:index": "babel lib -d dist",
+    "build": "npm run clean && npm run build:index && npm run copy:package && npm run copy:readme",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thoughtbot/superglue.git"
+  },
+  "author": "Johny Ho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thoughtbot/superglue/issues"
+  },
+  "homepage": "https://github.com/thoughtbot/superglue#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.3",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
+    "@babel/preset-react": "^7.13.13",
+    "core-js": "^2.6.12",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
+    "eslint": "^7.28.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "fetch-headers": "^2.0.0",
+    "fetch-mock": "^9.11.0",
+    "history": "^4.7.1",
+    "html-react-parser": "^1.2.6",
+    "jest": "^27.0.4",
+    "node-fetch": "^2.6.1",
+    "prettier": "^2.3.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.0",
+    "redux-mock-store": "^1.5.4",
+    "redux-thunk": "^2.3.0"
+  },
+  "peerDependencies": {
+    "html-react-parser": "^1.2.6",
+    "react": "^16.4.0",
+    "redux": "^4.1.0",
+    "history": "^4.7.1",
+    "react-redux": "^7.2.4",
+    "redux-thunk": "^2.3.0"
+  },
+  "dependencies": {
+    "abortcontroller-polyfill": "^1.7.3",
+    "url-parse": "^1.5.1"
+  }
+}

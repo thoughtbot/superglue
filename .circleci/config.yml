@@ -12,23 +12,23 @@ executors:
       - image: circleci/ruby:2.6-node-browsers
 
 jobs:
-  breezy:
+  superglue:
     executor: ruby27
     steps:
       - checkout
       - run:
           name: NPM Install
-          working_directory: ./breezy
+          working_directory: ./superglue
           command: npm install
       - run:
           name: Lint
-          working_directory: ./breezy
+          working_directory: ./superglue
           command: npm run lint
       - run:
           name: Test
-          working_directory: ./breezy
+          working_directory: ./superglue
           command: npm run test
-  breezy-rails:
+  superglue-rails:
     parameters:
       ruby-version:
         type: executor
@@ -39,30 +39,30 @@ jobs:
       - checkout
       - run:
           name: Which bundler?
-          working_directory: ./breezy_rails
+          working_directory: ./superglue_rails
           command: bundle -v
       - run:
           name: Using Gemfile
-          working_directory: ./breezy_rails
+          working_directory: ./superglue_rails
           command: mv -f ./<< parameters.gemfile >> ./Gemfile
       - run:
           name: Bundle install
-          working_directory: ./breezy_rails
+          working_directory: ./superglue_rails
           command: bundle install
       - run:
           name: Rake Test
-          working_directory: ./breezy_rails
+          working_directory: ./superglue_rails
           command: bundle exec rake test
       - run:
           name: Acceptance Test
-          working_directory: ./breezy_rails
-          command: BUNDLE_GEMFILE='' ruby -Ilib:test test/acceptance/breezy_installation_acceptance.rb
+          working_directory: ./superglue_rails
+          command: BUNDLE_GEMFILE='' ruby -Ilib:test test/acceptance/superglue_installation_acceptance.rb
 
 workflows:
   tests:
     jobs:
-      - breezy
-      - breezy-rails:
+      - superglue
+      - superglue-rails:
           matrix:
             parameters:
               gemfile:

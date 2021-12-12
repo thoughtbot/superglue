@@ -75,13 +75,13 @@ Instead, we can make it more efficient by loading just the modal contents.
 
 ```js
   <a
-    href="/seats/1?bzq=data.seat"
+    href="/seats/1?sgq=data.seat"
     data-bz-visit={true}
     data-bz-placeholder="/seats"
    > Show Seat Modal </a>
 ```
 
-The change above uses Breezy's [copy feature] to
+The change above uses Superglue's [copy feature] to
 
 1. Copy the current page, `/seats` and use it as a placeholder for `/seats/1`
 2. Navigate to that page optimistically (as defined in our `identifierToComponentMapping`)

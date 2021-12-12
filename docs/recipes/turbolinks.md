@@ -1,6 +1,6 @@
 # Replicating Turbolinks behavior
 
-With `visit`, Breezy will always wait for a response before a navigation
+With `visit`, Superglue will always wait for a response before a navigation
 transition. Turbolink's behavior is to transition first if possible while
 waiting for the response. To replicate this behavior:
 
@@ -8,7 +8,7 @@ In your `application_visit.js` file:
 
 ```javascript
 
-import { urlToPageKey } from '@thoughtbot/breezy/utils/url'
+import { urlToPageKey } from '@thoughtbot/superglue/utils/url'
 
 const appVisit = (...args) => {
 

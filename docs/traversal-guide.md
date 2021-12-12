@@ -4,15 +4,15 @@ Superglue's thunks work hand-in-hand with [PropsTemplate] to query your JSON
 template for nodes. This guide helps you understand how the tools work with
 each other.
 
-## The sgq param
-The `sgq` param is a keypath to nodes in your tree and is used exclusively with
+## The props_at param
+The `props_at` param is a keypath to nodes in your tree and is used exclusively with
 the `remote` thunk. On the PropsTemplate side, we pass that param over to an
 internal node in order to walk your templates.
 
 For example, with a template below.
 
 ```ruby
-json.data(search: params[:sgq]) do
+json.data(search: params[:props_at]) do
   json.header do
     json.search do
       # Results is a leaf node
@@ -33,17 +33,17 @@ end
 ```
 
 To fetch the `json.search` node, we would need to walk to `data` then `header`
-then `search`. Translating that to a remote call with a `sgq` param:
+then `search`. Translating that to a remote call with a `props_at` param:
 
 ```
-remote('/dashboard?sgq=data.header.search&some_search_str=haircuts')
+remote('/dashboard?props_at=data.header.search&some_search_str=haircuts')
 ```
 
 ## Collections
 There are two ways to query collections. Looking at the following example:
 
 ```ruby
-json.data(search: params[:sgq]) do
+json.data(search: params[:props_at]) do
   json.posts do
     json.array! @posts do |post|
       json.details do
@@ -58,7 +58,7 @@ end
 You may use an index-based key to fetch an item in a list like so:
 
 ```
-remote('/dashboard?sgq=data.posts.0.details')
+remote('/dashboard?props_at=data.posts.0.details')
 ```
 
 To enable this functionality, you are required to implement `member_at(index)`
@@ -74,7 +74,7 @@ if your Redux state has changed by the time the request comes back.
 Attribute-based keys for collections look like this:
 
 ```
-remote('/dashboard?sgq=data.posts.some_id=1.details')
+remote('/dashboard?props_at=data.posts.some_id=1.details')
 ```
 
 Notice that we're now referencing the collection member by `some_id=1` instead
@@ -85,7 +85,7 @@ To enable this, you are required to implement `member_by(attribute, value)` on
 the passed collection AND use the option `:key` in `json.array!`. For example:
 
 ```ruby
-json.data(search: params[:sgq]) do
+json.data(search: params[:props_at]) do
   json.posts do
     json.array! @posts, key: :some_id do |post|
       json.details do
@@ -104,11 +104,11 @@ end
 You can even query into partials.
 
 ```
-remote('/dashboard?sgq=data.posts.some_id=1.details')
+remote('/dashboard?props_at=data.posts.some_id=1.details')
 ```
 
 ```ruby
-json.data(search: params[:sgq]) do
+json.data(search: params[:props_at]) do
   json.posts(partial: 'list_of_posts')do
   end
 end

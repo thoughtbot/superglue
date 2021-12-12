@@ -4,8 +4,8 @@ import {
   needsRefresh,
   urlToPageKey,
   withoutBusters,
-  hasSgq,
-  removeSgq,
+  hasPropsAt,
+  removePropsAt,
 } from '../utils'
 import {
   CLEAR_FLASH,
@@ -136,16 +136,16 @@ export function visit(
 
     if (placeholderKey && !hasPlaceholder) {
       console.warn(
-        `Could not find placeholder with key ${placeholderKey} in state. The sgq param will be ignored`
+        `Could not find placeholder with key ${placeholderKey} in state. The props_at param will be ignored`
       )
-      path = removeSgq(path)
+      path = removePropsAt(path)
     }
 
-    if (!placeholderKey && hasSgq(path)) {
+    if (!placeholderKey && hasPropsAt(path)) {
       console.warn(
-        `visit was called with sgq param in the path ${path}, this will be ignore unless you provide a placeholder.`
+        `visit was called with props_at param in the path ${path}, this will be ignore unless you provide a placeholder.`
       )
-      path = removeSgq(path)
+      path = removePropsAt(path)
     }
 
     const controller = new AbortController()

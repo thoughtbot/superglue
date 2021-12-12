@@ -110,10 +110,10 @@ Makes an ajax call to a page, and sets the response to the `pages` store. Use
 There can only ever be one visit at a time. If you happen to call `visit` while
 another visit is taking place, it will abort the previous one.
 
-?> `visit` is used for full-page transitions and will strip the `sgq` query string
+?> `visit` is used for full-page transitions and will strip the `props_at` query string
 from your pathQuery parameters that target a specific node. The exception to this
-rule is if you use a `sgq` query string with a `placeholderKey` option. This is
-allowed because `sgq` would have a page to graft onto.
+rule is if you use a `props_at` query string with a `placeholderKey` option. This is
+allowed because `props_at` would have a page to graft onto.
 
 
 ```javascript
@@ -133,7 +133,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 
 | fetchRequestOptionsAndMore | Type | Notes
 | :--- | :--- | :--- |
-| placeholderKey | `String` | When passing a url that has a `sgq` param, you can provide a `placeholderKey`, which superglue will use to copy the state over to the new url before making a request. If you do not provide this param, Superglue will remove any `sgq` param from the url.
+| placeholderKey | `String` | When passing a url that has a `props_at` param, you can provide a `placeholderKey`, which superglue will use to copy the state over to the new url before making a request. If you do not provide this param, Superglue will remove any `props_at` param from the url.
 |      |      | Other options are passed on to `fetch`|
 
 | Callback options | Type | Notes |
@@ -179,7 +179,7 @@ Remote makes an ajax call and saves the response to the `pages` store in async
 fashion. Use this if you want to [update parts](react-redux.md#traversing-nodes)
 of the current page or preload other pages.
 
-?> Unlike `visit`, `remote` will not strip any `sgq` url parameters.
+?> Unlike `visit`, `remote` will not strip any `props_at` url parameters.
 
 ```javascript
 remote(pathQuery, {...fetchRequestOptionsAndMore}, pageKey).then(({rsp, page, screen, needsRefresh}) => {})
@@ -238,7 +238,7 @@ this.props.copyPage({
 ## Searching for nodes
 
 Superglue can search your content tree for a specific node. This is done by adding
-a `sgq=keypath.to.node` in your URL param, then passing the params in your
+a `props_at=keypath.to.node` in your URL param, then passing the params in your
 `application.json.props`. PropsTemplate will ignore blocks that are not in the
 keypath, disable deferment and caching, and return the node. Superglue will then
 immutably set that node back onto its tree on the client-side. Fragments will
@@ -248,13 +248,13 @@ for more examples.
 For example:
 
 ```javascript
-this.props.remote('/?sgq=header.shopping_cart')
+this.props.remote('/?props_at=header.shopping_cart')
 ```
 
 and in your `application.json.props`
 
 ```ruby
-path = param_to_search_path(params[:sgq])
+path = param_to_search_path(params[:props_at])
 
 json.data(search: path) do
   yield json

@@ -84,7 +84,7 @@ serializer, plenty of new JS code, etc.
 With Superglue, this can be done in one line:
 
 ```javascript
-  this.props.remote('/dashboard?qry=haircut&sgq=data.header.search')
+  this.props.remote('/dashboard?qry=haircut&props_at=data.header.search')
 ```
 
 The above will make a request to `/dashboard?qry=haircut`, walk your props to

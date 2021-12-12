@@ -33,7 +33,7 @@ without `json.metrics`, then when the content is received by the client, Supergl
 will automatically make an `remote` request for anything that was skipped:
 
 ```javascript
-remote('/dashboard?sgq=data.metrics')
+remote('/dashboard?props_at=data.metrics')
 ```
 
 It is up to you to handle the case when `metrics` starts out empty. For example:

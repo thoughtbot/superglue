@@ -50,7 +50,7 @@ close-to-correct assumptions on how to update the store without looking at any
 code.
 
 **It's extremely productive with PropsTemplate.** A keypath in your thunk like
-so `remote(/dashboard?sgq=data.content.bar_chart)` is enough to query your
+so `remote(/dashboard?props_at=data.content.bar_chart)` is enough to query your
 content on the server-side, respond with a node, and graft it at the same
 location in your redux state.
 

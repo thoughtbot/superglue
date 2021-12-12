@@ -55,14 +55,14 @@ export default connect(
 ?> When using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
 
 
-## `redirect_back_with_sgq`
+## `redirect_back_with_props_at`
 
-A helper to help retain the `sgq` parameter as part of the redirect `location`.
+A helper to help retain the `props_at` parameter as part of the redirect `location`.
 This helper has the same method signature as Rails own `redirect_back`.
 
 ```ruby
 def create
-  redirect_back_with_sgq fallback_url: '/'
+  redirect_back_with_props_at fallback_url: '/'
 end
 ```
 

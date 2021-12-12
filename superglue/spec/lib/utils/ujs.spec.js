@@ -36,7 +36,7 @@ describe('ujs', () => {
         href: '/foo',
         getAttribute: (attr) => {
           if(attr === 'href') {
-            return '/foo?sgq=data.hello'
+            return '/foo?props_at=data.hello'
           }
           if(attr === 'data-placeholder') {
             return '/current'
@@ -92,7 +92,7 @@ describe('ujs', () => {
       expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
-    it('calls visit with a placeholder when sgq is present on a valid link', () => {
+    it('calls visit with a placeholder when props_at is present on a valid link', () => {
       const ujsAttributePrefix = 'data'
       const visit = jest.fn()
       const navigatorRef = {
@@ -120,7 +120,7 @@ describe('ujs', () => {
       const {onClick} = builder.handlers()
       onClick(createFakeVisitGraftEvent())
 
-      expect(visit).toHaveBeenCalledWith('/foo?sgq=data.hello', {method: 'GET', placeholderKey: '/current'})
+      expect(visit).toHaveBeenCalledWith('/foo?props_at=data.hello', {method: 'GET', placeholderKey: '/current'})
     })
 
     it('calls remote if a link is enabled with remote', () => {

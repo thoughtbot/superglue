@@ -377,7 +377,7 @@ describe('reducers', () => {
           })
 
           expect(console.warn).toHaveBeenCalledWith(
-            'There was no node returned in the response. Do you have the correct key path in your sgq?'
+            'There was no node returned in the response. Do you have the correct key path in your props_at?'
           )
           expect(nextState).toEqual(prevState)
         })
@@ -453,7 +453,7 @@ describe('reducers', () => {
             },
             pageKey: '/foo',
             defers: [
-              { url: '/foo?sgq=data.foo.bar', path: 'data.foo.bar' },
+              { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
             ],
             fragments: [],
           },
@@ -467,7 +467,7 @@ describe('reducers', () => {
             },
           },
           defers: [
-            { url: '/foo?sgq=data.foo.bar', path: 'data.foo.bar' },
+            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
           ],
           fragments: [],
         }
@@ -491,7 +491,7 @@ describe('reducers', () => {
           },
           pageKey: '/foo',
           defers: [
-            { url: '/foo?sgq=data.foo.bar', path: 'data.foo.bar' },
+            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
           ],
           fragments: [],
           savedAt: expect.any(Number),
@@ -510,7 +510,7 @@ describe('reducers', () => {
             },
             pageKey: '/bar',
             defers: [
-              { url: '/bar?sgq=data.foo.bar', path: 'data.foo.bar' },
+              { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
             ],
             fragments: [
               { type: 'info', partial: 'info', path: 'data.foo.bar' },
@@ -526,7 +526,7 @@ describe('reducers', () => {
             baz: 'received',
           },
           defers: [
-            { url: '/bar?sgq=data.foo.bar', path: 'data.foo.bar' },
+            { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
           ],
           fragments: [
             { type: 'info', partial: 'info', path: 'data.foo.bar' },
@@ -552,7 +552,7 @@ describe('reducers', () => {
           },
           pageKey: '/bar',
           defers: [
-            { url: '/bar?sgq=data.foo.bar', path: 'data.foo.bar' },
+            { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
           ],
           fragments: [
             { type: 'info', partial: 'info', path: 'data.foo.bar' },
@@ -573,7 +573,7 @@ describe('reducers', () => {
             },
             pageKey: '/bar',
             defers: [
-              { url: '/bar?sgq=data.foo.bar', path: 'data.foo.bar' },
+              { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
             ],
             fragments: [],
           },
@@ -586,7 +586,7 @@ describe('reducers', () => {
             },
           },
           defers: [
-            { url: '/foo?sgq=data.foo.bar', path: 'data.foo.bar' },
+            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
           ],
           fragments: [
             { type: 'info', partial: 'info', path: 'data.foo.bar' },
@@ -609,7 +609,7 @@ describe('reducers', () => {
           },
           pageKey: '/foo',
           defers: [
-            { url: '/foo?sgq=data.foo.bar', path: 'data.foo.bar' },
+            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
           ],
           fragments: [
             { type: 'info', partial: 'info', path: 'data.foo.bar' },

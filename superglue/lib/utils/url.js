@@ -14,11 +14,11 @@ export function pathQueryHash(url) {
   return pathname + query + hash
 }
 
-export function hasSgq(url) {
+export function hasPropsAt(url) {
   url = new parse(url, {}, true)
   let query = url.query
 
-  return !!query['sgq']
+  return !!query['props_at']
 }
 
 export function withAntiCache(url) {
@@ -57,17 +57,17 @@ export function pathWithoutBZParams(url) {
 
   delete query['__']
   delete query['_']
-  delete query['sgq']
+  delete query['props_at']
   url.query = query
 
   return pathQueryHash(url.toString())
 }
 
-export function removeSgq(url) {
+export function removePropsAt(url) {
   url = new parse(url, {}, true)
   let query = url.query
 
-  delete query['sgq']
+  delete query['props_at']
   url.query = query
 
   return url.toString()
@@ -79,7 +79,7 @@ export function urlToPageKey(url) {
 
   delete query['__']
   delete query['_']
-  delete query['sgq']
+  delete query['props_at']
   url.query = query
 
   return pathQuery(url.toString())

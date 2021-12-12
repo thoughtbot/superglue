@@ -75,7 +75,7 @@ Instead, we can make it more efficient by loading just the modal contents.
 
 ```js
   <a
-    href="/seats/1?sgq=data.seat"
+    href="/seats/1?props_at=data.seat"
     data-bz-visit={true}
     data-bz-placeholder="/seats"
    > Show Seat Modal </a>

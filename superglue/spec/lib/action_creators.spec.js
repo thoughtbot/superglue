@@ -137,7 +137,7 @@ describe('action creators', () => {
         csrfToken: 'token',
         assets: [],
         fragments: [],
-        defers: [{ url: '/foo?sgq=body', type: 'auto' }],
+        defers: [{ url: '/foo?props_at=body', type: 'auto' }],
       }
 
       const expectedActions = [
@@ -173,7 +173,7 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/foo?sgq=body&__=0', {
+      fetchMock.mock('/foo?props_at=body&__=0', {
         body: JSON.stringify({
           data: 'success',
           action: 'graft',
@@ -210,10 +210,10 @@ describe('action creators', () => {
         csrfToken: 'token',
         assets: [],
         fragments: [{ type: 'body', path: 'data.body' }],
-        defers: [{ url: '/foo?sgq=data.body', type: 'auto' }],
+        defers: [{ url: '/foo?props_at=data.body', type: 'auto' }],
       }
 
-      fetchMock.mock('/foo?sgq=data.body&__=0', {
+      fetchMock.mock('/foo?props_at=data.body&__=0', {
         body: JSON.stringify({
           data: {
             aside: {
@@ -226,7 +226,7 @@ describe('action creators', () => {
           fragments: [],
           assets: [],
           defers: [
-            { url: '/foo?sgq=data.body.aside.top', type: 'auto' },
+            { url: '/foo?props_at=data.body.aside.top', type: 'auto' },
           ],
         }),
         headers: {
@@ -234,7 +234,7 @@ describe('action creators', () => {
         },
       })
 
-      fetchMock.mock('/foo?sgq=data.body.aside.top&__=0', {
+      fetchMock.mock('/foo?props_at=data.body.aside.top&__=0', {
         body: JSON.stringify({
           data: {
             hello: 'world',
@@ -261,7 +261,7 @@ describe('action creators', () => {
               csrfToken: 'token',
               assets: [],
               fragments: [{ type: 'body', path: 'data.body' }],
-              defers: [{ url: '/foo?sgq=data.body', type: 'auto' }],
+              defers: [{ url: '/foo?props_at=data.body', type: 'auto' }],
             },
           },
         },
@@ -269,7 +269,7 @@ describe('action creators', () => {
           type: '@@superglue/BEFORE_FETCH',
           payload: {
             fetchArgs: [
-              '/foo?sgq=data.body&__=0',
+              '/foo?props_at=data.body&__=0',
               {
                 method: 'GET',
                 headers: {
@@ -296,7 +296,7 @@ describe('action creators', () => {
               fragments: [],
               assets: [],
               defers: [
-                { url: '/foo?sgq=data.body.aside.top', type: 'auto' },
+                { url: '/foo?props_at=data.body.aside.top', type: 'auto' },
               ],
             },
           },
@@ -305,7 +305,7 @@ describe('action creators', () => {
           type: '@@superglue/BEFORE_FETCH',
           payload: {
             fetchArgs: [
-              '/foo?sgq=data.body.aside.top&__=0',
+              '/foo?props_at=data.body.aside.top&__=0',
               {
                 method: 'GET',
                 headers: {
@@ -374,7 +374,7 @@ describe('action creators', () => {
         data: { heading: 'Some heading 2' },
         csrfToken: 'token',
         assets: [],
-        defers: [{ url: '/foo?sgq=body', type: 'auto' }],
+        defers: [{ url: '/foo?props_at=body', type: 'auto' }],
       }
 
       const expectedActions = [
@@ -412,7 +412,7 @@ describe('action creators', () => {
         fragments: [],
         defers: [
           {
-            url: '/foo?sgq=body',
+            url: '/foo?props_at=body',
             type: 'auto',
             successAction: 'FOOBAR',
           },
@@ -452,7 +452,7 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/foo?sgq=body&__=0', {
+      fetchMock.mock('/foo?props_at=body&__=0', {
         body: JSON.stringify({
           data: 'success',
           action: 'graft',
@@ -488,7 +488,7 @@ describe('action creators', () => {
         assets: [],
         fragments: [],
         defers: [
-          { url: '/some_defered_request?sgq=body', type: 'manual' },
+          { url: '/some_defered_request?props_at=body', type: 'manual' },
         ],
       }
 
@@ -608,7 +608,7 @@ describe('action creators', () => {
         assets: [],
         fragments: [],
         defers: [
-          { url: '/some_defered_request?sgq=body', type: 'auto' },
+          { url: '/some_defered_request?props_at=body', type: 'auto' },
         ],
       }
 
@@ -631,7 +631,7 @@ describe('action creators', () => {
         {
           type: '@@superglue/GRAFTING_ERROR',
           payload: {
-            url: '/some_defered_request?sgq=body',
+            url: '/some_defered_request?props_at=body',
             pageKey: '/foo',
             err: expect.any(Object),
             keyPath: 'body',
@@ -639,7 +639,7 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/some_defered_request?sgq=body&__=0', 500)
+      fetchMock.mock('/some_defered_request?props_at=body&__=0', 500)
 
       return store
         .dispatch(saveAndProcessPage('/foo', page))
@@ -663,7 +663,7 @@ describe('action creators', () => {
         fragments: [],
         defers: [
           {
-            url: '/some_defered_request?sgq=body',
+            url: '/some_defered_request?props_at=body',
             type: 'auto',
             failAction: 'FOOBAR',
           },
@@ -689,7 +689,7 @@ describe('action creators', () => {
         {
           type: 'FOOBAR',
           payload: {
-            url: '/some_defered_request?sgq=body',
+            url: '/some_defered_request?props_at=body',
             pageKey: '/foo',
             err: expect.any(Object),
             keyPath: 'body',
@@ -697,7 +697,7 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/some_defered_request?sgq=body&__=0', 500)
+      fetchMock.mock('/some_defered_request?props_at=body&__=0', 500)
 
       return store
         .dispatch(saveAndProcessPage('/foo', page))
@@ -890,9 +890,9 @@ describe('action creators', () => {
     it('cleans any __ and - params', (done) => {
       const store = mockStore(initialState())
 
-      fetchMock.mock('/first?sgq=foo&__=0', rsp.visitSuccess())
+      fetchMock.mock('/first?props_at=foo&__=0', rsp.visitSuccess())
       store
-        .dispatch(remote('/first?sgq=foo&__=bar&_=baz'))
+        .dispatch(remote('/first?props_at=foo&__=bar&_=baz'))
         .then((meta) => {
           done()
         })
@@ -1068,7 +1068,7 @@ describe('action creators', () => {
       fetchMock.restore()
     })
 
-    it('cleans any sgq, __, and - params', (done) => {
+    it('cleans any props_at, __, and - params', (done) => {
       const initialState = {
         pages: {},
         superglue: {
@@ -1080,7 +1080,7 @@ describe('action creators', () => {
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
       store
-        .dispatch(visit('/first?sgq=foo&__=bar&_=baz'))
+        .dispatch(visit('/first?props_at=foo&__=bar&_=baz'))
         .then((meta) => {
           done()
         })
@@ -1117,7 +1117,7 @@ describe('action creators', () => {
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
 
-      const expectedFetchUrl = '/first?sgq=foo&__=bar&_=baz'
+      const expectedFetchUrl = '/first?props_at=foo&__=bar&_=baz'
       store
         .dispatch(
           visit(expectedFetchUrl, {
@@ -1126,13 +1126,13 @@ describe('action creators', () => {
         )
         .then((meta) => {
           expect(console.warn).toHaveBeenCalledWith(
-            'Could not find placeholder with key /does-not-exist in state. The sgq param will be ignored'
+            'Could not find placeholder with key /does-not-exist in state. The props_at param will be ignored'
           )
           done()
         })
     })
 
-    it('keeps the sgq parameter when a placeholder is passed and exists in state', (done) => {
+    it('keeps the props_at parameter when a placeholder is passed and exists in state', (done) => {
       const initialState = {
         superglue: {
           assets: [],
@@ -1144,9 +1144,9 @@ describe('action creators', () => {
 
       const store = mockStore(initialState)
 
-      fetchMock.mock('/first?sgq=foo&__=0', rsp.visitSuccess())
+      fetchMock.mock('/first?props_at=foo&__=0', rsp.visitSuccess())
 
-      const expectedFetchUrl = '/first?sgq=foo&__=bar&_=baz'
+      const expectedFetchUrl = '/first?props_at=foo&__=bar&_=baz'
       store
         .dispatch(
           visit(expectedFetchUrl, { placeholderKey: '/does-exist' })
@@ -1156,7 +1156,7 @@ describe('action creators', () => {
         })
     })
 
-    it('warns when sgq is included but a placeholder was not passed', (done) => {
+    it('warns when props_at is included but a placeholder was not passed', (done) => {
       jest.spyOn(console, 'warn')
       const initialState = {
         superglue: {
@@ -1171,10 +1171,10 @@ describe('action creators', () => {
 
       fetchMock.mock('/first?__=0', rsp.visitSuccess())
 
-      const expectedFetchUrl = '/first?sgq=foo'
+      const expectedFetchUrl = '/first?props_at=foo'
       store.dispatch(visit(expectedFetchUrl)).then((meta) => {
         expect(console.warn).toHaveBeenCalledWith(
-          'visit was called with sgq param in the path /first?sgq=foo, this will be ignore unless you provide a placeholder.'
+          'visit was called with props_at param in the path /first?props_at=foo, this will be ignore unless you provide a placeholder.'
         )
         done()
       })
@@ -1205,7 +1205,7 @@ describe('action creators', () => {
       const store = mockStore(initialState)
 
       let mockResponse = rsp.graftSuccessWithNewZip()
-      fetchMock.mock('/details?sgq=data.address&__=0', mockResponse)
+      fetchMock.mock('/details?props_at=data.address&__=0', mockResponse)
 
       const expectedActions = [
         {
@@ -1228,7 +1228,7 @@ describe('action creators', () => {
 
       store
         .dispatch(
-          visit('/details?sgq=data.address', {
+          visit('/details?props_at=data.address', {
             placeholderKey: '/current',
           })
         )

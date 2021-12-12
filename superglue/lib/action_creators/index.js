@@ -56,7 +56,7 @@ function fetchDeferments(pageKey, defers = []) {
         failAction = GRAFTING_ERROR,
       }) {
         let parsedUrl = new parse(url, true)
-        const keyPath = parsedUrl.query.sgq
+        const keyPath = parsedUrl.query.props_at
 
         return dispatch(remote(url, { pageKey }))
           .then(() => {

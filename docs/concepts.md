@@ -83,7 +83,7 @@ code.
 For example, here's how to refresh a chart with a button without any APIs:
 
 ```jsx
-  <a href='/posts?sgq=data.dashboard.key_metrics_chart' data-bz-remote={true} />
+  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-bz-remote={true} />
 ```
 
 [PropsTemplate] powers this interaction. Any template you build with
@@ -91,7 +91,7 @@ PropsTemplate is queryable using a param that you pass to the root node in your
 `layout/application.json.props`:
 
 ```ruby
-json.data(search: params[:sgq]) do
+json.data(search: params[:props_at]) do
   json.side_bar do
     # gets skipped
   end
@@ -111,10 +111,10 @@ Finally, Superglue on the client-side will receive the node, immutably graft it
 into your Redux state in the same exact path and hand it over to your
 component to render.
 
-The syntax of `sgq` is a keypath, here's another example using an array:
+The syntax of `props_at` is a keypath, here's another example using an array:
 
 ```jsx
-  <a href='/posts?sgq=data.post_list.0.title' data-bz-remote={true} />
+  <a href='/posts?props_at=data.post_list.0.title' data-bz-remote={true} />
 ```
 
 Read more about this in the [querying guide]
@@ -125,7 +125,7 @@ You may have noticed that we've been using `data-bz-remote` or `data-bz-visit`
 in the examples.
 
 ```jsx
-  <a href='/posts?sgq=data.dashboard.key_metrics_chart' data-bz-visit={true} />
+  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-bz-visit={true} />
 ```
 
 Superglue embraces Unobtrusive Javascript. Any link or form with a `data-bz`
@@ -137,7 +137,7 @@ components when using the included [React helpers]
 For example:
 
 ```jsx
-  this.props.visit('/posts?sgq=data.dashboard.key_metrics_chart')
+  this.props.visit('/posts?props_at=data.dashboard.key_metrics_chart')
   .then....
 ```
 

@@ -581,7 +581,7 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.remote('/foo?sgq=address')
+          this.props.remote('/foo?props_at=address')
         }
       }
 
@@ -599,7 +599,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.graftSuccessWithNewZip()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?sgq=address&__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?props_at=address&__=0', mockResponse)
 
       component.find('button').simulate('click')
       await flushPromises()

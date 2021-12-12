@@ -108,7 +108,7 @@ export function addFlash(state, pageKey, receivedFlash) {
 export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
   if (!node) {
     console.warn(
-      'There was no node returned in the response. Do you have the correct key path in your sgq?'
+      'There was no node returned in the response. Do you have the correct key path in your props_at?'
     )
     return state
   }

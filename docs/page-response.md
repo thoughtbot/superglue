@@ -70,7 +70,7 @@ The authenticity token that Superglue will use for non-GET request made by using
 or `data-bz-remote` attribute.
 
 ### `action` and `path`
-Only included when `sgq` is part of the request parameters. `action` is always
+Only included when `props_at` is part of the request parameters. `action` is always
 set to `graft` and `path` is the camelCase keypath to the requested node.
 Superglue uses these attributes to immutably graft a node from the server-side to
 the client-side.

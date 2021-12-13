@@ -1026,6 +1026,7 @@ describe('action creators', () => {
           path: 'heading.cart',
           csrfToken: 'token',
           assets: [],
+          fragments:[],
           defers: [],
         }),
         headers: {
@@ -1048,6 +1049,7 @@ describe('action creators', () => {
               path: 'heading.cart',
               csrfToken: 'token',
               assets: [],
+              fragments:[],
               defers: [],
             },
           })

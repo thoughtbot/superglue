@@ -74,6 +74,7 @@ describe('start', () => {
       flash: {},
       componentIdentifier: 'home',
       assets: ['123.js', '123.css'],
+      fragments: [],
       csrfToken: 'token',
     }
 
@@ -108,6 +109,7 @@ describe('start', () => {
           flash: {},
           componentIdentifier: 'home',
           assets: ['123.js', '123.css'],
+          fragments: [],
           csrfToken: 'token',
           savedAt: expect.any(Number),
         },
@@ -137,6 +139,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -193,6 +196,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -268,6 +272,7 @@ describe('navigation', () => {
           flash: {},
           componentIdentifier: 'home',
           assets: ['123.js', '123.css'],
+          fragments: [],
           csrfToken: 'token',
         }
 
@@ -309,6 +314,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -362,6 +368,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -411,6 +418,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -485,6 +493,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -539,6 +548,7 @@ describe('navigation', () => {
         flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
+        fragments: [],
         csrfToken: 'token',
       }
 
@@ -565,6 +575,7 @@ describe('navigation', () => {
           address: undefined,
         },
         flash: {},
+        fragments: [],
         componentIdentifier: 'home',
       }
 

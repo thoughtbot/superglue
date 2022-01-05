@@ -50,12 +50,12 @@
     "redux-thunk": "^2.3.0"
   },
   "peerDependencies": {
-    "html-react-parser": "^1.2.6",
-    "react": "^16.4.0",
-    "redux": "^4.1.0",
+    "html-react-parser": ">=1.2.6",
+    "react": ">=16",
+    "redux": ">=4.1",
     "history": "^4.7.1",
-    "react-redux": "^7.2.4",
-    "redux-thunk": "^2.3.0"
+    "react-redux": ">=7.2",
+    "redux-thunk": ">=2.3"
   },
   "dependencies": {
     "abortcontroller-polyfill": "^1.7.3",

@@ -75,8 +75,10 @@ class SuperglueInstallationTest < Minitest::Test
 
   def generate_test_app(app_name)
     successfully "rails new #{app_name} \
+       --webpack \
        --skip-git \
        --skip-turbolinks \
+       --skip-hotwire \
        --skip-spring \
        --no-rc"
   end
@@ -110,6 +112,20 @@ class SuperglueInstallationTest < Minitest::Test
       FileUtils.rm_rf("testapp")
       generate_test_app "testapp"
       Dir.chdir('testapp') do
+        if Rails.version >= "7"
+          layout_path = File.join(Dir.pwd, "app/views/layouts/application.html.erb")
+          layout_with_pack_tag = File.read(layout_path)
+            .split("\n")
+            .insert(8, '<%= javascript_pack_tag "application" %>')
+            .join("\n")
+
+          File.write(layout_path, layout_with_pack_tag)
+
+          successfully "echo \"gem 'webpacker'\" >> Gemfile"
+          successfully "bundle install"
+          successfully "rails webpacker:install"
+        end
+
         successfully 'bundle install'
         successfully 'yarn add react react-dom @babel/preset-react'
 

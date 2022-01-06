@@ -7,9 +7,9 @@ executors:
   ruby27:
     docker:
       - image: circleci/ruby:2.7-node-browsers
-  ruby26:
+  ruby30:
     docker:
-      - image: circleci/ruby:2.6-node-browsers
+      - image: circleci/ruby:3.0-node-browsers
 
 jobs:
   superglue:
@@ -66,8 +66,8 @@ workflows:
           matrix:
             parameters:
               gemfile:
-                - Gemfile.rails60
                 - Gemfile.rails61
+                - Gemfile.rails70
               ruby-version:
-                - ruby26
                 - ruby27
+                - ruby30

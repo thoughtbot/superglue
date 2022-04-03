@@ -1086,6 +1086,57 @@ describe('action creators', () => {
         })
     })
 
+    describe('when initiated with a revisit indicator', () => {
+      it('returns a meta with suggestedAction of "replace" if was redirected', () => {
+        const initialState = {
+          pages: {},
+          superglue: {
+            assets: [],
+          },
+        }
+
+        const store = mockStore(initialState)
+
+        fetchMock.mock('/redirecting_url?__=0', {
+          status: 200,
+          redirectUrl: '/foo',
+          headers: {
+            'content-type': 'application/json',
+            location: '/foo',
+          },
+          body: successfulBody(),
+        })
+
+        return store
+          .dispatch(visit('/redirecting_url', { revisit: true }))
+          .then((meta) => {
+            expect(meta.redirected).toEqual(true)
+            expect(meta.suggestedAction).toEqual('replace')
+          })
+      })
+
+      it('returns a meta with suggestedAction of "none" if was not redirected', () => {
+        const initialState = {
+          pages: {},
+          superglue: {
+            assets: [],
+          },
+        }
+
+        const store = mockStore(initialState)
+
+        fetchMock.mock('/first?__=0', rsp.visitSuccess())
+
+        return store
+          .dispatch(visit('/first', { revisit: true }))
+          .then((meta) => {
+            expect(meta.redirected).toEqual(false)
+            expect(meta.suggestedAction).toEqual('none')
+          })
+      })
+    })
+
+
     it('gets aborted when a new visit starts', (done) => {
       const initialState = {
         pages: {},

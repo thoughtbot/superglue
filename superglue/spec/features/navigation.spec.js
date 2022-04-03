@@ -63,7 +63,7 @@ class App extends ApplicationBase {
 describe('start', () => {
   it('sets the stage', () => {
     const history = createMemoryHistory({
-      initialEntries: ['http://example.com/bar?some=123#title'],
+      initialEntries: ['/bar?some=123#title'],
       initialIndex: 0,
     })
 
@@ -122,13 +122,14 @@ fetchMock.mock()
 
 describe('navigation', () => {
   beforeEach(() => {
+    jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
     fetchMock.restore()
   })
 
   describe('when an action pushes history', () => {
     it('saves the page and updates history', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['http://example.com/bar'],
+        initialEntries: ['/bar'],
         initialIndex: 0,
       })
 
@@ -185,7 +186,7 @@ describe('navigation', () => {
 
     it('saves the page and updates history with hash', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['http://example.com/bar'],
+        initialEntries: ['/bar'],
         initialIndex: 0,
       })
 
@@ -251,12 +252,14 @@ describe('navigation', () => {
     describe('and the action is to a non-superglue app', () => {
       it('does nothing to the store', (done) => {
         const history = createMemoryHistory({
-          initialEntries: ['http://example.com/bar'],
+          initialEntries: ['/bar'],
           initialIndex: 0,
         })
         let navComponent
 
-        history.listen(({ pathname }) => {
+        history.listen(({ action, location }) => {
+          const { pathname } = location
+
           if (pathname == '/some_html_page') {
             const state = store.getState()
             expect(state.superglue.currentPageKey).toEqual('/bar')
@@ -274,6 +277,7 @@ describe('navigation', () => {
           assets: ['123.js', '123.css'],
           fragments: [],
           csrfToken: 'token',
+          restoreStrategy: 'fromCacheOnly'
         }
 
         class ExampleHome extends Home {
@@ -303,7 +307,7 @@ describe('navigation', () => {
   describe('when an action replaces history', () => {
     it('removes the previous page in the store', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['http://example.com/bar'],
+        initialEntries: ['/bar'],
         initialIndex: 0,
       })
 
@@ -357,7 +361,7 @@ describe('navigation', () => {
 
     it('does nothing when we replace the same page', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['http://example.com/bar'],
+        initialEntries: ['/bar'],
         initialIndex: 0,
       })
 
@@ -407,7 +411,7 @@ describe('navigation', () => {
   describe('when an action pops history', () => {
     it('loads the page from the store', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['http://example.com/bar'],
+        initialEntries: ['/bar'],
         initialIndex: 0,
       })
 
@@ -420,6 +424,7 @@ describe('navigation', () => {
         assets: ['123.js', '123.css'],
         fragments: [],
         csrfToken: 'token',
+        restoreStrategy: 'fromCacheOnly'
       }
 
       const component = mount(
@@ -454,7 +459,7 @@ describe('navigation', () => {
       expect(history.location.hash).toEqual('')
       expect(navComponent.state.pageKey).toEqual('/foo')
 
-      history.goBack()
+      history.back()
 
       state = store.getState()
       expect(state.superglue.currentPageKey).toEqual('/bar')
@@ -475,7 +480,8 @@ describe('navigation', () => {
       history.push("/bar") // Gets replaced on Superglue.start
       let store, navComponent;
 
-      history.listen(({ pathname, hash }) => {
+      history.listen(({action, location}) => {
+        const { pathname, hash } = location
         if (hash === '#title') {
           const state = store.getState()
           expect(state.superglue.currentPageKey).toEqual('/bar')
@@ -495,11 +501,12 @@ describe('navigation', () => {
         assets: ['123.js', '123.css'],
         fragments: [],
         csrfToken: 'token',
+        restoreStrategy: 'fromCacheOnly'
       }
 
       class ExampleHome extends Home {
         componentDidMount() {
-          process.nextTick(() => history.goBack())
+          process.nextTick(() => history.back())
         }
       }
 
@@ -518,28 +525,16 @@ describe('navigation', () => {
       navComponent = component.find(Nav).instance()
     })
 
-    it('refreshes when the page has been evicted', (done) => {
+    it('requests the evicted page when encountering the page again using browser buttons', async () => {
       const history = createMemoryHistory({})
-      history.push('/evicited', {
+      history.push('/foo', {
         superglue: true,
-        pageKey: '/no_longer_exist',
+        pageKey: '/foo',
       })
       history.push('/bar') // Gets replaced on Superglue.start
-
-      class ExampleHome extends Home {
-        componentDidMount() {
-          history.listen(({ pathname, hash }) => {
-            process.nextTick(() => {
-              expect(Nav.prototype.reloadPage).toHaveBeenCalled()
-              done()
-            })
-          })
-
-          process.nextTick(() => history.goBack())
-        }
-      }
-
-      jest.spyOn(Nav.prototype, 'reloadPage').mockImplementation(() => {})
+      const mockResponse = rsp.visitSuccess()
+      mockResponse.headers['x-response-url'] = '/foo'
+      fetchMock.mock('http://example.com/foo?__=0', mockResponse)
 
       const initialPage = {
         data: {
@@ -552,16 +547,38 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      mount(
+      const component = mount(
         <App
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
-          mapping={{ home: ExampleHome }}
+          mapping={{ home: Home, about: About}}
           history={history}
         />
       )
+      const store = component.instance().store
+
+      const pageState = {
+        data: { heading: 'Some heading 2' },
+        flash: {},
+        csrfToken: 'token',
+        assets: ['application-123.js', 'application-123.js'],
+        componentIdentifier: 'about',
+        pageKey: '/foo',
+        fragments: [],
+        savedAt: expect.any(Number),
+      }
+
+      history.back()
+      // component.find('button').simulate('click')
+
+      await flushPromises()
+
+      expect(store.getState().pages['/foo']).toEqual(pageState)
+      expect(history.location.pathname).toEqual('/foo')
+      expect(history.location.search).toEqual('')
+      expect(history.location.hash).toEqual('')
     })
   })
 

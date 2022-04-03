@@ -9,6 +9,8 @@ export function buildVisitAndRemote(ref, store) {
     // Do something before
     // e.g, show loading state, you can access the current pageKey
     // via store.getState().superglue.currentPageKey
+    let { action } = args
+
     return store
       .dispatch(visit(...args))
       .then((meta) => {
@@ -22,6 +24,9 @@ export function buildVisitAndRemote(ref, store) {
         ref.current.navigateTo(meta.pageKey, {
           action: meta.suggestedAction,
         })
+
+        // always return meta
+        return meta
       })
       .finally(() => {
         // Do something after

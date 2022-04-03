@@ -36,7 +36,7 @@
     "eslint-plugin-react": "^7.24.0",
     "fetch-headers": "^2.0.0",
     "fetch-mock": "^9.11.0",
-    "history": "^4.7.1",
+    "history": "^5.3.0",
     "html-react-parser": "^1.2.6",
     "jest": "^27.0.4",
     "node-fetch": "^2.6.1",
@@ -53,7 +53,7 @@
     "html-react-parser": ">=1.2.6",
     "react": ">=16",
     "redux": ">=4.1",
-    "history": "^4.7.1",
+    "history": "^5.3.0",
     "react-redux": ">=7.2",
     "redux-thunk": ">=2.3"
   },

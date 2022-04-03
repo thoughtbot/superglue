@@ -21,6 +21,7 @@ if path
   json.path search_path_to_camelized_param(path)
 end
 
+json.restore_strategy 'fromCacheAndRevisitInBackground'
+
 json.rendered_at Time.now.to_i
 json.flash flash.to_h
-

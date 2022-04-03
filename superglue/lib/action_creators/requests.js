@@ -118,6 +118,7 @@ export function visit(
     body = '',
     placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
+    revisit = false,
   } = {}
 ) {
   path = withoutBusters(path)
@@ -177,6 +178,14 @@ export function visit(
         meta.suggestedAction = 'push'
         if (!rsp.redirected && fetchArgs[1].method != 'GET') {
           meta.suggestedAction = 'replace'
+        }
+
+        if (revisit && fetchArgs[1].method == 'GET') {
+          if (rsp.redirected) {
+            meta.suggestedAction = 'replace'
+          } else {
+            meta.suggestedAction = 'none'
+          }
         }
 
         if (method !== 'GET') {

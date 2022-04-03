@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.40
+Scroll history and cache restore strategies (`fromCacheOnly`, `revisitOnly`, 
+`fromCacheAndRevisitInBackground` default) added.
+
+`history` npm package upgraded.
+
 ## 0.30
 Project renamed to superglue
 

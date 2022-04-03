@@ -17,6 +17,7 @@ used Superglue's generators, this would be all set for you in
   renderedAt,
   flash,
   fragments,
+  restoreStrategy
 }
 ```
 
@@ -85,3 +86,15 @@ A `hash` of [flash messages](./rails.md#rails-flash). In
 ### `fragments`
 An `array` of [fragments](./updating-fragments.md#fragments). In
 `application.json.props` this is set to `json.fragments!`.
+
+### `restoreStrategy`
+By specifying the restore strategy used (`fromCacheOnly`, `revisitOnly`, or
+`fromCacheAndRevisitInBackground`), you can control what superglue does when
+encountering the page again when pressing the back or forward browser navigation
+buttons.
+  - `fromCacheAndRevisitInBackground` will transition to the cached page, then
+  issue a visit in the background, redirecting and replacing history if needed.
+  This is the option set in `application.json.props` when using the generators.
+  - `revisitOnly` will always issue a visit request in the background before
+  - `fromCacheOnly` will only restore the page from cache
+  transitioning

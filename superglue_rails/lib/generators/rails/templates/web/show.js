@@ -21,8 +21,8 @@ export default function <%= plural_table_name.camelize %>Show({
         {<%=attr.camelize(:lower)%>}
       </p>
       <%- end -%>
-      <a href={ edit<%= singular_table_name.camelize %>Path } data-bz-visit={true}>Edit</a>
-      <a href={ <%= plural_table_name.camelize(:lower) %>Path } data-bz-visit={true}>Back</a>
+      <a href={ edit<%= singular_table_name.camelize %>Path } data-sg-visit={true}>Edit</a>
+      <a href={ <%= plural_table_name.camelize(:lower) %>Path } data-sg-visit={true}>Back</a>
     </div>
   )
 }

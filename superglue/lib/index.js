@@ -146,7 +146,7 @@ export class ApplicationBase extends React.Component {
       visit: this.visit,
       remote: this.remote,
       store: this.store,
-      ujsAttributePrefix: 'data-bz',
+      ujsAttributePrefix: 'data-sg',
     })
     const { onClick, onSubmit } = this.ujsHandlers
 

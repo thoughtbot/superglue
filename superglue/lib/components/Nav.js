@@ -9,11 +9,13 @@ class Nav extends React.Component {
     const { history, initialPageKey } = this.props
     this.history = history
     this.navigateTo = this.navigateTo.bind(this)
+    this.scrollTo = this.scrollTo.bind(this)
     this.onHistoryChange = this.onHistoryChange.bind(this)
     this.state = {
       pageKey: initialPageKey,
       ownProps: {},
     }
+    this.hasWindow = typeof window !== 'undefined'
   }
 
   componentDidMount() {
@@ -30,22 +32,44 @@ class Nav extends React.Component {
     path,
     { action, ownProps } = { action: 'push', ownProps: {} }
   ) {
+    if (action === 'none') {
+      return false
+    }
+
     path = pathWithoutBZParams(path)
     const nextPageKey = urlToPageKey(path)
     const { store } = this.props
     const hasPage = !!store.getState().pages[nextPageKey]
 
     if (hasPage) {
-      const prevPageKey = this.history.location.state.pageKey
+      const location = this.history.location
+      const prevPageKey = location.state.pageKey
       const historyArgs = [
         path,
         {
           pageKey: nextPageKey,
           superglue: true,
+          posY: 0,
+          posX: 0,
         },
       ]
 
       if (action === 'push') {
+        if (this.hasWindow) {
+          this.history.replace(
+            {
+              pathname: location.pathname,
+              search: location.search,
+              hash: location.hash,
+            },
+            {
+              ...location.state,
+              posY: window.pageYOffset,
+              posX: window.pageXOffset,
+            }
+          )
+        }
+
         this.history.push(...historyArgs)
       }
 
@@ -54,6 +78,7 @@ class Nav extends React.Component {
       }
 
       this.setState({ pageKey: nextPageKey, ownProps })
+      this.scrollTo(0, 0)
 
       if (
         action === 'replace' &&
@@ -80,8 +105,12 @@ class Nav extends React.Component {
     }
   }
 
-  onHistoryChange(location) {
-    const { store } = this.props
+  scrollTo(posX, posY) {
+    this.hasWindow && window.scrollTo(posX, posY)
+  }
+
+  onHistoryChange({ location, action }) {
+    const { store, visit } = this.props
     const { pathname, search, hash, state } = location
 
     if (state && state.superglue) {
@@ -90,19 +119,60 @@ class Nav extends React.Component {
         payload: { pathname, search, hash },
       })
 
-      const { pageKey } = state
+      if (action !== 'POP') {
+        return
+      }
+
+      const { pageKey, posX, posY } = state
       const containsKey = !!store.getState().pages[pageKey]
 
       if (containsKey) {
-        this.setState({ pageKey })
+        const { restoreStrategy } = store.getState().pages[pageKey]
+
+        switch (restoreStrategy) {
+          case 'fromCacheOnly':
+            this.setState({ pageKey })
+            this.scrollTo(posX, posY)
+            break
+          case 'fromCacheAndRevisitInBackground':
+            this.setState({ pageKey })
+            this.scrollTo(posX, posY)
+            visit(pageKey, { revisit: true })
+            break
+          case 'revisitOnly':
+          default:
+            visit(pageKey, { revisit: true }).then((meta) => {
+              if (meta === undefined) {
+                console.warn(
+                  `scoll restoration was skipped. Your visit's then funtion
+                  should return the meta object it recieved if you want your
+                  application to restore the page's previous scroll.`
+                )
+              }
+
+              if (!!meta && meta.suggestedAction === 'none') {
+                this.setState({ pageKey })
+                this.scrollTo(posX, posY)
+              }
+            })
+        }
       } else {
-        this.reloadPage()
+        visit(pageKey, { revisit: true }).then((meta) => {
+          if (meta === undefined) {
+            console.warn(
+              `scoll restoration was skipped. Your visit's then funtion
+              should return the meta object it recieved if you want your
+              application to restore the page's previous scroll.`
+            )
+          }
+
+          if (!!meta && meta.suggestedAction === 'none') {
+            this.setState({ pageKey })
+            this.scrollTo(posX, posY)
+          }
+        })
       }
     }
-  }
-
-  reloadPage() {
-    window.location.reload()
   }
 
   notFound(identifier) {

@@ -22,8 +22,8 @@ export default function <%= plural_table_name.camelize %>New({
   return (
     <div>
       {messagesEl}
-      <RailsTag {...form} data-bz-visit={true}/>
-      <a href={<%= plural_table_name.camelize(:lower) %>Path} data-bz-visit={true}>Back</a>
+      <RailsTag {...form} data-sg-visit={true}/>
+      <a href={<%= plural_table_name.camelize(:lower) %>Path} data-sg-visit={true}>Back</a>
     </div>
   )
 }

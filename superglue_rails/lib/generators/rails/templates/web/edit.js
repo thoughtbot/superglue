@@ -23,9 +23,9 @@ export default function <%= plural_table_name.camelize %>Edit ({
   return (
     <div>
       {messagesEl}
-      <RailsTag {...form} data-bz-visit={true}/>
-      <a href={<%= singular_table_name.camelize(:lower) %>Path} data-bz-visit={true}>Show</a>
-      <a href={<%= plural_table_name.camelize(:lower) %>Path}  data-bz-visit={true}>Back</a>
+      <RailsTag {...form} data-sg-visit={true}/>
+      <a href={<%= singular_table_name.camelize(:lower) %>Path} data-sg-visit={true}>Show</a>
+      <a href={<%= plural_table_name.camelize(:lower) %>Path}  data-sg-visit={true}>Back</a>
     </div>
   )
 }

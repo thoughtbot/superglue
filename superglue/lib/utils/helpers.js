@@ -24,6 +24,8 @@ export function argsForHistory(path) {
     {
       superglue: true,
       pageKey,
+      posX: 0,
+      posY: 0,
     },
   ]
 }

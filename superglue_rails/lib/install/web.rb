@@ -56,7 +56,7 @@ say "Adding required member methods to ApplicationRecord"
 add_member_methods
 
 say "Installing React, Redux, and Superglue"
-run "yarn add babel-plugin-module-resolver history@\"^4\" html-react-parser react-redux redux-thunk redux redux-persist reduce-reducers immer @thoughtbot/superglue --save"
+run "yarn add babel-plugin-module-resolver history html-react-parser react-redux redux-thunk redux redux-persist reduce-reducers immer @thoughtbot/superglue --save"
 
 # For newer webpacker
 insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /additional_paths: \[/

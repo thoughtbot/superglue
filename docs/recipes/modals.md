@@ -62,7 +62,7 @@ In `SeatsIndex.js`, change the `a` tags like so.
 ```js
   <a
     href="/seats/1"
-    data-bz-visit={true}
+    data-sg-visit={true}
    > Show Seat Modal </a>
 ```
 
@@ -76,8 +76,8 @@ Instead, we can make it more efficient by loading just the modal contents.
 ```js
   <a
     href="/seats/1?props_at=data.seat"
-    data-bz-visit={true}
-    data-bz-placeholder="/seats"
+    data-sg-visit={true}
+    data-sg-placeholder="/seats"
    > Show Seat Modal </a>
 ```
 

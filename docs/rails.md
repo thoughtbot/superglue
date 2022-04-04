@@ -50,9 +50,9 @@ export default connect(
 
 ```
 
-?> When using `data-bz-visit`, all flash in Superglue's redux state will be cleared before the request.
+?> When using `data-sg-visit`, all flash in Superglue's redux state will be cleared before the request.
 
-?> When using `data-bz-remote`, the recieved flash will be merged with the current page's flash.
+?> When using `data-sg-remote`, the recieved flash will be merged with the current page's flash.
 
 
 ## `redirect_back_with_props_at`

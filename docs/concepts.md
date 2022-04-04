@@ -3,7 +3,7 @@
 ## Inspired by Turbolinks
 
 Superglue is inspired by Turbolinks. When you click on a link like this:
-`<a href='/posts' data-bz-visit={true} />`, Superglue fetches the next page's full
+`<a href='/posts' data-sg-visit={true} />`, Superglue fetches the next page's full
 content in JSON and swaps it with the current page JSON before handing it
 to your next React page component.
 
@@ -68,7 +68,7 @@ The routes remain simple:
 When a user clicks on a link enabled with Superglue's UJS:
 
 ```jsx
-  <a href='/posts' data-bz-visit={true} />
+  <a href='/posts' data-sg-visit={true} />
 ```
 
 Superglue will specify the request's mime type as JSON, causing Rails to render
@@ -83,7 +83,7 @@ code.
 For example, here's how to refresh a chart with a button without any APIs:
 
 ```jsx
-  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-bz-remote={true} />
+  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-sg-remote={true} />
 ```
 
 [PropsTemplate] powers this interaction. Any template you build with
@@ -114,21 +114,21 @@ component to render.
 The syntax of `props_at` is a keypath, here's another example using an array:
 
 ```jsx
-  <a href='/posts?props_at=data.post_list.0.title' data-bz-remote={true} />
+  <a href='/posts?props_at=data.post_list.0.title' data-sg-remote={true} />
 ```
 
 Read more about this in the [querying guide]
 
 ## Embrace UJS
 
-You may have noticed that we've been using `data-bz-remote` or `data-bz-visit`
+You may have noticed that we've been using `data-sg-remote` or `data-sg-visit`
 in the examples.
 
 ```jsx
-  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-bz-visit={true} />
+  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-sg-visit={true} />
 ```
 
-Superglue embraces Unobtrusive Javascript. Any link or form with a `data-bz`
+Superglue embraces Unobtrusive Javascript. Any link or form with a `data-sg`
 attribute receives superpowers inspired by Rails data attributes.
 
 For more advanced use cases, an action creator is passed to all your connected

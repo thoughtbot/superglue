@@ -67,8 +67,8 @@ refresh the browser due to new assets. You can control the refresh behavior in
 
 ### `csrfToken`
 The authenticity token that Superglue will use for non-GET request made by using
-`visit` or `remote` thunks. This includes forms that have the `data-bz-visit`
-or `data-bz-remote` attribute.
+`visit` or `remote` thunks. This includes forms that have the `data-sg-visit`
+or `data-sg-remote` attribute.
 
 ### `action` and `path`
 Only included when `props_at` is part of the request parameters. `action` is always

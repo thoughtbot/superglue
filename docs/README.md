@@ -60,7 +60,7 @@ A popular ask of SPAs is page-to-page navigation without reloading. This is
 easily done with Superglue's own UJS attributes inspired by Turbolinks:
 
 ```jsx
-  <a href='/posts' data-bz-visit={true} />
+  <a href='/posts' data-sg-visit={true} />
 ```
 
 The above will request for `/posts` with an `accept` of `application/json`, and
@@ -70,8 +70,8 @@ component the response asks for, and `pushState` on history.
 
 #### Partial updates
 Some features rely on updating some parts of the existing page. In
-addition to `data-bz-visit` and it's equivalent `this.props.visit`, Superglue
-also provides `data-bz-remote` or `this.props.remote`, which you can use to
+addition to `data-sg-visit` and it's equivalent `this.props.visit`, Superglue
+also provides `data-sg-remote` or `this.props.remote`, which you can use to
 update parts of your page in async fashion without changing `window.history`.
 
 Imagine having to implement search, where you enter some text, hit enter, and

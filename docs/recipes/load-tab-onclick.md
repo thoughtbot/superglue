@@ -21,7 +21,7 @@ end
     return (
       <ol className='tabs'>
         <li> tab1 </li>
-        <li> <a href="/posts?props_at=data.posts.pending" data-bz-remote={true}>tab2</a> </li>
+        <li> <a href="/posts?props_at=data.posts.pending" data-sg-remote={true}>tab2</a> </li>
       <ol>
       ....
     )

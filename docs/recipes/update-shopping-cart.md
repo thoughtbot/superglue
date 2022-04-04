@@ -4,7 +4,7 @@ You want to update a cart count located in the header when a user clicks on "Add
 to cart" on a product listing.
 
 ```javascript
-  <form action='/add_to_cart?props_at=data.header.cart' method='POST' data-bz-remote={true}>
+  <form action='/add_to_cart?props_at=data.header.cart' method='POST' data-sg-remote={true}>
 ```
 
 ```ruby

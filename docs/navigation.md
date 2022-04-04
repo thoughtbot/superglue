@@ -31,7 +31,7 @@ You can add customizations to `visit` or `remote` in `application_visit.js`.
 Single page navigation must be explicitly enabled using a [data attribute]
 
 ```jsx
-  <a href='/posts' data-bz-visit={true} />
+  <a href='/posts' data-sg-visit={true} />
 ```
 
 or manually called using the `visit` thunk somewhere in your component:
@@ -58,8 +58,8 @@ Example:
 ```jsx
   <a
     href='/posts/new?props_at=data.body.modal'
-    data-bz-visit={true}
-    data-bz-placeholder="/new"
+    data-sg-visit={true}
+    data-sg-placeholder="/new"
   />
 ```
 
@@ -168,5 +168,5 @@ end
 
 [one visit]: ./react-redux.md#visit
 [configuring]: https://github.com/rt2zz/redux-persist
-[data attribute]: ./react-redux#data-bz-visit
+[data attribute]: ./react-redux#data-sg-visit
 

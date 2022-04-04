@@ -152,24 +152,24 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 | url | `String` | The full url, passed to `fetch`. |
 | pageKey | `String` | Location in the Superglue store where `page` is stored |
 
-### `data-bz-visit`
+### `data-sg-visit`
 
 A UJS equivalent of `visit` is available. For example:
 
 ```javascript
-<a href='/some_url' data-bz-visit={true} />
+<a href='/some_url' data-sg-visit={true} />
 ```
 
 or if you're using a form
 
 ```javascript
-<form action='/some_url' data-bz-visit={true} />
+<form action='/some_url' data-sg-visit={true} />
 ```
 
-`data-bz-visit` also has 2 companion attributes:
+`data-sg-visit` also has 2 companion attributes:
 
-1. `data-bz-placeholder` will allow you to add a placeholder.
-2. `data-bz-method` will set the method of the request (GET, POST, PUT, DELETE)
+1. `data-sg-placeholder` will allow you to add a placeholder.
+2. `data-sg-method` will set the method of the request (GET, POST, PUT, DELETE)
 for a `<a>` tag.
 
 
@@ -198,14 +198,14 @@ Shares the same arguments as `visit` with a few differences:
 | pageKey | `String` | Where the response should be saved. By default, it is the current url.
 |      |      | Other options are passed on to `fetch`|
 
-### `data-bz-remote`
+### `data-sg-remote`
 
 A UJS equivalent of remote is available. Use this if you want to update parts
 of the current page, or another page in the Redux store without updating
 `window.history` for example:
 
 ```javascript
-<a href='/some_url' data-bz-remote={true} />
+<a href='/some_url' data-sg-remote={true} />
 ```
 
 ### saveAndProcessPage

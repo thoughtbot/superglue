@@ -30,8 +30,7 @@ The `rails superglue:install:web` step adds a [preconfigured entry point] in
 ## Custom Reducers
 The generator will also add a `reducer.js` file for any custom reducer you'd
 like to add. Included in the reducer is a `pagesReducer` for any cross-page
-optimistic updates, and a `applicationRootReducer` for the entire store. The
-latter is used for [Redux Persist], which you can customize to your needs.
+optimistic updates, and a `applicationRootReducer` for the entire store.
 
 ## Custom Visit and Remote
 
@@ -55,4 +54,3 @@ end
 
 
 [preconfigured entry point]: https://github.com/thoughtbot/Superglue/blob/main/superglue_rails/lib/install/templates/web/application.js
-[Redux Persist]: https://github.com/rt2zz/redux-persist

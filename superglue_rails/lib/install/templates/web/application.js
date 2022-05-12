@@ -5,8 +5,6 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import { ApplicationBase, fragmentMiddleware } from '@thoughtbot/superglue';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import { applicationRootReducer, applicationPagesReducer } from './reducer';
 import { buildVisitAndRemote } from './application_visit';
 
@@ -58,57 +56,20 @@ export default class Application extends ApplicationBase {
     const composeEnhancers =
       (this.hasWindow && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
       compose;
-    const reducer = this.wrapWithPersistReducer(
-      reduceReducers(
+    const reducer = reduceReducers(
         combineReducers({
           superglue: superglueReducer,
           pages: reduceReducers(pagesReducer, applicationPagesReducer),
         }),
         applicationRootReducer
-      )
     );
+
     const store = createStore(
       reducer,
       initialState,
       composeEnhancers(applyMiddleware(thunk, fragmentMiddleware))
     );
 
-    if (this.hasWindow) {
-      // Persist the store using Redux-Persist
-      persistStore(store);
-    }
-
     return store;
-  }
-
-  wrapWithPersistReducer(reducers) {
-    // Redux Persist settings
-    // The key is set to the stringified JS asset path to remove the need for
-    // migrations when hydrating.
-    if (!this.hasWindow) {
-      return reducers;
-    }
-    const prefix = "superglue";
-    const persistKey =
-      prefix +
-      this.props.initialPage.assets
-        .filter((asset) => asset.endsWith(".js"))
-        .join(",");
-    const persistConfig = {
-      key: persistKey,
-      storage,
-    };
-
-    // Remove older storage items that were used by previous JS assets
-    if (this.hasWindow) {
-      const storedKeys = Object.keys(localStorage);
-      storedKeys.forEach((key) => {
-        if (key.startsWith(`persist:${prefix}`) && key !== persistKey) {
-          localStorage.removeItem(key);
-        }
-      });
-    }
-
-    return persistReducer(persistConfig, reducers);
   }
 }

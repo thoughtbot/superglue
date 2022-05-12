@@ -11,7 +11,7 @@ a time.
 2. `remote` is used with urls that contain the `props_at` param for partial page
 updates.
 
-When [configuring] your application in `application.js`, your page components
+When configuring your application in `application.js`, your page components
 would all receive a `visit` and `remote` function that will dispatch when
 called.
 
@@ -167,6 +167,5 @@ end
 ```
 
 [one visit]: ./react-redux.md#visit
-[configuring]: https://github.com/rt2zz/redux-persist
 [data attribute]: ./react-redux#data-sg-visit
 

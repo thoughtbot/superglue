@@ -1,6 +1,8 @@
 import React from 'react'
-import parse, { domToReact } from 'html-react-parser'
-import attributesToProps from 'html-react-parser/lib/attributes-to-props'
+import parse, {
+  domToReact,
+  attributesToProps,
+} from 'html-react-parser'
 import PropTypes from 'prop-types'
 
 export default class RailsTag extends React.Component {

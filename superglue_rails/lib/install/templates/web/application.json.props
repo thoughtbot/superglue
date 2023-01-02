@@ -8,7 +8,8 @@ json.component_identifier local_assigns[:virtual_path_of_template]
 json.defers json.deferred!
 json.fragments json.fragments!
 json.assets [
-  asset_pack_path('application.js'),
+  # Uncomment for webpacker support
+  # asset_pack_path('application.js'),
   asset_path('application.css')
 ]
 

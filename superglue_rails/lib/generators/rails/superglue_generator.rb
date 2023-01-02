@@ -1,9 +1,10 @@
 require 'rails/generators/named_base'
 require 'rails/generators/resource_helpers'
+require 'rails/version'
 
 module Rails
   module Generators
-    class SuperglueGenerator < NamedBase # :nodoc:
+    class SuperglueGenerator < NamedBase
       include Rails::Generators::ResourceHelpers
 
       source_root File.expand_path('../templates', __FILE__)
@@ -42,13 +43,29 @@ module Rails
 
 
       protected
+        def view_path
+          if Rails.version >= "7"
+            "../views"
+          else
+            "../../views"
+          end
+        end
+
+        def app_js_path
+          if Rails.version >= "7"
+            "app/javascript/"
+          else
+            "app/javascript/packs"
+          end
+        end
+
         def append_mapping(action)
-          app_js = 'app/javascript/packs/application.js'
+          app_js = "#{app_js_path}/application.js"
 
           component_name = [plural_table_name, action].map(&:camelcase).join
 
           inject_into_file app_js, after: "from '@thoughtbot/superglue'" do
-            "\nimport #{component_name} from 'views/#{controller_file_path}/#{action}'"
+            "\nimport #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'"
           end
 
           inject_into_file app_js, after: 'identifierToComponentMapping = {' do

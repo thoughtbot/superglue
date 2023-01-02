@@ -66,18 +66,38 @@ class SuperglueInstallationTest < Minitest::Test
     successfully "echo \"gem 'props_template'\" >> Gemfile"
     successfully "echo \"gem 'superglue', path: '#{SUPERGLUE_RAILS_PATH}'\" >> Gemfile"
     successfully "bundle install"
-    successfully "cp #{SUPERGLUE_RAILS_PATH}/test/acceptance/babel.config.js ./babel.config.js"
-    FileUtils.rm_f("app/javascript/packs/application.js")
+
+    if Rails.version >= "7"
+      FileUtils.rm_f("app/javascript/application.js")
+    else
+      successfully "cp #{SUPERGLUE_RAILS_PATH}/test/acceptance/babel.config.js ./babel.config.js"
+      FileUtils.rm_f("app/javascript/packs/application.js")
+    end
+
     successfully "bundle exec rails superglue:install:web"
     update_package_json
     successfully "yarn install --cache-folder /tmp/.junk; rm -rf /tmp/.junk"
   end
 
-  def generate_test_app(app_name)
+  def add_esbuild_cmd
+    build_script = "esbuild app/javascript/*.* --bundle --loader:.js=jsx --sourcemap --outdir=app/assets/builds --public-path=assets"
+    successfully %(npm pkg set scripts.build="#{build_script}")
+  end
+
+  def generate_test_app_6(app_name)
     successfully "rails new #{app_name} \
        --webpack \
        --skip-git \
        --skip-turbolinks \
+       --skip-hotwire \
+       --skip-spring \
+       --no-rc"
+  end
+
+  def generate_test_app_7(app_name)
+    successfully "rails new #{app_name} \
+       --javascript=esbuild \
+       --skip-git \
        --skip-hotwire \
        --skip-spring \
        --no-rc"
@@ -94,8 +114,12 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def compile_assets
-    successfully "RAILS_ENV=production bundle exec rails assets:precompile"
-    successfully "RAILS_ENV=production bundle exec rails webpacker:compile"
+    if Rails.version >= "7"
+      successfully "RAILS_ENV=production bundle exec rails assets:precompile"
+    else
+      successfully "RAILS_ENV=production bundle exec rails assets:precompile"
+      successfully "RAILS_ENV=production bundle exec rails webpacker:compile"
+    end
   end
 
   def server_up
@@ -110,22 +134,12 @@ class SuperglueInstallationTest < Minitest::Test
     Dir.mkdir(TMP_DIR) unless Dir.exist?(TMP_DIR)
     Dir.chdir(TMP_DIR) do
       FileUtils.rm_rf("testapp")
-      generate_test_app "testapp"
+      if Rails.version >= "7"
+        generate_test_app_7 "testapp"
+      else
+        generate_test_app_6 "testapp"
+      end
       Dir.chdir('testapp') do
-        if Rails.version >= "7"
-          layout_path = File.join(Dir.pwd, "app/views/layouts/application.html.erb")
-          layout_with_pack_tag = File.read(layout_path)
-            .split("\n")
-            .insert(8, '<%= javascript_pack_tag "application" %>')
-            .join("\n")
-
-          File.write(layout_path, layout_with_pack_tag)
-
-          successfully "echo \"gem 'webpacker'\" >> Gemfile"
-          successfully "bundle install"
-          successfully "rails webpacker:install"
-        end
-
         successfully 'bundle install'
         successfully 'yarn add react react-dom @babel/preset-react'
 
@@ -133,6 +147,9 @@ class SuperglueInstallationTest < Minitest::Test
         install_superglue
         generate_scaffold
         reset_db
+        if Rails.version >= "7"
+          add_esbuild_cmd
+        end
         compile_assets
         pid = server_up
       end
@@ -155,6 +172,7 @@ class SuperglueInstallationTest < Minitest::Test
     click_button 'Update Post'
     assert page.has_content?('Post was successfully updated.')
 
+  ensure
     Process.kill 'TERM', pid
     Process.wait pid
   end

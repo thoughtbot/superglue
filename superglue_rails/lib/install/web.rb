@@ -1,6 +1,4 @@
-require "webpacker/configuration"
-
-babel_config = Rails.root.join("babel.config.js")
+require "rails/version"
 
 def add_member_methods
   inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
@@ -16,35 +14,28 @@ def add_member_methods
   end
 end
 
-say "Copying module-resolver preset to your babel.config.js"
-resolver_snippet = <<~JAVASCRIPT
-  [
-    require('babel-plugin-module-resolver').default, {
-      "root": ["./app"],
-      "alias": {
-        "views": "./app/views",
-        "components": "./app/components",
-        "javascript": "./app/javascript"
-      }
-    }
-  ],
-JAVASCRIPT
-insert_into_file "babel.config.js", resolver_snippet, after: /plugins: \[\n/
+def app_js_path
+  if Rails.version >= "7"
+    "app/javascript/"
+  else
+    "app/javascript/packs"
+  end
+end
 
-say "Copying application.js file to #{Webpacker.config.source_entry_path}"
-copy_file "#{__dir__}/templates/web/application.js", "#{Webpacker.config.source_entry_path}/application.js"
+say "Copying application.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/application.js", "#{app_js_path}/application.js"
 
-say "Copying reducer.js file to #{Webpacker.config.source_entry_path}"
-copy_file "#{__dir__}/templates/web/reducer.js", "#{Webpacker.config.source_entry_path}/reducer.js"
+say "Copying reducer.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/reducer.js", "#{app_js_path}/reducer.js"
 
-say "Copying action_creators.js file to #{Webpacker.config.source_entry_path}"
-copy_file "#{__dir__}/templates/web/action_creators.js", "#{Webpacker.config.source_entry_path}/action_creators.js"
+say "Copying action_creators.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/action_creators.js", "#{app_js_path}/action_creators.js"
 
-say "Copying actions.js file to #{Webpacker.config.source_entry_path}"
-copy_file "#{__dir__}/templates/web/actions.js", "#{Webpacker.config.source_entry_path}/actions.js"
+say "Copying actions.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/actions.js", "#{app_js_path}/actions.js"
 
-say "Copying application_visit.js file to #{Webpacker.config.source_entry_path}"
-copy_file "#{__dir__}/templates/web/application_visit.js", "#{Webpacker.config.source_entry_path}/application_visit.js"
+say "Copying application_visit.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/application_visit.js", "#{app_js_path}/application_visit.js"
 
 say "Copying Superglue initializer"
 copy_file "#{__dir__}/templates/web/initializer.rb", "config/initializers/superglue.rb"
@@ -56,11 +47,13 @@ say "Adding required member methods to ApplicationRecord"
 add_member_methods
 
 say "Installing React, Redux, and Superglue"
-run "yarn add babel-plugin-module-resolver history html-react-parser react-redux redux-thunk redux reduce-reducers immer @thoughtbot/superglue --save"
+run "yarn add history html-react-parser react-redux redux-thunk redux reduce-reducers immer @thoughtbot/superglue --save"
 
-# For newer webpacker
-insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /additional_paths: \[/
-# For older webpacker
-insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /resolved_paths: \[/
+if Rails.version < "7"
+  # For newer webpacker
+  insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /additional_paths: \[/
+  # For older webpacker
+  insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /resolved_paths: \[/
+end
 
-say "Webpacker now supports superglue.js 🎉", :green
+say "Superglue is Installed! 🎉", :green

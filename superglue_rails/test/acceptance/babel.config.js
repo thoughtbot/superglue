@@ -45,16 +45,6 @@ module.exports = function(api) {
       ]
     ].filter(Boolean),
     plugins: [
-[
-  require('babel-plugin-module-resolver').default, {
-    "root": ["./app"],
-    "alias": {
-      "views": "./app/views",
-      "components": "./app/components",
-      "javascript": "./app/javascript"
-    }
-  }
-],
       'babel-plugin-macros',
       '@babel/plugin-syntax-dynamic-import',
       isTestEnv && 'babel-plugin-dynamic-import-node',

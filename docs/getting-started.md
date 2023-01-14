@@ -2,8 +2,12 @@
 
 ## Installation
 
-Ensure you have Webpacker and React installed. Add the following to your
-Gemfile and run bundle
+If using Rails 6, ensure you have Webpacker and React installed. If using
+Rails 7, ensure you are using esbuild (enabled with JSX in `.js`) and
+have React installed.
+
+
+Add the following to your Gemfile and run bundle.
 
 ```ruby
 # Gemfile

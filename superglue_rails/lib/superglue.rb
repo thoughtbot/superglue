@@ -1,10 +1,11 @@
-require 'superglue/helpers'
-require 'superglue/redirection'
-require 'props_template'
+require "superglue/helpers"
+require "superglue/redirection"
+require "props_template"
 
 module Superglue
   module Controller
-    include Helpers, Redirection
+    include Redirection
+    include Helpers
 
     def self.included(base)
       if base.respond_to?(:helper_method)
@@ -22,7 +23,7 @@ module Superglue
     generators do |app|
       Rails::Generators.configure! app.config.generators
       Rails::Generators.hidden_namespaces.uniq!
-      require 'generators/rails/scaffold_controller_generator'
+      require "generators/rails/scaffold_controller_generator"
     end
 
     initializer :superglue do |app|

@@ -3,7 +3,7 @@ module Superglue
     def _compute_redirect_to_location(request, options)
       computed_location = URI.parse(super)
       next_param = Rack::Utils
-          .parse_nested_query(computed_location.query)
+        .parse_nested_query(computed_location.query)
 
       if request.params[:__] == "0"
         computed_location.query = next_param.merge({__: "0"}).to_query
@@ -27,4 +27,3 @@ module Superglue
     end
   end
 end
-

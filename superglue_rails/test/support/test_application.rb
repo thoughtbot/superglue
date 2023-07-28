@@ -7,9 +7,9 @@ class TestApplication < Rails::Application
   initialize!
 
   routes.draw do
-    get 'redirect_path', to: redirect('/superglue/simple_action')
-    get 'redirect_hash', to: redirect(path: '/superglue/simple_action')
-    get ':controller(/:action)'
+    get "redirect_path", to: redirect("/superglue/simple_action")
+    get "redirect_hash", to: redirect(path: "/superglue/simple_action")
+    get ":controller(/:action)"
   end
 end
 

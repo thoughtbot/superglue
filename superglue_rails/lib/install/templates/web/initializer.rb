@@ -1,1 +1,1 @@
-require 'props_template/core_ext'
+require "props_template/core_ext"

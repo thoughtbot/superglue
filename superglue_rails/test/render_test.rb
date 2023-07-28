@@ -1,14 +1,14 @@
-require 'test_helper'
+require "test_helper"
 
 class RenderController < TestController
-  require 'action_view/testing/resolvers'
+  require "action_view/testing/resolvers"
 
   append_view_path(ActionView::FixtureResolver.new(
-    'render/simple_render_with_superglue.json.props' => 'json.author "john smith"',
-    'render/simple_render_with_superglue_with_bad_layout.json.props' => 'json.author "john smith"',
-    'layouts/application.json.props' => 'json.data {yield json}',
-    'layouts/does_not_exist.html.erb' => '',
-    'layouts/application.html.erb' => <<~HTML
+    "render/simple_render_with_superglue.json.props" => 'json.author "john smith"',
+    "render/simple_render_with_superglue_with_bad_layout.json.props" => 'json.author "john smith"',
+    "layouts/application.json.props" => "json.data {yield json}",
+    "layouts/does_not_exist.html.erb" => "",
+    "layouts/application.html.erb" => <<~HTML
       <html>
         <head>
           <script><%= @initial_state.strip.html_safe %></script>
@@ -18,7 +18,7 @@ class RenderController < TestController
     HTML
   ))
 
-  layout 'application'
+  layout "application"
 
   def render_action
     render :action
@@ -26,12 +26,12 @@ class RenderController < TestController
 
   def simple_render_with_superglue
     @initial_state = render_to_string(formats: [:json], layout: true)
-    render inline: '', layout: true
+    render inline: "", layout: true
   end
 
   def simple_render_with_superglue_with_bad_layout
-    @initial_state = render_to_string(formats: [:json], layout: 'does_not_exist')
-    render inline: '', layout: true
+    @initial_state = render_to_string(formats: [:json], layout: "does_not_exist")
+    render inline: "", layout: true
   end
 
   def form_authenticity_token
@@ -56,7 +56,7 @@ class RenderTest < ActionController::TestCase
     HTML
 
     assert_equal rendered, @response.body
-    assert_equal 'text/html', @response.media_type
+    assert_equal "text/html", @response.media_type
   end
 
   test "simple render when the layout doesn't exist" do
@@ -64,6 +64,6 @@ class RenderTest < ActionController::TestCase
       get :simple_render_with_superglue_with_bad_layout
     end
 
-    assert_equal(true, err.message.starts_with?('Missing template layouts/does_not_exist with {:locale=>[:en], :formats=>[:json], :variants=>[], :handlers=>[:props, :erb]}.'))
+    assert_equal(true, err.message.starts_with?("Missing template layouts/does_not_exist with {:locale=>[:en], :formats=>[:json], :variants=>[], :handlers=>[:props, :erb]}."))
   end
 end

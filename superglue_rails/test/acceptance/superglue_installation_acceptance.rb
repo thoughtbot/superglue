@@ -1,20 +1,20 @@
 require "minitest/autorun"
-require 'capybara'
-require 'capybara/minitest'
-require 'selenium-webdriver'
-require 'byebug'
+require "capybara"
+require "capybara/minitest"
+require "selenium-webdriver"
+require "byebug"
 
-ROOT_DIR = File.expand_path('../../../../', __FILE__)
-TMP_DIR = File.join(ROOT_DIR, 'tmp')
-SUPERGLUE_RAILS_PATH = File.join(ROOT_DIR, 'superglue_rails')
-SUPERGLUE_SUPERGLUE_PATH = File.join(ROOT_DIR, 'superglue')
+ROOT_DIR = File.expand_path("../../../../", __FILE__)
+TMP_DIR = File.join(ROOT_DIR, "tmp")
+SUPERGLUE_RAILS_PATH = File.join(ROOT_DIR, "superglue_rails")
+SUPERGLUE_SUPERGLUE_PATH = File.join(ROOT_DIR, "superglue")
 VERSION = File.read(File.expand_path("../../../VERSION", __dir__)).strip
 
-SERVER_PORT = '3000'
+SERVER_PORT = "3000"
 
 Minitest.load_plugins
 
-class <<Minitest
+class << Minitest
   remove_method :plugin_rails_init if method_defined?(:plugin_rails_init)
 end
 
@@ -28,7 +28,7 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def setup
-    ENV['BUNDLE_GEMFILE'] = nil
+    ENV["BUNDLE_GEMFILE"] = nil
 
     Capybara.javascript_driver = :selenium_chrome_headless
     Capybara.current_driver = Capybara.javascript_driver
@@ -38,10 +38,10 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def successfully(command, silent = false)
-    if silent
-      silencer = "1>/dev/null"
+    silencer = if silent
+      "1>/dev/null"
     else
-      silencer = ""
+      ""
     end
 
     return_value = system("#{command} #{silencer}")
@@ -50,11 +50,11 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def update_package_json
-    content = File.read('package.json').gsub(
+    content = File.read("package.json").gsub(
       /"@thoughtbot\/superglue.*$/,
       "\"@thoughtbot/superglue\":\"file:#{SUPERGLUE_SUPERGLUE_PATH}/thoughtbot-superglue-#{VERSION}.tgz\","
     )
-    File.open('package.json', "w") {|file| file.puts content }
+    File.open("package.json", "w") { |file| file.puts content }
   end
 
   def install_superglue
@@ -125,9 +125,9 @@ class SuperglueInstallationTest < Minitest::Test
     Dir.chdir(TMP_DIR) do
       FileUtils.rm_rf("testapp")
       generate_test_app_7 "testapp"
-      Dir.chdir('testapp') do
-        successfully 'bundle install'
-        successfully 'yarn add react react-dom @babel/preset-react'
+      Dir.chdir("testapp") do
+        successfully "bundle install"
+        successfully "yarn add react react-dom @babel/preset-react"
 
         FileUtils.rm_f("public/index.html")
         install_superglue
@@ -139,25 +139,24 @@ class SuperglueInstallationTest < Minitest::Test
       end
     end
 
-    visit('/posts')
-    assert page.has_content?('Body')
-    assert page.has_content?('New Post')
-    find("a", :text => "New Post").click
-    assert page.has_content?('Back')
+    visit("/posts")
+    assert page.has_content?("Body")
+    assert page.has_content?("New Post")
+    find("a", text: "New Post").click
+    assert page.has_content?("Back")
 
-    fill_in 'post_body', with: 'foobar'
-    click_button 'Create Post'
+    fill_in "post_body", with: "foobar"
+    click_button "Create Post"
     successfully "ls #{TMP_DIR}/testapp/log/"
     sleep 30
-    assert page.has_content?('Post was successfully created.')
-    find("a", :text => "Edit").click
+    assert page.has_content?("Post was successfully created.")
+    find("a", text: "Edit").click
 
-    fill_in 'post_body', with: 'foobar'
-    click_button 'Update Post'
-    assert page.has_content?('Post was successfully updated.')
-
+    fill_in "post_body", with: "foobar"
+    click_button "Update Post"
+    assert page.has_content?("Post was successfully updated.")
   ensure
-    Process.kill 'TERM', pid
+    Process.kill "TERM", pid
     Process.wait pid
   end
 end

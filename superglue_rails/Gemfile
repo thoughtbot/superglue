@@ -1,5 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 gemspec
 
-gem 'rails', '~> 7.0.0'
-gem 'props_template'
+gem "rails", "~> 7.0.0"
+gem "props_template"
+gem "standard"

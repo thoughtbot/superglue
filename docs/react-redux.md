@@ -62,45 +62,6 @@ to restore an existing page before making a call to `visit` or `remote`.
 | :--- | :--- |
 | ownProps | Any additional props to be passed to the next page component. |
 
-
-## The `RailsTag` component
-
-With this component, you can use pass the generated HTML from your Rails view
-helpers to React without the need for an additional wrapper div component. The
-component uses [html-react-parser](https://github.com/remarkablemark/html-react-parser).
-React's click handlers will work as expected.
-
-As an example:
-
-```
-# index.json.props
-
-json.svg_tag inline_svg_tag(
-  "icons/x-circle.svg",
-  aria: true,
-  class: "syos-icon",
-  title: "Remove",
-)
-```
-
-Then somewhere in your component
-
-```
-  render() {
-    const {
-      svgTag
-    } = this.props
-
-    return (
-      <div>
-        <h1> Hello world </h1>
-        <RailsTag html={svgTag} / onClick={() => console.log('hello world')}>
-      </div>
-    )
-  }
-```
-
-
 ## Action Creators
 
 ### visit

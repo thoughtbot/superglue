@@ -1,13 +1,6 @@
-html = form_with(model: @<%= model_resource_name %>, local: true) do |form|
-  inner = "".html_safe
-
+form_props(model: @<%= model_resource_name %>) do |f|
 <%- attributes.each do |attr| -%>
-  inner << form.label(:<%= attr.column_name %>)
-  inner << form.<%= attr.field_type %>(:<%= attr.column_name %>)
+  f.<%= attr.field_type %>(:<%= attr.column_name %>)
 <%- end -%>
-  inner << form.submit
-
-  inner
+  f.submit
 end
-
-json.html html

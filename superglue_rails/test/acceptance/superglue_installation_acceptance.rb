@@ -2,7 +2,8 @@ require "minitest/autorun"
 require 'capybara'
 require 'capybara/minitest'
 require 'selenium-webdriver'
-require 'rails/version'
+# require 'rails/version'
+require 'byebug'
 
 ROOT_DIR = File.expand_path('../../../../', __FILE__)
 TMP_DIR = File.join(ROOT_DIR, 'tmp')
@@ -67,12 +68,12 @@ class SuperglueInstallationTest < Minitest::Test
     successfully "echo \"gem 'superglue', path: '#{SUPERGLUE_RAILS_PATH}'\" >> Gemfile"
     successfully "bundle install"
 
-    if Rails.version >= "7"
+    # if Rails.version >= "7"
       FileUtils.rm_f("app/javascript/application.js")
-    else
-      successfully "cp #{SUPERGLUE_RAILS_PATH}/test/acceptance/babel.config.js ./babel.config.js"
-      FileUtils.rm_f("app/javascript/packs/application.js")
-    end
+    # else
+    #   successfully "cp #{SUPERGLUE_RAILS_PATH}/test/acceptance/babel.config.js ./babel.config.js"
+    #   FileUtils.rm_f("app/javascript/packs/application.js")
+    # end
 
     successfully "bundle exec rails superglue:install:web"
     update_package_json
@@ -84,15 +85,15 @@ class SuperglueInstallationTest < Minitest::Test
     successfully %(npm pkg set scripts.build="#{build_script}")
   end
 
-  def generate_test_app_6(app_name)
-    successfully "rails new #{app_name} \
-       --webpack \
-       --skip-git \
-       --skip-turbolinks \
-       --skip-hotwire \
-       --skip-spring \
-       --no-rc"
-  end
+  # def generate_test_app_6(app_name)
+  #   successfully "rails new #{app_name} \
+  #      --webpack \
+  #      --skip-git \
+  #      --skip-turbolinks \
+  #      --skip-hotwire \
+  #      --skip-spring \
+  #      --no-rc"
+  # end
 
   def generate_test_app_7(app_name)
     successfully "rails new #{app_name} \
@@ -114,12 +115,12 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def compile_assets
-    if Rails.version >= "7"
+    # if Rails.version >= "7"
       successfully "RAILS_ENV=production bundle exec rails assets:precompile"
-    else
-      successfully "RAILS_ENV=production bundle exec rails assets:precompile"
-      successfully "RAILS_ENV=production bundle exec rails webpacker:compile"
-    end
+    # else
+    #   successfully "RAILS_ENV=production bundle exec rails assets:precompile"
+    #   successfully "RAILS_ENV=production bundle exec rails webpacker:compile"
+    # end
   end
 
   def server_up
@@ -134,11 +135,11 @@ class SuperglueInstallationTest < Minitest::Test
     Dir.mkdir(TMP_DIR) unless Dir.exist?(TMP_DIR)
     Dir.chdir(TMP_DIR) do
       FileUtils.rm_rf("testapp")
-      if Rails.version >= "7"
+      # if Rails.version >= "7"
         generate_test_app_7 "testapp"
-      else
-        generate_test_app_6 "testapp"
-      end
+      # else
+      #   generate_test_app_6 "testapp"
+      # end
       Dir.chdir('testapp') do
         successfully 'bundle install'
         successfully 'yarn add react react-dom @babel/preset-react'
@@ -147,9 +148,9 @@ class SuperglueInstallationTest < Minitest::Test
         install_superglue
         generate_scaffold
         reset_db
-        if Rails.version >= "7"
+        # if Rails.version >= "7"
           add_esbuild_cmd
-        end
+        # end
         compile_assets
         pid = server_up
       end

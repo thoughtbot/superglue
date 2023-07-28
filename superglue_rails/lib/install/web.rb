@@ -46,14 +46,10 @@ copy_file "#{__dir__}/templates/web/application.json.props", "app/views/layouts/
 say "Adding required member methods to ApplicationRecord"
 add_member_methods
 
-say "Installing React, Redux, and Superglue"
-run "yarn add history html-react-parser react-redux redux-thunk redux reduce-reducers immer @thoughtbot/superglue --save"
+say "Installing FormProps"
+run "bundle add form_props"
 
-if Rails.version < "7"
-  # For newer webpacker
-  insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /additional_paths: \[/
-  # For older webpacker
-  insert_into_file Webpacker.config.config_path, "'app/views', 'app/components'", after: /resolved_paths: \[/
-end
+say "Installing React, Redux, and Superglue"
+run "yarn add history react-redux redux-thunk redux reduce-reducers immer @thoughtbot/superglue --save"
 
 say "Superglue is Installed! 🎉", :green

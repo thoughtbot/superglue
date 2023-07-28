@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/*"]
 
   s.add_dependency 'actionpack', '>= 6.0.0'
-  s.add_dependency 'props_template', '>= 0.21.1'
-  s.add_dependency 'webpacker', '>= 3.0'
+  s.add_dependency 'props_template', '>= 0.23.0'
+  s.add_dependency 'form_props', '>= 0.0.3'
 
   s.add_development_dependency 'activerecord', '>= 6.0'
   s.add_development_dependency 'rake', ' ~> 12.0'

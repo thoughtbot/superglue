@@ -1,5 +1,4 @@
 import React from 'react'
-import RailsTag from '@thoughtbot/superglue/components/RailsTag'
 // import * as actionCreators from 'javascript/packs/action_creators'
 // import {useDispatch} from 'react-redux'
 
@@ -23,7 +22,15 @@ export default function <%= plural_table_name.camelize %>Edit ({
   return (
     <div>
       {messagesEl}
-      <RailsTag {...form} data-sg-visit={true}/>
+      <form {...form.props} data-sg-visit={true}>
+        {Object.values(form.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
+        <%- attributes.each do |attr| -%>
+        <input {...form.inputs.<%= attr.column_name %>} type="text"/>
+        <label htmlFor={form.inputs.<%= attr.column_name %>.id}><%= attr.column_name %></label>
+        <%- end -%>
+        <button {...form.inputs.submit} type="submit"> {...form.inputs.submit.text} </button>
+      </form>
+
       <a href={<%= singular_table_name.camelize(:lower) %>Path} data-sg-visit={true}>Show</a>
       <a href={<%= plural_table_name.camelize(:lower) %>Path}  data-sg-visit={true}>Back</a>
     </div>

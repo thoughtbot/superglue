@@ -1,6 +1,5 @@
 require 'rails/generators/named_base'
 require 'rails/generators/resource_helpers'
-require 'rails/version'
 
 module Rails
   module Generators
@@ -44,19 +43,11 @@ module Rails
 
       protected
         def view_path
-          if Rails.version >= "7"
-            "../views"
-          else
-            "../../views"
-          end
+          "../views"
         end
 
         def app_js_path
-          if Rails.version >= "7"
-            "app/javascript/"
-          else
-            "app/javascript/packs"
-          end
+          "app/javascript/"
         end
 
         def append_mapping(action)

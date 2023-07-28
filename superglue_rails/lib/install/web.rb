@@ -1,5 +1,3 @@
-require "rails/version"
-
 def add_member_methods
   inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
     <<-RUBY
@@ -15,11 +13,7 @@ def add_member_methods
 end
 
 def app_js_path
-  if Rails.version >= "7"
-    "app/javascript/"
-  else
-    "app/javascript/packs"
-  end
+  "app/javascript/"
 end
 
 say "Copying application.js file to #{app_js_path}"

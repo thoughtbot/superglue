@@ -42,18 +42,6 @@ end
 class RenderTest < ActionController::TestCase
   tests RenderController
 
-
-  setup do
-    if Rails.version >= '6'
-      # In rails 6, the fixture orders the templates based on their appearance in the handler
-      # This doesn't happen IRL, so I'm going to explicitly set the handler here.
-      #
-      # Note that the original is the following
-      # @controller.lookup_context.handlers = [:raw, :superglue, :erb, :js, :html, :builder, :ruby]
-      @controller.lookup_context.handlers = [:props, :erb]
-    end
-  end
-
   test "simple render with superglue" do
     get :simple_render_with_superglue
 

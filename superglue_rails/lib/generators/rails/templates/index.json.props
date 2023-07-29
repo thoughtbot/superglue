@@ -5,7 +5,9 @@ json.<%= plural_table_name %> do
     <%- end -%>
     json.edit_<%=singular_table_name%>_path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
     json.<%=singular_table_name%>_path <%=singular_table_name%>_path(<%=singular_table_name%>)
-    json.delete_<%=singular_table_name%>_path <%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.delete_form do
+      form_props(model: <%=singular_table_name%>, method: :delete)
+    end
   end
 end
 

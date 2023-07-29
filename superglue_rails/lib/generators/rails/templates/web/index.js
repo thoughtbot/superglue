@@ -10,6 +10,8 @@ export default function <%= plural_table_name.camelize %>Index({
   <%= plural_table_name.camelize(:lower) %> = [],
 }) {
   const <%= singular_table_name.camelize(:lower) %>Items = <%= plural_table_name.camelize(:lower) %>.map((<%= singular_table_name.camelize(:lower) %>, key) => {
+    const deleteForm = <%=singular_table_name.camelize(:lower)%>.deleteForm;
+
     return (
       <tr key={<%= singular_table_name.camelize(:lower) %>.id}>
         <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
@@ -17,7 +19,12 @@ export default function <%= plural_table_name.camelize %>Index({
         <%- end -%>
         <td><a href={ <%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path } data-sg-visit={true}>Show</a></td>
         <td><a href={ <%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path } data-sg-visit={true}>Edit</a></td>
-        <td><a href={ <%=singular_table_name%>.delete<%=singular_table_name.camelize%>Path }data-sg-visit={true} data-sg-method={"DELETE"}>Delete</a></td>
+        <td>
+          <form {...deleteForm.props} data-sg-visit={true}>
+            {Object.values(deleteForm.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
+            <button type="submit">Delete</button>
+          </form>
+        </td>
       </tr>
     )
   })

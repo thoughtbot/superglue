@@ -81,9 +81,7 @@ export class HandlerBuilder {
     let url = link.getAttribute('href')
     url = withoutBusters(url)
 
-    const method =
-      link.getAttribute(this.attributePrefix + '-method') || 'GET'
-    this.visitOrRemote(link, url, { method })
+    this.visitOrRemote(link, url, { method: 'GET' })
   }
 
   visitOrRemote(linkOrForm, url, opts = {}) {

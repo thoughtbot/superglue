@@ -155,6 +155,12 @@ class SuperglueInstallationTest < Minitest::Test
     fill_in "post_body", with: "foobar"
     click_button "Update Post"
     assert page.has_content?("Post was successfully updated.")
+
+    find("a", text: "Back").click
+    assert page.has_content?("foobar")
+
+    click_button "Delete"
+    assert page.has_content?("Post was successfully destroyed.")
   ensure
     Process.kill "TERM", pid
     Process.wait pid

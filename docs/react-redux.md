@@ -121,17 +121,20 @@ A UJS equivalent of `visit` is available. For example:
 <a href='/some_url' data-sg-visit={true} />
 ```
 
+!> You are not able to specify the HTTP method used in a UJS link. This is
+intentionally. If you want to create a link that can support different HTML
+methods, create a UJS form that look like a link using
+[form_props](https://github.com/thoughtbot/form_props)
+
 or if you're using a form
 
 ```javascript
 <form action='/some_url' data-sg-visit={true} />
 ```
 
-`data-sg-visit` also has 2 companion attributes:
-
-1. `data-sg-placeholder` will allow you to add a placeholder.
-2. `data-sg-method` will set the method of the request (GET, POST, PUT, DELETE)
-for a `<a>` tag.
+`data-sg-visit` also has the companion attribute, `data-sg-placeholder` which
+lets you specify a [placeholder](react-redux.md#visit) for the page while the
+visit is being made.
 
 
 ### remote

@@ -19,6 +19,9 @@ end
 say "Copying application.js file to #{app_js_path}"
 copy_file "#{__dir__}/templates/web/application.js", "#{app_js_path}/application.js"
 
+say "Copying page_to_page_mapping.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/page_to_page_mapping.js", "#{app_js_path}/page_to_page_mapping.js"
+
 say "Copying reducer.js file to #{app_js_path}"
 copy_file "#{__dir__}/templates/web/reducer.js", "#{app_js_path}/reducer.js"
 

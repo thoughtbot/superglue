@@ -7,14 +7,7 @@ import { render } from 'react-dom';
 import { ApplicationBase, fragmentMiddleware } from '@thoughtbot/superglue';
 import { applicationRootReducer, applicationPagesReducer } from './reducer';
 import { buildVisitAndRemote } from './application_visit';
-
-// Mapping between your props template to Component, you must add to this
-// to register any new page level component you create. If you are using the
-// scaffold, it will auto append the identifers for you.
-//
-// e.g {'posts/new': PostNew}
-const identifierToComponentMapping = {
-};
+import { pageIdentifierToPageComponent } from './page_to_page_mapping';
 
 if (typeof window !== "undefined") {
   document.addEventListener("DOMContentLoaded", function () {
@@ -43,7 +36,7 @@ if (typeof window !== "undefined") {
 
 export default class Application extends ApplicationBase {
   mapping() {
-    return identifierToComponentMapping;
+    return pageIdentifierToPageComponent;
   }
 
   visitAndRemote(navRef, store) {

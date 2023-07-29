@@ -51,16 +51,16 @@ module Rails
       end
 
       def append_mapping(action)
-        app_js = "#{app_js_path}/application.js"
+        app_js = "#{app_js_path}/page_to_page_mapping.js"
 
         component_name = [plural_table_name, action].map(&:camelcase).join
 
-        inject_into_file app_js, after: "from '@thoughtbot/superglue'" do
+        prepend_to_file app_js do
           "\nimport #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'"
         end
 
-        inject_into_file app_js, after: "identifierToComponentMapping = {" do
-          "\n      '#{[controller_file_path, action].join("/")}': #{component_name},"
+        inject_into_file app_js, after: "pageIdentifierToPageComponent = {" do
+          "\n  '#{[controller_file_path, action].join("/")}': #{component_name},"
         end
       end
 

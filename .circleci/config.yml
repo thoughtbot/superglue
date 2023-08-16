@@ -66,7 +66,6 @@ workflows:
           matrix:
             parameters:
               gemfile:
-                - Gemfile.rails61
                 - Gemfile.rails70
               ruby-version:
                 - ruby27

@@ -1,6 +1,6 @@
 {
   "name": "@thoughtbot/superglue",
-  "version": "0.41.0",
+  "version": "0.50.0.beta1",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
     "test": "jest",

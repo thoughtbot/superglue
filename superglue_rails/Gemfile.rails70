@@ -3,3 +3,4 @@ gemspec
 
 gem 'rails', '~> 7.0.0'
 gem 'props_template'
+gem 'standard'

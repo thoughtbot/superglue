@@ -1,4 +1,5 @@
 require "test_helper"
+require 'byebug'
 
 class RenderController < TestController
   require "action_view/testing/resolvers"
@@ -59,11 +60,20 @@ class RenderTest < ActionController::TestCase
     assert_equal "text/html", @response.media_type
   end
 
-  test "simple render when the layout doesn't exist" do
-    err = assert_raise ActionView::MissingTemplate do |e|
-      get :simple_render_with_superglue_with_bad_layout
-    end
+  test "simple render when the layout doesn't exist, but a version of the layout in a differnt format does" do
+    get :simple_render_with_superglue_with_bad_layout
 
-    assert_equal(true, err.message.starts_with?("Missing template layouts/does_not_exist with {:locale=>[:en], :formats=>[:json], :variants=>[], :handlers=>[:props, :erb]}."))
+    assert_response 200
+    rendered = <<~HTML
+      <html>
+        <head>
+          <script>{"author":"john smith"}</script>
+        </head>
+        <body></body>
+      </html>
+    HTML
+
+    assert_equal rendered, @response.body
+    assert_equal "text/html", @response.media_type
   end
 end

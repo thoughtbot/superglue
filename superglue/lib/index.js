@@ -18,6 +18,18 @@ import Nav from './components/Nav'
 import PropTypes from 'prop-types'
 
 export {
+  BEFORE_FETCH,
+  BEFORE_VISIT,
+  BEFORE_REMOTE,
+  SAVE_RESPONSE,
+  UPDATE_FRAGMENTS,
+  COPY_PAGE,
+  REMOVE_PAGE,
+  GRAFTING_ERROR,
+  GRAFTING_SUCCESS,
+} from './actions'
+
+export {
   mapStateToProps,
   mapDispatchToProps,
   mapDispatchToPropsIncludingVisitAndRemote,

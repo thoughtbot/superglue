@@ -149,6 +149,10 @@ describe('action creators', () => {
           },
         },
         {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: expect.any(Object),
+        },
+        {
           type: '@@superglue/BEFORE_FETCH',
           payload: expect.any(Object),
         },
@@ -266,6 +270,25 @@ describe('action creators', () => {
           },
         },
         {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: {
+            fetchArgs: [
+              '/foo?props_at=data.body&__=0',
+              {
+                method: 'GET',
+                headers: {
+                  accept: 'application/json',
+                  'x-requested-with': 'XMLHttpRequest',
+                  'x-superglue-request': true,
+                  'x-csrf-token': 'token',
+                },
+                credentials: 'same-origin',
+                referrer: '/bar',
+              },
+            ],
+          },
+        },
+        {
           type: '@@superglue/BEFORE_FETCH',
           payload: {
             fetchArgs: [
@@ -299,6 +322,25 @@ describe('action creators', () => {
                 { url: '/foo?props_at=data.body.aside.top', type: 'auto' },
               ],
             },
+          },
+        },
+        {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: {
+            fetchArgs: [
+              '/foo?props_at=data.body.aside.top&__=0',
+              {
+                method: 'GET',
+                headers: {
+                  accept: 'application/json',
+                  'x-requested-with': 'XMLHttpRequest',
+                  'x-superglue-request': true,
+                  'x-csrf-token': 'token',
+                },
+                credentials: 'same-origin',
+                referrer: '/bar',
+              },
+            ],
           },
         },
         {
@@ -426,6 +468,10 @@ describe('action creators', () => {
             pageKey: '/foo',
             page: page,
           },
+        },
+        {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: expect.any(Object),
         },
         {
           type: '@@superglue/BEFORE_FETCH',
@@ -621,6 +667,10 @@ describe('action creators', () => {
           },
         },
         {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: expect.any(Object),
+        },
+        {
           type: '@@superglue/BEFORE_FETCH',
           payload: expect.any(Object),
         },
@@ -679,6 +729,10 @@ describe('action creators', () => {
           },
         },
         {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: expect.any(Object),
+        },
+        {
           type: '@@superglue/BEFORE_FETCH',
           payload: expect.any(Object),
         },
@@ -724,6 +778,10 @@ describe('action creators', () => {
       })
 
       const expectedActions = [
+        {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
+        },
         {
           type: '@@superglue/BEFORE_FETCH',
           payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
@@ -796,6 +854,10 @@ describe('action creators', () => {
       })
 
       const expectedActions = [
+        {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
+        },
         {
           type: '@@superglue/BEFORE_FETCH',
           payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
@@ -924,6 +986,10 @@ describe('action creators', () => {
 
       const expectedActions = [
         {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
+        },
+        {
           type: '@@superglue/BEFORE_FETCH',
           payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
         },
@@ -953,6 +1019,10 @@ describe('action creators', () => {
       })
 
       const expectedActions = [
+        {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
+        },
         {
           type: '@@superglue/BEFORE_FETCH',
           payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
@@ -988,6 +1058,10 @@ describe('action creators', () => {
       })
 
       const expectedActions = [
+        {
+          type: '@@superglue/BEFORE_REMOTE',
+          payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
+        },
         {
           type: '@@superglue/BEFORE_FETCH',
           payload: { fetchArgs: ['/foo?__=0', expect.any(Object)] },
@@ -1266,6 +1340,10 @@ describe('action creators', () => {
         {
           type: '@@superglue/COPY_PAGE',
           payload: { from: '/current', to: '/details' },
+        },
+        {
+          type: '@@superglue/BEFORE_VISIT',
+          payload: expect.any(Object),
         },
         {
           type: '@@superglue/BEFORE_FETCH',

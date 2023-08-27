@@ -10,9 +10,25 @@ import {
 import {
   CLEAR_FLASH,
   BEFORE_FETCH,
+  BEFORE_VISIT,
+  BEFORE_REMOTE,
   SUPERGLUE_ERROR,
 } from '../actions'
 import { copyPage, saveAndProcessPage } from './index'
+
+function beforeVisit(payload) {
+  return {
+    type: BEFORE_VISIT,
+    payload,
+  }
+}
+
+function beforeRemote(payload) {
+  return {
+    type: BEFORE_REMOTE,
+    payload,
+  }
+}
 
 function beforeFetch(payload) {
   return {
@@ -80,6 +96,7 @@ export function remote(
     })
     pageKey = pageKey || getState().superglue.currentPageKey
 
+    dispatch(beforeRemote({ fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
     return fetch(...fetchArgs)
@@ -158,6 +175,7 @@ export function visit(
       signal,
     })
 
+    dispatch(beforeVisit({ fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
     lastVisitController.abort()

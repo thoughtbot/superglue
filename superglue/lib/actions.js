@@ -1,4 +1,6 @@
 export const BEFORE_FETCH = '@@superglue/BEFORE_FETCH'
+export const BEFORE_VISIT = '@@superglue/BEFORE_VISIT'
+export const BEFORE_REMOTE = '@@superglue/BEFORE_REMOTE'
 
 export const SAVE_RESPONSE = '@@superglue/SAVE_RESPONSE'
 export const HANDLE_GRAFT = '@@superglue/HANDLE_GRAFT'

@@ -8,7 +8,6 @@ import {
   removePropsAt,
 } from '../utils'
 import {
-  CLEAR_FLASH,
   BEFORE_FETCH,
   BEFORE_VISIT,
   BEFORE_REMOTE,
@@ -66,15 +65,6 @@ function buildMeta(pageKey, page, state) {
   }
 }
 
-export function clearFlash({ pageKey }) {
-  return {
-    type: CLEAR_FLASH,
-    payload: {
-      pageKey,
-    },
-  }
-}
-
 export function remote(
   path,
   {
@@ -95,8 +85,9 @@ export function remote(
       body,
     })
     pageKey = pageKey || getState().superglue.currentPageKey
+    const currentPageKey = getState().superglue.currentPageKey
 
-    dispatch(beforeRemote({ fetchArgs }))
+    dispatch(beforeRemote({ currentPageKey, fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
     return fetch(...fetchArgs)
@@ -142,9 +133,6 @@ export function visit(
   let pageKey = urlToPageKey(path)
 
   return (dispatch, getState) => {
-    const currentKey = getState().superglue.currentPageKey
-    dispatch(clearFlash({ pageKey: currentKey }))
-
     placeholderKey = placeholderKey && urlToPageKey(placeholderKey)
     const hasPlaceholder = !!getState().pages[placeholderKey]
 
@@ -175,7 +163,8 @@ export function visit(
       signal,
     })
 
-    dispatch(beforeVisit({ fetchArgs }))
+    const currentPageKey = getState().superglue.currentPageKey
+    dispatch(beforeVisit({ currentPageKey, fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
     lastVisitController.abort()

@@ -22,11 +22,14 @@ copy_file "#{__dir__}/templates/web/application.js", "#{app_js_path}/application
 say "Copying page_to_page_mapping.js file to #{app_js_path}"
 copy_file "#{__dir__}/templates/web/page_to_page_mapping.js", "#{app_js_path}/page_to_page_mapping.js"
 
-say "Copying reducer.js file to #{app_js_path}"
-copy_file "#{__dir__}/templates/web/reducer.js", "#{app_js_path}/reducer.js"
+say "Copying flash.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/flash.js", "#{app_js_path}/slices/flash.js"
 
-say "Copying action_creators.js file to #{app_js_path}"
-copy_file "#{__dir__}/templates/web/action_creators.js", "#{app_js_path}/action_creators.js"
+say "Copying pages.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/pages.js", "#{app_js_path}/slices/pages.js"
+
+say "Copying store.js file to #{app_js_path}"
+copy_file "#{__dir__}/templates/web/store.js", "#{app_js_path}/store.js"
 
 say "Copying actions.js file to #{app_js_path}"
 copy_file "#{__dir__}/templates/web/actions.js", "#{app_js_path}/actions.js"
@@ -46,7 +49,7 @@ add_member_methods
 say "Installing FormProps"
 run "bundle add form_props"
 
-say "Installing React, Redux, and Superglue"
-run "yarn add history react-redux redux-thunk redux reduce-reducers immer @thoughtbot/superglue --save"
+say "Installing Superglue and friends"
+run "yarn add history react react-dom @reduxjs/toolkit react-redux @thoughtbot/superglue --save"
 
 say "Superglue is Installed! 🎉", :green

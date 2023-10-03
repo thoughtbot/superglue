@@ -27,6 +27,7 @@ export {
   REMOVE_PAGE,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
+  HISTORY_CHANGE,
 } from './actions'
 
 export {
@@ -46,8 +47,11 @@ export { getIn } from './utils/immutability'
 export { urlToPageKey }
 
 function pageToInitialState(key, page) {
+  const slices = page.slices || {}
+
   return {
     pages: { [key]: page },
+    ...slices,
   }
 }
 

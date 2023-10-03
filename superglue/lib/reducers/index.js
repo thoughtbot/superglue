@@ -1,7 +1,6 @@
 import { setIn, getIn, urlToPageKey } from '../utils'
 import {
   REMOVE_PAGE,
-  CLEAR_FLASH,
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   HISTORY_CHANGE,
@@ -96,15 +95,6 @@ export function appendReceivedFragmentsOntoPage(
   return nextState
 }
 
-export function addFlash(state, pageKey, receivedFlash) {
-  const nextState = { ...state }
-  const nextPage = { ...state[pageKey] }
-  nextPage.flash = { ...nextPage.flash, ...receivedFlash }
-  nextState[pageKey] = nextPage
-
-  return nextState
-}
-
 export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
   if (!node) {
     console.warn(
@@ -132,7 +122,6 @@ export function handleGraft(state, pageKey, page) {
     data: receivedNode,
     path: pathToNode,
     fragments: receivedFragments = [],
-    flash: receivedFlash,
   } = page
 
   return [
@@ -144,7 +133,6 @@ export function handleGraft(state, pageKey, page) {
         pageKey,
         receivedFragments
       ),
-    (nextState) => addFlash(nextState, pageKey, receivedFlash),
   ].reduce((memo, fn) => fn(memo), state)
 }
 
@@ -182,16 +170,6 @@ export function pageReducer(state = {}, action) {
           }
         })
       })
-
-      return nextState
-    }
-    case CLEAR_FLASH: {
-      const { pageKey } = action.payload
-      const nextState = { ...state }
-      const nextPage = { ...state[pageKey] }
-
-      nextPage.flash = {}
-      nextState[pageKey] = nextPage
 
       return nextState
     }

@@ -9,6 +9,9 @@ TMP_DIR = File.join(ROOT_DIR, "tmp")
 SUPERGLUE_RAILS_PATH = File.join(ROOT_DIR, "superglue_rails")
 SUPERGLUE_SUPERGLUE_PATH = File.join(ROOT_DIR, "superglue")
 VERSION = File.read(File.expand_path("../../../VERSION", __dir__)).strip
+SUPERGLUE_JS_VERSION = JSON.parse(
+  File.read(File.expand_path("../../../superglue/package.json", __dir__)).strip
+)["version"]
 
 SERVER_PORT = "3000"
 
@@ -52,7 +55,7 @@ class SuperglueInstallationTest < Minitest::Test
   def update_package_json
     content = File.read("package.json").gsub(
       /"@thoughtbot\/superglue.*$/,
-      "\"@thoughtbot/superglue\":\"file:#{SUPERGLUE_SUPERGLUE_PATH}/thoughtbot-superglue-#{VERSION}.tgz\","
+      "\"@thoughtbot/superglue\":\"file:#{SUPERGLUE_SUPERGLUE_PATH}/thoughtbot-superglue-#{SUPERGLUE_JS_VERSION}.tgz\","
     )
     File.open("package.json", "w") { |file| file.puts content }
   end

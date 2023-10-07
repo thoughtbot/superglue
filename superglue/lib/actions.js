@@ -4,7 +4,6 @@ export const BEFORE_REMOTE = '@@superglue/BEFORE_REMOTE'
 
 export const SAVE_RESPONSE = '@@superglue/SAVE_RESPONSE'
 export const HANDLE_GRAFT = '@@superglue/HANDLE_GRAFT'
-export const CLEAR_FLASH = '@@superglue/CLEAR_FLASH'
 
 export const SUPERGLUE_ERROR = '@@superglue/ERROR'
 export const GRAFTING_ERROR = '@@superglue/GRAFTING_ERROR'

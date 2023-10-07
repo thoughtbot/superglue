@@ -83,7 +83,6 @@ describe('reducers', () => {
                 a: { b: { c: {} } },
               },
               fragments: [],
-              flash: {},
             },
           }
 
@@ -97,7 +96,6 @@ describe('reducers', () => {
                 path: 'data.a.b.c',
               },
             ],
-            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -120,7 +118,6 @@ describe('reducers', () => {
                   path: 'data.a.b.c',
                 },
               ],
-              flash: {},
             },
           })
         })
@@ -138,7 +135,6 @@ describe('reducers', () => {
                   path: 'data.a.b.c',
                 },
               ],
-              flash: {},
             },
           }
           const receivedPage = {
@@ -151,7 +147,6 @@ describe('reducers', () => {
                 path: 'data.a.b.c',
               },
             ],
-            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -174,7 +169,6 @@ describe('reducers', () => {
                   path: 'data.a.b.c',
                 },
               ],
-              flash: {},
             },
           })
         })
@@ -189,7 +183,6 @@ describe('reducers', () => {
                 d: { e: { f: {} } },
               },
               fragments: [],
-              flash: {},
             },
           }
 
@@ -203,7 +196,6 @@ describe('reducers', () => {
                 path: 'data.d.e.f',
               },
             ],
-            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -227,7 +219,6 @@ describe('reducers', () => {
                   path: 'data.d.e.f',
                 },
               ],
-              flash: {},
             },
           })
         })
@@ -246,7 +237,6 @@ describe('reducers', () => {
                   path: 'data.d.e.f',
                 },
               ],
-              flash: {},
             },
           }
 
@@ -254,7 +244,6 @@ describe('reducers', () => {
             data: {},
             path: 'data.a.b.c',
             fragments: [],
-            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -275,13 +264,11 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: {} } } },
               fragments: [],
-              flash: {},
             },
           }
           const receivedPage = {
             data: { foo: 1 },
             fragments: [],
-            flash: {},
           }
           const pageKey = '/foo'
 
@@ -301,7 +288,6 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: {} } } },
               fragments: [],
-              flash: {},
             },
           }
 
@@ -309,7 +295,6 @@ describe('reducers', () => {
             data: { foo: 1 },
             path: 'data.a.b.c',
             fragments: [],
-            flash: {},
           }
 
           const nextState = pageReducer(prevState, {
@@ -324,7 +309,6 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: { foo: 1 } } } },
               fragments: [],
-              flash: {},
             },
           })
         })
@@ -359,13 +343,11 @@ describe('reducers', () => {
             '/foo': {
               data: { a: { b: { c: {} } } },
               fragments: [],
-              flash: {},
             },
           }
 
           const receivedPage = {
             path: 'data.a.b.c',
-            flash: {},
           }
 
           const nextState = pageReducer(prevState, {

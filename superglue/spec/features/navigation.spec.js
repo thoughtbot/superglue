@@ -71,7 +71,6 @@ describe('start', () => {
       data: {
         heading: 'this is page 1',
       },
-      flash: {},
       componentIdentifier: 'home',
       assets: ['123.js', '123.css'],
       fragments: [],
@@ -106,7 +105,6 @@ describe('start', () => {
           data: {
             heading: 'this is page 1',
           },
-          flash: {},
           componentIdentifier: 'home',
           assets: ['123.js', '123.css'],
           fragments: [],
@@ -137,7 +135,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -165,7 +162,6 @@ describe('navigation', () => {
 
       const pageState = {
         data: { heading: 'Some heading 2' },
-        flash: {},
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
@@ -194,7 +190,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -230,7 +225,6 @@ describe('navigation', () => {
 
       const pageState = {
         data: { heading: 'Some heading 2' },
-        flash: {},
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
@@ -272,7 +266,6 @@ describe('navigation', () => {
           data: {
             heading: 'this is page 1',
           },
-          flash: {},
           componentIdentifier: 'home',
           assets: ['123.js', '123.css'],
           fragments: [],
@@ -315,7 +308,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -369,7 +361,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -419,7 +410,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -496,7 +486,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -540,7 +529,6 @@ describe('navigation', () => {
         data: {
           heading: 'this is page 1',
         },
-        flash: {},
         componentIdentifier: 'home',
         assets: ['123.js', '123.css'],
         fragments: [],
@@ -561,7 +549,6 @@ describe('navigation', () => {
 
       const pageState = {
         data: { heading: 'Some heading 2' },
-        flash: {},
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
@@ -591,7 +578,6 @@ describe('navigation', () => {
           heading: 'this is page 1',
           address: undefined,
         },
-        flash: {},
         fragments: [],
         componentIdentifier: 'home',
       }

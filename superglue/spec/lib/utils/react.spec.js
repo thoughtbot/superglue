@@ -6,7 +6,6 @@ describe('mapStateToToProps', () => {
       pages: {
         '/foo': {
           data: { heading: 'hi' },
-          flash: {},
         },
       },
       superglue: {
@@ -19,7 +18,6 @@ describe('mapStateToToProps', () => {
       heading: 'hi',
       pageKey: '/foo',
       csrfToken: 'token123',
-      flash: {},
     })
   })
 })

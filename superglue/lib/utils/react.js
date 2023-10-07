@@ -14,12 +14,11 @@ export function mapStateToProps(
   let params = ownProps
   const csrfToken = state.superglue.csrfToken
   pageKey = urlToPageKey(pageKey)
-  const { data, flash, fragments } = state.pages[pageKey] || {
+  const { data, fragments } = state.pages[pageKey] || {
     data: {},
-    flash: {},
     fragments: [],
   }
-  return { ...data, ...params, pageKey, csrfToken, flash, fragments }
+  return { ...data, ...params, pageKey, csrfToken, fragments }
 }
 
 export const mapDispatchToProps = {

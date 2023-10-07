@@ -1,14 +1,14 @@
 import React from 'react'
-// import * as actionCreators from 'javascript/packs/action_creators'
-// import {useDispatch} from 'react-redux'
+import { useSelector } from 'react-redux'
 
 export default function <%= plural_table_name.camelize %>Index({
   // visit,
   // remote,
-  flash,
   new<%= singular_table_name.camelize %>Path,
   <%= plural_table_name.camelize(:lower) %> = [],
 }) {
+  const flash = useSelector((state) => state.flash)
+
   const <%= singular_table_name.camelize(:lower) %>Items = <%= plural_table_name.camelize(:lower) %>.map((<%= singular_table_name.camelize(:lower) %>, key) => {
     const deleteForm = <%=singular_table_name.camelize(:lower)%>.deleteForm;
 
@@ -31,7 +31,7 @@ export default function <%= plural_table_name.camelize %>Index({
 
   return (
     <div>
-      <p id="notice">{flash.notice}</p>
+      <p id="notice">{flash && flash.notice}</p>
 
       <h1><%= plural_table_name.capitalize %></h1>
 

@@ -67,6 +67,7 @@ workflows:
             parameters:
               gemfile:
                 - Gemfile.rails70
+                - Gemfile.rails71
               ruby-version:
                 - ruby27
                 - ruby30

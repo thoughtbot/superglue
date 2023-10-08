@@ -1,5 +1,4 @@
 require "test_helper"
-require 'byebug'
 
 class RenderController < TestController
   require "action_view/testing/resolvers"

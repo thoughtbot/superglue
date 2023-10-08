@@ -5,10 +5,11 @@ Use classic Rails to build rich React Redux applications with **NO APIs** and
 
 [![Build Status](https://circleci.com/gh/thoughtbot/superglue.svg?style=shield)](https://circleci.com/gh/thoughtbot/superglue)
 
-Superglue is a React Redux starter and library inspired by Turbolinks and designed
-to complement classic Rails. You can enjoy the benefits of Redux state
-management and React components without giving up the productivity of Rails form
-helpers, UJS, tag helpers, the flash, cookie auth, and more.
+Superglue makes React and Redux equally as productive as Hotwire, Turbo and
+Stimulus. Its inspired by Turbolinks and designed to feel like a natural
+extension of Rails. Enjoy the benefits of Redux state management and React
+components without giving up the productivity of Rails form helpers, UJS,
+tag helpers, flash, cookie auth, and more.
 
 ## Caution
 
@@ -67,7 +68,6 @@ The above will request for `/posts` with an `accept` of `application/json`, and
 when the client receives the response, swap out the current component for the
 component the response asks for, and `pushState` on history.
 
-
 #### Partial updates
 Some features rely on updating some parts of the existing page. In
 addition to `data-sg-visit` and it's equivalent `this.props.visit`, Superglue
@@ -106,9 +106,8 @@ Documentation is hosted on [Github pages](https://thoughtbot.github.io/superglue
 
 ## Contributing
 
-See the [CONTRIBUTING] document. Thank you, [contributors]!
+Thank you, [contributors]!
 
-  [CONTRIBUTING]: CONTRIBUTING.md
   [contributors]: https://github.com/thoughtbot/superglue/graphs/contributors
 
 ## Special Thanks
@@ -118,5 +117,3 @@ Thanks to [jbuilder](https://github.com/rails/jbuilder),
 [turbolinks3](https://github.com/turbolinks/turbolinks-classic),
 [turbograft](https://github.com/Shopify/turbograft/),
 [turbostreamer](https://github.com/malomalo/turbostreamer)
-
-

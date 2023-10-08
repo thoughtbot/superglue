@@ -3,17 +3,21 @@
 Superglue does not include server-side rendering out of the box, but you can easily
 add it with [humid](https://github.com/thoughtbot/humid).
 
-Follow the [instructions](https://github.com/thoughtbot/humid.md#installation).
-Then create a `app/javascript/packs/server_rendering.js`:
+Follow the [instructions](https://github.com/thoughtbot/humid#installation).
+Then, if you're using esbuild, create a `app/javascript/packs/server_rendering.js`:
 
 ```javascript
 import React from 'react';
-import { ApplicationBase } from '@thoughtbot/superglue'
-import SeatsIndex from 'views/seats/index'
-import ReactDOMServer from 'react-dom/server';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import { createRoot } from 'react-dom/client';
+import { ApplicationBase } from '@thoughtbot/superglue';
+import { pageIdentifierToPageComponent } from './pageToPageMapping';
+import { buildStore } from './store'
+import { renderToString } from 'react-dom/server';
+
 require("source-map-support").install({
   retrieveSourceMap: filename => {
-    console.log('--------------------hello')
     return {
       url: filename,
       map: readSourceMap(filename)
@@ -21,29 +25,23 @@ require("source-map-support").install({
   }
 });
 
-// Mapping between your props template to Component, you must add to this
-// to register any new page level component you create. If you are using the
-// scaffold, it will auto append the identifers for you.
-//
-// e.g {'posts/new': PostNew}
-const identifierToComponentMapping = {
-  'seats/index': SeatsIndex,
-  'seats/show': SeatsIndex,
-};
-
-export default class Application extends ApplicationBase {
+class Application extends ApplicationBase {
   mapping() {
-    return identifierToComponentMapping;
+    return pageIdentifierToPageComponent;
   }
 
   visitAndRemote(navRef, store) {
     return {visit: () => {}, remote: () => {}}
   }
+
+  buildStore(initialState, { superglue, pages}) {
+    return buildStore(initialState, superglue, pages);
+  }
 }
 
 setHumidRenderer((json) => {
   const initialState = JSON.parse(json)
-  return ReactDOMServer.renderToString(
+  return renderToString(
     <Application
       // baseUrl={origin}
       // The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
@@ -56,32 +54,46 @@ setHumidRenderer((json) => {
 })
 ```
 
-Modify your webpack config
+Next `yarn add esbuild-plugin-polyfill-node text-encoding` and add a esbuild build file.
+
+```
+import * as esbuild from 'esbuild'
+import { polyfillNode } from "esbuild-plugin-polyfill-node";
+
+await esbuild.build({
+  entryPoints: ['app/javascript/server_rendering.js'],
+  bundle: true,
+  platform: "browser",
+  define: {
+    "process.env.NODE_ENV": '"production"'
+  },
+  sourcemap: true,
+  outfile: 'app/assets/builds/server_rendering.js',
+  logLevel: "info",
+  loader: {
+    ".js": "jsx",
+    ".svg": "dataurl"
+  },
+  inject: ["./shim.js"],
+  plugins: [
+    polyfillNode({
+      globals: false
+    }),
+  ]
+})
+```
+
+Add a `shim.js` for the above. We'll need this for the v8 environment that mini-racer runs on.
 
 ```javascript
-process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-const environment = require('./environment')
-const path = require('path')
-const ConfigObject = require('@rails/webpacker/package/config_types/config_object')
+export {TextEncoder, TextDecoder} from 'text-encoding'
+```
 
-const webConfig = environment.toWebpackConfig()
-const ssrConfig = new ConfigObject(webConfig.toObject())
+Add a line to your `package.json` like so:
 
-ssrConfig.delete('entry')
-ssrConfig.merge({
-  entry: {
-    server_rendering: webConfig.entry.server_rendering
-  },
-  resolve: {
-    alias: {
-      'html-dom-parser': path.resolve(__dirname, '../../node_modules/html-dom-parser/lib/server/html-to-dom')
-    }
-  }
-})
-
-delete webConfig.entry.server_rendering
-
-module.exports = [ssrConfig, webConfig]
+```
+   "scripts": {
++    "build:ssr": "node ./build-ssr.mjs"
 ```
 
 Replace `<div id="app">` in your ERB templates with:
@@ -101,13 +113,13 @@ Replace `<div id="app">` in your ERB templates with:
 In `application.js` change this:
 
 ```
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client';
 ```
 
 to this
 
 ```
-import { hydrate } from 'react-dom'
+import { hydrateRoot } from 'react-dom/client';
 ```
 
 and change the rest of `application.js` accordingly.

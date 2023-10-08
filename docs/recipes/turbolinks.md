@@ -21,3 +21,5 @@ const appVisit = (...args) => {
     ....
 ```
 
+This is different from [restore strategy] which controls what happens
+when the brower's `history` object pops.

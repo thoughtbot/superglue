@@ -63,5 +63,4 @@ page does not have.
 
 You will have to create your own reducers to update these fragments, but Superglue
 provides tooling to make it easier to update fragments. You can read more about
-updating fragments [here](./updating-fragments.md)
-
+updating fragments [here](./fragments-and-slices.md)

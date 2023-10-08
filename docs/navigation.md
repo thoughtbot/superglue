@@ -1,6 +1,6 @@
 # Navigation
 
-Navigation is [inspired by turbolinks](./concepts#inspired-by-turbolinks).
+Navigation is [inspired by turbolinks](./concepts.md#inspired-by-turbolinks).
 
 ## Visit and Remote
 
@@ -167,5 +167,5 @@ end
 ```
 
 [one visit]: ./react-redux.md#visit
-[data attribute]: ./react-redux#data-sg-visit
+[data attribute]: ./react-redux.md#data-sg-visit
 

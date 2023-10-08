@@ -1,6 +1,6 @@
 # Usage with Kaminari
 
-SPA pagination is pretty easy to add with Kaminari and any component library you
+SPA pagination is easy to add with Kaminari and any component library you
 wish to use. Let's use [antd](https://ant.design/components/pagination/) as an example:
 
 ```ruby

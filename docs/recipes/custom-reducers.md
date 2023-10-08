@@ -1,29 +1,24 @@
 # Custom reducers
 
-Superglue generators will `yarn add reduce-reducers` and set up a `reducers.js`. If
-you find yourself needing additional functionality beyond what the generated
-reducers provide, just add your own reducers:
+Superglue will also generate a `pageSlice` for customized functionality. You
+can respond to Superglue [actions] For example, when you want to clear out
+form errors before visiting another page.
 
-```javascript
-....
-import reduceReducers from 'reduce-reducers'
-import {getIn} from '@thoughtbot/superglue'
-import produce from "immer"
+```
+import { createSlice } from '@reduxjs/toolkit'
+import { saveResponse, beforeVisit } from '../actions'
 
-function myCustomReducer(state = {}, action) {
-  ....
-}
+export const pagesSlice = createSlice({
+  name: 'pages',
+  extraReducers: (builder) => {
+   builder.addCase(beforeVisit, (state, action) => {
+     const {currentPageKey} = action.payload
 
-...
-
-const store = createStore(
-  combineReducers({
-    superglue: superglueReducer,
-    pages: reduceReducers(pagesReducer, applicationReducer),
-    additionalFoobar: myCustomReducer
-  }),
-  initialState,
-  applyMiddleware(thunk)
-)
+     const currentPage = draft[currentPageKey]
+     delete currentPage.error
+   })
+  }
+})
 ```
 
+[actions]: ../fragments-and-slices.md

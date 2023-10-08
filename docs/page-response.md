@@ -15,17 +15,17 @@ used Superglue's generators, this would be all set for you in
   action,
   path,
   renderedAt,
-  flash,
   fragments,
-  restoreStrategy
+  restoreStrategy,
+  slices
 }
 ```
 
 ### `data`
 Passed to your page component as its props. In a Superglue application, this would
-be the contents of your templates, e.g., `index.json.props`. Note that `flash`,
-`csrfToken`, `fragments`, and `pageKey` will be merged with your props.
-`ownProps` are also merged when [navigating](./react-redux.md#navigateto)
+be the contents of your templates, e.g., `index.json.props`. Note that `csrfToken`, 
+`fragments`, and `pageKey` will be merged with your props. `ownProps` are also 
+merged when [navigating](./react-redux.md#navigateto)
 
 ### `componentIdentifier`
 A `string` to instruct Superglue which component to render. The generated
@@ -38,10 +38,10 @@ json.component_identifier local_assigns[:virtual_path_of_template]
 ```
 
 You can control which `componentIdentifier` will render which component in the
-`application.js`.
+`page_to_page_mapping.js`.
 
 ```
-const identifierToComponentMapping = {
+const pageIdentifierToPageComponent = {
   'posts/edit': PostsEdit,
   'posts/new': PostsNew,
   'posts/show': PostsShow,
@@ -50,11 +50,11 @@ const identifierToComponentMapping = {
 ```
 
 It's not uncommon to have multiple indentifiers pointing to the same component.
-This can be used when building `index` pages that link to `show ` modals living
-on a different URL path.
+This can be used when building `index` pages use modals instead of a new page for
+`show`.
 
 ```
-const identifierToComponentMapping = {
+const pageIdentifierToPageComponent = {
   'posts/index': PostsIndex,
   'posts/show': PostsIndex,
 }
@@ -79,12 +79,8 @@ the client-side.
 ### `renderedAt`
 An UNIX timestamp representing the time the response was rendered.
 
-### `flash`
-A `hash` of [flash messages](./rails.md#rails-flash). In
-`application.json.props` this is set to `flash.to_h`.
-
 ### `fragments`
-An `array` of [fragments](./updating-fragments.md#fragments). In
+An `array` of [fragments](./fragments-and-slices.md#fragments). In
 `application.json.props` this is set to `json.fragments!`.
 
 ### `restoreStrategy`
@@ -98,3 +94,9 @@ buttons.
   - `revisitOnly` will always issue a visit request in the background before
   - `fromCacheOnly` will only restore the page from cache
   transitioning
+
+### `slices`
+An object merged with the `initialState` when implementing `buildStore` inside
+of `application.js`. You can use this as the initial state for redux slices.
+Take advantage of the `SAVE_RESPONSE` to continually update your slice everytime
+superglue recieves a new page request.

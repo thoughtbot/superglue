@@ -2,8 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.50
+Updates generators to use redux starter kit. Superglue will also generate
+a few handy slices for use. Generators will also use a new Rails helper
+[form_props](https://github.com/thoughtbot/form_props) to make building
+forms as easy as `form_with`
+
+Move flash to a slice. This is a backward breaking change, to transition
+see this [PR](https://github.com/thoughtbot/superglue/pull/25) for details
+on how to transition to a slice.
+
+Readme updated and non-working links fixed.
+
 ## 0.40
-Scroll history and cache restore strategies (`fromCacheOnly`, `revisitOnly`, 
+Scroll history and cache restore strategies (`fromCacheOnly`, `revisitOnly`,
 `fromCacheAndRevisitInBackground` default) added.
 
 `history` npm package upgraded.
@@ -12,7 +24,7 @@ Scroll history and cache restore strategies (`fromCacheOnly`, `revisitOnly`,
 Project renamed to superglue
 
 ## 0.20
-Added back the `props_from_form_with` helper and update to use latest 
+Added back the `props_from_form_with` helper and update to use latest
 html-dom-parser.
 
 ## 0.19

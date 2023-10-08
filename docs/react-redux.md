@@ -19,6 +19,10 @@ between your `prop` templates to the page component.
 - `visitAndRemote` override this and return an object with `visit` and `remote`.
 If you used the generators, a customizable one has been created for you in
 `application_visit.js`
+- `buildStore` override this and return a configured store. You'll be passed an
+`initialState` and 2 reducers, `superglue` and `pages`. The `initialState` will
+contain the initial state of `pages` and the merged `slices` object from the pages
+[payload](./page-response.md#slices)
 
 ## Nav
 
@@ -50,7 +54,7 @@ this.props.navigateTo('/posts', {ownProps:{something: true}})
 
 If there is an existing page in your store `navigateTo` will restore the props,
 render the correct component, and return `true`. Otherwise, it will return
-`false`. This is [useful](./recipes/turbolinks) if you want
+`false`. This is [useful](./recipes/turbolinks.md) if you want
 to restore an existing page before making a call to `visit` or `remote`.
 
 | Parameter | Notes |
@@ -230,8 +234,9 @@ end
 
 ## Updating Fragments
 
-A Fragment is a way to mark a node as shared across all pages. They can only be
-enabled as an option on partials using [PropsTemplate](props-template.md#partial-fragments)
+A fragment is a lightweight alternative to redux slices that allows you to update
+cross cutting concerns by marking a node as shared across all pages. They can
+only be enabled as an option on partials using [PropsTemplate]
 
 For example:
 
@@ -240,7 +245,8 @@ json.header partial: ['header', fragment: true] do
 end
 ```
 
-This metadata can then be used by your reducers to make updates that span
-[across pages](./updating-fragments.md).
+This metadata can then be used by your reducers to make updates that span [across pages]
 
+[across pages]: ./fragments-and-slices.md#fragments
 [querying guide]: ./traversal-guide.md
+[PropsTemplate]: https://github.com/thoughtbot/props_template#partial-fragments

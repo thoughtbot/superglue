@@ -38,7 +38,7 @@ In `packs/application.js`, change your component mapping to use your `ShowIndex`
 component as your identifier's component:
 
 ```
-const identifierToComponentMapping = {
+const pageIdentifierToPageComponent = {
   'seats/index': SeatsIndex,
   'seats/show': SeatsIndex,
 };
@@ -84,11 +84,11 @@ Instead, we can make it more efficient by loading just the modal contents.
 The change above uses Superglue's [copy feature] to
 
 1. Copy the current page, `/seats` and use it as a placeholder for `/seats/1`
-2. Navigate to that page optimistically (as defined in our `identifierToComponentMapping`)
+2. Navigate to that page optimistically (as defined in our `page_to_page_mapping.js`)
 3. Query `show.json.props` and walk to the `data` node, then to the `seat` node,
 and return that.
 4. Immutably graft it to the placeholder in `/seats/1` in the same location.
 5. React will render with the modal contents.
 
-[copy feature]: ./navigation.md#placeholders
-[UJS visit]: ./navigation.md#single-page-navigation-using-visit
+[copy feature]: ../navigation.md#placeholders
+[UJS visit]: ../navigation.md#single-page-navigation-using-visit

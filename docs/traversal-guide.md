@@ -12,7 +12,8 @@ internal node in order to walk your templates.
 For example, with a template below.
 
 ```ruby
-json.data(search: params[:props_at]) do
+path = param_to_search_path(params[:props_at])
+json.data(search: path) do
   json.header do
     json.search do
       # Results is a leaf node
@@ -43,7 +44,8 @@ remote('/dashboard?props_at=data.header.search&some_search_str=haircuts')
 There are two ways to query collections. Looking at the following example:
 
 ```ruby
-json.data(search: params[:props_at]) do
+path = param_to_search_path(params[:props_at])
+json.data(search: path) do
   json.posts do
     json.array! @posts do |post|
       json.details do
@@ -85,6 +87,7 @@ To enable this, you are required to implement `member_by(attribute, value)` on
 the passed collection AND use the option `:key` in `json.array!`. For example:
 
 ```ruby
+path = param_to_search_path(params[:props_at])
 json.data(search: params[:props_at]) do
   json.posts do
     json.array! @posts, key: :some_id do |post|

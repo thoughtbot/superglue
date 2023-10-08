@@ -106,17 +106,17 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def reset_db
-    successfully "RAILS_ENV=production bundle exec rake db:drop"
-    successfully "RAILS_ENV=production bundle exec rake db:create"
-    successfully "RAILS_ENV=production bundle exec rake db:migrate"
+    successfully "RAILS_ENV=development bundle exec rake db:drop"
+    successfully "RAILS_ENV=development bundle exec rake db:create"
+    successfully "RAILS_ENV=development bundle exec rake db:migrate"
   end
 
   def compile_assets
-    successfully "RAILS_ENV=production bundle exec rails assets:precompile"
+    successfully "RAILS_ENV=development bundle exec rails assets:precompile"
   end
 
   def server_up
-    pid = spawn "RAILS_ENV=production RAILS_SERVE_STATIC_FILES=t SECRET_KEY_BASE=FOOBAR bundle exec rails server -p #{SERVER_PORT}"
+    pid = spawn "RAILS_ENV=development RAILS_SERVE_STATIC_FILES=t SECRET_KEY_BASE=FOOBAR bundle exec rails server -p #{SERVER_PORT}"
     sleep 5
 
     pid

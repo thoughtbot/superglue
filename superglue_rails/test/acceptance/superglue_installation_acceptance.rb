@@ -2,7 +2,6 @@ require "minitest/autorun"
 require "capybara"
 require "capybara/minitest"
 require "selenium-webdriver"
-require "byebug"
 
 ROOT_DIR = File.expand_path("../../../../", __FILE__)
 TMP_DIR = File.join(ROOT_DIR, "tmp")

@@ -96,19 +96,14 @@ Add a line to your `package.json` like so:
 +    "build:ssr": "node ./build-ssr.mjs"
 ```
 
-Replace `<div id="app">` in your ERB templates with:
+Replace `<div id="app"></div>` in your ERB templates `index.html.erb` with:
 
 ```erb
-<% initial_state = controller.render_to_string(@virtual_path ,formats: [:json], locals: local_assigns, layout: true) %>
-
-<script type="text/javascript">
-  window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;
-</script>
-
-<div id="app">
-  <%= Humid.render(initial_state).html_safe %>
-</div>
+<div id="app"><%= Humid.render(initial_state).html_safe %></div>
 ```
+
+!> Do not render spacing above. If you do, React will not hydrate properly and
+warn `Hydration failed because the initial UI does not match what was rendered on the server`
 
 In `application.js` change this:
 

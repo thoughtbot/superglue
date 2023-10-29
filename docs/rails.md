@@ -29,30 +29,31 @@ end
 ```
 
 ## Rails Flash
-Your Rails flash will work as expected. On the React side, you receive the
-flash in the `props` of your connected component:
+
+The installation generator will add a `flash.js` slice to `app/javascript/slices`
+and will work with the Rails `flash`.
+
+To use in your page components, simply use a selector.
 
 ```
-class PostsIndex extends React.Component {
-  render () {
-    const {
-      flash,
-    } = this.props
+import { useSelector } from 'react-redux'
 
-    ...
-  }
-}
+...
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PostsIndex)
-
+const flash = useSelector((state) => state.flash)
 ```
 
-?> When using `data-sg-visit`, all flash in Superglue's redux state will be cleared before the request.
+then use the flash as you would normally in a controller
 
-?> When using `data-sg-remote`, the recieved flash will be merged with the current page's flash.
+```ruby
+def create
+  flash[:success] = "Post was saved!"
+end
+```
+
+?> When using `data-sg-visit`, all flash in slice will be cleared before the request.
+
+?> When using `data-sg-visit` or `data-sg-remote`, the recieved flash will be merged with the current flash.
 
 
 ## `redirect_back_with_props_at`

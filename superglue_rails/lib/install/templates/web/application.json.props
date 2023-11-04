@@ -4,7 +4,7 @@ json.data(search: path) do
   yield json
 end
 
-json.component_identifier local_assigns[:virtual_path_of_template]
+json.component_identifier virtual_path_of_template
 json.defers json.deferred!
 json.fragments json.fragments!
 json.assets [ asset_path('application.js') ]

@@ -34,7 +34,7 @@ you can customize this to fit your needs.
 
 ```ruby
 # application.json.props
-json.component_identifier local_assigns[:virtual_path_of_template]
+json.component_identifier virtual_path_of_template
 ```
 
 You can control which `componentIdentifier` will render which component in the

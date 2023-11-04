@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.files = Dir["MIT-LICENSE", "README.md", "lib/**/*", "app/**/*"]
 
   s.add_dependency "actionpack", ">= 7.0.0"
-  s.add_dependency "props_template", ">= 0.23.0"
+  s.add_dependency "props_template", ">= 0.24.0"
   s.add_dependency "form_props", ">= 0.0.3"
 
   s.add_development_dependency "activerecord", ">= 7.0"

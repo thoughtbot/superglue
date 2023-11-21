@@ -21,17 +21,6 @@ export function hasPropsAt(url) {
   return !!query['props_at']
 }
 
-export function withAntiCache(url) {
-  url = new parse(url, {}, true)
-
-  if (Object.prototype.hasOwnProperty.call(url.query, '_')) {
-    return url.toString()
-  } else {
-    url.query['_'] = uniqueId()
-    return url.toString()
-  }
-}
-
 export function withMimeBust(url) {
   url = new parse(url, {}, true)
   if (Object.prototype.hasOwnProperty.call(url.query, '__')) {
@@ -93,10 +82,6 @@ export function withoutHash(url) {
 
 export function formatForXHR(url, opts = {}) {
   let formats = [withMimeBust, withoutHash]
-
-  if (opts.cacheRequest) {
-    formats.push(withAntiCache)
-  }
 
   return formats.reduce((memo, f) => f(memo), url)
 }

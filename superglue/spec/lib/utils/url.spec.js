@@ -1,5 +1,4 @@
 import {
-  withMimeBust,
   withoutHash,
   removePropsAt,
   pathQuery,
@@ -7,14 +6,6 @@ import {
   hasPropsAt,
 } from '../../../lib/utils/url'
 import parse from 'url-parse'
-
-describe('.withMimeBust', () => {
-  it('take a url and adds mime busting param, browsers will cache same urls even if mime type is different', () => {
-    const url = withMimeBust('http://www.github.com')
-
-    expect(url).toEqual('http://www.github.com/?__=0')
-  })
-})
 
 describe('.withoutHash', () => {
   it('take a url and removes the hash', () => {

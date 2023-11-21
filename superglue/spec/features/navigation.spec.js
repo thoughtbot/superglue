@@ -158,7 +158,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       const pageState = {
         data: { heading: 'Some heading 2' },
@@ -221,7 +221,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       const pageState = {
         data: { heading: 'Some heading 2' },
@@ -337,7 +337,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       component.find('button').simulate('click')
       await flushPromises()
@@ -435,7 +435,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       component.find('button').simulate('click')
 
@@ -523,7 +523,7 @@ describe('navigation', () => {
       history.push('/bar') // Gets replaced on Superglue.start
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       const initialPage = {
         data: {
@@ -602,7 +602,7 @@ describe('navigation', () => {
 
       const mockResponse = rsp.graftSuccessWithNewZip()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?props_at=address&__=0', mockResponse)
+      fetchMock.mock('http://example.com/foo?props_at=address&format=json', mockResponse)
 
       component.find('button').simulate('click')
       await flushPromises()

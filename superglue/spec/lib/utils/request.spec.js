@@ -54,7 +54,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo')
 
     expect(args).toEqual([
-      '/foo?__=0',
+      '/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -80,7 +80,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo', { signal })
 
     expect(args).toEqual([
-      '/foo?__=0',
+      '/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -105,7 +105,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo', { method: 'PUT' })
 
     expect(args).toEqual([
-      '/foo?__=0',
+      '/foo?format=json',
       {
         method: 'POST',
         headers: {
@@ -134,7 +134,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo')
 
     expect(args).toEqual([
-      '/foo?__=0',
+      '/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -157,7 +157,7 @@ describe('argsForFetch', () => {
     }
 
     expect(argsForFetch(getState, '/foo', { body: 'ignored' })).toEqual([
-      '/foo?__=0',
+      '/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -173,7 +173,7 @@ describe('argsForFetch', () => {
     expect(
       argsForFetch(getState, '/foo', { method: 'HEAD', body: 'ignored' })
     ).toEqual([
-      '/foo?__=0',
+      '/foo?format=json',
       {
         method: 'HEAD',
         headers: {

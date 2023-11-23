@@ -1,7 +1,6 @@
 <%- attributes_list_with_timestamps.each do |attr|-%>
-json.<%=attr%> @<%= singular_table_name %>.<%=attr%>
+json.<%=attr.to_s.camelize(:lower)%> @<%= singular_table_name %>.<%=attr%>
 <%- end -%>
 
-
-json.<%= plural_table_name %>_path <%= plural_table_name %>_path
-json.edit_<%= singular_table_name %>_path edit_<%= singular_table_name %>_path(@<%= singular_table_name %>)
+json.<%= plural_table_name.camelize(:lower) %>Path <%= plural_table_name %>_path
+json.edit<%= singular_table_name.camelize %>Path edit_<%= singular_table_name %>_path(@<%= singular_table_name %>)

@@ -102,6 +102,29 @@ export function remote(
           fetchArgs,
         }
 
+        const willReplaceCurrent = pageKey == currentPageKey
+        const existingId = pages[currentPageKey]?.componentIdentifier
+        const receivedId = json.componentIdentifier
+
+        if (
+          willReplaceCurrent &&
+          !!existingId &&
+          existingId != receivedId
+        ) {
+          console.warn(
+            `You're about replace an existing page located at pages["${currentPageKey}"]
+that has the componentIdentifier "${existingId}" with the contents of a
+received page that has a componentIdentifier of "${receivedId}".
+
+This can happen if you're using data-sg-remote or remote but your response
+redirected to a completely different page. Since remote requests do not
+navigate or change the current page component, your current page component may
+receive a shape that is unexpected and cause issues with rendering.
+
+Consider using data-sg-visit, the visit function, or redirect_back.`
+          )
+        }
+
         const page = beforeSave(pages[pageKey], json)
         return dispatch(saveAndProcessPage(pageKey, page)).then(
           () => {

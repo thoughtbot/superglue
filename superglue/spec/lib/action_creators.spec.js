@@ -1136,6 +1136,93 @@ describe('action creators', () => {
 
       store.dispatch(remote('/foo', { pageKey: '/foo' }))
     })
+
+    it('warns if a received page has a completely component id that the target page it will replace', () => {
+      jest.spyOn(console, 'warn')
+      const store = mockStore({
+        superglue: {
+          currentPageKey: '/bar',
+          csrfToken: 'token',
+        },
+        pages: {
+          "/bar": {
+            data: {},
+            componentIdentifier: "bar-id"
+          }
+        }
+      })
+
+      const successfulBody = {
+        data: {},
+        componentIdentifier: "foo-id",
+        csrfToken: 'token',
+        assets: [],
+        defers: [],
+        fragments: [],
+      }
+
+      fetchMock.mock('/bar?format=json', {
+        body: successfulBody,
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store
+        .dispatch(remote('/bar'))
+        .then(() => {
+          expect(console.warn).toHaveBeenCalledWith(
+          `You're about replace an existing page located at pages["/bar"]
+that has the componentIdentifier "bar-id" with the contents of a
+received page that has a componentIdentifier of "foo-id".
+
+This can happen if you're using data-sg-remote or remote but your response
+redirected to a completely different page. Since remote requests do not
+navigate or change the current page component, your current page component may
+receive a shape that is unexpected and cause issues with rendering.
+
+Consider using data-sg-visit, the visit function, or redirect_back.`
+          )
+        })
+    })
+
+    it('does not warn if a received page is not replacing a target page with a different componentIdentifier', () => {
+      jest.spyOn(console, 'warn')
+      const store = mockStore({
+        superglue: {
+          currentPageKey: '/bar',
+          csrfToken: 'token',
+        },
+        pages: {
+          "/bar": {
+            data: {},
+            componentIdentifier: "ForBar"
+          }
+        }
+      })
+
+      const successfulBody = {
+        data: {},
+        componentIdentifier: "ForBar",
+        csrfToken: 'token',
+        assets: [],
+        defers: [],
+        fragments: [],
+      }
+
+      fetchMock.mock('/bar?format=json', {
+        body: successfulBody,
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store
+        .dispatch(remote('/bar'))
+        .then(() => {
+          expect(console.warn).not.toHaveBeenCalled()
+        })
+    })
   })
 
   describe('visit', () => {

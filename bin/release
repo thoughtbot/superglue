@@ -17,7 +17,10 @@ Dir.chdir(SUPERGLUE_DIR) do
   system("npm publish dist")
 end
 
+Dir.chdir("#{SUPERGLUE_DIR}/dist") do
+  system("npm publish")
+end
+
 system("git tag v#{version_str}")
 system("git push origin v#{version_str}")
-system("git branch docs/v#{version_str}")
-system("git push origin docs/v#{version_str}")
+system("git push origin main")

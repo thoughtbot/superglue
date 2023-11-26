@@ -1,6 +1,6 @@
 # Superglue
 
-![Super](https://thoughtbot.github.io/superglue/images/no_apis.png)
+![Logo](https://thoughtbot.github.io/superglue/images/superglue.png)
 
 Use classic Rails to build rich React Redux applications with **NO APIs** and
 **NO client-side routing**.

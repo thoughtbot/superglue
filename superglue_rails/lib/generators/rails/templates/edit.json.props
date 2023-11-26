@@ -8,5 +8,5 @@ end
 json.form(partial: 'form') do
 end
 
-json.<%= singular_table_name%>_path <%= singular_table_name%>_path(@<%=singular_table_name%>)
-json.<%= plural_table_name %>_path <%= plural_table_name %>_path
+json.<%= singular_table_name.camelize(:lower)%>Path <%= singular_table_name%>_path(@<%=singular_table_name%>)
+json.<%= plural_table_name.camelize(:lower) %>Path <%= plural_table_name %>_path

@@ -179,7 +179,7 @@ class Nav extends React.Component {
     let reminder = ''
     if (!identifier) {
       reminder =
-        'Did you forget to add `json.component_identifier` in your application.json.props layout?'
+        'Did you forget to add `json.componentIdentifier` in your application.json.props layout?'
     }
 
     const error = new Error(

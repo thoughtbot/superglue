@@ -4,13 +4,13 @@ json.data(search: path) do
   yield json
 end
 
-json.component_identifier virtual_path_of_template
+json.componentIdentifier virtual_path_of_template
 json.defers json.deferred!
 json.fragments json.fragments!
 json.assets [ asset_path('application.js') ]
 
 if protect_against_forgery?
-  json.csrf_token form_authenticity_token
+  json.csrfToken form_authenticity_token
 end
 
 if path
@@ -18,9 +18,9 @@ if path
   json.path search_path_to_camelized_param(path)
 end
 
-json.restore_strategy 'fromCacheAndRevisitInBackground'
+json.restoreStrategy 'fromCacheAndRevisitInBackground'
 
-json.rendered_at Time.now.to_i
+json.renderedAt Time.now.to_i
 
 json.slices do
   json.flash flash.to_h

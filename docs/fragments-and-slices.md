@@ -46,7 +46,7 @@ A fragment in Superglue is a rendered partial with a given name:
 
 ```
   json.body do
-    json.side_bar partial: ["application/side_bar", fragment: "some_user_side_bar_type"]
+    json.sideBar partial: ["application/side_bar", fragment: "some_user_side_bar_type"]
   end
 ```
 

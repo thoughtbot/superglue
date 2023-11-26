@@ -18,14 +18,14 @@ json.posts do
     json.array! paged_posts do |post|
       json.id post.id
       json.body post.body
-      json.edit_post_path edit_post_path(post)
+      json.editPostPath edit_post_path(post)
     end
   end
 
-  json.pagination_path posts_path
+  json.paginationPath posts_path
   json.current paged_posts.current_page
   json.total @posts.count
-  json.page_size items_per_page
+  json.pageSize items_per_page
 end
 
 ```

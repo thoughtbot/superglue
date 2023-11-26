@@ -126,9 +126,9 @@ automatically and manually.
 ## `auto`
 
 ```ruby
-  json.metrics(defer: [:auto, placeholder: {total_visitors: 0}]) do
+  json.metrics(defer: [:auto, placeholder: {totalVisitors: 0}]) do
     sleep 10 # expensive operation
-    json.total_visitors 30
+    json.totalVisitors 30
   end
 ```
 
@@ -149,9 +149,9 @@ Redux store and React will rerender. For more control, you may provide a
 the promise resolves successfully or fails.
 
 ```ruby
-json.metrics(defer: [:auto, placeholder: {total_visitors: 0}, success_action: "SUCCESS", fail_action: "FAIL"]) do
+json.metrics(defer: [:auto, placeholder: {totalVisitors: 0}, success_action: "SUCCESS", fail_action: "FAIL"]) do
   sleep 10 # expensive operation
-  json.total_visitors 30
+  json.totalVisitors 30
 end
 ```
 
@@ -160,9 +160,9 @@ Using `manual` with deferment means that a `remote` call will not
 take place, it is up to you to fetch the node using `remote` yourself.
 
 ```ruby
-json.metrics(defer: [:manual, placeholder: {total_visitors: 0}]) do
+json.metrics(defer: [:manual, placeholder: {totalVisitors: 0}]) do
   sleep 10 # expensive operation
-  json.total_visitors 30
+  json.totalVisitors 30
 end
 ```
 

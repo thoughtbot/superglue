@@ -11,7 +11,7 @@ end
 
 json.metrics do
   sleep 10 # expensive operation
-  json.total_visitors 30
+  json.totalVisitors 30
 end
 ```
 
@@ -24,7 +24,7 @@ With Superglue, we can turn content async with a single setting.
 ```ruby
 json.metrics(defer: :auto) do
   sleep 10 # expensive operation
-  json.total_visitors 30
+  json.totalVisitors 30
 end
 ```
 
@@ -53,9 +53,9 @@ It is up to you to handle the case when `metrics` starts out empty. For example:
 Alternatively, you can use a placeholder like so:
 
 ```ruby
-json.metrics(defer: [:auto, placeholder: {total_visitors: 0}]) do
+json.metrics(defer: [:auto, placeholder: {totalVisitors: 0}]) do
   sleep 10 # expensive operation
-  json.total_visitors 30
+  json.totalVisitors 30
 end
 ```
 

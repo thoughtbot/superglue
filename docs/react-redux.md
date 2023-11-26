@@ -126,7 +126,7 @@ A UJS equivalent of `visit` is available. For example:
 ```
 
 !> You are not able to specify the HTTP method used in a UJS link. This is
-intentionally. If you want to create a link that can support different HTML
+intentional. If you want to create a link that can support different HTML
 methods, create a UJS form that look like a link using
 [form_props](https://github.com/thoughtbot/form_props)
 

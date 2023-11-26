@@ -15,7 +15,7 @@ In `/seats/index.json.props`
 # Other index.json.props content here
 ...
 
-json.seat_details do
+json.seatDetails do
   json.show false
   # empty
 end
@@ -27,7 +27,7 @@ In `/seats/show.json.props`
 # Other index.json.props content here
 ...
 
-json.seat_details do
+json.seatDetails do
   json.show true
 
   # Add additional modal content here.

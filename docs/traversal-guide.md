@@ -22,7 +22,7 @@ json.data(search: path) do
   end
 
   json.content do
-    json.bar_chart do
+    json.barChart do
        ...bar chart data
     end
 

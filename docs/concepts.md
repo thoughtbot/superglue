@@ -92,11 +92,11 @@ PropsTemplate is queryable using a param that you pass to the root node in your
 
 ```ruby
 json.data(search: params[:props_at]) do
-  json.side_bar do
+  json.sideBar do
     # gets skipped
   end
   json.dashboard do
-    json.key_metrics_chart do
+    json.keyMetricsChart do
       #gets rendered
     end
   end

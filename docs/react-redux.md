@@ -216,7 +216,7 @@ for more examples.
 For example:
 
 ```javascript
-this.props.remote('/?props_at=header.shopping_cart')
+this.props.remote('/?props_at=header.shoppingCart')
 ```
 
 and in your `application.json.props`

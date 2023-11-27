@@ -12,7 +12,7 @@
 
   - [Navigation](navigation.md)
   - [Template querying](traversal-guide.md)
-  - [Updating fragments](fragments-and-slices.md#fragments)
+  - [Updating fragments](fragments-and-slices.md)
 
 - API
   - [React Redux](react-redux.md)

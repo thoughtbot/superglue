@@ -83,7 +83,7 @@ code.
 For example, here's how to refresh a chart with a button without any APIs:
 
 ```jsx
-  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-sg-remote={true} />
+  <a href='/posts?props_at=data.dashboard.keyMetricsChart' data-sg-remote={true} />
 ```
 
 [PropsTemplate] powers this interaction. Any template you build with
@@ -104,7 +104,7 @@ end
 ```
 
 When the server receives a request, it will query your template and fetch ONLY
-the `data.dashboard.key_metrics_chart` node without executing other nodes in
+the `data.dashboard.keyMetricsChart` node without executing other nodes in
 your template.
 
 Finally, Superglue on the client-side will receive the node, immutably graft it
@@ -125,7 +125,7 @@ You may have noticed that we've been using `data-sg-remote` or `data-sg-visit`
 in the examples.
 
 ```jsx
-  <a href='/posts?props_at=data.dashboard.key_metrics_chart' data-sg-visit={true} />
+  <a href='/posts?props_at=data.dashboard.keyMetricsChart' data-sg-visit={true} />
 ```
 
 Superglue embraces Unobtrusive Javascript. Any link or form with a `data-sg`
@@ -137,7 +137,7 @@ components when using the included [React helpers]
 For example:
 
 ```jsx
-  this.props.visit('/posts?props_at=data.dashboard.key_metrics_chart')
+  this.props.visit('/posts?props_at=data.dashboard.keyMetricsChart')
   .then....
 ```
 

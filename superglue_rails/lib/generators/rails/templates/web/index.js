@@ -17,10 +17,10 @@ export default function <%= plural_table_name.camelize %>Index({
         <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
         <td>{<%=singular_table_name.camelize(:lower)%>.<%=attr.camelize(:lower)%>}</td>
         <%- end -%>
-        <td><a href={ <%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path } data-sg-visit={true}>Show</a></td>
-        <td><a href={ <%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path } data-sg-visit={true}>Edit</a></td>
+        <td><a href={ <%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path } data-sg-visit>Show</a></td>
+        <td><a href={ <%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path } data-sg-visit>Edit</a></td>
         <td>
-          <form {...deleteForm.props} data-sg-visit={true}>
+          <form {...deleteForm.props} data-sg-visit>
             {Object.values(deleteForm.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
             <button type="submit">Delete</button>
           </form>
@@ -50,7 +50,7 @@ export default function <%= plural_table_name.camelize %>Index({
         </tbody>
       </table>
       <br />
-      <a href={new<%= singular_table_name.camelize %>Path} data-sg-visit={true}>New <%= singular_table_name.capitalize %></a>
+      <a href={new<%= singular_table_name.camelize %>Path} data-sg-visit>New <%= singular_table_name.capitalize %></a>
     </div>
   )
 }

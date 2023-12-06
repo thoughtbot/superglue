@@ -21,7 +21,7 @@ end
     return (
       <ol className='tabs'>
         <li> tab1 </li>
-        <li> <a href="/posts?props_at=data.posts.pending" data-sg-remote={true}>tab2</a> </li>
+        <li> <a href="/posts?props_at=data.posts.pending">tab2</a> </li>
       <ol>
       ....
     )
@@ -30,7 +30,7 @@ end
 
 `defer: :manual` will instruct PropsTemplate to render the page without that
 node. You need to manually request the missing content using
-[template querying][querying guide] like the example above.
+[template querying][dig] like the example above.
 
 
-[querying guide]: ../traversal-guide.md
+[dig]: ../traversal-guide.md

@@ -7,7 +7,7 @@ Rails-like Superglue/React/Redux can be.
 
 ![Demo App](images/demo.jpg)
 
-We recommend going over the meticously verbose commit history on [Sean's
+We recommend going over the meticulously verbose commit history on [Sean's
 version] and comparing that with the [Superglue version].
 
 [demo]: https://github.com/thoughtbot/select-your-own-seat-superglue

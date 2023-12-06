@@ -4,7 +4,7 @@ Superglue will also generate a `pageSlice` for customized functionality. You
 can respond to Superglue [actions] For example, when you want to clear out
 form errors before visiting another page.
 
-```
+```js
 import { createSlice } from '@reduxjs/toolkit'
 import { saveResponse, beforeVisit } from '../actions'
 

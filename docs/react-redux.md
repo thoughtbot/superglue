@@ -1,7 +1,8 @@
 # React Redux
 
 ## ApplicationBase
-```
+
+```js
 import { ApplicationBase } from '@thoughtbot/superglue'
 
 export default class Application extends ApplicationBase {
@@ -122,7 +123,7 @@ visit(pathQuery, {...fetchRequestOptions}, pageKey).catch(({message, fetchArgs, 
 A UJS equivalent of `visit` is available. For example:
 
 ```javascript
-<a href='/some_url' data-sg-visit={true} />
+<a href='/some_url' data-sg-visit />
 ```
 
 !> You are not able to specify the HTTP method used in a UJS link. This is
@@ -133,7 +134,7 @@ methods, create a UJS form that look like a link using
 or if you're using a form
 
 ```javascript
-<form action='/some_url' data-sg-visit={true} />
+<form action='/some_url' data-sg-visit />
 ```
 
 `data-sg-visit` also has the companion attribute, `data-sg-placeholder` which
@@ -190,7 +191,7 @@ Save and process a rendered view from PropsTemplate and fetch any deferments.
 Copies an existing page in the store, and sets it to a different `pageKey`.
 Useful for optimistic updates on the next page before you navigate.
 
-```
+```js
 this.props.copyPage({
   from: '/current_page',
   to '/next_page'
@@ -210,7 +211,7 @@ a `props_at=keypath.to.node` in your URL param, then passing the params in your
 `application.json.props`. PropsTemplate will ignore blocks that are not in the
 keypath, disable deferment and caching, and return the node. Superglue will then
 immutably set that node back onto its tree on the client-side. Fragments will
-also automatically be updated where needed. See our [querying guide]
+also automatically be updated where needed. See our [digging docs]
 for more examples.
 
 For example:
@@ -248,5 +249,5 @@ end
 This metadata can then be used by your reducers to make updates that span [across pages]
 
 [across pages]: ./fragments-and-slices.md#fragments
-[querying guide]: ./traversal-guide.md
+[digging guide]: ./traversal-guide.md
 [PropsTemplate]: https://github.com/thoughtbot/props_template#partial-fragments

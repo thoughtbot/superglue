@@ -31,7 +31,7 @@ You can add customizations to `visit` or `remote` in `application_visit.js`.
 Single page navigation must be explicitly enabled using a [data attribute]
 
 ```jsx
-  <a href='/posts' data-sg-visit={true} />
+  <a href='/posts' data-sg-visit/>
 ```
 
 or manually called using the `visit` thunk somewhere in your component:
@@ -58,7 +58,7 @@ Example:
 ```jsx
   <a
     href='/posts/new?props_at=data.body.modal'
-    data-sg-visit={true}
+    data-sg-visit
     data-sg-placeholder="/new"
   />
 ```

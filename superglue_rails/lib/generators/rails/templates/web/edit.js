@@ -19,7 +19,7 @@ export default function <%= plural_table_name.camelize %>Edit ({
   return (
     <div>
       {messagesEl}
-      <form {...form.props} data-sg-visit={true}>
+      <form {...form.props} data-sg-visit>
         {Object.values(form.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
         <%- attributes.each do |attr| -%>
         <input {...form.inputs.<%= attr.column_name %>} type="text"/>
@@ -28,8 +28,8 @@ export default function <%= plural_table_name.camelize %>Edit ({
         <button {...form.inputs.submit} type="submit"> {...form.inputs.submit.text} </button>
       </form>
 
-      <a href={<%= singular_table_name.camelize(:lower) %>Path} data-sg-visit={true}>Show</a>
-      <a href={<%= plural_table_name.camelize(:lower) %>Path}  data-sg-visit={true}>Back</a>
+      <a href={<%= singular_table_name.camelize(:lower) %>Path} data-sg-visit>Show</a>
+      <a href={<%= plural_table_name.camelize(:lower) %>Path}  data-sg-visit>Back</a>
     </div>
   )
 }

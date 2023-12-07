@@ -1,5 +1,4 @@
 import React from 'react';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import { ApplicationBase } from '@thoughtbot/superglue';

@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.52
+
+Backward breaking changes. Superglue now uses props_template 0.31.0 which
+removes the use of virtual_path_of_template in favor of a simplier
+controller_path and action_name identifier. See
+https://github.com/thoughtbot/props_template/blob/main/NEWS.md#0310-dec-6-2023
+for a migration path.
+
+
+## 0.51
+
+Backward breaking changes! Superglue now uses props_template 0.30.0 which no
+longer autocamelize keys. See
+https://github.com/thoughtbot/props_template/blob/main/NEWS.md#0300-nov-25-2023
+for details and a migration path.
+
+
 ## 0.50
 Updates generators to use redux starter kit. Superglue will also generate
 a few handy slices for use. Generators will also use a new Rails helper

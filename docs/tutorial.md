@@ -105,7 +105,7 @@ This file renders and injects `show.json.props` sets it globally as the initial
 state to be picked up by React and Redux.
 
 ```ruby
-<% initial_state = controller.render_to_string(@virtual_path ,formats: [:json], locals: local_assigns, layout: true) %>
+<% initial_state = controller.render_to_string(formats: [:json], locals: local_assigns, layout: true) %>
 
 <script type="text/javascript">
   window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;

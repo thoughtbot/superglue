@@ -83,15 +83,6 @@ function atKey(node, key) {
     )
   }
 
-  if (
-    isObject(node) &&
-    !Object.prototype.hasOwnProperty.call(node, key)
-  ) {
-    throw new KeyPathError(
-      `Expected to find key: ${key} in object ${JSON.stringify(node)}`
-    )
-  }
-
   if (Array.isArray(node) && id) {
     let child
     for (let i = 0; i < node.length; i++) {

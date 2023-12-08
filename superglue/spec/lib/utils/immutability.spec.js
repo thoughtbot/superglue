@@ -40,13 +40,6 @@ describe('setIn', () => {
     expect(page).toBe(clone)
   })
 
-  it('throws an error when parents dont exist', () => {
-    const page = { a: { b: 2 } }
-    expect(() => {
-      setIn(page, 'a.c', 'foo')
-    }).toThrow(new KeyPathError('Expected to find key: c in object {"b":2}'))
-  })
-
   it('throws an error when parents are untranversible', () => {
     const page = { a: { b: 2 } }
     expect(() => {
@@ -101,5 +94,21 @@ describe('setIn', () => {
     expect(clone).toEqual({
       a: { b: [{ foo_id: 1 }, { foo_id: 2, foo: 'bar' }, { foo_id: 3 }] },
     })
+  })
+
+  it('sets if the key on the object does not exist', () => {
+    const page = { a: { b: {hello: "world"} } }
+    const clone = setIn(page, 'a.c', 'foo')
+
+    expect(page.a.b).toBe(clone.a.b)
+    expect(clone).toEqual({ a: { b: {hello: "world"} , c: 'foo' }})
+  })
+
+  it('sets if the index on the array does not exist', () => {
+    const page = { a: [{c: 4}, {b: 5}] }
+    const clone = setIn(page, 'a.0', 'foo')
+
+    expect(page.a[1]).toBe(clone.a[1])
+    expect(clone).toEqual({ a: ['foo', {b: 5}]})
   })
 })

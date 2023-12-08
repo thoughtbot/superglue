@@ -89,7 +89,7 @@ const onChange = (e) => (
 )
 ```
 
-?> `remote` and `visit` is a think [passed] to every page component.
+?> `remote` and `visit` is a thunk [passed] to every page component.
 
   [passed]: ./navigation.md
 

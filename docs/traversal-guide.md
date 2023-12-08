@@ -1,13 +1,18 @@
-# Template querying
+# Digging
 
 Superglue's thunks work hand-in-hand with [PropsTemplate] to query your JSON
 template for nodes. This guide helps you understand how the tools work with
 each other.
 
 ## The props_at param
-The `props_at` param is a keypath to nodes in your tree and is used exclusively with
-the `remote` thunk. On the PropsTemplate side, we pass that param over to an
-internal node in order to walk your templates.
+The `props_at` param is a keypath to nodes in your tree and is used almost
+exclusively with the `remote` thunk. On the PropsTemplate side, we pass that
+param over to an internal node in order to walk your templates.
+
+?> `props_at` can be used with `data-sg-visit`, but only combined with
+`data-sg-placeholder` to [build placeholders].
+
+[build placeholders]: ./navigation.md#placeholders
 
 For example, with a template below.
 
@@ -36,7 +41,7 @@ end
 To fetch the `json.search` node, we would need to walk to `data` then `header`
 then `search`. Translating that to a remote call with a `props_at` param:
 
-```
+```js
 remote('/dashboard?props_at=data.header.search&some_search_str=haircuts')
 ```
 
@@ -59,7 +64,7 @@ end
 ### Index-based selection
 You may use an index-based key to fetch an item in a list like so:
 
-```
+```js
 remote('/dashboard?props_at=data.posts.0.details')
 ```
 
@@ -75,7 +80,7 @@ if your Redux state has changed by the time the request comes back.
 ### Attribute-based selection
 Attribute-based keys for collections look like this:
 
-```
+```js
 remote('/dashboard?props_at=data.posts.some_id=1.details')
 ```
 
@@ -106,7 +111,7 @@ end
 
 You can even query into partials.
 
-```
+```js
 remote('/dashboard?props_at=data.posts.some_id=1.details')
 ```
 
@@ -134,7 +139,7 @@ end
 [deferment](https://github.com/thoughtbot/props_template#deferment) until the
 target node is reached.
 
-That's the basics of traversing with Superglue. A lot of modern SPA functionality
+That's the basics of traversing with Superglue. Many modern SPA functionality
 can be achieved by just a few lines of code. For examples, see our recipes
 section.
 

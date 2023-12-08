@@ -12,8 +12,8 @@ Superglue occupies 2 nodes in your Redux state tree:
     hash,
   },
   pages: {
-    '/dashboard': { ..page received from `/dashboad`.. },
-    '/posts?foo=123': {... page received from `/posrs?foo=123` },
+    '/dashboard': { ..page received from `/dashboard`.. },
+    '/posts?foo=123': {... page received from `/posts?foo=123` },
   }
 }
 ```

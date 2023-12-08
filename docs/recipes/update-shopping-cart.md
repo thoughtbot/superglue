@@ -1,6 +1,6 @@
 # Shopping cart
 
-You want a shopping cart with state that can be reflected on the header as a count and a slideout.
+You want a shopping cart with state that can be reflected on the header as a count and a slide out.
 
 Render the cart in your props across all pages and mark it as a fragment.
 

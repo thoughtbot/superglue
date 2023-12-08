@@ -29,18 +29,18 @@ merged when [navigating](./react-redux.md#navigateto)
 
 ### `componentIdentifier`
 A `string` to instruct Superglue which component to render. The generated
-`application.json.props` will set this to the virtual path of the template, but
-you can customize this to fit your needs.
+`application.json.props` will set this to the `controller_path` and
+`action_name`, but you can customize this to fit your needs.
 
 ```ruby
 # application.json.props
-json.componentIdentifier virtual_path_of_template
+json.componentIdentifier "#{controller_path}/#{action_name}"
 ```
 
 You can control which `componentIdentifier` will render which component in the
 `page_to_page_mapping.js`.
 
-```
+```js
 const pageIdentifierToPageComponent = {
   'posts/edit': PostsEdit,
   'posts/new': PostsNew,
@@ -49,11 +49,11 @@ const pageIdentifierToPageComponent = {
 }
 ```
 
-It's not uncommon to have multiple indentifiers pointing to the same component.
+It's not uncommon to have multiple identifiers pointing to the same component.
 This can be used when building `index` pages use modals instead of a new page for
 `show`.
 
-```
+```js
 const pageIdentifierToPageComponent = {
   'posts/index': PostsIndex,
   'posts/show': PostsIndex,

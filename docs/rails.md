@@ -35,7 +35,7 @@ and will work with the Rails `flash`.
 
 To use in your page components, simply use a selector.
 
-```
+```jsx
 import { useSelector } from 'react-redux'
 
 ...

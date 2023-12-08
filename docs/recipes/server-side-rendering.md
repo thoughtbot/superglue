@@ -6,11 +6,8 @@ add it with [humid](https://github.com/thoughtbot/humid).
 Follow the [instructions](https://github.com/thoughtbot/humid#installation).
 Then, if you're using esbuild, create a `app/javascript/packs/server_rendering.js`:
 
-```javascript
+```js
 import React from 'react';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { createRoot } from 'react-dom/client';
 import { ApplicationBase } from '@thoughtbot/superglue';
 import { pageIdentifierToPageComponent } from './pageToPageMapping';
 import { buildStore } from './store'
@@ -42,21 +39,20 @@ class Application extends ApplicationBase {
 setHumidRenderer((json) => {
   const initialState = JSON.parse(json)
   return renderToString(
-    <Application
-      // baseUrl={origin}
-      // The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-      // template, e.g., index.html.erb
-      initialPage={initialState}
-      // The initial path of the page, e.g., /foobar
-      // path={path}
-    />
+    <Application initialPage={initialState}/>
   )
 })
 ```
 
-Next `yarn add esbuild-plugin-polyfill-node text-encoding` and add a esbuild build file.
+Next
 
+```terminal
+yarn add esbuild-plugin-polyfill-node text-encoding
 ```
+
+and add a esbuild build file.
+
+```js
 import * as esbuild from 'esbuild'
 import { polyfillNode } from "esbuild-plugin-polyfill-node";
 
@@ -91,30 +87,26 @@ export {TextEncoder, TextDecoder} from 'text-encoding'
 
 Add a line to your `package.json` like so:
 
-```
+```diff
    "scripts": {
 +    "build:ssr": "node ./build-ssr.mjs"
 ```
 
-Replace `<div id="app"></div>` in your ERB templates `index.html.erb` with:
+Use `Humid.render` in all your ERB templates `index.html.erb`:
 
-```erb
-<div id="app"><%= Humid.render(initial_state).html_safe %></div>
+```diff
+- <div id="app"></div>
++ <div id="app"><%= Humid.render(initial_state).html_safe %></div>
 ```
 
 !> Do not render spacing above. If you do, React will not hydrate properly and
 warn `Hydration failed because the initial UI does not match what was rendered on the server`
 
-In `application.js` change this:
+Change your `application.js` to use `hydrateRoot`:
 
-```
-import { createRoot } from 'react-dom/client';
-```
-
-to this
-
-```
-import { hydrateRoot } from 'react-dom/client';
+```diff
+- import { createRoot } from 'react-dom/client';
++ import { hydrateRoot } from 'react-dom/client';
 ```
 
 and change the rest of `application.js` accordingly.

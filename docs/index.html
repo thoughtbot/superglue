@@ -6,18 +6,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/treeview/prism-treeview.min.css">
+  <style>
+    :root {
+      --theme-color: hsla(130, 80%, 30%, 1);
+      --docsifytabs-tab-highlight-color: hsla(130, 80%, 30%, 1);;
+      --docsify-example-panels-left-panel-width : 50%; /* bit more for left */
+      --docsify-example-panels-right-panel-width : 50%; /* bit less for right */
+    }
+    .docsify-example-panels {
+      margin: var(--heading-h2-margin, var(--heading-margin));
+    }
+  </style>
 </head>
 <body>
   <div id="app"></div>
   <script>
     window.$docsify = {
       name: '',
-      repo: '',
+      repo: 'thoughtbot/superglue',
       loadSidebar: true,
+      auto2top: true,
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-example-panels"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-ruby.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-diff.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/plugins/treeview/prism-treeview.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-terminal-block@1.0.3"></script>
 </body>
 </html>

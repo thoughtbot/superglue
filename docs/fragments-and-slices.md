@@ -3,14 +3,20 @@
 When building pages, we commonly use partials to extract crosscutting concerns.
 For example, a shared header:
 
-```
-views/
-  application/
-    _header.json.props
-  posts/
-    index.json.props
-  comments/
-    index.json.props
+```treeview
+app/
+|-- controllers/
+|-- views/
+|   |-- shared/
+|   |   |-- _header.json.props
+|   |-- posts/
+|   |   |-- index.js
+|   |   |-- index.json.props
+|   |   |-- index.html.erb
+|   |-- comments/
+|   |   |-- index.js
+|   |   |-- index.json.props
+|   |   |-- index.html.erb
 ```
 
 By [design](./redux-state-shape.md) this results in duplicate JSON nodes
@@ -150,7 +156,7 @@ with the installation is a good example of this.
 }
 ```
 
-`UPDATE_FRAGMENTS` - Whenever a fragment is recieved or changed.
+`UPDATE_FRAGMENTS` - Whenever a fragment is received or changed.
 
 ```
 {

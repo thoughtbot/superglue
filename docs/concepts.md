@@ -1,148 +1,96 @@
-# Concepts
+# Philosophy
 
-## Inspired by Turbolinks
+## Lean on Rails
 
-Superglue is inspired by Turbolinks. When you click on a link like this:
-`<a href='/posts' data-sg-visit={true} />`, Superglue fetches the next page's full
-content in JSON and swaps it with the current page JSON before handing it
-to your next React page component.
-
-## Pages not models
-
-Superglue comes with a simple and denormalized Redux state. Each node in the store
-is a copy of your recently visited page in JSON. This concept is very similar
-to Turbolink's [page cache][Turbolinks cache], but Superglue exposes the pages to
-your Redux reducers to allow you to make optimistic updates.
-
-For example, we can optimistically edit the header on the current and all
-previous pages using a reducer.
-
-```javascript
-const applicationPagesReducer = (state = {}, action) => {
-  switch(action.type) {
-
-  case UPDATE_USER_HEADERS: {
-    const nextPages = { ...state }
-    const { email } = action.payload
-
-    for (const key in nextPages) {
-      if (nextPages[key].email) {
-        nextPages[key].email = email
-      }
-    }
-
-    return nextPages
-  }
-
-  default:
-    return state
-  }
-}
-```
-
-## No APIs
-There are no APIs to build. Instead, Superglue leans on Rail's ability to render
-different mime types on the same route.
-
-In a Superglue application, you write your page's content in JSON using
-[PropsTemplate], inject that state in HTML, and write your markup in JSX.
-
-Here's how that looks:
-
-```
-MyRailsApp/
-  app/
-  views/
-  dashboard/
-    index.html.erb <- where index.json.props gets rendered as initial state
-    index.js <- Gets packaged with application.js
-    index.json.props <- will also respond to `.json` requests
-```
-
-The routes remain simple:
+Move as much logic as you can into Rails. For example, instead of doing
+this:
 
 ```ruby
-  resources :posts
+  json.firstName @user.first_name
 ```
 
-When a user clicks on a link enabled with Superglue's UJS:
-
-```jsx
-  <a href='/posts' data-sg-visit={true} />
+```js
+const Header = ({firstName}) => (<h1>{firstName.toUpperCase()}</h1>)
 ```
 
-Superglue will specify the request's mime type as JSON, causing Rails to render
-`index.json.props`, and respond with the full page's JSON for your next
-page component to consume.
-
-## Make updates easy
-
-Any part of your page can be easily updated in as little as a single line of
-code.
-
-For example, here's how to refresh a chart with a button without any APIs:
-
-```jsx
-  <a href='/posts?props_at=data.dashboard.keyMetricsChart' data-sg-remote={true} />
-```
-
-[PropsTemplate] powers this interaction. Any template you build with
-PropsTemplate is queryable using a param that you pass to the root node in your
-`layout/application.json.props`:
+we do
 
 ```ruby
-json.data(search: params[:props_at]) do
-  json.sideBar do
-    # gets skipped
-  end
-  json.dashboard do
-    json.keyMetricsChart do
-      #gets rendered
-    end
-  end
-end
+  json.firstName @user.first_name.capitalize
 ```
 
-When the server receives a request, it will query your template and fetch ONLY
-the `data.dashboard.keyMetricsChart` node without executing other nodes in
-your template.
-
-Finally, Superglue on the client-side will receive the node, immutably graft it
-into your Redux state in the same exact path and hand it over to your
-component to render.
-
-The syntax of `props_at` is a keypath, here's another example using an array:
-
-```jsx
-  <a href='/posts?props_at=data.post_list.0.title' data-sg-remote={true} />
+```js
+const Header = ({firstName}) => (<h1>{firstName}</h1>)
 ```
 
-Read more about this in the [querying guide]
+## Shape with presentation
 
-## Embrace UJS
+As an end user, its easy to look at any regular web page and understand all the
+actions that you can take. Its the strength of HTML and of HATEOAS. Superglue is
+inspired by this and encourages you to shape your JSON in the same way.
+
+Shape your pages roughly how you'll organize your components. Some may critic
+the addition of presentation, but there is intentionally only one consumer of
+your shape, your page components.
+
+?> **What about forms?** You can use [form_props] to build the right JSON for your
+React components.
+
+  [form_props]: https://github.com/thoughtbot/form_props
+
+
+## HTML Thinking
+
+Just because you can create a link without a `href` in React doesn't mean you
+should. Ultimately, everything renders as HTML. That's why Superglue doesn't
+give links the ability to make non-get requests. Instead it encourages you to
+create forms that look like links, the same approach Rails uses. This has the
+added benefit of easily building for [Server Side Rendering].
+
+  [Server Side Rendering]: ./recipes/server-side-rendering.md
+
+## Embrace Unobtrusive Javascript (UJS)
 
 You may have noticed that we've been using `data-sg-remote` or `data-sg-visit`
 in the examples.
 
 ```jsx
-  <a href='/posts?props_at=data.dashboard.keyMetricsChart' data-sg-visit={true} />
+  <a href='/posts?props_at=data.dashboard.keyMetricsChart' data-sg-visit />
 ```
 
 Superglue embraces Unobtrusive Javascript. Any link or form with a `data-sg`
 attribute receives superpowers inspired by Rails data attributes.
 
-For more advanced use cases, an action creator is passed to all your connected
-components when using the included [React helpers]
+For more advanced use cases, an action creator is [passed] to all your connected
+page components.
 
-For example:
+  [passed]: ./navigation.md
 
-```jsx
-  this.props.visit('/posts?props_at=data.dashboard.keyMetricsChart')
-  .then....
+
+## You can dig it!
+
+```
+/dashboard?props_at=data.greet
 ```
 
+A single keypath will dig your template for content and place it to where it
+belongs in your Redux state. That's incredibly productive and can be used for a
+variety of rich applications. See the the [digging docs] or recipes section.
 
-[PropsTemplate]: https://github.com/thoughtbot/props_template
-[Turbolinks cache]: https://github.com/turbolinks/turbolinks#understanding-caching
-[querying guide]: ./traversal-guide.md
-[React helpers]: ./react-redux.md
+## Its still just Rails
+
+We might using React components, but most of what gives Superglue superpowers is that
+its driven by all the conveniences of old fashion and boring Rails.
+
+```treeview
+app/
+|-- controllers/
+|-- views/
+|   |-- posts/
+|   |   |-- index.js
+|   |   |-- index.json.props
+|   |   |-- index.html.erb
+```
+
+[props_template]: https://github.com/thoughtbot/props_template
+[digging docs]: ./traversal-guide.md

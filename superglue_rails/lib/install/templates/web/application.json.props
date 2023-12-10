@@ -4,7 +4,7 @@ json.data(search: path) do
   yield json
 end
 
-json.componentIdentifier "#{controller_path}/#{action_name}"
+json.componentIdentifier active_template_virtual_path
 json.defers json.deferred!
 json.fragments json.fragments!
 json.assets [ asset_path('application.js') ]

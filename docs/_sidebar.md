@@ -25,7 +25,6 @@
 
 - Recipes
   - [Modals](recipes/modals.md)
-  - [Default HTML template](recipes/default-html-template.md)
   - [Server-Side Rendering](recipes/server-side-rendering.md)
   - [Loading content later](recipes/load-content-later.md)
   - [Loading a tab onClick](recipes/load-tab-onclick.md)

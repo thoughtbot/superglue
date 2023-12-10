@@ -29,12 +29,12 @@ merged when [navigating](./react-redux.md#navigateto)
 
 ### `componentIdentifier`
 A `string` to instruct Superglue which component to render. The generated
-`application.json.props` will set this to the `controller_path` and
-`action_name`, but you can customize this to fit your needs.
+`application.json.props` will set this to the `active_template_virtual_path`
+(added by [props_template]), but you can customize this to fit your needs.
 
 ```ruby
 # application.json.props
-json.componentIdentifier "#{controller_path}/#{action_name}"
+json.componentIdentifier active_template_virtual_path
 ```
 
 You can control which `componentIdentifier` will render which component in the
@@ -100,3 +100,5 @@ An object merged with the `initialState` when implementing `buildStore` inside
 of `application.js`. You can use this as the initial state for redux slices.
 Take advantage of the `SAVE_RESPONSE` to continually update your slice everytime
 superglue recieves a new page request.
+
+[props_template]: https://github.com/thoughtbot/props_template

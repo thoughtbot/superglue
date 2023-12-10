@@ -140,7 +140,7 @@ superglue knows which component to render with which response by modifying
 <!-- tabs:start -->
 #### **Example greet.json**
 The layout for `show.json.props` is located at `app/views/layouts/application.json.props`. It
-conforms to superglue's [payload] response, and uses the `controller_path` and `action` as the
+conforms to superglue's [payload] response, and uses the `active_template_virtual_path` as the
 `componentIdentifier`.
 
 ```json

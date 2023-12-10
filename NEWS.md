@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.53
+
+Essentially reverts the backward breaking change for the removal of 
+virtual_path_of_template. A method called active_template_virtual_path
+was introduced in props_template 0.32. Using controller_path and action_name
+identifier was causing issues with associating a template with a component.
+
 ## 0.52
 
 Backward breaking changes. Superglue now uses props_template 0.31.0 which

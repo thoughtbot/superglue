@@ -27,16 +27,5 @@ module Superglue
           end
       end
     end
-
-    def search_path_to_camelized_param(path)
-      path.map do |part|
-        if part.include? "="
-          key, rest = part.split("=")
-          [key.camelize(:lower), rest].join("=")
-        else
-          part.camelize(:lower)
-        end
-      end.join(".")
-    end
   end
 end

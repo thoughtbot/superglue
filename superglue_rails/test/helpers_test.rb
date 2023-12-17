@@ -14,10 +14,4 @@ class HelpersTest < ActiveSupport::TestCase
 
     assert_equal param_to_search_path(qry), ["foo", "bar"]
   end
-
-  test "camelize_path" do
-    path = ["foo_bar", "foo_bar=1", "foo_baz_roo"]
-
-    assert_equal search_path_to_camelized_param(path), "fooBar.fooBar=1.fooBazRoo"
-  end
 end

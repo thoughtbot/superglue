@@ -15,7 +15,7 @@ end
 
 if path
   json.action 'graft'
-  json.path search_path_to_camelized_param(path)
+  json.path params[:props_at]
 end
 
 json.restoreStrategy 'fromCacheAndRevisitInBackground'

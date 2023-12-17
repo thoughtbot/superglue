@@ -16,15 +16,10 @@ module Superglue
 
     def param_to_search_path(param)
       if param
-        param.gsub(/[^\da-zA-Z_=.]+/, "").squeeze(".")
+        param
+          .gsub(/[^\da-zA-Z_=.]+/, "")
+          .squeeze(".")
           .split(".")
-          .map do |part|
-            if /^-?[0-9]+$/.match?(part)
-              part.to_i
-            else
-              part
-            end
-          end
       end
     end
   end

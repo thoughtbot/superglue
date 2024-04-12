@@ -5,13 +5,13 @@ export default function <%= plural_table_name.camelize %>New({
   // visit,
   // remote
   form,
-  error,
+  errors,
   <%= plural_table_name.camelize(:lower) %>Path,
 }) {
-  const messagesEl = error && (
+  const messagesEl = errors && (
     <div id="error_explanation">
-      <h2>{ error.explanation }</h2>
-      <ul>{ error.messages.map(({body})=> <li key={body}>{body}</li>) }</ul>
+      <h2>{ errors.explanation }</h2>
+      <ul>{ errors.messages.map(({body})=> <li key={body}>{body}</li>) }</ul>
     </div>
   )
 

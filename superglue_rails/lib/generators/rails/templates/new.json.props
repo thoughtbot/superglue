@@ -1,6 +1,6 @@
-if @post.errors.any?
+if @<%= singular_table_name %>.errors.any?
   json.errors({
-    explanation: "#{pluralize(@<%= singular_table_name %>.errors.count, "error")} prohibited this post from being saved:",
+    explanation: "#{pluralize(@<%= singular_table_name %>.errors.count, "error")} prohibited this <%= singular_table_name %> from being saved:",
     messages: @<%= singular_table_name %>.errors.full_messages.map{|msg| {body: msg}}
   })
 end

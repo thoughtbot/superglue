@@ -81,16 +81,6 @@ class SuperglueInstallationTest < Minitest::Test
     successfully %(npm pkg set scripts.build="#{build_script}")
   end
 
-  # def generate_test_app_6(app_name)
-  #   successfully "rails new #{app_name} \
-  #      --webpack \
-  #      --skip-git \
-  #      --skip-turbolinks \
-  #      --skip-hotwire \
-  #      --skip-spring \
-  #      --no-rc"
-  # end
-
   def generate_test_app_7(app_name)
     successfully "rails new #{app_name} \
        --javascript=esbuild \
@@ -164,7 +154,9 @@ class SuperglueInstallationTest < Minitest::Test
     click_button "Delete"
     assert page.has_content?("Post was successfully destroyed.")
   ensure
-    Process.kill "TERM", pid
-    Process.wait pid
+    if pid
+      Process.kill "TERM", pid
+      Process.wait pid
+    end
   end
 end

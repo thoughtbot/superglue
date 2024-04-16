@@ -1,0 +1,28 @@
+name: Test superglue_js
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Test superglue.js
+    strategy:
+      fail-fast: false
+
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Setup project
+        working-directory: ./superglue
+        run: npm install
+      - name: Lint
+        working-directory: ./superglue
+        run: npm run lint
+      - name: Test
+        working-directory: ./superglue
+        run: npm run test

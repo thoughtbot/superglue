@@ -14,11 +14,4 @@ Gem::Specification.new do |s|
   s.add_dependency "actionpack", ">= 7.0.0"
   s.add_dependency "props_template", ">= 0.32.0"
   s.add_dependency "form_props", ">= 0.0.5"
-
-  s.add_development_dependency "activerecord", ">= 7.0"
-  s.add_development_dependency "rake", " ~> 12.0"
-  s.add_development_dependency "sqlite3", "~> 1.3"
-  s.add_development_dependency "minitest", "~> 5.10"
-  s.add_development_dependency "capybara", "~> 3.0"
-  s.add_development_dependency "selenium-webdriver", "~> 3.11"
 end

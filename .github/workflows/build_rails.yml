@@ -25,12 +25,16 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Setup project
+      - name: Which bundler?
+        working-directory: ./superglue_rails
+        run: bundle -v
+      - name: Using Gemfile
         working-directory: ./superglue_rails
         run: |
-          mv Gemfile.${{ matrix.version }} Gemfile
-          bundle install
-          bundle update
+          mv -f Gemfile.${{ matrix.version }} ./Gemfile
+      - name: Bundle install
+        working-directory: ./superglue_rails
+        run: bundle install
       - name: Run unit test
         working-directory: ./superglue_rails
         run: bundle exec rake test

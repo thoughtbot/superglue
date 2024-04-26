@@ -87,7 +87,8 @@ class SuperglueInstallationTest < Minitest::Test
        --skip-git \
        --skip-hotwire \
        --skip-spring \
-       --no-rc"
+       --no-rc \
+       --skip_bootsnap"
   end
 
   def generate_scaffold

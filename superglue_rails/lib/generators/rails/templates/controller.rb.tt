@@ -29,11 +29,7 @@ class <%= controller_class_name %>Controller < ApplicationController
     @<%= singular_table_name %> = <%= orm_class.build(class_name, "#{singular_table_name}_params") %>
 
     if @<%= orm_instance.save %>
-      <%- if options[:platform] == 'mobile' -%>
-      redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully created.'" %>
-      <%- else -%>
       redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
-      <%- end -%>
     else
       response.set_header("content-location", new_<%= singular_table_name %>_path)
       render :new
@@ -43,11 +39,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # PATCH/PUT <%= route_url %>/1
   def update
     if @<%= orm_instance.update("#{singular_table_name}_params") %>
-      <%- if options[:platform] == 'mobile' -%>
-      redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully updated.'" %>
-      <%- else -%>
       redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
-      <%- end -%>
     else
       response.set_header("content-location", edit_<%= singular_table_name %>_path(@<%= singular_table_name %>))
       render :edit
@@ -57,11 +49,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # DELETE <%= route_url %>/1
   def destroy
     @<%= orm_instance.destroy %>
-    <%- if options[:platform] == 'mobile' -%>
     redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully destroyed.'" %>
-    <%- else -%>
-    redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} was successfully destroyed.'" %>
-    <%- end -%>
   end
 
   private

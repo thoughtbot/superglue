@@ -1,37 +1,27 @@
-name: Test superglue_rails
+name: Scheduled Rails Main
+
 on:
-  push:
-  pull_request:
   schedule:
-    - cron: "0 0 * * 0"
-  workflow_dispatch:
+    - cron: '0 0 * * 4'
 
 jobs:
   build:
-    name: Ruby ${{ matrix.ruby }}. Rails ${{ matrix.version }}
+    name: Rails main
+    runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
-      matrix:
-        ruby: ["3.3", "3.2", "3.1"]
-        version: ["70", "71"]
-
-    runs-on: "ubuntu-latest"
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
-      - name: Which bundler?
-        working-directory: ./superglue_rails
-        run: bundle -v
+          ruby-version: '3.3'
+          bundler-cache: true
       - name: Using Gemfile
         working-directory: ./superglue_rails
         run: |
-          mv -f Gemfile.${{ matrix.version }} ./Gemfile
+          mv -f Gemfile.main ./Gemfile
       - name: Bundle install
         working-directory: ./superglue_rails
         run: bundle install

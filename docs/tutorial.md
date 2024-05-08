@@ -108,7 +108,7 @@ state to be picked up by React and Redux.
 <% initial_state = controller.render_to_string(formats: [:json], locals: local_assigns, layout: true) %>
 
 <script type="text/javascript">
-  window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;
+  window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state.html_safe %>;<%# erblint:disable ErbSafety %>
 </script>
 
 <div id="app"></div>

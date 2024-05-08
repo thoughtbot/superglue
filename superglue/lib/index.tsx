@@ -40,7 +40,6 @@ export {
   superglueReducer,
   pageReducer,
   rootReducer,
-  updateFragments,
 } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
@@ -94,7 +93,20 @@ class NotImplementedError extends Error {
   }
 }
 
-export class ApplicationBase extends React.Component {
+
+interface Props {}
+
+export class ApplicationBase extends React.Component<Props> {
+  public hasWindow: any
+  public navigatorRef: any
+  public initialPageKey: any
+  public store: any
+  public history: any
+  public connectedMapping: any
+  public ujsHandlers: any
+  public visit: any
+  public remote: any
+
   constructor(props) {
     super(props)
     this.hasWindow = typeof window !== 'undefined'

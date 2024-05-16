@@ -65,7 +65,7 @@ If you've used Jbuidler, this should look familiar. Here, we're using
   [props_template]: https://github.com/thoughtbot/props_template
 
 ```ruby
-json.body
+json.body do
   json.greet "Hello world"
 end
 
@@ -196,7 +196,7 @@ But first! A quick dive into [props_template]. Click on the tabs to see what hap
 when `@path` changes for the example below.
 
 ```ruby
-json.data(@path) do
+json.data(search: @path) do
   json.body do
     json.chart do
       sleep 10
@@ -314,7 +314,7 @@ How should we improve the user experience?
 #### **`show.json.props`**
 
 ```ruby
-json.body
+json.body do
   sleep 5
   json.greet "Hello world"
 end

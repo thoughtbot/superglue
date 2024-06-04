@@ -15,7 +15,6 @@ import thunk from 'redux-thunk'
 import { Provider, connect } from 'react-redux'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import Nav from './components/Nav'
-import PropTypes from 'prop-types'
 
 export {
   BEFORE_FETCH,
@@ -93,10 +92,15 @@ class NotImplementedError extends Error {
   }
 }
 
+interface Props {
+  initialPage: any
+  baseUrl: any
+  path: any
+}
 
-interface Props {}
+interface Store {}
 
-export class ApplicationBase extends React.Component<Props> {
+export class ApplicationBase extends React.Component<Props, Store> {
   public hasWindow: any
   public navigatorRef: any
   public initialPageKey: any
@@ -231,11 +235,4 @@ export class ApplicationBase extends React.Component<Props> {
       </Provider>
     )
   }
-}
-
-ApplicationBase.propTypes = {
-  initialPage: PropTypes.object,
-  baseUrl: PropTypes.string,
-  path: PropTypes.string,
-  appEl: PropTypes.object,
 }

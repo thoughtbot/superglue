@@ -15,4 +15,3 @@ props_template/performance/**/*.png
 .tool-versions
 testapp/
 
-built/

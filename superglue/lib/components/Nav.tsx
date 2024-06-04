@@ -1,19 +1,18 @@
 import React from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
-import { object, func, string } from 'prop-types'
 
 interface Props {
-  store: any, // object
-  history: any, // object
-  mapping: any, // object
-  visit: any, // fund
-  remote: any, // func
-  initialPageKey: string,
+  store: any
+  history: any
+  mapping: any
+  visit: any
+  remote: any
+  initialPageKey: any
 }
 
 interface State {
-  pageKey: any,
+  pageKey: any
   ownProps: any
 }
 
@@ -228,15 +227,5 @@ class Nav extends React.Component<Props, State> {
     }
   }
 }
-
-// TODO: remove now that we have Props ?
-// Nav.propTypes = {
-//   store: object,
-//   history: object,
-//   mapping: object,
-//   visit: func,
-//   remote: func,
-//   initialPageKey: string,
-// }
 
 export default Nav

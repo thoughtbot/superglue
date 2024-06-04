@@ -1,6 +1,6 @@
 module.exports = {
   plugins: [
-    ["transform-react-remove-prop-types", {removeImport: true}]
+    ["transform-react-remove-prop-types", { removeImport: true }]
   ],
   presets: [
     [
@@ -13,6 +13,9 @@ module.exports = {
     ],
     [
       "@babel/preset-react"
+    ],
+    [
+      "@babel/preset-typescript"
     ],
   ],
 };

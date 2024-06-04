@@ -72,7 +72,12 @@ export function argsForFetch(
     headers['x-csrf-token'] = currentState.csrfToken
   }
 
-  const href = new parse(pathQuery, config.baseUrl || {}, false).href
+  const fetchPath = new parse(
+    formatForXHR(pathQuery),
+    config.baseUrl || {},
+    false
+  )
+
   const credentials = 'same-origin'
 
   if (!(method == 'GET' || method == 'HEAD')) {
@@ -93,10 +98,16 @@ export function argsForFetch(
   }
 
   if (method == 'GET' || method == 'HEAD') {
+    if (options.body instanceof FormData) {
+      const allData = new URLSearchParams(options.body).toString()
+      // fetchPath will always have atleast /?format=json
+      fetchPath.query = fetchPath.query + '&' + allData
+    }
+
     delete options.body
   }
 
-  return [formatForXHR(href), options]
+  return [fetchPath.toString(), options]
 }
 
 export function extractJSON(rsp) {

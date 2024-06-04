@@ -2,14 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.53.3
+Fixed issue with being able to remotely submit a form that was using
+a GET request. This uncovered another issue with a null content-type
+that was also resolved.
+
 ## 0.53.1
-Minor update, removed a helper method `search_path_to_camelized_param` 
+Minor update, removed a helper method `search_path_to_camelized_param`
 that was no longer needed and fixed the existing `param_to_search_path`
 to skip over number as props_template will also do that.
 
 ## 0.53
 
-Essentially reverts the backward breaking change for the removal of 
+Essentially reverts the backward breaking change for the removal of
 virtual_path_of_template. A method called active_template_virtual_path
 was introduced in props_template 0.32. Using controller_path and action_name
 identifier was causing issues with associating a template with a component.

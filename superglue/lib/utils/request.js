@@ -60,12 +60,17 @@ export function argsForFetch(
     'x-superglue-request': true,
   }
 
+  // This needs to be done better. This is saying to
+  // remove the content-type header from UJS form
+  // submissions.
+  const fromUJSForm = headers['content-type'] === null
+
   if (method != 'GET' && method != 'HEAD') {
-    if (headers['content-type'] === null) {
-      delete headers['content-type']
-    } else {
-      headers['content-type'] = 'application/json'
-    }
+    headers['content-type'] = 'application/json'
+  }
+
+  if (fromUJSForm) {
+    delete headers['content-type']
   }
 
   if (currentState.csrfToken) {

@@ -1,9 +1,26 @@
 import React from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
-import PropTypes from 'prop-types'
 
-class Nav extends React.Component {
+interface Props {
+  store: any
+  history: any
+  mapping: any
+  visit: any
+  remote: any
+  initialPageKey: any
+}
+
+interface State {
+  pageKey: any
+  ownProps: any
+}
+
+class Nav extends React.Component<Props, State> {
+  public history
+  public hasWindow
+  public unsubscribeHistory
+
   constructor(props) {
     super(props)
     const { history, initialPageKey } = this.props
@@ -209,15 +226,6 @@ class Nav extends React.Component {
       this.notFound(componentIdentifier)
     }
   }
-}
-
-Nav.propTypes = {
-  store: PropTypes.object,
-  history: PropTypes.object,
-  mapping: PropTypes.object,
-  visit: PropTypes.func,
-  remote: PropTypes.func,
-  initialPageKey: PropTypes.string,
 }
 
 export default Nav

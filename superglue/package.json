@@ -8,8 +8,10 @@
     "clean": "rm -rf ./dist",
     "copy:package": "cat ./package.json | jq 'del(.scripts)' > dist/package.json",
     "copy:readme": "cp ../README.md dist/",
-    "build:index": "babel lib -d dist",
-    "build": "npm run clean && npm run build:index && npm run copy:package && npm run copy:readme",
+    "build": "npm run clean && npm run build:js && npm run copy:package && npm run copy:readme",
+    "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\"",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -27,6 +29,7 @@
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.13.13",
+    "@babel/preset-typescript": "^7.24.6",
     "core-js": "^2.6.12",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",

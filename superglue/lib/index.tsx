@@ -15,7 +15,6 @@ import thunk from 'redux-thunk'
 import { Provider, connect } from 'react-redux'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import Nav from './components/Nav'
-import PropTypes from 'prop-types'
 
 export {
   BEFORE_FETCH,
@@ -40,7 +39,6 @@ export {
   superglueReducer,
   pageReducer,
   rootReducer,
-  updateFragments,
 } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
@@ -94,7 +92,25 @@ class NotImplementedError extends Error {
   }
 }
 
-export class ApplicationBase extends React.Component {
+interface Props {
+  initialPage: any
+  baseUrl: any
+  path: any
+}
+
+interface Store {}
+
+export class ApplicationBase extends React.Component<Props, Store> {
+  public hasWindow: any
+  public navigatorRef: any
+  public initialPageKey: any
+  public store: any
+  public history: any
+  public connectedMapping: any
+  public ujsHandlers: any
+  public visit: any
+  public remote: any
+
   constructor(props) {
     super(props)
     this.hasWindow = typeof window !== 'undefined'
@@ -219,11 +235,4 @@ export class ApplicationBase extends React.Component {
       </Provider>
     )
   }
-}
-
-ApplicationBase.propTypes = {
-  initialPage: PropTypes.object,
-  baseUrl: PropTypes.string,
-  path: PropTypes.string,
-  appEl: PropTypes.object,
 }

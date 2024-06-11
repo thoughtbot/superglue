@@ -1,6 +1,10 @@
 import { withoutBusters, urlToPageKey } from './url'
 
 export class HandlerBuilder {
+  public attributePrefix: any
+  public visit: any
+  public remote: any
+
   constructor({ ujsAttributePrefix, visit, remote }) {
     this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
@@ -84,7 +88,7 @@ export class HandlerBuilder {
     this.visitOrRemote(link, url, { method: 'GET' })
   }
 
-  visitOrRemote(linkOrForm, url, opts = {}) {
+  visitOrRemote(linkOrForm, url, opts: any = {}) {
     let target
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {

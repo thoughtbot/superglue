@@ -1,4 +1,4 @@
-import { isValidResponse, argsForFetch } from '../../../lib/utils/request'
+import { isValidResponse, argsForFetch, handleServerErrors } from '../../../lib/utils/request'
 import parse from 'url-parse'
 import Headers from 'fetch-headers'
 
@@ -187,3 +187,69 @@ describe('argsForFetch', () => {
     ])
   })
 })
+
+describe('handleServerErrors', () => {
+  let originalConsoleWarn;
+
+  beforeAll(() => {
+    originalConsoleWarn = console.warn;
+    console.warn = jest.fn();
+  });
+
+  afterAll(() => {
+    console.warn = originalConsoleWarn;
+  });
+
+  it('warns when 406 response code is received', () => {
+    const headers = new Headers([
+      ['content-type', 'application/json'],
+    ])
+
+    const rsp = {
+      ok: false,
+      status: 406,
+      statusText: 'Not Acceptable',
+      headers,
+    }
+
+    expect(() => handleServerErrors({ rsp })).not.toThrow();
+    expect(console.warn).toHaveBeenCalledWith(
+        "Superglue encountered a 406 Not Acceptable response. This can happen if you used respond_to and didn't specify format.json in the block. Try adding it to your respond_to. For example:\n\n" +
+        "respond_to do |format|\n" +
+        "  format.html\n" +
+        "  format.json\n" +
+        "  format.csv\n" +
+        "end"
+    );
+  });
+
+  it('throws error for non-406 response codes', () => {
+    const headers = new Headers([
+      ['content-type', 'application/json'],
+    ])
+
+    const rsp = {
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      headers,
+    }
+
+    expect(() => handleServerErrors({ rsp })).toThrowError('Internal Server Error');
+  });
+
+  it('does not throw error for ok response', () => {
+    const headers = new Headers([
+      ['content-type', 'application/json'],
+    ])
+
+    const rsp = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      headers,
+    }
+
+    expect(() => handleServerErrors({ rsp })).not.toThrow();
+  });
+});

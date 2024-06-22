@@ -206,13 +206,14 @@ export function visit(
           rsp,
           fetchArgs,
         }
+        const isGet = fetchArgs[1].method === 'GET'
 
         meta.suggestedAction = 'push'
-        if (!rsp.redirected && fetchArgs[1].method != 'GET') {
+        if (!rsp.redirected && !isGet) {
           meta.suggestedAction = 'replace'
         }
 
-        if (revisit && fetchArgs[1].method == 'GET') {
+        if (revisit && isGet) {
           if (rsp.redirected) {
             meta.suggestedAction = 'replace'
           } else {
@@ -220,16 +221,15 @@ export function visit(
           }
         }
 
-        if (method !== 'GET') {
-          const contentLocation = rsp.headers.get('content-location')
+        pageKey = urlToPageKey(rsp.url)
 
-          if (contentLocation) {
-            pageKey = urlToPageKey(contentLocation)
-          }
+        if (!isGet && !rsp.redirected) {
+          pageKey = currentPageKey
         }
 
-        if (rsp.redirected) {
-          pageKey = urlToPageKey(rsp.url)
+        const contentLocation = rsp.headers.get('content-location')
+        if (contentLocation) {
+          pageKey = urlToPageKey(contentLocation)
         }
 
         const page = beforeSave(pages[pageKey], json)

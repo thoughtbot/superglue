@@ -189,15 +189,15 @@ describe('argsForFetch', () => {
 })
 
 describe('handleServerErrors', () => {
-  let originalConsoleWarn;
+  let originalConsoleError;
 
   beforeAll(() => {
-    originalConsoleWarn = console.warn;
-    console.warn = jest.fn();
+    originalConsoleError = console.error;
+    console.error = jest.fn();
   });
 
   afterAll(() => {
-    console.warn = originalConsoleWarn;
+    console.error = originalConsoleError;
   });
 
   it('warns when 406 response code is received', () => {
@@ -212,14 +212,14 @@ describe('handleServerErrors', () => {
       headers,
     }
 
-    expect(() => handleServerErrors({ rsp })).not.toThrow();
-    expect(console.warn).toHaveBeenCalledWith(
+    expect(() => handleServerErrors({ rsp })).toThrowError('Not Acceptable');
+    expect(console.error).toHaveBeenCalledWith(
         "Superglue encountered a 406 Not Acceptable response. This can happen if you used respond_to and didn't specify format.json in the block. Try adding it to your respond_to. For example:\n\n" +
-        "respond_to do |format|\n" +
-        "  format.html\n" +
-        "  format.json\n" +
-        "  format.csv\n" +
-        "end"
+        'respond_to do |format|\n' +
+        '  format.html\n' +
+        '  format.json\n' +
+        '  format.csv\n' +
+        'end'
     );
   });
 

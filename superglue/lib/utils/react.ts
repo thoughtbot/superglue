@@ -11,7 +11,7 @@ export function mapStateToProps(
   ownProps
 ) {
   let pageKey = ownProps.pageKey
-  let params = ownProps
+  const params = ownProps
   const csrfToken = state.superglue.csrfToken
   pageKey = urlToPageKey(pageKey)
   const { data, fragments } = state.pages[pageKey] || {

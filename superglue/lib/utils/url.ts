@@ -14,7 +14,7 @@ export function pathQueryHash(url) {
 
 export function hasPropsAt(url) {
   url = new parse(url, {}, true)
-  let query = url.query
+  const query = url.query
 
   return !!query['props_at']
 }
@@ -28,7 +28,7 @@ export function withFormatJson(url) {
 
 export function pathWithoutBZParams(url) {
   url = new parse(url, {}, true)
-  let query = url.query
+  const query = url.query
 
   delete query['props_at']
   delete query['format']
@@ -39,7 +39,7 @@ export function pathWithoutBZParams(url) {
 
 export function removePropsAt(url) {
   url = new parse(url, {}, true)
-  let query = url.query
+  const query = url.query
 
   delete query['props_at']
   url.query = query
@@ -49,7 +49,7 @@ export function removePropsAt(url) {
 
 export function urlToPageKey(url) {
   url = new parse(url, {}, true)
-  let query = url.query
+  const query = url.query
 
   delete query['props_at']
   delete query['format']
@@ -66,7 +66,7 @@ export function withoutHash(url) {
 
 export function withoutBusters(url) {
   url = new parse(url, {}, true)
-  let query = url.query
+  const query = url.query
   delete query['format']
   url.query = query
 
@@ -74,7 +74,7 @@ export function withoutBusters(url) {
 }
 
 export function formatForXHR(url) {
-  let formats = [withoutHash, withFormatJson]
+  const formats = [withoutHash, withFormatJson]
 
   return formats.reduce((memo, f) => f(memo), url)
 }

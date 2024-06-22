@@ -6,7 +6,7 @@ const actionValues = Object.values(actions)
 const fragmentMiddleware = (store) => (next) => (action) => {
   const prevState = store.getState()
   const nextAction = next(action)
-  let nextState = store.getState()
+  const nextState = store.getState()
 
   if (actionValues.includes(action.type)) {
     return nextAction
@@ -16,8 +16,8 @@ const fragmentMiddleware = (store) => (next) => (action) => {
     return nextAction
   }
 
-  let changedFragments = {}
-  let changedKeys = Object.keys(nextState.pages).filter((key) => {
+  const changedFragments = {}
+  const changedKeys = Object.keys(nextState.pages).filter((key) => {
     return prevState.pages[key] !== nextState.pages[key]
   })
 

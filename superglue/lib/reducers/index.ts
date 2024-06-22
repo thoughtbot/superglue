@@ -31,7 +31,7 @@ function constrainPagesSize(state) {
     .map((key) => state[key].savedAt)
     .sort((a, b) => b - a)
 
-  for (let key of Array.from(allPageKeys)) {
+  for (const key of Array.from(allPageKeys)) {
     if (state[key].savedAt <= cacheTimesRecentFirst[maxPages - 1]) {
       delete state[key]
     }
@@ -226,7 +226,7 @@ export function metaReducer(state = {}, action) {
 }
 
 export function superglueReducer(state = {}, action) {
-  let meta = metaReducer(state, action)
+  const meta = metaReducer(state, action)
 
   return { ...meta }
 }

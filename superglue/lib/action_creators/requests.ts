@@ -138,7 +138,9 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
 }
 
 let lastVisitController = {
-  abort: () => {},
+  abort: () => {
+    // noop
+  },
 }
 
 export function visit(

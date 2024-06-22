@@ -62,7 +62,9 @@ export class HandlerBuilder {
     event.preventDefault()
 
     let url = form.getAttribute('action')
-    let method = (form.getAttribute('method') || 'POST').toUpperCase()
+    const method = (
+      form.getAttribute('method') || 'POST'
+    ).toUpperCase()
     url = withoutBusters(url)
 
     this.visitOrRemote(form, url, {

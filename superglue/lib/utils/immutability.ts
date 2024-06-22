@@ -118,8 +118,8 @@ function normalizeKeyPath(path) {
 function setIn(object, keypath, value) {
   keypath = normalizeKeyPath(keypath)
 
-  let results = {}
-  let parents = {}
+  const results = {}
+  const parents = {}
   let i
 
   parents[0] = object
@@ -132,7 +132,7 @@ function setIn(object, keypath, value) {
 
   for (i = keypath.length - 1; i >= 0; i--) {
     results[i] = clone(parents[i])
-    let key = getKey(results[i], keypath[i])
+    const key = getKey(results[i], keypath[i])
     results[i][key] = results[i + 1]
   }
 

@@ -96,11 +96,10 @@ interface Props {
   initialPage: any
   baseUrl: any
   path: any
+  appEl: HTMLElement
 }
 
-interface Store {}
-
-export class ApplicationBase extends React.Component<Props, Store> {
+export class ApplicationBase extends React.Component<Props> {
   public hasWindow: any
   public navigatorRef: any
   public initialPageKey: any

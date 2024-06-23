@@ -31,7 +31,6 @@ class <%= controller_class_name %>Controller < ApplicationController
     if @<%= orm_instance.save %>
       redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully created.'" %>
     else
-      response.set_header("content-location", new_<%= singular_table_name %>_path)
       render :new
     end
   end
@@ -41,7 +40,6 @@ class <%= controller_class_name %>Controller < ApplicationController
     if @<%= orm_instance.update("#{singular_table_name}_params") %>
       redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} was successfully updated.'" %>
     else
-      response.set_header("content-location", edit_<%= singular_table_name %>_path(@<%= singular_table_name %>))
       render :edit
     end
   end

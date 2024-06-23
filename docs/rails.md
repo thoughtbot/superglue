@@ -1,33 +1,5 @@
 # Rails
 
-## Setting the content location
-
-On non-GET `visit`s, Superglue uses the response's `content-location` to create
-the key used to store your props.
-
-This is because when you render in a `create` or `update`, the returned
-response does not necessarily reflect the url the user should see.
-
-For example, when the user is on `posts/new` and they make a POST request to
-`posts/`, we may decide to render `posts/new` for any errors you'd like to
-show.
-
-It is recommended that you set this header in your `create` and `update`
-methods. If you used the generators, this is done for you.
-
-```ruby
-def create
-  @post = Post.new(post_params)
-
-  if @post.save
-    redirect_to @post, notice: 'Post was successfully created.'
-  else
-    response.set_header("content-location", new_post_path)
-    render :new
-  end
-end
-```
-
 ## Rails Flash
 
 The installation generator will add a `flash.js` slice to `app/javascript/slices`
@@ -66,3 +38,23 @@ def create
   redirect_back_with_props_at fallback_url: '/'
 end
 ```
+
+## Setting the content location
+
+You can override the URL Superglue uses to display on the address bar and
+store your response directly from the server using `content-location`. This
+is optional. For example:
+
+```ruby
+def create
+  @post = Post.new(post_params)
+
+  if @post.save
+    redirect_to @post, notice: 'Post was successfully created.'
+  else
+    response.set_header("content-location", new_post_path)
+    render :new
+  end
+end
+```
+

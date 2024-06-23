@@ -4,23 +4,82 @@ ROOT_DIR = File.expand_path('..', File.dirname(__FILE__))
 VERSION_FILE = File.join(ROOT_DIR, 'VERSION')
 SUPERGLUE_DIR = File.join(ROOT_DIR, 'superglue')
 SUPERGLUE_RAILS_DIR = File.join(ROOT_DIR, 'superglue_rails')
+PACKAGE_JSON = File.join(SUPERGLUE_DIR, 'package.json')
 
-version_str = File.read(VERSION_FILE)
-
-Dir.chdir(SUPERGLUE_RAILS_DIR) do
-  system("gem build superglue.gemspec")
-  system("gem push superglue-#{version_str}.gem")
+def prompt_version
+  print "Enter the new version number (e.g., 1.0.0): "
+  version_str = gets.strip
+  if version_str.empty?
+    puts "Version number cannot be empty."
+    prompt_version
+  else
+    version_str
+  end
 end
 
-Dir.chdir(SUPERGLUE_DIR) do
-  system("npm run build")
-  system("npm publish dist")
+def confirm_version(version_str)
+  print "Are you sure you want to release version #{version_str}? (y/n): "
+  confirmation = gets.strip.downcase
+  unless confirmation == 'y'
+    puts "Release aborted."
+    exit 1
+  end
 end
 
-Dir.chdir("#{SUPERGLUE_DIR}/dist") do
-  system("npm publish")
+def update_version_files(version_str)
+  # Update VERSION file
+  File.open(VERSION_FILE, 'w') { |f| f.write(version_str) }
+
+  # Update package.json
+  package_json = File.read(PACKAGE_JSON)
+  package_json.gsub!(/^.+version":.+$/, "  \"version\": \"#{version_str}\",")
+  File.open(PACKAGE_JSON, 'w') { |f| f.write(package_json) }
+
+  # Commit changes
+  system("git add #{VERSION_FILE} #{PACKAGE_JSON}")
+  system("git commit -m 'Version bump to #{version_str}'")
 end
 
-system("git tag v#{version_str}")
-system("git push origin v#{version_str}")
-system("git push origin main")
+def run_tests
+  puts "Running tests..."
+
+  Dir.chdir(SUPERGLUE_RAILS_DIR) do
+    if system("bundle exec rake test")
+      puts "Tests passed."
+    else
+      puts "Tests failed. Aborting release."
+      exit 1
+    end
+  end
+end
+
+def build_and_publish_gem(version_str)
+  Dir.chdir(SUPERGLUE_RAILS_DIR) do
+    system("gem build superglue.gemspec")
+    system("gem push superglue-#{version_str}.gem")
+  end
+end
+
+def build_and_publish_npm_package
+  Dir.chdir(SUPERGLUE_DIR) do
+    system("npm run build")
+    system("npm publish dist")
+  end
+end
+
+def tag_and_push_git(version_str)
+  system("git tag v#{version_str}")
+  system("git push origin v#{version_str}")
+  system("git push origin main")
+end
+
+# Main release script
+version_str = ARGV[0] || prompt_version
+confirm_version(version_str)
+update_version_files(version_str)
+run_tests
+build_and_publish_gem(version_str)
+build_and_publish_npm_package
+tag_and_push_git(version_str)
+
+puts "Release process completed successfully."

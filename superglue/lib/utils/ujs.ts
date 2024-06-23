@@ -48,8 +48,11 @@ export class HandlerBuilder {
     const hasRemote = !!node.getAttribute(
       this.attributePrefix + '-remote'
     )
+    const hasReplace = !!node.getAttribute(
+      this.attributePrefix + '-replace'
+    )
 
-    return hasVisit || hasRemote
+    return hasVisit || hasRemote || hasReplace
   }
 
   handleSubmit(event) {
@@ -92,6 +95,7 @@ export class HandlerBuilder {
 
   visitOrRemote(linkOrForm, url, opts: any = {}) {
     let target
+    let suggestedAction = 'push'
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
       target = this.visit
@@ -107,10 +111,15 @@ export class HandlerBuilder {
       target = this.remote
     }
 
+    if (linkOrForm.getAttribute(this.attributePrefix + '-replace')) {
+      target = this.visit
+      suggestedAction = 'replace'
+    }
+
     if (!target) {
       return
     } else {
-      return target(url, opts)
+      return target(url, { ...opts, suggestedAction })
     }
   }
 

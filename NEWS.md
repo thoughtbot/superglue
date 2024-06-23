@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.53.4
+Remove the need for content-location, but retain the functionality in
+case there is a need for it, and do our best not to break existing
+functionality.
+
+Better dev experience with new error handling and typescript/eslint
+
 ## 0.53.3
 Fixed issue with being able to remotely submit a form that was using
 a GET request. This uncovered another issue with a null content-type

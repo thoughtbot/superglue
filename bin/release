@@ -63,7 +63,10 @@ end
 def build_and_publish_npm_package
   Dir.chdir(SUPERGLUE_DIR) do
     system("npm run build")
-    system("npm publish dist")
+  end
+  
+  Dir.chdir("#{SUPERGLUE_DIR}/dist") do
+    system("npm publish")
   end
 end
 

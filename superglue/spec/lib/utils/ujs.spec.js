@@ -166,30 +166,7 @@ describe('ujs', () => {
       const {onClick} = builder.handlers()
       onClick(createFakeRemoteEvent())
 
-      expect(remote).toHaveBeenCalledWith('/foo', {method: 'GET', suggestedAction: 'push'})
-    })
-
-    it('calls visit with replace action if link has data-replace attribute', () => {
-      const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {}
-        }
-      }
-      const store = {}
-
-      const builder = new HandlerBuilder({
-        ujsAttributePrefix,
-        store,
-        visit,
-        navigatorRef
-     })
-
-      const {onClick} = builder.handlers()
-      onClick(createFakeReplaceEvent())
-
-      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET', suggestedAction: 'replace'})
+      expect(remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
     it('does not call visit on a link that does not have the visit attribute data-visit', () => {
@@ -383,7 +360,6 @@ describe('ujs', () => {
         headers: {
           "content-type": null,
         },
-        suggestedAction: 'push',
         body: {some: 'Body'}
       })
     })

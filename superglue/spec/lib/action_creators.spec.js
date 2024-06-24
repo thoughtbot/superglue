@@ -1388,7 +1388,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
       const expectedFetchUrl = '/first?props_at=foo'
       store.dispatch(visit(expectedFetchUrl)).then((meta) => {
         expect(console.warn).toHaveBeenCalledWith(
-          'visit was called with props_at param in the path /first?props_at=foo, this will be ignore unless you provide a placeholder.'
+          'visit was called with props_at param in the path /first?props_at=foo, this will be ignored unless you provide a placeholder.'
         )
         done()
       })

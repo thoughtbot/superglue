@@ -1,4 +1,7 @@
-export function needsRefresh(prevAssets, newAssets) {
+export function needsRefresh(
+  prevAssets: string[],
+  newAssets: string[]
+): boolean {
   if (prevAssets && newAssets) {
     const hasNewAssets = !newAssets.every((asset) =>
       prevAssets.includes(asset)

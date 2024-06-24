@@ -60,7 +60,7 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'x-superglue-request': true,
+          'x-superglue-request': 'true',
         },
         credentials: 'same-origin',
         signal: undefined,
@@ -86,7 +86,7 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'x-superglue-request': true,
+          'x-superglue-request': 'true',
         },
         signal,
         credentials: 'same-origin',
@@ -111,7 +111,7 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'x-superglue-request': true,
+          'x-superglue-request': 'true',
           'content-type': 'application/json',
           'x-http-method-override': 'PUT',
         },
@@ -140,7 +140,7 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'x-superglue-request': true,
+          'x-superglue-request': 'true',
         },
         signal: undefined,
         credentials: 'same-origin',
@@ -163,7 +163,7 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'x-superglue-request': true,
+          'x-superglue-request': 'true',
         },
         signal: undefined,
         credentials: 'same-origin',
@@ -179,7 +179,7 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'x-superglue-request': true,
+          'x-superglue-request': 'true',
         },
         signal: undefined,
         credentials: 'same-origin',

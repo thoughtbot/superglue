@@ -280,7 +280,7 @@ describe('action creators', () => {
                 headers: {
                   accept: 'application/json',
                   'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': true,
+                  'x-superglue-request': 'true',
                   'x-csrf-token': 'token',
                 },
                 credentials: 'same-origin',
@@ -299,7 +299,7 @@ describe('action creators', () => {
                 headers: {
                   accept: 'application/json',
                   'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': true,
+                  'x-superglue-request': 'true',
                   'x-csrf-token': 'token',
                 },
                 credentials: 'same-origin',
@@ -336,7 +336,7 @@ describe('action creators', () => {
                 headers: {
                   accept: 'application/json',
                   'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': true,
+                  'x-superglue-request': 'true',
                   'x-csrf-token': 'token',
                 },
                 credentials: 'same-origin',
@@ -355,7 +355,7 @@ describe('action creators', () => {
                 headers: {
                   accept: 'application/json',
                   'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': true,
+                  'x-superglue-request': 'true',
                   'x-csrf-token': 'token',
                 },
                 credentials: 'same-origin',
@@ -812,7 +812,7 @@ describe('action creators', () => {
           expect(requestheaders).toEqual({
             accept: 'application/json',
             'x-requested-with': 'XMLHttpRequest',
-            'x-superglue-request': true,
+            'x-superglue-request': 'true',
             'x-csrf-token': 'token',
           })
 

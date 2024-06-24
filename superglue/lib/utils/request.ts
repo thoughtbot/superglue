@@ -1,39 +1,51 @@
 import parse from 'url-parse'
 import { formatForXHR } from './url'
 import { config } from '../config'
+import { ParsedResponse } from '../types'
 
-export function isValidResponse(xhr) {
+export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
 }
 
-export function isValidContent(rsp) {
+export function isValidContent(rsp: Response): boolean {
   const contentType = rsp.headers.get('content-type')
   const jsContent = /^(?:application\/json)(?:;|$)/
 
   return !!(contentType !== undefined && contentType.match(jsContent))
 }
 
-function downloadingFile(xhr) {
+function downloadingFile(xhr: Response): boolean {
   const disposition = xhr.headers.get('content-disposition')
-  return (
-    disposition !== undefined &&
-    disposition !== null &&
-    disposition.match(/^attachment/)
-  )
+
+  return disposition && disposition.match(/^attachment/) !== null
 }
 
-export function validateResponse(args) {
+class SuperglueResponseError extends Error {
+  response: Response
+
+  constructor(message) {
+    super(message)
+  }
+}
+
+export function validateResponse(
+  args: ParsedResponse
+): ParsedResponse {
   const { rsp } = args
   if (isValidResponse(rsp)) {
     return args
   } else {
-    const error = new Error('Invalid Superglue Response')
+    const error = new SuperglueResponseError(
+      'Invalid Superglue Response'
+    )
     error.response = rsp
     throw error
   }
 }
 
-export function handleServerErrors(args) {
+export function handleServerErrors(
+  args: ParsedResponse
+): ParsedResponse {
   const { rsp } = args
   if (!rsp.ok) {
     if (rsp.status === 406) {
@@ -46,7 +58,7 @@ export function handleServerErrors(args) {
           'end'
       )
     }
-    const error = new Error(rsp.statusText)
+    const error = new SuperglueResponseError(rsp.statusText)
     error.response = rsp
     throw error
   }
@@ -56,8 +68,13 @@ export function handleServerErrors(args) {
 export function argsForFetch(
   getState,
   pathQuery,
-  { method = 'GET', headers = {}, body = '', signal } = {}
-) {
+  {
+    method = 'GET',
+    headers = {},
+    body = '',
+    signal,
+  }: RequestInit = {}
+): [string, RequestInit] {
   method = method.toUpperCase()
 
   const currentState = getState().superglue || {}
@@ -67,7 +84,7 @@ export function argsForFetch(
     ...headers,
     accept: jsAccept,
     'x-requested-with': 'XMLHttpRequest',
-    'x-superglue-request': true,
+    'x-superglue-request': 'true',
   }
 
   // This needs to be done better. This is saying to
@@ -100,7 +117,13 @@ export function argsForFetch(
     method = 'POST'
   }
 
-  const options = { method, headers, body, credentials, signal }
+  const options: RequestInit = {
+    method,
+    headers,
+    body,
+    credentials,
+    signal,
+  }
 
   if (currentState.currentPageKey) {
     const referrer = new parse(
@@ -114,7 +137,9 @@ export function argsForFetch(
 
   if (method == 'GET' || method == 'HEAD') {
     if (options.body instanceof FormData) {
-      const allData = new URLSearchParams(options.body).toString()
+      const allData = new URLSearchParams(
+        options.body as any
+      ).toString()
       // fetchPath will always have atleast /?format=json
       fetchPath.query = fetchPath.query + '&' + allData
     }
@@ -125,7 +150,9 @@ export function argsForFetch(
   return [fetchPath.toString(), options]
 }
 
-export function extractJSON(rsp) {
+export function extractJSON(
+  rsp: Response
+): PromiseLike<ParsedResponse> {
   return rsp
     .json()
     .then((json) => {
@@ -137,7 +164,9 @@ export function extractJSON(rsp) {
     })
 }
 
-export function parseResponse(prm) {
+export function parseResponse(
+  prm: Response
+): PromiseLike<ParsedResponse> {
   return Promise.resolve(prm)
     .then(extractJSON)
     .then(handleServerErrors)

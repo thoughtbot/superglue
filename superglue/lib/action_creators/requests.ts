@@ -152,7 +152,7 @@ export function visit(
     placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
-    action = 'push',
+    action,
   } = {}
 ) {
   path = withoutBusters(path)
@@ -210,11 +210,7 @@ export function visit(
 
         const isGet = fetchArgs[1].method === 'GET'
 
-        if (action !== undefined) {
-          meta.suggestedAction = action
-        } else {
-          meta.suggestedAction = 'push'
-        }
+        meta.suggestedAction = 'push'
 
         if (!rsp.redirected && !isGet) {
           meta.suggestedAction = 'replace'
@@ -226,6 +222,10 @@ export function visit(
           } else {
             meta.suggestedAction = 'none'
           }
+        }
+
+        if (action) {
+          meta.suggestedAction = action
         }
 
         pageKey = urlToPageKey(rsp.url)

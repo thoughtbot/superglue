@@ -79,6 +79,9 @@ describe('ujs', () => {
           if(attr === 'href') {
             return '/foo'
           }
+          if(attr === 'data-visit') {
+            return true
+          }
           if(attr === 'data-replace') {
             return true
           }
@@ -167,6 +170,32 @@ describe('ujs', () => {
       onClick(createFakeRemoteEvent())
 
       expect(remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
+    })
+
+    it('calls visit with replace action if link has data-replace attribute', () => {
+      const ujsAttributePrefix = 'data'
+      const visit = jest.fn()
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {},
+        },
+      }
+      const store = {}
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        visit,
+        navigatorRef,
+      })
+
+      const { onClick } = builder.handlers()
+      onClick(createFakeReplaceEvent())
+
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        suggestedAction: 'replace',
+      })
     })
 
     it('does not call visit on a link that does not have the visit attribute data-visit', () => {
@@ -400,7 +429,59 @@ describe('ujs', () => {
 
       expect(visit).not.toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        body: {some: 'Body'}
+        body: { some: 'Body' },
+      })
+    })
+
+    it('calls visit with replace action if form has data-replace attribute', () => {
+      const store = {}
+      const ujsAttributePrefix = 'data'
+      const visit = jest.fn()
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {},
+        },
+      }
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        visit,
+        navigatorRef,
+      })
+      global.FormData = () => {}
+      jest
+          .spyOn(global, 'FormData')
+          .mockImplementation(() => ({ some: 'Body' }))
+
+      const { onSubmit } = builder.handlers()
+      const fakeFormEvent = createFakeFormEvent()
+      fakeFormEvent.target.getAttribute = (attr) => {
+        if (attr === 'action') {
+          return '/foo'
+        }
+        if (attr === 'method') {
+          return 'POST'
+        }
+        if (attr === 'data-visit') {
+          return true
+        }
+        if (attr === 'data-replace') {
+          return true
+        }
+      }
+      onSubmit(fakeFormEvent)
+
+      expect(global.FormData).toHaveBeenCalledWith(
+          fakeFormEvent.target
+      )
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'POST',
+        headers: {
+          'content-type': null,
+        },
+        suggestedAction: 'replace',
+        body: { some: 'Body' },
       })
     })
   })

@@ -152,6 +152,7 @@ export function visit(
     placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
+    action,
   } = {}
 ) {
   path = withoutBusters(path)
@@ -174,7 +175,7 @@ export function visit(
 
     if (!placeholderKey && hasPropsAt(path)) {
       console.warn(
-        `visit was called with props_at param in the path ${path}, this will be ignore unless you provide a placeholder.`
+        `visit was called with props_at param in the path ${path}, this will be ignored unless you provide a placeholder.`
       )
       path = removePropsAt(path)
     }
@@ -206,9 +207,11 @@ export function visit(
           rsp,
           fetchArgs,
         }
+
         const isGet = fetchArgs[1].method === 'GET'
 
         meta.suggestedAction = 'push'
+
         if (!rsp.redirected && !isGet) {
           meta.suggestedAction = 'replace'
         }
@@ -219,6 +222,10 @@ export function visit(
           } else {
             meta.suggestedAction = 'none'
           }
+        }
+
+        if (action) {
+          meta.suggestedAction = action
         }
 
         pageKey = urlToPageKey(rsp.url)

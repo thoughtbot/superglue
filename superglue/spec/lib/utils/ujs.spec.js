@@ -68,6 +68,28 @@ describe('ujs', () => {
     }
   }
 
+  function createFakeReplaceEvent() {
+    return {
+      preventDefault: () => {},
+      target: {
+        nodeName: 'A',
+        parentNode: 'DIV',
+        href: '/foo',
+        getAttribute: (attr) => {
+          if(attr === 'href') {
+            return '/foo'
+          }
+          if(attr === 'data-visit') {
+            return true
+          }
+          if(attr === 'data-replace') {
+            return true
+          }
+        }
+      }
+    }
+  }
+
   describe('onClick', () => {
     it('calls visit on a valid link', () => {
       const ujsAttributePrefix = 'data'
@@ -89,7 +111,7 @@ describe('ujs', () => {
       const {onClick} = builder.handlers()
       onClick(createFakeEvent())
 
-      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET', suggestedAction: 'push'})
     })
 
     it('calls visit with a placeholder when props_at is present on a valid link', () => {
@@ -120,7 +142,11 @@ describe('ujs', () => {
       const {onClick} = builder.handlers()
       onClick(createFakeVisitGraftEvent())
 
-      expect(visit).toHaveBeenCalledWith('/foo?props_at=data.hello', {method: 'GET', placeholderKey: '/current'})
+      expect(visit).toHaveBeenCalledWith('/foo?props_at=data.hello', {
+        method: 'GET',
+        placeholderKey: '/current',
+        suggestedAction: 'push',
+      })
     })
 
     it('calls remote if a link is enabled with remote', () => {
@@ -146,7 +172,33 @@ describe('ujs', () => {
       expect(remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
 
-    it('does not call visit on an link does not have the visit attribute data-visit', () => {
+    it('calls visit with replace action if link has data-replace attribute', () => {
+      const ujsAttributePrefix = 'data'
+      const visit = jest.fn()
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {},
+        },
+      }
+      const store = {}
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        visit,
+        navigatorRef,
+      })
+
+      const { onClick } = builder.handlers()
+      onClick(createFakeReplaceEvent())
+
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        suggestedAction: 'replace',
+      })
+    })
+
+    it('does not call visit on a link that does not have the visit attribute data-visit', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = jest.fn()
@@ -176,7 +228,7 @@ describe('ujs', () => {
       expect(visit).not.toHaveBeenCalledWith('/foo', {})
     })
 
-    it('does not call visit on an non-standard link', () => {
+    it('does not call visit on a non-standard link', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = jest.fn()
@@ -227,7 +279,7 @@ describe('ujs', () => {
 
       fakeEvent = createFakeEvent()
       onClick(fakeEvent)
-      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET', suggestedAction: 'push'})
     })
   })
 
@@ -274,7 +326,7 @@ describe('ujs', () => {
       }
     }
 
-    it('succssfully posts a form with a visit attribute', () => {
+    it('successfully posts a form with a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = jest.fn()
@@ -303,11 +355,12 @@ describe('ujs', () => {
         headers: {
           "content-type": null,
         },
+        suggestedAction: 'push',
         body: {some: 'Body'}
       })
     })
 
-    it('succssfully posts a form with a remote attribut', () => {
+    it('successfully posts a form with a remote attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const remote = jest.fn()
@@ -340,7 +393,7 @@ describe('ujs', () => {
       })
     })
 
-    it('does not posts a form without a visit attribute', () => {
+    it('does not post a form without a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = jest.fn()
@@ -376,7 +429,59 @@ describe('ujs', () => {
 
       expect(visit).not.toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        body: {some: 'Body'}
+        body: { some: 'Body' },
+      })
+    })
+
+    it('calls visit with replace action if form has data-replace attribute', () => {
+      const store = {}
+      const ujsAttributePrefix = 'data'
+      const visit = jest.fn()
+      const navigatorRef = {
+        current: {
+          navigateTo: () => {},
+        },
+      }
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        visit,
+        navigatorRef,
+      })
+      global.FormData = () => {}
+      jest
+          .spyOn(global, 'FormData')
+          .mockImplementation(() => ({ some: 'Body' }))
+
+      const { onSubmit } = builder.handlers()
+      const fakeFormEvent = createFakeFormEvent()
+      fakeFormEvent.target.getAttribute = (attr) => {
+        if (attr === 'action') {
+          return '/foo'
+        }
+        if (attr === 'method') {
+          return 'POST'
+        }
+        if (attr === 'data-visit') {
+          return true
+        }
+        if (attr === 'data-replace') {
+          return true
+        }
+      }
+      onSubmit(fakeFormEvent)
+
+      expect(global.FormData).toHaveBeenCalledWith(
+          fakeFormEvent.target
+      )
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'POST',
+        headers: {
+          'content-type': null,
+        },
+        suggestedAction: 'replace',
+        body: { some: 'Body' },
       })
     })
   })

@@ -101,6 +101,14 @@ export class HandlerBuilder {
       if (placeholderKey) {
         opts.placeholderKey = urlToPageKey(placeholderKey)
       }
+
+      if (
+        linkOrForm.getAttribute(this.attributePrefix + '-replace')
+      ) {
+        opts.suggestedAction = 'replace'
+      } else {
+        opts.suggestedAction = 'push'
+      }
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {

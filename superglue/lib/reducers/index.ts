@@ -9,8 +9,19 @@ import {
   UPDATE_FRAGMENTS,
 } from '../actions'
 import { config } from '../config'
+import {
+  AllPages,
+  Page,
+  VisitResponse,
+  Fragment,
+  GraftResponse,
+  SuperglueState,
+} from '../types'
 
-function addPlaceholdersToDeferredNodes(existingPage, page) {
+function addPlaceholdersToDeferredNodes(
+  existingPage: Page,
+  page: Page
+): Page {
   const { defers = [] } = existingPage
 
   const prevDefers = defers.map(({ path }) => {
@@ -24,7 +35,7 @@ function addPlaceholdersToDeferredNodes(existingPage, page) {
   }, page)
 }
 
-function constrainPagesSize(state) {
+function constrainPagesSize(state: AllPages) {
   const { maxPages } = config
   const allPageKeys = Object.keys(state)
   const cacheTimesRecentFirst = allPageKeys
@@ -38,10 +49,14 @@ function constrainPagesSize(state) {
   }
 }
 
-function saveResponse(state, pageKey, page) {
+function saveResponse(
+  state: AllPages,
+  pageKey: string,
+  page: VisitResponse
+): AllPages {
   state = { ...state }
 
-  page = {
+  let nextPage: Page = {
     pageKey,
     fragments: [],
     ...page,
@@ -51,19 +66,19 @@ function saveResponse(state, pageKey, page) {
   const existingPage = state[pageKey]
 
   if (existingPage) {
-    page = addPlaceholdersToDeferredNodes(existingPage, page)
+    nextPage = addPlaceholdersToDeferredNodes(existingPage, nextPage)
   }
   constrainPagesSize(state)
-  state[pageKey] = page
+  state[pageKey] = nextPage
 
   return state
 }
 
 export function appendReceivedFragmentsOntoPage(
-  state,
-  pageKey,
-  receivedFragments
-) {
+  state: AllPages,
+  pageKey: string,
+  receivedFragments: Fragment[]
+): AllPages {
   if (!pageKey) {
     return state
   }
@@ -95,7 +110,12 @@ export function appendReceivedFragmentsOntoPage(
   return nextState
 }
 
-export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
+export function graftNodeOntoPage(
+  state: AllPages,
+  pageKey: string,
+  node: any,
+  pathToNode: string
+): AllPages {
   if (!node) {
     console.warn(
       'There was no node returned in the response. Do you have the correct key path in your props_at?'
@@ -110,7 +130,11 @@ export function graftNodeOntoPage(state, pageKey, node, pathToNode) {
   return setIn(state, fullPathToNode, node)
 }
 
-export function handleGraft(state, pageKey, page) {
+export function handleGraft(
+  state: AllPages,
+  pageKey: string,
+  page: GraftResponse
+): AllPages {
   const currentPage = state[pageKey]
   if (!currentPage) {
     const error = new Error(
@@ -125,9 +149,9 @@ export function handleGraft(state, pageKey, page) {
   } = page
 
   return [
-    (nextState) =>
+    (nextState: AllPages) =>
       graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
-    (nextState) =>
+    (nextState: AllPages) =>
       appendReceivedFragmentsOntoPage(
         nextState,
         pageKey,
@@ -136,7 +160,10 @@ export function handleGraft(state, pageKey, page) {
   ].reduce((memo, fn) => fn(memo), state)
 }
 
-export function pageReducer(state = {}, action) {
+export function pageReducer(
+  state: AllPages = {},
+  action: any
+): AllPages {
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload
@@ -195,7 +222,10 @@ export function pageReducer(state = {}, action) {
   }
 }
 
-export function metaReducer(state = {}, action) {
+export function superglueReducer(
+  state: SuperglueState | Record<string, never> = {},
+  action
+) {
   switch (action.type) {
     case HISTORY_CHANGE: {
       const { pathname, search, hash } = action.payload
@@ -223,12 +253,6 @@ export function metaReducer(state = {}, action) {
     default:
       return state
   }
-}
-
-export function superglueReducer(state = {}, action) {
-  const meta = metaReducer(state, action)
-
-  return { ...meta }
 }
 
 export const rootReducer = {

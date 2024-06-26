@@ -9,6 +9,7 @@ import {
   UPDATE_FRAGMENTS,
 } from '../actions'
 import { remote } from './requests'
+import { Page, VisitResponse } from '../types'
 export * from './requests'
 
 export function copyPage({ from, to }) {
@@ -21,7 +22,13 @@ export function copyPage({ from, to }) {
   }
 }
 
-export function saveResponse({ pageKey, page }) {
+export function saveResponse({
+  pageKey,
+  page,
+}: {
+  pageKey: string
+  page: VisitResponse
+}): SaveResponseAction {
   pageKey = urlToPageKey(pageKey)
 
   return {
@@ -98,7 +105,10 @@ function updateFragmentsUsing(page) {
   }
 }
 
-export function saveAndProcessPage(pageKey, page) {
+export function saveAndProcessPage(
+  pageKey: string,
+  page: VisitResponse
+) {
   return (dispatch, getState) => {
     pageKey = urlToPageKey(pageKey)
 

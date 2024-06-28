@@ -1,5 +1,6 @@
-import { VisitResponse, GraftResponse } from '.'
-import { AnyAction } from 'redux'
+import { ThunkAction } from 'redux-thunk'
+import { VisitResponse, GraftResponse, RootState } from '.'
+import { AnyAction, UnknownAction } from 'redux'
 
 export interface SaveResponseAction extends AnyAction {
   type: '@@superglue/SAVE_RESPONSE'
@@ -87,6 +88,13 @@ export interface HandleError extends AnyAction {
   }
 }
 
+export type SaveAndProcessPageThunkAction = ThunkAction<
+  Promise<void>,
+  RootState,
+  never,
+  UnknownAction
+>
+
 export type PageReducerAction =
   | SaveResponseAction
   | HandleGraftAction
@@ -98,3 +106,5 @@ export type SuperglueReducerAction =
   | SaveResponseAction
   | SetCSRFToken
   | HistoryChange
+
+export type AllAction = PageReducerAction | SuperglueReducerAction

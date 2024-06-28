@@ -42,7 +42,7 @@ function getKey(node, key) {
 
     for (i = 0; i < node.length; i++) {
       child = node[i]
-      if (child[attr].toString() === id) {
+      if (child[attr as string].toString() === id) {
         break
       }
     }

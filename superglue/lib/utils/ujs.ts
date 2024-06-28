@@ -1,11 +1,28 @@
 import { withoutBusters, urlToPageKey } from './url'
+import {
+  Visit,
+  Remote,
+  VisitProps,
+  RemoteProps,
+  Meta,
+  Handlers,
+  UJSHandlers,
+} from '../types'
 
 export class HandlerBuilder {
-  public attributePrefix: any
-  public visit: any
-  public remote: any
+  public attributePrefix: string
+  public visit: Visit
+  public remote: Remote
 
-  constructor({ ujsAttributePrefix, visit, remote }) {
+  constructor({
+    ujsAttributePrefix,
+    visit,
+    remote,
+  }: {
+    ujsAttributePrefix: string
+    visit: Visit
+    remote: Remote
+  }) {
     this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
 
@@ -17,21 +34,14 @@ export class HandlerBuilder {
     this.visitOrRemote = this.visitOrRemote.bind(this)
   }
 
-  retrieveLink(target) {
-    let link = target
-    while (!!link.parentNode && link.nodeName.toLowerCase() !== 'a') {
-      link = link.parentNode
-    }
-
-    if (
-      link.nodeName.toLowerCase() === 'a' &&
-      link.href.length !== 0
-    ) {
+  retrieveLink(target: Element): HTMLAnchorElement | undefined {
+    const link = target.closest<HTMLAnchorElement>('a')
+    if (link.href.length !== 0) {
       return link
     }
   }
 
-  isNonStandardClick(event) {
+  isNonStandardClick(event: KeyboardEvent): boolean {
     return (
       event.which > 1 ||
       event.metaKey ||
@@ -41,30 +51,28 @@ export class HandlerBuilder {
     )
   }
 
-  isUJS(node) {
-    const hasVisit = !!node.getAttribute(
-      this.attributePrefix + '-visit'
-    )
-    const hasRemote = !!node.getAttribute(
-      this.attributePrefix + '-remote'
-    )
+  isUJS(node: HTMLFormElement | HTMLAnchorElement): boolean {
+    const hasVisit = !!node.getAttribute(this.attributePrefix + '-visit')
+    const hasRemote = !!node.getAttribute(this.attributePrefix + '-remote')
 
     return hasVisit || hasRemote
   }
 
-  handleSubmit(event) {
+  handleSubmit(event: Event): void {
     const form = event.target
 
-    if (form.nodeName.toLowerCase() !== 'form' || !this.isUJS(form)) {
+    if (!(form instanceof HTMLFormElement)) {
+      return
+    }
+
+    if (!this.isUJS(form)) {
       return
     }
 
     event.preventDefault()
 
     let url = form.getAttribute('action')
-    const method = (
-      form.getAttribute('method') || 'POST'
-    ).toUpperCase()
+    const method = (form.getAttribute('method') || 'POST').toUpperCase()
     url = withoutBusters(url)
 
     this.visitOrRemote(form, url, {
@@ -72,11 +80,15 @@ export class HandlerBuilder {
       headers: {
         'content-type': null,
       },
-      body: new FormData(event.target),
+      body: new FormData(form),
     })
   }
 
-  handleClick(event) {
+  handleClick(event: Event & KeyboardEvent): void {
+    if (!(event.target instanceof Element)) {
+      return
+    }
+
     const link = this.retrieveLink(event.target)
     const isNonStandard = this.isNonStandardClick(event)
     if (!link || isNonStandard || !this.isUJS(link)) {
@@ -90,31 +102,28 @@ export class HandlerBuilder {
     this.visitOrRemote(link, url, { method: 'GET' })
   }
 
-  visitOrRemote(linkOrForm, url, opts: any = {}) {
-    let target
-
+  visitOrRemote(
+    linkOrForm: HTMLAnchorElement | HTMLFormElement,
+    url: string,
+    opts: VisitProps | RemoteProps
+  ): Promise<Meta> {
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
-      target = this.visit
+      const nextOpts: VisitProps = { ...opts }
       const placeholderKey = linkOrForm.getAttribute(
         this.attributePrefix + '-placeholder'
       )
       if (placeholderKey) {
-        opts.placeholderKey = urlToPageKey(placeholderKey)
+        nextOpts.placeholderKey = urlToPageKey(placeholderKey)
       }
+      return this.visit(url, { ...nextOpts, placeholderKey })
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {
-      target = this.remote
-    }
-
-    if (!target) {
-      return
-    } else {
-      return target(url, opts)
+      return this.remote(url, opts)
     }
   }
 
-  handlers() {
+  handlers(): Handlers {
     return {
       onClick: this.handleClick,
       onSubmit: this.handleSubmit,
@@ -122,7 +131,7 @@ export class HandlerBuilder {
   }
 }
 
-export const ujsHandlers = ({
+export const ujsHandlers: UJSHandlers = ({
   ujsAttributePrefix,
   visit,
   remote,

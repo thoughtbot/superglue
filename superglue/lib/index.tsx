@@ -5,14 +5,7 @@ import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
-import {
-  combineReducers,
-  createStore,
-  applyMiddleware,
-  compose,
-} from 'redux'
-import thunk from 'redux-thunk'
-import { Provider, connect } from 'react-redux'
+import { ConnectedComponent, Provider, connect } from 'react-redux'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import Nav from './components/Nav'
 
@@ -35,6 +28,7 @@ export {
   mapDispatchToPropsIncludingVisitAndRemote,
 } from './utils/react'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
+import { Meta, Remote, RemoteProps, RootState, SuperglueReducerAction, SuperglueStore, Visit, VisitProps } from './types'
 export {
   superglueReducer,
   pageReducer,
@@ -68,7 +62,7 @@ function start({
 
   return {
     reducer: rootReducer,
-    prepareStore: function (store) {
+    prepareStore: function (store: SuperglueStore) {
       store.dispatch({
         type: HISTORY_CHANGE,
         payload: {
@@ -103,7 +97,7 @@ export class ApplicationBase extends React.Component<Props> {
   public hasWindow: any
   public navigatorRef: any
   public initialPageKey: any
-  public store: any
+  public store: SuperglueStore
   public history: any
   public connectedMapping: any
   public ujsHandlers: any
@@ -165,7 +159,10 @@ export class ApplicationBase extends React.Component<Props> {
     this.remote = remote
   }
 
-  visitAndRemote() {
+  visitAndRemote(
+    navigatorRef,
+    store
+  ): { visit: Visit; remote: Remote } {
     throw new NotImplementedError('Implement this')
   }
 
@@ -176,7 +173,6 @@ export class ApplicationBase extends React.Component<Props> {
     this.ujsHandlers = ujsHandlers({
       visit: this.visit,
       remote: this.remote,
-      store: this.store,
       ujsAttributePrefix: 'data-sg',
     })
     const { onClick, onSubmit } = this.ujsHandlers
@@ -193,14 +189,8 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.removeEventListener('submit', onSubmit)
   }
 
-  buildStore(initialState, reducer) {
-    const store = createStore(
-      combineReducers(reducer),
-      initialState,
-      compose(applyMiddleware(thunk))
-    )
-
-    return store
+  buildStore(initialState, reducer) : SuperglueStore {
+    throw new NotImplementedError('Implement this')
   }
 
   createHistory() {
@@ -213,7 +203,9 @@ export class ApplicationBase extends React.Component<Props> {
     }
   }
 
-  mapping() {
+  mapping(): {
+    [key: string]: ConnectedComponent<React.ComponentType, any>
+  } {
     throw new NotImplementedError('Implement this')
   }
 

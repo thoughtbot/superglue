@@ -1,4 +1,8 @@
-import { FetchArgs } from './actions'
+import { Store, UnknownAction } from 'redux'
+import { AllAction, FetchArgs } from './actions'
+import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
+import { ThunkAction } from '@reduxjs/toolkit'
+import { ThunkDispatch } from '@reduxjs/toolkit'
 
 export * from './actions'
 
@@ -106,3 +110,45 @@ export interface Meta {
   needsRefresh: boolean
   suggestedAction?: 'push' | 'replace' | 'none'
 }
+// I can do Visit['props'] or better yet Visit['options']
+export type Visit = (pageKey: string, props: VisitProps) => Promise<Meta>
+
+export type Remote = (pageKey: string, props: RemoteProps) => Promise<Meta>
+
+// type M extends Tuple<Middlewares<S>> = Tuple<[ThunkMiddlewareFor<S>]>
+export type SaveAndProcessPageThunkAction = ThunkAction<
+  Promise<void>,
+  RootState,
+  never,
+  UnknownAction
+>
+
+export type Dispatch = ThunkDispatch<RootState, undefined, AllAction>
+
+export type SuperglueStore = EnhancedStore<
+  RootState,
+  AllAction,
+  Tuple<
+    [
+      StoreEnhancer<{
+        dispatch: Dispatch
+      }>,
+      StoreEnhancer
+    ]
+  >
+>
+
+export interface Handlers {
+  onClick: (event: Event & KeyboardEvent) => void
+  onSubmit: (event: Event) => void
+}
+
+export type UJSHandlers = ({
+  ujsAttributePrefix,
+  visit,
+  remote,
+}: {
+  ujsAttributePrefix: string
+  visit: Visit
+  remote: Remote
+}) => Handlers

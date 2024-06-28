@@ -14,7 +14,11 @@ import {
   CopyAction,
   VisitResponse,
   SaveResponseAction,
+  SaveAndProcessPageThunkAction,
+  RootState,
 } from '../types'
+import { ThunkAction } from 'redux-thunk'
+import { AnyAction } from 'redux'
 export * from './requests'
 
 export function copyPage({
@@ -63,7 +67,10 @@ export function handleGraft({ pageKey, page }) {
   }
 }
 
-function fetchDeferments(pageKey: string, defers = []) {
+function fetchDeferments(
+  pageKey: string,
+  defers = []
+): ThunkAction<Promise<void[]>, RootState, never, AnyAction> {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers
@@ -119,7 +126,7 @@ function updateFragmentsUsing(page) {
 export function saveAndProcessPage(
   pageKey: string,
   page: VisitResponse
-) {
+): SaveAndProcessPageThunkAction {
   return (dispatch, getState) => {
     pageKey = urlToPageKey(pageKey)
 
@@ -136,7 +143,7 @@ export function saveAndProcessPage(
       return dispatch(fetchDeferments(pageKey, defers)).then(() => {
         if (page.fragments.length > 0) {
           const finishedPage = getState().pages[pageKey]
-          return dispatch(updateFragmentsUsing(finishedPage))
+          dispatch(updateFragmentsUsing(finishedPage))
         }
       })
     } else {

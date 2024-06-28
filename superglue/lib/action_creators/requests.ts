@@ -25,7 +25,10 @@ import {
   VisitResponse,
   SuperglueState,
   Meta,
+  RootState,
 } from '../types'
+import { AnyAction, Dispatch } from 'redux'
+import { ThunkAction } from 'redux-thunk'
 
 function beforeVisit(payload: {
   fetchArgs: FetchArgs
@@ -63,7 +66,7 @@ function handleError(err: Error): HandleError {
   }
 }
 
-function handleFetchErr(err, fetchArgs, dispatch) {
+function handleFetchErr(err, fetchArgs, dispatch): never {
   err.fetchArgs = fetchArgs
   err.url = fetchArgs[0]
   err.pageKey = urlToPageKey(fetchArgs[0])
@@ -101,7 +104,7 @@ export function remote(
     pageKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
   }: RemoteProps = {}
-) {
+): ThunkAction<Promise<Meta>, RootState, never, AnyAction> {
   path = withoutBusters(path)
   pageKey = pageKey && urlToPageKey(pageKey)
 
@@ -180,7 +183,7 @@ export function visit(
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
   }: VisitProps = {}
-) {
+): ThunkAction<Promise<Meta>, RootState, never, AnyAction> {
   path = withoutBusters(path)
   let pageKey = urlToPageKey(path)
 

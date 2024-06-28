@@ -116,14 +116,6 @@ export type Visit = (pageKey: string, props: VisitProps) => Promise<Meta>
 
 export type Remote = (pageKey: string, props: RemoteProps) => Promise<Meta>
 
-// type M extends Tuple<Middlewares<S>> = Tuple<[ThunkMiddlewareFor<S>]>
-export type SaveAndProcessPageThunkAction = ThunkAction<
-  Promise<void>,
-  RootState,
-  never,
-  UnknownAction
->
-
 export type Dispatch = ThunkDispatch<RootState, undefined, AllAction>
 
 export type SuperglueStore = EnhancedStore<
@@ -160,3 +152,19 @@ export interface HistoryState {
   posX: number
   posY: number
 }
+
+export type SaveAndProcessPageThunk = ThunkAction<
+  Promise<void>,
+  RootState,
+  never,
+  UnknownAction
+>
+
+export type MetaThunk = ThunkAction<Promise<Meta>, RootState, never, AllAction>
+
+export type DefermentThunk = ThunkAction<
+  Promise<void[]>,
+  RootState,
+  never,
+  UnknownAction
+>

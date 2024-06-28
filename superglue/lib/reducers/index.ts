@@ -155,7 +155,10 @@ export function handleGraft(
   ].reduce((memo, fn) => fn(memo), state)
 }
 
-export function pageReducer(state: AllPages = {}, action: any): AllPages {
+export function pageReducer(
+  state: AllPages = {},
+  action: PageReducerAction
+): AllPages {
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload
@@ -207,8 +210,8 @@ export function pageReducer(state: AllPages = {}, action: any): AllPages {
 
 export function superglueReducer(
   state: SuperglueState | Record<string, never> = {},
-  action
-) {
+  action: SuperglueReducerAction
+): SuperglueState {
   switch (action.type) {
     case HISTORY_CHANGE: {
       const { pathname, search, hash } = action.payload

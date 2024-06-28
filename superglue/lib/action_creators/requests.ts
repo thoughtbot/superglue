@@ -26,6 +26,7 @@ import {
   SuperglueState,
   Meta,
   RootState,
+  MetaThunk,
 } from '../types'
 import { AnyAction, Dispatch } from 'redux'
 import { ThunkAction } from 'redux-thunk'
@@ -104,7 +105,7 @@ export function remote(
     pageKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
   }: RemoteProps = {}
-): ThunkAction<Promise<Meta>, RootState, never, AnyAction> {
+): MetaThunk {
   path = withoutBusters(path)
   pageKey = pageKey && urlToPageKey(pageKey)
 
@@ -171,7 +172,7 @@ export function visit(
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
   }: VisitProps = {}
-): ThunkAction<Promise<Meta>, RootState, never, AnyAction> {
+): MetaThunk {
   path = withoutBusters(path)
   let pageKey = urlToPageKey(path)
 

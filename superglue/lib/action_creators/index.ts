@@ -1,4 +1,4 @@
-import { isGraft, urlToPageKey, getIn } from '../utils'
+import { urlToPageKey, getIn } from '../utils'
 import parse from 'url-parse'
 import {
   SAVE_RESPONSE,
@@ -10,15 +10,14 @@ import {
 } from '../actions'
 import { remote } from './requests'
 import {
-  Page,
   CopyAction,
   VisitResponse,
   SaveResponseAction,
-  SaveAndProcessPageThunkAction,
-  RootState,
+  SaveAndProcessPageThunk,
+  DefermentThunk,
+  HandleGraftAction,
+  GraftResponse,
 } from '../types'
-import { ThunkAction } from 'redux-thunk'
-import { AnyAction } from 'redux'
 export * from './requests'
 
 export function copyPage({
@@ -55,7 +54,13 @@ export function saveResponse({
   }
 }
 
-export function handleGraft({ pageKey, page }) {
+export function handleGraft({
+  pageKey,
+  page,
+}: {
+  pageKey: string
+  page: GraftResponse
+}): HandleGraftAction {
   pageKey = urlToPageKey(pageKey)
 
   return {
@@ -67,10 +72,7 @@ export function handleGraft({ pageKey, page }) {
   }
 }
 
-function fetchDeferments(
-  pageKey: string,
-  defers = []
-): ThunkAction<Promise<void[]>, RootState, never, AnyAction> {
+function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers
@@ -125,14 +127,14 @@ function updateFragmentsUsing(page) {
 
 export function saveAndProcessPage(
   pageKey: string,
-  page: VisitResponse
-): SaveAndProcessPageThunkAction {
+  page: VisitResponse | GraftResponse
+): SaveAndProcessPageThunk {
   return (dispatch, getState) => {
     pageKey = urlToPageKey(pageKey)
 
     const { defers = [] } = page
 
-    if (isGraft(page)) {
+    if ('action' in page) {
       dispatch(handleGraft({ pageKey, page }))
     } else {
       dispatch(saveResponse({ pageKey, page }))

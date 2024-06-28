@@ -88,12 +88,11 @@ export interface HandleError extends AnyAction {
   }
 }
 
-export type SaveAndProcessPageThunkAction = ThunkAction<
-  Promise<void>,
-  RootState,
-  never,
-  UnknownAction
->
+export type LifecycleAction =
+  | BeforeFetch
+  | HandleError
+  | BeforeVisit
+  | BeforeRemote
 
 export type PageReducerAction =
   | SaveResponseAction
@@ -107,4 +106,7 @@ export type SuperglueReducerAction =
   | SetCSRFToken
   | HistoryChange
 
-export type AllAction = PageReducerAction | SuperglueReducerAction
+export type AllAction =
+  | PageReducerAction
+  | SuperglueReducerAction
+  | LifecycleAction

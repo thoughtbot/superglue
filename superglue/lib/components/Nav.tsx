@@ -1,13 +1,12 @@
 import React from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
-import { Store } from 'redux'
-import { HistoryState, Remote, Visit } from '../types'
+import { HistoryState, Remote, SuperglueStore, Visit } from '../types'
 import { ConnectedComponent } from 'react-redux'
 import { History, Update } from 'history'
 
 interface Props {
-  store: Store
+  store: SuperglueStore
   history: History
   mapping: {
     [key: string]: ConnectedComponent<React.ComponentType, any>

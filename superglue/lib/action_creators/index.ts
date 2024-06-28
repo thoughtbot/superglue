@@ -13,10 +13,12 @@ import {
   CopyAction,
   VisitResponse,
   SaveResponseAction,
+  UpdateFragmentsAction,
   SaveAndProcessPageThunk,
   DefermentThunk,
   HandleGraftAction,
   GraftResponse,
+  Page,
 } from '../types'
 export * from './requests'
 
@@ -112,7 +114,7 @@ function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
   }
 }
 
-function updateFragmentsUsing(page) {
+function updateFragmentsUsing(page: Page): UpdateFragmentsAction {
   const changedFragments = {}
   page.fragments.forEach((fragment) => {
     const { type, path } = fragment

@@ -167,7 +167,7 @@ export class ApplicationBase extends React.Component<Props> {
 
   visitAndRemote(
     navigatorRef: React.RefObject<Nav>,
-    store: Store
+    store: SuperglueStore
   ): { visit: Visit; remote: Remote } {
     throw new NotImplementedError('Implement this')
   }

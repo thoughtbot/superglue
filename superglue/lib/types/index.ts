@@ -157,7 +157,7 @@ export type SaveAndProcessPageThunk = ThunkAction<
   Promise<void>,
   RootState,
   never,
-  UnknownAction
+  AllAction
 >
 
 export type MetaThunk = ThunkAction<Promise<Meta>, RootState, never, AllAction>
@@ -166,5 +166,5 @@ export type DefermentThunk = ThunkAction<
   Promise<void[]>,
   RootState,
   never,
-  UnknownAction
+  AllAction
 >

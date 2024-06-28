@@ -1,8 +1,7 @@
-import { ThunkAction } from 'redux-thunk'
-import { VisitResponse, GraftResponse, RootState } from '.'
-import { AnyAction, UnknownAction } from 'redux'
+import { VisitResponse, GraftResponse } from '.'
+import { Action } from 'redux'
 
-export interface SaveResponseAction extends AnyAction {
+export interface SaveResponseAction extends Action {
   type: '@@superglue/SAVE_RESPONSE'
   payload: {
     pageKey: string
@@ -10,7 +9,7 @@ export interface SaveResponseAction extends AnyAction {
   }
 }
 
-export interface HandleGraftAction extends AnyAction {
+export interface HandleGraftAction extends Action {
   type: '@@superglue/HANDLE_GRAFT'
   payload: {
     pageKey: string
@@ -18,7 +17,7 @@ export interface HandleGraftAction extends AnyAction {
   }
 }
 
-export interface CopyAction extends AnyAction {
+export interface CopyAction extends Action {
   type: '@@superglue/COPY_PAGE'
   payload: {
     from: string
@@ -26,28 +25,30 @@ export interface CopyAction extends AnyAction {
   }
 }
 
-export interface RemovePageAction extends AnyAction {
+export interface RemovePageAction extends Action {
   type: '@@superglue/REMOVE_PAGE'
   payload: {
     pageKey: string
   }
 }
 
-export interface UpdateFragmentsAction extends AnyAction {
+export interface UpdateFragmentsAction extends Action {
   type: '@@superglue/UPDATE_FRAGMENTS'
   payload: {
-    changedFragments: any
+    changedFragments: {
+      [key: string]: any
+    }
   }
 }
 
-export interface SetCSRFToken extends AnyAction {
+export interface SetCSRFToken extends Action {
   type: '@@superglue/SET_CSRF_TOKEN'
   payload: {
     csrfToken: string
   }
 }
 
-export interface HistoryChange extends AnyAction {
+export interface HistoryChange extends Action {
   type: '@@superglue/HISTORY_CHANGE'
   payload: {
     pathname: string
@@ -58,7 +59,7 @@ export interface HistoryChange extends AnyAction {
 
 export type FetchArgs = [string, RequestInit]
 
-export interface BeforeVisit extends AnyAction {
+export interface BeforeVisit extends Action {
   type: '@@superglue/BEFORE_VISIT'
   payload: {
     fetchArgs: [string, RequestInit]
@@ -66,7 +67,7 @@ export interface BeforeVisit extends AnyAction {
   }
 }
 
-export interface BeforeRemote extends AnyAction {
+export interface BeforeRemote extends Action {
   type: '@@superglue/BEFORE_REMOTE'
   payload: {
     fetchArgs: [string, RequestInit]
@@ -74,14 +75,14 @@ export interface BeforeRemote extends AnyAction {
   }
 }
 
-export interface BeforeFetch extends AnyAction {
+export interface BeforeFetch extends Action {
   type: '@@superglue/BEFORE_FETCH'
   payload: {
     fetchArgs: [string, RequestInit]
   }
 }
 
-export interface HandleError extends AnyAction {
+export interface HandleError extends Action {
   type: '@@superglue/ERROR'
   payload: {
     message: string

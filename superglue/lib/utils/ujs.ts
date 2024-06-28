@@ -123,15 +123,11 @@ export class HandlerBuilder {
 }
 
 export const ujsHandlers = ({
-  navigatorRef,
-  store,
   ujsAttributePrefix,
   visit,
   remote,
 }) => {
   const builder = new HandlerBuilder({
-    navigatorRef,
-    store,
     visit,
     remote,
     ujsAttributePrefix,

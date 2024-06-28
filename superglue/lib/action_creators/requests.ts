@@ -15,12 +15,16 @@ import {
 } from '../actions'
 import { copyPage, saveAndProcessPage } from './index'
 import {
-  VisitResponse,
   BeforeVisit,
   BeforeFetch,
   FetchArgs,
   BeforeRemote,
   HandleError,
+  RemoteProps,
+  VisitProps,
+  VisitResponse,
+  SuperglueState,
+  Meta,
 } from '../types'
 
 function beforeVisit(payload: {
@@ -67,27 +71,36 @@ function handleFetchErr(err, fetchArgs, dispatch) {
   throw err
 }
 
-function buildMeta(pageKey, page, state) {
+function buildMeta(
+  pageKey: string,
+  page: VisitResponse,
+  state: SuperglueState,
+  rsp: Response,
+  fetchArgs: FetchArgs
+): Meta {
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
   return {
     pageKey,
     page,
+    redirected: rsp.redirected,
+    rsp,
+    fetchArgs,
     componentIdentifier: page.componentIdentifier,
     needsRefresh: needsRefresh(prevAssets, nextAssets),
   }
 }
 
 export function remote(
-  path,
+  path: string,
   {
     method = 'GET',
     headers,
-    body = '',
+    body,
     pageKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
-  } = {}
+  }: RemoteProps = {}
 ) {
   path = withoutBusters(path)
   pageKey = pageKey && urlToPageKey(pageKey)
@@ -109,13 +122,13 @@ export function remote(
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
-        const meta = {
-          ...buildMeta(pageKey, json, superglue),
-          redirected: rsp.redirected,
+        const meta = buildMeta(
+          pageKey,
+          json,
+          superglue,
           rsp,
-          fetchArgs,
-        }
-
+          fetchArgs
+        )
         const willReplaceCurrent = pageKey == currentPageKey
         const existingId = pages[currentPageKey]?.componentIdentifier
         const receivedId = json.componentIdentifier
@@ -158,15 +171,15 @@ let lastVisitController = {
 }
 
 export function visit(
-  path,
+  path: string,
   {
     method = 'GET',
     headers,
-    body = '',
+    body,
     placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
-  } = {}
+  }: VisitProps = {}
 ) {
   path = withoutBusters(path)
   let pageKey = urlToPageKey(path)
@@ -214,12 +227,14 @@ export function visit(
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
-        const meta = {
-          ...buildMeta(pageKey, json, superglue),
-          redirected: rsp.redirected,
+        const meta = buildMeta(
+          pageKey,
+          json,
+          superglue,
           rsp,
-          fetchArgs,
-        }
+          fetchArgs
+        )
+
         const isGet = fetchArgs[1].method === 'GET'
 
         meta.suggestedAction = 'push'

@@ -1,3 +1,5 @@
+import { FetchArgs } from './actions'
+
 export * from './actions'
 
 export interface ParsedResponse {
@@ -73,4 +75,34 @@ export type PageComponentProps = PageOwnProps & {
   fragments: Fragment[]
   csrfToken?: string
   [key: string]: any
+}
+
+interface BaseProps {
+  method?: string
+  body?: BodyInit
+  headers?: HeadersInit
+  beforeSave?: (
+    prevPage: VisitResponse,
+    receivedPage: VisitResponse
+  ) => VisitResponse
+}
+
+export interface RemoteProps extends BaseProps {
+  pageKey?: string
+}
+
+export interface VisitProps extends BaseProps {
+  revisit?: boolean
+  placeholderKey?: string
+}
+
+export interface Meta {
+  pageKey: string
+  page: VisitResponse
+  redirected: boolean
+  rsp: Response
+  fetchArgs: FetchArgs
+  componentIdentifier: string
+  needsRefresh: boolean
+  suggestedAction?: 'push' | 'replace' | 'none'
 }

@@ -4,11 +4,12 @@ import {
   saveAndProcessPage,
   copyPage,
 } from '../action_creators'
+import { PageOwnProps, RootState } from '../types'
 import { urlToPageKey } from './url'
 
 export function mapStateToProps(
-  state = { pages: {}, superglue: {} },
-  ownProps
+  state: RootState,
+  ownProps: PageOwnProps
 ) {
   let pageKey = ownProps.pageKey
   const params = ownProps

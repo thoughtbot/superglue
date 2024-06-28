@@ -63,7 +63,7 @@ export function handleGraft({ pageKey, page }) {
   }
 }
 
-function fetchDeferments(pageKey, defers = []) {
+function fetchDeferments(pageKey: string, defers = []) {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers

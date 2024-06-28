@@ -53,13 +53,14 @@ export type AllPages = {
   [key: string]: Page
 }
 
+// It should be possible to make this all NOT optional
 export type SuperglueState = {
-  currentPageKey: string
-  pathname: string
-  search: string
-  hash: string
+  currentPageKey?: string
+  pathname?: string
+  search?: string
+  hash?: string
   csrfToken?: string
-  assets: string[]
+  assets?: string[]
 }
 
 export type RootState = {

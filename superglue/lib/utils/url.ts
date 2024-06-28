@@ -1,32 +1,32 @@
 import parse from 'url-parse'
 
-export function pathQuery(url) {
+export function pathQuery(url: string): string {
   const { pathname, query } = new parse(url, {})
 
   return pathname + query
 }
 
-export function pathQueryHash(url) {
+export function pathQueryHash(url: string): string {
   const { pathname, query, hash } = new parse(url, {})
 
   return pathname + query + hash
 }
 
-export function hasPropsAt(url) {
+export function hasPropsAt(url: string): boolean {
   url = new parse(url, {}, true)
   const query = url.query
 
   return !!query['props_at']
 }
 
-export function withFormatJson(url) {
+export function withFormatJson(url: string): string {
   url = new parse(url, {}, true)
   url.query['format'] = 'json'
 
   return url.toString()
 }
 
-export function pathWithoutBZParams(url) {
+export function pathWithoutBZParams(url: string): string {
   url = new parse(url, {}, true)
   const query = url.query
 
@@ -37,7 +37,7 @@ export function pathWithoutBZParams(url) {
   return pathQueryHash(url.toString())
 }
 
-export function removePropsAt(url) {
+export function removePropsAt(url: string): string {
   url = new parse(url, {}, true)
   const query = url.query
 
@@ -47,7 +47,7 @@ export function removePropsAt(url) {
   return url.toString()
 }
 
-export function urlToPageKey(url) {
+export function urlToPageKey(url: string): string {
   url = new parse(url, {}, true)
   const query = url.query
 
@@ -58,13 +58,13 @@ export function urlToPageKey(url) {
   return pathQuery(url.toString())
 }
 
-export function withoutHash(url) {
+export function withoutHash(url: string): string {
   url = new parse(url, {}, true)
   url.hash = ''
   return url.toString()
 }
 
-export function withoutBusters(url) {
+export function withoutBusters(url: string): string {
   url = new parse(url, {}, true)
   const query = url.query
   delete query['format']
@@ -73,7 +73,7 @@ export function withoutBusters(url) {
   return pathQuery(url.toString())
 }
 
-export function formatForXHR(url) {
+export function formatForXHR(url: string): string {
   const formats = [withoutHash, withFormatJson]
 
   return formats.reduce((memo, f) => f(memo), url)

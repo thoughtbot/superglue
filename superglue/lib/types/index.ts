@@ -1,4 +1,4 @@
-import { Store, UnknownAction } from 'redux'
+import { UnknownAction } from 'redux'
 import { AllAction, FetchArgs } from './actions'
 import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
@@ -38,7 +38,7 @@ export type Page = VisitResponse & {
 }
 
 export type GraftResponse = VisitResponse & {
-  action: string
+  action: 'graft'
   path: string
 }
 
@@ -152,3 +152,10 @@ export type UJSHandlers = ({
   visit: Visit
   remote: Remote
 }) => Handlers
+
+export interface HistoryState {
+  superglue: true
+  pageKey: string
+  posX: number
+  posY: number
+}

@@ -1,4 +1,4 @@
-import { GraftResponse, VisitResponse } from '../types'
+import { GraftResponse, HistoryState, VisitResponse } from '../types'
 import { urlToPageKey } from './url'
 
 export function isGraft(page: GraftResponse | VisitResponse): boolean {
@@ -20,9 +20,7 @@ export function extractNodeAndPath(page: GraftResponse): {
   }
 }
 
-export function argsForHistory(
-  path: string
-): [string, { superglue: true; pageKey: string; posX: number; posY: number }] {
+export function argsForHistory(path: string): [string, HistoryState] {
   const pageKey = urlToPageKey(path)
 
   return [

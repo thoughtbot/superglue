@@ -12,10 +12,12 @@ import { config } from '../config'
 import {
   AllPages,
   Page,
+  PageReducerAction,
   VisitResponse,
   Fragment,
   GraftResponse,
   SuperglueState,
+  SuperglueReducerAction,
 } from '../types'
 
 function addPlaceholdersToDeferredNodes(

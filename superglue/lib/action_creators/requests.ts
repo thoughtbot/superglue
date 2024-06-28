@@ -14,30 +14,43 @@ import {
   SUPERGLUE_ERROR,
 } from '../actions'
 import { copyPage, saveAndProcessPage } from './index'
-import { VisitResponse } from '../types'
+import {
+  VisitResponse,
+  BeforeVisit,
+  BeforeFetch,
+  FetchArgs,
+  BeforeRemote,
+  HandleError,
+} from '../types'
 
-function beforeVisit(payload) {
+function beforeVisit(payload: {
+  fetchArgs: FetchArgs
+  currentPageKey: string
+}): BeforeVisit {
   return {
     type: BEFORE_VISIT,
     payload,
   }
 }
 
-function beforeRemote(payload) {
+function beforeRemote(payload: {
+  fetchArgs: FetchArgs
+  currentPageKey: string
+}): BeforeRemote {
   return {
     type: BEFORE_REMOTE,
     payload,
   }
 }
 
-function beforeFetch(payload) {
+function beforeFetch(payload: { fetchArgs: FetchArgs }): BeforeFetch {
   return {
     type: BEFORE_FETCH,
     payload,
   }
 }
 
-function handleError(err) {
+function handleError(err: Error): HandleError {
   return {
     type: SUPERGLUE_ERROR,
     payload: {

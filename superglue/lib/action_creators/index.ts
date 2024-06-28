@@ -9,10 +9,21 @@ import {
   UPDATE_FRAGMENTS,
 } from '../actions'
 import { remote } from './requests'
-import { Page, VisitResponse } from '../types'
+import {
+  Page,
+  CopyAction,
+  VisitResponse,
+  SaveResponseAction,
+} from '../types'
 export * from './requests'
 
-export function copyPage({ from, to }) {
+export function copyPage({
+  from,
+  to,
+}: {
+  from: string
+  to: string
+}): CopyAction {
   return {
     type: COPY_PAGE,
     payload: {

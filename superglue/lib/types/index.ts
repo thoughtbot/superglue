@@ -1,3 +1,5 @@
+export * from './actions'
+
 export interface ParsedResponse {
   rsp: Response
   json: any

@@ -1,7 +1,7 @@
 import parse from 'url-parse'
 import { formatForXHR } from './url'
 import { config } from '../config'
-import { ParsedResponse } from '../types'
+import { ParsedResponse, RootState } from '../types'
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -60,13 +60,13 @@ export function handleServerErrors(args: ParsedResponse): ParsedResponse {
 }
 
 export function argsForFetch(
-  getState,
-  pathQuery,
+  getState: () => RootState,
+  pathQuery: string,
   { method = 'GET', headers = {}, body = '', signal }: RequestInit = {}
 ): [string, RequestInit] {
   method = method.toUpperCase()
 
-  const currentState = getState().superglue || {}
+  const currentState = getState().superglue
 
   const jsAccept = 'application/json'
   headers = {

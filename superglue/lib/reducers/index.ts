@@ -20,10 +20,7 @@ import {
   SuperglueReducerAction,
 } from '../types'
 
-function addPlaceholdersToDeferredNodes(
-  existingPage: Page,
-  page: Page
-): Page {
+function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
   const { defers = [] } = existingPage
 
   const prevDefers = defers.map(({ path }) => {
@@ -154,18 +151,11 @@ export function handleGraft(
     (nextState: AllPages) =>
       graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
     (nextState: AllPages) =>
-      appendReceivedFragmentsOntoPage(
-        nextState,
-        pageKey,
-        receivedFragments
-      ),
+      appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
   ].reduce((memo, fn) => fn(memo), state)
 }
 
-export function pageReducer(
-  state: AllPages = {},
-  action: any
-): AllPages {
+export function pageReducer(state: AllPages = {}, action: any): AllPages {
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload
@@ -186,16 +176,9 @@ export function pageReducer(
           const changedNode = changedFragments[type]
           const currentNode = getIn(nextState, `${pageKey}.${path}`)
 
-          if (
-            type in changedFragments &&
-            changedNode !== currentNode
-          ) {
+          if (type in changedFragments && changedNode !== currentNode) {
             const nextNode = JSON.parse(JSON.stringify(changedNode))
-            nextState = setIn(
-              nextState,
-              `${pageKey}.${path}`,
-              nextNode
-            )
+            nextState = setIn(nextState, `${pageKey}.${path}`, nextNode)
           }
         })
       })
@@ -206,9 +189,7 @@ export function pageReducer(
       const nextState = { ...state }
       const { from, to } = action.payload
 
-      nextState[urlToPageKey(to)] = JSON.parse(
-        JSON.stringify(nextState[from])
-      )
+      nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
 
       return nextState
     }

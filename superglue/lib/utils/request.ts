@@ -28,24 +28,18 @@ class SuperglueResponseError extends Error {
   }
 }
 
-export function validateResponse(
-  args: ParsedResponse
-): ParsedResponse {
+export function validateResponse(args: ParsedResponse): ParsedResponse {
   const { rsp } = args
   if (isValidResponse(rsp)) {
     return args
   } else {
-    const error = new SuperglueResponseError(
-      'Invalid Superglue Response'
-    )
+    const error = new SuperglueResponseError('Invalid Superglue Response')
     error.response = rsp
     throw error
   }
 }
 
-export function handleServerErrors(
-  args: ParsedResponse
-): ParsedResponse {
+export function handleServerErrors(args: ParsedResponse): ParsedResponse {
   const { rsp } = args
   if (!rsp.ok) {
     if (rsp.status === 406) {
@@ -68,12 +62,7 @@ export function handleServerErrors(
 export function argsForFetch(
   getState,
   pathQuery,
-  {
-    method = 'GET',
-    headers = {},
-    body = '',
-    signal,
-  }: RequestInit = {}
+  { method = 'GET', headers = {}, body = '', signal }: RequestInit = {}
 ): [string, RequestInit] {
   method = method.toUpperCase()
 
@@ -137,9 +126,7 @@ export function argsForFetch(
 
   if (method == 'GET' || method == 'HEAD') {
     if (options.body instanceof FormData) {
-      const allData = new URLSearchParams(
-        options.body as any
-      ).toString()
+      const allData = new URLSearchParams(options.body as any).toString()
       // fetchPath will always have atleast /?format=json
       fetchPath.query = fetchPath.query + '&' + allData
     }
@@ -150,9 +137,7 @@ export function argsForFetch(
   return [fetchPath.toString(), options]
 }
 
-export function extractJSON(
-  rsp: Response
-): PromiseLike<ParsedResponse> {
+export function extractJSON(rsp: Response): PromiseLike<ParsedResponse> {
   return rsp
     .json()
     .then((json) => {
@@ -164,9 +149,7 @@ export function extractJSON(
     })
 }
 
-export function parseResponse(
-  prm: Response
-): PromiseLike<ParsedResponse> {
+export function parseResponse(prm: Response): PromiseLike<ParsedResponse> {
   return Promise.resolve(prm)
     .then(extractJSON)
     .then(handleServerErrors)

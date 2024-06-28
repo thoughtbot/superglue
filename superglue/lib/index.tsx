@@ -28,12 +28,17 @@ export {
   mapDispatchToPropsIncludingVisitAndRemote,
 } from './utils/react'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
-import { Meta, Remote, RemoteProps, RootState, SuperglueReducerAction, SuperglueStore, Visit, VisitProps } from './types'
-export {
-  superglueReducer,
-  pageReducer,
-  rootReducer,
-} from './reducers'
+import {
+  Meta,
+  Remote,
+  RemoteProps,
+  RootState,
+  SuperglueReducerAction,
+  SuperglueStore,
+  Visit,
+  VisitProps,
+} from './types'
+export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
@@ -113,14 +118,13 @@ export class ApplicationBase extends React.Component<Props> {
     this.navigatorRef = React.createRef()
 
     // Retrieve initial values and methods to prepare the store.
-    const { prepareStore, initialState, initialPageKey, reducer } =
-      start({
-        initialPage: this.props.initialPage,
-        baseUrl: this.props.baseUrl,
-        path: this.props.path,
-        // The max number of pages to keep in the store. Default is 20
-        // maxPages: 20
-      })
+    const { prepareStore, initialState, initialPageKey, reducer } = start({
+      initialPage: this.props.initialPage,
+      baseUrl: this.props.baseUrl,
+      path: this.props.path,
+      // The max number of pages to keep in the store. Default is 20
+      // maxPages: 20
+    })
     this.initialPageKey = initialPageKey
 
     // Build the store and pass Superglue's provided reducer to be combined with
@@ -137,10 +141,7 @@ export class ApplicationBase extends React.Component<Props> {
     const nextMapping = { ...this.mapping() }
     for (const key in nextMapping) {
       const component = nextMapping[key]
-      nextMapping[key] = connect(
-        mapStateToProps,
-        mapDispatchToProps
-      )(component)
+      nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)
     }
 
     this.connectedMapping = nextMapping
@@ -151,18 +152,12 @@ export class ApplicationBase extends React.Component<Props> {
     //
     // You can access them via `this.props.visit` or `this.props.remote`. In
     // your page components
-    const { visit, remote } = this.visitAndRemote(
-      this.navigatorRef,
-      this.store
-    )
+    const { visit, remote } = this.visitAndRemote(this.navigatorRef, this.store)
     this.visit = visit
     this.remote = remote
   }
 
-  visitAndRemote(
-    navigatorRef,
-    store
-  ): { visit: Visit; remote: Remote } {
+  visitAndRemote(navigatorRef, store): { visit: Visit; remote: Remote } {
     throw new NotImplementedError('Implement this')
   }
 
@@ -189,7 +184,7 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.removeEventListener('submit', onSubmit)
   }
 
-  buildStore(initialState, reducer) : SuperglueStore {
+  buildStore(initialState, reducer): SuperglueStore {
     throw new NotImplementedError('Implement this')
   }
 

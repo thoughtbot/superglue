@@ -125,22 +125,12 @@ export function remote(
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
-        const meta = buildMeta(
-          pageKey,
-          json,
-          superglue,
-          rsp,
-          fetchArgs
-        )
+        const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
         const willReplaceCurrent = pageKey == currentPageKey
         const existingId = pages[currentPageKey]?.componentIdentifier
         const receivedId = json.componentIdentifier
 
-        if (
-          willReplaceCurrent &&
-          !!existingId &&
-          existingId != receivedId
-        ) {
+        if (willReplaceCurrent && !!existingId && existingId != receivedId) {
           console.warn(
             `You're about replace an existing page located at pages["${currentPageKey}"]
 that has the componentIdentifier "${existingId}" with the contents of a
@@ -156,12 +146,10 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         }
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(
-          () => {
-            meta.pageKey = pageKey
-            return meta
-          }
-        )
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => {
+          meta.pageKey = pageKey
+          return meta
+        })
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
@@ -230,13 +218,7 @@ export function visit(
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
-        const meta = buildMeta(
-          pageKey,
-          json,
-          superglue,
-          rsp,
-          fetchArgs
-        )
+        const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
         const isGet = fetchArgs[1].method === 'GET'
 
@@ -265,12 +247,10 @@ export function visit(
         }
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(
-          () => {
-            meta.pageKey = pageKey
-            return meta
-          }
-        )
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => {
+          meta.pageKey = pageKey
+          return meta
+        })
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }

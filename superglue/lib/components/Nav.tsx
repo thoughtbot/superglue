@@ -36,19 +36,14 @@ class Nav extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.unsubscribeHistory = this.history.listen(
-      this.onHistoryChange
-    )
+    this.unsubscribeHistory = this.history.listen(this.onHistoryChange)
   }
 
   componentWillUnmount() {
     this.unsubscribeHistory()
   }
 
-  navigateTo(
-    path,
-    { action, ownProps } = { action: 'push', ownProps: {} }
-  ) {
+  navigateTo(path, { action, ownProps } = { action: 'push', ownProps: {} }) {
     if (action === 'none') {
       return false
     }
@@ -97,11 +92,7 @@ class Nav extends React.Component<Props, State> {
       this.setState({ pageKey: nextPageKey, ownProps })
       this.scrollTo(0, 0)
 
-      if (
-        action === 'replace' &&
-        prevPageKey &&
-        prevPageKey !== nextPageKey
-      ) {
+      if (action === 'replace' && prevPageKey && prevPageKey !== nextPageKey) {
         store.dispatch({
           type: REMOVE_PAGE,
           payload: {

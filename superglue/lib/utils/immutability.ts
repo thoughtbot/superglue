@@ -71,9 +71,7 @@ function atKey(node, key) {
 
   if (!isArray(node) && !isObject(node)) {
     throw new KeyPathError(
-      `Expected to traverse an Array or Obj, got ${JSON.stringify(
-        node
-      )}`
+      `Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`
     )
   }
 

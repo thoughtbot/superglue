@@ -1,6 +1,6 @@
 import {
   pageReducer,
-  metaReducer,
+  superglueReducer,
   graftNodeOntoPage,
   updateSameFragmentsOnPage,
   appendReceivedFragmentsOntoPage,
@@ -8,7 +8,7 @@ import {
 } from '../../lib/reducers'
 
 describe('reducers', () => {
-  describe('meta reducer', () => {
+  describe('superglue reducer', () => {
     describe('SUPERGLUE_HISTORY_CHANGE', () => {
       it('sets the currentPageKey', () => {
         const prevState = { foo: 'bar' }
@@ -20,7 +20,7 @@ describe('reducers', () => {
             hash: '#title',
           },
         }
-        const nextState = metaReducer(prevState, action)
+        const nextState = superglueReducer(prevState, action)
 
         expect(nextState).toEqual({
           foo: 'bar',
@@ -44,7 +44,7 @@ describe('reducers', () => {
             },
           },
         }
-        const nextState = metaReducer(prevState, action)
+        const nextState = superglueReducer(prevState, action)
 
         expect(nextState).toEqual({
           foo: 'bar',
@@ -63,7 +63,7 @@ describe('reducers', () => {
             csrfToken: 'some_token',
           },
         }
-        const nextState = metaReducer(prevState, action)
+        const nextState = superglueReducer(prevState, action)
 
         expect(nextState).toEqual({
           foo: 'bar',

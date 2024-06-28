@@ -14,6 +14,7 @@ import {
   SUPERGLUE_ERROR,
 } from '../actions'
 import { copyPage, saveAndProcessPage } from './index'
+import { VisitResponse } from '../types'
 
 function beforeVisit(payload) {
   return {

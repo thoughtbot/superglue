@@ -6,7 +6,13 @@ import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
 import { ConnectedComponent, Provider, connect } from 'react-redux'
-import { createBrowserHistory, createMemoryHistory } from 'history'
+import {
+  BrowserHistory,
+  History,
+  createBrowserHistory,
+  createMemoryHistory,
+} from 'history'
+
 import Nav from './components/Nav'
 
 export {
@@ -29,15 +35,14 @@ export {
 } from './utils/react'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
-  Meta,
   Remote,
-  RemoteProps,
-  RootState,
-  SuperglueReducerAction,
   SuperglueStore,
+  Handlers,
   Visit,
-  VisitProps,
+  VisitResponse,
+  RootState,
 } from './types'
+import { Store } from 'redux'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
@@ -92,24 +97,26 @@ class NotImplementedError extends Error {
 }
 
 interface Props {
-  initialPage: any
-  baseUrl: any
-  path: any
+  initialPage: VisitResponse
+  baseUrl: string
+  path: string
   appEl: HTMLElement
 }
 
 export class ApplicationBase extends React.Component<Props> {
-  public hasWindow: any
-  public navigatorRef: any
-  public initialPageKey: any
+  public hasWindow: boolean
+  public navigatorRef: React.RefObject<Nav>
+  public initialPageKey: string
   public store: SuperglueStore
-  public history: any
-  public connectedMapping: any
-  public ujsHandlers: any
-  public visit: any
-  public remote: any
+  public history: History
+  public connectedMapping: {
+    [key: string]: ConnectedComponent<React.ComponentType, any>
+  }
+  public ujsHandlers: Handlers
+  public visit: Visit
+  public remote: Remote
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props)
     this.hasWindow = typeof window !== 'undefined'
 
@@ -138,9 +145,10 @@ export class ApplicationBase extends React.Component<Props> {
     this.history = this.createHistory()
     this.history.replace(...argsForHistory(this.props.path))
 
-    const nextMapping = { ...this.mapping() }
-    for (const key in nextMapping) {
-      const component = nextMapping[key]
+    const unconnectedMapping = this.mapping()
+    const nextMapping = {}
+    for (const key in unconnectedMapping) {
+      const component = unconnectedMapping[key]
       nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)
     }
 
@@ -157,11 +165,14 @@ export class ApplicationBase extends React.Component<Props> {
     this.remote = remote
   }
 
-  visitAndRemote(navigatorRef, store): { visit: Visit; remote: Remote } {
+  visitAndRemote(
+    navigatorRef: React.RefObject<Nav>,
+    store: Store
+  ): { visit: Visit; remote: Remote } {
     throw new NotImplementedError('Implement this')
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { appEl } = this.props
     // Create the ujs event handlers. You can change the ujsAttributePrefix
     // in the event the data attribute conflicts with another.
@@ -176,7 +187,7 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.addEventListener('submit', onSubmit)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     const { appEl } = this.props
     const { onClick, onSubmit } = this.ujsHandlers
 
@@ -184,11 +195,14 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.removeEventListener('submit', onSubmit)
   }
 
-  buildStore(initialState, reducer): SuperglueStore {
+  buildStore(
+    initialState: RootState,
+    reducer: typeof rootReducer
+  ): SuperglueStore {
     throw new NotImplementedError('Implement this')
   }
 
-  createHistory() {
+  createHistory(): BrowserHistory {
     if (this.hasWindow) {
       // This is used for client side rendering
       return createBrowserHistory({})
@@ -199,12 +213,12 @@ export class ApplicationBase extends React.Component<Props> {
   }
 
   mapping(): {
-    [key: string]: ConnectedComponent<React.ComponentType, any>
+    [key: string]: React.ComponentType
   } {
     throw new NotImplementedError('Implement this')
   }
 
-  render() {
+  render(): JSX.Element {
     // The Nav component is pretty bare and can be inherited from for custom
     // behavior or replaced with your own.
     return (

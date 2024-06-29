@@ -7,7 +7,7 @@ export * from './actions'
 
 export interface ParsedResponse {
   rsp: Response
-  json: any
+  json: PageResponse
 }
 
 export type Defer = {
@@ -67,7 +67,7 @@ export type SuperglueState = {
 export type RootState = {
   superglue: SuperglueState
   pages: AllPages
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export type PageOwnProps = {
@@ -77,10 +77,11 @@ export type PageOwnProps = {
   remote: () => void
 }
 
-export type PageComponentProps = PageOwnProps & {
+export type Content = PageOwnProps & {
+  pageKey: string
   fragments: Fragment[]
   csrfToken?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface BaseProps {

@@ -42,7 +42,6 @@ import {
   VisitResponse,
   RootState,
 } from './types'
-import { Store } from 'redux'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'

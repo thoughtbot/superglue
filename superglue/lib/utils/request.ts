@@ -25,6 +25,7 @@ class SuperglueResponseError extends Error {
 
   constructor(message) {
     super(message)
+    this.name = 'SuperglueResponseError'
   }
 }
 

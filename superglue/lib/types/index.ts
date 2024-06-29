@@ -1,4 +1,3 @@
-import { UnknownAction } from 'redux'
 import { AllAction, FetchArgs } from './actions'
 import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'

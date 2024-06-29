@@ -25,11 +25,8 @@ import {
   VisitResponse,
   SuperglueState,
   Meta,
-  RootState,
   MetaThunk,
 } from '../types'
-import { AnyAction, Dispatch } from 'redux'
-import { ThunkAction } from 'redux-thunk'
 
 function beforeVisit(payload: {
   fetchArgs: FetchArgs

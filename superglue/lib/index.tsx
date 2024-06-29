@@ -174,8 +174,8 @@ export class ApplicationBase extends React.Component<Props> {
   }
 
   visitAndRemote(
-    navigatorRef: React.RefObject<Nav>,
-    store: SuperglueStore
+    // eslint-disable-next-line
+    navigatorRef: React.RefObject<Nav>, store: SuperglueStore
   ): { visit: Visit; remote: Remote } {
     throw new NotImplementedError('Implement this')
   }
@@ -208,7 +208,9 @@ export class ApplicationBase extends React.Component<Props> {
     reducer: typeof rootReducer
   ): SuperglueStore {
     console.warn(
-      `We strongly recommend you to override the ApplicationBase's buildStore method.`
+      `You're seeing this warning because you're using the default implementation of
+Superglue's buildStore in ApplicationBase. We strongly recommend you to override the default implementation of
+ApplicationBase's buildStore method using redux toolkit's configureStore`
     )
     const store = legacy_createStore(
       combineReducers(reducer),

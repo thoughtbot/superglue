@@ -7,6 +7,14 @@ import { saveAndProcessPage } from './action_creators'
 import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
 import { ConnectedComponent, Provider, connect } from 'react-redux'
 import {
+  combineReducers,
+  legacy_createStore,
+  applyMiddleware,
+  compose,
+} from 'redux'
+import { thunk } from 'redux-thunk'
+
+import {
   BrowserHistory,
   History,
   createBrowserHistory,
@@ -41,6 +49,7 @@ import {
   Visit,
   VisitResponse,
   RootState,
+  PageOwnProps,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
@@ -89,7 +98,7 @@ function start({
 }
 
 class NotImplementedError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message)
     this.name = this.constructor.name
   }
@@ -109,7 +118,7 @@ export class ApplicationBase extends React.Component<Props> {
   public store: SuperglueStore
   public history: History
   public connectedMapping: {
-    [key: string]: ConnectedComponent<React.ComponentType, any>
+    [key: string]: ConnectedComponent<React.ComponentType, PageOwnProps>
   }
   public ujsHandlers: Handlers
   public visit: Visit
@@ -198,7 +207,16 @@ export class ApplicationBase extends React.Component<Props> {
     initialState: RootState,
     reducer: typeof rootReducer
   ): SuperglueStore {
-    throw new NotImplementedError('Implement this')
+    console.warn(
+      `We strongly recommend you to override the ApplicationBase's buildStore method.`
+    )
+    const store = legacy_createStore(
+      combineReducers(reducer),
+      initialState,
+      compose(applyMiddleware(thunk))
+    )
+
+    return store
   }
 
   createHistory(): BrowserHistory {

@@ -64,11 +64,10 @@ export type SuperglueState = {
   assets?: string[]
 }
 
-export type RootState = {
+export type RootState = Partial<{
   superglue: SuperglueState
   pages: AllPages
-  [key: string]: unknown
-}
+}>
 
 export type PageOwnProps = {
   pageKey: string

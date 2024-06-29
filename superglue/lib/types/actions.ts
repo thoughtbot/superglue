@@ -36,7 +36,7 @@ export interface UpdateFragmentsAction extends Action {
   type: '@@superglue/UPDATE_FRAGMENTS'
   payload: {
     changedFragments: {
-      [key: string]: any
+      [key: string]: unknown
     }
   }
 }

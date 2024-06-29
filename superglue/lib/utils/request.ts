@@ -127,7 +127,9 @@ export function argsForFetch(
 
   if (method == 'GET' || method == 'HEAD') {
     if (options.body instanceof FormData) {
-      const allData = new URLSearchParams(options.body as any).toString()
+      const allData = new URLSearchParams(
+        options.body as unknown as Record<string, string>
+      ).toString()
       // fetchPath will always have atleast /?format=json
       fetchPath.set('query', fetchPath.query + '&' + allData)
     }

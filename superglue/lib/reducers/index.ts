@@ -112,7 +112,7 @@ export function appendReceivedFragmentsOntoPage(
 export function graftNodeOntoPage(
   state: AllPages,
   pageKey: string,
-  node: any,
+  node: unknown,
   pathToNode: string
 ): AllPages {
   if (!node) {

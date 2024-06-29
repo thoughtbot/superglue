@@ -1,7 +1,13 @@
 import React from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
-import { HistoryState, Remote, SuperglueStore, Visit } from '../types'
+import {
+  HistoryState,
+  PageOwnProps,
+  Remote,
+  SuperglueStore,
+  Visit,
+} from '../types'
 import { ConnectedComponent } from 'react-redux'
 import { History, Update } from 'history'
 
@@ -9,7 +15,7 @@ interface Props {
   store: SuperglueStore
   history: History
   mapping: {
-    [key: string]: ConnectedComponent<React.ComponentType, any>
+    [key: string]: ConnectedComponent<React.ComponentType, PageOwnProps>
   }
   visit: Visit
   remote: Remote
@@ -18,7 +24,9 @@ interface Props {
 
 interface State {
   pageKey: string
-  ownProps: any
+  ownProps: {
+    [key: string]: unknown
+  }
 }
 
 class Nav extends React.Component<Props, State> {

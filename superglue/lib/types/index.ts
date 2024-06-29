@@ -72,16 +72,19 @@ export type RootState = {
 
 export type PageOwnProps = {
   pageKey: string
-  navigateTo: () => void
-  visit: () => void
-  remote: () => void
+  navigateTo: (
+    path: string,
+    { action, ownProps }: { action: string; ownProps: unknown }
+  ) => boolean
+  visit: Visit
+  remote: Remote
+  [key: string]: unknown
 }
 
 export type Content = PageOwnProps & {
   pageKey: string
   fragments: Fragment[]
   csrfToken?: string
-  [key: string]: unknown
 }
 
 interface BaseProps {

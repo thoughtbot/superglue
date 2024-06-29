@@ -6,7 +6,7 @@ export function isGraft(page: GraftResponse | VisitResponse): boolean {
 }
 
 export function extractNodeAndPath(page: GraftResponse): {
-  node: any
+  node: unknown
   pathToNode: string
 } {
   const { data: node, action, path: pathToNode } = page

@@ -129,7 +129,7 @@ export function argsForFetch(
     if (options.body instanceof FormData) {
       const allData = new URLSearchParams(options.body as any).toString()
       // fetchPath will always have atleast /?format=json
-      fetchPath.query = fetchPath.query + '&' + allData
+      fetchPath.set('query', fetchPath.query + '&' + allData)
     }
 
     delete options.body

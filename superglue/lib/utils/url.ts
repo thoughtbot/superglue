@@ -13,64 +13,64 @@ export function pathQueryHash(url: string): string {
 }
 
 export function hasPropsAt(url: string): boolean {
-  url = new parse(url, {}, true)
-  const query = url.query
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   return !!query['props_at']
 }
 
 export function withFormatJson(url: string): string {
-  url = new parse(url, {}, true)
-  url.query['format'] = 'json'
+  const parsed = new parse(url, {}, true)
+  parsed.query['format'] = 'json'
 
-  return url.toString()
+  return parsed.toString()
 }
 
 export function pathWithoutBZParams(url: string): string {
-  url = new parse(url, {}, true)
-  const query = url.query
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   delete query['props_at']
   delete query['format']
-  url.query = query
+  parsed.set('query', query)
 
   return pathQueryHash(url.toString())
 }
 
 export function removePropsAt(url: string): string {
-  url = new parse(url, {}, true)
-  const query = url.query
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   delete query['props_at']
-  url.query = query
+  parsed.set('query', query)
 
-  return url.toString()
+  return parsed.toString()
 }
 
 export function urlToPageKey(url: string): string {
-  url = new parse(url, {}, true)
-  const query = url.query
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   delete query['props_at']
   delete query['format']
-  url.query = query
+  parsed.set('query', query)
 
   return pathQuery(url.toString())
 }
 
 export function withoutHash(url: string): string {
-  url = new parse(url, {}, true)
-  url.hash = ''
-  return url.toString()
+  const parsed = new parse(url, {}, true)
+  parsed.set('hash', '')
+  return parsed.toString()
 }
 
 export function withoutBusters(url: string): string {
-  url = new parse(url, {}, true)
-  const query = url.query
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
   delete query['format']
-  url.query = query
+  parsed.set('query', query)
 
-  return pathQuery(url.toString())
+  return pathQuery(parsed.toString())
 }
 
 export function formatForXHR(url: string): string {

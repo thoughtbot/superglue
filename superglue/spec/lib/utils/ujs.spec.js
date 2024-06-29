@@ -8,63 +8,47 @@ import { render } from 'react-dom'
 import * as helpers from '../../../lib/utils/helpers'
 
 describe('ujs', () => {
-  function createFakeEvent() {
+  function createFakeLinkTarget(attrs={}) {
+    const jsdom = new JSDOM()
+    global.Element = jsdom.window.Element
+    const { document } = jsdom.window
+
+    const parentNode = document.createElement("DIV")
+    const link = document.createElement("A")
+
+    parentNode.appendChild(link)
+    link.href = "/foo"
+    for (const key in attrs) {
+     link.setAttribute(key, attrs[key])
+    }
+    return link
+  }
+
+  function createFakeEvent(attrs) {
     return {
       preventDefault: () => {},
-      target: {
-        nodeName: 'A',
-        parentNode: 'DIV',
-        href: '/foo',
-        getAttribute: (attr) => {
-          if(attr === 'href') {
-            return '/foo'
-          }
-          if(attr === 'data-visit') {
-            return true
-          }
-        }
-      }
+      target: createFakeLinkTarget({href: "/foo", "data-visit": true})
     }
   }
 
   function createFakeVisitGraftEvent() {
     return {
       preventDefault: () => {},
-      target: {
-        nodeName: 'A',
-        parentNode: 'DIV',
-        href: '/foo',
-        getAttribute: (attr) => {
-          if(attr === 'href') {
-            return '/foo?props_at=data.hello'
-          }
-          if(attr === 'data-placeholder') {
-            return '/current'
-          }
-          if(attr === 'data-visit') {
-            return true
-          }
-        }
-      }
+      target: createFakeLinkTarget({
+        href: '/foo?props_at=data.hello', 
+        'data-placeholder': '/current',
+        'data-visit': 'true'
+      })
     }
   }
 
   function createFakeRemoteEvent() {
     return {
       preventDefault: () => {},
-      target: {
-        nodeName: 'A',
-        parentNode: 'DIV',
-        href: '/foo',
-        getAttribute: (attr) => {
-          if(attr === 'href') {
-            return '/foo'
-          }
-          if(attr === 'data-remote') {
-            return true
-          }
-        }
-      }
+      target: createFakeLinkTarget({
+        href: '/foo', 
+        'data-remote': 'true'
+      }) 
     }
   }
 
@@ -86,8 +70,9 @@ describe('ujs', () => {
         navigatorRef
       })
 
+      const fakeEvent = createFakeEvent()
       const {onClick} = builder.handlers()
-      onClick(createFakeEvent())
+      onClick(fakeEvent)
 
       expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
     })
@@ -232,45 +217,41 @@ describe('ujs', () => {
   })
 
   describe('onSubmit', () => {
+    function createFakeFormTarget(attrs={}) {
+      const jsdom = new JSDOM()
+      global.HTMLFormElement = jsdom.window.HTMLFormElement
+      const { document } = jsdom.window
+  
+      const parentNode = document.createElement("DIV")
+      const form = document.createElement("FORM")
+  
+      parentNode.appendChild(form)
+      form.action = "/foo"
+      for (const key in attrs) {
+        form.setAttribute(key, attrs[key])
+      }
+      return form
+    }
+
     function createFakeFormEvent() {
       return {
         preventDefault: () => {},
-        target: {
-          nodeName: 'FORM',
-          href: '/foo',
-          getAttribute: (attr) => {
-            if(attr === 'action') {
-              return '/foo'
-            }
-            if(attr === 'method') {
-              return 'POST'
-            }
-            if(attr === 'data-visit') {
-              return true
-            }
-          }
-        }
+        target: createFakeFormTarget({
+          action: "/foo", 
+          method: "POST", 
+          "data-visit": "true"
+        })
       }
     }
 
     function createFakeRemoteFormEvent() {
       return {
         preventDefault: () => {},
-        target: {
-          nodeName: 'FORM',
-          href: '/foo',
-          getAttribute: (attr) => {
-            if(attr === 'action') {
-              return '/foo'
-            }
-            if(attr === 'method') {
-              return 'POST'
-            }
-            if(attr === 'data-remote') {
-              return true
-            }
-          }
-        }
+        target: createFakeFormTarget({
+          action: "/foo",
+          method: "POST",
+          "data-remote": "true"
+        })
       }
     }
 
@@ -307,7 +288,7 @@ describe('ujs', () => {
       })
     })
 
-    it('succssfully posts a form with a remote attribut', () => {
+    it('succssfully posts a form with a remote attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const remote = jest.fn()

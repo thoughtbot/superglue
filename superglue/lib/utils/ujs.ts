@@ -36,7 +36,7 @@ export class HandlerBuilder {
 
   retrieveLink(target: Element): HTMLAnchorElement | undefined {
     const link = target.closest<HTMLAnchorElement>('a')
-    if (link.href.length !== 0) {
+    if (link && link.href.length !== 0) {
       return link
     }
   }
@@ -115,7 +115,7 @@ export class HandlerBuilder {
       if (placeholderKey) {
         nextOpts.placeholderKey = urlToPageKey(placeholderKey)
       }
-      return this.visit(url, { ...nextOpts, placeholderKey })
+      return this.visit(url, { ...nextOpts })
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {

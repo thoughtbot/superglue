@@ -148,6 +148,7 @@ export function saveAndProcessPage(
         if (page.fragments.length > 0) {
           const finishedPage = getState().pages[pageKey]
           dispatch(updateFragmentsUsing(finishedPage))
+          return Promise.resolve()
         }
       })
     } else {

@@ -34,7 +34,7 @@ export function pathWithoutBZParams(url: string): string {
   delete query['format']
   parsed.set('query', query)
 
-  return pathQueryHash(url.toString())
+  return pathQueryHash(parsed.toString())
 }
 
 export function removePropsAt(url: string): string {
@@ -55,7 +55,7 @@ export function urlToPageKey(url: string): string {
   delete query['format']
   parsed.set('query', query)
 
-  return pathQuery(url.toString())
+  return pathQuery(parsed.toString())
 }
 
 export function withoutHash(url: string): string {

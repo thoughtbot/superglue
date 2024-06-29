@@ -17,7 +17,9 @@ export type Defer = {
 }
 
 export type VisitResponse = {
-  data: any
+  data: {
+    [key: string]: unknown
+  }
   componentIdentifier: string
   assets: string[]
   csrfToken?: string

@@ -4,15 +4,18 @@
 const isSearchable = /^[\da-zA-Z\-_=.]+$/
 
 class KeyPathError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message)
     this.name = 'KeyPathError'
   }
 }
 
-function getIn(obj, path) {
+function getIn(
+  node: Record<string, unknown> | Array<unknown>,
+  path: string
+): unknown {
   const keyPath = normalizeKeyPath(path)
-  let result = obj
+  let result = node
 
   for (let i = 0; i < keyPath.length; i++) {
     const key = keyPath[i]
@@ -25,16 +28,17 @@ function getIn(obj, path) {
   return result
 }
 
-function clone(object) {
-  return Array.isArray(object) ? [].slice.call(object) : { ...object }
+function clone(node: Record<string, unknown> | Array<unknown>) {
+  return Array.isArray(node) ? [].slice.call(node) : { ...node }
 }
 
-function getKey(node, key) {
-  if (Array.isArray(node) && isNaN(key)) {
+function getKey(node: Record<string, unknown> | Array<unknown>, key: string) {
+  if (Array.isArray(node) && Number.isNaN(Number(key))) {
     const key_parts = Array.from(key.split('='))
     const attr = key_parts[0]
     const id = key_parts[1]
-    let i, child
+    let i: number
+    let child: unknown
 
     if (!id) {
       return key
@@ -53,16 +57,17 @@ function getKey(node, key) {
   }
 }
 
-function isArray(ary) {
-  return Array.isArray(ary)
+function isArray(node: unknown) {
+  return Array.isArray(node)
 }
 
-function isObject(obj) {
-  return !isArray(obj) && obj === Object(obj)
+function isObject(node: unknown) {
+  return !isArray(node) && node === Object(node)
 }
 
-function atKey(node, key) {
-  let id, attr
+function atKey(node: Record<string, unknown> | Array<unknown>, key: string) {
+  let id: string
+  let attr: string
 
   if (isSearchable.test(key)) {
     // eslint-disable-next-line
@@ -82,7 +87,7 @@ function atKey(node, key) {
   }
 
   if (Array.isArray(node) && id) {
-    let child
+    let child: unknown
     for (let i = 0; i < node.length; i++) {
       child = node[i]
       if (child[attr].toString() === id) {
@@ -113,12 +118,12 @@ function normalizeKeyPath(path) {
   }
 }
 
-function setIn(object, keypath, value) {
+function setIn<T>(object: T, keypath: string, value: unknown): T {
   keypath = normalizeKeyPath(keypath)
 
   const results = {}
   const parents = {}
-  let i
+  let i: number
 
   parents[0] = object
 

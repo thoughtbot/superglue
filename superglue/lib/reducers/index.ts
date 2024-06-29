@@ -19,6 +19,7 @@ import {
   SuperglueState,
   SuperglueReducerAction,
 } from '../types'
+import { AnyAction } from 'redux'
 
 function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
   const { defers = [] } = existingPage
@@ -157,7 +158,7 @@ export function handleGraft(
 
 export function pageReducer(
   state: AllPages = {},
-  action: PageReducerAction
+  action: PageReducerAction | AnyAction
 ): AllPages {
   switch (action.type) {
     case SAVE_RESPONSE: {
@@ -209,8 +210,8 @@ export function pageReducer(
 }
 
 export function superglueReducer(
-  state: SuperglueState | Record<string, never> = {},
-  action: SuperglueReducerAction
+  state: SuperglueState = {},
+  action: SuperglueReducerAction | AnyAction
 ): SuperglueState {
   switch (action.type) {
     case HISTORY_CHANGE: {

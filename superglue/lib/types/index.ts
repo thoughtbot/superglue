@@ -1,5 +1,10 @@
 import { AllAction, FetchArgs } from './actions'
-import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
+import {
+  EnhancedStore,
+  Tuple,
+  StoreEnhancer,
+  AnyAction,
+} from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 
@@ -64,10 +69,10 @@ export type SuperglueState = {
   assets?: string[]
 }
 
-export type RootState = Partial<{
+export type RootState = {
   superglue: SuperglueState
   pages: AllPages
-}>
+}
 
 export type PageOwnProps = {
   pageKey: string
@@ -124,7 +129,7 @@ export type Dispatch = ThunkDispatch<RootState, undefined, AllAction>
 
 export type SuperglueStore = EnhancedStore<
   RootState,
-  AllAction,
+  AllAction | AnyAction,
   Tuple<
     [
       StoreEnhancer<{

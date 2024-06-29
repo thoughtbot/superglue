@@ -207,11 +207,6 @@ export class ApplicationBase extends React.Component<Props> {
     initialState: RootState,
     reducer: typeof rootReducer
   ): SuperglueStore {
-    console.warn(
-      `You're seeing this warning because you're using the default implementation of
-Superglue's buildStore in ApplicationBase. We strongly recommend you to override the default implementation of
-ApplicationBase's buildStore method using redux toolkit's configureStore`
-    )
     const store = legacy_createStore(
       combineReducers(reducer),
       initialState,

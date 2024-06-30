@@ -18,8 +18,15 @@ import {
   GraftResponse,
   SuperglueState,
   SuperglueReducerAction,
+  HistoryChange,
+  SaveResponseAction,
+  SetCSRFToken,
+  HandleGraftAction,
+  UpdateFragmentsAction,
+  CopyAction,
+  RemovePageAction,
 } from '../types'
-import { AnyAction } from 'redux'
+import { UnknownAction } from 'redux'
 
 function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
   const { defers = [] } = existingPage
@@ -158,20 +165,21 @@ export function handleGraft(
 
 export function pageReducer(
   state: AllPages = {},
-  action: PageReducerAction | AnyAction
+  action: PageReducerAction | UnknownAction
 ): AllPages {
   switch (action.type) {
     case SAVE_RESPONSE: {
-      const { pageKey, page } = action.payload
+      const { pageKey, page } = action.payload as SaveResponseAction['payload']
       return saveResponse(state, pageKey, page)
     }
     case HANDLE_GRAFT: {
-      const { pageKey, page } = action.payload
+      const { pageKey, page } = action.payload as HandleGraftAction['payload']
 
       return handleGraft(state, pageKey, page)
     }
     case UPDATE_FRAGMENTS: {
-      const { changedFragments } = action.payload
+      const { changedFragments } =
+        action.payload as UpdateFragmentsAction['payload']
       let nextState = state
 
       Object.entries(state).forEach(([pageKey, page]) => {
@@ -191,14 +199,14 @@ export function pageReducer(
     }
     case COPY_PAGE: {
       const nextState = { ...state }
-      const { from, to } = action.payload
+      const { from, to } = action.payload as CopyAction['payload']
 
       nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
 
       return nextState
     }
     case REMOVE_PAGE: {
-      const { pageKey } = action.payload
+      const { pageKey } = action.payload as RemovePageAction['payload']
       const nextState = { ...state }
       delete nextState[pageKey]
 
@@ -211,11 +219,12 @@ export function pageReducer(
 
 export function superglueReducer(
   state: SuperglueState = {},
-  action: SuperglueReducerAction | AnyAction
+  action: SuperglueReducerAction | UnknownAction
 ): SuperglueState {
   switch (action.type) {
     case HISTORY_CHANGE: {
-      const { pathname, search, hash } = action.payload
+      const { pathname, search, hash } =
+        action.payload as HistoryChange['payload']
       const currentPageKey = urlToPageKey(pathname + search)
 
       return {
@@ -229,12 +238,12 @@ export function superglueReducer(
     case SAVE_RESPONSE: {
       const {
         page: { csrfToken, assets },
-      } = action.payload
+      } = action.payload as SaveResponseAction['payload']
 
       return { ...state, csrfToken, assets }
     }
     case SET_CSRF_TOKEN: {
-      const { csrfToken } = action.payload
+      const { csrfToken } = action.payload as SetCSRFToken['payload']
       return { ...state, csrfToken: csrfToken }
     }
     default:

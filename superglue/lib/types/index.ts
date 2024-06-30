@@ -3,7 +3,7 @@ import {
   EnhancedStore,
   Tuple,
   StoreEnhancer,
-  AnyAction,
+  UnknownAction,
 } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
@@ -129,7 +129,7 @@ export type Dispatch = ThunkDispatch<RootState, undefined, AllAction>
 
 export type SuperglueStore = EnhancedStore<
   RootState,
-  AllAction | AnyAction,
+  AllAction | UnknownAction,
   Tuple<
     [
       StoreEnhancer<{

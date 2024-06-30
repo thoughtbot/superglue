@@ -1,7 +1,5 @@
 module.exports = {
-  plugins: [
-    ["transform-react-remove-prop-types", { removeImport: true }]
-  ],
+  plugins: [],
   presets: [
     [
       "@babel/preset-env",

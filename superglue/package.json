@@ -64,7 +64,6 @@
   "dependencies": {
     "@types/url-parse": "^1.4.11",
     "abortcontroller-polyfill": "^1.7.3",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "url-parse": "^1.5.1"
   }
 }

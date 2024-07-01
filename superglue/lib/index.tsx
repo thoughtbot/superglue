@@ -6,13 +6,6 @@ import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
 import { ConnectedComponent, Provider, connect } from 'react-redux'
-import {
-  combineReducers,
-  legacy_createStore,
-  applyMiddleware,
-  compose,
-} from 'redux'
-import { thunk } from 'redux-thunk'
 
 import {
   BrowserHistory,
@@ -111,7 +104,7 @@ interface Props {
   appEl: HTMLElement
 }
 
-export class ApplicationBase extends React.Component<Props> {
+export abstract class ApplicationBase extends React.Component<Props> {
   public hasWindow: boolean
   public navigatorRef: React.RefObject<Nav>
   public initialPageKey: string
@@ -203,18 +196,10 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.removeEventListener('submit', onSubmit)
   }
 
-  buildStore(
+  abstract buildStore(
     initialState: RootState,
     reducer: typeof rootReducer
-  ): SuperglueStore {
-    const store = legacy_createStore(
-      combineReducers(reducer),
-      initialState,
-      compose(applyMiddleware(thunk))
-    )
-
-    return store
-  }
+  ): SuperglueStore
 
   createHistory(): BrowserHistory {
     if (this.hasWindow) {
@@ -226,10 +211,8 @@ export class ApplicationBase extends React.Component<Props> {
     }
   }
 
-  mapping(): {
+  abstract mapping(): {
     [key: string]: React.ComponentType
-  } {
-    throw new NotImplementedError('Implement this')
   }
 
   render(): JSX.Element {

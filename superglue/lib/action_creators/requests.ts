@@ -144,10 +144,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         }
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(() => {
-          meta.pageKey = pageKey
-          return meta
-        })
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }

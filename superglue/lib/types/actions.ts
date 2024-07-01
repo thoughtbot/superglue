@@ -35,9 +35,7 @@ export interface RemovePageAction extends Action {
 export interface UpdateFragmentsAction extends Action {
   type: '@@superglue/UPDATE_FRAGMENTS'
   payload: {
-    changedFragments: {
-      [key: string]: unknown
-    }
+    changedFragments: Record<string, unknown>
   }
 }
 

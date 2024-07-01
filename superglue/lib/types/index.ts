@@ -22,9 +22,7 @@ export type Defer = {
 }
 
 export type VisitResponse = {
-  data: {
-    [key: string]: unknown
-  }
+  data: Record<string, unknown>
   componentIdentifier: string
   assets: string[]
   csrfToken?: string
@@ -55,9 +53,7 @@ export type Fragment = {
   path: string
 }
 
-export type AllPages = {
-  [key: string]: Page
-}
+export type AllPages = Record<string, Page>
 
 // It should be possible to make this all NOT optional
 export type SuperglueState = {
@@ -82,8 +78,7 @@ export type PageOwnProps = {
   ) => boolean
   visit: Visit
   remote: Remote
-  [key: string]: unknown
-}
+} & Record<string, unknown>
 
 export type Content = PageOwnProps & {
   pageKey: string

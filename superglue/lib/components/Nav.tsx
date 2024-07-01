@@ -14,9 +14,7 @@ import { History, Update } from 'history'
 interface Props {
   store: SuperglueStore
   history: History
-  mapping: {
-    [key: string]: ConnectedComponent<React.ComponentType, PageOwnProps>
-  }
+  mapping: Record<string, ConnectedComponent<React.ComponentType, PageOwnProps>>
   visit: Visit
   remote: Remote
   initialPageKey: string
@@ -24,9 +22,7 @@ interface Props {
 
 interface State {
   pageKey: string
-  ownProps: {
-    [key: string]: unknown
-  }
+  ownProps: Record<string, unknown>
 }
 
 class Nav extends React.Component<Props, State> {

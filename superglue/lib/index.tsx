@@ -110,9 +110,10 @@ export abstract class ApplicationBase extends React.Component<Props> {
   public initialPageKey: string
   public store: SuperglueStore
   public history: History
-  public connectedMapping: {
-    [key: string]: ConnectedComponent<React.ComponentType, PageOwnProps>
-  }
+  public connectedMapping: Record<
+    string,
+    ConnectedComponent<React.ComponentType, PageOwnProps>
+  >
   public ujsHandlers: Handlers
   public visit: Visit
   public remote: Remote
@@ -211,9 +212,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
     }
   }
 
-  abstract mapping(): {
-    [key: string]: React.ComponentType
-  }
+  abstract mapping(): Record<string, React.ComponentType>
 
   render(): JSX.Element {
     // The Nav component is pretty bare and can be inherited from for custom

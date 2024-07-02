@@ -1,15 +1,11 @@
-import {
-  visit,
-  remote,
-  saveAndProcessPage,
-  copyPage,
-} from '../action_creators'
+import { visit, remote, saveAndProcessPage, copyPage } from '../action_creators'
+import { Content, PageOwnProps, RootState } from '../types'
 import { urlToPageKey } from './url'
 
 export function mapStateToProps(
-  state = { pages: {}, superglue: {} },
-  ownProps
-) {
+  state: RootState,
+  ownProps: PageOwnProps
+): Content {
   let pageKey = ownProps.pageKey
   const params = ownProps
   const csrfToken = state.superglue.csrfToken

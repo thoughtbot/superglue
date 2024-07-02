@@ -2,13 +2,14 @@ import { ApplicationBase } from '../../lib/index'
 import Nav from '../../lib/components/Nav'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
-import { combineReducers, createStore, applyMiddleware } from 'redux'
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { config } from '../../lib/config'
 import { visit, remote } from '../../lib/action_creators'
 import { mount } from 'enzyme'
+import { thunk } from 'redux-thunk'
 import 'regenerator-runtime/runtime'
 
 const flushPromises = () =>
@@ -58,6 +59,20 @@ class App extends ApplicationBase {
   createHistory() {
     return this.props.history
   }
+
+  buildStore(
+    initialState,
+    reducer
+  ) {
+    const store = createStore(
+      combineReducers(reducer),
+      initialState,
+      compose(applyMiddleware(thunk))
+    )
+
+    return store
+  }
+
 }
 
 describe('start', () => {

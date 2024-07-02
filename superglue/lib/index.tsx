@@ -5,15 +5,15 @@ import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
+import { ConnectedComponent, Provider, connect } from 'react-redux'
+
 import {
-  combineReducers,
-  createStore,
-  applyMiddleware,
-  compose,
-} from 'redux'
-import thunk from 'redux-thunk'
-import { Provider, connect } from 'react-redux'
-import { createBrowserHistory, createMemoryHistory } from 'history'
+  BrowserHistory,
+  History,
+  createBrowserHistory,
+  createMemoryHistory,
+} from 'history'
+
 import Nav from './components/Nav'
 
 export {
@@ -35,11 +35,16 @@ export {
   mapDispatchToPropsIncludingVisitAndRemote,
 } from './utils/react'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
-export {
-  superglueReducer,
-  pageReducer,
-  rootReducer,
-} from './reducers'
+import {
+  Remote,
+  SuperglueStore,
+  Handlers,
+  Visit,
+  VisitResponse,
+  RootState,
+  PageOwnProps,
+} from './types'
+export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
@@ -68,7 +73,7 @@ function start({
 
   return {
     reducer: rootReducer,
-    prepareStore: function (store) {
+    prepareStore: function (store: SuperglueStore) {
       store.dispatch({
         type: HISTORY_CHANGE,
         payload: {
@@ -86,31 +91,34 @@ function start({
 }
 
 class NotImplementedError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message)
     this.name = this.constructor.name
   }
 }
 
 interface Props {
-  initialPage: any
-  baseUrl: any
-  path: any
+  initialPage: VisitResponse
+  baseUrl: string
+  path: string
   appEl: HTMLElement
 }
 
-export class ApplicationBase extends React.Component<Props> {
-  public hasWindow: any
-  public navigatorRef: any
-  public initialPageKey: any
-  public store: any
-  public history: any
-  public connectedMapping: any
-  public ujsHandlers: any
-  public visit: any
-  public remote: any
+export abstract class ApplicationBase extends React.Component<Props> {
+  public hasWindow: boolean
+  public navigatorRef: React.RefObject<Nav>
+  public initialPageKey: string
+  public store: SuperglueStore
+  public history: History
+  public connectedMapping: Record<
+    string,
+    ConnectedComponent<React.ComponentType, PageOwnProps>
+  >
+  public ujsHandlers: Handlers
+  public visit: Visit
+  public remote: Remote
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props)
     this.hasWindow = typeof window !== 'undefined'
 
@@ -119,14 +127,13 @@ export class ApplicationBase extends React.Component<Props> {
     this.navigatorRef = React.createRef()
 
     // Retrieve initial values and methods to prepare the store.
-    const { prepareStore, initialState, initialPageKey, reducer } =
-      start({
-        initialPage: this.props.initialPage,
-        baseUrl: this.props.baseUrl,
-        path: this.props.path,
-        // The max number of pages to keep in the store. Default is 20
-        // maxPages: 20
-      })
+    const { prepareStore, initialState, initialPageKey, reducer } = start({
+      initialPage: this.props.initialPage,
+      baseUrl: this.props.baseUrl,
+      path: this.props.path,
+      // The max number of pages to keep in the store. Default is 20
+      // maxPages: 20
+    })
     this.initialPageKey = initialPageKey
 
     // Build the store and pass Superglue's provided reducer to be combined with
@@ -140,13 +147,11 @@ export class ApplicationBase extends React.Component<Props> {
     this.history = this.createHistory()
     this.history.replace(...argsForHistory(this.props.path))
 
-    const nextMapping = { ...this.mapping() }
-    for (const key in nextMapping) {
-      const component = nextMapping[key]
-      nextMapping[key] = connect(
-        mapStateToProps,
-        mapDispatchToProps
-      )(component)
+    const unconnectedMapping = this.mapping()
+    const nextMapping = {}
+    for (const key in unconnectedMapping) {
+      const component = unconnectedMapping[key]
+      nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)
     }
 
     this.connectedMapping = nextMapping
@@ -157,26 +162,25 @@ export class ApplicationBase extends React.Component<Props> {
     //
     // You can access them via `this.props.visit` or `this.props.remote`. In
     // your page components
-    const { visit, remote } = this.visitAndRemote(
-      this.navigatorRef,
-      this.store
-    )
+    const { visit, remote } = this.visitAndRemote(this.navigatorRef, this.store)
     this.visit = visit
     this.remote = remote
   }
 
-  visitAndRemote() {
+  visitAndRemote(
+    // eslint-disable-next-line
+    navigatorRef: React.RefObject<Nav>, store: SuperglueStore
+  ): { visit: Visit; remote: Remote } {
     throw new NotImplementedError('Implement this')
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { appEl } = this.props
     // Create the ujs event handlers. You can change the ujsAttributePrefix
     // in the event the data attribute conflicts with another.
     this.ujsHandlers = ujsHandlers({
       visit: this.visit,
       remote: this.remote,
-      store: this.store,
       ujsAttributePrefix: 'data-sg',
     })
     const { onClick, onSubmit } = this.ujsHandlers
@@ -185,7 +189,7 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.addEventListener('submit', onSubmit)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     const { appEl } = this.props
     const { onClick, onSubmit } = this.ujsHandlers
 
@@ -193,17 +197,12 @@ export class ApplicationBase extends React.Component<Props> {
     appEl.removeEventListener('submit', onSubmit)
   }
 
-  buildStore(initialState, reducer) {
-    const store = createStore(
-      combineReducers(reducer),
-      initialState,
-      compose(applyMiddleware(thunk))
-    )
+  abstract buildStore(
+    initialState: RootState,
+    reducer: typeof rootReducer
+  ): SuperglueStore
 
-    return store
-  }
-
-  createHistory() {
+  createHistory(): BrowserHistory {
     if (this.hasWindow) {
       // This is used for client side rendering
       return createBrowserHistory({})
@@ -213,11 +212,9 @@ export class ApplicationBase extends React.Component<Props> {
     }
   }
 
-  mapping() {
-    throw new NotImplementedError('Implement this')
-  }
+  abstract mapping(): Record<string, React.ComponentType>
 
-  render() {
+  render(): JSX.Element {
     // The Nav component is pretty bare and can be inherited from for custom
     // behavior or replaced with your own.
     return (

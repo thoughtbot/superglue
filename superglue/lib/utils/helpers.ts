@@ -1,10 +1,14 @@
+import { GraftResponse, HistoryState, VisitResponse } from '../types'
 import { urlToPageKey } from './url'
 
-export function isGraft(page) {
-  return page.action === 'graft'
+export function isGraft(page: GraftResponse | VisitResponse): boolean {
+  return 'action' in page && page.action === 'graft'
 }
 
-export function extractNodeAndPath(page) {
+export function extractNodeAndPath(page: GraftResponse): {
+  node: unknown
+  pathToNode: string
+} {
   const { data: node, action, path: pathToNode } = page
 
   if (action === 'graft') {
@@ -16,7 +20,7 @@ export function extractNodeAndPath(page) {
   }
 }
 
-export function argsForHistory(path) {
+export function argsForHistory(path: string): [string, HistoryState] {
   const pageKey = urlToPageKey(path)
 
   return [

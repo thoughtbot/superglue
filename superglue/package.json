@@ -30,6 +30,7 @@
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.24.6",
+    "@reduxjs/toolkit": "^2.2.5",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
     "core-js": "^2.6.12",
@@ -41,7 +42,6 @@
     "eslint-plugin-react": "^7.24.0",
     "fetch-headers": "^2.0.0",
     "fetch-mock": "^9.11.0",
-    "history": "^5.3.0",
     "jest": "^27.0.4",
     "node-fetch": "^2.6.1",
     "prettier": "^2.3.1",
@@ -49,20 +49,20 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-redux": "^7.2.4",
-    "redux": "^4.1.0",
+    "redux": "^5.0.1",
     "redux-mock-store": "^1.5.4",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^3.1.0",
+    "@types/url-parse": "^1.4.11"
   },
   "peerDependencies": {
-    "history": "^5.3.0",
     "react": ">=16",
     "react-redux": ">=7.2",
     "redux": ">=4.1",
     "redux-thunk": ">=2.3"
   },
   "dependencies": {
+    "history": "^5.3.0",
     "abortcontroller-polyfill": "^1.7.3",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "url-parse": "^1.5.1"
   }
 }

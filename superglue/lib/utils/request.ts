@@ -1,7 +1,7 @@
 import parse from 'url-parse'
 import { formatForXHR } from './url'
 import { config } from '../config'
-import { ParsedResponse } from '../types'
+import { ParsedResponse, RootState } from '../types'
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -25,27 +25,22 @@ class SuperglueResponseError extends Error {
 
   constructor(message) {
     super(message)
+    this.name = 'SuperglueResponseError'
   }
 }
 
-export function validateResponse(
-  args: ParsedResponse
-): ParsedResponse {
+export function validateResponse(args: ParsedResponse): ParsedResponse {
   const { rsp } = args
   if (isValidResponse(rsp)) {
     return args
   } else {
-    const error = new SuperglueResponseError(
-      'Invalid Superglue Response'
-    )
+    const error = new SuperglueResponseError('Invalid Superglue Response')
     error.response = rsp
     throw error
   }
 }
 
-export function handleServerErrors(
-  args: ParsedResponse
-): ParsedResponse {
+export function handleServerErrors(args: ParsedResponse): ParsedResponse {
   const { rsp } = args
   if (!rsp.ok) {
     if (rsp.status === 406) {
@@ -66,18 +61,13 @@ export function handleServerErrors(
 }
 
 export function argsForFetch(
-  getState,
-  pathQuery,
-  {
-    method = 'GET',
-    headers = {},
-    body = '',
-    signal,
-  }: RequestInit = {}
+  getState: () => RootState,
+  pathQuery: string,
+  { method = 'GET', headers = {}, body = '', signal }: RequestInit = {}
 ): [string, RequestInit] {
   method = method.toUpperCase()
 
-  const currentState = getState().superglue || {}
+  const currentState = getState().superglue
 
   const jsAccept = 'application/json'
   headers = {
@@ -107,7 +97,7 @@ export function argsForFetch(
   const fetchPath = new parse(
     formatForXHR(pathQuery),
     config.baseUrl || {},
-    false
+    true
   )
 
   const credentials = 'same-origin'
@@ -138,10 +128,12 @@ export function argsForFetch(
   if (method == 'GET' || method == 'HEAD') {
     if (options.body instanceof FormData) {
       const allData = new URLSearchParams(
-        options.body as any
-      ).toString()
-      // fetchPath will always have atleast /?format=json
-      fetchPath.query = fetchPath.query + '&' + allData
+        options.body as unknown as Record<string, string>
+      )
+
+      // TODO: Add coverage for this
+      const nextQuery = { ...fetchPath.query, ...Object.fromEntries(allData) }
+      fetchPath.set('query', nextQuery)
     }
 
     delete options.body
@@ -150,9 +142,7 @@ export function argsForFetch(
   return [fetchPath.toString(), options]
 }
 
-export function extractJSON(
-  rsp: Response
-): PromiseLike<ParsedResponse> {
+export function extractJSON(rsp: Response): PromiseLike<ParsedResponse> {
   return rsp
     .json()
     .then((json) => {
@@ -164,9 +154,7 @@ export function extractJSON(
     })
 }
 
-export function parseResponse(
-  prm: Response
-): PromiseLike<ParsedResponse> {
+export function parseResponse(prm: Response): PromiseLike<ParsedResponse> {
   return Promise.resolve(prm)
     .then(extractJSON)
     .then(handleServerErrors)

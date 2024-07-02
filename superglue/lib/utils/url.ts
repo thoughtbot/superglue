@@ -1,79 +1,79 @@
 import parse from 'url-parse'
 
-export function pathQuery(url) {
+export function pathQuery(url: string): string {
   const { pathname, query } = new parse(url, {})
 
   return pathname + query
 }
 
-export function pathQueryHash(url) {
+export function pathQueryHash(url: string): string {
   const { pathname, query, hash } = new parse(url, {})
 
   return pathname + query + hash
 }
 
-export function hasPropsAt(url) {
-  url = new parse(url, {}, true)
-  const query = url.query
+export function hasPropsAt(url: string): boolean {
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   return !!query['props_at']
 }
 
-export function withFormatJson(url) {
-  url = new parse(url, {}, true)
-  url.query['format'] = 'json'
+export function withFormatJson(url: string): string {
+  const parsed = new parse(url, {}, true)
+  parsed.query['format'] = 'json'
 
-  return url.toString()
+  return parsed.toString()
 }
 
-export function pathWithoutBZParams(url) {
-  url = new parse(url, {}, true)
-  const query = url.query
+export function pathWithoutBZParams(url: string): string {
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   delete query['props_at']
   delete query['format']
-  url.query = query
+  parsed.set('query', query)
 
-  return pathQueryHash(url.toString())
+  return pathQueryHash(parsed.toString())
 }
 
-export function removePropsAt(url) {
-  url = new parse(url, {}, true)
-  const query = url.query
+export function removePropsAt(url: string): string {
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   delete query['props_at']
-  url.query = query
+  parsed.set('query', query)
 
-  return url.toString()
+  return parsed.toString()
 }
 
-export function urlToPageKey(url) {
-  url = new parse(url, {}, true)
-  const query = url.query
+export function urlToPageKey(url: string): string {
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
 
   delete query['props_at']
   delete query['format']
-  url.query = query
+  parsed.set('query', query)
 
-  return pathQuery(url.toString())
+  return pathQuery(parsed.toString())
 }
 
-export function withoutHash(url) {
-  url = new parse(url, {}, true)
-  url.hash = ''
-  return url.toString()
+export function withoutHash(url: string): string {
+  const parsed = new parse(url, {}, true)
+  parsed.set('hash', '')
+  return parsed.toString()
 }
 
-export function withoutBusters(url) {
-  url = new parse(url, {}, true)
-  const query = url.query
+export function withoutBusters(url: string): string {
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
   delete query['format']
-  url.query = query
+  parsed.set('query', query)
 
-  return pathQuery(url.toString())
+  return pathQuery(parsed.toString())
 }
 
-export function formatForXHR(url) {
+export function formatForXHR(url: string): string {
   const formats = [withoutHash, withFormatJson]
 
   return formats.reduce((memo, f) => f(memo), url)

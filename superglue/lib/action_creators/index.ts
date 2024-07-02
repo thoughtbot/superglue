@@ -1,4 +1,4 @@
-import { isGraft, urlToPageKey, getIn } from '../utils'
+import { urlToPageKey, getIn } from '../utils'
 import parse from 'url-parse'
 import {
   SAVE_RESPONSE,
@@ -9,9 +9,26 @@ import {
   UPDATE_FRAGMENTS,
 } from '../actions'
 import { remote } from './requests'
+import {
+  CopyAction,
+  VisitResponse,
+  SaveResponseAction,
+  UpdateFragmentsAction,
+  SaveAndProcessPageThunk,
+  DefermentThunk,
+  HandleGraftAction,
+  GraftResponse,
+  Page,
+} from '../types'
 export * from './requests'
 
-export function copyPage({ from, to }) {
+export function copyPage({
+  from,
+  to,
+}: {
+  from: string
+  to: string
+}): CopyAction {
   return {
     type: COPY_PAGE,
     payload: {
@@ -21,7 +38,13 @@ export function copyPage({ from, to }) {
   }
 }
 
-export function saveResponse({ pageKey, page }) {
+export function saveResponse({
+  pageKey,
+  page,
+}: {
+  pageKey: string
+  page: VisitResponse
+}): SaveResponseAction {
   pageKey = urlToPageKey(pageKey)
 
   return {
@@ -33,7 +56,13 @@ export function saveResponse({ pageKey, page }) {
   }
 }
 
-export function handleGraft({ pageKey, page }) {
+export function handleGraft({
+  pageKey,
+  page,
+}: {
+  pageKey: string
+  page: GraftResponse
+}): HandleGraftAction {
   pageKey = urlToPageKey(pageKey)
 
   return {
@@ -45,7 +74,7 @@ export function handleGraft({ pageKey, page }) {
   }
 }
 
-function fetchDeferments(pageKey, defers = []) {
+function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers
@@ -85,7 +114,7 @@ function fetchDeferments(pageKey, defers = []) {
   }
 }
 
-function updateFragmentsUsing(page) {
+function updateFragmentsUsing(page: Page): UpdateFragmentsAction {
   const changedFragments = {}
   page.fragments.forEach((fragment) => {
     const { type, path } = fragment
@@ -98,13 +127,16 @@ function updateFragmentsUsing(page) {
   }
 }
 
-export function saveAndProcessPage(pageKey, page) {
+export function saveAndProcessPage(
+  pageKey: string,
+  page: VisitResponse | GraftResponse
+): SaveAndProcessPageThunk {
   return (dispatch, getState) => {
     pageKey = urlToPageKey(pageKey)
 
     const { defers = [] } = page
 
-    if (isGraft(page)) {
+    if ('action' in page) {
       dispatch(handleGraft({ pageKey, page }))
     } else {
       dispatch(saveResponse({ pageKey, page }))
@@ -115,7 +147,8 @@ export function saveAndProcessPage(pageKey, page) {
       return dispatch(fetchDeferments(pageKey, defers)).then(() => {
         if (page.fragments.length > 0) {
           const finishedPage = getState().pages[pageKey]
-          return dispatch(updateFragmentsUsing(finishedPage))
+          dispatch(updateFragmentsUsing(finishedPage))
+          return Promise.resolve()
         }
       })
     } else {

@@ -1,27 +1,36 @@
 import React from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
+import {
+  HistoryState,
+  PageOwnProps,
+  Remote,
+  SuperglueStore,
+  Visit,
+} from '../types'
+import { ConnectedComponent } from 'react-redux'
+import { History, Update } from 'history'
 
 interface Props {
-  store: any
-  history: any
-  mapping: any
-  visit: any
-  remote: any
-  initialPageKey: any
+  store: SuperglueStore
+  history: History
+  mapping: Record<string, ConnectedComponent<React.ComponentType, PageOwnProps>>
+  visit: Visit
+  remote: Remote
+  initialPageKey: string
 }
 
 interface State {
-  pageKey: any
-  ownProps: any
+  pageKey: string
+  ownProps: Record<string, unknown>
 }
 
 class Nav extends React.Component<Props, State> {
-  public history
-  public hasWindow
-  public unsubscribeHistory
+  public history: History
+  public hasWindow: boolean
+  public unsubscribeHistory: () => void
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props)
     const { history, initialPageKey } = this.props
     this.history = history
@@ -35,20 +44,18 @@ class Nav extends React.Component<Props, State> {
     this.hasWindow = typeof window !== 'undefined'
   }
 
-  componentDidMount() {
-    this.unsubscribeHistory = this.history.listen(
-      this.onHistoryChange
-    )
+  componentDidMount(): void {
+    this.unsubscribeHistory = this.history.listen(this.onHistoryChange)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.unsubscribeHistory()
   }
 
   navigateTo(
-    path,
+    path: string,
     { action, ownProps } = { action: 'push', ownProps: {} }
-  ) {
+  ): boolean {
     if (action === 'none') {
       return false
     }
@@ -60,7 +67,8 @@ class Nav extends React.Component<Props, State> {
 
     if (hasPage) {
       const location = this.history.location
-      const prevPageKey = location.state.pageKey
+      const state = location.state as HistoryState
+      const prevPageKey = state.pageKey
       const historyArgs = [
         path,
         {
@@ -69,7 +77,7 @@ class Nav extends React.Component<Props, State> {
           posY: 0,
           posX: 0,
         },
-      ]
+      ] as const
 
       if (action === 'push') {
         if (this.hasWindow) {
@@ -80,7 +88,7 @@ class Nav extends React.Component<Props, State> {
               hash: location.hash,
             },
             {
-              ...location.state,
+              ...state,
               posY: window.pageYOffset,
               posX: window.pageXOffset,
             }
@@ -97,11 +105,7 @@ class Nav extends React.Component<Props, State> {
       this.setState({ pageKey: nextPageKey, ownProps })
       this.scrollTo(0, 0)
 
-      if (
-        action === 'replace' &&
-        prevPageKey &&
-        prevPageKey !== nextPageKey
-      ) {
+      if (action === 'replace' && prevPageKey && prevPageKey !== nextPageKey) {
         store.dispatch({
           type: REMOVE_PAGE,
           payload: {
@@ -122,15 +126,16 @@ class Nav extends React.Component<Props, State> {
     }
   }
 
-  scrollTo(posX, posY) {
+  scrollTo(posX: number, posY: number): void {
     this.hasWindow && window.scrollTo(posX, posY)
   }
 
-  onHistoryChange({ location, action }) {
+  onHistoryChange({ location, action }: Update): void {
     const { store, visit } = this.props
-    const { pathname, search, hash, state } = location
+    const { pathname, search, hash } = location
+    const state = location.state as HistoryState
 
-    if (state && state.superglue) {
+    if (state && 'superglue' in state) {
       store.dispatch({
         type: HISTORY_CHANGE,
         payload: { pathname, search, hash },
@@ -192,7 +197,7 @@ class Nav extends React.Component<Props, State> {
     }
   }
 
-  notFound(identifier) {
+  notFound(identifier: string | undefined): never {
     let reminder = ''
     if (!identifier) {
       reminder =
@@ -206,7 +211,7 @@ class Nav extends React.Component<Props, State> {
     throw error
   }
 
-  render() {
+  render(): JSX.Element {
     const { store, visit, remote } = this.props
     const { pageKey, ownProps } = this.state
     const { componentIdentifier } = store.getState().pages[pageKey]

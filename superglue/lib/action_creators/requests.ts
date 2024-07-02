@@ -14,29 +14,48 @@ import {
   SUPERGLUE_ERROR,
 } from '../actions'
 import { copyPage, saveAndProcessPage } from './index'
+import {
+  BeforeVisit,
+  BeforeFetch,
+  FetchArgs,
+  BeforeRemote,
+  HandleError,
+  RemoteProps,
+  VisitProps,
+  VisitResponse,
+  SuperglueState,
+  Meta,
+  MetaThunk,
+} from '../types'
 
-function beforeVisit(payload) {
+function beforeVisit(payload: {
+  fetchArgs: FetchArgs
+  currentPageKey: string
+}): BeforeVisit {
   return {
     type: BEFORE_VISIT,
     payload,
   }
 }
 
-function beforeRemote(payload) {
+function beforeRemote(payload: {
+  fetchArgs: FetchArgs
+  currentPageKey: string
+}): BeforeRemote {
   return {
     type: BEFORE_REMOTE,
     payload,
   }
 }
 
-function beforeFetch(payload) {
+function beforeFetch(payload: { fetchArgs: FetchArgs }): BeforeFetch {
   return {
     type: BEFORE_FETCH,
     payload,
   }
 }
 
-function handleError(err) {
+function handleError(err: Error): HandleError {
   return {
     type: SUPERGLUE_ERROR,
     payload: {
@@ -45,7 +64,7 @@ function handleError(err) {
   }
 }
 
-function handleFetchErr(err, fetchArgs, dispatch) {
+function handleFetchErr(err, fetchArgs, dispatch): never {
   err.fetchArgs = fetchArgs
   err.url = fetchArgs[0]
   err.pageKey = urlToPageKey(fetchArgs[0])
@@ -53,28 +72,37 @@ function handleFetchErr(err, fetchArgs, dispatch) {
   throw err
 }
 
-function buildMeta(pageKey, page, state) {
+function buildMeta(
+  pageKey: string,
+  page: VisitResponse,
+  state: SuperglueState,
+  rsp: Response,
+  fetchArgs: FetchArgs
+): Meta {
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
   return {
     pageKey,
     page,
+    redirected: rsp.redirected,
+    rsp,
+    fetchArgs,
     componentIdentifier: page.componentIdentifier,
     needsRefresh: needsRefresh(prevAssets, nextAssets),
   }
 }
 
 export function remote(
-  path,
+  path: string,
   {
     method = 'GET',
     headers,
-    body = '',
+    body,
     pageKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
-  } = {}
-) {
+  }: RemoteProps = {}
+): MetaThunk {
   path = withoutBusters(path)
   pageKey = pageKey && urlToPageKey(pageKey)
 
@@ -95,22 +123,12 @@ export function remote(
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
-        const meta = {
-          ...buildMeta(pageKey, json, superglue),
-          redirected: rsp.redirected,
-          rsp,
-          fetchArgs,
-        }
-
+        const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
         const willReplaceCurrent = pageKey == currentPageKey
         const existingId = pages[currentPageKey]?.componentIdentifier
         const receivedId = json.componentIdentifier
 
-        if (
-          willReplaceCurrent &&
-          !!existingId &&
-          existingId != receivedId
-        ) {
+        if (willReplaceCurrent && !!existingId && existingId != receivedId) {
           console.warn(
             `You're about replace an existing page located at pages["${currentPageKey}"]
 that has the componentIdentifier "${existingId}" with the contents of a
@@ -126,12 +144,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         }
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(
-          () => {
-            meta.pageKey = pageKey
-            return meta
-          }
-        )
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
@@ -144,16 +157,16 @@ let lastVisitController = {
 }
 
 export function visit(
-  path,
+  path: string,
   {
     method = 'GET',
     headers,
-    body = '',
+    body,
     placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
-  } = {}
-) {
+  }: VisitProps = {}
+): MetaThunk {
   path = withoutBusters(path)
   let pageKey = urlToPageKey(path)
 
@@ -200,12 +213,8 @@ export function visit(
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
-        const meta = {
-          ...buildMeta(pageKey, json, superglue),
-          redirected: rsp.redirected,
-          rsp,
-          fetchArgs,
-        }
+        const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
+
         const isGet = fetchArgs[1].method === 'GET'
 
         meta.suggestedAction = 'push'
@@ -233,12 +242,10 @@ export function visit(
         }
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(
-          () => {
-            meta.pageKey = pageKey
-            return meta
-          }
-        )
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => {
+          meta.pageKey = pageKey
+          return meta
+        })
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }

@@ -97,7 +97,7 @@ export function argsForFetch(
   const fetchPath = new parse(
     formatForXHR(pathQuery),
     config.baseUrl || {},
-    false
+    true
   )
 
   const credentials = 'same-origin'
@@ -129,9 +129,11 @@ export function argsForFetch(
     if (options.body instanceof FormData) {
       const allData = new URLSearchParams(
         options.body as unknown as Record<string, string>
-      ).toString()
-      // fetchPath will always have atleast /?format=json
-      fetchPath.set('query', fetchPath.query + '&' + allData)
+      )
+
+      // TODO: Add coverage for this
+      const nextQuery = { ...fetchPath.query, ...Object.fromEntries(allData) }
+      fetchPath.set('query', nextQuery)
     }
 
     delete options.body

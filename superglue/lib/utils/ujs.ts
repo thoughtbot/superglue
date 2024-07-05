@@ -72,14 +72,15 @@ export class HandlerBuilder {
     event.preventDefault()
 
     let url = form.getAttribute('action')
+    if (!url) {
+      return
+    }
+
     const method = (form.getAttribute('method') || 'POST').toUpperCase()
     url = withoutBusters(url)
 
     this.visitOrRemote(form, url, {
       method,
-      headers: {
-        'content-type': null,
-      },
       body: new FormData(form),
     })
   }
@@ -97,6 +98,9 @@ export class HandlerBuilder {
 
     event.preventDefault()
     let url = link.getAttribute('href')
+    if (!url) {
+      return
+    }
     url = withoutBusters(url)
 
     this.visitOrRemote(link, url, { method: 'GET' })
@@ -106,7 +110,7 @@ export class HandlerBuilder {
     linkOrForm: HTMLAnchorElement | HTMLFormElement,
     url: string,
     opts: VisitProps | RemoteProps
-  ): Promise<Meta> {
+  ): Promise<Meta> | undefined {
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
       const nextOpts: VisitProps = { ...opts }
       const placeholderKey = linkOrForm.getAttribute(

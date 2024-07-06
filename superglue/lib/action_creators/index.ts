@@ -89,7 +89,10 @@ function fetchDeferments(
         failAction = GRAFTING_ERROR,
       }) {
         const parsedUrl = new parse(url, true)
-        const keyPath = parsedUrl.query.props_at
+
+        // props_at will always be present in a graft response
+        // That's why this is marked `as string`
+        const keyPath = parsedUrl.query.props_at as string
 
         return dispatch(remote(url, { pageKey }))
           .then(() => {

@@ -43,6 +43,8 @@ import {
   VisitResponse,
   RootState,
   PageOwnProps,
+  AllPages,
+  Page,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
@@ -51,9 +53,14 @@ export { urlToPageKey }
 
 function pageToInitialState(key: string, page: VisitResponse) {
   const slices = page.slices || {}
+  const nextPage: Page = {
+    ...page,
+    pageKey: key, //TODO remove this
+    savedAt: Date.now()
+  }
 
   return {
-    pages: { [key]: page },
+    pages: { [key]: nextPage},
     ...slices,
   }
 }
@@ -198,7 +205,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
   }
 
   abstract buildStore(
-    initialState: RootState,
+    initialState: {pages: AllPages, [key: string]: any},
     reducer: typeof rootReducer
   ): SuperglueStore
 

@@ -40,6 +40,7 @@ export type VisitResponse = {
   csrfToken?: string
   fragments: Fragment[]
   defers: Defer[]
+  slices: JSONObject
 
   renderedAt: number
   restoreStrategy:

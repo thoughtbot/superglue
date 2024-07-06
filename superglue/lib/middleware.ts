@@ -31,7 +31,7 @@ const fragmentMiddleware: Middleware<unknown, RootState, Dispatch> =
       return nextAction
     }
 
-    const changedFragments = {}
+    const changedFragments: Record<string, unknown> = {}
     const changedKeys = Object.keys(nextState.pages).filter((key) => {
       return prevState.pages[key] !== nextState.pages[key]
     })

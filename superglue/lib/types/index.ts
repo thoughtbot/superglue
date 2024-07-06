@@ -10,6 +10,16 @@ import { ThunkDispatch } from '@reduxjs/toolkit'
 
 export * from './actions'
 
+export type JSONPrimitive = string | number | boolean | null | undefined
+export type JSONObject = {
+  [key: string]: JSONValue
+}
+export type JSONMappable = JSONValue[] | JSONObject
+export type JSONValue = JSONPrimitive | JSONMappable
+export type JSONLookAheadable = {
+  [key: string]: JSONValue
+}[]
+
 export interface ParsedResponse {
   rsp: Response
   json: PageResponse
@@ -24,7 +34,7 @@ export type Defer = {
 }
 
 export type VisitResponse = {
-  data: Record<string, unknown>
+  data: JSONMappable
   componentIdentifier: string
   assets: string[]
   csrfToken?: string

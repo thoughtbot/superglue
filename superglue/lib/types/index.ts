@@ -86,7 +86,7 @@ export type PageOwnProps = {
   pageKey: string
   navigateTo: (
     path: string,
-    { action, ownProps }: { action: string; ownProps: unknown }
+    { action, ownProps }: { action: string; ownProps: Record<string, unknown> }
   ) => boolean
   visit: Visit
   remote: Remote

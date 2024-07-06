@@ -70,7 +70,7 @@ function start({
   baseUrl = config.baseUrl,
   maxPages = config.maxPages,
   path,
-}: {initialPage: VisitResponse, baseUrl: string, maxPages: number, path: string}) {
+}: {initialPage: VisitResponse, baseUrl: string, maxPages?: number, path: string}) {
   const initialPageKey = urlToPageKey(parse(path).href)
   const { csrfToken } = initialPage
   const location = parse(path)

@@ -5,8 +5,8 @@ import {
   StoreEnhancer,
   UnknownAction,
 } from '@reduxjs/toolkit'
-import { ThunkAction } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
+import { ThunkAction } from '@reduxjs/toolkit'
 
 export * from './actions'
 
@@ -173,15 +173,20 @@ export interface HistoryState {
 export type SaveAndProcessPageThunk = ThunkAction<
   Promise<void>,
   RootState,
-  never,
+  undefined,
   AllAction
 >
 
-export type MetaThunk = ThunkAction<Promise<Meta>, RootState, never, AllAction>
+export type MetaThunk = ThunkAction<
+  Promise<Meta>,
+  RootState,
+  undefined,
+  AllAction
+>
 
 export type DefermentThunk = ThunkAction<
   Promise<void[]>,
   RootState,
-  never,
+  undefined,
   AllAction
 >

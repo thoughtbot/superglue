@@ -41,7 +41,7 @@ export class HandlerBuilder {
     }
   }
 
-  isNonStandardClick(event: KeyboardEvent): boolean {
+  isNonStandardClick(event: MouseEvent): boolean {
     return (
       event.which > 1 ||
       event.metaKey ||
@@ -85,7 +85,7 @@ export class HandlerBuilder {
     })
   }
 
-  handleClick(event: Event & KeyboardEvent): void {
+  handleClick(event: MouseEvent): void {
     if (!(event.target instanceof Element)) {
       return
     }

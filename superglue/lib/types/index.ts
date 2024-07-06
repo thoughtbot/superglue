@@ -149,7 +149,7 @@ export type SuperglueStore = EnhancedStore<
 >
 
 export interface Handlers {
-  onClick: (event: Event & KeyboardEvent) => void
+  onClick: (event: MouseEvent) => void
   onSubmit: (event: Event) => void
 }
 

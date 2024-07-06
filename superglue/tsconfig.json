@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
+    "removeComments": true,
+    "moduleResolution": "Node",
+    "strict": true,
     "jsx": "react",
-    "allowJs": true,
-    "target": "es5",
+    "allowJs": false,
+    "target": "ES2021",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },

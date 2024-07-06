@@ -49,7 +49,7 @@ export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
 
-function pageToInitialState(key, page) {
+function pageToInitialState(key: string, page: VisitResponse) {
   const slices = page.slices || {}
 
   return {

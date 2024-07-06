@@ -87,6 +87,26 @@ export interface HandleError extends Action {
   }
 }
 
+type USER_SUBMITTED_STRING = string
+
+export interface GraftingSuccessAction extends Action {
+  type: '@@superglue/GRAFTING_SUCCESS' | USER_SUBMITTED_STRING
+  payload: {
+    pageKey: string
+    keyPath: string
+  }
+}
+
+export interface GraftingErrorAction extends Action {
+  type: '@@superglue/GRAFTING_ERROR' | USER_SUBMITTED_STRING
+  payload: {
+    pageKey: string
+    url: string
+    err: unknown
+    keyPath: string
+  }
+}
+
 export type LifecycleAction =
   | BeforeFetch
   | HandleError
@@ -96,6 +116,8 @@ export type LifecycleAction =
 export type PageReducerAction =
   | SaveResponseAction
   | HandleGraftAction
+  | GraftingSuccessAction
+  | GraftingErrorAction
   | CopyAction
   | RemovePageAction
   | UpdateFragmentsAction
@@ -107,5 +129,7 @@ export type SuperglueReducerAction =
 
 export type AllAction =
   | PageReducerAction
+  | GraftingSuccessAction
+  | GraftingErrorAction
   | SuperglueReducerAction
   | LifecycleAction

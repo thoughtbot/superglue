@@ -19,6 +19,7 @@ import {
   HandleGraftAction,
   GraftResponse,
   Page,
+  Defer,
 } from '../types'
 export * from './requests'
 
@@ -74,7 +75,10 @@ export function handleGraft({
   }
 }
 
-function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
+function fetchDeferments(
+  pageKey: string,
+  defers: Defer[] = []
+): DefermentThunk {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers

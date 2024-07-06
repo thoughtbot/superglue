@@ -65,7 +65,6 @@ function saveResponse(
 
   let nextPage: Page = {
     pageKey,
-    fragments: [],
     ...page,
     savedAt: Date.now(),
   }
@@ -97,7 +96,7 @@ export function appendReceivedFragmentsOntoPage(
   const currentPage = state[pageKey]
   const { fragments: prevFragments = [] } = currentPage
   const nextFragments = [...prevFragments]
-  const existingKeys = {}
+  const existingKeys: Record<string, boolean> = {}
   prevFragments.forEach((frag) => (existingKeys[frag.path] = true))
 
   receivedFragments.forEach((frag) => {

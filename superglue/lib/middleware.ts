@@ -2,14 +2,25 @@ import * as actions from './actions'
 import { Dispatch, RootState } from './types'
 import { getIn } from './utils/immutability'
 import { Middleware } from 'redux'
+import { KeyPathError } from './utils/immutability'
 
 const actionValues = Object.values(actions).map((action) => action.toString())
 
 const fragmentMiddleware: Middleware<unknown, RootState, Dispatch> =
-  (store) => (next) => (action: { payload: unknown; type: string }) => {
+  (store) => (next) => (action) => {
     const prevState = store.getState()
     const nextAction = next(action)
     const nextState = store.getState()
+    if (
+      !(
+        action instanceof Object &&
+        'type' in action &&
+        typeof action.type === 'string'
+      )
+    ) {
+      return nextAction
+    }
+
     const type = action.type
 
     if (actionValues.includes(type)) {
@@ -40,7 +51,7 @@ const fragmentMiddleware: Middleware<unknown, RootState, Dispatch> =
           prevFragment = getIn(prevPage, path)
           nextFragment = getIn(nextPage, path)
         } catch (err) {
-          if (err.name == 'KeyPathError') {
+          if (err instanceof KeyPathError) {
             console.warn(err.message)
           } else {
             throw err

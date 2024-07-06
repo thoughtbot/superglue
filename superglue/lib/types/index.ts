@@ -19,6 +19,8 @@ export type Defer = {
   url: string
   type: 'auto' | 'manual'
   path: string
+  successAction: string
+  failAction: string
 }
 
 export type VisitResponse = {

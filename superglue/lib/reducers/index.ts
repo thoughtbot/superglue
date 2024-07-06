@@ -217,9 +217,9 @@ export function pageReducer(
 }
 
 export function superglueReducer(
-  state: SuperglueState = {},
+  state: Partial<SuperglueState> = {},
   action: SuperglueReducerAction | UnknownAction
-): SuperglueState {
+): Partial<SuperglueState> {
   switch (action.type) {
     case HISTORY_CHANGE: {
       const { pathname, search, hash } =

@@ -69,12 +69,12 @@ export type AllPages = Record<string, Page>
 
 // It should be possible to make this all NOT optional
 export type SuperglueState = {
-  currentPageKey?: string
-  pathname?: string
-  search?: string
-  hash?: string
-  csrfToken?: string
-  assets?: string[]
+  currentPageKey: string
+  pathname: string
+  search: string
+  hash: string
+  csrfToken: string
+  assets: string[]
 }
 
 export type RootState = {

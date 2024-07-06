@@ -122,7 +122,8 @@ function fetchDeferments(
 }
 
 function updateFragmentsUsing(page: Page): UpdateFragmentsAction {
-  const changedFragments = {}
+  // TODO change this from unknown
+  const changedFragments: Record<string, unknown> = {}
   page.fragments.forEach((fragment) => {
     const { type, path } = fragment
     changedFragments[type] = getIn(page, path)

@@ -110,6 +110,11 @@ interface Props {
   path: string
   appEl: HTMLElement
 }
+  
+type ConnectedMapping = Record<
+    string,
+    ConnectedComponent<React.ComponentType, PageOwnProps>
+  >
 
 export abstract class ApplicationBase extends React.Component<Props> {
   public hasWindow: boolean
@@ -117,10 +122,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
   public initialPageKey: string
   public store: SuperglueStore
   public history: History
-  public connectedMapping: Record<
-    string,
-    ConnectedComponent<React.ComponentType, PageOwnProps>
-  >
+  public connectedMapping: ConnectedMapping 
   public ujsHandlers: Handlers
   public visit: Visit
   public remote: Remote
@@ -155,7 +157,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
     this.history.replace(...argsForHistory(this.props.path))
 
     const unconnectedMapping = this.mapping()
-    const nextMapping = {}
+    const nextMapping: ConnectedMapping = {}
     for (const key in unconnectedMapping) {
       const component = unconnectedMapping[key]
       nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)

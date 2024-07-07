@@ -4,6 +4,7 @@
 import { JSONKeyable, JSONMappable, JSONObject, JSONValue } from '../types'
 
 const isSearchable = /^[\da-zA-Z\-_=.]+$/
+const isDigKey = /^[\da-zA-Z\-_]+=[\da-zA-Z\-_]+$/
 
 class KeyPathError extends Error {
   constructor(message: string) {
@@ -19,10 +20,19 @@ function getIn(node: JSONMappable, path: string): JSONValue {
 
   for (i = 0; i < keyPath.length; i++) {
     const key = keyPath[i]
+
     if (typeof result === 'object' && result !== null) {
+      if (!Array.isArray(result) && isDigKey.test(key)) {
+        throw new KeyPathError(
+          `Expected to find an Array when using the key: ${key}`
+        )
+      }
+
       result = atKey(result, key)
     } else {
-      break
+      throw new KeyPathError(
+        `Expected to traverse an Array or Obj, got ${JSON.stringify(result)}`
+      )
     }
   }
 
@@ -60,12 +70,14 @@ function getKey(node: JSONMappable, key: string): string | number | never {
         const val = child[attr]
         if (val && val.toString() === id) {
           break
-        } else {
-          throw new KeyPathError(`Could not look ahead ${key} at ${child}`)
         }
       } else {
         throw new KeyPathError(`Could not look ahead ${key} at ${child}`)
       }
+    }
+
+    if (i === node.length) {
+      throw new KeyPathError(`Could not find ${key} while looking ahead`)
     }
 
     return i
@@ -117,13 +129,18 @@ function setIn<T extends JSONMappable>(
     [key: number]: JSONValue
   } = { 0: object }
 
-  const parents: Record<number, JSONMappable> = {}
+  const parents: {
+    0: T
+    [key: number]: JSONValue
+  } = { 0: object }
+
   let i: number
 
   for (i = 0; i < keypath.length; i++) {
-    const parent = atKey(parents[i], keypath[i])
-    if (typeof parent === 'object' && parent !== null) {
-      parents[i + 1] = parent
+    const parent = parents[i]
+    const child = atKey(parent, keypath[i])
+    if (typeof child === 'object' && child !== null) {
+      parents[i + 1] = child
     } else {
       throw new KeyPathError(`Could not set in ${keypath[i]}`)
     }

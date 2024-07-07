@@ -15,6 +15,7 @@ export type JSONObject = {
   [key: string]: JSONValue
 }
 export type JSONMappable = JSONValue[] | JSONObject
+export type JSONKeyable = JSONObject[] | JSONObject
 export type JSONValue = JSONPrimitive | JSONMappable
 export type JSONLookAheadable = {
   [key: string]: JSONValue

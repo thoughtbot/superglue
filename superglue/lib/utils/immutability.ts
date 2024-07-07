@@ -1,6 +1,8 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
+import { JSONKeyable, JSONMappable, JSONObject, JSONValue } from '../types'
+
 const isSearchable = /^[\da-zA-Z\-_=.]+$/
 
 class KeyPathError extends Error {
@@ -10,10 +12,7 @@ class KeyPathError extends Error {
   }
 }
 
-function getIn(
-  node: Record<string, unknown> | Array<unknown>,
-  path: string
-): unknown {
+function getIn(node: JSONMappable, path: string): JSONValue {
   const keyPath = normalizeKeyPath(path)
   let result = node
 
@@ -28,26 +27,30 @@ function getIn(
   return result
 }
 
-function clone(node: Record<string, unknown> | Array<unknown>) {
+function clone(node: JSONMappable) {
   return Array.isArray(node) ? [].slice.call(node) : { ...node }
 }
 
-function getKey(node: Record<string, unknown> | Array<unknown>, key: string) {
+function getKey(node: JSONKeyable, key: string): string | number | never {
   if (Array.isArray(node) && Number.isNaN(Number(key))) {
     const key_parts = Array.from(key.split('='))
     const attr = key_parts[0]
     const id = key_parts[1]
-    let i: number
-    let child: unknown
 
     if (!id) {
       return key
     }
 
+    let i: number
+    let child: JSONObject
+
     for (i = 0; i < node.length; i++) {
       child = node[i]
-      if (child[attr as string].toString() === id) {
+      const val = child[attr]
+      if (val && val.toString() === id) {
         break
+      } else {
+        throw new KeyPathError(`Could not look ahead ${key} at ${child}`)
       }
     }
 

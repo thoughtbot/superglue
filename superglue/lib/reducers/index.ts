@@ -25,6 +25,8 @@ import {
   UpdateFragmentsAction,
   CopyAction,
   RemovePageAction,
+  JSONValue,
+  JSONMappable,
 } from '../types'
 import { UnknownAction } from 'redux'
 
@@ -119,7 +121,7 @@ export function appendReceivedFragmentsOntoPage(
 export function graftNodeOntoPage(
   state: AllPages,
   pageKey: string,
-  node: unknown,
+  node: JSONMappable,
   pathToNode: string
 ): AllPages {
   if (!node) {

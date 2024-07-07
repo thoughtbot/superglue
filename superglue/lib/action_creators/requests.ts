@@ -26,6 +26,7 @@ import {
   SuperglueState,
   Meta,
   MetaThunk,
+  Dispatch,
 } from '../types'
 
 function beforeVisit(payload: {
@@ -64,10 +65,14 @@ function handleError(err: Error): HandleError {
   }
 }
 
-function handleFetchErr(err, fetchArgs, dispatch): never {
-  err.fetchArgs = fetchArgs
-  err.url = fetchArgs[0]
-  err.pageKey = urlToPageKey(fetchArgs[0])
+function handleFetchErr(
+  err: Error,
+  fetchArgs: FetchArgs,
+  dispatch: Dispatch
+): never {
+  // err.fetchArgs = fetchArgs
+  // err.url = fetchArgs[0]
+  // err.pageKey = urlToPageKey(fetchArgs[0])
   dispatch(handleError(err))
   throw err
 }

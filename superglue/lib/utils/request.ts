@@ -67,21 +67,21 @@ export function argsForFetch(
   method = method.toUpperCase()
   const currentState = getState().superglue
 
-  const nextHeaders = new Headers(headers)
-  nextHeaders.set('x-requested-with', 'XMLHttpRequest')
-  nextHeaders.set('accept', 'application/json')
-  nextHeaders.set('x-superglue-request', 'true')
+  const nextHeaders = Object.fromEntries(new Headers(headers).entries())
+  nextHeaders['x-requested-with'] = 'XMLHttpRequest'
+  nextHeaders['accept'] = 'application/json'
+  nextHeaders['x-superglue-request'] = 'true'
 
   if (method != 'GET' && method != 'HEAD') {
-    nextHeaders.set('content-type', 'application/json')
+    nextHeaders['content-type'] = 'application/json'
   }
 
   if (body instanceof FormData) {
-    nextHeaders.delete('content-type')
+    delete nextHeaders['content-type']
   }
 
   if (currentState.csrfToken) {
-    nextHeaders.set('x-csrf-token', currentState.csrfToken)
+    nextHeaders['x-csrf-token'] = currentState.csrfToken
   }
 
   const fetchPath = new parse(
@@ -93,7 +93,7 @@ export function argsForFetch(
   const credentials = 'same-origin'
 
   if (!(method == 'GET' || method == 'HEAD')) {
-    nextHeaders.set('x-http-method-override', method)
+    nextHeaders['x-http-method-override'] = method
     method = 'POST'
   }
 

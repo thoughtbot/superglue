@@ -52,7 +52,6 @@ describe('argsForFetch', () => {
     }
 
     const args = argsForFetch(getState, '/foo')
-    args[1].headers = Object.fromEntries(args[1].headers.entries())
 
     expect(args).toEqual([
       '/foo?format=json',
@@ -79,7 +78,6 @@ describe('argsForFetch', () => {
     const { signal } = new AbortController
 
     const args = argsForFetch(getState, '/foo', { signal })
-    args[1].headers = Object.fromEntries(args[1].headers.entries())
 
     expect(args).toEqual([
       '/foo?format=json',
@@ -105,7 +103,6 @@ describe('argsForFetch', () => {
     }
 
     const args = argsForFetch(getState, '/foo', { method: 'PUT' })
-    args[1].headers = Object.fromEntries(args[1].headers.entries())
 
     expect(args).toEqual([
       '/foo?format=json',
@@ -135,7 +132,6 @@ describe('argsForFetch', () => {
     }
 
     const args = argsForFetch(getState, '/foo')
-    args[1].headers = Object.fromEntries(args[1].headers.entries())
 
     expect(args).toEqual([
       '/foo?format=json',
@@ -161,7 +157,6 @@ describe('argsForFetch', () => {
     }
 
     const args = argsForFetch(getState, '/foo', { body: 'ignored' })
-    args[1].headers = Object.fromEntries(args[1].headers.entries())
 
     expect(args).toEqual([
       '/foo?format=json',
@@ -178,7 +173,6 @@ describe('argsForFetch', () => {
     ])
 
     const args2 = argsForFetch(getState, '/foo', { method: 'HEAD', body: 'ignored' })
-    args2[1].headers = Object.fromEntries(args2[1].headers.entries())
 
     expect(args2).toEqual([
       '/foo?format=json',

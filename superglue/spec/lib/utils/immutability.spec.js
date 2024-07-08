@@ -40,7 +40,7 @@ describe('setIn', () => {
     expect(page).toBe(clone)
   })
 
-  fit('throws an error when parents are untranversible', () => {
+  it('throws an error when parents are untranversible', () => {
     const page = { a: { b: 2 } }
     expect(() => {
       setIn(page, 'a.b.c', 'foo')

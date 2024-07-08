@@ -1,9 +1,8 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
-import { JSONKeyable, JSONMappable, JSONObject, JSONValue } from '../types'
+import { JSONMappable, JSONValue } from '../types'
 
-const isSearchable = /^[\da-zA-Z\-_=.]+$/
 const isDigKey = /^[\da-zA-Z\-_]+=[\da-zA-Z\-_]+$/
 
 class KeyPathError extends Error {
@@ -86,14 +85,6 @@ function getKey(node: JSONMappable, key: string): string | number | never {
   }
 }
 
-function isArray(node: JSONMappable) {
-  return Array.isArray(node)
-}
-
-function isObject(node: JSONMappable) {
-  return !isArray(node) && node === Object(node)
-}
-
 function atKey(node: JSONMappable, key: string) {
   const actualKey = getKey(node, key)
 
@@ -138,18 +129,24 @@ function setIn<T extends JSONMappable>(
 
   for (i = 0; i < keypath.length; i++) {
     const parent = parents[i]
-    const child = atKey(parent, keypath[i])
-    if (typeof child === 'object' && child !== null) {
-      parents[i + 1] = child
-    } else {
-      throw new KeyPathError(`Could not set in ${keypath[i]}`)
+
+    if (!(typeof parent === 'object' && parent !== null)) {
+      throw new KeyPathError(
+        `Expected to traverse an Array or Obj, got ${JSON.stringify(parent)}`
+      )
     }
+
+    const child = atKey(parent, keypath[i])
+    parents[i + 1] = child
   }
 
   results[keypath.length] = value
 
   for (i = keypath.length - 1; i >= 0; i--) {
-    const target = clone(parents[i])
+    // Parents will always have a JSONValue at
+    // keypath.length so this loop skips that one element
+    // Every other element in parents is a JSONMappable
+    const target = clone(parents[i] as JSONMappable)
     results[i] = target
     const key = getKey(results[i] as JSONMappable, keypath[i])
     if (Array.isArray(target)) {

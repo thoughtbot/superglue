@@ -5,10 +5,21 @@ import {
   StoreEnhancer,
   UnknownAction,
 } from '@reduxjs/toolkit'
-import { ThunkAction } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
+import { ThunkAction } from '@reduxjs/toolkit'
 
 export * from './actions'
+
+export type JSONPrimitive = string | number | boolean | null | undefined
+export type JSONObject = {
+  [key: string]: JSONValue
+}
+export type JSONMappable = JSONValue[] | JSONObject
+export type JSONKeyable = JSONObject[] | JSONObject
+export type JSONValue = JSONPrimitive | JSONMappable
+export type JSONLookAheadable = {
+  [key: string]: JSONValue
+}[]
 
 export interface ParsedResponse {
   rsp: Response
@@ -19,15 +30,18 @@ export type Defer = {
   url: string
   type: 'auto' | 'manual'
   path: string
+  successAction: string
+  failAction: string
 }
 
 export type VisitResponse = {
-  data: Record<string, unknown>
+  data: JSONMappable
   componentIdentifier: string
   assets: string[]
   csrfToken?: string
   fragments: Fragment[]
   defers: Defer[]
+  slices: JSONObject
 
   renderedAt: number
   restoreStrategy:
@@ -57,12 +71,12 @@ export type AllPages = Record<string, Page>
 
 // It should be possible to make this all NOT optional
 export type SuperglueState = {
-  currentPageKey?: string
-  pathname?: string
-  search?: string
-  hash?: string
-  csrfToken?: string
-  assets?: string[]
+  currentPageKey: string
+  pathname: string
+  search: string
+  hash: string
+  csrfToken: string
+  assets: string[]
 }
 
 export type RootState = {
@@ -74,7 +88,7 @@ export type PageOwnProps = {
   pageKey: string
   navigateTo: (
     path: string,
-    { action, ownProps }: { action: string; ownProps: unknown }
+    { action, ownProps }: { action: string; ownProps: Record<string, unknown> }
   ) => boolean
   visit: Visit
   remote: Remote
@@ -136,7 +150,7 @@ export type SuperglueStore = EnhancedStore<
 >
 
 export interface Handlers {
-  onClick: (event: Event & KeyboardEvent) => void
+  onClick: (event: MouseEvent) => void
   onSubmit: (event: Event) => void
 }
 
@@ -160,15 +174,20 @@ export interface HistoryState {
 export type SaveAndProcessPageThunk = ThunkAction<
   Promise<void>,
   RootState,
-  never,
+  undefined,
   AllAction
 >
 
-export type MetaThunk = ThunkAction<Promise<Meta>, RootState, never, AllAction>
+export type MetaThunk = ThunkAction<
+  Promise<Meta>,
+  RootState,
+  undefined,
+  AllAction
+>
 
 export type DefermentThunk = ThunkAction<
   Promise<void[]>,
   RootState,
-  never,
+  undefined,
   AllAction
 >

@@ -25,6 +25,7 @@ import {
   UpdateFragmentsAction,
   CopyAction,
   RemovePageAction,
+  JSONMappable,
 } from '../types'
 import { UnknownAction } from 'redux'
 
@@ -65,7 +66,6 @@ function saveResponse(
 
   let nextPage: Page = {
     pageKey,
-    fragments: [],
     ...page,
     savedAt: Date.now(),
   }
@@ -97,7 +97,7 @@ export function appendReceivedFragmentsOntoPage(
   const currentPage = state[pageKey]
   const { fragments: prevFragments = [] } = currentPage
   const nextFragments = [...prevFragments]
-  const existingKeys = {}
+  const existingKeys: Record<string, boolean> = {}
   prevFragments.forEach((frag) => (existingKeys[frag.path] = true))
 
   receivedFragments.forEach((frag) => {
@@ -120,7 +120,7 @@ export function appendReceivedFragmentsOntoPage(
 export function graftNodeOntoPage(
   state: AllPages,
   pageKey: string,
-  node: unknown,
+  node: JSONMappable,
   pathToNode: string
 ): AllPages {
   if (!node) {
@@ -218,9 +218,9 @@ export function pageReducer(
 }
 
 export function superglueReducer(
-  state: SuperglueState = {},
+  state: Partial<SuperglueState> = {},
   action: SuperglueReducerAction | UnknownAction
-): SuperglueState {
+): Partial<SuperglueState> {
   switch (action.type) {
     case HISTORY_CHANGE: {
       const { pathname, search, hash } =

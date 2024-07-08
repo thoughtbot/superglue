@@ -19,6 +19,8 @@ import {
   HandleGraftAction,
   GraftResponse,
   Page,
+  Defer,
+  JSONMappable,
 } from '../types'
 export * from './requests'
 
@@ -74,7 +76,10 @@ export function handleGraft({
   }
 }
 
-function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
+function fetchDeferments(
+  pageKey: string,
+  defers: Defer[] = []
+): DefermentThunk {
   pageKey = urlToPageKey(pageKey)
   return (dispatch) => {
     const fetches = defers
@@ -85,7 +90,10 @@ function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
         failAction = GRAFTING_ERROR,
       }) {
         const parsedUrl = new parse(url, true)
-        const keyPath = parsedUrl.query.props_at
+
+        // props_at will always be present in a graft response
+        // That's why this is marked `as string`
+        const keyPath = parsedUrl.query.props_at as string
 
         return dispatch(remote(url, { pageKey }))
           .then(() => {
@@ -115,10 +123,12 @@ function fetchDeferments(pageKey: string, defers = []): DefermentThunk {
 }
 
 function updateFragmentsUsing(page: Page): UpdateFragmentsAction {
-  const changedFragments = {}
+  const changedFragments: Record<string, JSONMappable> = {}
   page.fragments.forEach((fragment) => {
     const { type, path } = fragment
-    changedFragments[type] = getIn(page, path)
+    // A fragment only works on a block in props_template. So using getIn
+    // will always return a JSONMappable
+    changedFragments[type] = getIn(page, path) as JSONMappable
   })
 
   return {

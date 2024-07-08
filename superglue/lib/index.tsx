@@ -41,19 +41,26 @@ import {
   Handlers,
   Visit,
   VisitResponse,
-  RootState,
   PageOwnProps,
+  AllPages,
+  Page,
+  JSONValue,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
 
-function pageToInitialState(key, page) {
+function pageToInitialState(key: string, page: VisitResponse) {
   const slices = page.slices || {}
+  const nextPage: Page = {
+    ...page,
+    pageKey: key, //TODO remove this
+    savedAt: Date.now()
+  }
 
   return {
-    pages: { [key]: page },
+    pages: { [key]: nextPage},
     ...slices,
   }
 }
@@ -63,7 +70,7 @@ function start({
   baseUrl = config.baseUrl,
   maxPages = config.maxPages,
   path,
-}) {
+}: {initialPage: VisitResponse, baseUrl: string, maxPages?: number, path: string}) {
   const initialPageKey = urlToPageKey(parse(path).href)
   const { csrfToken } = initialPage
   const location = parse(path)
@@ -103,6 +110,11 @@ interface Props {
   path: string
   appEl: HTMLElement
 }
+  
+type ConnectedMapping = Record<
+    string,
+    ConnectedComponent<React.ComponentType, PageOwnProps>
+  >
 
 export abstract class ApplicationBase extends React.Component<Props> {
   public hasWindow: boolean
@@ -110,10 +122,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
   public initialPageKey: string
   public store: SuperglueStore
   public history: History
-  public connectedMapping: Record<
-    string,
-    ConnectedComponent<React.ComponentType, PageOwnProps>
-  >
+  public connectedMapping: ConnectedMapping 
   public ujsHandlers: Handlers
   public visit: Visit
   public remote: Remote
@@ -148,7 +157,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
     this.history.replace(...argsForHistory(this.props.path))
 
     const unconnectedMapping = this.mapping()
-    const nextMapping = {}
+    const nextMapping: ConnectedMapping = {}
     for (const key in unconnectedMapping) {
       const component = unconnectedMapping[key]
       nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)
@@ -198,7 +207,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
   }
 
   abstract buildStore(
-    initialState: RootState,
+    initialState: {pages: AllPages, [key: string]: JSONValue},
     reducer: typeof rootReducer
   ): SuperglueStore
 

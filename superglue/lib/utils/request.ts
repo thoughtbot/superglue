@@ -1,7 +1,7 @@
 import parse from 'url-parse'
 import { formatForXHR } from './url'
 import { config } from '../config'
-import { ParsedResponse, RootState } from '../types'
+import { BasicRequestInit, ParsedResponse, RootState } from '../types'
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -63,12 +63,12 @@ export function handleServerErrors(args: ParsedResponse): ParsedResponse {
 export function argsForFetch(
   getState: () => RootState,
   pathQuery: string,
-  { method = 'GET', headers = {}, body = '', signal }: RequestInit = {}
-): [string, RequestInit] {
+  { method = 'GET', headers = {}, body = '', signal }: BasicRequestInit = {}
+): [string, BasicRequestInit] {
   method = method.toUpperCase()
   const currentState = getState().superglue
 
-  const nextHeaders = Object.fromEntries(new Headers(headers).entries())
+  const nextHeaders = { ...headers }
   nextHeaders['x-requested-with'] = 'XMLHttpRequest'
   nextHeaders['accept'] = 'application/json'
   nextHeaders['x-superglue-request'] = 'true'
@@ -98,7 +98,7 @@ export function argsForFetch(
     method = 'POST'
   }
 
-  const options: RequestInit = {
+  const options: BasicRequestInit = {
     method,
     headers: nextHeaders,
     body,

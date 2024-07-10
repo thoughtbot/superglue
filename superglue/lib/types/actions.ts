@@ -1,5 +1,6 @@
 import { VisitResponse, GraftResponse } from '.'
 import { Action } from 'redux'
+import { BasicRequestInit } from '.'
 
 export interface SaveResponseAction extends Action {
   type: '@@superglue/SAVE_RESPONSE'
@@ -55,12 +56,12 @@ export interface HistoryChange extends Action {
   }
 }
 
-export type FetchArgs = [string, RequestInit]
+export type FetchArgs = [string, BasicRequestInit]
 
 export interface BeforeVisit extends Action {
   type: '@@superglue/BEFORE_VISIT'
   payload: {
-    fetchArgs: [string, RequestInit]
+    fetchArgs: [string, BasicRequestInit]
     currentPageKey: string
   }
 }
@@ -68,7 +69,7 @@ export interface BeforeVisit extends Action {
 export interface BeforeRemote extends Action {
   type: '@@superglue/BEFORE_REMOTE'
   payload: {
-    fetchArgs: [string, RequestInit]
+    fetchArgs: [string, BasicRequestInit]
     currentPageKey: string
   }
 }
@@ -76,7 +77,7 @@ export interface BeforeRemote extends Action {
 export interface BeforeFetch extends Action {
   type: '@@superglue/BEFORE_FETCH'
   payload: {
-    fetchArgs: [string, RequestInit]
+    fetchArgs: [string, BasicRequestInit]
   }
 }
 

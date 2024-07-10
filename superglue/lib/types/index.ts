@@ -191,3 +191,9 @@ export type DefermentThunk = ThunkAction<
   undefined,
   AllAction
 >
+
+export type BasicRequestInit = RequestInit & {
+  headers?: {
+    [key: string]: string
+  }
+}

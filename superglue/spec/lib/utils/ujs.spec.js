@@ -281,9 +281,6 @@ describe('ujs', () => {
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(visit).toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        headers: {
-          "content-type": null,
-        },
         body: {some: 'Body'}
       })
     })
@@ -314,9 +311,6 @@ describe('ujs', () => {
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(remote).toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        headers: {
-          "content-type": null,
-        },
         body: {some: 'Body'}
       })
     })

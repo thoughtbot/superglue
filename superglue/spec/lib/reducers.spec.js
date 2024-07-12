@@ -377,6 +377,7 @@ describe('reducers', () => {
               data: {},
               csrfToken: 'token',
               assets: ['application-123.js'],
+              fragments: [],
             },
           },
         })
@@ -388,6 +389,7 @@ describe('reducers', () => {
             assets: ['application-123.js'],
             pageKey: '/foo',
             fragments: [],
+            savedAt: expect.any(Number)
           })
         )
       })

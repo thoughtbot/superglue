@@ -1,7 +1,9 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
-const isSearchable = /^[\da-zA-Z\-_=.]+$/
+import { JSONMappable, JSONValue } from '../types'
+
+const canLookAhead = /^[\da-zA-Z\-_]+=[\da-zA-Z\-_]+$/
 
 class KeyPathError extends Error {
   constructor(message: string) {
@@ -10,45 +12,71 @@ class KeyPathError extends Error {
   }
 }
 
-function getIn(
-  node: Record<string, unknown> | Array<unknown>,
-  path: string
-): unknown {
+function getIn(node: JSONMappable, path: string): JSONValue {
   const keyPath = normalizeKeyPath(path)
-  let result = node
+  let result: JSONValue = node
+  let i: number
 
-  for (let i = 0; i < keyPath.length; i++) {
+  for (i = 0; i < keyPath.length; i++) {
     const key = keyPath[i]
-    if (!result) {
-      break
+
+    if (typeof result === 'object' && result !== null) {
+      if (!Array.isArray(result) && canLookAhead.test(key)) {
+        throw new KeyPathError(
+          `Expected to find an Array when using the key: ${key}`
+        )
+      }
+
+      result = atKey(result, key)
+    } else {
+      throw new KeyPathError(
+        `Expected to traverse an Array or Obj, got ${JSON.stringify(result)}`
+      )
     }
-    result = atKey(result, key)
   }
 
-  return result
+  if (i === keyPath.length) {
+    return result
+  } else {
+    return undefined
+  }
 }
 
-function clone(node: Record<string, unknown> | Array<unknown>) {
+function clone(node: JSONMappable): JSONMappable {
   return Array.isArray(node) ? [].slice.call(node) : { ...node }
 }
 
-function getKey(node: Record<string, unknown> | Array<unknown>, key: string) {
+function getKey(node: JSONMappable, key: string): string | number | never {
   if (Array.isArray(node) && Number.isNaN(Number(key))) {
     const key_parts = Array.from(key.split('='))
     const attr = key_parts[0]
     const id = key_parts[1]
-    let i: number
-    let child: unknown
 
-    if (!id) {
+    if (!id || !attr) {
       return key
     }
 
+    let i: number
+    let child: JSONValue
+
     for (i = 0; i < node.length; i++) {
       child = node[i]
-      if (child[attr as string].toString() === id) {
-        break
+      if (
+        typeof child === 'object' &&
+        !Array.isArray(child) &&
+        child !== null
+      ) {
+        const val = child[attr]
+        if (val && val.toString() === id) {
+          break
+        }
+      } else {
+        throw new KeyPathError(`Could not look ahead ${key} at ${child}`)
       }
+    }
+
+    if (i === node.length) {
+      throw new KeyPathError(`Could not find ${key} while looking ahead`)
     }
 
     return i
@@ -57,55 +85,17 @@ function getKey(node: Record<string, unknown> | Array<unknown>, key: string) {
   }
 }
 
-function isArray(node: unknown) {
-  return Array.isArray(node)
-}
+function atKey(node: JSONMappable, key: string) {
+  const actualKey = getKey(node, key)
 
-function isObject(node: unknown) {
-  return !isArray(node) && node === Object(node)
-}
-
-function atKey(node: Record<string, unknown> | Array<unknown>, key: string) {
-  let id: string
-  let attr: string
-
-  if (isSearchable.test(key)) {
-    // eslint-disable-next-line
-    ;[attr, id] = Array.from(key.split('='))
-  }
-
-  if (!isArray(node) && !isObject(node)) {
-    throw new KeyPathError(
-      `Expected to traverse an Array or Obj, got ${JSON.stringify(node)}`
-    )
-  }
-
-  if (isObject(node) && id) {
-    throw new KeyPathError(
-      `Expected to find an Array when using the key: ${key}`
-    )
-  }
-
-  if (Array.isArray(node) && id) {
-    let child: unknown
-    for (let i = 0; i < node.length; i++) {
-      child = node[i]
-      if (child[attr].toString() === id) {
-        break
-      }
-    }
-
-    if (child[attr].toString() === id) {
-      return child
-    } else {
-      return undefined
-    }
+  if (Array.isArray(node)) {
+    return node[actualKey as number]
   } else {
-    return node[key]
+    return node[actualKey]
   }
 }
 
-function normalizeKeyPath(path) {
+function normalizeKeyPath(path: string): string[] {
   if (typeof path === 'string') {
     path = path.replace(/ /g, '')
     if (path === '') {
@@ -118,25 +108,52 @@ function normalizeKeyPath(path) {
   }
 }
 
-function setIn<T>(object: T, keypath: string, value: unknown): T {
-  keypath = normalizeKeyPath(keypath)
+function setIn<T extends JSONMappable>(
+  object: T,
+  path: string,
+  value: JSONValue
+): T | never {
+  const keypath = normalizeKeyPath(path)
 
-  const results = {}
-  const parents = {}
+  const results: {
+    0: T
+    [key: number]: JSONValue
+  } = { 0: object }
+
+  const parents: {
+    0: T
+    [key: number]: JSONValue
+  } = { 0: object }
+
   let i: number
 
-  parents[0] = object
-
   for (i = 0; i < keypath.length; i++) {
-    parents[i + 1] = atKey(parents[i], keypath[i])
+    const parent = parents[i]
+
+    if (!(typeof parent === 'object' && parent !== null)) {
+      throw new KeyPathError(
+        `Expected to traverse an Array or Obj, got ${JSON.stringify(parent)}`
+      )
+    }
+
+    const child = atKey(parent, keypath[i])
+    parents[i + 1] = child
   }
 
   results[keypath.length] = value
 
   for (i = keypath.length - 1; i >= 0; i--) {
-    results[i] = clone(parents[i])
-    const key = getKey(results[i], keypath[i])
-    results[i][key] = results[i + 1]
+    // Parents will always have a JSONValue at
+    // keypath.length so this loop skips that one element
+    // Every other element in parents is a JSONMappable
+    const target = clone(parents[i] as JSONMappable)
+    results[i] = target
+    const key = getKey(results[i] as JSONMappable, keypath[i])
+    if (Array.isArray(target)) {
+      target[key as number] = results[i + 1]
+    } else {
+      target[key] = results[i + 1]
+    }
   }
 
   return results[0]

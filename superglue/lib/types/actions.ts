@@ -1,5 +1,6 @@
 import { VisitResponse, GraftResponse } from '.'
 import { Action } from 'redux'
+import { BasicRequestInit } from '.'
 
 export interface SaveResponseAction extends Action {
   type: '@@superglue/SAVE_RESPONSE'
@@ -55,12 +56,12 @@ export interface HistoryChange extends Action {
   }
 }
 
-export type FetchArgs = [string, RequestInit]
+export type FetchArgs = [string, BasicRequestInit]
 
 export interface BeforeVisit extends Action {
   type: '@@superglue/BEFORE_VISIT'
   payload: {
-    fetchArgs: [string, RequestInit]
+    fetchArgs: [string, BasicRequestInit]
     currentPageKey: string
   }
 }
@@ -68,7 +69,7 @@ export interface BeforeVisit extends Action {
 export interface BeforeRemote extends Action {
   type: '@@superglue/BEFORE_REMOTE'
   payload: {
-    fetchArgs: [string, RequestInit]
+    fetchArgs: [string, BasicRequestInit]
     currentPageKey: string
   }
 }
@@ -76,7 +77,7 @@ export interface BeforeRemote extends Action {
 export interface BeforeFetch extends Action {
   type: '@@superglue/BEFORE_FETCH'
   payload: {
-    fetchArgs: [string, RequestInit]
+    fetchArgs: [string, BasicRequestInit]
   }
 }
 
@@ -84,6 +85,26 @@ export interface HandleError extends Action {
   type: '@@superglue/ERROR'
   payload: {
     message: string
+  }
+}
+
+type USER_SPECIFIED_STRING = string
+
+export interface GraftingSuccessAction extends Action {
+  type: '@@superglue/GRAFTING_SUCCESS' | USER_SPECIFIED_STRING
+  payload: {
+    pageKey: string
+    keyPath: string
+  }
+}
+
+export interface GraftingErrorAction extends Action {
+  type: '@@superglue/GRAFTING_ERROR' | USER_SPECIFIED_STRING
+  payload: {
+    pageKey: string
+    url: string
+    err: unknown
+    keyPath: string
   }
 }
 
@@ -96,6 +117,8 @@ export type LifecycleAction =
 export type PageReducerAction =
   | SaveResponseAction
   | HandleGraftAction
+  | GraftingSuccessAction
+  | GraftingErrorAction
   | CopyAction
   | RemovePageAction
   | UpdateFragmentsAction
@@ -107,5 +130,7 @@ export type SuperglueReducerAction =
 
 export type AllAction =
   | PageReducerAction
+  | GraftingSuccessAction
+  | GraftingErrorAction
   | SuperglueReducerAction
   | LifecycleAction

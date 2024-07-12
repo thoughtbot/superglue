@@ -26,6 +26,7 @@ import {
   SuperglueState,
   Meta,
   MetaThunk,
+  Dispatch,
 } from '../types'
 
 function beforeVisit(payload: {
@@ -64,10 +65,11 @@ function handleError(err: Error): HandleError {
   }
 }
 
-function handleFetchErr(err, fetchArgs, dispatch): never {
-  err.fetchArgs = fetchArgs
-  err.url = fetchArgs[0]
-  err.pageKey = urlToPageKey(fetchArgs[0])
+function handleFetchErr(
+  err: Error,
+  fetchArgs: FetchArgs,
+  dispatch: Dispatch
+): never {
   dispatch(handleError(err))
   throw err
 }
@@ -99,12 +101,12 @@ export function remote(
     method = 'GET',
     headers,
     body,
-    pageKey,
+    pageKey: rawPageKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
   }: RemoteProps = {}
 ): MetaThunk {
   path = withoutBusters(path)
-  pageKey = pageKey && urlToPageKey(pageKey)
+  rawPageKey = rawPageKey && urlToPageKey(rawPageKey)
 
   return (dispatch, getState) => {
     const fetchArgs = argsForFetch(getState, path, {
@@ -112,7 +114,10 @@ export function remote(
       headers,
       body,
     })
-    pageKey = pageKey || getState().superglue.currentPageKey
+    if (rawPageKey === undefined) {
+      rawPageKey = getState().superglue.currentPageKey
+    }
+    const pageKey = rawPageKey
     const currentPageKey = getState().superglue.currentPageKey
 
     dispatch(beforeRemote({ currentPageKey, fetchArgs }))
@@ -172,7 +177,9 @@ export function visit(
 
   return (dispatch, getState) => {
     placeholderKey = placeholderKey && urlToPageKey(placeholderKey)
-    const hasPlaceholder = !!getState().pages[placeholderKey]
+    const hasPlaceholder = !!(
+      placeholderKey && getState().pages[placeholderKey]
+    )
 
     if (placeholderKey && hasPlaceholder) {
       dispatch(copyPage({ from: placeholderKey, to: pageKey }))

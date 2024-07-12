@@ -156,7 +156,9 @@ describe('argsForFetch', () => {
       }
     }
 
-    expect(argsForFetch(getState, '/foo', { body: 'ignored' })).toEqual([
+    const args = argsForFetch(getState, '/foo', { body: 'ignored' })
+
+    expect(args).toEqual([
       '/foo?format=json',
       {
         method: 'GET',
@@ -170,9 +172,9 @@ describe('argsForFetch', () => {
       },
     ])
 
-    expect(
-      argsForFetch(getState, '/foo', { method: 'HEAD', body: 'ignored' })
-    ).toEqual([
+    const args2 = argsForFetch(getState, '/foo', { method: 'HEAD', body: 'ignored' })
+
+    expect(args2).toEqual([
       '/foo?format=json',
       {
         method: 'HEAD',

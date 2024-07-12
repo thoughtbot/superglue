@@ -1,7 +1,7 @@
 import parse from 'url-parse'
 import { formatForXHR } from './url'
 import { config } from '../config'
-import { ParsedResponse, RootState } from '../types'
+import { BasicRequestInit, ParsedResponse, RootState } from '../types'
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -11,19 +11,19 @@ export function isValidContent(rsp: Response): boolean {
   const contentType = rsp.headers.get('content-type')
   const jsContent = /^(?:application\/json)(?:;|$)/
 
-  return !!(contentType !== undefined && contentType.match(jsContent))
+  return !!(contentType && contentType.match(jsContent))
 }
 
 function downloadingFile(xhr: Response): boolean {
   const disposition = xhr.headers.get('content-disposition')
 
-  return disposition && disposition.match(/^attachment/) !== null
+  return !!(disposition && disposition.match(/^attachment/) !== null)
 }
 
 class SuperglueResponseError extends Error {
   response: Response
 
-  constructor(message) {
+  constructor(message: string) {
     super(message)
     this.name = 'SuperglueResponseError'
   }
@@ -63,35 +63,26 @@ export function handleServerErrors(args: ParsedResponse): ParsedResponse {
 export function argsForFetch(
   getState: () => RootState,
   pathQuery: string,
-  { method = 'GET', headers = {}, body = '', signal }: RequestInit = {}
-): [string, RequestInit] {
+  { method = 'GET', headers = {}, body = '', signal }: BasicRequestInit = {}
+): [string, BasicRequestInit] {
   method = method.toUpperCase()
-
   const currentState = getState().superglue
 
-  const jsAccept = 'application/json'
-  headers = {
-    ...headers,
-    accept: jsAccept,
-    'x-requested-with': 'XMLHttpRequest',
-    'x-superglue-request': 'true',
-  }
-
-  // This needs to be done better. This is saying to
-  // remove the content-type header from UJS form
-  // submissions.
-  const fromUJSForm = headers['content-type'] === null
+  const nextHeaders = { ...headers }
+  nextHeaders['x-requested-with'] = 'XMLHttpRequest'
+  nextHeaders['accept'] = 'application/json'
+  nextHeaders['x-superglue-request'] = 'true'
 
   if (method != 'GET' && method != 'HEAD') {
-    headers['content-type'] = 'application/json'
+    nextHeaders['content-type'] = 'application/json'
   }
 
-  if (fromUJSForm) {
-    delete headers['content-type']
+  if (body instanceof FormData) {
+    delete nextHeaders['content-type']
   }
 
   if (currentState.csrfToken) {
-    headers['x-csrf-token'] = currentState.csrfToken
+    nextHeaders['x-csrf-token'] = currentState.csrfToken
   }
 
   const fetchPath = new parse(
@@ -103,13 +94,13 @@ export function argsForFetch(
   const credentials = 'same-origin'
 
   if (!(method == 'GET' || method == 'HEAD')) {
-    headers['x-http-method-override'] = method
+    nextHeaders['x-http-method-override'] = method
     method = 'POST'
   }
 
-  const options: RequestInit = {
+  const options: BasicRequestInit = {
     method,
-    headers,
+    headers: nextHeaders,
     body,
     credentials,
     signal,

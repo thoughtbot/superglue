@@ -103,7 +103,9 @@ export type Content = PageOwnProps & {
 interface BaseProps {
   method?: string
   body?: BodyInit
-  headers?: HeadersInit
+  headers?: {
+    [key: string]: string
+  }
   beforeSave?: (
     prevPage: VisitResponse,
     receivedPage: VisitResponse

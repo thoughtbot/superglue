@@ -1,3 +1,5 @@
+import {describe, it, expect, vi} from 'vitest'
+import { JSDOM } from 'jsdom'
 import React from 'react'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
@@ -69,7 +71,7 @@ describe('Nav', () => {
           />
         </Provider>
       )
-      const scrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
       expect(component.find(Home).exists()).toBe(true)
       expect(component.find(About).exists()).toBe(false)
 
@@ -130,7 +132,7 @@ describe('Nav', () => {
           csrfToken: "abc"
         }
       })
-      const scrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
       const component = mount(
         <Provider store={store}>
           <Nav
@@ -276,12 +278,12 @@ describe('Nav', () => {
             csrfToken: "abc"
           }
         })
-        const scrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
         const suggestedAction = 'none'
 
-        const fakeVisit = jest.fn((...args) => {
+        const fakeVisit = vi.fn((...args) => {
           return {
-            then: jest.fn(fn => {
+            then: vi.fn(fn => {
               expect(scrollTo).not.toHaveBeenCalled()
               fn({suggestedAction})
               expect(scrollTo).toHaveBeenCalledWith(5, 5)
@@ -330,12 +332,12 @@ describe('Nav', () => {
             csrfToken: "abc"
           }
         })
-        const scrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
         const suggestedAction = 'push'
 
-        const fakeVisit = jest.fn((...args) => {
+        const fakeVisit = vi.fn((...args) => {
           return {
-            then: jest.fn(fn => {
+            then: vi.fn(fn => {
               // expect(scrollTo).not.toHaveBeenCalled()
               fn({suggestedAction})
               expect(scrollTo).not.toHaveBeenCalled()
@@ -388,10 +390,10 @@ describe('Nav', () => {
             csrfToken: "abc"
           }
         })
-        const scrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
         const suggestedAction = 'none'
 
-        const fakeVisit = jest.fn()
+        const fakeVisit = vi.fn()
 
         const component = mount(
           <Provider store={store}>
@@ -437,10 +439,10 @@ describe('Nav', () => {
             csrfToken: "abc"
           }
         })
-        const scrollTo = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
         const suggestedAction = 'none'
 
-        const fakeVisit = jest.fn((...args) => {
+        const fakeVisit = vi.fn((...args) => {
           expect(scrollTo).toHaveBeenCalledWith(5, 5)
         })
 

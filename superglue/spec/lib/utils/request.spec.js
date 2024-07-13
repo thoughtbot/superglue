@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import { isValidResponse, argsForFetch, handleServerErrors } from '../../../lib/utils/request'
 import parse from 'url-parse'
 import Headers from 'fetch-headers'
@@ -195,7 +196,7 @@ describe('handleServerErrors', () => {
 
   beforeAll(() => {
     originalConsoleError = console.error;
-    console.error = jest.fn();
+    console.error = vi.fn();
   });
 
   afterAll(() => {

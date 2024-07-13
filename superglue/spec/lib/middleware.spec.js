@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest'
 import {
   fragmentMiddleware,
 } from '../../lib/middleware'
@@ -16,7 +17,7 @@ describe('fragment middleware', () => {
           superglue: {}
         }
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
 
     const next = (action) => {
@@ -42,7 +43,7 @@ describe('fragment middleware', () => {
           superglue: {}
         }
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
 
     const action = {
@@ -91,7 +92,7 @@ describe('fragment middleware', () => {
           superglue: {}
         }
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
     const next = (action) => {
       store.getState = () => {
@@ -149,7 +150,7 @@ describe('fragment middleware', () => {
           superglue: {}
         }
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
 
     const next = (action) => {
@@ -199,7 +200,7 @@ describe('fragment middleware', () => {
           superglue: {}
         }
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
 
     const next = (action) => {
@@ -259,7 +260,7 @@ describe('fragment middleware', () => {
           superglue: {}
         }
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
     const next = (action) => {
       store.getState = () => {

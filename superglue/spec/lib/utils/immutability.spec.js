@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { getIn, setIn, KeyPathError } from '../../../lib/utils/immutability'
 
 describe('getIn', () => {

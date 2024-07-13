@@ -1,3 +1,4 @@
+import {describe, expect, it, vi} from 'vitest'
 import {
   pageReducer,
   superglueReducer,
@@ -337,7 +338,7 @@ describe('reducers', () => {
         })
 
         it('does not mutate the state when search results are empty', () => {
-          jest.spyOn(console, 'warn')
+          vi.spyOn(console, 'warn')
 
           const prevState = {
             '/foo': {

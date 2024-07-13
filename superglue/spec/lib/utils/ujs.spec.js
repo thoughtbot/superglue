@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest'
 import { HandlerBuilder } from '../../../lib/utils/ujs'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
@@ -8,18 +9,20 @@ import { render } from 'react-dom'
 import * as helpers from '../../../lib/utils/helpers'
 
 describe('ujs', () => {
-  function createFakeLinkTarget(attrs={}) {
-    const jsdom = new JSDOM()
+  function createFakeLinkTarget(attrs = {}) {
+    const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {
+      url: 'http://localhost/',
+    });
     global.Element = jsdom.window.Element
     const { document } = jsdom.window
 
-    const parentNode = document.createElement("DIV")
-    const link = document.createElement("A")
+    const parentNode = document.createElement('DIV')
+    const link = document.createElement('A')
 
     parentNode.appendChild(link)
-    link.href = "/foo"
+    link.href = '/foo'
     for (const key in attrs) {
-     link.setAttribute(key, attrs[key])
+      link.setAttribute(key, attrs[key])
     }
     return link
   }
@@ -27,7 +30,7 @@ describe('ujs', () => {
   function createFakeEvent(attrs) {
     return {
       preventDefault: () => {},
-      target: createFakeLinkTarget({href: "/foo", "data-visit": true})
+      target: createFakeLinkTarget({ href: '/foo', 'data-visit': true }),
     }
   }
 
@@ -35,10 +38,10 @@ describe('ujs', () => {
     return {
       preventDefault: () => {},
       target: createFakeLinkTarget({
-        href: '/foo?props_at=data.hello', 
+        href: '/foo?props_at=data.hello',
         'data-placeholder': '/current',
-        'data-visit': 'true'
-      })
+        'data-visit': 'true',
+      }),
     }
   }
 
@@ -46,20 +49,20 @@ describe('ujs', () => {
     return {
       preventDefault: () => {},
       target: createFakeLinkTarget({
-        href: '/foo', 
-        'data-remote': 'true'
-      }) 
+        href: '/foo',
+        'data-remote': 'true',
+      }),
     }
   }
 
   describe('onClick', () => {
     it('calls visit on a valid link', () => {
       const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
+      const visit = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
       const store = {}
 
@@ -67,54 +70,57 @@ describe('ujs', () => {
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef
+        navigatorRef,
       })
 
       const fakeEvent = createFakeEvent()
-      const {onClick} = builder.handlers()
+      const { onClick } = builder.handlers()
       onClick(fakeEvent)
 
-      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(visit).toHaveBeenCalledWith('/foo', { method: 'GET' })
     })
 
     it('calls visit with a placeholder when props_at is present on a valid link', () => {
       const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
+      const visit = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
       const store = {
         getState: () => {
           return {
             superglue: {
-              currentPageKey: '/current'
-            }
+              currentPageKey: '/current',
+            },
           }
-        }
+        },
       }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef
+        navigatorRef,
       })
 
-      const {onClick} = builder.handlers()
+      const { onClick } = builder.handlers()
       onClick(createFakeVisitGraftEvent())
 
-      expect(visit).toHaveBeenCalledWith('/foo?props_at=data.hello', {method: 'GET', placeholderKey: '/current'})
+      expect(visit).toHaveBeenCalledWith('/foo?props_at=data.hello', {
+        method: 'GET',
+        placeholderKey: '/current',
+      })
     })
 
     it('calls remote if a link is enabled with remote', () => {
       const ujsAttributePrefix = 'data'
-      const remote = jest.fn()
+      const remote = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
       const store = {}
 
@@ -122,40 +128,40 @@ describe('ujs', () => {
         ujsAttributePrefix,
         store,
         remote,
-        navigatorRef
+        navigatorRef,
       })
 
-      const {onClick} = builder.handlers()
+      const { onClick } = builder.handlers()
       onClick(createFakeRemoteEvent())
 
-      expect(remote).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(remote).toHaveBeenCalledWith('/foo', { method: 'GET' })
     })
 
     it('does not call visit on an link does not have the visit attribute data-visit', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
+      const visit = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef
+        navigatorRef,
       })
 
       const fakeEvent = createFakeEvent()
       fakeEvent.target.getAttribute = (attr) => {
-        if(attr === 'href') {
+        if (attr === 'href') {
           return '/foo'
         }
       }
 
-      const {onClick} = builder.handlers()
+      const { onClick } = builder.handlers()
       onClick(fakeEvent)
 
       expect(visit).not.toHaveBeenCalledWith('/foo', {})
@@ -164,21 +170,21 @@ describe('ujs', () => {
     it('does not call visit on an non-standard link', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
+      const visit = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         visit,
         store,
-        navigatorRef
+        navigatorRef,
       })
 
-      const {onClick} = builder.handlers()
+      const { onClick } = builder.handlers()
 
       let fakeEvent = createFakeEvent()
       fakeEvent.which = 2
@@ -196,37 +202,39 @@ describe('ujs', () => {
       expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
-      fakeEvent.ctrlKey= 1
+      fakeEvent.ctrlKey = 1
       onClick(fakeEvent)
       expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
-      fakeEvent.shiftKey= 1
+      fakeEvent.shiftKey = 1
       onClick(fakeEvent)
       expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
-      fakeEvent.altKey= 1
+      fakeEvent.altKey = 1
       onClick(fakeEvent)
       expect(visit).not.toHaveBeenCalledWith('/foo', {})
 
       fakeEvent = createFakeEvent()
       onClick(fakeEvent)
-      expect(visit).toHaveBeenCalledWith('/foo', {method: 'GET'})
+      expect(visit).toHaveBeenCalledWith('/foo', { method: 'GET' })
     })
   })
 
   describe('onSubmit', () => {
-    function createFakeFormTarget(attrs={}) {
-      const jsdom = new JSDOM()
+    function createFakeFormTarget(attrs = {}) {
+      const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {
+        url: 'http://localhost/',
+      });
       global.HTMLFormElement = jsdom.window.HTMLFormElement
       const { document } = jsdom.window
-  
-      const parentNode = document.createElement("DIV")
-      const form = document.createElement("FORM")
-  
+
+      const parentNode = document.createElement('DIV')
+      const form = document.createElement('FORM')
+
       parentNode.appendChild(form)
-      form.action = "/foo"
+      form.action = '/foo'
       for (const key in attrs) {
         form.setAttribute(key, attrs[key])
       }
@@ -237,10 +245,10 @@ describe('ujs', () => {
       return {
         preventDefault: () => {},
         target: createFakeFormTarget({
-          action: "/foo", 
-          method: "POST", 
-          "data-visit": "true"
-        })
+          action: '/foo',
+          method: 'POST',
+          'data-visit': 'true',
+        }),
       }
     }
 
@@ -248,102 +256,102 @@ describe('ujs', () => {
       return {
         preventDefault: () => {},
         target: createFakeFormTarget({
-          action: "/foo",
-          method: "POST",
-          "data-remote": "true"
-        })
+          action: '/foo',
+          method: 'POST',
+          'data-remote': 'true',
+        }),
       }
     }
 
     it('succssfully posts a form with a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
+      const visit = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         visit,
         store,
-        navigatorRef
+        navigatorRef,
       })
       global.FormData = () => {}
-      jest.spyOn(global, 'FormData').mockImplementation(() => ({some: 'Body'}))
+      vi.spyOn(global, 'FormData').mockImplementation(() => ({ some: 'Body' }))
 
-      const {onSubmit} = builder.handlers()
+      const { onSubmit } = builder.handlers()
       const fakeFormEvent = createFakeFormEvent()
       onSubmit(fakeFormEvent)
 
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(visit).toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        body: {some: 'Body'}
+        body: { some: 'Body' },
       })
     })
 
     it('succssfully posts a form with a remote attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
-      const remote = jest.fn()
+      const remote = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         remote,
-        navigatorRef
+        navigatorRef,
       })
       global.FormData = () => {}
-      jest.spyOn(global, 'FormData').mockImplementation(() => ({some: 'Body'}))
+      vi.spyOn(global, 'FormData').mockImplementation(() => ({ some: 'Body' }))
 
-      const {onSubmit} = builder.handlers()
+      const { onSubmit } = builder.handlers()
       const fakeFormEvent = createFakeRemoteFormEvent()
       onSubmit(fakeFormEvent)
 
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(remote).toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        body: {some: 'Body'}
+        body: { some: 'Body' },
       })
     })
 
     it('does not posts a form without a visit attribute', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
-      const visit = jest.fn()
+      const visit = vi.fn()
       const navigatorRef = {
         current: {
-          navigateTo: () => {}
-        }
+          navigateTo: () => {},
+        },
       }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef
+        navigatorRef,
       })
       global.FormData = () => {}
-      jest.spyOn(global, 'FormData').mockImplementation(() => ({some: 'Body'}))
+      vi.spyOn(global, 'FormData').mockImplementation(() => ({ some: 'Body' }))
 
-      const {onSubmit} = builder.handlers()
+      const { onSubmit } = builder.handlers()
       const fakeFormEvent = createFakeFormEvent()
       fakeFormEvent.target.getAttribute = (attr) => {
-        if(attr === 'action') {
+        if (attr === 'action') {
           return '/foo'
         }
-        if(attr === 'method') {
+        if (attr === 'method') {
           return 'POST'
         }
-        if(attr === 'data-visit') {
+        if (attr === 'data-visit') {
           return false
         }
       }
@@ -351,7 +359,7 @@ describe('ujs', () => {
 
       expect(visit).not.toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        body: {some: 'Body'}
+        body: { some: 'Body' },
       })
     })
   })

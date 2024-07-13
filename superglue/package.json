@@ -3,7 +3,7 @@
   "version": "0.53.4",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
-    "test": "jest",
+    "test": "vitest --config ./vitest.config.ts",
     "lint": "eslint 'lib/**/*.{js,ts,tsx}'",
     "clean": "rm -rf ./dist",
     "copy:package": "cat ./package.json | jq 'del(.scripts)' > dist/package.json",
@@ -34,6 +34,7 @@
     "@types/url-parse": "^1.4.11",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "core-js": "^2.6.12",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
@@ -41,7 +42,6 @@
     "eslint-plugin-react": "^7.34.3",
     "fetch-headers": "^2.0.0",
     "fetch-mock": "^9.11.0",
-    "jest": "^27.0.4",
     "jsdom": "^24.1.0",
     "node-fetch": "^2.6.1",
     "prettier": "^2.3.1",
@@ -53,7 +53,8 @@
     "redux": "^5.0.1",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.2"
   },
   "peerDependencies": {
     "react": ">=16",

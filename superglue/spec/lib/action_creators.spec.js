@@ -1,3 +1,4 @@
+import {describe, expect, afterEach, it, vi} from 'vitest'
 import configureMockStore from 'redux-mock-store'
 import { thunk } from 'redux-thunk'
 import fetchMock from 'fetch-mock'
@@ -951,7 +952,7 @@ describe('action creators', () => {
         })
     })
 
-    it('removes format from params', (done) => {
+    it('removes format from params', () => new Promise(done => {
       const store = mockStore(initialState())
 
       fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
@@ -960,7 +961,7 @@ describe('action creators', () => {
         .then((meta) => {
           done()
         })
-    })
+    }))
 
     it('returns a meta with redirected true if was redirected', () => {
       const store = mockStore(initialState())
@@ -1088,7 +1089,7 @@ describe('action creators', () => {
       })
     })
 
-    it('fires SUPERGLUE_HANDLE_GRAFT when the response is a graft', (done) => {
+    it('fires SUPERGLUE_HANDLE_GRAFT when the response is a graft', () => new Promise(done => {
       const store = mockStore({
         ...initialState(),
         pages: {
@@ -1135,10 +1136,10 @@ describe('action creators', () => {
       })
 
       store.dispatch(remote('/foo', { pageKey: '/foo' }))
-    })
+    }))
 
     it('warns if a received page has a completely component id that the target page it will replace', () => {
-      jest.spyOn(console, 'warn')
+      vi.spyOn(console, 'warn')
       const store = mockStore({
         superglue: {
           currentPageKey: '/bar',
@@ -1187,7 +1188,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
     })
 
     it('does not warn if a received page is not replacing a target page with a different componentIdentifier', () => {
-      jest.spyOn(console, 'warn')
+      vi.spyOn(console, 'warn')
       const store = mockStore({
         superglue: {
           currentPageKey: '/bar',
@@ -1231,7 +1232,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
       fetchMock.restore()
     })
 
-    it('removes formats json, and props_at params', (done) => {
+    it('removes formats json, and props_at params', () => new Promise(done => {
       const initialState = {
         pages: {},
         superglue: {
@@ -1247,7 +1248,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         .then((meta) => {
           done()
         })
-    })
+    }))
 
     describe('when initiated with a revisit indicator', () => {
       it('returns a meta with suggestedAction of "replace" if was redirected', () => {
@@ -1300,7 +1301,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
     })
 
 
-    it('gets aborted when a new visit starts', (done) => {
+    it('gets aborted when a new visit starts', () => new Promise(done => {
       const initialState = {
         pages: {},
         superglue: {
@@ -1316,10 +1317,10 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         done()
       })
       store.dispatch(visit('/first'))
-    })
+    }))
 
-    it('warns when a placeholder is passed but does not exist in state', (done) => {
-      jest.spyOn(console, 'warn')
+    it('warns when a placeholder is passed but does not exist in state', () => new Promise(done => {
+      vi.spyOn(console, 'warn')
       const initialState = {
         superglue: {
           assets: [],
@@ -1344,9 +1345,9 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           )
           done()
         })
-    })
+    }))
 
-    it('keeps the props_at parameter when a placeholder is passed and exists in state', (done) => {
+    it('keeps the props_at parameter when a placeholder is passed and exists in state', () => new Promise(done => {
       const initialState = {
         superglue: {
           assets: [],
@@ -1368,10 +1369,10 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         .then((meta) => {
           done()
         })
-    })
+    }))
 
-    it('warns when props_at is included but a placeholder was not passed', (done) => {
-      jest.spyOn(console, 'warn')
+    it('warns when props_at is included but a placeholder was not passed', () => new Promise(done => {
+      vi.spyOn(console, 'warn')
       const initialState = {
         superglue: {
           assets: [],
@@ -1392,9 +1393,9 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         )
         done()
       })
-    })
+    }))
 
-    it('uses a placeholder when attempting to graft', (done) => {
+    it('uses a placeholder when attempting to graft', () => new Promise(done => {
       const initialState = {
         superglue: {
           assets: [],
@@ -1449,6 +1450,6 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           expect(store.getActions()).toEqual(expectedActions)
           done()
         })
-    })
+    }))
   })
 })

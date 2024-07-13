@@ -1,0 +1,6 @@
+# Ignore artifacts:
+dist
+coverage
+
+# Ignore all HTML files:
+**/*.html

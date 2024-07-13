@@ -61,3 +61,6 @@ typings/
 dist/
 
 package-lock.json
+
+coverage/
+todo.txt

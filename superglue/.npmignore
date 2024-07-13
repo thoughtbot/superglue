@@ -8,4 +8,4 @@
 yarn.lock
 .eslintignore
 .eslintrc.json
-jest.config.js
+vitest.config.ts

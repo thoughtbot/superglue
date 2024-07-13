@@ -1,3 +1,4 @@
+import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { ApplicationBase } from '../../lib/index'
 import Nav from '../../lib/components/Nav'
 import fetchMock from 'fetch-mock'
@@ -135,7 +136,7 @@ fetchMock.mock()
 
 describe('navigation', () => {
   beforeEach(() => {
-    jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
     fetchMock.restore()
   })
 
@@ -259,7 +260,7 @@ describe('navigation', () => {
     })
 
     describe('and the action is to a non-superglue app', () => {
-      it('does nothing to the store', (done) => {
+      it('does nothing to the store', () => new Promise(done => {
         const history = createMemoryHistory({
           initialEntries: ['/bar'],
           initialIndex: 0,
@@ -308,7 +309,7 @@ describe('navigation', () => {
         navComponent = component.find(Nav).instance()
 
         expect(component.find(ExampleHome).exists()).toBe(true)
-      })
+      }))
     })
   })
 
@@ -476,7 +477,7 @@ describe('navigation', () => {
       expect(navComponent.state.pageKey).toEqual('/bar')
     })
 
-    it('does not change current page when the hash changes', (done) => {
+    it('does not change current page when the hash changes', () => new Promise(done => {
       const history = createMemoryHistory({})
       history.push("/bar#title", {
         superglue: true,
@@ -527,7 +528,7 @@ describe('navigation', () => {
 
       store = component.instance().store
       navComponent = component.find(Nav).instance()
-    })
+    }))
 
     it('requests the evicted page when encountering the page again using browser buttons', async () => {
       const history = createMemoryHistory({})

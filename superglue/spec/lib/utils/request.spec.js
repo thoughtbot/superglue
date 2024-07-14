@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import { isValidResponse, argsForFetch, handleServerErrors } from '../../../lib/utils/request'
+import {
+  isValidResponse,
+  argsForFetch,
+  handleServerErrors,
+} from '../../../lib/utils/request'
 import parse from 'url-parse'
 import Headers from 'fetch-headers'
 
@@ -76,7 +80,7 @@ describe('argsForFetch', () => {
       }
     }
 
-    const { signal } = new AbortController
+    const { signal } = new AbortController()
 
     const args = argsForFetch(getState, '/foo', { signal })
 
@@ -94,7 +98,6 @@ describe('argsForFetch', () => {
       },
     ])
   })
-
 
   it('returns fetch arguments with content-type json and method POST on non-GETs', () => {
     const getState = () => {
@@ -173,7 +176,10 @@ describe('argsForFetch', () => {
       },
     ])
 
-    const args2 = argsForFetch(getState, '/foo', { method: 'HEAD', body: 'ignored' })
+    const args2 = argsForFetch(getState, '/foo', {
+      method: 'HEAD',
+      body: 'ignored',
+    })
 
     expect(args2).toEqual([
       '/foo?format=json',
@@ -192,21 +198,19 @@ describe('argsForFetch', () => {
 })
 
 describe('handleServerErrors', () => {
-  let originalConsoleError;
+  let originalConsoleError
 
   beforeAll(() => {
-    originalConsoleError = console.error;
-    console.error = vi.fn();
-  });
+    originalConsoleError = console.error
+    console.error = vi.fn()
+  })
 
   afterAll(() => {
-    console.error = originalConsoleError;
-  });
+    console.error = originalConsoleError
+  })
 
   it('warns when 406 response code is received', () => {
-    const headers = new Headers([
-      ['content-type', 'application/json'],
-    ])
+    const headers = new Headers([['content-type', 'application/json']])
 
     const rsp = {
       ok: false,
@@ -215,21 +219,19 @@ describe('handleServerErrors', () => {
       headers,
     }
 
-    expect(() => handleServerErrors({ rsp })).toThrowError('Not Acceptable');
+    expect(() => handleServerErrors({ rsp })).toThrowError('Not Acceptable')
     expect(console.error).toHaveBeenCalledWith(
-        "Superglue encountered a 406 Not Acceptable response. This can happen if you used respond_to and didn't specify format.json in the block. Try adding it to your respond_to. For example:\n\n" +
+      "Superglue encountered a 406 Not Acceptable response. This can happen if you used respond_to and didn't specify format.json in the block. Try adding it to your respond_to. For example:\n\n" +
         'respond_to do |format|\n' +
         '  format.html\n' +
         '  format.json\n' +
         '  format.csv\n' +
         'end'
-    );
-  });
+    )
+  })
 
   it('throws error for non-406 response codes', () => {
-    const headers = new Headers([
-      ['content-type', 'application/json'],
-    ])
+    const headers = new Headers([['content-type', 'application/json']])
 
     const rsp = {
       ok: false,
@@ -238,13 +240,13 @@ describe('handleServerErrors', () => {
       headers,
     }
 
-    expect(() => handleServerErrors({ rsp })).toThrowError('Internal Server Error');
-  });
+    expect(() => handleServerErrors({ rsp })).toThrowError(
+      'Internal Server Error'
+    )
+  })
 
   it('does not throw error for ok response', () => {
-    const headers = new Headers([
-      ['content-type', 'application/json'],
-    ])
+    const headers = new Headers([['content-type', 'application/json']])
 
     const rsp = {
       ok: true,
@@ -253,6 +255,6 @@ describe('handleServerErrors', () => {
       headers,
     }
 
-    expect(() => handleServerErrors({ rsp })).not.toThrow();
-  });
-});
+    expect(() => handleServerErrors({ rsp })).not.toThrow()
+  })
+})

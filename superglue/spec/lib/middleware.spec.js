@@ -1,12 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import {
-  fragmentMiddleware,
-} from '../../lib/middleware'
+import { fragmentMiddleware } from '../../lib/middleware'
 import { getIn, setIn } from '../../lib/utils/immutability'
-import {
-  HISTORY_CHANGE,
-  UPDATE_FRAGMENTS
-} from '../../lib/actions'
+import { HISTORY_CHANGE, UPDATE_FRAGMENTS } from '../../lib/actions'
 
 describe('fragment middleware', () => {
   it('does nothing on superglue actions', () => {
@@ -14,10 +9,10 @@ describe('fragment middleware', () => {
       getState: () => {
         return {
           pages: {},
-          superglue: {}
+          superglue: {},
         }
       },
-      dispatch: vi.fn()
+      dispatch: vi.fn(),
     }
 
     const next = (action) => {
@@ -40,10 +35,10 @@ describe('fragment middleware', () => {
       getState: () => {
         return {
           pages,
-          superglue: {}
+          superglue: {},
         }
       },
-      dispatch: vi.fn()
+      dispatch: vi.fn(),
     }
 
     const action = {
@@ -64,23 +59,23 @@ describe('fragment middleware', () => {
       '/foo': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
         },
-        fragments: []
+        fragments: [],
       },
       '/bar': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
         },
-        fragments: []
-      }
+        fragments: [],
+      },
     }
 
     const changedNode = {
-      email: "world@world.com"
+      email: 'world@world.com',
     }
 
     const nextPages = setIn(pages, '/bar.data.header', changedNode)
@@ -89,16 +84,16 @@ describe('fragment middleware', () => {
       getState: () => {
         return {
           pages,
-          superglue: {}
+          superglue: {},
         }
       },
-      dispatch: vi.fn()
+      dispatch: vi.fn(),
     }
     const next = (action) => {
       store.getState = () => {
         return {
           pages: nextPages,
-          superglue: {}
+          superglue: {},
         }
       }
 
@@ -119,45 +114,41 @@ describe('fragment middleware', () => {
       '/foo': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
         },
-        fragments: [
-          {type: 'header', path: 'data.header'}
-        ]
+        fragments: [{ type: 'header', path: 'data.header' }],
       },
       '/bar': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
           body: {
-            title: "foobar"
-          }
+            title: 'foobar',
+          },
         },
-        fragments: [
-          {type: 'header', path: 'data.header'}
-        ]
-      }
+        fragments: [{ type: 'header', path: 'data.header' }],
+      },
     }
 
-    const nextPages = setIn(pages, '/bar.data.body', {title: "changed"})
+    const nextPages = setIn(pages, '/bar.data.body', { title: 'changed' })
 
     const store = {
       getState: () => {
         return {
           pages,
-          superglue: {}
+          superglue: {},
         }
       },
-      dispatch: vi.fn()
+      dispatch: vi.fn(),
     }
 
     const next = (action) => {
       store.getState = () => {
         return {
           pages: nextPages,
-          superglue: {}
+          superglue: {},
         }
       }
 
@@ -178,15 +169,13 @@ describe('fragment middleware', () => {
       '/foo': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
           body: {
-            title: "foobar"
-          }
+            title: 'foobar',
+          },
         },
-        fragments: [
-          {type: 'header', path: 'data.header'}
-        ]
+        fragments: [{ type: 'header', path: 'data.header' }],
       },
     }
 
@@ -197,17 +186,17 @@ describe('fragment middleware', () => {
       getState: () => {
         return {
           pages,
-          superglue: {}
+          superglue: {},
         }
       },
-      dispatch: vi.fn()
+      dispatch: vi.fn(),
     }
 
     const next = (action) => {
       store.getState = () => {
         return {
           pages: nextPages,
-          superglue: {}
+          superglue: {},
         }
       }
 
@@ -228,27 +217,23 @@ describe('fragment middleware', () => {
       '/foo': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
         },
-        fragments: [
-          {type: 'header', path: 'data.header'}
-        ]
+        fragments: [{ type: 'header', path: 'data.header' }],
       },
       '/bar': {
         data: {
           header: {
-            email: "hello@hello.com"
+            email: 'hello@hello.com',
           },
         },
-        fragments: [
-          {type: 'header', path: 'data.header'}
-        ]
-      }
+        fragments: [{ type: 'header', path: 'data.header' }],
+      },
     }
 
     const changedNode = {
-      email: "world@world.com"
+      email: 'world@world.com',
     }
 
     const nextPages = setIn(pages, '/bar.data.header', changedNode)
@@ -257,10 +242,10 @@ describe('fragment middleware', () => {
       getState: () => {
         return {
           pages,
-          superglue: {}
+          superglue: {},
         }
       },
-      dispatch: vi.fn()
+      dispatch: vi.fn(),
     }
     const next = (action) => {
       store.getState = () => {
@@ -277,18 +262,15 @@ describe('fragment middleware', () => {
     }
 
     fragmentMiddleware(store)(next)(action)
-    expect(store.dispatch).toHaveBeenCalledWith(
-      {
-        type: UPDATE_FRAGMENTS,
-        payload: {
-          changedFragments: {
-            header: {
-              email: "world@world.com"
-            }
-          }
-        }
-      }
-    )
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: UPDATE_FRAGMENTS,
+      payload: {
+        changedFragments: {
+          header: {
+            email: 'world@world.com',
+          },
+        },
+      },
+    })
   })
 })
-

@@ -1,4 +1,4 @@
-import {describe, it, expect, vi} from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { JSDOM } from 'jsdom'
 import React from 'react'
 import fetchMock from 'fetch-mock'
@@ -39,26 +39,31 @@ describe('Nav', () => {
   describe('navigateTo', () => {
     it('navigates to the specified page', () => {
       const history = createMemoryHistory({})
-      history.push("/bar", {
+      history.push('/bar', {
         superglue: true,
         pageKey: '/bar',
         posX: 0,
-        posY: 0
+        posY: 0,
       })
       let expected = '<div><h1>About Page</h1></div>'
 
-      class ExampleAbout extends About {
-      }
+      class ExampleAbout extends About {}
 
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/foo': { componentIdentifier: 'about', restoreStrategy: 'fromCacheOnly' },
-          '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheOnly' },
+          '/foo': {
+            componentIdentifier: 'about',
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/bar': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
         },
         superglue: {
-          csrfToken: "abc"
-        }
+          csrfToken: 'abc',
+        },
       })
 
       const component = mount(
@@ -71,7 +76,7 @@ describe('Nav', () => {
           />
         </Provider>
       )
-      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       expect(component.find(Home).exists()).toBe(true)
       expect(component.find(About).exists()).toBe(false)
 
@@ -87,11 +92,14 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheOnly' },
+          '/bar': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
         },
         superglue: {
-          csrfToken: "abc"
-        }
+          csrfToken: 'abc',
+        },
       })
 
       const component = mount(
@@ -116,23 +124,29 @@ describe('Nav', () => {
 
     it('navigates to the specified page and calls the action when used with react-redux', () => {
       const history = createMemoryHistory({})
-      history.push("/bar", {
+      history.push('/bar', {
         superglue: true,
         pageKey: '/bar',
         posX: 0,
-        posY: 0
+        posY: 0,
       })
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/foo': { componentIdentifier: 'about', restoreStrategy: 'fromCacheOnly' },
-          '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheOnly' },
+          '/foo': {
+            componentIdentifier: 'about',
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/bar': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
         },
         superglue: {
-          csrfToken: "abc"
-        }
+          csrfToken: 'abc',
+        },
       })
-      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       const component = mount(
         <Provider store={store}>
           <Nav
@@ -155,7 +169,7 @@ describe('Nav', () => {
             pathname: '/bar',
             search: '',
             hash: '',
-          }
+          },
         },
         {
           type: '@@superglue/HISTORY_CHANGE',
@@ -163,7 +177,7 @@ describe('Nav', () => {
             pathname: '/foo',
             search: '',
             hash: '',
-          }
+          },
         },
       ]
       expect(store.getActions()).toEqual(expectedActions)
@@ -171,7 +185,7 @@ describe('Nav', () => {
 
     it('navigates to the page when history changes', () => {
       const history = createMemoryHistory({})
-      history.push("/bar", {
+      history.push('/bar', {
         superglue: true,
         pageKey: '/bar',
         posX: 0,
@@ -180,12 +194,18 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheOnly' },
-          '/foo': { componentIdentifier: 'about', restoreStrategy: 'fromCacheOnly' },
+          '/bar': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/foo': {
+            componentIdentifier: 'about',
+            restoreStrategy: 'fromCacheOnly',
+          },
         },
         superglue: {
-          csrfToken: "abc"
-        }
+          csrfToken: 'abc',
+        },
       })
 
       let mountTimes = 0
@@ -229,12 +249,18 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheOnly' },
-          '/foo': { componentIdentifier: 'about', restoreStrategy: 'fromCacheOnly' },
+          '/bar': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/foo': {
+            componentIdentifier: 'about',
+            restoreStrategy: 'fromCacheOnly',
+          },
         },
         superglue: {
-          csrfToken: "abc"
-        }
+          csrfToken: 'abc',
+        },
       })
       const component = mount(
         <Nav
@@ -246,7 +272,7 @@ describe('Nav', () => {
       )
 
       expect(
-        component.instance().navigateTo('/blah', {action: 'none'})
+        component.instance().navigateTo('/blah', { action: 'none' })
       ).toEqual(false)
     })
   })
@@ -255,39 +281,47 @@ describe('Nav', () => {
     describe('when the previous page was set to "revisitOnly"', () => {
       it('revisits the page and scrolls when finished', () => {
         const history = createMemoryHistory({})
-        history.replace("/bar", {
+        history.replace('/bar', {
           superglue: true,
           pageKey: '/bar',
           posX: 5,
-          posY: 5
+          posY: 5,
         })
 
-        history.push("/foo", {
+        history.push('/foo', {
           superglue: true,
           pageKey: '/foo',
           posX: 10,
-          posY: 10
+          posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': { componentIdentifier: 'home', restoreStrategy: 'revisitOnly' },
-            '/foo': { componentIdentifier: 'about', restoreStrategy: 'revisitOnly' },
+            '/bar': {
+              componentIdentifier: 'home',
+              restoreStrategy: 'revisitOnly',
+            },
+            '/foo': {
+              componentIdentifier: 'about',
+              restoreStrategy: 'revisitOnly',
+            },
           },
           superglue: {
-            csrfToken: "abc"
-          }
+            csrfToken: 'abc',
+          },
         })
-        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi
+          .spyOn(window, 'scrollTo')
+          .mockImplementation(() => {})
         const suggestedAction = 'none'
 
         const fakeVisit = vi.fn((...args) => {
           return {
-            then: vi.fn(fn => {
+            then: vi.fn((fn) => {
               expect(scrollTo).not.toHaveBeenCalled()
-              fn({suggestedAction})
+              fn({ suggestedAction })
               expect(scrollTo).toHaveBeenCalledWith(5, 5)
-            })
+            }),
           }
         })
 
@@ -304,44 +338,52 @@ describe('Nav', () => {
         )
 
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith("/bar", { revisit: true })
+        expect(fakeVisit).toHaveBeenCalledWith('/bar', { revisit: true })
       })
 
       it('revisits the page and skips scroll when redirected (suggestedAction is not "none")', () => {
         const history = createMemoryHistory({})
-        history.replace("/bar", {
+        history.replace('/bar', {
           superglue: true,
           pageKey: '/bar',
           posX: 5,
-          posY: 5
+          posY: 5,
         })
 
-        history.push("/foo", {
+        history.push('/foo', {
           superglue: true,
           pageKey: '/foo',
           posX: 10,
-          posY: 10
+          posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': { componentIdentifier: 'home', restoreStrategy: 'revisitOnly' },
-            '/foo': { componentIdentifier: 'about', restoreStrategy: 'revisitOnly' },
+            '/bar': {
+              componentIdentifier: 'home',
+              restoreStrategy: 'revisitOnly',
+            },
+            '/foo': {
+              componentIdentifier: 'about',
+              restoreStrategy: 'revisitOnly',
+            },
           },
           superglue: {
-            csrfToken: "abc"
-          }
+            csrfToken: 'abc',
+          },
         })
-        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi
+          .spyOn(window, 'scrollTo')
+          .mockImplementation(() => {})
         const suggestedAction = 'push'
 
         const fakeVisit = vi.fn((...args) => {
           return {
-            then: vi.fn(fn => {
+            then: vi.fn((fn) => {
               // expect(scrollTo).not.toHaveBeenCalled()
-              fn({suggestedAction})
+              fn({ suggestedAction })
               expect(scrollTo).not.toHaveBeenCalled()
-            })
+            }),
           }
         })
 
@@ -360,37 +402,45 @@ describe('Nav', () => {
         )
 
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith("/bar", { revisit: true })
+        expect(fakeVisit).toHaveBeenCalledWith('/bar', { revisit: true })
       })
     })
 
     describe('when the previous page was set to "fromCacheOnly"', () => {
       it('restores without visiting and scrolls', () => {
         const history = createMemoryHistory({})
-        history.replace("/bar", {
+        history.replace('/bar', {
           superglue: true,
           pageKey: '/bar',
           posX: 5,
-          posY: 5
+          posY: 5,
         })
 
-        history.push("/foo", {
+        history.push('/foo', {
           superglue: true,
           pageKey: '/foo',
           posX: 10,
-          posY: 10
+          posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheOnly' },
-            '/foo': { componentIdentifier: 'about', restoreStrategy: 'fromCacheOnly' },
+            '/bar': {
+              componentIdentifier: 'home',
+              restoreStrategy: 'fromCacheOnly',
+            },
+            '/foo': {
+              componentIdentifier: 'about',
+              restoreStrategy: 'fromCacheOnly',
+            },
           },
           superglue: {
-            csrfToken: "abc"
-          }
+            csrfToken: 'abc',
+          },
         })
-        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi
+          .spyOn(window, 'scrollTo')
+          .mockImplementation(() => {})
         const suggestedAction = 'none'
 
         const fakeVisit = vi.fn()
@@ -416,30 +466,38 @@ describe('Nav', () => {
     describe('and the previous page was set to "fromCacheAndRevisitInBackground"', () => {
       it('restores, scrolls, and revisits the page in the background', () => {
         const history = createMemoryHistory({})
-        history.replace("/bar", {
+        history.replace('/bar', {
           superglue: true,
           pageKey: '/bar',
           posX: 5,
-          posY: 5
+          posY: 5,
         })
 
-        history.push("/foo", {
+        history.push('/foo', {
           superglue: true,
           pageKey: '/foo',
           posX: 10,
-          posY: 10
+          posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': { componentIdentifier: 'home', restoreStrategy: 'fromCacheAndRevisitInBackground' },
-            '/foo': { componentIdentifier: 'about', restoreStrategy: 'fromCacheAndRevisitInBackground' },
+            '/bar': {
+              componentIdentifier: 'home',
+              restoreStrategy: 'fromCacheAndRevisitInBackground',
+            },
+            '/foo': {
+              componentIdentifier: 'about',
+              restoreStrategy: 'fromCacheAndRevisitInBackground',
+            },
           },
           superglue: {
-            csrfToken: "abc"
-          }
+            csrfToken: 'abc',
+          },
         })
-        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+        const scrollTo = vi
+          .spyOn(window, 'scrollTo')
+          .mockImplementation(() => {})
         const suggestedAction = 'none'
 
         const fakeVisit = vi.fn((...args) => {
@@ -459,7 +517,7 @@ describe('Nav', () => {
         )
 
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith("/bar", { revisit: true })
+        expect(fakeVisit).toHaveBeenCalledWith('/bar', { revisit: true })
       })
     })
   })

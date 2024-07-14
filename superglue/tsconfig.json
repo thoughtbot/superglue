@@ -11,7 +11,5 @@
     "esModuleInterop": true,
     "noEmit": true
   },
-  "include": [
-    "./lib/**/*"
-  ]
+  "include": ["./lib/**/*"]
 }

@@ -7,7 +7,7 @@
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "lint": "run-p lint:eslint lint:types lint:prettier",
-    "lint:eslint": "eslint --max-warnings=0 --ext js,jsx,ts,tsx .",
+    "lint:eslint": "eslint --max-warnings=0 --ext js,jsx,ts,tsx ./lib",
     "lint:prettier": "prettier --check '**/*' --ignore-unknown",
     "lint:types": "tsc",
     "fix:prettier": "prettier --write '**/*' --ignore-unknown",

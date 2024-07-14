@@ -102,13 +102,6 @@ function start({
   }
 }
 
-class NotImplementedError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = this.constructor.name
-  }
-}
-
 interface Props {
   initialPage: VisitResponse
   baseUrl: string
@@ -181,13 +174,11 @@ export abstract class ApplicationBase extends React.Component<Props> {
     this.remote = remote
   }
 
-  visitAndRemote(
+  abstract visitAndRemote(
     // eslint-disable-next-line
     navigatorRef: React.RefObject<Nav>,
     store: SuperglueStore
-  ): { visit: Visit; remote: Remote } {
-    throw new NotImplementedError('Implement this')
-  }
+  ): { visit: Visit; remote: Remote }
 
   componentDidMount(): void {
     const { appEl } = this.props

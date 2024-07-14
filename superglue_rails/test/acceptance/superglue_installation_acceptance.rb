@@ -63,7 +63,7 @@ class SuperglueInstallationTest < Minitest::Test
     Dir.chdir(SUPERGLUE_SUPERGLUE_PATH) do
       successfully "npm install"
       successfully "npm run build"
-      successfully "npm pack ./dist"
+      successfully "npm pack"
     end
     successfully "echo \"gem 'props_template'\" >> Gemfile"
     successfully "echo \"gem 'superglue', path: '#{SUPERGLUE_RAILS_PATH}'\" >> Gemfile"

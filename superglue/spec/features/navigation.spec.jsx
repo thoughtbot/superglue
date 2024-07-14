@@ -13,8 +13,7 @@ import { mount } from 'enzyme'
 import { thunk } from 'redux-thunk'
 import 'regenerator-runtime/runtime'
 
-const flushPromises = () =>
-  new Promise((res) => process.nextTick(res))
+const flushPromises = () => new Promise((res) => process.nextTick(res))
 
 process.on('unhandledRejection', (r) => console.error(r))
 
@@ -61,10 +60,7 @@ class App extends ApplicationBase {
     return this.props.history
   }
 
-  buildStore(
-    initialState,
-    reducer
-  ) {
+  buildStore(initialState, reducer) {
     const store = createStore(
       combineReducers(reducer),
       initialState,
@@ -73,7 +69,6 @@ class App extends ApplicationBase {
 
     return store
   }
-
 }
 
 describe('start', () => {
@@ -136,7 +131,7 @@ fetchMock.mock()
 
 describe('navigation', () => {
   beforeEach(() => {
-    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
     fetchMock.restore()
   })
 
@@ -260,56 +255,57 @@ describe('navigation', () => {
     })
 
     describe('and the action is to a non-superglue app', () => {
-      it('does nothing to the store', () => new Promise(done => {
-        const history = createMemoryHistory({
-          initialEntries: ['/bar'],
-          initialIndex: 0,
-        })
-        let navComponent
+      it('does nothing to the store', () =>
+        new Promise((done) => {
+          const history = createMemoryHistory({
+            initialEntries: ['/bar'],
+            initialIndex: 0,
+          })
+          let navComponent
 
-        history.listen(({ action, location }) => {
-          const { pathname } = location
+          history.listen(({ action, location }) => {
+            const { pathname } = location
 
-          if (pathname == '/some_html_page') {
-            const state = store.getState()
-            expect(state.superglue.currentPageKey).toEqual('/bar')
-            expect(navComponent.state.pageKey).toEqual('/bar')
-            done()
+            if (pathname == '/some_html_page') {
+              const state = store.getState()
+              expect(state.superglue.currentPageKey).toEqual('/bar')
+              expect(navComponent.state.pageKey).toEqual('/bar')
+              done()
+            }
+          })
+
+          const initialPage = {
+            data: {
+              heading: 'this is page 1',
+            },
+            componentIdentifier: 'home',
+            assets: ['123.js', '123.css'],
+            fragments: [],
+            csrfToken: 'token',
+            restoreStrategy: 'fromCacheOnly',
           }
-        })
 
-        const initialPage = {
-          data: {
-            heading: 'this is page 1',
-          },
-          componentIdentifier: 'home',
-          assets: ['123.js', '123.css'],
-          fragments: [],
-          csrfToken: 'token',
-          restoreStrategy: 'fromCacheOnly'
-        }
-
-        class ExampleHome extends Home {
-          componentDidMount() {
-            process.nextTick(() => history.push('/some_html_page'))
+          class ExampleHome extends Home {
+            componentDidMount() {
+              process.nextTick(() => history.push('/some_html_page'))
+            }
           }
-        }
 
-        const component = mount(
-          <App
-            initialPage={initialPage}
-            baseUrl={'http://example.com'}
-            path={'/bar'}
-            appEl={document}
-            mapping={{ home: ExampleHome }}
-            history={history}
-          />
-        )
-        const store = component.instance().store
-        navComponent = component.find(Nav).instance()
+          const component = mount(
+            <App
+              initialPage={initialPage}
+              baseUrl={'http://example.com'}
+              path={'/bar'}
+              appEl={document}
+              mapping={{ home: ExampleHome }}
+              history={history}
+            />
+          )
+          const store = component.instance().store
+          navComponent = component.find(Nav).instance()
 
-        expect(component.find(ExampleHome).exists()).toBe(true)
-      }))
+          expect(component.find(ExampleHome).exists()).toBe(true)
+        }))
     })
   })
 
@@ -395,7 +391,7 @@ describe('navigation', () => {
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
-          mapping={{ home: ExampleHome}}
+          mapping={{ home: ExampleHome }}
           history={history}
         />
       )
@@ -430,7 +426,7 @@ describe('navigation', () => {
         assets: ['123.js', '123.css'],
         fragments: [],
         csrfToken: 'token',
-        restoreStrategy: 'fromCacheOnly'
+        restoreStrategy: 'fromCacheOnly',
       }
 
       const component = mount(
@@ -439,7 +435,7 @@ describe('navigation', () => {
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
-          mapping={{ home:Home, about: About}}
+          mapping={{ home: Home, about: About }}
           history={history}
         />
       )
@@ -477,58 +473,59 @@ describe('navigation', () => {
       expect(navComponent.state.pageKey).toEqual('/bar')
     })
 
-    it('does not change current page when the hash changes', () => new Promise(done => {
-      const history = createMemoryHistory({})
-      history.push("/bar#title", {
-        superglue: true,
-        pageKey: '/bar',
-      })
-      history.push("/bar") // Gets replaced on Superglue.start
-      let store, navComponent;
+    it('does not change current page when the hash changes', () =>
+      new Promise((done) => {
+        const history = createMemoryHistory({})
+        history.push('/bar#title', {
+          superglue: true,
+          pageKey: '/bar',
+        })
+        history.push('/bar') // Gets replaced on Superglue.start
+        let store, navComponent
 
-      history.listen(({action, location}) => {
-        const { pathname, hash } = location
-        if (hash === '#title') {
-          const state = store.getState()
-          expect(state.superglue.currentPageKey).toEqual('/bar')
-          expect(navComponent.state.pageKey).toEqual('/bar')
-          expect(pathname).toEqual('/bar')
-          expect(hash).toEqual('#title')
-          done()
+        history.listen(({ action, location }) => {
+          const { pathname, hash } = location
+          if (hash === '#title') {
+            const state = store.getState()
+            expect(state.superglue.currentPageKey).toEqual('/bar')
+            expect(navComponent.state.pageKey).toEqual('/bar')
+            expect(pathname).toEqual('/bar')
+            expect(hash).toEqual('#title')
+            done()
+          }
+        })
+
+        const initialPage = {
+          data: {
+            heading: 'this is page 1',
+          },
+          componentIdentifier: 'home',
+          assets: ['123.js', '123.css'],
+          fragments: [],
+          csrfToken: 'token',
+          restoreStrategy: 'fromCacheOnly',
         }
-      })
 
-      const initialPage = {
-        data: {
-          heading: 'this is page 1',
-        },
-        componentIdentifier: 'home',
-        assets: ['123.js', '123.css'],
-        fragments: [],
-        csrfToken: 'token',
-        restoreStrategy: 'fromCacheOnly'
-      }
-
-      class ExampleHome extends Home {
-        componentDidMount() {
-          process.nextTick(() => history.back())
+        class ExampleHome extends Home {
+          componentDidMount() {
+            process.nextTick(() => history.back())
+          }
         }
-      }
 
-      const component = mount(
-        <App
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/bar'}
-          appEl={document}
-          mapping={{ home: ExampleHome }}
-          history={history}
-        />
-      )
+        const component = mount(
+          <App
+            initialPage={initialPage}
+            baseUrl={'http://example.com'}
+            path={'/bar'}
+            appEl={document}
+            mapping={{ home: ExampleHome }}
+            history={history}
+          />
+        )
 
-      store = component.instance().store
-      navComponent = component.find(Nav).instance()
-    }))
+        store = component.instance().store
+        navComponent = component.find(Nav).instance()
+      }))
 
     it('requests the evicted page when encountering the page again using browser buttons', async () => {
       const history = createMemoryHistory({})
@@ -557,7 +554,7 @@ describe('navigation', () => {
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
-          mapping={{ home: Home, about: About}}
+          mapping={{ home: Home, about: About }}
           history={history}
         />
       )
@@ -610,7 +607,7 @@ describe('navigation', () => {
           baseUrl={'http://example.com'}
           path={'/foo'}
           appEl={document}
-          mapping={{ home: ExampleHome}}
+          mapping={{ home: ExampleHome }}
           history={history}
         />
       )
@@ -618,7 +615,10 @@ describe('navigation', () => {
 
       const mockResponse = rsp.graftSuccessWithNewZip()
       mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?props_at=address&format=json', mockResponse)
+      fetchMock.mock(
+        'http://example.com/foo?props_at=address&format=json',
+        mockResponse
+      )
 
       component.find('button').simulate('click')
       await flushPromises()

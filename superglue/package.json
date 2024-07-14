@@ -3,39 +3,55 @@
   "version": "0.53.4",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
-    "test": "vitest --config ./vitest.config.ts",
-    "lint": "eslint 'lib/**/*.{js,ts,tsx}'",
-    "clean": "rm -rf ./dist",
-    "copy:package": "cat ./package.json | jq 'del(.scripts)' > dist/package.json",
-    "copy:readme": "cp ../README.md dist/",
-    "build": "npm run clean && npm run build:js && npm run copy:package && npm run copy:readme",
-    "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\"",
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch",
-    "prepublishOnly": "npm run build"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "run-p lint:eslint lint:types lint:prettier",
+    "lint:eslint": "eslint --max-warnings=0 --ext js,jsx,ts,tsx ./lib",
+    "lint:prettier": "prettier --check '**/*' --ignore-unknown",
+    "lint:types": "tsc",
+    "fix:prettier": "prettier --write '**/*' --ignore-unknown",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:cov": "vitest --coverage",
+    "test:all": "npm lint && npm test:run",
+    "pub:beta": "npm build && npm publish --tag beta",
+    "pub:release": "npm build && npm publish"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thoughtbot/superglue.git"
   },
   "author": "Johny Ho",
+  "main": "dist/cjs/superglue.cjs",
+  "module": "dist/superglue.mjs",
+  "types": "dist/superglue.d.mts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/superglue.d.mts",
+      "import": "./dist/superglue.mjs",
+      "default": "./dist/cjs/superglue.cjs"
+    },
+    "./action_creators": {
+      "types": "./dist/action_creators.d.mts",
+      "import": "./dist/action_creators.mjs",
+      "default": "./dist/cjs/action_creators.cjs"
+    }
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/thoughtbot/superglue/issues"
   },
   "homepage": "https://github.com/thoughtbot/superglue#readme",
   "devDependencies": {
-    "@babel/cli": "^7.14.3",
-    "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.4",
-    "@babel/preset-react": "^7.13.13",
-    "@babel/preset-typescript": "^7.24.6",
     "@reduxjs/toolkit": "^2.2.5",
     "@types/url-parse": "^1.4.11",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "core-js": "^2.6.12",
+    "@vitest/coverage-v8": "^2.0.2",
+    "abortcontroller-polyfill": "^1.7.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^8.57.0",
@@ -44,15 +60,16 @@
     "fetch-mock": "^9.11.0",
     "jsdom": "^24.1.0",
     "node-fetch": "^2.6.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.3.1",
     "prettier-eslint": "^16.3.0",
-    "prop-types": "^15.7.2",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-redux": "^7.2.4",
     "redux": "^5.0.1",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
+    "tsup": "^8.1.0",
     "typescript": "^5.5.3",
     "vitest": "^2.0.2"
   },
@@ -63,7 +80,6 @@
     "redux-thunk": ">=2.3"
   },
   "dependencies": {
-    "abortcontroller-polyfill": "^1.7.3",
     "history": "^5.3.0",
     "url-parse": "^1.5.1"
   }

@@ -1,4 +1,4 @@
-import {describe, expect, afterEach, it, vi} from 'vitest'
+import { describe, expect, afterEach, it, vi } from 'vitest'
 import configureMockStore from 'redux-mock-store'
 import { thunk } from 'redux-thunk'
 import fetchMock from 'fetch-mock'
@@ -116,11 +116,9 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('handles deferments on the page and fires HANDLE_GRAFT', () => {
@@ -193,11 +191,9 @@ describe('action creators', () => {
         },
       })
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('handles nested deferments to complete the page before updating fragments', () => {
@@ -230,9 +226,7 @@ describe('action creators', () => {
           csrfToken: 'token',
           fragments: [],
           assets: [],
-          defers: [
-            { url: '/foo?props_at=data.body.aside.top', type: 'auto' },
-          ],
+          defers: [{ url: '/foo?props_at=data.body.aside.top', type: 'auto' }],
         }),
         headers: {
           'content-type': 'application/json',
@@ -273,7 +267,7 @@ describe('action creators', () => {
         {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
-            currentPageKey: "/bar",
+            currentPageKey: '/bar',
             fetchArgs: [
               '/foo?props_at=data.body&format=json',
               {
@@ -329,7 +323,7 @@ describe('action creators', () => {
         {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
-            currentPageKey: "/bar",
+            currentPageKey: '/bar',
             fetchArgs: [
               '/foo?props_at=data.body.aside.top&format=json',
               {
@@ -397,11 +391,9 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('does not handle deferments when using SSR', () => {
@@ -432,12 +424,10 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          global.fetch = prevFetch
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        global.fetch = prevFetch
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('handles deferments on the page and fires user defined success', () => {
@@ -516,11 +506,9 @@ describe('action creators', () => {
         },
       })
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('ignores manual deferments on the page', () => {
@@ -551,11 +539,9 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('fires HANDLE_GRAFT and process a page', () => {
@@ -586,11 +572,9 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('fires HANDLE_GRAFT, and process a page with a fragment', () => {
@@ -634,11 +618,9 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     //TODO: add tests for when type is mannual
@@ -656,9 +638,7 @@ describe('action creators', () => {
         csrfToken: 'token',
         assets: [],
         fragments: [],
-        defers: [
-          { url: '/some_defered_request?props_at=body', type: 'auto' },
-        ],
+        defers: [{ url: '/some_defered_request?props_at=body', type: 'auto' }],
       }
 
       const expectedActions = [
@@ -694,11 +674,9 @@ describe('action creators', () => {
 
       fetchMock.mock('/some_defered_request?props_at=body&format=json', 500)
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('fires a user defined error when a fetch fails', () => {
@@ -756,11 +734,9 @@ describe('action creators', () => {
 
       fetchMock.mock('/some_defered_request?props_at=body&format=json', 500)
 
-      return store
-        .dispatch(saveAndProcessPage('/foo', page))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
-        })
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
   })
 
@@ -783,7 +759,10 @@ describe('action creators', () => {
       const expectedActions = [
         {
           type: '@@superglue/BEFORE_REMOTE',
-          payload: { currentPageKey: "/bar", fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            currentPageKey: '/bar',
+            fetchArgs: ['/foo?format=json', expect.any(Object)],
+          },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
@@ -804,21 +783,18 @@ describe('action creators', () => {
         },
       ]
 
-      return store
-        .dispatch(remote('/foo', { pageKey: '/foo' }))
-        .then(() => {
-          const requestheaders =
-            fetchMock.lastCall('/foo?format=json')[1].headers
+      return store.dispatch(remote('/foo', { pageKey: '/foo' })).then(() => {
+        const requestheaders = fetchMock.lastCall('/foo?format=json')[1].headers
 
-          expect(requestheaders).toEqual({
-            accept: 'application/json',
-            'x-requested-with': 'XMLHttpRequest',
-            'x-superglue-request': 'true',
-            'x-csrf-token': 'token',
-          })
-
-          expect(store.getActions()).toEqual(expectedActions)
+        expect(requestheaders).toEqual({
+          accept: 'application/json',
+          'x-requested-with': 'XMLHttpRequest',
+          'x-superglue-request': 'true',
+          'x-csrf-token': 'token',
         })
+
+        expect(store.getActions()).toEqual(expectedActions)
+      })
     })
 
     it('accepts a beforeSave to modify the response before saving', () => {
@@ -859,7 +835,10 @@ describe('action creators', () => {
       const expectedActions = [
         {
           type: '@@superglue/BEFORE_REMOTE',
-          payload: { currentPageKey: '/bar', fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            currentPageKey: '/bar',
+            fetchArgs: ['/foo?format=json', expect.any(Object)],
+          },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
@@ -952,16 +931,15 @@ describe('action creators', () => {
         })
     })
 
-    it('removes format from params', () => new Promise(done => {
-      const store = mockStore(initialState())
+    it('removes format from params', () =>
+      new Promise((done) => {
+        const store = mockStore(initialState())
 
-      fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
-      store
-        .dispatch(remote('/first?props_at=foo'))
-        .then((meta) => {
+        fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
+        store.dispatch(remote('/first?props_at=foo')).then((meta) => {
           done()
         })
-    }))
+      }))
 
     it('returns a meta with redirected true if was redirected', () => {
       const store = mockStore(initialState())
@@ -976,11 +954,9 @@ describe('action creators', () => {
         body: successfulBody(),
       })
 
-      return store
-        .dispatch(remote('/redirecting_url'))
-        .then((meta) => {
-          expect(meta.redirected).toEqual(true)
-        })
+      return store.dispatch(remote('/redirecting_url')).then((meta) => {
+        expect(meta.redirected).toEqual(true)
+      })
     })
 
     it('fires SUPERGLUE_REQUEST_ERROR on a bad server response status', () => {
@@ -990,7 +966,10 @@ describe('action creators', () => {
       const expectedActions = [
         {
           type: '@@superglue/BEFORE_REMOTE',
-          payload: { currentPageKey: "/bar", fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            currentPageKey: '/bar',
+            fetchArgs: ['/foo?format=json', expect.any(Object)],
+          },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
@@ -1024,7 +1003,10 @@ describe('action creators', () => {
       const expectedActions = [
         {
           type: '@@superglue/BEFORE_REMOTE',
-          payload: { currentPageKey: "/bar", fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            currentPageKey: '/bar',
+            fetchArgs: ['/foo?format=json', expect.any(Object)],
+          },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
@@ -1063,7 +1045,10 @@ describe('action creators', () => {
       const expectedActions = [
         {
           type: '@@superglue/BEFORE_REMOTE',
-          payload: { currentPageKey: "/bar", fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            currentPageKey: '/bar',
+            fetchArgs: ['/foo?format=json', expect.any(Object)],
+          },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
@@ -1089,54 +1074,55 @@ describe('action creators', () => {
       })
     })
 
-    it('fires SUPERGLUE_HANDLE_GRAFT when the response is a graft', () => new Promise(done => {
-      const store = mockStore({
-        ...initialState(),
-        pages: {
-          '/foo': {},
-        },
-      })
-      fetchMock.mock('/foo?format=json', {
-        body: JSON.stringify({
-          data: 'success',
-          action: 'graft',
-          path: 'heading.cart',
-          csrfToken: 'token',
-          assets: [],
-          fragments:[],
-          defers: [],
-        }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
+    it('fires SUPERGLUE_HANDLE_GRAFT when the response is a graft', () =>
+      new Promise((done) => {
+        const store = mockStore({
+          ...initialState(),
+          pages: {
+            '/foo': {},
+          },
+        })
+        fetchMock.mock('/foo?format=json', {
+          body: JSON.stringify({
+            data: 'success',
+            action: 'graft',
+            path: 'heading.cart',
+            csrfToken: 'token',
+            assets: [],
+            fragments: [],
+            defers: [],
+          }),
+          headers: {
+            'content-type': 'application/json',
+          },
+        })
 
-      store.subscribe(() => {
-        const state = store.getState()
-        const actions = store.getActions()
-        const lastAction = actions[actions.length - 1]
-        const { type, payload } = lastAction
+        store.subscribe(() => {
+          const state = store.getState()
+          const actions = store.getActions()
+          const lastAction = actions[actions.length - 1]
+          const { type, payload } = lastAction
 
-        if (type === '@@superglue/HANDLE_GRAFT') {
-          expect(payload).toEqual({
-            pageKey: '/foo',
-            page: {
-              data: 'success',
-              action: 'graft',
-              path: 'heading.cart',
-              csrfToken: 'token',
-              assets: [],
-              fragments:[],
-              defers: [],
-            },
-          })
+          if (type === '@@superglue/HANDLE_GRAFT') {
+            expect(payload).toEqual({
+              pageKey: '/foo',
+              page: {
+                data: 'success',
+                action: 'graft',
+                path: 'heading.cart',
+                csrfToken: 'token',
+                assets: [],
+                fragments: [],
+                defers: [],
+              },
+            })
 
-          done()
-        }
-      })
+            done()
+          }
+        })
 
-      store.dispatch(remote('/foo', { pageKey: '/foo' }))
-    }))
+        store.dispatch(remote('/foo', { pageKey: '/foo' }))
+      }))
 
     it('warns if a received page has a completely component id that the target page it will replace', () => {
       vi.spyOn(console, 'warn')
@@ -1146,16 +1132,16 @@ describe('action creators', () => {
           csrfToken: 'token',
         },
         pages: {
-          "/bar": {
+          '/bar': {
             data: {},
-            componentIdentifier: "bar-id"
-          }
-        }
+            componentIdentifier: 'bar-id',
+          },
+        },
       })
 
       const successfulBody = {
         data: {},
-        componentIdentifier: "foo-id",
+        componentIdentifier: 'foo-id',
         csrfToken: 'token',
         assets: [],
         defers: [],
@@ -1169,10 +1155,8 @@ describe('action creators', () => {
         },
       })
 
-      return store
-        .dispatch(remote('/bar'))
-        .then(() => {
-          expect(console.warn).toHaveBeenCalledWith(
+      return store.dispatch(remote('/bar')).then(() => {
+        expect(console.warn).toHaveBeenCalledWith(
           `You're about replace an existing page located at pages["/bar"]
 that has the componentIdentifier "bar-id" with the contents of a
 received page that has a componentIdentifier of "foo-id".
@@ -1183,8 +1167,8 @@ navigate or change the current page component, your current page component may
 receive a shape that is unexpected and cause issues with rendering.
 
 Consider using data-sg-visit, the visit function, or redirect_back.`
-          )
-        })
+        )
+      })
     })
 
     it('does not warn if a received page is not replacing a target page with a different componentIdentifier', () => {
@@ -1195,16 +1179,16 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           csrfToken: 'token',
         },
         pages: {
-          "/bar": {
+          '/bar': {
             data: {},
-            componentIdentifier: "ForBar"
-          }
-        }
+            componentIdentifier: 'ForBar',
+          },
+        },
       })
 
       const successfulBody = {
         data: {},
-        componentIdentifier: "ForBar",
+        componentIdentifier: 'ForBar',
         csrfToken: 'token',
         assets: [],
         defers: [],
@@ -1218,11 +1202,9 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         },
       })
 
-      return store
-        .dispatch(remote('/bar'))
-        .then(() => {
-          expect(console.warn).not.toHaveBeenCalled()
-        })
+      return store.dispatch(remote('/bar')).then(() => {
+        expect(console.warn).not.toHaveBeenCalled()
+      })
     })
   })
 
@@ -1232,23 +1214,24 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
       fetchMock.restore()
     })
 
-    it('removes formats json, and props_at params', () => new Promise(done => {
-      const initialState = {
-        pages: {},
-        superglue: {
-          assets: [],
-        },
-      }
+    it('removes formats json, and props_at params', () =>
+      new Promise((done) => {
+        const initialState = {
+          pages: {},
+          superglue: {
+            assets: [],
+          },
+        }
 
-      const store = mockStore(initialState)
+        const store = mockStore(initialState)
 
-      fetchMock.mock('/first?format=json', rsp.visitSuccess())
-      store
-        .dispatch(visit('/first?props_at=foo&format=json'))
-        .then((meta) => {
-          done()
-        })
-    }))
+        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+        store
+          .dispatch(visit('/first?props_at=foo&format=json'))
+          .then((meta) => {
+            done()
+          })
+      }))
 
     describe('when initiated with a revisit indicator', () => {
       it('returns a meta with suggestedAction of "replace" if was redirected', () => {
@@ -1300,156 +1283,158 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
       })
     })
 
+    it('gets aborted when a new visit starts', () =>
+      new Promise((done) => {
+        const initialState = {
+          pages: {},
+          superglue: {
+            assets: [],
+          },
+        }
 
-    it('gets aborted when a new visit starts', () => new Promise(done => {
-      const initialState = {
-        pages: {},
-        superglue: {
-          assets: [],
-        },
-      }
+        const store = mockStore(initialState)
 
-      const store = mockStore(initialState)
+        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+        store.dispatch(visit('/first')).catch((err) => {
+          expect(err.message).toEqual('The operation was aborted.')
+          done()
+        })
+        store.dispatch(visit('/first'))
+      }))
 
-      fetchMock.mock('/first?format=json', rsp.visitSuccess())
-      store.dispatch(visit('/first')).catch((err) => {
-        expect(err.message).toEqual('The operation was aborted.')
-        done()
-      })
-      store.dispatch(visit('/first'))
-    }))
+    it('warns when a placeholder is passed but does not exist in state', () =>
+      new Promise((done) => {
+        vi.spyOn(console, 'warn')
+        const initialState = {
+          superglue: {
+            assets: [],
+          },
+          pages: {},
+        }
 
-    it('warns when a placeholder is passed but does not exist in state', () => new Promise(done => {
-      vi.spyOn(console, 'warn')
-      const initialState = {
-        superglue: {
-          assets: [],
-        },
-        pages: {},
-      }
+        const store = mockStore(initialState)
 
-      const store = mockStore(initialState)
+        fetchMock.mock('/first?format=json', rsp.visitSuccess())
 
-      fetchMock.mock('/first?format=json', rsp.visitSuccess())
-
-      const expectedFetchUrl = '/first?props_at=foo&format=json'
-      store
-        .dispatch(
-          visit(expectedFetchUrl, {
-            placeholderKey: '/does-not-exist',
+        const expectedFetchUrl = '/first?props_at=foo&format=json'
+        store
+          .dispatch(
+            visit(expectedFetchUrl, {
+              placeholderKey: '/does-not-exist',
+            })
+          )
+          .then((meta) => {
+            expect(console.warn).toHaveBeenCalledWith(
+              'Could not find placeholder with key /does-not-exist in state. The props_at param will be ignored'
+            )
+            done()
           })
-        )
-        .then((meta) => {
+      }))
+
+    it('keeps the props_at parameter when a placeholder is passed and exists in state', () =>
+      new Promise((done) => {
+        const initialState = {
+          superglue: {
+            assets: [],
+          },
+          pages: {
+            '/does-exist': {},
+          },
+        }
+
+        const store = mockStore(initialState)
+
+        fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
+
+        const expectedFetchUrl = '/first?props_at=foo&format=json'
+        store
+          .dispatch(visit(expectedFetchUrl, { placeholderKey: '/does-exist' }))
+          .then((meta) => {
+            done()
+          })
+      }))
+
+    it('warns when props_at is included but a placeholder was not passed', () =>
+      new Promise((done) => {
+        vi.spyOn(console, 'warn')
+        const initialState = {
+          superglue: {
+            assets: [],
+          },
+          pages: {
+            '/does-exist': {},
+          },
+        }
+
+        const store = mockStore(initialState)
+
+        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+
+        const expectedFetchUrl = '/first?props_at=foo'
+        store.dispatch(visit(expectedFetchUrl)).then((meta) => {
           expect(console.warn).toHaveBeenCalledWith(
-            'Could not find placeholder with key /does-not-exist in state. The props_at param will be ignored'
+            'visit was called with props_at param in the path /first?props_at=foo, this will be ignore unless you provide a placeholder.'
           )
           done()
         })
-    }))
+      }))
 
-    it('keeps the props_at parameter when a placeholder is passed and exists in state', () => new Promise(done => {
-      const initialState = {
-        superglue: {
-          assets: [],
-        },
-        pages: {
-          '/does-exist': {},
-        },
-      }
-
-      const store = mockStore(initialState)
-
-      fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
-
-      const expectedFetchUrl = '/first?props_at=foo&format=json'
-      store
-        .dispatch(
-          visit(expectedFetchUrl, { placeholderKey: '/does-exist' })
-        )
-        .then((meta) => {
-          done()
-        })
-    }))
-
-    it('warns when props_at is included but a placeholder was not passed', () => new Promise(done => {
-      vi.spyOn(console, 'warn')
-      const initialState = {
-        superglue: {
-          assets: [],
-        },
-        pages: {
-          '/does-exist': {},
-        },
-      }
-
-      const store = mockStore(initialState)
-
-      fetchMock.mock('/first?format=json', rsp.visitSuccess())
-
-      const expectedFetchUrl = '/first?props_at=foo'
-      store.dispatch(visit(expectedFetchUrl)).then((meta) => {
-        expect(console.warn).toHaveBeenCalledWith(
-          'visit was called with props_at param in the path /first?props_at=foo, this will be ignore unless you provide a placeholder.'
-        )
-        done()
-      })
-    }))
-
-    it('uses a placeholder when attempting to graft', () => new Promise(done => {
-      const initialState = {
-        superglue: {
-          assets: [],
-          currentPageKey: '/current',
-        },
-        pages: {
-          '/current': {
-            data: {
-              address: {},
-            },
-            csrfToken: 'token',
-            assets: [
-              'application-new123.js',
-              'application-new123.js',
-            ],
-            fragments: [],
+    it('uses a placeholder when attempting to graft', () =>
+      new Promise((done) => {
+        const initialState = {
+          superglue: {
+            assets: [],
+            currentPageKey: '/current',
           },
-        },
-      }
+          pages: {
+            '/current': {
+              data: {
+                address: {},
+              },
+              csrfToken: 'token',
+              assets: ['application-new123.js', 'application-new123.js'],
+              fragments: [],
+            },
+          },
+        }
 
-      const store = mockStore(initialState)
+        const store = mockStore(initialState)
 
-      let mockResponse = rsp.graftSuccessWithNewZip()
-      fetchMock.mock('/details?props_at=data.address&format=json', mockResponse)
-
-      const expectedActions = [
-        {
-          type: '@@superglue/COPY_PAGE',
-          payload: { from: '/current', to: '/details' },
-        },
-        {
-          type: '@@superglue/BEFORE_VISIT',
-          payload: expect.any(Object),
-        },
-        {
-          type: '@@superglue/BEFORE_FETCH',
-          payload: expect.any(Object),
-        },
-        {
-          type: '@@superglue/HANDLE_GRAFT',
-          payload: expect.any(Object),
-        },
-      ]
-
-      store
-        .dispatch(
-          visit('/details?props_at=data.address', {
-            placeholderKey: '/current',
-          })
+        let mockResponse = rsp.graftSuccessWithNewZip()
+        fetchMock.mock(
+          '/details?props_at=data.address&format=json',
+          mockResponse
         )
-        .then((meta) => {
-          expect(store.getActions()).toEqual(expectedActions)
-          done()
-        })
-    }))
+
+        const expectedActions = [
+          {
+            type: '@@superglue/COPY_PAGE',
+            payload: { from: '/current', to: '/details' },
+          },
+          {
+            type: '@@superglue/BEFORE_VISIT',
+            payload: expect.any(Object),
+          },
+          {
+            type: '@@superglue/BEFORE_FETCH',
+            payload: expect.any(Object),
+          },
+          {
+            type: '@@superglue/HANDLE_GRAFT',
+            payload: expect.any(Object),
+          },
+        ]
+
+        store
+          .dispatch(
+            visit('/details?props_at=data.address', {
+              placeholderKey: '/current',
+            })
+          )
+          .then((meta) => {
+            expect(store.getActions()).toEqual(expectedActions)
+            done()
+          })
+      }))
   })
 })

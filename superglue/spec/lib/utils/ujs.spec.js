@@ -12,7 +12,7 @@ describe('ujs', () => {
   function createFakeLinkTarget(attrs = {}) {
     const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {
       url: 'http://localhost/',
-    });
+    })
     global.Element = jsdom.window.Element
     const { document } = jsdom.window
 
@@ -226,7 +226,7 @@ describe('ujs', () => {
     function createFakeFormTarget(attrs = {}) {
       const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {
         url: 'http://localhost/',
-      });
+      })
       global.HTMLFormElement = jsdom.window.HTMLFormElement
       const { document } = jsdom.window
 

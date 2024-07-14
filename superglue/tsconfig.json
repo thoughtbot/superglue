@@ -8,9 +8,8 @@
     "allowJs": false,
     "target": "ES2021",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noEmit": true
   },
-  "include": [
-    "./lib/**/*"
-  ]
+  "include": ["./lib/**/*"]
 }

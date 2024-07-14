@@ -56,11 +56,11 @@ function pageToInitialState(key: string, page: VisitResponse) {
   const nextPage: Page = {
     ...page,
     pageKey: key, //TODO remove this
-    savedAt: Date.now()
+    savedAt: Date.now(),
   }
 
   return {
-    pages: { [key]: nextPage},
+    pages: { [key]: nextPage },
     ...slices,
   }
 }
@@ -70,7 +70,12 @@ function start({
   baseUrl = config.baseUrl,
   maxPages = config.maxPages,
   path,
-}: {initialPage: VisitResponse, baseUrl: string, maxPages?: number, path: string}) {
+}: {
+  initialPage: VisitResponse
+  baseUrl: string
+  maxPages?: number
+  path: string
+}) {
   const initialPageKey = urlToPageKey(parse(path).href)
   const { csrfToken } = initialPage
   const location = parse(path)
@@ -97,24 +102,17 @@ function start({
   }
 }
 
-class NotImplementedError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = this.constructor.name
-  }
-}
-
 interface Props {
   initialPage: VisitResponse
   baseUrl: string
   path: string
   appEl: HTMLElement
 }
-  
+
 type ConnectedMapping = Record<
-    string,
-    ConnectedComponent<React.ComponentType, PageOwnProps>
-  >
+  string,
+  ConnectedComponent<React.ComponentType, PageOwnProps>
+>
 
 export abstract class ApplicationBase extends React.Component<Props> {
   public hasWindow: boolean
@@ -122,7 +120,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
   public initialPageKey: string
   public store: SuperglueStore
   public history: History
-  public connectedMapping: ConnectedMapping 
+  public connectedMapping: ConnectedMapping
   public ujsHandlers: Handlers
   public visit: Visit
   public remote: Remote
@@ -176,12 +174,11 @@ export abstract class ApplicationBase extends React.Component<Props> {
     this.remote = remote
   }
 
-  visitAndRemote(
+  abstract visitAndRemote(
     // eslint-disable-next-line
-    navigatorRef: React.RefObject<Nav>, store: SuperglueStore
-  ): { visit: Visit; remote: Remote } {
-    throw new NotImplementedError('Implement this')
-  }
+    navigatorRef: React.RefObject<Nav>,
+    store: SuperglueStore
+  ): { visit: Visit; remote: Remote }
 
   componentDidMount(): void {
     const { appEl } = this.props
@@ -207,7 +204,7 @@ export abstract class ApplicationBase extends React.Component<Props> {
   }
 
   abstract buildStore(
-    initialState: {pages: AllPages, [key: string]: JSONValue},
+    initialState: { pages: AllPages; [key: string]: JSONValue },
     reducer: typeof rootReducer
   ): SuperglueStore
 

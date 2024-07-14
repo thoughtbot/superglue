@@ -1,4 +1,4 @@
-import {describe, expect, it, vi} from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   pageReducer,
   superglueReducer,
@@ -390,7 +390,7 @@ describe('reducers', () => {
             assets: ['application-123.js'],
             pageKey: '/foo',
             fragments: [],
-            savedAt: expect.any(Number)
+            savedAt: expect.any(Number),
           })
         )
       })
@@ -451,9 +451,7 @@ describe('reducers', () => {
               bar: {},
             },
           },
-          defers: [
-            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
-          ],
+          defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
           fragments: [],
         }
 
@@ -475,9 +473,7 @@ describe('reducers', () => {
             },
           },
           pageKey: '/foo',
-          defers: [
-            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
-          ],
+          defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
           fragments: [],
           savedAt: expect.any(Number),
         })
@@ -510,12 +506,8 @@ describe('reducers', () => {
             },
             baz: 'received',
           },
-          defers: [
-            { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
-          ],
-          fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' },
-          ],
+          defers: [{ url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' }],
+          fragments: [{ type: 'info', partial: 'info', path: 'data.foo.bar' }],
         }
 
         const nextState = pageReducer(prevState, {
@@ -536,12 +528,8 @@ describe('reducers', () => {
             baz: 'received',
           },
           pageKey: '/bar',
-          defers: [
-            { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
-          ],
-          fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' },
-          ],
+          defers: [{ url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' }],
+          fragments: [{ type: 'info', partial: 'info', path: 'data.foo.bar' }],
           savedAt: expect.any(Number),
         })
       })
@@ -570,12 +558,8 @@ describe('reducers', () => {
               bar: {},
             },
           },
-          defers: [
-            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
-          ],
-          fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' },
-          ],
+          defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
+          fragments: [{ type: 'info', partial: 'info', path: 'data.foo.bar' }],
         }
 
         const nextState = pageReducer(prevState, {
@@ -593,12 +577,8 @@ describe('reducers', () => {
             },
           },
           pageKey: '/foo',
-          defers: [
-            { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
-          ],
-          fragments: [
-            { type: 'info', partial: 'info', path: 'data.foo.bar' },
-          ],
+          defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
+          fragments: [{ type: 'info', partial: 'info', path: 'data.foo.bar' }],
           savedAt: expect.any(Number),
         })
       })
@@ -630,9 +610,9 @@ describe('reducers', () => {
           payload: {
             changedFragments: {
               header: {
-                email: "world@world.com"
-              }
-            }
+                email: 'world@world.com',
+              },
+            },
           },
         })
 
@@ -652,13 +632,13 @@ describe('reducers', () => {
               },
             },
             fragments: [{ type: 'header', path: 'data.header' }],
-          }
+          },
         })
       })
 
       it('skips updating referentially identical fragments', () => {
         const header = {
-          email: "world@world.com"
+          email: 'world@world.com',
         }
 
         const prevState = {
@@ -682,8 +662,8 @@ describe('reducers', () => {
           type: '@@superglue/UPDATE_FRAGMENTS',
           payload: {
             changedFragments: {
-              header
-            }
+              header,
+            },
           },
         })
 
@@ -703,7 +683,7 @@ describe('reducers', () => {
               },
             },
             fragments: [{ type: 'header', path: 'data.header' }],
-          }
+          },
         })
 
         expect(nextState['/foo'].data.header).toBe(header)

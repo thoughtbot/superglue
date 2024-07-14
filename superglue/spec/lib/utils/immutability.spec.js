@@ -98,18 +98,18 @@ describe('setIn', () => {
   })
 
   it('sets if the key on the object does not exist', () => {
-    const page = { a: { b: {hello: "world"} } }
+    const page = { a: { b: { hello: 'world' } } }
     const clone = setIn(page, 'a.c', 'foo')
 
     expect(page.a.b).toBe(clone.a.b)
-    expect(clone).toEqual({ a: { b: {hello: "world"} , c: 'foo' }})
+    expect(clone).toEqual({ a: { b: { hello: 'world' }, c: 'foo' } })
   })
 
   it('sets if the index on the array does not exist', () => {
-    const page = { a: [{c: 4}, {b: 5}] }
+    const page = { a: [{ c: 4 }, { b: 5 }] }
     const clone = setIn(page, 'a.0', 'foo')
 
     expect(page.a[1]).toBe(clone.a[1])
-    expect(clone).toEqual({ a: ['foo', {b: 5}]})
+    expect(clone).toEqual({ a: ['foo', { b: 5 }] })
   })
 })

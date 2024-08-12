@@ -1,7 +1,7 @@
 // These were taken from Scour.js
 // Then, modified to respect the id=0 keypath
 
-import { JSONMappable, JSONValue } from '../types'
+import { JSONMappable, JSONValue, Keypath } from '../types'
 
 const canLookAhead = /^[\da-zA-Z\-_]+=[\da-zA-Z\-_]+$/
 
@@ -12,7 +12,14 @@ class KeyPathError extends Error {
   }
 }
 
-function getIn(node: JSONMappable, path: string): JSONValue {
+/**
+ * Retrieves data from a JSON object using a {@link Keypath}
+ *
+ * @param node
+ * @param path
+ * @returns
+ */
+function getIn(node: JSONMappable, path: Keypath): JSONValue {
   const keyPath = normalizeKeyPath(path)
   let result: JSONValue = node
   let i: number
@@ -107,7 +114,14 @@ function normalizeKeyPath(path: string): string[] {
     return path
   }
 }
-
+/**
+ * Sets data into a JSON object using a {@link Keypath}
+ *
+ * @param object
+ * @param path
+ * @param value
+ * @returns
+ */
 function setIn<T extends JSONMappable>(
   object: T,
   path: string,

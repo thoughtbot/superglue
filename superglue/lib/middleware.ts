@@ -6,6 +6,12 @@ import { KeyPathError } from './utils/immutability'
 
 const actionValues = Object.values(actions).map((action) => action.toString())
 
+/**
+ * A middleware that will update all {@link Fragment} across the {@link
+ * AllPages} slice, if a fragment on any page was mutated.
+ *
+ * @experimental
+ */
 const fragmentMiddleware: Middleware<unknown, RootState, Dispatch> =
   (store) => (next) => (action) => {
     const prevState = store.getState()

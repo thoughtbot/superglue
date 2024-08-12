@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPoints": [
+    "./lib/index.tsx",
+    "./lib/types/index.ts",
+    "./lib/types/requests.ts",
+    "./lib/components/Nav.tsx"
+  ],
+  "outputFileStrategy": "modules",
+  "flattenOutputFiles": true,
+  "readme": "none",
+  "expandParameters": true,
+  "expandObjects": true,
+  "hidePageTitle": true,
+  "sort": ["source-order", "external-last"],
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "indexFormat": "table",
+  "parametersFormat": "table",
+  "interfacePropertiesFormat": "table",
+  "classPropertiesFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "propertyMembersFormat": "table",
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "out": "../../superdocs/docs/reference"
+}

@@ -29,11 +29,6 @@ export {
   HISTORY_CHANGE,
 } from './actions'
 
-export {
-  mapStateToProps,
-  mapDispatchToProps,
-  mapDispatchToPropsIncludingVisitAndRemote,
-} from './utils/react'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
   Remote,
@@ -46,7 +41,7 @@ import {
   Page,
   JSONValue,
 } from './types'
-export { superglueReducer, pageReducer, rootReducer } from './reducers'
+// export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
@@ -101,11 +96,29 @@ function start({
     initialPageKey,
   }
 }
-
-interface Props {
+/**
+ * Props for the `ApplicationBase` component
+ */
+interface ApplicationProps {
+  /**
+   * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
+   * template, e.g., index.html.erb
+   */
   initialPage: VisitResponse
+  /**
+   * The base url prefixed to all calls made by `visit` and
+   * `remote`.
+   */
   baseUrl: string
+  /**
+   * The path of the current page. It should equal to the `location.pathname` +
+   * `location.search` + `location.hash`
+   */
   path: string
+  /**
+   * The app element that was passed to React's `createRoot`. This will be used
+   * to setup UJS helpers.
+   */
   appEl: HTMLElement
 }
 
@@ -113,19 +126,29 @@ type ConnectedMapping = Record<
   string,
   ConnectedComponent<React.ComponentType, PageOwnProps>
 >
+/**
+ * The entry point to your superglue application. You should create a class
+ * (Application) that inherit from the ApplicationBase component and override
+ * the {@link buildStore}, {@link mapping}, and {@link visitAndRemote} methods.
+ *
+ * This would be setup for you when installing Superglue at `application.js`.
+ */
+export abstract class ApplicationBase extends React.Component<ApplicationProps> {
+  private hasWindow: boolean
+  private navigatorRef: React.RefObject<Nav>
+  private initialPageKey: string
+  private store: SuperglueStore
+  private history: History
+  private connectedMapping: ConnectedMapping
+  private ujsHandlers: Handlers
+  private visit: Visit
+  private remote: Remote
 
-export abstract class ApplicationBase extends React.Component<Props> {
-  public hasWindow: boolean
-  public navigatorRef: React.RefObject<Nav>
-  public initialPageKey: string
-  public store: SuperglueStore
-  public history: History
-  public connectedMapping: ConnectedMapping
-  public ujsHandlers: Handlers
-  public visit: Visit
-  public remote: Remote
-
-  constructor(props: Props) {
+  /**
+   * The constructor of the `ApplicationBase` class.
+   * @param props
+   */
+  constructor(props: ApplicationProps) {
     super(props)
     this.hasWindow = typeof window !== 'undefined'
 
@@ -174,6 +197,17 @@ export abstract class ApplicationBase extends React.Component<Props> {
     this.remote = remote
   }
 
+  /**
+   * Override this method to return a visit and remote function. These functions
+   * will be used by Superglue to power its UJS attributes and passed to your
+   * page components. You may customize this functionality to your liking, e.g,
+   * adding a progress bar.
+   *
+   * @param navigatorRef
+   * @param store
+   *
+   * @returns
+   */
   abstract visitAndRemote(
     // eslint-disable-next-line
     navigatorRef: React.RefObject<Nav>,
@@ -203,6 +237,14 @@ export abstract class ApplicationBase extends React.Component<Props> {
     appEl.removeEventListener('submit', onSubmit)
   }
 
+  /**
+   * Override this method and return a Redux store for Superglue to use. This
+   * would be setup and generated for you in `store.js`. We recommend using
+   * using Redux toolkit's `configureStore` to build the store.
+   *
+   * @param initialState - A preconfigured intial state to pass to your store.
+   * @param reducer - A preconfigured reducer
+   */
   abstract buildStore(
     initialState: { pages: AllPages; [key: string]: JSONValue },
     reducer: typeof rootReducer
@@ -218,6 +260,13 @@ export abstract class ApplicationBase extends React.Component<Props> {
     }
   }
 
+  /**
+   * Override this method and return a mapping between a componentIdentifier and
+   * a PageComponent. This will be passed to Superglue to determine which Page component
+   * to render with which payload.
+   *
+   * @returns
+   */
   abstract mapping(): Record<string, React.ComponentType>
 
   render(): JSX.Element {

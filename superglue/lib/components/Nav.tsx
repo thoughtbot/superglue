@@ -3,6 +3,8 @@ import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
 import {
   HistoryState,
+  Keypath,
+  NavigationAction,
   PageOwnProps,
   Remote,
   SuperglueStore,
@@ -25,11 +27,19 @@ interface State {
   ownProps: Record<string, unknown>
 }
 
+/**
+ * A Nav component for browsers. It handles changine the browser history,
+ * deciding which page component to render based on a passed mapping, and
+ * passes a `navigateTo` to all page components.
+ */
 class Nav extends React.Component<Props, State> {
-  public history: History
-  public hasWindow: boolean
-  public unsubscribeHistory: () => void
+  private history: History
+  private hasWindow: boolean
+  private unsubscribeHistory: () => void
 
+  /**
+   * @ignore
+   */
   constructor(props: Props) {
     super(props)
     const { history, initialPageKey } = this.props
@@ -43,18 +53,39 @@ class Nav extends React.Component<Props, State> {
     }
     this.hasWindow = typeof window !== 'undefined'
   }
-
+  /**
+   * @ignore
+   */
   componentDidMount(): void {
     this.unsubscribeHistory = this.history.listen(this.onHistoryChange)
   }
 
+  /**
+   * @ignore
+   */
   componentWillUnmount(): void {
     this.unsubscribeHistory()
   }
 
+  /**
+   * Passed to every page component. Manually navigate using pages that exists
+   * in the store and restores scroll position. This is what {@link Visit} in
+   * your `application_visit.js` ultimately calls.
+   *
+   * @param path
+   * @param options when `none`, immediately returns `false`
+   * @returns `true` if the navigation was a success, `false` if the page was not found in the
+   * store.
+   */
   navigateTo(
-    path: string,
-    { action, ownProps } = { action: 'push', ownProps: {} }
+    path: Keypath,
+    {
+      action,
+      ownProps,
+    }: { action: NavigationAction; ownProps: Record<string, unknown> } = {
+      action: 'push',
+      ownProps: {},
+    }
   ): boolean {
     if (action === 'none') {
       return false
@@ -126,10 +157,16 @@ class Nav extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * @ignore
+   */
   scrollTo(posX: number, posY: number): void {
     this.hasWindow && window.scrollTo(posX, posY)
   }
 
+  /**
+   * @ignore
+   */
   onHistoryChange({ location, action }: Update): void {
     const { store, visit } = this.props
     const { pathname, search, hash } = location
@@ -197,6 +234,9 @@ class Nav extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * @ignore
+   */
   notFound(identifier: string | undefined): never {
     let reminder = ''
     if (!identifier) {
@@ -211,6 +251,9 @@ class Nav extends React.Component<Props, State> {
     throw error
   }
 
+  /**
+   * @ignore
+   */
   render(): JSX.Element {
     const { store, visit, remote } = this.props
     const { pageKey, ownProps } = this.state

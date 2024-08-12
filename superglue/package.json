@@ -70,6 +70,9 @@
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
     "tsup": "^8.1.0",
+    "typedoc": "^0.26.5",
+    "typedoc-plugin-markdown": "^4.2.3",
+    "typedoc-plugin-missing-exports": "^3.0.0",
     "typescript": "^5.5.3",
     "vitest": "^2.0.2"
   },

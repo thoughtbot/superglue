@@ -20,13 +20,12 @@ import {
   FetchArgs,
   BeforeRemote,
   HandleError,
-  RemoteProps,
-  VisitProps,
   VisitResponse,
   SuperglueState,
   Meta,
-  MetaThunk,
   Dispatch,
+  RemoteCreator,
+  VisitCreator,
 } from '../types'
 
 function beforeVisit(payload: {
@@ -95,16 +94,16 @@ function buildMeta(
   }
 }
 
-export function remote(
-  path: string,
+export const remote: RemoteCreator = (
+  path,
   {
     method = 'GET',
     headers,
     body,
     pageKey: rawPageKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
-  }: RemoteProps = {}
-): MetaThunk {
+  } = {}
+) => {
   path = withoutBusters(path)
   rawPageKey = rawPageKey && urlToPageKey(rawPageKey)
 
@@ -161,8 +160,8 @@ let lastVisitController = {
   },
 }
 
-export function visit(
-  path: string,
+export const visit: VisitCreator = (
+  path,
   {
     method = 'GET',
     headers,
@@ -170,8 +169,8 @@ export function visit(
     placeholderKey,
     beforeSave = (prevPage, receivedPage) => receivedPage,
     revisit = false,
-  }: VisitProps = {}
-): MetaThunk {
+  } = {}
+) => {
   path = withoutBusters(path)
   let pageKey = urlToPageKey(path)
 

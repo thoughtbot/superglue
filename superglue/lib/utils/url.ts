@@ -1,4 +1,5 @@
 import parse from 'url-parse'
+import { PageKey } from '../types'
 
 export function pathQuery(url: string): string {
   const { pathname, query } = new parse(url, {})
@@ -47,7 +48,13 @@ export function removePropsAt(url: string): string {
   return parsed.toString()
 }
 
-export function urlToPageKey(url: string): string {
+/**
+ * Converts a url to a PageKey.
+ *
+ * @param url
+ * @returns
+ */
+export function urlToPageKey(url: string): PageKey {
   const parsed = new parse(url, {}, true)
   const query = parsed.query
 

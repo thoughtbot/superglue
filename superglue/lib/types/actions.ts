@@ -56,6 +56,9 @@ export interface HistoryChange extends Action {
   }
 }
 
+/**
+ * Tuple of Fetch arguments that Superglue passes to Fetch.
+ */
 export type FetchArgs = [string, BasicRequestInit]
 
 export interface BeforeVisit extends Action {

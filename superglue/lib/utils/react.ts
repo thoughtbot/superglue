@@ -1,4 +1,4 @@
-import { visit, remote, saveAndProcessPage, copyPage } from '../action_creators'
+import { saveAndProcessPage, copyPage } from '../action_creators'
 import { Content, PageOwnProps, RootState } from '../types'
 import { urlToPageKey } from './url'
 
@@ -18,13 +18,6 @@ export function mapStateToProps(
 }
 
 export const mapDispatchToProps = {
-  saveAndProcessPage,
-  copyPage,
-}
-
-export const mapDispatchToPropsIncludingVisitAndRemote = {
-  visit,
-  remote,
   saveAndProcessPage,
   copyPage,
 }

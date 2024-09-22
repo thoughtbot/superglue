@@ -42,7 +42,7 @@ end
 content is the same, the `componentIdentifier` is different as that has
 been setup to use the controller and action name.
 
-#### **`page_to_page_mapping.rb`**
+#### **`page_to_page_mapping.js`**
 
 ```js
 import PostIndex from '../views/posts/index'

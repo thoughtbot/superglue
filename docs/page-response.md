@@ -1,4 +1,5 @@
-## The `page` response
+# The `page` response
+
 Superglue expects your JSON responses to contain the following attributes. If you
 used Superglue's generators, this would be all set for you in
 `application.json.props`.
@@ -25,7 +26,7 @@ used Superglue's generators, this would be all set for you in
 Passed to your page component as its props. In a Superglue application, this would
 be the contents of your templates, e.g., `index.json.props`. Note that `csrfToken`, 
 `fragments`, and `pageKey` will be merged with your props. `ownProps` are also 
-merged when [navigating](./react-redux.md#navigateto)
+merged when [navigating](reference/functions-passed.md#navigateto)
 
 ### `componentIdentifier`
 A `string` to instruct Superglue which component to render. The generated
@@ -40,25 +41,11 @@ json.componentIdentifier active_template_virtual_path
 You can control which `componentIdentifier` will render which component in the
 `page_to_page_mapping.js`.
 
-```js
-const pageIdentifierToPageComponent = {
-  'posts/edit': PostsEdit,
-  'posts/new': PostsNew,
-  'posts/show': PostsShow,
-  'posts/index': PostsIndex,
-}
-```
+<div class="grid cards" markdown>
+  -  [:octicons-arrow-right-24: See reference](configuration.md#page_to_page_mappingjs)
+  for page_to_page_mapping.js
+</div>
 
-It's not uncommon to have multiple identifiers pointing to the same component.
-This can be used when building `index` pages use modals instead of a new page for
-`show`.
-
-```js
-const pageIdentifierToPageComponent = {
-  'posts/index': PostsIndex,
-  'posts/show': PostsIndex,
-}
-```
 
 ### `assets`
 An `array` of asset fingerprint `string`s. Used by Superglue to detect the need to
@@ -88,6 +75,7 @@ By specifying the restore strategy used (`fromCacheOnly`, `revisitOnly`, or
 `fromCacheAndRevisitInBackground`), you can control what superglue does when
 encountering the page again when pressing the back or forward browser navigation
 buttons.
+
   - `fromCacheAndRevisitInBackground` will transition to the cached page, then
   issue a visit in the background, redirecting and replacing history if needed.
   This is the option set in `application.json.props` when using the generators.
@@ -102,3 +90,4 @@ Take advantage of the `SAVE_RESPONSE` to continually update your slice everytime
 superglue recieves a new page request.
 
 [props_template]: https://github.com/thoughtbot/props_template
+

@@ -1,0 +1,128 @@
+site_name: Superglue
+site_url: https://thoughtbot.github.io/superglue
+site_author: Johny Ho
+site_description: >-
+  Thoughtfully build interactive React apps using normal day-to-day Rails. No more JS fatigue,
+  and no more APIS.
+
+repo_name: thoughtbot/superglue
+repo_url: https://github.com/thoughtbot/superglue
+
+copyright: Copyright &copy; 2024 thoughtbot
+
+theme:
+  name: material
+  features:
+    - header.autohide
+    - navigation.footer
+    - navigation.tabs
+    - navigation.path
+    - toc.follow
+    - navigation.top
+    - navigation.sections
+    - navigation.tabs
+
+
+extra_css:
+  - stylesheets/extra.css
+extra:
+  social:
+    - icon: fontawesome/brands/mastodon
+      link: https://thoughtbot.social/public/local
+    - icon: fontawesome/brands/github
+      link: https://github.com/thoughtbot
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/thoughtbot?lang=en
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/thoughtbot-inc-/posts/?feedView=all
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/thoughtbot/?hl=en
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+not_in_nav: |
+  /tutorials/**/*.md
+
+nav:
+  - Home:
+    - Overview: index.md
+    - Installation: installation.md
+    - Tutorial: tutorial.md
+    - Demo: demo.md
+    - Configuration: configuration.md
+
+    - Concepts:
+      - Page response: page-response.md
+      - Store shape: redux-state-shape.md
+
+    - Navigation:
+      - The return of Rails UJS: ujs.md
+      - Advanced requests: requests.md
+
+    - Partial updates:
+      - Digging: digging.md
+      - Fragment and slices: fragments-and-slices.md
+      - Deferments: deferments.md
+
+  - Recipes:
+    - Modals: recipes/modals.md
+    - Server Side Rendering: recipes/ssr.md
+    - Easy SPA Navigation: recipes/spa-pagination.md
+    - Progress Bars: recipes/progress-bar.md
+    - Turbo Nav: recipes/turbo.md
+
+  - Reference:
+    - Rails Utilities: rails-utils.md
+    - Page utilities: functions-passed.md
+    - Nav: reference/components.Nav.md
+    - Superglue: reference/index.md
+    - Types: reference/types.md
+    - Requests: reference/types.requests.md
+

@@ -25,5 +25,6 @@
   "propertyMembersFormat": "table",
   "excludeExternals": true,
   "excludeInternal": true,
-  "out": "../../superdocs/docs/reference"
+  "useHTMLAnchors": true,
+  "out": "../docs/reference"
 }

@@ -21,6 +21,8 @@ import {
   BeforeRemote,
   HandleError,
   VisitResponse,
+  PageResponse,
+  Page,
   SuperglueState,
   Meta,
   Dispatch,
@@ -101,7 +103,8 @@ export const remote: RemoteCreator = (
     headers,
     body,
     pageKey: rawPageKey,
-    beforeSave = (prevPage, receivedPage) => receivedPage,
+    beforeSave = (prevPage: Page, receivedPage: PageResponse) =>
+      receivedPage,
   } = {}
 ) => {
   path = withoutBusters(path)
@@ -167,7 +170,8 @@ export const visit: VisitCreator = (
     headers,
     body,
     placeholderKey,
-    beforeSave = (prevPage, receivedPage) => receivedPage,
+    beforeSave = (prevPage: Page, receivedPage: PageResponse) =>
+      receivedPage,
     revisit = false,
   } = {}
 ) => {

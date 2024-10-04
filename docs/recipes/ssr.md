@@ -9,7 +9,7 @@ Then, if you're using esbuild, create a `app/javascript/packs/server_rendering.j
 ```js
 import React from 'react';
 import { ApplicationBase } from '@thoughtbot/superglue';
-import { pageIdentifierToPageComponent } from './pageToPageMapping';
+import { pageIdentifierToPageComponent } from './page_to_page_mapping';
 import { buildStore } from './store'
 import { renderToString } from 'react-dom/server';
 
@@ -110,4 +110,5 @@ Change your `application.js` to use `hydrateRoot`:
 ```
 
 and change the rest of `application.js` accordingly.
+
 

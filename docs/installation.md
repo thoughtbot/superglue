@@ -1,9 +1,8 @@
-# Getting started
+# Installation
 
-## Installation
-
-Ensure you are using esbuild (enabled with JSX in `.js`)
-
+!!! info "Prerequisite"
+    To get started with Superglue, the only prerequisite is to be setup with a javascript
+    bundler. We'll assume esbuild with js-bundling, but you can also use vite.
 
 Add the following to your Gemfile
 
@@ -19,32 +18,49 @@ bundle
 rails superglue:install:web
 ```
 
-## Contents
-The above will also generate a redux toolkit starter that's
-configured to work with Superglue. You'll find:
+The above will generate the following files:
 
-- A [slice for the flash] that works with the Rails flash
-- A pages slice that can be used for [custom reducers]
-- And `application_visit.js` that can be used to add before and
-  after behavior for [visit and remote]
-- A `store.js` that puts the above together
-- And a [pre-configured entry point] in
-  `app/javascript/packs/application.js`
+```terminal
+.
+└─ app/
+   └─ javascript/
+      ├─ slices/
+      │  ├─ flash.js
+      |  └─ pages.js
+      ├─ actions.js
+      ├─ application.js
+      ├─ application_visit.js
+      ├─ page_to_page_mapping.js
+      └─ store.js
+```
 
-For more information, visit the [react redux] section.
+## Redux toolkit
 
-  [preconfigured entry point]: https://github.com/thoughtbot/Superglue/blob/main/superglue_rails/lib/install/templates/web/application.js
-  [slice for the flash]: rails.md#rails-flash
-  [visit and remote]: navigation.md#visit-and-remote
-  [custom reducers]: ./recipes/custom-reducers.md
-  [react redux]: react-redux.md
+If you've ever encountered Redux then the files above may seem familiar to you.
+Superglue works as a complete and fully functional Redux toolkit application.
+For the most part, all the functionality you would need resides in these files
+and you'll make minimum edits, but they are made available if you ever need
+greater control over state management.
 
-### Scaffold
+## Configuration
 
-If you'd like to dive right in, you can work with a scaffold.
+We recommend getting familiar with the following files:
+
+- `application_visit.js` - Add custom functionality to Superglue navigation, e.g, progress bars.
+- `page_to_page_mapping.js` - Pairs your `props` files with your page components.
+- `flash.js` - Seamlessly, integrates with the Rails flash.
+
+For more information, visit the [configuration] section.
+
+[configuration]: configuration.md
+
+## Scaffold
+
+If you'd like to dive right in, you can start with a scaffold:
 
 ```terminal
 rails generate scaffold post body:string --force --no-template-engine --superglue
 ```
 
 or proceed with a [tutorial](./tutorial.md)
+

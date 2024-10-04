@@ -1,5 +1,8 @@
 # Fragments and Slices
 
+!!! warning
+    This functionality is experimental
+
 When building pages, we commonly use partials to extract crosscutting concerns.
 For example, a shared header:
 
@@ -43,7 +46,7 @@ across our `pages` slice:
 }
 ```
 
-Superglue fragments, and Redux slices are two recommended ways for updating cross-cutting
+Superglue fragments, and Redux slices are two ways for updating cross-cutting
 concerns.
 
 # Fragments
@@ -81,8 +84,9 @@ fragments: [
 ]
 ```
 
-?> Fragments used in nodes that are [deferred](./navigation.md#deferments) do
-not show up inside the metadata until the deferred nodes are loaded.
+!!! info
+    Fragments used in nodes that are [deferred](./deferments.md) do
+    not show up inside the metadata until the deferred nodes are loaded.
 
 ## Automatic updates
 
@@ -109,7 +113,7 @@ that can make this process easier.
 ### InitialState
 You can render your slice's initial state in the [slices] `key` of the page
 object, it'll be merged with the `initialState` passed to your `buildStore`
-function in your [application.js](./react-redux.md#applicationbase)
+function in your [application.js](./configuration.md#applicationjs)
 
 
 ### extraReducers
@@ -201,3 +205,4 @@ export const cartSlice = createSlice({
 [page response]: ./page-response.md
 [slices]: ./page-response.md#slices
 [extraReducers]: https://redux-toolkit.js.org/api/createSlice#extrareducers
+

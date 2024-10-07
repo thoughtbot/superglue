@@ -1,0 +1,3387 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Thoughtfully build interactive React apps using normal day-to-day Rails. No more JS fatigue, and no more APIS.">
+      
+      
+        <meta name="author" content="Johny Ho">
+      
+      
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/reference/">
+      
+      
+        <link rel="prev" href="components.Nav/">
+      
+      
+        <link rel="next" href="types/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Superglue - Superglue</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#classes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Superglue" class="md-header__button md-logo" aria-label="Superglue" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Superglue
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Superglue
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thoughtbot/superglue" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    thoughtbot/superglue
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../recipes/modals/" class="md-tabs__link">
+          
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../rails-utils/" class="md-tabs__link">
+          
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Superglue" class="md-nav__button md-logo" aria-label="Superglue" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Superglue
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thoughtbot/superglue" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    thoughtbot/superglue
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Concepts
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../page-response/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Page response
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redux-state-shape/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Store shape
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Navigation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_7">
+            <span class="md-nav__icon md-icon"></span>
+            Navigation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ujs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The return of Rails UJS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Advanced requests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_8" id="__nav_1_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Partial updates
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_8">
+            <span class="md-nav__icon md-icon"></span>
+            Partial updates
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Digging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fragments-and-slices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fragment and slices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deferments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deferments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Recipes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Recipes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/modals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/ssr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Server Side Rendering
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/spa-pagination/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Easy SPA Navigation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/progress-bar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Progress Bars
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/turbo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Turbo Nav
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rails-utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rails Utilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functions-passed/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Page utilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="components.Nav/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nav
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Superglue
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Superglue
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#abstract-applicationbase" class="md-nav__link">
+    <span class="md-ellipsis">
+      abstract ApplicationBase
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="abstract ApplicationBase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-applicationbase" class="md-nav__link">
+    <span class="md-ellipsis">
+      new ApplicationBase()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="new ApplicationBase()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visitandremote" class="md-nav__link">
+    <span class="md-ellipsis">
+      visitAndRemote()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="visitAndRemote()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentdidmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      componentDidMount()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="componentDidMount()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentwillunmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      componentWillUnmount()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="componentWillUnmount()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      buildStore()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="buildStore()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createhistory" class="md-nav__link">
+    <span class="md-ellipsis">
+      createHistory()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="createHistory()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      mapping()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="mapping()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render" class="md-nav__link">
+    <span class="md-ellipsis">
+      render()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="render()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_FETCH
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BEFORE_FETCH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_VISIT
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BEFORE_VISIT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_REMOTE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BEFORE_REMOTE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVE_RESPONSE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SAVE_RESPONSE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafting_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      GRAFTING_ERROR
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GRAFTING_ERROR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafting_success" class="md-nav__link">
+    <span class="md-ellipsis">
+      GRAFTING_SUCCESS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GRAFTING_SUCCESS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#history_change" class="md-nav__link">
+    <span class="md-ellipsis">
+      HISTORY_CHANGE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HISTORY_CHANGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove_page" class="md-nav__link">
+    <span class="md-ellipsis">
+      REMOVE_PAGE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REMOVE_PAGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copy_page" class="md-nav__link">
+    <span class="md-ellipsis">
+      COPY_PAGE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="COPY_PAGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update_fragments" class="md-nav__link">
+    <span class="md-ellipsis">
+      UPDATE_FRAGMENTS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UPDATE_FRAGMENTS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fragmentmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      fragmentMiddleware()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="fragmentMiddleware()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getin" class="md-nav__link">
+    <span class="md-ellipsis">
+      getIn()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="getIn()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#urltopagekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      urlToPageKey()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="urlToPageKey()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="types/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Types
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="types.requests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#abstract-applicationbase" class="md-nav__link">
+    <span class="md-ellipsis">
+      abstract ApplicationBase
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="abstract ApplicationBase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-applicationbase" class="md-nav__link">
+    <span class="md-ellipsis">
+      new ApplicationBase()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="new ApplicationBase()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visitandremote" class="md-nav__link">
+    <span class="md-ellipsis">
+      visitAndRemote()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="visitAndRemote()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentdidmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      componentDidMount()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="componentDidMount()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentwillunmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      componentWillUnmount()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="componentWillUnmount()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      buildStore()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="buildStore()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createhistory" class="md-nav__link">
+    <span class="md-ellipsis">
+      createHistory()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="createHistory()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      mapping()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="mapping()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render" class="md-nav__link">
+    <span class="md-ellipsis">
+      render()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="render()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returns_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overrides_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overrides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_FETCH
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BEFORE_FETCH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_VISIT
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BEFORE_VISIT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_REMOTE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BEFORE_REMOTE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVE_RESPONSE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SAVE_RESPONSE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafting_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      GRAFTING_ERROR
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GRAFTING_ERROR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafting_success" class="md-nav__link">
+    <span class="md-ellipsis">
+      GRAFTING_SUCCESS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GRAFTING_SUCCESS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#history_change" class="md-nav__link">
+    <span class="md-ellipsis">
+      HISTORY_CHANGE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HISTORY_CHANGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove_page" class="md-nav__link">
+    <span class="md-ellipsis">
+      REMOVE_PAGE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REMOVE_PAGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copy_page" class="md-nav__link">
+    <span class="md-ellipsis">
+      COPY_PAGE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="COPY_PAGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update_fragments" class="md-nav__link">
+    <span class="md-ellipsis">
+      UPDATE_FRAGMENTS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UPDATE_FRAGMENTS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fragmentmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      fragmentMiddleware()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="fragmentMiddleware()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getin" class="md-nav__link">
+    <span class="md-ellipsis">
+      getIn()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="getIn()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#urltopagekey" class="md-nav__link">
+    <span class="md-ellipsis">
+      urlToPageKey()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="urlToPageKey()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defined-in_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defined in
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Superglue</h1>
+
+<h2 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h2>
+<p><a id="applicationbase" name="applicationbase"></a></p>
+<h3 id="abstract-applicationbase"><code>abstract</code> ApplicationBase<a class="headerlink" href="#abstract-applicationbase" title="Permanent link">&para;</a></h3>
+<p>The entry point to your superglue application. You should create a class
+(Application) that inherit from the ApplicationBase component and override
+the <a href="./#buildstore">buildStore</a>, <a href="./#mapping">mapping</a>, and <a href="./#visitandremote">visitAndRemote</a> methods.</p>
+<p>This would be setup for you when installing Superglue at <code>application.js</code>.</p>
+<h4 id="extends">Extends<a class="headerlink" href="#extends" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>Component</code>\&lt;<code>ApplicationProps</code>&gt;</li>
+</ul>
+<h4 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">&para;</a></h4>
+<p><a id="constructors" name="constructors"></a></p>
+<h5 id="new-applicationbase">new ApplicationBase()<a class="headerlink" href="#new-applicationbase" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><strong>new ApplicationBase</strong>(<code>props</code>: <code>ApplicationProps</code>): <a href="./#applicationbase"><code>ApplicationBase</code></a></p>
+</blockquote>
+<p>The constructor of the <code>ApplicationBase</code> class.</p>
+<h6 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h6>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>props</code></td>
+<td><code>ApplicationProps</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h6 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h6>
+<p><a href="./#applicationbase"><code>ApplicationBase</code></a></p>
+<h6 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">&para;</a></h6>
+<p><code>React.Component&lt;ApplicationProps&gt;.constructor</code></p>
+<h6 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L151">lib/index.tsx:151</a></p>
+<h4 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<p><a id="visitandremote" name="visitandremote"></a></p>
+<h5 id="visitandremote">visitAndRemote()<a class="headerlink" href="#visitandremote" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><code>abstract</code> <strong>visitAndRemote</strong>(<code>navigatorRef</code>: <code>RefObject</code>\&lt;<a href="components.Nav/#default"><code>default</code></a>&gt;, <code>store</code>: <a href="types/#supergluestore"><code>SuperglueStore</code></a>): {<code>visit</code>: <a href="types.requests/#visit"><code>Visit</code></a>;<code>remote</code>: <a href="types.requests/#remote"><code>Remote</code></a>; }</p>
+</blockquote>
+<p>Override this method to return a visit and remote function. These functions
+will be used by Superglue to power its UJS attributes and passed to your
+page components. You may customize this functionality to your liking, e.g,
+adding a progress bar.</p>
+<h6 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h6>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>navigatorRef</code></td>
+<td><code>RefObject</code>\&lt;<a href="components.Nav/#default"><code>default</code></a>&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td><a href="types/#supergluestore"><code>SuperglueStore</code></a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h6 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h6>
+<p>{<code>visit</code>: <a href="types.requests/#visit"><code>Visit</code></a>;<code>remote</code>: <a href="types.requests/#remote"><code>Remote</code></a>; }</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Defined in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visit</code></td>
+<td><a href="types.requests/#visit"><code>Visit</code></a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L215">lib/index.tsx:215</a></td>
+</tr>
+<tr>
+<td><code>remote</code></td>
+<td><a href="types.requests/#remote"><code>Remote</code></a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L215">lib/index.tsx:215</a></td>
+</tr>
+</tbody>
+</table>
+<h6 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L211">lib/index.tsx:211</a></p>
+<p><a id="componentdidmount" name="componentdidmount"></a></p>
+<h5 id="componentdidmount">componentDidMount()<a class="headerlink" href="#componentdidmount" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><strong>componentDidMount</strong>(): <code>void</code></p>
+</blockquote>
+<p>Called immediately after a component is mounted. Setting state here will trigger re-rendering.</p>
+<h6 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h6>
+<p><code>void</code></p>
+<h6 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">&para;</a></h6>
+<p><code>React.Component.componentDidMount</code></p>
+<h6 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L217">lib/index.tsx:217</a></p>
+<p><a id="componentwillunmount" name="componentwillunmount"></a></p>
+<h5 id="componentwillunmount">componentWillUnmount()<a class="headerlink" href="#componentwillunmount" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><strong>componentWillUnmount</strong>(): <code>void</code></p>
+</blockquote>
+<p>Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
+cancelled network requests, or cleaning up any DOM elements created in <code>componentDidMount</code>.</p>
+<h6 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h6>
+<p><code>void</code></p>
+<h6 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">&para;</a></h6>
+<p><code>React.Component.componentWillUnmount</code></p>
+<h6 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L232">lib/index.tsx:232</a></p>
+<p><a id="buildstore" name="buildstore"></a></p>
+<h5 id="buildstore">buildStore()<a class="headerlink" href="#buildstore" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><code>abstract</code> <strong>buildStore</strong>(<code>initialState</code>: {<code>[key: string]</code>: <a href="types/#jsonvalue"><code>JSONValue</code></a>; <code>pages</code>: <a href="types/#allpages"><code>AllPages</code></a>; }, <code>reducer</code>: {<code>superglue</code>: <code>superglueReducer</code>;<code>pages</code>: <code>pageReducer</code>; }): <a href="types/#supergluestore"><code>SuperglueStore</code></a></p>
+</blockquote>
+<p>Override this method and return a Redux store for Superglue to use. This
+would be setup and generated for you in <code>store.js</code>. We recommend using
+using Redux toolkit's <code>configureStore</code> to build the store.</p>
+<h6 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h6>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>initialState</code></td>
+<td><code>object</code></td>
+<td>A preconfigured intial state to pass to your store.</td>
+</tr>
+<tr>
+<td><code>initialState.pages</code></td>
+<td><a href="types/#allpages"><code>AllPages</code></a></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>reducer</code></td>
+<td><code>object</code></td>
+<td>A preconfigured reducer</td>
+</tr>
+<tr>
+<td><code>reducer.superglue</code></td>
+<td>(<code>state</code>: <code>Partial</code>\&lt;<a href="types/#supergluestate"><code>SuperglueState</code></a>&gt;, <code>action</code>: <code>UnknownAction</code> | <a href="types/#supergluereduceraction"><code>SuperglueReducerAction</code></a>) =&gt; <code>Partial</code>\&lt;<a href="types/#supergluestate"><code>SuperglueState</code></a>&gt;</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>reducer.pages</code></td>
+<td>(<code>state</code>: <a href="types/#allpages"><code>AllPages</code></a>, <code>action</code>: <code>UnknownAction</code> | <a href="types/#pagereduceraction"><code>PageReducerAction</code></a>) =&gt; <a href="types/#allpages"><code>AllPages</code></a></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h6 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h6>
+<p><a href="types/#supergluestore"><code>SuperglueStore</code></a></p>
+<h6 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L248">lib/index.tsx:248</a></p>
+<p><a id="createhistory" name="createhistory"></a></p>
+<h5 id="createhistory">createHistory()<a class="headerlink" href="#createhistory" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><strong>createHistory</strong>(): <code>BrowserHistory</code></p>
+</blockquote>
+<h6 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">&para;</a></h6>
+<p><code>BrowserHistory</code></p>
+<h6 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L253">lib/index.tsx:253</a></p>
+<p><a id="mapping" name="mapping"></a></p>
+<h5 id="mapping">mapping()<a class="headerlink" href="#mapping" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><code>abstract</code> <strong>mapping</strong>(): <code>Record</code>\&lt;<code>string</code>, <code>ComponentType</code>\&lt;{}&gt;&gt;</p>
+</blockquote>
+<p>Override this method and return a mapping between a componentIdentifier and
+a PageComponent. This will be passed to Superglue to determine which Page component
+to render with which payload.</p>
+<h6 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">&para;</a></h6>
+<p><code>Record</code>\&lt;<code>string</code>, <code>ComponentType</code>\&lt;{}&gt;&gt;</p>
+<h6 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L270">lib/index.tsx:270</a></p>
+<p><a id="render" name="render"></a></p>
+<h5 id="render">render()<a class="headerlink" href="#render" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><strong>render</strong>(): <code>Element</code></p>
+</blockquote>
+<h6 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">&para;</a></h6>
+<p><code>Element</code></p>
+<h6 id="overrides_3">Overrides<a class="headerlink" href="#overrides_3" title="Permanent link">&para;</a></h6>
+<p><code>React.Component.render</code></p>
+<h6 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h6>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/index.tsx#L272">lib/index.tsx:272</a></p>
+<h2 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h2>
+<p><a id="before_fetch" name="before_fetch"></a></p>
+<h3 id="before_fetch">BEFORE_FETCH<a class="headerlink" href="#before_fetch" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>BEFORE_FETCH</strong>: <code>"@@superglue/BEFORE_FETCH"</code> = <code>'@@superglue/BEFORE_FETCH'</code></p>
+</blockquote>
+<h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L1">lib/actions.ts:1</a></p>
+<hr />
+<p><a id="before_visit" name="before_visit"></a></p>
+<h3 id="before_visit">BEFORE_VISIT<a class="headerlink" href="#before_visit" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>BEFORE_VISIT</strong>: <code>"@@superglue/BEFORE_VISIT"</code> = <code>'@@superglue/BEFORE_VISIT'</code></p>
+</blockquote>
+<h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L2">lib/actions.ts:2</a></p>
+<hr />
+<p><a id="before_remote" name="before_remote"></a></p>
+<h3 id="before_remote">BEFORE_REMOTE<a class="headerlink" href="#before_remote" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>BEFORE_REMOTE</strong>: <code>"@@superglue/BEFORE_REMOTE"</code> = <code>'@@superglue/BEFORE_REMOTE'</code></p>
+</blockquote>
+<h4 id="defined-in_10">Defined in<a class="headerlink" href="#defined-in_10" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L3">lib/actions.ts:3</a></p>
+<hr />
+<p><a id="save_response" name="save_response"></a></p>
+<h3 id="save_response">SAVE_RESPONSE<a class="headerlink" href="#save_response" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>SAVE_RESPONSE</strong>: <code>"@@superglue/SAVE_RESPONSE"</code> = <code>'@@superglue/SAVE_RESPONSE'</code></p>
+</blockquote>
+<h4 id="defined-in_11">Defined in<a class="headerlink" href="#defined-in_11" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L5">lib/actions.ts:5</a></p>
+<hr />
+<p><a id="grafting_error" name="grafting_error"></a></p>
+<h3 id="grafting_error">GRAFTING_ERROR<a class="headerlink" href="#grafting_error" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>GRAFTING_ERROR</strong>: <code>"@@superglue/GRAFTING_ERROR"</code> = <code>'@@superglue/GRAFTING_ERROR'</code></p>
+</blockquote>
+<h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L9">lib/actions.ts:9</a></p>
+<hr />
+<p><a id="grafting_success" name="grafting_success"></a></p>
+<h3 id="grafting_success">GRAFTING_SUCCESS<a class="headerlink" href="#grafting_success" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>GRAFTING_SUCCESS</strong>: <code>"@@superglue/GRAFTING_SUCCESS"</code> = <code>'@@superglue/GRAFTING_SUCCESS'</code></p>
+</blockquote>
+<h4 id="defined-in_13">Defined in<a class="headerlink" href="#defined-in_13" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L10">lib/actions.ts:10</a></p>
+<hr />
+<p><a id="history_change" name="history_change"></a></p>
+<h3 id="history_change">HISTORY_CHANGE<a class="headerlink" href="#history_change" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>HISTORY_CHANGE</strong>: <code>"@@superglue/HISTORY_CHANGE"</code> = <code>'@@superglue/HISTORY_CHANGE'</code></p>
+</blockquote>
+<h4 id="defined-in_14">Defined in<a class="headerlink" href="#defined-in_14" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L12">lib/actions.ts:12</a></p>
+<hr />
+<p><a id="remove_page" name="remove_page"></a></p>
+<h3 id="remove_page">REMOVE_PAGE<a class="headerlink" href="#remove_page" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>REMOVE_PAGE</strong>: <code>"@@superglue/REMOVE_PAGE"</code> = <code>'@@superglue/REMOVE_PAGE'</code></p>
+</blockquote>
+<h4 id="defined-in_15">Defined in<a class="headerlink" href="#defined-in_15" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L14">lib/actions.ts:14</a></p>
+<hr />
+<p><a id="copy_page" name="copy_page"></a></p>
+<h3 id="copy_page">COPY_PAGE<a class="headerlink" href="#copy_page" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>COPY_PAGE</strong>: <code>"@@superglue/COPY_PAGE"</code> = <code>'@@superglue/COPY_PAGE'</code></p>
+</blockquote>
+<h4 id="defined-in_16">Defined in<a class="headerlink" href="#defined-in_16" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L15">lib/actions.ts:15</a></p>
+<hr />
+<p><a id="update_fragments" name="update_fragments"></a></p>
+<h3 id="update_fragments">UPDATE_FRAGMENTS<a class="headerlink" href="#update_fragments" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><code>const</code> <strong>UPDATE_FRAGMENTS</strong>: <code>"@@superglue/UPDATE_FRAGMENTS"</code> = <code>'@@superglue/UPDATE_FRAGMENTS'</code></p>
+</blockquote>
+<h4 id="defined-in_17">Defined in<a class="headerlink" href="#defined-in_17" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/actions.ts#L16">lib/actions.ts:16</a></p>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
+<p><a id="fragmentmiddleware" name="fragmentmiddleware"></a></p>
+<h3 id="fragmentmiddleware">fragmentMiddleware()<a class="headerlink" href="#fragmentmiddleware" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>fragmentMiddleware</strong>(<code>api</code>: <code>MiddlewareAPI</code>\&lt;<a href="types/#dispatch"><code>Dispatch</code></a>, <a href="types/#rootstate"><code>RootState</code></a>&gt;): (<code>next</code>: (<code>action</code>: <code>unknown</code>) =&gt; <code>unknown</code>) =&gt; (<code>action</code>: <code>unknown</code>) =&gt; <code>unknown</code></p>
+</blockquote>
+<p><strong><code>Experimental</code></strong></p>
+<p>A middleware that will update all Fragment across the AllPages slice, if a fragment on any page was mutated.</p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api</code></td>
+<td><code>MiddlewareAPI</code>\&lt;<a href="types/#dispatch"><code>Dispatch</code></a>, <a href="types/#rootstate"><code>RootState</code></a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">&para;</a></h4>
+<p><code>Function</code></p>
+<h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>next</code></td>
+<td>(<code>action</code>: <code>unknown</code>) =&gt; <code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">&para;</a></h5>
+<p><code>Function</code></p>
+<h6 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">&para;</a></h6>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action</code></td>
+<td><code>unknown</code></td>
+</tr>
+</tbody>
+</table>
+<h6 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">&para;</a></h6>
+<p><code>unknown</code></p>
+<h4 id="defined-in_18">Defined in<a class="headerlink" href="#defined-in_18" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/middleware.ts#L15">lib/middleware.ts:15</a></p>
+<hr />
+<p><a id="getin" name="getin"></a></p>
+<h3 id="getin">getIn()<a class="headerlink" href="#getin" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>getIn</strong>(<code>node</code>: <a href="types/#jsonmappable"><code>JSONMappable</code></a>, <code>path</code>: <code>string</code>): <a href="types/#jsonvalue"><code>JSONValue</code></a></p>
+</blockquote>
+<p>Retrieves data from a JSON object using a <a href="types/#keypath-2">Keypath</a></p>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node</code></td>
+<td><a href="types/#jsonmappable"><code>JSONMappable</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td><code>string</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">&para;</a></h4>
+<p><a href="types/#jsonvalue"><code>JSONValue</code></a></p>
+<h4 id="defined-in_19">Defined in<a class="headerlink" href="#defined-in_19" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/utils/immutability.ts#L22">lib/utils/immutability.ts:22</a></p>
+<hr />
+<p><a id="urltopagekey" name="urltopagekey"></a></p>
+<h3 id="urltopagekey">urlToPageKey()<a class="headerlink" href="#urltopagekey" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>urlToPageKey</strong>(<code>url</code>: <code>string</code>): <a href="types/#pagekey-8"><code>PageKey</code></a></p>
+</blockquote>
+<p>Converts a url to a PageKey.</p>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td><code>string</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">&para;</a></h4>
+<p><a href="types/#pagekey-8"><code>PageKey</code></a></p>
+<h4 id="defined-in_20">Defined in<a class="headerlink" href="#defined-in_20" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/thoughtbot/superglue/blob/ea5ccb59bc374b54e06ccb1c66a4294204f7a2ea/superglue/lib/utils/url.ts#L57">lib/utils/url.ts:57</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="components.Nav/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Nav">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Nav
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="types/" class="md-footer__link md-footer__link--next" aria-label="Next: Types">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Types
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 thoughtbot
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://thoughtbot.social/public/local" target="_blank" rel="noopener me" title="thoughtbot.social" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/thoughtbot" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/thoughtbot?lang=en" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/thoughtbot-inc-/posts/?feedView=all" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.instagram.com/thoughtbot/?hl=en" target="_blank" rel="noopener" title="www.instagram.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141m0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7m146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8m76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8M398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.footer", "navigation.tabs", "navigation.path", "toc.follow", "navigation.top", "navigation.sections", "navigation.tabs"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

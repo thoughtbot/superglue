@@ -9,9 +9,11 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { config } from '../../lib/config'
 import { visit, remote } from '../../lib/action_creators'
-import { mount } from 'enzyme'
+// import { mount } from 'enzyme'
 import { thunk } from 'redux-thunk'
 import 'regenerator-runtime/runtime'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 const flushPromises = () => new Promise((res) => process.nextTick(res))
 
@@ -32,7 +34,7 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        Home Page, {this.props.heading}
+        <h1>Home Page, {this.props.heading}</h1>
         <button onClick={this.visit}> click </button>
       </div>
     )
@@ -88,9 +90,12 @@ describe('start', () => {
       csrfToken: 'token',
     }
 
-    const component = mount(
+    let instance
+
+    render(
       <App
         initialPage={initialPage}
+        ref={(node) => (instance = node)}
         baseUrl={'http://example.com/base'}
         path={'/bar?some=123#title'}
         appEl={document}
@@ -98,7 +103,7 @@ describe('start', () => {
         history={history}
       />
     )
-    const store = component.instance().store
+    const store = instance.store
 
     expect(store.getState()).toEqual({
       superglue: {
@@ -152,9 +157,12 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      const component = mount(
+      let instance
+
+      render(
         <App
           initialPage={initialPage}
+          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
@@ -162,17 +170,17 @@ describe('navigation', () => {
           mapping={{ home: Home, about: About }}
         />
       )
-      const store = component.instance().store
+      const store = instance.store
 
-      expect(component.find(Home).exists()).toBe(true)
-      expect(component.find(About).exists()).toBe(false)
+      expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
       fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       const pageState = {
-        data: { heading: 'Some heading 2' },
+        data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
@@ -181,7 +189,8 @@ describe('navigation', () => {
         savedAt: expect.any(Number),
       }
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
 
       await flushPromises()
 
@@ -215,9 +224,12 @@ describe('navigation', () => {
         }
       }
 
-      const component = mount(
+      let instance
+
+      render(
         <App
           initialPage={initialPage}
+          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
@@ -225,17 +237,17 @@ describe('navigation', () => {
           mapping={{ home: ExampleHome, about: About }}
         />
       )
-      const store = component.instance().store
+      const store = instance.store
 
-      expect(component.find(ExampleHome).exists()).toBe(true)
-      expect(component.find(About).exists()).toBe(false)
+      expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
       fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
       const pageState = {
-        data: { heading: 'Some heading 2' },
+        data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
@@ -243,7 +255,8 @@ describe('navigation', () => {
         fragments: [],
         savedAt: expect.any(Number),
       }
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
 
       await flushPromises()
 
@@ -252,6 +265,8 @@ describe('navigation', () => {
       expect(history.location.pathname).toEqual('/foo')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('#title')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).toHaveTextContent('About Page')
     })
 
     describe('and the action is to a non-superglue app', () => {
@@ -261,15 +276,13 @@ describe('navigation', () => {
             initialEntries: ['/bar'],
             initialIndex: 0,
           })
-          let navComponent
 
-          history.listen(({ action, location }) => {
+          history.listen(({ location }) => {
             const { pathname } = location
 
             if (pathname == '/some_html_page') {
               const state = store.getState()
               expect(state.superglue.currentPageKey).toEqual('/bar')
-              expect(navComponent.state.pageKey).toEqual('/bar')
               done()
             }
           })
@@ -291,9 +304,11 @@ describe('navigation', () => {
             }
           }
 
-          const component = mount(
+          let instance
+          render(
             <App
               initialPage={initialPage}
+              ref={(node) => (instance = node)}
               baseUrl={'http://example.com'}
               path={'/bar'}
               appEl={document}
@@ -301,10 +316,9 @@ describe('navigation', () => {
               history={history}
             />
           )
-          const store = component.instance().store
-          navComponent = component.find(Nav).instance()
+          const store = instance.store
 
-          expect(component.find(ExampleHome).exists()).toBe(true)
+          expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
         }))
     })
   })
@@ -334,9 +348,11 @@ describe('navigation', () => {
         }
       }
 
-      const component = mount(
+      let instance
+      render(
         <App
           initialPage={initialPage}
+          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
@@ -344,14 +360,15 @@ describe('navigation', () => {
           history={history}
         />
       )
-      const store = component.instance().store
-      const navComponent = component.find(Nav).instance()
+      const store = instance.store
 
+      expect(screen.getByRole('heading')).not.toHaveTextContent('Visit Success')
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
       fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
       await flushPromises()
 
       const state = store.getState()
@@ -360,7 +377,7 @@ describe('navigation', () => {
       expect(history.location.pathname).toEqual('/foo')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
-      expect(navComponent.state.pageKey).toEqual('/foo')
+      expect(screen.getByRole('heading')).toHaveTextContent('Visit Success')
     })
 
     it('does nothing when we replace the same page', async () => {
@@ -385,9 +402,11 @@ describe('navigation', () => {
         }
       }
 
-      const component = mount(
+      let instance
+      render(
         <App
           initialPage={initialPage}
+          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
@@ -395,10 +414,10 @@ describe('navigation', () => {
           history={history}
         />
       )
-      const store = component.instance().store
-      const navComponent = component.find(Nav).instance()
+      const store = instance.store
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
       await flushPromises()
 
       const state = store.getState()
@@ -407,7 +426,6 @@ describe('navigation', () => {
       expect(history.location.pathname).toEqual('/bar')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
-      expect(navComponent.state.pageKey).toEqual('/bar')
     })
   })
 
@@ -429,9 +447,12 @@ describe('navigation', () => {
         restoreStrategy: 'fromCacheOnly',
       }
 
-      const component = mount(
+      let instance
+
+      render(
         <App
           initialPage={initialPage}
+          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
@@ -439,17 +460,17 @@ describe('navigation', () => {
           history={history}
         />
       )
-      const store = component.instance().store
-      const navComponent = component.find(Nav).instance()
+      const store = instance.store
 
-      expect(component.find(Home).exists()).toBe(true)
-      expect(component.find(About).exists()).toBe(false)
+      expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
       const mockResponse = rsp.visitSuccess()
       mockResponse.headers['x-response-url'] = '/foo'
       fetchMock.mock('http://example.com/foo?format=json', mockResponse)
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
 
       await flushPromises()
       let state = store.getState()
@@ -459,7 +480,6 @@ describe('navigation', () => {
       expect(history.location.pathname).toEqual('/foo')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
-      expect(navComponent.state.pageKey).toEqual('/foo')
 
       history.back()
 
@@ -470,7 +490,6 @@ describe('navigation', () => {
       expect(history.location.pathname).toEqual('/bar')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
-      expect(navComponent.state.pageKey).toEqual('/bar')
     })
 
     it('does not change current page when the hash changes', () =>
@@ -481,14 +500,13 @@ describe('navigation', () => {
           pageKey: '/bar',
         })
         history.push('/bar') // Gets replaced on Superglue.start
-        let store, navComponent
+        let store
 
         history.listen(({ action, location }) => {
           const { pathname, hash } = location
           if (hash === '#title') {
             const state = store.getState()
             expect(state.superglue.currentPageKey).toEqual('/bar')
-            expect(navComponent.state.pageKey).toEqual('/bar')
             expect(pathname).toEqual('/bar')
             expect(hash).toEqual('#title')
             done()
@@ -512,9 +530,12 @@ describe('navigation', () => {
           }
         }
 
-        const component = mount(
+        let instance
+
+        render(
           <App
             initialPage={initialPage}
+            ref={(node) => (instance = node)}
             baseUrl={'http://example.com'}
             path={'/bar'}
             appEl={document}
@@ -523,8 +544,7 @@ describe('navigation', () => {
           />
         )
 
-        store = component.instance().store
-        navComponent = component.find(Nav).instance()
+        store = instance.store
       }))
 
     it('requests the evicted page when encountering the page again using browser buttons', async () => {
@@ -548,9 +568,11 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      const component = mount(
+      let instance
+      render(
         <App
           initialPage={initialPage}
+          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/bar'}
           appEl={document}
@@ -558,10 +580,10 @@ describe('navigation', () => {
           history={history}
         />
       )
-      const store = component.instance().store
+      const store = instance.store
 
       const pageState = {
-        data: { heading: 'Some heading 2' },
+        data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
@@ -601,17 +623,20 @@ describe('navigation', () => {
         }
       }
 
-      const component = mount(
+      let instance
+
+      render(
         <App
           initialPage={initialPage}
           baseUrl={'http://example.com'}
+          ref={(node) => (instance = node)}
           path={'/foo'}
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
         />
       )
-      const store = component.instance().store
+      const store = instance.store
 
       const mockResponse = rsp.graftSuccessWithNewZip()
       mockResponse.headers['x-response-url'] = '/foo'
@@ -620,7 +645,8 @@ describe('navigation', () => {
         mockResponse
       )
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
       await flushPromises()
 
       const state = store.getState()

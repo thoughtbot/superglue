@@ -1,7 +1,7 @@
 export const visitSuccess = () => {
   return {
     body: JSON.stringify({
-      data: { heading: 'Some heading 2' },
+      data: { heading: 'Visit Success Some heading 2' },
       csrfToken: 'token',
       assets: ['application-123.js', 'application-123.js'],
       componentIdentifier: 'about',

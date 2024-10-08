@@ -103,8 +103,7 @@ export const remote: RemoteCreator = (
     headers,
     body,
     pageKey: rawPageKey,
-    beforeSave = (prevPage: Page, receivedPage: PageResponse) =>
-      receivedPage,
+    beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
   } = {}
 ) => {
   path = withoutBusters(path)
@@ -170,8 +169,7 @@ export const visit: VisitCreator = (
     headers,
     body,
     placeholderKey,
-    beforeSave = (prevPage: Page, receivedPage: PageResponse) =>
-      receivedPage,
+    beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
     revisit = false,
   } = {}
 ) => {

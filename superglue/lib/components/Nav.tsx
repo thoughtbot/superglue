@@ -72,6 +72,11 @@ class Nav extends React.Component<Props, State> {
    * in the store and restores scroll position. This is what {@link Visit} in
    * your `application_visit.js` ultimately calls.
    *
+   * If there is an existing page in your store `navigateTo` will restore the props,
+   * render the correct component, and return `true`. Otherwise, it will return
+   * `false`. This is useful if you want to restore an existing page before making a
+   * call to `visit` or `remote`.
+   *
    * @param path
    * @param options when `none`, immediately returns `false`
    * @returns `true` if the navigation was a success, `false` if the page was not found in the

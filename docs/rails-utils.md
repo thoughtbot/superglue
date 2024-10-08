@@ -1,32 +1,4 @@
-# Rails
-
-## Rails Flash
-
-The installation generator will add a `flash.js` slice to `app/javascript/slices`
-and will work with the Rails `flash`.
-
-To use in your page components, simply use a selector.
-
-```jsx
-import { useSelector } from 'react-redux'
-
-...
-
-const flash = useSelector((state) => state.flash)
-```
-
-then use the flash as you would normally in a controller
-
-```ruby
-def create
-  flash[:success] = "Post was saved!"
-end
-```
-
-?> When using `data-sg-visit`, all flash in slice will be cleared before the request.
-
-?> When using `data-sg-visit` or `data-sg-remote`, the recieved flash will be merged with the current flash.
-
+# Rails utils
 
 ## `redirect_back_with_props_at`
 
@@ -57,4 +29,5 @@ def create
   end
 end
 ```
+
 

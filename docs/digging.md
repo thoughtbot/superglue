@@ -1,20 +1,21 @@
 # Digging
 
-Superglue's thunks work hand-in-hand with [PropsTemplate] to query your JSON
-template for nodes. This guide helps you understand how the tools work with
-each other.
+Beyond full page navigation, Superglue can make selective updates to parts of
+the page without a full load through digging. You may recognize digging from
+earlier docs:
 
-## The props_at param
-The `props_at` param is a keypath to nodes in your tree and is used almost
-exclusively with the `remote` thunk. On the PropsTemplate side, we pass that
-param over to an internal node in order to walk your templates.
+```
+/some_current_page?props_at=data.rightDrawer.dailySpecials
+```
 
-?> `props_at` can be used with `data-sg-visit`, but only combined with
-`data-sg-placeholder` to [build placeholders].
+By simply adding a `props_at` parameter to your requests, you can selectively
+fetch parts of the page without incurring the cost of loading unneeded content. This
+is great for functionality like modals, tabs, etc.
 
-[build placeholders]: ./navigation.md#placeholders
+## The `props_at` param
 
-For example, with a template below.
+The `props_at` param is a keypath to the content in your PropsTemplate. As a simplified
+example, imagine this page with no layouts:
 
 ```ruby
 path = param_to_search_path(params[:props_at])
@@ -39,11 +40,23 @@ end
 ```
 
 To fetch the `json.search` node, we would need to walk to `data` then `header`
-then `search`. Translating that to a remote call with a `props_at` param:
+then `search`. Translating that to a url with a `props_at` param:
 
-```js
-remote('/dashboard?props_at=data.header.search&some_search_str=haircuts')
 ```
+/dashboard?props_at=data.header.search&some_search_str=haircuts
+```
+
+Digging is normally combined with using [data-sg-remote] or [remote] to update
+content in async fashion.
+
+!!! info
+    `props_at` can be used with `data-sg-visit`, but only combined with
+    [data-sg-placeholder].
+
+[data-sg-placeholder]: ./ujs.md#data-sg-placeholder
+[data-sg-remote]: ./ujs.md#data-sg-remote
+[remote]: ./requests.md#remote
+
 
 ## Collections
 There are two ways to query collections. Looking at the following example:
@@ -134,13 +147,14 @@ json.array! @posts , key: :some_id do |post|
 end
 ```
 
-!> When querying, Superglue will disable
-[caching](https://github.com/thoughtbot/props_template#caching) and
-[deferment](https://github.com/thoughtbot/props_template#deferment) until the
-target node is reached.
+!!! info
+    When querying, Superglue will disable
+    [caching](https://github.com/thoughtbot/props_template#caching) and
+    [deferment](https://github.com/thoughtbot/props_template#deferment) until the
+    target node is reached.
 
-That's the basics of traversing with Superglue. Many modern SPA functionality
-can be achieved by just a few lines of code. For examples, see our recipes
-section.
+With digging, many modern SPA functionality can be achieved by just a keypath and a
+few lines of code.
 
 [PropsTemplate]: https://github.com/thoughtbot/props_template
+

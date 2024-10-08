@@ -15,3 +15,4 @@ version] and comparing that with the [Superglue version].
 [Sean Doyle]: https://github.com/seanpdoyle
 [Sean's version]: https://github.com/seanpdoyle/select-your-own-seat/commits/main
 [Superglue version]: https://github.com/thoughtbot/select-your-own-seat-superglue/commits/superglue
+

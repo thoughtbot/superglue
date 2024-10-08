@@ -120,6 +120,11 @@ interface ApplicationProps {
    * to setup UJS helpers.
    */
   appEl: HTMLElement
+  /**
+   * A store to perform setup on. If none is provided, it will build a basic
+   * store.
+   */
+  store?: SuperglueStore
 }
 
 type ConnectedMapping = Record<

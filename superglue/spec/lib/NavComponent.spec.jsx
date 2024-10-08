@@ -7,7 +7,8 @@ import { Provider } from 'react-redux'
 import { createMemoryHistory } from 'history'
 import configureMockStore from 'redux-mock-store'
 import Nav from '../../lib/components/Nav'
-import { mount } from 'enzyme'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 class Home extends React.Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        Home Page
+        <h1>Home Page</h1>
         <button onClick={this.enhancedVisit}> click </button>
       </div>
     )
@@ -37,7 +38,7 @@ class About extends React.Component {
 
 describe('Nav', () => {
   describe('navigateTo', () => {
-    it('navigates to the specified page', () => {
+    it('navigates to the specified page', async () => {
       const history = createMemoryHistory({})
       history.push('/bar', {
         superglue: true,
@@ -66,7 +67,7 @@ describe('Nav', () => {
         },
       })
 
-      const component = mount(
+      render(
         <Provider store={store}>
           <Nav
             store={store}
@@ -77,17 +78,18 @@ describe('Nav', () => {
         </Provider>
       )
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
-      expect(component.find(Home).exists()).toBe(true)
-      expect(component.find(About).exists()).toBe(false)
+      expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
       expect(scrollTo).toHaveBeenCalledWith(0, 0)
 
-      expect(component.find(Home).exists()).toBe(false)
-      expect(component.find(About).exists()).toBe(true)
+      expect(screen.getByRole('heading')).not.toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).toHaveTextContent('About Page')
     })
 
-    it('does not navigate to the specified page if the page is not in the store', () => {
+    it('does not navigate to the specified page if the page is not in the store', async () => {
       const history = createMemoryHistory({})
       const mockStore = configureMockStore()
       const store = mockStore({
@@ -102,7 +104,7 @@ describe('Nav', () => {
         },
       })
 
-      const component = mount(
+      render(
         <Provider store={store}>
           <Nav
             store={store}
@@ -113,16 +115,17 @@ describe('Nav', () => {
         </Provider>
       )
 
-      expect(component.find(Home).exists()).toBe(true)
-      expect(component.find(About).exists()).toBe(false)
+      expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
 
-      expect(component.find(Home).exists()).toBe(true)
-      expect(component.find(About).exists()).toBe(false)
+      expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
     })
 
-    it('navigates to the specified page and calls the action when used with react-redux', () => {
+    it('navigates to the specified page and calls the action when used with react-redux', async () => {
       const history = createMemoryHistory({})
       history.push('/bar', {
         superglue: true,
@@ -147,7 +150,7 @@ describe('Nav', () => {
         },
       })
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
-      const component = mount(
+      render(
         <Provider store={store}>
           <Nav
             store={store}
@@ -157,10 +160,12 @@ describe('Nav', () => {
           />
         </Provider>
       )
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
+
       expect(scrollTo).toHaveBeenCalledWith(0, 0)
-      expect(component.find(Home).exists()).toBe(false)
-      expect(component.find(About).exists()).toBe(true)
+      expect(screen.getByRole('heading')).not.toHaveTextContent('Home Page')
+      expect(screen.getByRole('heading')).toHaveTextContent('About Page')
 
       const expectedActions = [
         {
@@ -183,7 +188,7 @@ describe('Nav', () => {
       expect(store.getActions()).toEqual(expectedActions)
     })
 
-    it('navigates to the page when history changes', () => {
+    it('navigates to the page when history changes', async () => {
       const history = createMemoryHistory({})
       history.push('/bar', {
         superglue: true,
@@ -228,7 +233,7 @@ describe('Nav', () => {
         }
       }
 
-      const component = mount(
+      render(
         <Provider store={store}>
           <Nav
             store={store}
@@ -239,7 +244,8 @@ describe('Nav', () => {
         </Provider>
       )
 
-      component.find('button').simulate('click')
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
       expect(visitedAbout).toBe(true)
       expect(returnedHome).toBe(true)
     })
@@ -262,18 +268,20 @@ describe('Nav', () => {
           csrfToken: 'abc',
         },
       })
-      const component = mount(
+
+      let instance
+
+      render(
         <Nav
           store={store}
+          ref={(node) => (instance = node)}
           mapping={{ home: Home, about: About }}
           initialPageKey={'/bar'}
           history={history}
         />
       )
 
-      expect(
-        component.instance().navigateTo('/blah', { action: 'none' })
-      ).toEqual(false)
+      expect(instance.navigateTo('/blah', { action: 'none' })).toEqual(false)
     })
   })
 
@@ -325,7 +333,7 @@ describe('Nav', () => {
           }
         })
 
-        const component = mount(
+        render(
           <Provider store={store}>
             <Nav
               store={store}
@@ -389,7 +397,7 @@ describe('Nav', () => {
 
         // scroll to 0 0
 
-        const component = mount(
+        render(
           <Provider store={store}>
             <Nav
               store={store}
@@ -445,7 +453,7 @@ describe('Nav', () => {
 
         const fakeVisit = vi.fn()
 
-        const component = mount(
+        render(
           <Provider store={store}>
             <Nav
               store={store}
@@ -504,7 +512,7 @@ describe('Nav', () => {
           expect(scrollTo).toHaveBeenCalledWith(5, 5)
         })
 
-        const component = mount(
+        render(
           <Provider store={store}>
             <Nav
               store={store}

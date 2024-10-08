@@ -3,8 +3,17 @@ on:
   push:
     branches:
       - main
+    workflow_dispatch:
+
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest

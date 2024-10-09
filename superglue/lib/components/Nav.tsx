@@ -1,6 +1,6 @@
 import React from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
-import { REMOVE_PAGE, HISTORY_CHANGE } from '../actions'
+import { REMOVE_PAGE, historyChange } from '../actions'
 import {
   HistoryState,
   Keypath,
@@ -178,10 +178,11 @@ class Nav extends React.Component<Props, State> {
     const state = location.state as HistoryState
 
     if (state && 'superglue' in state) {
-      store.dispatch({
-        type: HISTORY_CHANGE,
-        payload: { pathname, search, hash },
-      })
+      store.dispatch(historyChange({
+        pathname, 
+        search, 
+        hash,
+      }))
 
       if (action !== 'POP') {
         return

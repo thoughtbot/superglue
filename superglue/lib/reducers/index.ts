@@ -3,7 +3,7 @@ import {
   REMOVE_PAGE,
   SAVE_RESPONSE,
   HANDLE_GRAFT,
-  HISTORY_CHANGE,
+  historyChange,
   COPY_PAGE,
   UPDATE_FRAGMENTS,
   setCSRFToken,
@@ -18,7 +18,6 @@ import {
   GraftResponse,
   SuperglueState,
   SuperglueReducerAction,
-  HistoryChange,
   SaveResponseAction,
   SetCSRFToken,
   HandleGraftAction,
@@ -226,20 +225,20 @@ export function superglueReducer(
     return { ...state, csrfToken: csrfToken }
   }
 
-  switch (action.type) {
-    case HISTORY_CHANGE: {
-      const { pathname, search, hash } =
-        action.payload as HistoryChange['payload']
-      const currentPageKey = urlToPageKey(pathname + search)
+  if (historyChange.match(action)) {
+    const { pathname, search, hash } = action.payload
+    const currentPageKey = urlToPageKey(pathname + search)
 
-      return {
-        ...state,
-        currentPageKey,
-        pathname,
-        search,
-        hash,
-      }
+    return {
+      ...state,
+      currentPageKey,
+      pathname,
+      search,
+      hash,
     }
+  }
+
+  switch (action.type) {
     case SAVE_RESPONSE: {
       const {
         page: { csrfToken, assets },

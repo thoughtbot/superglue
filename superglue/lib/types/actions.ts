@@ -47,15 +47,6 @@ export interface SetCSRFToken extends Action {
   }
 }
 
-export interface HistoryChange extends Action {
-  type: '@@superglue/HISTORY_CHANGE'
-  payload: {
-    pathname: string
-    search: string
-    hash: string
-  }
-}
-
 /**
  * Tuple of Fetch arguments that Superglue passes to Fetch.
  */
@@ -115,10 +106,7 @@ export type PageReducerAction =
   | RemovePageAction
   | UpdateFragmentsAction
 
-export type SuperglueReducerAction =
-  | SaveResponseAction
-  | SetCSRFToken
-  | HistoryChange
+export type SuperglueReducerAction = SaveResponseAction | SetCSRFToken
 
 export type AllAction =
   | PageReducerAction

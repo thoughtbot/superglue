@@ -4,7 +4,7 @@ import { rootReducer } from './reducers'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { HISTORY_CHANGE, setCSRFToken } from './actions'
+import { historyChange, setCSRFToken } from './actions'
 import { ConnectedComponent, Provider, connect } from 'react-redux'
 
 import {
@@ -26,7 +26,6 @@ export {
   REMOVE_PAGE,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
-  HISTORY_CHANGE,
 } from './actions'
 
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
@@ -81,14 +80,11 @@ function start({
   return {
     reducer: rootReducer,
     prepareStore: function (store: SuperglueStore) {
-      store.dispatch({
-        type: HISTORY_CHANGE,
-        payload: {
-          pathname: location.pathname,
-          search: location.query,
-          hash: location.hash,
-        },
-      })
+      store.dispatch(historyChange({
+        pathname: location.pathname,
+        search: location.query,
+        hash: location.hash,
+      }))
       store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
       store.dispatch(setCSRFToken({csrfToken}))
     },

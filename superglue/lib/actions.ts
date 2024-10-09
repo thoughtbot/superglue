@@ -8,7 +8,6 @@ export const SUPERGLUE_ERROR = '@@superglue/ERROR'
 export const GRAFTING_ERROR = '@@superglue/GRAFTING_ERROR'
 export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
 
-export const HISTORY_CHANGE = '@@superglue/HISTORY_CHANGE'
 export const REMOVE_PAGE = '@@superglue/REMOVE_PAGE'
 export const COPY_PAGE = '@@superglue/COPY_PAGE'
 export const UPDATE_FRAGMENTS = '@@superglue/UPDATE_FRAGMENTS'
@@ -30,3 +29,9 @@ export const beforeRemote = createAction<{
 export const setCSRFToken = createAction<{
   csrfToken: string | undefined
 }>('@@superglue/SET_CSRF_TOKEN')
+
+export const historyChange = createAction<{
+  pathname: string
+  search: string
+  hash: string
+}>('@@superglue/HISTORY_CHANGE')

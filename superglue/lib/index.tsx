@@ -4,7 +4,7 @@ import { rootReducer } from './reducers'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
+import { HISTORY_CHANGE, setCSRFToken } from './actions'
 import { ConnectedComponent, Provider, connect } from 'react-redux'
 
 import {
@@ -90,7 +90,7 @@ function start({
         },
       })
       store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-      store.dispatch({ type: SET_CSRF_TOKEN, payload: { csrfToken } })
+      store.dispatch(setCSRFToken({csrfToken}))
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,

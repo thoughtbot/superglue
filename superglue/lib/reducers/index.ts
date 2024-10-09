@@ -4,9 +4,9 @@ import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   HISTORY_CHANGE,
-  SET_CSRF_TOKEN,
   COPY_PAGE,
   UPDATE_FRAGMENTS,
+  setCSRFToken,
 } from '../actions'
 import { config } from '../config'
 import {
@@ -221,6 +221,11 @@ export function superglueReducer(
   state: Partial<SuperglueState> = {},
   action: SuperglueReducerAction | UnknownAction
 ): Partial<SuperglueState> {
+  if (setCSRFToken.match(action)) {
+    const { csrfToken } = action.payload as SetCSRFToken['payload']
+    return { ...state, csrfToken: csrfToken }
+  }
+
   switch (action.type) {
     case HISTORY_CHANGE: {
       const { pathname, search, hash } =
@@ -241,10 +246,6 @@ export function superglueReducer(
       } = action.payload as SaveResponseAction['payload']
 
       return { ...state, csrfToken, assets }
-    }
-    case SET_CSRF_TOKEN: {
-      const { csrfToken } = action.payload as SetCSRFToken['payload']
-      return { ...state, csrfToken: csrfToken }
     }
     default:
       return state

@@ -1,5 +1,5 @@
 import { VisitResponse, GraftResponse } from '.'
-import { Action } from 'redux'
+import type { Action } from '@reduxjs/toolkit'
 import { BasicRequestInit } from '.'
 
 export interface SaveResponseAction extends Action {
@@ -77,13 +77,6 @@ export interface BeforeRemote extends Action {
   }
 }
 
-export interface BeforeFetch extends Action {
-  type: '@@superglue/BEFORE_FETCH'
-  payload: {
-    fetchArgs: [string, BasicRequestInit]
-  }
-}
-
 export interface HandleError extends Action {
   type: '@@superglue/ERROR'
   payload: {
@@ -111,11 +104,7 @@ export interface GraftingErrorAction extends Action {
   }
 }
 
-export type LifecycleAction =
-  | BeforeFetch
-  | HandleError
-  | BeforeVisit
-  | BeforeRemote
+export type LifecycleAction = HandleError | BeforeVisit | BeforeRemote
 
 export type PageReducerAction =
   | SaveResponseAction
@@ -137,3 +126,4 @@ export type AllAction =
   | GraftingErrorAction
   | SuperglueReducerAction
   | LifecycleAction
+  | Action

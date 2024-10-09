@@ -8,7 +8,7 @@ import {
   removePropsAt,
 } from '../utils'
 import {
-  BEFORE_FETCH,
+  beforeFetch,
   BEFORE_VISIT,
   BEFORE_REMOTE,
   SUPERGLUE_ERROR,
@@ -16,7 +16,6 @@ import {
 import { copyPage, saveAndProcessPage } from './index'
 import {
   BeforeVisit,
-  BeforeFetch,
   FetchArgs,
   BeforeRemote,
   HandleError,
@@ -46,13 +45,6 @@ function beforeRemote(payload: {
 }): BeforeRemote {
   return {
     type: BEFORE_REMOTE,
-    payload,
-  }
-}
-
-function beforeFetch(payload: { fetchArgs: FetchArgs }): BeforeFetch {
-  return {
-    type: BEFORE_FETCH,
     payload,
   }
 }

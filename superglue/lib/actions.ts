@@ -1,3 +1,6 @@
+import { createAction } from '@reduxjs/toolkit'
+import { BasicRequestInit, FetchArgs } from './types'
+
 export const BEFORE_FETCH = '@@superglue/BEFORE_FETCH'
 export const BEFORE_VISIT = '@@superglue/BEFORE_VISIT'
 export const BEFORE_REMOTE = '@@superglue/BEFORE_REMOTE'
@@ -14,3 +17,7 @@ export const SET_CSRF_TOKEN = '@@superglue/SET_CSRF_TOKEN'
 export const REMOVE_PAGE = '@@superglue/REMOVE_PAGE'
 export const COPY_PAGE = '@@superglue/COPY_PAGE'
 export const UPDATE_FRAGMENTS = '@@superglue/UPDATE_FRAGMENTS'
+
+export const beforeFetch = createAction<{ fetchArgs: FetchArgs }>(
+  '@@superglue/BEFORE_FETCH'
+)

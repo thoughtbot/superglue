@@ -45,7 +45,6 @@
   },
   "homepage": "https://github.com/thoughtbot/superglue#readme",
   "devDependencies": {
-    "@reduxjs/toolkit": "^2.2.5",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
@@ -67,7 +66,7 @@
     "prettier-eslint": "^16.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-redux": "^7.2.4",
+    "react-redux": "^7.2.9",
     "redux": "^5.0.1",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
@@ -79,6 +78,7 @@
     "vitest": "^2.0.2"
   },
   "peerDependencies": {
+    "@reduxjs/toolkit": "^2.2.8",
     "react": ">=16",
     "react-redux": ">=7.2",
     "redux": ">=4.1",

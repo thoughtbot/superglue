@@ -1,8 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { BasicRequestInit, FetchArgs, PageKey } from './types'
 
-export const BEFORE_REMOTE = '@@superglue/BEFORE_REMOTE'
-
 export const SAVE_RESPONSE = '@@superglue/SAVE_RESPONSE'
 export const HANDLE_GRAFT = '@@superglue/HANDLE_GRAFT'
 
@@ -24,3 +22,8 @@ export const beforeVisit = createAction<{
   currentPageKey: PageKey
   fetchArgs: FetchArgs
 }>('@@superglue/BEFORE_VISIT')
+
+export const beforeRemote = createAction<{
+  currentPageKey: PageKey
+  fetchArgs: FetchArgs
+}>('@@superglue/BEFORE_REMOTE')

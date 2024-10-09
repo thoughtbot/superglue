@@ -10,7 +10,7 @@ import {
 import {
   beforeFetch,
   beforeVisit,
-  BEFORE_REMOTE,
+  beforeRemote,
   SUPERGLUE_ERROR,
 } from '../actions'
 import { copyPage, saveAndProcessPage } from './index'
@@ -27,16 +27,6 @@ import {
   RemoteCreator,
   VisitCreator,
 } from '../types'
-
-function beforeRemote(payload: {
-  fetchArgs: FetchArgs
-  currentPageKey: string
-}): BeforeRemote {
-  return {
-    type: BEFORE_REMOTE,
-    payload,
-  }
-}
 
 function handleError(err: Error): HandleError {
   return {

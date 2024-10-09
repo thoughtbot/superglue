@@ -17,9 +17,9 @@ import {
 import Nav from './components/Nav'
 
 export {
-  BEFORE_FETCH,
-  BEFORE_VISIT,
-  BEFORE_REMOTE,
+  beforeFetch,
+  beforeVisit,
+  beforeRemote,
   SAVE_RESPONSE,
   UPDATE_FRAGMENTS,
   COPY_PAGE,

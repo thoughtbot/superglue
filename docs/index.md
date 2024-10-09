@@ -48,7 +48,7 @@ to your team.
 
     A very fast JSON builder. The secret sauce that enabled much more than just Rails/React integration
 
-    [:octicons-arrow-right-24: props_template](#)
+    [:octicons-arrow-right-24: props_template](https://github.com/thoughtbot/props_template)
 
 -   __Humid__
 
@@ -56,7 +56,7 @@ to your team.
 
     Server Side Rendering using MiniRacer and V8 isolates.
 
-    [:octicons-arrow-right-24: Humid](#)
+    [:octicons-arrow-right-24: Humid](recipes/ssr.md)
 
 -   __Form Props__
 
@@ -65,7 +65,7 @@ to your team.
     Just use Rails forms with React. Combine it with React
     components.
 
-    [:octicons-arrow-right-24: form_props](#)
+    [:octicons-arrow-right-24: form_props](https://github.com/thoughtbot/form_props)
 
 </div>
 

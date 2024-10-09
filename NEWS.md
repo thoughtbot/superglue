@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.54.0
+Migrated to typescript and mkdocs. There are no backward incompatible
+changse. This is may be the last release before 1.0.
+
 ## 0.53.4
 Remove the need for content-location, but retain the functionality in
 case there is a need for it, and do our best not to break existing

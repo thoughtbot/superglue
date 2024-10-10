@@ -33,13 +33,6 @@ export interface RemovePageAction extends Action {
   }
 }
 
-export interface UpdateFragmentsAction extends Action {
-  type: '@@superglue/UPDATE_FRAGMENTS'
-  payload: {
-    changedFragments: Record<string, unknown>
-  }
-}
-
 export interface SetCSRFToken extends Action {
   type: '@@superglue/SET_CSRF_TOKEN'
   payload: {
@@ -104,7 +97,6 @@ export type PageReducerAction =
   | GraftingErrorAction
   | CopyAction
   | RemovePageAction
-  | UpdateFragmentsAction
 
 export type SuperglueReducerAction = SaveResponseAction | SetCSRFToken
 

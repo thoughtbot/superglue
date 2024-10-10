@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fragmentMiddleware } from '../../lib/middleware'
 import { getIn, setIn } from '../../lib/utils/immutability'
-import { historyChange, UPDATE_FRAGMENTS } from '../../lib/actions'
+import { historyChange, updateFragments} from '../../lib/actions'
 
 describe('fragment middleware', () => {
   it('does nothing on superglue actions', () => {
@@ -260,7 +260,7 @@ describe('fragment middleware', () => {
 
     fragmentMiddleware(store)(next)(action)
     expect(store.dispatch).toHaveBeenCalledWith({
-      type: UPDATE_FRAGMENTS,
+      type: updateFragments.type,
       payload: {
         changedFragments: {
           header: {

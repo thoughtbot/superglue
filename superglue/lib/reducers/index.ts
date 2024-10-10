@@ -4,7 +4,7 @@ import {
   HANDLE_GRAFT,
   historyChange,
   copyPage,
-  UPDATE_FRAGMENTS,
+  updateFragments,
   setCSRFToken,
   removePage,
 } from '../actions'
@@ -21,7 +21,6 @@ import {
   SaveResponseAction,
   SetCSRFToken,
   HandleGraftAction,
-  UpdateFragmentsAction,
   CopyAction,
   RemovePageAction,
   JSONMappable,
@@ -183,6 +182,26 @@ export function pageReducer(
     return nextState
   }
 
+  if (updateFragments.match(action)) {
+    const { changedFragments } = action.payload
+    let nextState = state
+
+    Object.entries(state).forEach(([pageKey, page]) => {
+      page.fragments.forEach((fragment) => {
+        const { type, path } = fragment
+        const changedNode = changedFragments[type]
+        const currentNode = getIn(nextState, `${pageKey}.${path}`)
+
+        if (type in changedFragments && changedNode !== currentNode) {
+          const nextNode = JSON.parse(JSON.stringify(changedNode))
+          nextState = setIn(nextState, `${pageKey}.${path}`, nextNode)
+        }
+      })
+    })
+
+    return nextState
+  }
+
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload as SaveResponseAction['payload']
@@ -193,26 +212,7 @@ export function pageReducer(
 
       return handleGraft(state, pageKey, page)
     }
-    case UPDATE_FRAGMENTS: {
-      const { changedFragments } =
-        action.payload as UpdateFragmentsAction['payload']
-      let nextState = state
 
-      Object.entries(state).forEach(([pageKey, page]) => {
-        page.fragments.forEach((fragment) => {
-          const { type, path } = fragment
-          const changedNode = changedFragments[type]
-          const currentNode = getIn(nextState, `${pageKey}.${path}`)
-
-          if (type in changedFragments && changedNode !== currentNode) {
-            const nextNode = JSON.parse(JSON.stringify(changedNode))
-            nextState = setIn(nextState, `${pageKey}.${path}`, nextNode)
-          }
-        })
-      })
-
-      return nextState
-    }
     default:
       return state
   }

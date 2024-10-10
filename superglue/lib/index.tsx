@@ -21,7 +21,7 @@ export {
   beforeVisit,
   beforeRemote,
   SAVE_RESPONSE,
-  UPDATE_FRAGMENTS,
+  updateFragments,
   copyPage,
   removePage,
   GRAFTING_ERROR,

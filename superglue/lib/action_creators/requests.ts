@@ -12,7 +12,7 @@ import {
   beforeVisit,
   beforeRemote,
   copyPage,
-  SUPERGLUE_ERROR,
+  superglueError,
 } from '../actions'
 import { saveAndProcessPage } from './index'
 import {
@@ -29,21 +29,12 @@ import {
   VisitCreator,
 } from '../types'
 
-function handleError(err: Error): HandleError {
-  return {
-    type: SUPERGLUE_ERROR,
-    payload: {
-      message: err.message,
-    },
-  }
-}
-
 function handleFetchErr(
   err: Error,
   fetchArgs: FetchArgs,
   dispatch: Dispatch
 ): never {
-  dispatch(handleError(err))
+  dispatch(superglueError({ message: err.message }))
   throw err
 }
 

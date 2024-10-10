@@ -1,12 +1,15 @@
 import { createAction } from '@reduxjs/toolkit'
-import { BasicRequestInit, FetchArgs, PageKey, JSONValue } from './types'
+import { FetchArgs, PageKey, JSONValue } from './types'
 
 export const SAVE_RESPONSE = '@@superglue/SAVE_RESPONSE'
 export const HANDLE_GRAFT = '@@superglue/HANDLE_GRAFT'
 
-export const SUPERGLUE_ERROR = '@@superglue/ERROR'
 export const GRAFTING_ERROR = '@@superglue/GRAFTING_ERROR'
 export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
+
+export const superglueError = createAction<{ message: String }>(
+  '@@superglue/ERROR'
+)
 
 export const updateFragments = createAction<{
   changedFragments: Record<string, JSONValue>

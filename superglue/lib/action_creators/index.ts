@@ -5,7 +5,6 @@ import {
   HANDLE_GRAFT,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
-  COPY_PAGE,
   UPDATE_FRAGMENTS,
 } from '../actions'
 import { remote } from './requests'
@@ -23,22 +22,6 @@ import {
   JSONMappable,
 } from '../types'
 export * from './requests'
-
-export function copyPage({
-  from,
-  to,
-}: {
-  from: string
-  to: string
-}): CopyAction {
-  return {
-    type: COPY_PAGE,
-    payload: {
-      from,
-      to,
-    },
-  }
-}
 
 export function saveResponse({
   pageKey,

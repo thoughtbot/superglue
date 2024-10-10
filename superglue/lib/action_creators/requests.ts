@@ -11,9 +11,10 @@ import {
   beforeFetch,
   beforeVisit,
   beforeRemote,
+  copyPage,
   SUPERGLUE_ERROR,
 } from '../actions'
-import { copyPage, saveAndProcessPage } from './index'
+import { saveAndProcessPage } from './index'
 import {
   FetchArgs,
   BeforeRemote,

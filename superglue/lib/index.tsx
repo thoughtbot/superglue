@@ -22,7 +22,7 @@ export {
   beforeRemote,
   SAVE_RESPONSE,
   UPDATE_FRAGMENTS,
-  COPY_PAGE,
+  copyPage,
   removePage,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,

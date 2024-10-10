@@ -3,7 +3,7 @@ import {
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   historyChange,
-  COPY_PAGE,
+  copyPage,
   UPDATE_FRAGMENTS,
   setCSRFToken,
   removePage,
@@ -174,6 +174,15 @@ export function pageReducer(
     return nextState
   }
 
+  if (copyPage.match(action)) {
+    const nextState = { ...state }
+    const { from, to } = action.payload
+
+    nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
+
+    return nextState
+  }
+
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload as SaveResponseAction['payload']
@@ -201,14 +210,6 @@ export function pageReducer(
           }
         })
       })
-
-      return nextState
-    }
-    case COPY_PAGE: {
-      const nextState = { ...state }
-      const { from, to } = action.payload as CopyAction['payload']
-
-      nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
 
       return nextState
     }

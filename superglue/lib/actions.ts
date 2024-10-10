@@ -1,11 +1,31 @@
 import { createAction } from '@reduxjs/toolkit'
-import { FetchArgs, PageKey, JSONValue } from './types'
+import { FetchArgs, PageKey, JSONValue, Page, GraftResponse } from './types'
+import { urlToPageKey } from './utils'
 
 export const SAVE_RESPONSE = '@@superglue/SAVE_RESPONSE'
-export const HANDLE_GRAFT = '@@superglue/HANDLE_GRAFT'
 
 export const GRAFTING_ERROR = '@@superglue/GRAFTING_ERROR'
 export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
+
+export const handleGraft = createAction(
+  '@@superglue/HANDLE_GRAFT',
+  function prepare({
+    pageKey,
+    page,
+  }: {
+    pageKey: PageKey
+    page: GraftResponse
+  }) {
+    pageKey = urlToPageKey(pageKey)
+
+    return {
+      payload: {
+        page,
+        pageKey,
+      },
+    }
+  }
+)
 
 export const superglueError = createAction<{ message: String }>(
   '@@superglue/ERROR'

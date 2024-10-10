@@ -2,10 +2,10 @@ import { urlToPageKey, getIn } from '../utils'
 import parse from 'url-parse'
 import {
   SAVE_RESPONSE,
-  HANDLE_GRAFT,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
   updateFragments,
+  handleGraft,
 } from '../actions'
 import { remote } from './requests'
 import {
@@ -33,24 +33,6 @@ export function saveResponse({
 
   return {
     type: SAVE_RESPONSE,
-    payload: {
-      pageKey,
-      page,
-    },
-  }
-}
-
-export function handleGraft({
-  pageKey,
-  page,
-}: {
-  pageKey: string
-  page: GraftResponse
-}): HandleGraftAction {
-  pageKey = urlToPageKey(pageKey)
-
-  return {
-    type: HANDLE_GRAFT,
     payload: {
       pageKey,
       page,

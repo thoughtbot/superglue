@@ -1,7 +1,7 @@
 import { setIn, getIn, urlToPageKey } from '../utils'
 import {
   SAVE_RESPONSE,
-  HANDLE_GRAFT,
+  handleGraft,
   historyChange,
   copyPage,
   updateFragments,
@@ -135,7 +135,7 @@ export function graftNodeOntoPage(
   return setIn(state, fullPathToNode, node)
 }
 
-export function handleGraft(
+export function handleGraftResponse(
   state: AllPages,
   pageKey: string,
   page: GraftResponse
@@ -202,15 +202,16 @@ export function pageReducer(
     return nextState
   }
 
+  if (handleGraft.match(action)) {
+    const { pageKey, page } = action.payload
+
+    return handleGraftResponse(state, pageKey, page)
+  }
+
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload as SaveResponseAction['payload']
       return saveResponse(state, pageKey, page)
-    }
-    case HANDLE_GRAFT: {
-      const { pageKey, page } = action.payload as HandleGraftAction['payload']
-
-      return handleGraft(state, pageKey, page)
     }
 
     default:

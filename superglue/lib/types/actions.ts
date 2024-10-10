@@ -2,14 +2,6 @@ import { VisitResponse, GraftResponse } from '.'
 import type { Action } from '@reduxjs/toolkit'
 import { BasicRequestInit } from '.'
 
-export interface SaveResponseAction extends Action {
-  type: '@@superglue/SAVE_RESPONSE'
-  payload: {
-    pageKey: string
-    page: VisitResponse
-  }
-}
-
 export interface HandleGraftAction extends Action {
   type: '@@superglue/HANDLE_GRAFT'
   payload: {
@@ -91,14 +83,13 @@ export interface GraftingErrorAction extends Action {
 export type LifecycleAction = HandleError | BeforeVisit | BeforeRemote
 
 export type PageReducerAction =
-  | SaveResponseAction
   | HandleGraftAction
   | GraftingSuccessAction
   | GraftingErrorAction
   | CopyAction
   | RemovePageAction
 
-export type SuperglueReducerAction = SaveResponseAction | SetCSRFToken
+export type SuperglueReducerAction = SetCSRFToken
 
 export type AllAction =
   | PageReducerAction

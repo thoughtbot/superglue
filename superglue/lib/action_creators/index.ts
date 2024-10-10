@@ -1,7 +1,7 @@
 import { urlToPageKey, getIn } from '../utils'
 import parse from 'url-parse'
 import {
-  SAVE_RESPONSE,
+  saveResponse,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
   updateFragments,
@@ -11,7 +11,6 @@ import { remote } from './requests'
 import {
   CopyAction,
   VisitResponse,
-  SaveResponseAction,
   SaveAndProcessPageThunk,
   DefermentThunk,
   HandleGraftAction,
@@ -21,24 +20,6 @@ import {
   JSONMappable,
 } from '../types'
 export * from './requests'
-
-export function saveResponse({
-  pageKey,
-  page,
-}: {
-  pageKey: string
-  page: VisitResponse
-}): SaveResponseAction {
-  pageKey = urlToPageKey(pageKey)
-
-  return {
-    type: SAVE_RESPONSE,
-    payload: {
-      pageKey,
-      page,
-    },
-  }
-}
 
 function fetchDeferments(
   pageKey: string,

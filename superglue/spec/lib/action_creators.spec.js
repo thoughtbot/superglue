@@ -7,10 +7,9 @@ import {
   remote,
   beforeFetch,
   handleError,
-  saveResponse,
   saveAndProcessPage,
 } from '../../lib/action_creators'
-import { handleGraft } from '../../lib/actions'
+import { handleGraft, saveResponse } from '../../lib/actions'
 import * as helpers from '../../lib/utils/helpers'
 import * as rsp from '../../spec/fixtures'
 

@@ -1,6 +1,6 @@
 import { setIn, getIn, urlToPageKey } from '../utils'
 import {
-  SAVE_RESPONSE,
+  saveResponse,
   handleGraft,
   historyChange,
   copyPage,
@@ -18,7 +18,6 @@ import {
   GraftResponse,
   SuperglueState,
   SuperglueReducerAction,
-  SaveResponseAction,
   SetCSRFToken,
   HandleGraftAction,
   CopyAction,
@@ -55,7 +54,7 @@ function constrainPagesSize(state: AllPages) {
   }
 }
 
-function saveResponse(
+function handleSaveResponse(
   state: AllPages,
   pageKey: string,
   page: VisitResponse
@@ -208,15 +207,12 @@ export function pageReducer(
     return handleGraftResponse(state, pageKey, page)
   }
 
-  switch (action.type) {
-    case SAVE_RESPONSE: {
-      const { pageKey, page } = action.payload as SaveResponseAction['payload']
-      return saveResponse(state, pageKey, page)
-    }
-
-    default:
-      return state
+  if (saveResponse.match(action)) {
+    const { pageKey, page } = action.payload
+    return handleSaveResponse(state, pageKey, page)
   }
+
+  return state
 }
 
 export function superglueReducer(
@@ -241,17 +237,15 @@ export function superglueReducer(
     }
   }
 
-  switch (action.type) {
-    case SAVE_RESPONSE: {
-      const {
-        page: { csrfToken, assets },
-      } = action.payload as SaveResponseAction['payload']
+  if (saveResponse.match(action)) {
+    const {
+      page: { csrfToken, assets },
+    } = action.payload
 
-      return { ...state, csrfToken, assets }
-    }
-    default:
-      return state
+    return { ...state, csrfToken, assets }
   }
+
+  return state
 }
 
 export const rootReducer = {

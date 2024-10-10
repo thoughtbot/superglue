@@ -20,7 +20,7 @@ export {
   beforeFetch,
   beforeVisit,
   beforeRemote,
-  SAVE_RESPONSE,
+  saveResponse,
   updateFragments,
   copyPage,
   removePage,

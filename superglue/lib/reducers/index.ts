@@ -19,7 +19,6 @@ import {
   SuperglueState,
   JSONMappable,
 } from '../types'
-import { UnknownAction } from 'redux'
 
 function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
   const { defers = [] } = existingPage

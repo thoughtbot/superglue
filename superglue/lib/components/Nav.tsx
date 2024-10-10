@@ -142,7 +142,7 @@ class Nav extends React.Component<Props, State> {
       this.scrollTo(0, 0)
 
       if (action === 'replace' && prevPageKey && prevPageKey !== nextPageKey) {
-        store.dispatch(removePage({pageKey: prevPageKey}))
+        store.dispatch(removePage({ pageKey: prevPageKey }))
       }
 
       return true
@@ -173,11 +173,13 @@ class Nav extends React.Component<Props, State> {
     const state = location.state as HistoryState
 
     if (state && 'superglue' in state) {
-      store.dispatch(historyChange({
-        pathname, 
-        search, 
-        hash,
-      }))
+      store.dispatch(
+        historyChange({
+          pathname,
+          search,
+          hash,
+        })
+      )
 
       if (action !== 'POP') {
         return

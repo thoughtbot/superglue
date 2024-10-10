@@ -3,7 +3,6 @@ import {
   FetchArgs,
   PageKey,
   JSONValue,
-  Page,
   GraftResponse,
   VisitResponse,
 } from './types'
@@ -40,7 +39,7 @@ export const handleGraft = createAction(
   }
 )
 
-export const superglueError = createAction<{ message: String }>(
+export const superglueError = createAction<{ message: string }>(
   '@@superglue/ERROR'
 )
 

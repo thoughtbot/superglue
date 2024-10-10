@@ -80,13 +80,15 @@ function start({
   return {
     reducer: rootReducer,
     prepareStore: function (store: SuperglueStore) {
-      store.dispatch(historyChange({
-        pathname: location.pathname,
-        search: location.query,
-        hash: location.hash,
-      }))
+      store.dispatch(
+        historyChange({
+          pathname: location.pathname,
+          search: location.query,
+          hash: location.hash,
+        })
+      )
       store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-      store.dispatch(setCSRFToken({csrfToken}))
+      store.dispatch(setCSRFToken({ csrfToken }))
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,

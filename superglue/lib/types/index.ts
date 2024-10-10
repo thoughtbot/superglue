@@ -1,11 +1,6 @@
 import { FetchArgs } from './actions'
 import type { Action } from '@reduxjs/toolkit'
-import {
-  EnhancedStore,
-  Tuple,
-  StoreEnhancer,
-  UnknownAction,
-} from '@reduxjs/toolkit'
+import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import Nav from '../components/Nav'

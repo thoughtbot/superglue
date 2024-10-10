@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fragmentMiddleware } from '../../lib/middleware'
 import { getIn, setIn } from '../../lib/utils/immutability'
-import { historyChange, updateFragments} from '../../lib/actions'
+import { historyChange, updateFragments } from '../../lib/actions'
 
 describe('fragment middleware', () => {
   it('does nothing on superglue actions', () => {

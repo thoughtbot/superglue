@@ -23,7 +23,7 @@ export {
   SAVE_RESPONSE,
   UPDATE_FRAGMENTS,
   COPY_PAGE,
-  REMOVE_PAGE,
+  removePage,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
 } from './actions'

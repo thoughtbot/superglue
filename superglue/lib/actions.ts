@@ -8,9 +8,12 @@ export const SUPERGLUE_ERROR = '@@superglue/ERROR'
 export const GRAFTING_ERROR = '@@superglue/GRAFTING_ERROR'
 export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
 
-export const REMOVE_PAGE = '@@superglue/REMOVE_PAGE'
 export const COPY_PAGE = '@@superglue/COPY_PAGE'
 export const UPDATE_FRAGMENTS = '@@superglue/UPDATE_FRAGMENTS'
+
+export const removePage = createAction<{ pageKey: PageKey }>(
+  '@@superglue/REMOVE_PAGE'
+)
 
 export const beforeFetch = createAction<{ fetchArgs: FetchArgs }>(
   '@@superglue/BEFORE_FETCH'

@@ -1,12 +1,12 @@
 import { setIn, getIn, urlToPageKey } from '../utils'
 import {
-  REMOVE_PAGE,
   SAVE_RESPONSE,
   HANDLE_GRAFT,
   historyChange,
   COPY_PAGE,
   UPDATE_FRAGMENTS,
   setCSRFToken,
+  removePage,
 } from '../actions'
 import { config } from '../config'
 import {
@@ -166,6 +166,14 @@ export function pageReducer(
   state: AllPages = {},
   action: PageReducerAction | UnknownAction
 ): AllPages {
+  if (removePage.match(action)) {
+    const { pageKey } = action.payload
+    const nextState = { ...state }
+    delete nextState[pageKey]
+
+    return nextState
+  }
+
   switch (action.type) {
     case SAVE_RESPONSE: {
       const { pageKey, page } = action.payload as SaveResponseAction['payload']
@@ -201,13 +209,6 @@ export function pageReducer(
       const { from, to } = action.payload as CopyAction['payload']
 
       nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
-
-      return nextState
-    }
-    case REMOVE_PAGE: {
-      const { pageKey } = action.payload as RemovePageAction['payload']
-      const nextState = { ...state }
-      delete nextState[pageKey]
 
       return nextState
     }

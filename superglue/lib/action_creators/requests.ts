@@ -17,8 +17,6 @@ import {
 import { saveAndProcessPage } from './index'
 import {
   FetchArgs,
-  BeforeRemote,
-  HandleError,
   VisitResponse,
   PageResponse,
   Page,

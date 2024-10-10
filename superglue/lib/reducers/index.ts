@@ -1,4 +1,5 @@
 import { setIn, getIn, urlToPageKey } from '../utils'
+import type { Action } from '@reduxjs/toolkit'
 import {
   saveResponse,
   handleGraft,
@@ -12,16 +13,10 @@ import { config } from '../config'
 import {
   AllPages,
   Page,
-  PageReducerAction,
   VisitResponse,
   Fragment,
   GraftResponse,
   SuperglueState,
-  SuperglueReducerAction,
-  SetCSRFToken,
-  HandleGraftAction,
-  CopyAction,
-  RemovePageAction,
   JSONMappable,
 } from '../types'
 import { UnknownAction } from 'redux'
@@ -134,7 +129,7 @@ export function graftNodeOntoPage(
   return setIn(state, fullPathToNode, node)
 }
 
-export function handleGraftResponse(
+function handleGraftResponse(
   state: AllPages,
   pageKey: string,
   page: GraftResponse
@@ -160,10 +155,7 @@ export function handleGraftResponse(
   ].reduce((memo, fn) => fn(memo), state)
 }
 
-export function pageReducer(
-  state: AllPages = {},
-  action: PageReducerAction | UnknownAction
-): AllPages {
+export function pageReducer(state: AllPages = {}, action: Action): AllPages {
   if (removePage.match(action)) {
     const { pageKey } = action.payload
     const nextState = { ...state }
@@ -217,10 +209,10 @@ export function pageReducer(
 
 export function superglueReducer(
   state: Partial<SuperglueState> = {},
-  action: SuperglueReducerAction | UnknownAction
+  action: Action
 ): Partial<SuperglueState> {
   if (setCSRFToken.match(action)) {
-    const { csrfToken } = action.payload as SetCSRFToken['payload']
+    const { csrfToken } = action.payload
     return { ...state, csrfToken: csrfToken }
   }
 

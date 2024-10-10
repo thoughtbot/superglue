@@ -1,4 +1,5 @@
-import { AllAction, FetchArgs } from './actions'
+import { FetchArgs } from './actions'
+import type { Action } from '@reduxjs/toolkit'
 import {
   EnhancedStore,
   Tuple,
@@ -303,7 +304,7 @@ export type RemoteCreator = (
   options: RemoteProps
 ) => MetaThunk
 
-export type Dispatch = ThunkDispatch<RootState, undefined, AllAction>
+export type Dispatch = ThunkDispatch<RootState, undefined, Action>
 
 /**
  * A Store created with Redux Toolkit's `configureStore` setup with reducers
@@ -312,7 +313,7 @@ export type Dispatch = ThunkDispatch<RootState, undefined, AllAction>
  */
 export type SuperglueStore = EnhancedStore<
   RootState,
-  AllAction | UnknownAction,
+  Action,
   Tuple<
     [
       StoreEnhancer<{
@@ -358,21 +359,16 @@ export type SaveAndProcessPageThunk = ThunkAction<
   Promise<void>,
   RootState,
   undefined,
-  AllAction
+  Action
 >
 
-export type MetaThunk = ThunkAction<
-  Promise<Meta>,
-  RootState,
-  undefined,
-  AllAction
->
+export type MetaThunk = ThunkAction<Promise<Meta>, RootState, undefined, Action>
 
 export type DefermentThunk = ThunkAction<
   Promise<void[]>,
   RootState,
   undefined,
-  AllAction
+  Action
 >
 
 /** A variation of RequestInit except the headers must be a regular object */

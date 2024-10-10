@@ -79,12 +79,7 @@ const fragmentMiddleware: Middleware<unknown, RootState, Dispatch> =
       return nextAction
     }
 
-    store.dispatch({
-      type: actions.UPDATE_FRAGMENTS,
-      payload: {
-        changedFragments,
-      },
-    })
+    store.dispatch(actions.updateFragments({ changedFragments }))
 
     return nextAction
   }

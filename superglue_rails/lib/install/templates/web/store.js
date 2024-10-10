@@ -2,9 +2,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import { pagesSlice } from "./slices/pages"
 import { flashSlice } from "./slices/flash"
 import {
-  BEFORE_VISIT,
-  BEFORE_FETCH,
-  BEFORE_REMOTE,
+  beforeVisit,
+  beforeFetch,
+  beforeRemote,
   fragmentMiddleware
 } from '@thoughtbot/superglue'
 
@@ -16,7 +16,7 @@ export const buildStore = (initialState, superglueReducer, supergluePagesReducer
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
-          ignoredActions: [BEFORE_VISIT, BEFORE_FETCH, BEFORE_REMOTE],
+          ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],
         },
       }).concat(fragmentMiddleware),
     reducer: {

@@ -5,12 +5,11 @@ import fetchMock from 'fetch-mock'
 import {
   visit,
   remote,
-  handleGraft,
   beforeFetch,
   handleError,
-  saveResponse,
   saveAndProcessPage,
 } from '../../lib/action_creators'
+import { handleGraft, saveResponse } from '../../lib/actions'
 import * as helpers from '../../lib/utils/helpers'
 import * as rsp from '../../spec/fixtures'
 

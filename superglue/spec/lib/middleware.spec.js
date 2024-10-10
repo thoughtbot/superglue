@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fragmentMiddleware } from '../../lib/middleware'
 import { getIn, setIn } from '../../lib/utils/immutability'
-import { HISTORY_CHANGE, UPDATE_FRAGMENTS } from '../../lib/actions'
+import { historyChange, updateFragments } from '../../lib/actions'
 
 describe('fragment middleware', () => {
   it('does nothing on superglue actions', () => {
@@ -19,10 +19,7 @@ describe('fragment middleware', () => {
       return action
     }
 
-    const action = {
-      type: HISTORY_CHANGE,
-      payload: {},
-    }
+    const action = historyChange({})
 
     expect(fragmentMiddleware(store)(next)(action)).toEqual(action)
     expect(store.dispatch).not.toHaveBeenCalled()
@@ -263,7 +260,7 @@ describe('fragment middleware', () => {
 
     fragmentMiddleware(store)(next)(action)
     expect(store.dispatch).toHaveBeenCalledWith({
-      type: UPDATE_FRAGMENTS,
+      type: updateFragments.type,
       payload: {
         changedFragments: {
           header: {

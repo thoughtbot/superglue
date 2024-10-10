@@ -1,80 +1,23 @@
 import { urlToPageKey, getIn } from '../utils'
 import parse from 'url-parse'
 import {
-  SAVE_RESPONSE,
-  HANDLE_GRAFT,
+  saveResponse,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
-  COPY_PAGE,
-  UPDATE_FRAGMENTS,
+  updateFragments,
+  handleGraft,
 } from '../actions'
 import { remote } from './requests'
 import {
-  CopyAction,
   VisitResponse,
-  SaveResponseAction,
-  UpdateFragmentsAction,
   SaveAndProcessPageThunk,
   DefermentThunk,
-  HandleGraftAction,
   GraftResponse,
   Page,
   Defer,
   JSONMappable,
 } from '../types'
 export * from './requests'
-
-export function copyPage({
-  from,
-  to,
-}: {
-  from: string
-  to: string
-}): CopyAction {
-  return {
-    type: COPY_PAGE,
-    payload: {
-      from,
-      to,
-    },
-  }
-}
-
-export function saveResponse({
-  pageKey,
-  page,
-}: {
-  pageKey: string
-  page: VisitResponse
-}): SaveResponseAction {
-  pageKey = urlToPageKey(pageKey)
-
-  return {
-    type: SAVE_RESPONSE,
-    payload: {
-      pageKey,
-      page,
-    },
-  }
-}
-
-export function handleGraft({
-  pageKey,
-  page,
-}: {
-  pageKey: string
-  page: GraftResponse
-}): HandleGraftAction {
-  pageKey = urlToPageKey(pageKey)
-
-  return {
-    type: HANDLE_GRAFT,
-    payload: {
-      pageKey,
-      page,
-    },
-  }
-}
 
 function fetchDeferments(
   pageKey: string,
@@ -122,7 +65,7 @@ function fetchDeferments(
   }
 }
 
-function updateFragmentsUsing(page: Page): UpdateFragmentsAction {
+function getChangedFragments(page: Page) {
   const changedFragments: Record<string, JSONMappable> = {}
   page.fragments.forEach((fragment) => {
     const { type, path } = fragment
@@ -131,10 +74,7 @@ function updateFragmentsUsing(page: Page): UpdateFragmentsAction {
     changedFragments[type] = getIn(page, path) as JSONMappable
   })
 
-  return {
-    type: UPDATE_FRAGMENTS,
-    payload: { changedFragments },
-  }
+  return changedFragments
 }
 
 export function saveAndProcessPage(
@@ -157,7 +97,8 @@ export function saveAndProcessPage(
       return dispatch(fetchDeferments(pageKey, defers)).then(() => {
         if (page.fragments.length > 0) {
           const finishedPage = getState().pages[pageKey]
-          dispatch(updateFragmentsUsing(finishedPage))
+          const changedFragments = getChangedFragments(finishedPage)
+          dispatch(updateFragments({ changedFragments }))
           return Promise.resolve()
         }
       })

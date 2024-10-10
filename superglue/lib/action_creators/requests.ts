@@ -8,18 +8,15 @@ import {
   removePropsAt,
 } from '../utils'
 import {
-  BEFORE_FETCH,
-  BEFORE_VISIT,
-  BEFORE_REMOTE,
-  SUPERGLUE_ERROR,
+  beforeFetch,
+  beforeVisit,
+  beforeRemote,
+  copyPage,
+  superglueError,
 } from '../actions'
-import { copyPage, saveAndProcessPage } from './index'
+import { saveAndProcessPage } from './index'
 import {
-  BeforeVisit,
-  BeforeFetch,
   FetchArgs,
-  BeforeRemote,
-  HandleError,
   VisitResponse,
   PageResponse,
   Page,
@@ -30,48 +27,12 @@ import {
   VisitCreator,
 } from '../types'
 
-function beforeVisit(payload: {
-  fetchArgs: FetchArgs
-  currentPageKey: string
-}): BeforeVisit {
-  return {
-    type: BEFORE_VISIT,
-    payload,
-  }
-}
-
-function beforeRemote(payload: {
-  fetchArgs: FetchArgs
-  currentPageKey: string
-}): BeforeRemote {
-  return {
-    type: BEFORE_REMOTE,
-    payload,
-  }
-}
-
-function beforeFetch(payload: { fetchArgs: FetchArgs }): BeforeFetch {
-  return {
-    type: BEFORE_FETCH,
-    payload,
-  }
-}
-
-function handleError(err: Error): HandleError {
-  return {
-    type: SUPERGLUE_ERROR,
-    payload: {
-      message: err.message,
-    },
-  }
-}
-
 function handleFetchErr(
   err: Error,
   fetchArgs: FetchArgs,
   dispatch: Dispatch
 ): never {
-  dispatch(handleError(err))
+  dispatch(superglueError({ message: err.message }))
   throw err
 }
 

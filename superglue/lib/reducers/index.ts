@@ -1,33 +1,24 @@
 import { setIn, getIn, urlToPageKey } from '../utils'
+import type { Action } from '@reduxjs/toolkit'
 import {
-  REMOVE_PAGE,
-  SAVE_RESPONSE,
-  HANDLE_GRAFT,
-  HISTORY_CHANGE,
-  SET_CSRF_TOKEN,
-  COPY_PAGE,
-  UPDATE_FRAGMENTS,
+  saveResponse,
+  handleGraft,
+  historyChange,
+  copyPage,
+  updateFragments,
+  setCSRFToken,
+  removePage,
 } from '../actions'
 import { config } from '../config'
 import {
   AllPages,
   Page,
-  PageReducerAction,
   VisitResponse,
   Fragment,
   GraftResponse,
   SuperglueState,
-  SuperglueReducerAction,
-  HistoryChange,
-  SaveResponseAction,
-  SetCSRFToken,
-  HandleGraftAction,
-  UpdateFragmentsAction,
-  CopyAction,
-  RemovePageAction,
   JSONMappable,
 } from '../types'
-import { UnknownAction } from 'redux'
 
 function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
   const { defers = [] } = existingPage
@@ -57,7 +48,7 @@ function constrainPagesSize(state: AllPages) {
   }
 }
 
-function saveResponse(
+function handleSaveResponse(
   state: AllPages,
   pageKey: string,
   page: VisitResponse
@@ -137,7 +128,7 @@ export function graftNodeOntoPage(
   return setIn(state, fullPathToNode, node)
 }
 
-export function handleGraft(
+function handleGraftResponse(
   state: AllPages,
   pageKey: string,
   page: GraftResponse
@@ -163,92 +154,89 @@ export function handleGraft(
   ].reduce((memo, fn) => fn(memo), state)
 }
 
-export function pageReducer(
-  state: AllPages = {},
-  action: PageReducerAction | UnknownAction
-): AllPages {
-  switch (action.type) {
-    case SAVE_RESPONSE: {
-      const { pageKey, page } = action.payload as SaveResponseAction['payload']
-      return saveResponse(state, pageKey, page)
-    }
-    case HANDLE_GRAFT: {
-      const { pageKey, page } = action.payload as HandleGraftAction['payload']
+export function pageReducer(state: AllPages = {}, action: Action): AllPages {
+  if (removePage.match(action)) {
+    const { pageKey } = action.payload
+    const nextState = { ...state }
+    delete nextState[pageKey]
 
-      return handleGraft(state, pageKey, page)
-    }
-    case UPDATE_FRAGMENTS: {
-      const { changedFragments } =
-        action.payload as UpdateFragmentsAction['payload']
-      let nextState = state
-
-      Object.entries(state).forEach(([pageKey, page]) => {
-        page.fragments.forEach((fragment) => {
-          const { type, path } = fragment
-          const changedNode = changedFragments[type]
-          const currentNode = getIn(nextState, `${pageKey}.${path}`)
-
-          if (type in changedFragments && changedNode !== currentNode) {
-            const nextNode = JSON.parse(JSON.stringify(changedNode))
-            nextState = setIn(nextState, `${pageKey}.${path}`, nextNode)
-          }
-        })
-      })
-
-      return nextState
-    }
-    case COPY_PAGE: {
-      const nextState = { ...state }
-      const { from, to } = action.payload as CopyAction['payload']
-
-      nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
-
-      return nextState
-    }
-    case REMOVE_PAGE: {
-      const { pageKey } = action.payload as RemovePageAction['payload']
-      const nextState = { ...state }
-      delete nextState[pageKey]
-
-      return nextState
-    }
-    default:
-      return state
+    return nextState
   }
+
+  if (copyPage.match(action)) {
+    const nextState = { ...state }
+    const { from, to } = action.payload
+
+    nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
+
+    return nextState
+  }
+
+  if (updateFragments.match(action)) {
+    const { changedFragments } = action.payload
+    let nextState = state
+
+    Object.entries(state).forEach(([pageKey, page]) => {
+      page.fragments.forEach((fragment) => {
+        const { type, path } = fragment
+        const changedNode = changedFragments[type]
+        const currentNode = getIn(nextState, `${pageKey}.${path}`)
+
+        if (type in changedFragments && changedNode !== currentNode) {
+          const nextNode = JSON.parse(JSON.stringify(changedNode))
+          nextState = setIn(nextState, `${pageKey}.${path}`, nextNode)
+        }
+      })
+    })
+
+    return nextState
+  }
+
+  if (handleGraft.match(action)) {
+    const { pageKey, page } = action.payload
+
+    return handleGraftResponse(state, pageKey, page)
+  }
+
+  if (saveResponse.match(action)) {
+    const { pageKey, page } = action.payload
+    return handleSaveResponse(state, pageKey, page)
+  }
+
+  return state
 }
 
 export function superglueReducer(
   state: Partial<SuperglueState> = {},
-  action: SuperglueReducerAction | UnknownAction
+  action: Action
 ): Partial<SuperglueState> {
-  switch (action.type) {
-    case HISTORY_CHANGE: {
-      const { pathname, search, hash } =
-        action.payload as HistoryChange['payload']
-      const currentPageKey = urlToPageKey(pathname + search)
-
-      return {
-        ...state,
-        currentPageKey,
-        pathname,
-        search,
-        hash,
-      }
-    }
-    case SAVE_RESPONSE: {
-      const {
-        page: { csrfToken, assets },
-      } = action.payload as SaveResponseAction['payload']
-
-      return { ...state, csrfToken, assets }
-    }
-    case SET_CSRF_TOKEN: {
-      const { csrfToken } = action.payload as SetCSRFToken['payload']
-      return { ...state, csrfToken: csrfToken }
-    }
-    default:
-      return state
+  if (setCSRFToken.match(action)) {
+    const { csrfToken } = action.payload
+    return { ...state, csrfToken: csrfToken }
   }
+
+  if (historyChange.match(action)) {
+    const { pathname, search, hash } = action.payload
+    const currentPageKey = urlToPageKey(pathname + search)
+
+    return {
+      ...state,
+      currentPageKey,
+      pathname,
+      search,
+      hash,
+    }
+  }
+
+  if (saveResponse.match(action)) {
+    const {
+      page: { csrfToken, assets },
+    } = action.payload
+
+    return { ...state, csrfToken, assets }
+  }
+
+  return state
 }
 
 export const rootReducer = {

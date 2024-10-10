@@ -4,7 +4,7 @@ import { rootReducer } from './reducers'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { HISTORY_CHANGE, SET_CSRF_TOKEN } from './actions'
+import { historyChange, setCSRFToken } from './actions'
 import { ConnectedComponent, Provider, connect } from 'react-redux'
 
 import {
@@ -17,16 +17,15 @@ import {
 import Nav from './components/Nav'
 
 export {
-  BEFORE_FETCH,
-  BEFORE_VISIT,
-  BEFORE_REMOTE,
-  SAVE_RESPONSE,
-  UPDATE_FRAGMENTS,
-  COPY_PAGE,
-  REMOVE_PAGE,
+  beforeFetch,
+  beforeVisit,
+  beforeRemote,
+  saveResponse,
+  updateFragments,
+  copyPage,
+  removePage,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
-  HISTORY_CHANGE,
 } from './actions'
 
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
@@ -81,16 +80,15 @@ function start({
   return {
     reducer: rootReducer,
     prepareStore: function (store: SuperglueStore) {
-      store.dispatch({
-        type: HISTORY_CHANGE,
-        payload: {
+      store.dispatch(
+        historyChange({
           pathname: location.pathname,
           search: location.query,
           hash: location.hash,
-        },
-      })
+        })
+      )
       store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-      store.dispatch({ type: SET_CSRF_TOKEN, payload: { csrfToken } })
+      store.dispatch(setCSRFToken({ csrfToken }))
     },
     initialState: pageToInitialState(initialPageKey, initialPage),
     initialPageKey,

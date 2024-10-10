@@ -31,9 +31,6 @@ copy_file "#{__dir__}/templates/web/pages.js", "#{app_js_path}/slices/pages.js"
 say "Copying store.js file to #{app_js_path}"
 copy_file "#{__dir__}/templates/web/store.js", "#{app_js_path}/store.js"
 
-say "Copying actions.js file to #{app_js_path}"
-copy_file "#{__dir__}/templates/web/actions.js", "#{app_js_path}/actions.js"
-
 say "Copying application_visit.js file to #{app_js_path}"
 copy_file "#{__dir__}/templates/web/application_visit.js", "#{app_js_path}/application_visit.js"
 

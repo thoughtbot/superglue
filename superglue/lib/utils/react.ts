@@ -1,4 +1,5 @@
-import { saveAndProcessPage, copyPage } from '../action_creators'
+import { saveAndProcessPage } from '../action_creators'
+import { copyPage } from '../actions'
 import { Content, PageOwnProps, RootState } from '../types'
 import { urlToPageKey } from './url'
 

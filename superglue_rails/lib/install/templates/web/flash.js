@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { saveResponse, beforeVisit } from '../actions'
+import { saveResponse, beforeVisit } from '@thoughtbot/superglue'
 
 export const flashSlice = createSlice({
   name: 'flash',

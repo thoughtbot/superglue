@@ -121,6 +121,7 @@ nav:
   - Reference:
     - Rails Utilities: rails-utils.md
     - Page utilities: functions-passed.md
+    - Hooks: reference/hooks.md
     - Nav: reference/components.Nav.md
     - Superglue: reference/index.md
     - Types: reference/types.md

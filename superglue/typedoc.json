@@ -4,6 +4,7 @@
   "entryPoints": [
     "./lib/index.tsx",
     "./lib/types/index.ts",
+    "./lib/hooks/index.ts",
     "./lib/types/requests.ts",
     "./lib/components/Nav.tsx"
   ],

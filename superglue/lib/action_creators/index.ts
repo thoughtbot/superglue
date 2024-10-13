@@ -77,6 +77,13 @@ function getChangedFragments(page: Page) {
   return changedFragments
 }
 
+/**
+ * Save and process a rendered view from PropsTemplate. This is the primitive
+ * function that `visit` and `remote` calls when it receives a page.
+ *
+ * If you render a page outside the normal request response cycle, e.g,
+ * websocket, you can use this function to save the payload.
+ */
 export function saveAndProcessPage(
   pageKey: string,
   page: VisitResponse | GraftResponse

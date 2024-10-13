@@ -54,28 +54,14 @@ const pageIdentifierToPageComponent = {
 
 ## `application.js`
 
-!!! hint
-    Normally you wouldn't need to configure this class as it'll be generated
-    for you.
-
-Your `Application` component inherits from Superglue's [ApplicationBase]
-abstract class and is the entry point for your Superglue app. It overrides
-the methods [buildStore], [visitAndRemote], and [mapping], to perform
-setup of redux, UJS, and other functionality.
-
-
-```js
-import { ApplicationBase } from '@thoughtbot/superglue'
-
-export default class Application extends ApplicationBase {
-  ...
-}
-```
-
+This is the entry point of your application and uses Superglue's [Application]
+component. There's nothing to do here, but if you need finer control of
+how redux is setup, you can build your own Application using the [source] as
+inspiration.
 
 <div class="grid cards" markdown>
-  -  [:octicons-arrow-right-24: See complete reference](reference/index.md#abstract-applicationbase)
-     for `ApplicationBase`
+  -  [:octicons-arrow-right-24: See complete reference](reference/index.md#application)
+     for `Application` and source reference under [Defined in](reference/index.md#defined-in_13)
 </div>
 
 ## `flash.js`
@@ -112,7 +98,6 @@ def create
 end
 ```
 
-[ApplicationBase]: reference/index.md#abstract-applicationbase
 [buildStore]: reference/index.md#buildstore
 [visitAndRemote]: requests.md
 [mapping]: reference/index.md#mapping

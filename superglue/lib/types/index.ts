@@ -3,8 +3,12 @@ import type { Action } from '@reduxjs/toolkit'
 import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
-import Nav from '../components/Nav'
+import { ConnectedComponent } from 'react-redux'
 import { Visit, Remote, VisitProps, RemoteProps } from './requests'
+import { History } from 'history'
+import { rootReducer } from '../reducers'
+import { NavigationProvider } from '../components/Navigation'
+
 export * from './requests'
 /**
  * A PageKey is a combination of a parsed URL's pathname + query string. No hash.
@@ -236,7 +240,7 @@ export interface RootState {
 export interface PageOwnProps {
   /** the pagekey of the current page */
   pageKey: PageKey
-  navigateTo: InstanceType<typeof Nav>['navigateTo']
+  navigateTo: NavigateTo
   visit: Visit
   remote: Remote
 }
@@ -371,4 +375,147 @@ export interface BasicRequestInit extends RequestInit {
   headers?: {
     [key: string]: string
   }
+}
+
+/**
+ * Passed to every page component and also available as part of a NavigationContext:
+ *
+ * ```js
+ * import { NavigationContext } from '@thoughtbot/superglue';
+ *
+ *
+ * const { navigateTo } = useContext(NavigationContext)
+ * ```
+ *
+ * Manually navigate using pages that exists in the store and restores scroll
+ * position. `navigateTo` is what {@link Visit} in your `application_visit.js`
+ * ultimately calls.
+ *
+ * If there is an existing page in your store `navigateTo` will restore the props,
+ * render the correct component, and return `true`. Otherwise, it will return
+ * `false`. This is useful if you want to restore an existing page before making a
+ * call to `visit` or `remote`.
+ *
+ * @param path
+ * @param options.action when `none`, `navigateTo` will immediately return `false`
+ * @param options.ownProps additional props that will be passed to the page component
+ * @returns `true` if the navigation was a success, `false` if the page was not found in the
+ * store.
+ */
+export type NavigateTo = (
+  path: Keypath,
+  options: {
+    action: NavigationAction
+    ownProps: Record<string, unknown>
+  }
+) => boolean
+
+/**
+ * Superglue comes with a Navigation component that provides a context with
+ * access to {@link Visit}, {@link Remote} and other useful tooling.
+ *
+ * You can also use this to build your own `<Link>` component.
+ *
+ * @prop pageKey The pagekey that's being used to render the current page
+ * component. Useful when used in combination with {@link Remote} to create
+ * requests that target the current page.
+ * @interface
+ */
+export type NavigationContextProps = {
+  navigateTo: NavigateTo
+  visit: Visit
+  remote: Remote
+  pageKey: PageKey
+}
+
+/**
+ * This is the navigation component that gets used by {@link ApplicationProps}. The component
+ * takes a mapping of page components and swaps them when navigating and passes
+ * {@link NavigateTo} to all page components.
+ *
+ * @prop initialPageKey The {@link PageKey} that's to be used when first rendering. Used to
+ * determine the initial page component to show.
+ * @interface
+ */
+export type NavigationProviderProps = {
+  history: History
+  visit: Visit
+  remote: Remote
+  mapping: Record<
+    ComponentIdentifier,
+    ConnectedComponent<React.ComponentType, PageOwnProps>
+  >
+  initialPageKey: PageKey
+}
+
+export type ConnectedMapping = Record<
+  ComponentIdentifier,
+  ConnectedComponent<React.ComponentType, PageOwnProps>
+>
+
+/**
+ * Provide this callback to {@link ApplicationProps} returning a Redux store for
+ * Superglue to use. This would be setup and generated for you in `store.js`. We
+ * recommend using using Redux toolkit's `configureStore` to build the store.
+ *
+ * @param initialState - A preconfigured intial state to pass to your store.
+ * @param reducer - A preconfigured reducer
+ */
+export interface buildStore {
+  (
+    initialState: { pages: AllPages; [key: string]: JSONValue },
+    reducer: typeof rootReducer
+  ): SuperglueStore
+}
+
+/**
+ * Provide this callback to {@link ApplicationProps} returning a visit and remote
+ * function. These functions will be used by Superglue to power its UJS
+ * attributes and passed to your page components and {@link NavigationContextProps}.
+ * You may customize this functionality to your liking, e.g, adding a progress
+ * bar.
+ *
+ * @param navigatorRef
+ * @param store
+ *
+ * @returns
+ */
+export interface buildVisitAndRemote {
+  (
+    navigatorRef: React.RefObject<typeof NavigationProvider>,
+    store: SuperglueStore
+  ): {
+    visit: Visit
+    remote: Remote
+  }
+}
+
+/**
+ * Props for the `Application` component
+ */
+export interface ApplicationProps {
+  /**
+   * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
+   * template, e.g., index.html.erb
+   */
+  initialPage: VisitResponse
+  /**
+   * The base url prefixed to all calls made by `visit` and
+   * `remote`.
+   */
+  baseUrl: string
+  /**
+   * The path of the current page. It should equal to the `location.pathname` +
+   * `location.search` + `location.hash`
+   */
+  path: string
+  /**
+   * The app element that was passed to React's `createRoot`. This will be used
+   * to setup UJS helpers.
+   */
+  appEl: HTMLElement
+  buildStore: buildStore
+  buildVisitAndRemote: buildVisitAndRemote
+  mapping: Record<string, React.ComponentType>
+  history: History
 }

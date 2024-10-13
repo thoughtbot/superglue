@@ -6,7 +6,7 @@ import * as rsp from '../fixtures'
 import { Provider } from 'react-redux'
 import { createMemoryHistory } from 'history'
 import configureMockStore from 'redux-mock-store'
-import Nav from '../../lib/components/Nav'
+import { NavigationProvider } from '../../lib/components/Navigation'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
@@ -69,7 +69,7 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <Nav
+          <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
             initialPageKey={'/bar'}
@@ -106,7 +106,7 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <Nav
+          <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
             initialPageKey={'/bar'}
@@ -152,7 +152,7 @@ describe('Nav', () => {
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       render(
         <Provider store={store}>
-          <Nav
+          <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
             initialPageKey={'/bar'}
@@ -235,7 +235,7 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <Nav
+          <NavigationProvider
             store={store}
             mapping={{ home: ExampleHome, about: ExampleAbout }}
             initialPageKey={'/bar'}
@@ -272,13 +272,15 @@ describe('Nav', () => {
       let instance
 
       render(
-        <Nav
-          store={store}
-          ref={(node) => (instance = node)}
-          mapping={{ home: Home, about: About }}
-          initialPageKey={'/bar'}
-          history={history}
-        />
+        <Provider store={store}>
+          <NavigationProvider
+            store={store}
+            ref={(node) => (instance = node)}
+            mapping={{ home: Home, about: About }}
+            initialPageKey={'/bar'}
+            history={history}
+          />
+        </Provider>
       )
 
       expect(instance.navigateTo('/blah', { action: 'none' })).toEqual(false)
@@ -335,7 +337,7 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <Nav
+            <NavigationProvider
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
@@ -399,7 +401,7 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <Nav
+            <NavigationProvider
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
@@ -455,7 +457,7 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <Nav
+            <NavigationProvider
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
@@ -514,7 +516,7 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <Nav
+            <NavigationProvider
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}

@@ -200,7 +200,8 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
 
   if (saveResponse.match(action)) {
     const { pageKey, page } = action.payload
-    return handleSaveResponse(state, pageKey, page)
+    const nextState = handleSaveResponse(state, pageKey, page)
+    return nextState
   }
 
   return state

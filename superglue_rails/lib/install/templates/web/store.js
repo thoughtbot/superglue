@@ -8,7 +8,8 @@ import {
   fragmentMiddleware
 } from '@thoughtbot/superglue'
 
-export const buildStore = (initialState, superglueReducer, supergluePagesReducer) => {
+export const buildStore = (initialState, reducer) => {
+  const {pages, superglue} = reducer
 
   return configureStore({
     preloadedState: initialState,
@@ -20,9 +21,9 @@ export const buildStore = (initialState, superglueReducer, supergluePagesReducer
         },
       }).concat(fragmentMiddleware),
     reducer: {
-      superglue: superglueReducer,
+      superglue,
       pages: (state, action) => {
-        const nextState = supergluePagesReducer(state, action)
+        const nextState = pages(state, action)
         return pagesSlice.reducer(nextState, action)
       },
       flash: flashSlice.reducer

@@ -5,8 +5,9 @@
     "./lib/index.tsx",
     "./lib/types/index.ts",
     "./lib/hooks/index.ts",
+    "./lib/types/actions.ts",
     "./lib/types/requests.ts",
-    "./lib/components/Nav.tsx"
+    "./lib/components/Navigation.tsx"
   ],
   "outputFileStrategy": "modules",
   "flattenOutputFiles": true,

@@ -1,11 +1,10 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { ApplicationBase } from '../../lib/index'
-import Nav from '../../lib/components/Nav'
+import { Application } from '../../lib/index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
-import React from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react'
 import { createMemoryHistory } from 'history'
 import { config } from '../../lib/config'
 import { visit, remote } from '../../lib/action_creators'
@@ -47,31 +46,24 @@ class About extends React.Component {
   }
 }
 
-class App extends ApplicationBase {
-  visitAndRemote() {
-    return {
-      visit: (...args) => this.store.dispatch(visit(...args)),
-      remote: (...args) => this.store.dispatch(remote(...args)),
-    }
-  }
-  mapping() {
-    return this.props.mapping
-  }
-
-  createHistory() {
-    return this.props.history
-  }
-
-  buildStore(initialState, reducer) {
-    const store = createStore(
-      combineReducers(reducer),
-      initialState,
-      compose(applyMiddleware(thunk))
-    )
-
-    return store
+const buildVisitAndRemote = (navRef, store) => {
+  return {
+    visit: (...args) => store.dispatch(visit(...args)),
+    remote: (...args) => store.dispatch(remote(...args)),
   }
 }
+
+const buildStore = (initialState, reducer) => {
+  const store = createStore(
+    combineReducers(reducer),
+    initialState,
+    compose(applyMiddleware(thunk))
+  )
+
+  return store
+}
+
+const App = Application
 
 describe('start', () => {
   it('sets the stage', () => {
@@ -93,7 +85,7 @@ describe('start', () => {
     let instance
 
     render(
-      <App
+      <Application
         initialPage={initialPage}
         ref={(node) => (instance = node)}
         baseUrl={'http://example.com/base'}
@@ -101,6 +93,8 @@ describe('start', () => {
         appEl={document}
         mapping={{ home: Home, about: About }}
         history={history}
+        buildStore={buildStore}
+        buildVisitAndRemote={buildVisitAndRemote}
       />
     )
     const store = instance.store
@@ -160,7 +154,7 @@ describe('navigation', () => {
       let instance
 
       render(
-        <App
+        <Application
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
@@ -168,6 +162,8 @@ describe('navigation', () => {
           appEl={document}
           history={history}
           mapping={{ home: Home, about: About }}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store
@@ -227,7 +223,7 @@ describe('navigation', () => {
       let instance
 
       render(
-        <App
+        <Application
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
@@ -235,6 +231,8 @@ describe('navigation', () => {
           appEl={document}
           history={history}
           mapping={{ home: ExampleHome, about: About }}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store
@@ -306,7 +304,7 @@ describe('navigation', () => {
 
           let instance
           render(
-            <App
+            <Application
               initialPage={initialPage}
               ref={(node) => (instance = node)}
               baseUrl={'http://example.com'}
@@ -314,6 +312,8 @@ describe('navigation', () => {
               appEl={document}
               mapping={{ home: ExampleHome }}
               history={history}
+              buildStore={buildStore}
+              buildVisitAndRemote={buildVisitAndRemote}
             />
           )
           const store = instance.store
@@ -350,7 +350,7 @@ describe('navigation', () => {
 
       let instance
       render(
-        <App
+        <Application
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
@@ -358,6 +358,8 @@ describe('navigation', () => {
           appEl={document}
           mapping={{ home: ExampleHome, about: About }}
           history={history}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store
@@ -404,7 +406,7 @@ describe('navigation', () => {
 
       let instance
       render(
-        <App
+        <Application
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
@@ -412,6 +414,8 @@ describe('navigation', () => {
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store
@@ -450,7 +454,7 @@ describe('navigation', () => {
       let instance
 
       render(
-        <App
+        <Application
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
@@ -458,6 +462,8 @@ describe('navigation', () => {
           appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store
@@ -533,7 +539,7 @@ describe('navigation', () => {
         let instance
 
         render(
-          <App
+          <Application
             initialPage={initialPage}
             ref={(node) => (instance = node)}
             baseUrl={'http://example.com'}
@@ -541,6 +547,8 @@ describe('navigation', () => {
             appEl={document}
             mapping={{ home: ExampleHome }}
             history={history}
+            buildStore={buildStore}
+            buildVisitAndRemote={buildVisitAndRemote}
           />
         )
 
@@ -570,7 +578,7 @@ describe('navigation', () => {
 
       let instance
       render(
-        <App
+        <Application
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
@@ -578,6 +586,8 @@ describe('navigation', () => {
           appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store
@@ -626,7 +636,7 @@ describe('navigation', () => {
       let instance
 
       render(
-        <App
+        <Application
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           ref={(node) => (instance = node)}
@@ -634,6 +644,8 @@ describe('navigation', () => {
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
+          buildStore={buildStore}
+          buildVisitAndRemote={buildVisitAndRemote}
         />
       )
       const store = instance.store

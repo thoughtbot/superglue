@@ -190,6 +190,13 @@ export const visit: VisitCreator = (
         if (!rsp.redirected && !isGet) {
           meta.suggestedAction = 'replace'
         }
+        pageKey = urlToPageKey(rsp.url)
+
+        const isSamePage = pageKey == currentPageKey
+
+        if (isSamePage) {
+          meta.suggestedAction = 'none'
+        }
 
         if (revisit && isGet) {
           if (rsp.redirected) {
@@ -198,8 +205,6 @@ export const visit: VisitCreator = (
             meta.suggestedAction = 'none'
           }
         }
-
-        pageKey = urlToPageKey(rsp.url)
 
         if (!isGet && !rsp.redirected) {
           pageKey = currentPageKey

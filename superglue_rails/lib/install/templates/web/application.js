@@ -1,23 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { ApplicationBase } from '@thoughtbot/superglue';
+import { Application } from '@thoughtbot/superglue';
 import { buildVisitAndRemote } from './application_visit';
 import { pageIdentifierToPageComponent } from './page_to_page_mapping';
 import { buildStore } from './store'
-
-class Application extends ApplicationBase {
-  mapping() {
-    return pageIdentifierToPageComponent;
-  }
-
-  visitAndRemote(navRef, store) {
-    return buildVisitAndRemote(navRef, store);
-  }
-
-  buildStore(initialState, { superglue, pages}) {
-    return buildStore(initialState, superglue, pages);
-  }
-}
 
 if (typeof window !== "undefined") {
   document.addEventListener("DOMContentLoaded", function () {
@@ -28,6 +14,7 @@ if (typeof window !== "undefined") {
       const root = createRoot(appEl);
       root.render(
         <Application
+          // UJS will be setup on the appEl
           appEl={appEl}
           // The base url prefixed to all calls made by the `visit`
           // and `remote` thunks.
@@ -37,6 +24,12 @@ if (typeof window !== "undefined") {
           initialPage={window.SUPERGLUE_INITIAL_PAGE_STATE}
           // The initial path of the page, e.g., /foobar
           path={location.pathname + location.search + location.hash}
+          // Callback used to setup visit and remote
+          buildVisitAndRemote={buildVisitAndRemote}
+          // Callback used to setup the store
+          buildStore={buildStore}
+          // Mapping between the page identifier to page component
+          mapping={pageIdentifierToPageComponent}
         />
       );
     }

@@ -1282,6 +1282,25 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
       })
     })
 
+    it('returns a meta with suggestedAction of "none" if the next page has the same pageKey as the current page', () => {
+      const initialState = {
+        pages: {},
+        superglue: {
+          assets: [],
+          currentPageKey: '/same_page',
+        },
+      }
+
+      const store = mockStore(initialState)
+
+      fetchMock.mock('/same_page?format=json', rsp.visitSuccess())
+
+      return store.dispatch(visit('/same_page')).then((meta) => {
+        expect(meta.redirected).toEqual(false)
+        expect(meta.suggestedAction).toEqual('none')
+      })
+    })
+
     it('gets aborted when a new visit starts', () =>
       new Promise((done) => {
         const initialState = {

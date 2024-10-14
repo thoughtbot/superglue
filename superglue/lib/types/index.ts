@@ -24,7 +24,10 @@ export type PageKey = string
  *
  * When the page already exists in the store:
  * - `fromCacheOnly` - Use the cached page that exists on the store, only.
- * - `revisitOnly` - Ignore the cache and make a request for the latest page.
+ * - `revisitOnly` - Ignore the cache and make a request for the latest page. If
+ * the response was 200, the {@link SuggestedAction} would be `none` as we don't want
+ * to push into history. If the response was redirected, the {@link SuggestedAction} would be set to
+ * `replace`.
  * - `fromCacheAndRevisitInBackground` - Use the cache version of the page so
  *    superglue can optimistically navigate to it, then make an additional request
  *    for the latest version.

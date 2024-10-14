@@ -1,9 +1,5 @@
 name: Publish docs
-on:
-  push:
-    branches:
-      - main
-    workflow_dispatch:
+on: workflow_dispatch
 
 permissions:
   contents: write

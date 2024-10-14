@@ -44,6 +44,7 @@ import {
 export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
+export { usePage, useSuperglue } from './hooks'
 
 function pageToInitialState(key: string, page: VisitResponse) {
   const slices = page.slices || {}

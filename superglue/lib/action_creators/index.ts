@@ -13,7 +13,6 @@ import {
   SaveAndProcessPageThunk,
   DefermentThunk,
   GraftResponse,
-  Page,
   Defer,
   JSONMappable,
 } from '../types'
@@ -65,18 +64,6 @@ function fetchDeferments(
   }
 }
 
-function getChangedFragments(page: Page) {
-  const changedFragments: Record<string, JSONMappable> = {}
-  page.fragments.forEach((fragment) => {
-    const { type, path } = fragment
-    // A fragment only works on a block in props_template. So using getIn
-    // will always return a JSONMappable
-    changedFragments[type] = getIn(page, path) as JSONMappable
-  })
-
-  return changedFragments
-}
-
 /**
  * Save and process a rendered view from PropsTemplate. This is the primitive
  * function that `visit` and `remote` calls when it receives a page.
@@ -94,21 +81,65 @@ export function saveAndProcessPage(
     const { defers = [] } = page
 
     if ('action' in page) {
+      const prevPage = getState().pages[pageKey]
       dispatch(handleGraft({ pageKey, page }))
+      const currentPage = getState().pages[pageKey]
+
+      currentPage.fragments.forEach((fragment) => {
+        const { type, path } = fragment
+        // A fragment only works on a block in props_template. So using getIn
+        // will always return a JSONMappable
+        const currentFragment = getIn(currentPage, path) as JSONMappable
+        const prevFragment = getIn(prevPage, path) as JSONMappable
+        if (!prevFragment) {
+          dispatch(
+            updateFragments({
+              name: type,
+              pageKey: pageKey,
+              value: currentFragment,
+              path,
+            })
+          )
+        } else if (currentFragment !== prevFragment) {
+          dispatch(
+            updateFragments({
+              name: type,
+              pageKey: pageKey,
+              value: currentFragment,
+              previousValue: prevFragment,
+              path,
+            })
+          )
+        }
+      })
     } else {
       dispatch(saveResponse({ pageKey, page }))
+      if (!getState().pages) {
+        console.log('here')
+        console.log(getState())
+      }
+      const currentPage = getState().pages[pageKey]
+
+      currentPage.fragments.forEach((fragment) => {
+        const { type, path } = fragment
+        const currentFragment = getIn(currentPage, path) as JSONMappable
+
+        dispatch(
+          updateFragments({
+            name: type,
+            pageKey: pageKey,
+            value: currentFragment,
+            path,
+          })
+        )
+      })
     }
 
     const hasFetch = typeof fetch != 'undefined'
     if (hasFetch) {
-      return dispatch(fetchDeferments(pageKey, defers)).then(() => {
-        if (page.fragments.length > 0) {
-          const finishedPage = getState().pages[pageKey]
-          const changedFragments = getChangedFragments(finishedPage)
-          dispatch(updateFragments({ changedFragments }))
-          return Promise.resolve()
-        }
-      })
+      return dispatch(fetchDeferments(pageKey, defers)).then(() =>
+        Promise.resolve()
+      )
     } else {
       return Promise.resolve()
     }

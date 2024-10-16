@@ -36,7 +36,6 @@ import {
   ApplicationProps,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
-export { fragmentMiddleware } from './middleware'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
 export { usePage, useSuperglue } from './hooks'

@@ -108,7 +108,7 @@ nav:
 
     - Partial updates:
       - Digging: digging.md
-      - Fragment and slices: fragments-and-slices.md
+      - Cross-cutting concerns: cross-cutting-concerns.md
       - Deferments: deferments.md
 
   - Recipes:
@@ -126,4 +126,5 @@ nav:
     - Superglue: reference/index.md
     - Types: reference/types.md
     - Requests: reference/types.requests.md
+    - Actions: reference/types.actions.md
 

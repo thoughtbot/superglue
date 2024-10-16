@@ -5,7 +5,6 @@ import {
   handleGraft,
   historyChange,
   copyPage,
-  updateFragments,
   setCSRFToken,
   removePage,
 } from '../actions'
@@ -168,26 +167,6 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
     const { from, to } = action.payload
 
     nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
-
-    return nextState
-  }
-
-  if (updateFragments.match(action)) {
-    const { changedFragments } = action.payload
-    let nextState = state
-
-    Object.entries(state).forEach(([pageKey, page]) => {
-      page.fragments.forEach((fragment) => {
-        const { type, path } = fragment
-        const changedNode = changedFragments[type]
-        const currentNode = getIn(nextState, `${pageKey}.${path}`)
-
-        if (type in changedFragments && changedNode !== currentNode) {
-          const nextNode = JSON.parse(JSON.stringify(changedNode))
-          nextState = setIn(nextState, `${pageKey}.${path}`, nextNode)
-        }
-      })
-    })
 
     return nextState
   }

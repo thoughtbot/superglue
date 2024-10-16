@@ -18,7 +18,7 @@ navigateTo('/posts', {ownProps:{something: true}})
 ```
 
 <div class="grid cards" markdown>
-  -  [:octicons-arrow-right-24: See complete reference](reference/components.Nav.md#navigateto)
+  -  [:octicons-arrow-right-24: See complete reference](reference/types.md#navigateto-2)
      for `navigateTo`
 </div>
 

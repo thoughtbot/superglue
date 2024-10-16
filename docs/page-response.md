@@ -67,7 +67,7 @@ the client-side.
 An UNIX timestamp representing the time the response was rendered.
 
 ### `fragments`
-An `array` of [fragments](./fragments-and-slices.md#fragments). In
+An `array` of [fragments](./cross-cutting-concerns.md#advanced-functionality). In
 `application.json.props` this is set to `json.fragments!`.
 
 ### `restoreStrategy`

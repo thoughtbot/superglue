@@ -12,6 +12,28 @@ import {
 import { handleGraft, saveResponse } from '../../lib/actions'
 import * as helpers from '../../lib/utils/helpers'
 import * as rsp from '../../spec/fixtures'
+import { configureStore } from '@reduxjs/toolkit'
+import { rootReducer } from '../../lib'
+
+const buildStore = (preloadedState) => {
+  let resultsReducer = (state = [], action) => {
+    return state.concat([action])
+  }
+
+  return configureStore({
+    preloadedState,
+    reducer: {
+      ...rootReducer,
+      results: resultsReducer,
+    },
+  })
+}
+
+const allSuperglueActions = (store) => {
+  return store
+    .getState()
+    .results.filter((action) => !action.type.startsWith('@@redux'))
+}
 
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
@@ -99,7 +121,7 @@ describe('action creators', () => {
         assets: [],
         fragments: [],
       }
-      const store = mockStore(initialState())
+      const store = buildStore(initialState())
       const expectedActions = [
         {
           type: '@@superglue/SAVE_RESPONSE',
@@ -116,12 +138,12 @@ describe('action creators', () => {
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     it('handles deferments on the page and fires HANDLE_GRAFT', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
           '/foo': {
@@ -191,26 +213,35 @@ describe('action creators', () => {
       })
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
-    it('handles nested deferments to complete the page before updating fragments', () => {
-      const store = mockStore({
-        ...initialState(),
+    it('handles nested deferments to complete what it needs to complete while calling for an encountered fragment ', () => {
+      const preloadedState = {
+        superglue: {
+          currentPageKey: '/bar',
+          csrfToken: 'token',
+        },
         pages: {
           '/foo': {
             fragments: [],
           },
         },
-      })
+        results: [],
+      }
+
+      let store = buildStore(preloadedState)
 
       const page = {
-        data: { heading: 'Some heading 2', body: {} },
+        data: { heading: 'Some heading 2', body: {}, footer: {} },
         csrfToken: 'token',
         assets: [],
         fragments: [{ type: 'body', path: 'data.body' }],
-        defers: [{ url: '/foo?props_at=data.body', type: 'auto' }],
+        defers: [
+          { url: '/foo?props_at=data.body', type: 'auto' },
+          { url: '/foo?props_at=data.footer', type: 'auto' },
+        ],
       }
 
       fetchMock.mock('/foo?props_at=data.body&format=json', {
@@ -235,12 +266,35 @@ describe('action creators', () => {
       fetchMock.mock('/foo?props_at=data.body.aside.top&format=json', {
         body: JSON.stringify({
           data: {
-            hello: 'world',
+            greeting: {
+              hello: 'world',
+            },
           },
           action: 'graft',
           path: 'data.body.aside.top',
           csrfToken: 'token',
-          fragments: [],
+          fragments: [
+            { type: 'greeting', path: 'data.body.aside.top.greeting' },
+          ],
+          assets: [],
+          defers: [],
+        }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      fetchMock.mock('/foo?props_at=data.footer&format=json', {
+        body: JSON.stringify({
+          data: {
+            copyright: {
+              author: 'john',
+            },
+          },
+          action: 'graft',
+          path: 'data.footer',
+          csrfToken: 'token',
+          fragments: [{ type: 'copyright', path: 'data.footer.copyright' }],
           assets: [],
           defers: [],
         }),
@@ -251,147 +305,82 @@ describe('action creators', () => {
 
       const expectedActions = [
         {
-          type: '@@superglue/SAVE_RESPONSE',
+          type: '@@superglue/UPDATE_FRAGMENTS',
           payload: {
+            name: 'body',
             pageKey: '/foo',
-            page: {
-              data: { heading: 'Some heading 2', body: {} },
-              csrfToken: 'token',
-              assets: [],
-              fragments: [{ type: 'body', path: 'data.body' }],
-              defers: [{ url: '/foo?props_at=data.body', type: 'auto' }],
-            },
+            value: {},
+            path: 'data.body',
           },
-        },
-        {
-          type: '@@superglue/BEFORE_REMOTE',
-          payload: {
-            currentPageKey: '/bar',
-            fetchArgs: [
-              '/foo?props_at=data.body&format=json',
-              {
-                method: 'GET',
-                headers: {
-                  accept: 'application/json',
-                  'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': 'true',
-                  'x-csrf-token': 'token',
-                },
-                credentials: 'same-origin',
-                referrer: '/bar',
-              },
-            ],
-          },
-        },
-        {
-          type: '@@superglue/BEFORE_FETCH',
-          payload: {
-            fetchArgs: [
-              '/foo?props_at=data.body&format=json',
-              {
-                method: 'GET',
-                headers: {
-                  accept: 'application/json',
-                  'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': 'true',
-                  'x-csrf-token': 'token',
-                },
-                credentials: 'same-origin',
-                referrer: '/bar',
-              },
-            ],
-          },
-        },
-        {
-          type: '@@superglue/HANDLE_GRAFT',
-          payload: {
-            pageKey: '/foo',
-            page: {
-              data: { aside: { top: {} } },
-              action: 'graft',
-              path: 'data.body',
-              csrfToken: 'token',
-              fragments: [],
-              assets: [],
-              defers: [
-                { url: '/foo?props_at=data.body.aside.top', type: 'auto' },
-              ],
-            },
-          },
-        },
-        {
-          type: '@@superglue/BEFORE_REMOTE',
-          payload: {
-            currentPageKey: '/bar',
-            fetchArgs: [
-              '/foo?props_at=data.body.aside.top&format=json',
-              {
-                method: 'GET',
-                headers: {
-                  accept: 'application/json',
-                  'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': 'true',
-                  'x-csrf-token': 'token',
-                },
-                credentials: 'same-origin',
-                referrer: '/bar',
-              },
-            ],
-          },
-        },
-        {
-          type: '@@superglue/BEFORE_FETCH',
-          payload: {
-            fetchArgs: [
-              '/foo?props_at=data.body.aside.top&format=json',
-              {
-                method: 'GET',
-                headers: {
-                  accept: 'application/json',
-                  'x-requested-with': 'XMLHttpRequest',
-                  'x-superglue-request': 'true',
-                  'x-csrf-token': 'token',
-                },
-                credentials: 'same-origin',
-                referrer: '/bar',
-              },
-            ],
-          },
-        },
-        {
-          type: '@@superglue/HANDLE_GRAFT',
-          payload: {
-            pageKey: '/foo',
-            page: {
-              data: { hello: 'world' },
-              action: 'graft',
-              path: 'data.body.aside.top',
-              csrfToken: 'token',
-              fragments: [],
-              assets: [],
-              defers: [],
-            },
-          },
-        },
-        {
-          type: '@@superglue/GRAFTING_SUCCESS',
-          payload: {
-            pageKey: '/foo',
-            keyPath: 'data.body.aside.top',
-          },
-        },
-        {
-          type: '@@superglue/GRAFTING_SUCCESS',
-          payload: { pageKey: '/foo', keyPath: 'data.body' },
         },
         {
           type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: { changedFragments: {} },
+          payload: {
+            name: 'body',
+            pageKey: '/foo',
+            value: {
+              aside: {
+                top: {},
+              },
+            },
+            previousValue: {},
+            path: 'data.body',
+          },
+        },
+        {
+          type: '@@superglue/UPDATE_FRAGMENTS',
+          payload: {
+            name: 'copyright',
+            pageKey: '/foo',
+            value: {
+              author: 'john',
+            },
+            path: 'data.footer.copyright',
+          },
+        },
+        {
+          type: '@@superglue/UPDATE_FRAGMENTS',
+          payload: {
+            name: 'body',
+            pageKey: '/foo',
+            value: {
+              aside: {
+                top: {
+                  greeting: {
+                    hello: 'world',
+                  },
+                },
+              },
+            },
+            previousValue: {
+              aside: {
+                top: {},
+              },
+            },
+            path: 'data.body',
+          },
+        },
+        {
+          type: '@@superglue/UPDATE_FRAGMENTS',
+          payload: {
+            name: 'greeting',
+            pageKey: '/foo',
+            value: {
+              hello: 'world',
+            },
+            path: 'data.body.aside.top.greeting',
+          },
         },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        const actions = store
+          .getState()
+          .results.filter((action) =>
+            action.type.startsWith('@@superglue/UPDATE_FRAGMENTS')
+          )
+
+        expect(actions).toEqual(expectedActions)
       })
     })
 
@@ -399,10 +388,12 @@ describe('action creators', () => {
       const prevFetch = global.fetch
       global.fetch = undefined
 
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
-          '/foo': {},
+          '/foo': {
+            fragments: [],
+          },
         },
       })
 
@@ -411,6 +402,7 @@ describe('action creators', () => {
         csrfToken: 'token',
         assets: [],
         defers: [{ url: '/foo?props_at=body', type: 'auto' }],
+        fragments: [],
       }
 
       const expectedActions = [
@@ -425,12 +417,12 @@ describe('action creators', () => {
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
         global.fetch = prevFetch
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     it('handles deferments on the page and fires user defined success', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
           '/foo': {
@@ -440,7 +432,7 @@ describe('action creators', () => {
       })
 
       const page = {
-        data: { heading: 'Some heading 2' },
+        data: { heading: 'Some heading 2', body: {} },
         csrfToken: 'token',
         assets: [],
         fragments: [],
@@ -506,15 +498,17 @@ describe('action creators', () => {
       })
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     it('ignores manual deferments on the page', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
-          '/foo': {},
+          '/foo': {
+            fragments: [],
+          },
         },
       })
 
@@ -539,15 +533,20 @@ describe('action creators', () => {
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     it('fires HANDLE_GRAFT and process a page', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
-          '/foo': {},
+          '/foo': {
+            heading: {
+              cart: {},
+            },
+            fragments: [],
+          },
         },
       })
 
@@ -572,12 +571,12 @@ describe('action creators', () => {
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     it('fires HANDLE_GRAFT, and process a page with a fragment', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
           '/foo': {
@@ -612,20 +611,26 @@ describe('action creators', () => {
         {
           type: '@@superglue/UPDATE_FRAGMENTS',
           payload: {
-            changedFragments: {},
+            name: 'cart',
+            pageKey: '/foo',
+            path: 'data.heading.cart',
+            previousValue: {},
+            value: {
+              status: 'success',
+            },
           },
         },
       ]
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     //TODO: add tests for when type is mannual
 
     it('fires a GRAFTING_ERROR when a fetch fails', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
           '/foo': {},
@@ -674,12 +679,12 @@ describe('action creators', () => {
       fetchMock.mock('/some_defered_request?props_at=body&format=json', 500)
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
     it('fires a user defined error when a fetch fails', () => {
-      const store = mockStore({
+      const store = buildStore({
         ...initialState(),
         pages: {
           '/foo': {},
@@ -734,7 +739,7 @@ describe('action creators', () => {
       fetchMock.mock('/some_defered_request?props_at=body&format=json', 500)
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
   })
@@ -746,7 +751,7 @@ describe('action creators', () => {
     })
 
     it('fetches with correct headers and fires SAVE_RESPONSE', () => {
-      const store = mockStore(initialState())
+      const store = buildStore(initialState())
 
       fetchMock.mock('/foo?format=json', {
         body: successfulBody(),
@@ -792,7 +797,7 @@ describe('action creators', () => {
           'x-csrf-token': 'token',
         })
 
-        expect(store.getActions()).toEqual(expectedActions)
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
 
@@ -811,7 +816,7 @@ describe('action creators', () => {
           csrfToken: 'token',
         },
       }
-      const store = mockStore(initialState)
+      const store = buildStore(initialState)
 
       const body = {
         data: {
@@ -869,12 +874,12 @@ describe('action creators', () => {
       return store
         .dispatch(remote('/foo', { beforeSave, pageKey: '/foo' }))
         .then(() => {
-          expect(store.getActions()).toEqual(expectedActions)
+          expect(allSuperglueActions(store)).toEqual(expectedActions)
         })
     })
 
     it('defaults to the currentPageKey as the pageKey', () => {
-      const store = mockStore({
+      const store = buildStore({
         superglue: {
           currentPageKey: '/current_url',
           csrfToken: 'token',
@@ -900,7 +905,7 @@ describe('action creators', () => {
     })
 
     it('uses the pageKey option to override the currentPageKey as the preferred pageKey', () => {
-      const store = mockStore({
+      const store = buildStore({
         superglue: {
           currentPageKey: '/url_to_be_overridden',
           csrfToken: 'token',
@@ -932,7 +937,7 @@ describe('action creators', () => {
 
     it('removes format from params', () =>
       new Promise((done) => {
-        const store = mockStore(initialState())
+        const store = buildStore(initialState())
 
         fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
         store.dispatch(remote('/first?props_at=foo')).then((meta) => {
@@ -941,7 +946,7 @@ describe('action creators', () => {
       }))
 
     it('returns a meta with redirected true if was redirected', () => {
-      const store = mockStore(initialState())
+      const store = buildStore(initialState())
 
       fetchMock.mock('/redirecting_url?format=json', {
         status: 200,
@@ -959,7 +964,7 @@ describe('action creators', () => {
     })
 
     it('fires SUPERGLUE_REQUEST_ERROR on a bad server response status', () => {
-      const store = mockStore(initialState())
+      const store = buildStore(initialState())
       fetchMock.mock('/foo?format=json', { body: '{}', status: 500 })
 
       const expectedActions = [
@@ -983,14 +988,15 @@ describe('action creators', () => {
       return store.dispatch(remote('/foo')).catch((err) => {
         expect(err.message).toEqual('Internal Server Error')
         expect(err.response.status).toEqual(500)
-        expect(store.getActions()).toEqual(
+
+        expect(allSuperglueActions(store)).toEqual(
           expect.objectContaining(expectedActions)
         )
       })
     })
 
     it('fires SUPERGLUE_REQUEST_ERROR on a invalid response', () => {
-      const store = mockStore(initialState())
+      const store = buildStore(initialState())
       fetchMock.mock('/foo?format=json', {
         status: 200,
         headers: {
@@ -1025,14 +1031,14 @@ describe('action creators', () => {
           'invalid json response body at /foo?format=json reason: Unexpected end of JSON input'
         )
         expect(err.response.status).toEqual(200)
-        expect(store.getActions()).toEqual(
+        expect(allSuperglueActions(store)).toEqual(
           expect.objectContaining(expectedActions)
         )
       })
     })
 
     it('fires SUPERGLUE_REQUEST_ERROR when the SJR returns nothing', () => {
-      const store = mockStore(initialState())
+      const store = buildStore(initialState())
 
       fetchMock.mock('/foo?format=json', {
         body: ``,
@@ -1067,7 +1073,7 @@ describe('action creators', () => {
           'invalid json response body at /foo?format=json reason: Unexpected end of JSON input'
         )
         expect(err.response.status).toEqual(200)
-        expect(store.getActions()).toEqual(
+        expect(allSuperglueActions(store)).toEqual(
           expect.objectContaining(expectedActions)
         )
       })
@@ -1075,10 +1081,15 @@ describe('action creators', () => {
 
     it('fires SUPERGLUE_HANDLE_GRAFT when the response is a graft', () =>
       new Promise((done) => {
-        const store = mockStore({
+        const store = buildStore({
           ...initialState(),
           pages: {
-            '/foo': {},
+            '/foo': {
+              heading: {
+                cart: {},
+              },
+              fragments: [],
+            },
           },
         })
         fetchMock.mock('/foo?format=json', {
@@ -1097,8 +1108,7 @@ describe('action creators', () => {
         })
 
         store.subscribe(() => {
-          const state = store.getState()
-          const actions = store.getActions()
+          const actions = allSuperglueActions(store)
           const lastAction = actions[actions.length - 1]
           const { type, payload } = lastAction
 
@@ -1125,7 +1135,7 @@ describe('action creators', () => {
 
     it('warns if a received page has a completely component id that the target page it will replace', () => {
       vi.spyOn(console, 'warn')
-      const store = mockStore({
+      const store = buildStore({
         superglue: {
           currentPageKey: '/bar',
           csrfToken: 'token',
@@ -1172,7 +1182,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
 
     it('does not warn if a received page is not replacing a target page with a different componentIdentifier', () => {
       vi.spyOn(console, 'warn')
-      const store = mockStore({
+      const store = buildStore({
         superglue: {
           currentPageKey: '/bar',
           csrfToken: 'token',
@@ -1222,7 +1232,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/first?format=json', rsp.visitSuccess())
         store
@@ -1241,7 +1251,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/redirecting_url?format=json', {
           status: 200,
@@ -1269,7 +1279,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/first?format=json', rsp.visitSuccess())
 
@@ -1291,7 +1301,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
         },
       }
 
-      const store = mockStore(initialState)
+      const store = buildStore(initialState)
 
       fetchMock.mock('/same_page?format=json', rsp.visitSuccess())
 
@@ -1310,7 +1320,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/first?format=json', rsp.visitSuccess())
         store.dispatch(visit('/first')).catch((err) => {
@@ -1330,7 +1340,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           pages: {},
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/first?format=json', rsp.visitSuccess())
 
@@ -1360,7 +1370,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
 
@@ -1384,7 +1394,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         fetchMock.mock('/first?format=json', rsp.visitSuccess())
 
@@ -1416,7 +1426,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
           },
         }
 
-        const store = mockStore(initialState)
+        const store = buildStore(initialState)
 
         let mockResponse = rsp.graftSuccessWithNewZip()
         fetchMock.mock(
@@ -1450,7 +1460,7 @@ Consider using data-sg-visit, the visit function, or redirect_back.`
             })
           )
           .then((meta) => {
-            expect(store.getActions()).toEqual(expectedActions)
+            expect(allSuperglueActions(store)).toEqual(expectedActions)
             done()
           })
       }))

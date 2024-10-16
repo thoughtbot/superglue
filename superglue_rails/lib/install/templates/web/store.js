@@ -5,7 +5,6 @@ import {
   beforeVisit,
   beforeFetch,
   beforeRemote,
-  fragmentMiddleware
 } from '@thoughtbot/superglue'
 
 export const buildStore = (initialState, reducer) => {
@@ -19,7 +18,7 @@ export const buildStore = (initialState, reducer) => {
         serializableCheck: {
           ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],
         },
-      }).concat(fragmentMiddleware),
+      }),
     reducer: {
       superglue,
       pages: (state, action) => {

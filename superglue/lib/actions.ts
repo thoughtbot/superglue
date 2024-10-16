@@ -2,9 +2,10 @@ import { createAction } from '@reduxjs/toolkit'
 import {
   FetchArgs,
   PageKey,
-  JSONValue,
   GraftResponse,
   VisitResponse,
+  JSONMappable,
+  Keypath,
 } from './types'
 import { urlToPageKey } from './utils'
 
@@ -43,8 +44,29 @@ export const superglueError = createAction<{ message: string }>(
   '@@superglue/ERROR'
 )
 
+/**
+ * A redux action called whenever a fragment is received from `visit` or updated
+ * using `remote`. Its a useful action to use for cross cutting concerns like a
+ * shared header or a shopping cart. For example:
+ *
+ * ```
+ * import { updateFragments } from '@thoughtbot/superglue'
+ *
+ * export const exampleSlice = createSlice({
+ *  name: 'Example',
+ *  initialState: {},
+ *  extraReducers: (builder) => {
+ *    builder.addCase(updateFragments, (state, action) => {
+ *      // Update the slice using the latest and greatest.
+ *      return action.value
+ * ```
+ */
 export const updateFragments = createAction<{
-  changedFragments: Record<string, JSONValue>
+  name: string
+  path: Keypath
+  pageKey: PageKey
+  value: JSONMappable
+  previousValue?: JSONMappable
 }>('@@superglue/UPDATE_FRAGMENTS')
 
 /**

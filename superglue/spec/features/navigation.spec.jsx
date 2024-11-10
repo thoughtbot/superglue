@@ -25,8 +25,8 @@ class Home extends React.Component {
   }
 
   visit() {
-    this.props.visit('/foo').then(() => {
-      this.props.navigateTo('/foo')
+    this.props.visit('/about').then(() => {
+      this.props.navigateTo('/about')
     })
   }
 
@@ -68,7 +68,7 @@ const App = Application
 describe('start', () => {
   it('sets the stage', () => {
     const history = createMemoryHistory({
-      initialEntries: ['/bar?some=123#title'],
+      initialEntries: ['/home?some=123#title'],
       initialIndex: 0,
     })
 
@@ -89,7 +89,7 @@ describe('start', () => {
         initialPage={initialPage}
         ref={(node) => (instance = node)}
         baseUrl={'http://example.com/base'}
-        path={'/bar?some=123#title'}
+        path={'/home?some=123#title'}
         appEl={document}
         mapping={{ home: Home, about: About }}
         history={history}
@@ -101,16 +101,16 @@ describe('start', () => {
 
     expect(store.getState()).toEqual({
       superglue: {
-        currentPageKey: '/bar?some=123',
-        pathname: '/bar',
+        currentPageKey: '/home?some=123',
+        pathname: '/home',
         search: '?some=123',
         hash: '#title',
         csrfToken: 'token',
         assets: ['123.js', '123.css'],
       },
       pages: {
-        '/bar?some=123': {
-          pageKey: '/bar?some=123',
+        '/home?some=123': {
+          pageKey: '/home?some=123',
           fragments: [],
           data: {
             heading: 'this is page 1',
@@ -137,7 +137,7 @@ describe('navigation', () => {
   describe('when an action pushes history', () => {
     it('saves the page and updates history', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/bar'],
+        initialEntries: ['/home'],
         initialIndex: 0,
       })
 
@@ -158,7 +158,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
-          path={'/bar'}
+          path={'/home'}
           appEl={document}
           history={history}
           mapping={{ home: Home, about: About }}
@@ -172,15 +172,15 @@ describe('navigation', () => {
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
       const mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
+      mockResponse.headers['x-response-url'] = '/about'
+      fetchMock.mock('http://example.com/about?format=json', mockResponse)
 
       const pageState = {
         data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
-        pageKey: '/foo',
+        pageKey: '/about',
         fragments: [],
         savedAt: expect.any(Number),
       }
@@ -190,15 +190,15 @@ describe('navigation', () => {
 
       await flushPromises()
 
-      expect(store.getState().pages['/foo']).toEqual(pageState)
-      expect(history.location.pathname).toEqual('/foo')
+      expect(store.getState().pages['/about']).toEqual(pageState)
+      expect(history.location.pathname).toEqual('/about')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
     })
 
     it('saves the page and updates history with hash', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/bar'],
+        initialEntries: ['/home'],
         initialIndex: 0,
       })
 
@@ -215,8 +215,8 @@ describe('navigation', () => {
       class ExampleHome extends Home {
         visit() {
           this.props
-            .visit('/foo#title')
-            .then(() => this.props.navigateTo('/foo#title'))
+            .visit('/about#title')
+            .then(() => this.props.navigateTo('/about#title'))
         }
       }
 
@@ -227,7 +227,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
-          path={'/bar'}
+          path={'/home'}
           appEl={document}
           history={history}
           mapping={{ home: ExampleHome, about: About }}
@@ -241,15 +241,15 @@ describe('navigation', () => {
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
       const mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
+      mockResponse.headers['x-response-url'] = '/about'
+      fetchMock.mock('http://example.com/about?format=json', mockResponse)
 
       const pageState = {
         data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
-        pageKey: '/foo',
+        pageKey: '/about',
         fragments: [],
         savedAt: expect.any(Number),
       }
@@ -259,8 +259,8 @@ describe('navigation', () => {
       await flushPromises()
 
       const state = store.getState()
-      expect(state.pages['/foo']).toEqual(pageState)
-      expect(history.location.pathname).toEqual('/foo')
+      expect(state.pages['/about']).toEqual(pageState)
+      expect(history.location.pathname).toEqual('/about')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('#title')
       expect(screen.getByRole('heading')).not.toHaveTextContent('Home Page')
@@ -271,7 +271,7 @@ describe('navigation', () => {
       it('does nothing to the store', () =>
         new Promise((done) => {
           const history = createMemoryHistory({
-            initialEntries: ['/bar'],
+            initialEntries: ['/home'],
             initialIndex: 0,
           })
 
@@ -280,7 +280,7 @@ describe('navigation', () => {
 
             if (pathname == '/some_html_page') {
               const state = store.getState()
-              expect(state.superglue.currentPageKey).toEqual('/bar')
+              expect(state.superglue.currentPageKey).toEqual('/home')
               done()
             }
           })
@@ -308,7 +308,7 @@ describe('navigation', () => {
               initialPage={initialPage}
               ref={(node) => (instance = node)}
               baseUrl={'http://example.com'}
-              path={'/bar'}
+              path={'/home'}
               appEl={document}
               mapping={{ home: ExampleHome }}
               history={history}
@@ -326,7 +326,7 @@ describe('navigation', () => {
   describe('when an action replaces history', () => {
     it('removes the previous page in the store', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/bar'],
+        initialEntries: ['/home'],
         initialIndex: 0,
       })
 
@@ -342,8 +342,8 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.visit('/foo').then(() => {
-            this.props.navigateTo('/foo', { action: 'replace' })
+          this.props.visit('/about').then(() => {
+            this.props.navigateTo('/about', { action: 'replace' })
           })
         }
       }
@@ -354,7 +354,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
-          path={'/bar'}
+          path={'/home'}
           appEl={document}
           mapping={{ home: ExampleHome, about: About }}
           history={history}
@@ -366,17 +366,17 @@ describe('navigation', () => {
 
       expect(screen.getByRole('heading')).not.toHaveTextContent('Visit Success')
       const mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
+      mockResponse.headers['x-response-url'] = '/about'
+      fetchMock.mock('http://example.com/about?format=json', mockResponse)
 
       const user = userEvent.setup()
       await user.click(screen.getByText('click'))
       await flushPromises()
 
       const state = store.getState()
-      expect(Object.keys(state.pages)).toEqual(['/foo'])
-      expect(state.superglue.currentPageKey).toEqual('/foo')
-      expect(history.location.pathname).toEqual('/foo')
+      expect(Object.keys(state.pages)).toEqual(['/about'])
+      expect(state.superglue.currentPageKey).toEqual('/about')
+      expect(history.location.pathname).toEqual('/about')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
       expect(screen.getByRole('heading')).toHaveTextContent('Visit Success')
@@ -384,7 +384,7 @@ describe('navigation', () => {
 
     it('does nothing when we replace the same page', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/bar'],
+        initialEntries: ['/home'],
         initialIndex: 0,
       })
 
@@ -400,7 +400,7 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.navigateTo('/bar', { action: 'replace' })
+          this.props.navigateTo('/home', { action: 'replace' })
         }
       }
 
@@ -410,7 +410,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
-          path={'/bar'}
+          path={'/home'}
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
@@ -425,9 +425,9 @@ describe('navigation', () => {
       await flushPromises()
 
       const state = store.getState()
-      expect(Object.keys(state.pages)).toEqual(['/bar'])
-      expect(state.superglue.currentPageKey).toEqual('/bar')
-      expect(history.location.pathname).toEqual('/bar')
+      expect(Object.keys(state.pages)).toEqual(['/home'])
+      expect(state.superglue.currentPageKey).toEqual('/home')
+      expect(history.location.pathname).toEqual('/home')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
     })
@@ -436,7 +436,7 @@ describe('navigation', () => {
   describe('when an action pops history', () => {
     it('loads the page from the store', async () => {
       const history = createMemoryHistory({
-        initialEntries: ['/bar'],
+        initialEntries: ['/home'],
         initialIndex: 0,
       })
 
@@ -458,7 +458,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
-          path={'/bar'}
+          path={'/home'}
           appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
@@ -472,28 +472,28 @@ describe('navigation', () => {
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
       const mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
+      mockResponse.headers['x-response-url'] = '/about'
+      fetchMock.mock('http://example.com/about?format=json', mockResponse)
 
       const user = userEvent.setup()
       await user.click(screen.getByText('click'))
 
       await flushPromises()
       let state = store.getState()
-      expect(state.superglue.currentPageKey).toEqual('/foo')
-      expect(history.location.pathname).toEqual('/foo')
-      expect(state.superglue.currentPageKey).toEqual('/foo')
-      expect(history.location.pathname).toEqual('/foo')
+      expect(state.superglue.currentPageKey).toEqual('/about')
+      expect(history.location.pathname).toEqual('/about')
+      expect(state.superglue.currentPageKey).toEqual('/about')
+      expect(history.location.pathname).toEqual('/about')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
 
       history.back()
 
       state = store.getState()
-      expect(state.superglue.currentPageKey).toEqual('/bar')
-      expect(history.location.pathname).toEqual('/bar')
-      expect(state.superglue.currentPageKey).toEqual('/bar')
-      expect(history.location.pathname).toEqual('/bar')
+      expect(state.superglue.currentPageKey).toEqual('/home')
+      expect(history.location.pathname).toEqual('/home')
+      expect(state.superglue.currentPageKey).toEqual('/home')
+      expect(history.location.pathname).toEqual('/home')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
     })
@@ -501,19 +501,19 @@ describe('navigation', () => {
     it('does not change current page when the hash changes', () =>
       new Promise((done) => {
         const history = createMemoryHistory({})
-        history.push('/bar#title', {
+        history.push('/home#title', {
           superglue: true,
-          pageKey: '/bar',
+          pageKey: '/home',
         })
-        history.push('/bar') // Gets replaced on Superglue.start
+        history.push('/home') // Gets replaced on Superglue.start
         let store
 
         history.listen(({ action, location }) => {
           const { pathname, hash } = location
           if (hash === '#title') {
             const state = store.getState()
-            expect(state.superglue.currentPageKey).toEqual('/bar')
-            expect(pathname).toEqual('/bar')
+            expect(state.superglue.currentPageKey).toEqual('/home')
+            expect(pathname).toEqual('/home')
             expect(hash).toEqual('#title')
             done()
           }
@@ -543,7 +543,7 @@ describe('navigation', () => {
             initialPage={initialPage}
             ref={(node) => (instance = node)}
             baseUrl={'http://example.com'}
-            path={'/bar'}
+            path={'/home'}
             appEl={document}
             mapping={{ home: ExampleHome }}
             history={history}
@@ -557,14 +557,14 @@ describe('navigation', () => {
 
     it('requests the evicted page when encountering the page again using browser buttons', async () => {
       const history = createMemoryHistory({})
-      history.push('/foo', {
+      history.push('/about', {
         superglue: true,
-        pageKey: '/foo',
+        pageKey: '/about',
       })
-      history.push('/bar') // Gets replaced on Superglue.start
+      history.push('/home') // Gets replaced on Superglue.start
       const mockResponse = rsp.visitSuccess()
-      mockResponse.headers['x-response-url'] = '/foo'
-      fetchMock.mock('http://example.com/foo?format=json', mockResponse)
+      mockResponse.headers['x-response-url'] = '/about'
+      fetchMock.mock('http://example.com/about?format=json', mockResponse)
 
       const initialPage = {
         data: {
@@ -582,7 +582,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
-          path={'/bar'}
+          path={'/home'}
           appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
@@ -597,7 +597,7 @@ describe('navigation', () => {
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
-        pageKey: '/foo',
+        pageKey: '/about',
         fragments: [],
         savedAt: expect.any(Number),
       }
@@ -607,8 +607,8 @@ describe('navigation', () => {
 
       await flushPromises()
 
-      expect(store.getState().pages['/foo']).toEqual(pageState)
-      expect(history.location.pathname).toEqual('/foo')
+      expect(store.getState().pages['/about']).toEqual(pageState)
+      expect(history.location.pathname).toEqual('/about')
       expect(history.location.search).toEqual('')
       expect(history.location.hash).toEqual('')
     })
@@ -629,7 +629,7 @@ describe('navigation', () => {
 
       class ExampleHome extends Home {
         visit() {
-          this.props.remote('/foo?props_at=address')
+          this.props.remote('/about?props_at=address')
         }
       }
 
@@ -640,7 +640,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           ref={(node) => (instance = node)}
-          path={'/foo'}
+          path={'/about'}
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
@@ -651,9 +651,9 @@ describe('navigation', () => {
       const store = instance.store
 
       const mockResponse = rsp.graftSuccessWithNewZip()
-      mockResponse.headers['x-response-url'] = '/foo'
+      mockResponse.headers['x-response-url'] = '/about'
       fetchMock.mock(
-        'http://example.com/foo?props_at=address&format=json',
+        'http://example.com/about?props_at=address&format=json',
         mockResponse
       )
 
@@ -662,7 +662,7 @@ describe('navigation', () => {
       await flushPromises()
 
       const state = store.getState()
-      expect(state.pages['/foo'].data.address).toEqual({
+      expect(state.pages['/about'].data.address).toEqual({
         zip: 91210,
       })
     })

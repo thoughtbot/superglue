@@ -17,7 +17,7 @@ class Home extends React.Component {
   }
 
   visit() {
-    this.props.navigateTo('/foo')
+    this.props.navigateTo('/about')
   }
 
   render() {
@@ -40,9 +40,9 @@ describe('Nav', () => {
   describe('navigateTo', () => {
     it('navigates to the specified page', async () => {
       const history = createMemoryHistory({})
-      history.push('/bar', {
+      history.push('/home', {
         superglue: true,
-        pageKey: '/bar',
+        pageKey: '/home',
         posX: 0,
         posY: 0,
       })
@@ -53,11 +53,11 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/foo': {
+          '/about': {
             componentIdentifier: 'about',
             restoreStrategy: 'fromCacheOnly',
           },
-          '/bar': {
+          '/home': {
             componentIdentifier: 'home',
             restoreStrategy: 'fromCacheOnly',
           },
@@ -72,7 +72,7 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/bar'}
+            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -94,7 +94,7 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': {
+          '/home': {
             componentIdentifier: 'home',
             restoreStrategy: 'fromCacheOnly',
           },
@@ -109,7 +109,7 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/bar'}
+            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -127,20 +127,20 @@ describe('Nav', () => {
 
     it('navigates to the specified page and calls the action when used with react-redux', async () => {
       const history = createMemoryHistory({})
-      history.push('/bar', {
+      history.push('/home', {
         superglue: true,
-        pageKey: '/bar',
+        pageKey: '/home',
         posX: 0,
         posY: 0,
       })
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/foo': {
+          '/about': {
             componentIdentifier: 'about',
             restoreStrategy: 'fromCacheOnly',
           },
-          '/bar': {
+          '/home': {
             componentIdentifier: 'home',
             restoreStrategy: 'fromCacheOnly',
           },
@@ -155,7 +155,7 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/bar'}
+            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -171,7 +171,7 @@ describe('Nav', () => {
         {
           type: '@@superglue/HISTORY_CHANGE',
           payload: {
-            pathname: '/bar',
+            pathname: '/home',
             search: '',
             hash: '',
           },
@@ -179,7 +179,7 @@ describe('Nav', () => {
         {
           type: '@@superglue/HISTORY_CHANGE',
           payload: {
-            pathname: '/foo',
+            pathname: '/about',
             search: '',
             hash: '',
           },
@@ -190,20 +190,20 @@ describe('Nav', () => {
 
     it('navigates to the page when history changes', async () => {
       const history = createMemoryHistory({})
-      history.push('/bar', {
+      history.push('/home', {
         superglue: true,
-        pageKey: '/bar',
+        pageKey: '/home',
         posX: 0,
         posY: 0,
       })
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': {
+          '/home': {
             componentIdentifier: 'home',
             restoreStrategy: 'fromCacheOnly',
           },
-          '/foo': {
+          '/about': {
             componentIdentifier: 'about',
             restoreStrategy: 'fromCacheOnly',
           },
@@ -238,7 +238,7 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: ExampleHome, about: ExampleAbout }}
-            initialPageKey={'/bar'}
+            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -255,11 +255,11 @@ describe('Nav', () => {
       const mockStore = configureMockStore()
       const store = mockStore({
         pages: {
-          '/bar': {
+          '/home': {
             componentIdentifier: 'home',
             restoreStrategy: 'fromCacheOnly',
           },
-          '/foo': {
+          '/about': {
             componentIdentifier: 'about',
             restoreStrategy: 'fromCacheOnly',
           },
@@ -277,7 +277,7 @@ describe('Nav', () => {
             store={store}
             ref={(node) => (instance = node)}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/bar'}
+            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -291,27 +291,27 @@ describe('Nav', () => {
     describe('when the previous page was set to "revisitOnly"', () => {
       it('revisits the page and scrolls when finished', () => {
         const history = createMemoryHistory({})
-        history.replace('/bar', {
+        history.replace('/home', {
           superglue: true,
-          pageKey: '/bar',
+          pageKey: '/home',
           posX: 5,
           posY: 5,
         })
 
-        history.push('/foo', {
+        history.push('/about', {
           superglue: true,
-          pageKey: '/foo',
+          pageKey: '/about',
           posX: 10,
           posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': {
+            '/home': {
               componentIdentifier: 'home',
               restoreStrategy: 'revisitOnly',
             },
-            '/foo': {
+            '/about': {
               componentIdentifier: 'about',
               restoreStrategy: 'revisitOnly',
             },
@@ -341,39 +341,39 @@ describe('Nav', () => {
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
-              initialPageKey={'/bar'}
+              initialPageKey={'/home'}
               history={history}
             />
           </Provider>
         )
 
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith('/bar', { revisit: true })
+        expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
       })
 
       it('revisits the page and skips scroll when redirected (suggestedAction is not "none")', () => {
         const history = createMemoryHistory({})
-        history.replace('/bar', {
+        history.replace('/home', {
           superglue: true,
-          pageKey: '/bar',
+          pageKey: '/home',
           posX: 5,
           posY: 5,
         })
 
-        history.push('/foo', {
+        history.push('/about', {
           superglue: true,
-          pageKey: '/foo',
+          pageKey: '/about',
           posX: 10,
           posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': {
+            '/home': {
               componentIdentifier: 'home',
               restoreStrategy: 'revisitOnly',
             },
-            '/foo': {
+            '/about': {
               componentIdentifier: 'about',
               restoreStrategy: 'revisitOnly',
             },
@@ -405,41 +405,41 @@ describe('Nav', () => {
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
-              initialPageKey={'/bar'}
+              initialPageKey={'/home'}
               history={history}
             />
           </Provider>
         )
 
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith('/bar', { revisit: true })
+        expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
       })
     })
 
     describe('when the previous page was set to "fromCacheOnly"', () => {
       it('restores without visiting and scrolls', () => {
         const history = createMemoryHistory({})
-        history.replace('/bar', {
+        history.replace('/home', {
           superglue: true,
-          pageKey: '/bar',
+          pageKey: '/home',
           posX: 5,
           posY: 5,
         })
 
-        history.push('/foo', {
+        history.push('/about', {
           superglue: true,
-          pageKey: '/foo',
+          pageKey: '/about',
           posX: 10,
           posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': {
+            '/home': {
               componentIdentifier: 'home',
               restoreStrategy: 'fromCacheOnly',
             },
-            '/foo': {
+            '/about': {
               componentIdentifier: 'about',
               restoreStrategy: 'fromCacheOnly',
             },
@@ -461,7 +461,7 @@ describe('Nav', () => {
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
-              initialPageKey={'/bar'}
+              initialPageKey={'/home'}
               history={history}
             />
           </Provider>
@@ -476,27 +476,27 @@ describe('Nav', () => {
     describe('and the previous page was set to "fromCacheAndRevisitInBackground"', () => {
       it('restores, scrolls, and revisits the page in the background', () => {
         const history = createMemoryHistory({})
-        history.replace('/bar', {
+        history.replace('/home', {
           superglue: true,
-          pageKey: '/bar',
+          pageKey: '/home',
           posX: 5,
           posY: 5,
         })
 
-        history.push('/foo', {
+        history.push('/about', {
           superglue: true,
-          pageKey: '/foo',
+          pageKey: '/about',
           posX: 10,
           posY: 10,
         })
         const mockStore = configureMockStore()
         const store = mockStore({
           pages: {
-            '/bar': {
+            '/home': {
               componentIdentifier: 'home',
               restoreStrategy: 'fromCacheAndRevisitInBackground',
             },
-            '/foo': {
+            '/about': {
               componentIdentifier: 'about',
               restoreStrategy: 'fromCacheAndRevisitInBackground',
             },
@@ -520,14 +520,14 @@ describe('Nav', () => {
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
-              initialPageKey={'/bar'}
+              initialPageKey={'/home'}
               history={history}
             />
           </Provider>
         )
 
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith('/bar', { revisit: true })
+        expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
       })
     })
   })

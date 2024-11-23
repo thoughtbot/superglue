@@ -71,7 +71,7 @@ class SuperglueInstallationTest < Minitest::Test
 
     FileUtils.rm_f("app/javascript/application.js")
 
-    successfully "bundle exec rails superglue:install:web"
+    successfully "bundle exec rails generate superglue:install"
     update_package_json
     successfully "yarn install --cache-folder /tmp/.junk; rm -rf /tmp/.junk"
   end
@@ -92,7 +92,7 @@ class SuperglueInstallationTest < Minitest::Test
   end
 
   def generate_scaffold
-    successfully "bundle exec rails generate scaffold post body:string --force --no-template-engine --superglue"
+    successfully "bundle exec rails generate superglue:scaffold post body:string --force"
   end
 
   def reset_db

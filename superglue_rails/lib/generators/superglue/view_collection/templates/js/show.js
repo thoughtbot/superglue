@@ -1,14 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-export default function <%= plural_table_name.camelize %>Show({
+export default function <%= js_plural_table_name(:upper) %>Show({
   // visit,
   // remote,
   <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
   <%=attr.camelize(:lower)%>,
   <%- end -%>
-  edit<%= singular_table_name.camelize %>Path,
-  <%= plural_table_name.camelize(:lower) %>Path
+  edit<%= js_singular_table_name(:upper) %>Path,
+  <%= js_plural_table_name %>Path
 }) {
   const flash = useSelector((state) => state.flash)
 
@@ -21,8 +21,8 @@ export default function <%= plural_table_name.camelize %>Show({
         {<%=attr.camelize(:lower)%>}
       </p>
       <%- end -%>
-      <a href={ edit<%= singular_table_name.camelize %>Path } data-sg-visit>Edit</a>
-      <a href={ <%= plural_table_name.camelize(:lower) %>Path } data-sg-visit>Back</a>
+      <a href={ edit<%= js_singular_table_name(:upper) %>Path } data-sg-visit>Edit</a>
+      <a href={ <%= js_plural_table_name %>Path } data-sg-visit>Back</a>
     </div>
   )
 }

@@ -1,14 +1,14 @@
-json.<%= plural_table_name.camelize(:lower) %> do
+json.<%= js_plural_table_name %> do
   json.array! @<%= plural_table_name %> do |<%= singular_table_name %>|
     <%- attributes_list_with_timestamps.each do |attr| -%>
-    json.<%=attr%> <%= singular_table_name.camelize(:lower) %>.<%=attr%>
+    json.<%=attr%> <%= js_singular_table_name %>.<%=attr%>
     <%- end -%>
-    json.edit<%=singular_table_name.camelize%>Path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
-    json.<%=singular_table_name.camelize(:lower)%>Path <%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.edit<%=js_singular_table_name(:upper)%>Path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
+    json.<%=js_singular_table_name%>Path <%=singular_table_name%>_path(<%=singular_table_name%>)
     json.deleteForm do
       form_props(model: <%=singular_table_name%>, method: :delete)
     end
   end
 end
 
-json.new<%= singular_table_name.camelize %>Path new_<%= singular_table_name %>_path
+json.new<%= js_singular_table_name(:upper) %>Path new_<%= singular_table_name %>_path

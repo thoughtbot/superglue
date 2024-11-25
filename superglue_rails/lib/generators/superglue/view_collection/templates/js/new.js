@@ -1,12 +1,12 @@
 import React from 'react'
 // import { useSelector } from 'react-redux'
 
-export default function <%= plural_table_name.camelize %>New({
+export default function <%= js_plural_table_name(:upper) %>New({
   // visit,
   // remote
   form,
   errors,
-  <%= plural_table_name.camelize(:lower) %>Path,
+  <%= js_plural_table_name %>Path,
 }) {
   const messagesEl = errors && (
     <div id="error_explanation">
@@ -27,7 +27,7 @@ export default function <%= plural_table_name.camelize %>New({
         <button {...form.inputs.submit} type="submit"> {...form.inputs.submit.text} </button>
       </form>
 
-      <a href={<%= plural_table_name.camelize(:lower) %>Path} data-sg-visit>Back</a>
+      <a href={<%= js_plural_table_name %>Path} data-sg-visit>Back</a>
     </div>
   )
 }

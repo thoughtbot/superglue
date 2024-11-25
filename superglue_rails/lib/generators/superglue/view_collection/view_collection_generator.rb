@@ -61,6 +61,14 @@ module Superglue
 
       protected
 
+      def js_singular_table_name(casing = :lower)
+        singular_table_name.camelize(casing)
+      end
+
+      def js_plural_table_name(casing = :lower)
+        plural_table_name.camelize(casing)
+      end
+
       def available_views
         %w(index edit show new)
       end

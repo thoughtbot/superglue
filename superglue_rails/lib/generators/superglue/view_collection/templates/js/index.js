@@ -1,24 +1,24 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-export default function <%= plural_table_name.camelize %>Index({
+export default function <%= js_plural_table_name(:upper) %>Index({
   // visit,
   // remote,
-  new<%= singular_table_name.camelize %>Path,
-  <%= plural_table_name.camelize(:lower) %> = [],
+  new<%= js_singular_table_name(:upper) %>Path,
+  <%= js_plural_table_name %> = [],
 }) {
   const flash = useSelector((state) => state.flash)
 
-  const <%= singular_table_name.camelize(:lower) %>Items = <%= plural_table_name.camelize(:lower) %>.map((<%= singular_table_name.camelize(:lower) %>, key) => {
-    const deleteForm = <%=singular_table_name.camelize(:lower)%>.deleteForm;
+  const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>, key) => {
+    const deleteForm = <%=js_singular_table_name%>.deleteForm;
 
     return (
-      <tr key={<%= singular_table_name.camelize(:lower) %>.id}>
+      <tr key={<%= js_singular_table_name %>.id}>
         <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-        <td>{<%=singular_table_name.camelize(:lower)%>.<%=attr.camelize(:lower)%>}</td>
+        <td>{<%=js_singular_table_name%>.<%=attr.camelize(:lower)%>}</td>
         <%- end -%>
-        <td><a href={ <%=singular_table_name%>.<%=singular_table_name.camelize(:lower)%>Path } data-sg-visit>Show</a></td>
-        <td><a href={ <%=singular_table_name%>.edit<%=singular_table_name.camelize%>Path } data-sg-visit>Edit</a></td>
+        <td><a href={ <%=js_singular_table_name%>.<%=js_singular_table_name%>Path } data-sg-visit>Show</a></td>
+        <td><a href={ <%=js_singular_table_name%>.edit<%=js_singular_table_name(:upper)%>Path } data-sg-visit>Edit</a></td>
         <td>
           <form {...deleteForm.props} data-sg-visit>
             {Object.values(deleteForm.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
@@ -33,7 +33,7 @@ export default function <%= plural_table_name.camelize %>Index({
     <div>
       <p id="notice">{flash && flash.notice}</p>
 
-      <h1><%= plural_table_name.capitalize %></h1>
+      <h1><%= js_plural_table_name(:upper) %></h1>
 
       <table>
         <thead>
@@ -50,7 +50,7 @@ export default function <%= plural_table_name.camelize %>Index({
         </tbody>
       </table>
       <br />
-      <a href={new<%= singular_table_name.camelize %>Path} data-sg-visit>New <%= singular_table_name.capitalize %></a>
+      <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= js_singular_table_name(:upper) %></a>
     </div>
   )
 }

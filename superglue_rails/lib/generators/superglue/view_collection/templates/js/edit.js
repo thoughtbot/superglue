@@ -1,13 +1,13 @@
 import React from 'react'
 // import { useSelector } from 'react-redux'
 
-export default function <%= plural_table_name.camelize %>Edit ({
+export default function <%= js_plural_table_name(:upper) %>Edit ({
   // visit,
   // remote,
   form,
   errors,
-  <%= singular_table_name.camelize(:lower) %>Path,
-  <%= plural_table_name.camelize(:lower) %>Path,
+  <%= js_singular_table_name %>Path,
+  <%= js_plural_table_name %>Path,
 }) {
   const messagesEl = errors && (
     <div id="error_explanation">
@@ -28,8 +28,8 @@ export default function <%= plural_table_name.camelize %>Edit ({
         <button {...form.inputs.submit} type="submit"> {...form.inputs.submit.text} </button>
       </form>
 
-      <a href={<%= singular_table_name.camelize(:lower) %>Path} data-sg-visit>Show</a>
-      <a href={<%= plural_table_name.camelize(:lower) %>Path}  data-sg-visit>Back</a>
+      <a href={<%= js_singular_table_name %>Path} data-sg-visit>Show</a>
+      <a href={<%= js_plural_table_name %>Path}  data-sg-visit>Back</a>
     </div>
   )
 }

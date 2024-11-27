@@ -1,4 +1,6 @@
 import React from 'react'
+import { Form, TextField } from '@javascript/components'
+
 // import { useSelector } from 'react-redux'
 
 export default function <%= js_plural_table_name(:upper) %>Edit ({
@@ -9,24 +11,15 @@ export default function <%= js_plural_table_name(:upper) %>Edit ({
   <%= js_singular_table_name %>Path,
   <%= js_plural_table_name %>Path,
 }) {
-  const messagesEl = errors && (
-    <div id="error_explanation">
-      <h2>{ errors.explanation }</h2>
-      <ul>{ errors.messages.map(({body})=> <li key={body}>{body}</li>) }</ul>
-    </div>
-  )
-
+  const { inputs, props, extras } = form
   return (
     <div>
-      {messagesEl}
-      <form {...form.props} data-sg-visit>
-        {Object.values(form.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
+      <Form {...props} extras={extras} data-sg-visit>
         <%- attributes.each do |attr| -%>
-        <input {...form.inputs.<%= attr.column_name %>} type="text"/>
-        <label htmlFor={form.inputs.<%= attr.column_name %>.id}><%= attr.column_name %></label>
+        <<%= js_component(attr)%> {...inputs.<%= attr.column_name.camelize(:lower)%>} label="<%= attr.column_name.humanize %>" errorKey="<%= attr.column_name %>" />
         <%- end -%>
-        <button {...form.inputs.submit} type="submit"> {...form.inputs.submit.text} </button>
-      </form>
+        <button {...inputs.submit} type="submit"> {...inputs.submit.text} </button>
+      </Form>
 
       <a href={<%= js_singular_table_name %>Path} data-sg-visit>Show</a>
       <a href={<%= js_plural_table_name %>Path}  data-sg-visit>Back</a>

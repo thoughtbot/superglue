@@ -1,4 +1,5 @@
 import React from 'react'
+import { Form, TextField } from '@javascript/components'
 import { useSelector } from 'react-redux'
 
 export default function <%= js_plural_table_name(:upper) %>Index({
@@ -10,7 +11,8 @@ export default function <%= js_plural_table_name(:upper) %>Index({
   const flash = useSelector((state) => state.flash)
 
   const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>, key) => {
-    const deleteForm = <%=js_singular_table_name%>.deleteForm;
+    const { deleteForm } = <%=js_singular_table_name%>;
+    const { inputs, props, extras } = deleteForm;
 
     return (
       <tr key={<%= js_singular_table_name %>.id}>
@@ -20,10 +22,9 @@ export default function <%= js_plural_table_name(:upper) %>Index({
         <td><a href={ <%=js_singular_table_name%>.<%=js_singular_table_name%>Path } data-sg-visit>Show</a></td>
         <td><a href={ <%=js_singular_table_name%>.edit<%=js_singular_table_name(:upper)%>Path } data-sg-visit>Edit</a></td>
         <td>
-          <form {...deleteForm.props} data-sg-visit>
-            {Object.values(deleteForm.extras).map((hiddenProps) => (<input {...hiddenProps} key={hiddenProps.id} type="hidden"/>))}
+          <Form {...props} extras={extras} data-sg-visit>
             <button type="submit">Delete</button>
-          </form>
+          </Form>
         </td>
       </tr>
     )

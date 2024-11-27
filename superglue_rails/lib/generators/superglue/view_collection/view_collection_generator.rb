@@ -61,6 +61,27 @@ module Superglue
 
       protected
 
+      def js_component(attribute)
+        case attribute.type
+        when :string
+          "TextField"
+        when :text, :rich_text
+          "TextArea"
+        when :integer, :float, :decimal
+          "NumberField"
+        when :datetime, :timestamp, :time
+          "DatetimeLocalField"
+        when :date
+          "DateField"
+        when :boolean
+          "Checkbox"
+        when :attachments, :attachment
+          "File"
+        else
+          "TextField"
+        end
+      end
+
       def js_singular_table_name(casing = :lower)
         singular_table_name.camelize(casing)
       end

@@ -25,6 +25,12 @@ module Superglue
         say "Copying application_visit.js file to #{app_js_path}"
         copy_file "#{__dir__}/templates/js/application_visit.js", "#{app_js_path}/application_visit.js"
 
+        say "Copying components.js file to #{app_js_path}"
+        copy_file "#{__dir__}/templates/js/components.js", "#{app_js_path}/components.js"
+
+        say "Copying jsconfig.json file to #{app_js_path}"
+        copy_file "#{__dir__}/templates/js/jsconfig.json", "jsconfig.json"
+
         say "Copying Superglue initializer"
         copy_file "#{__dir__}/templates/initializer.rb", "config/initializers/superglue.rb"
 

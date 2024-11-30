@@ -14,6 +14,7 @@ import * as helpers from '../../lib/utils/helpers'
 import * as rsp from '../../spec/fixtures'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib'
+import { MismatchedComponentError } from '../../lib/action_creators'
 
 const buildStore = (preloadedState) => {
   let resultsReducer = (state = [], action) => {
@@ -1133,8 +1134,7 @@ describe('action creators', () => {
         store.dispatch(remote('/foo', { pageKey: '/foo' }))
       }))
 
-    it('warns if a received page has a completely component id that the target page it will replace', () => {
-      vi.spyOn(console, 'warn')
+    it('throws if a received page has a completely component id that the target page it will replace', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/bar',
@@ -1164,18 +1164,46 @@ describe('action creators', () => {
         },
       })
 
-      return store.dispatch(remote('/bar')).then(() => {
-        expect(console.warn).toHaveBeenCalledWith(
-          `You're about replace an existing page located at pages["/bar"]
-that has the componentIdentifier "bar-id" with the contents of a
-received page that has a componentIdentifier of "foo-id".
+      expect(() => store.dispatch(remote('/bar'))).rejects.toThrow(
+        new MismatchedComponentError('bar-id', 'foo-id', '/bar')
+      )
+    })
 
-This can happen if you're using data-sg-remote or remote but your response
-redirected to a completely different page. Since remote requests do not
-navigate or change the current page component, your current page component may
-receive a shape that is unexpected and cause issues with rendering.
+    it('forces a remote even if a received page has a completely component id than the target page', () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/bar',
+          csrfToken: 'token',
+        },
+        pages: {
+          '/bar': {
+            data: {},
+            componentIdentifier: 'bar-id',
+          },
+        },
+      })
 
-Consider using data-sg-visit, the visit function, or redirect_back.`
+      const successfulBody = {
+        data: { greeting: 'hello' },
+        componentIdentifier: 'foo-id',
+        csrfToken: 'token',
+        assets: [],
+        defers: [],
+        fragments: [],
+      }
+
+      fetchMock.mock('/bar?format=json', {
+        body: successfulBody,
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store.dispatch(remote('/bar', { force: true })).then(() => {
+        expect(store.getState().pages['/bar'].data).toEqual(
+          expect.objectContaining({
+            greeting: 'hello',
+          })
         )
       })
     })

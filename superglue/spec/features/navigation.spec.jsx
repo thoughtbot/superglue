@@ -650,7 +650,10 @@ describe('navigation', () => {
       )
       const store = instance.store
 
-      const mockResponse = rsp.graftSuccessWithNewZip()
+      const mockResponse = rsp.graftSuccessWithNewZip({
+        componentIdentifier: 'home',
+      })
+
       mockResponse.headers['x-response-url'] = '/about'
       fetchMock.mock(
         'http://example.com/about?props_at=address&format=json',

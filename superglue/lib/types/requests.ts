@@ -83,6 +83,11 @@ export interface RemoteProps extends BaseProps {
    * {@link Remote} will use the `currentPageKey` at {@link SuperglueState}
    */
   pageKey?: PageKey
+  /**
+   * Forces {@link Remote} to allow mismatched components between the response
+   * and the target page.
+   */
+  force?: boolean
 }
 
 export interface BeforeSave {

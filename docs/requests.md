@@ -65,9 +65,17 @@ sequenceDiagram
   end
 ```
 
-If you provide a `pageKey` you can also target a different page
-in your store not visible to the user.
+If you provide a `pageKey` you can also target a different page in your store
+not visible to the user. Unlike `visit`, `remote` will not derive the target
+page key from the response. As long as the componentIdentifier from the
+response and target page is the same, `remote` will save and process the response
+to the provided `pageKey`.
 
+!!! warning
+    The componentIdentifier from the page response **MUST** match the target page, otherwise
+    remote will throw a `MismatchedComponentError` error. You can override this by using the
+    `force: true` option. See the [docs](reference/types.requests.md#remoteprops)
+    for details.
 
 ```mermaid
 sequenceDiagram

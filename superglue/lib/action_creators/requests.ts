@@ -57,6 +57,25 @@ function buildMeta(
   }
 }
 
+export class MismatchedComponentError extends Error {
+  constructor(existingId: string, receivedId: string, currentPageKey: string) {
+    const message = `You are about to replace an existing page located at pages["${currentPageKey}"]
+that has the componentIdentifier "${existingId}" with the contents of a
+received page that has a componentIdentifier of "${receivedId}".
+
+This can happen if you're using data-sg-remote or remote but your response
+redirected to a completely different page. Since remote requests do not
+navigate or change the current page component, your current page component may
+receive a shape that is unexpected and cause issues with rendering.
+
+Consider using data-sg-visit, the visit function, or redirect_back to the same page. Or if you're
+sure you want to proceed, use force: true.
+`
+    super(message)
+    this.name = 'MismatchedComponentError'
+  }
+}
+
 export const remote: RemoteCreator = (
   path,
   {
@@ -64,6 +83,7 @@ export const remote: RemoteCreator = (
     headers,
     body,
     pageKey: rawPageKey,
+    force = false,
     beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
   } = {}
 ) => {
@@ -95,18 +115,16 @@ export const remote: RemoteCreator = (
         const existingId = pages[currentPageKey]?.componentIdentifier
         const receivedId = json.componentIdentifier
 
-        if (willReplaceCurrent && !!existingId && existingId != receivedId) {
-          console.warn(
-            `You're about replace an existing page located at pages["${currentPageKey}"]
-that has the componentIdentifier "${existingId}" with the contents of a
-received page that has a componentIdentifier of "${receivedId}".
-
-This can happen if you're using data-sg-remote or remote but your response
-redirected to a completely different page. Since remote requests do not
-navigate or change the current page component, your current page component may
-receive a shape that is unexpected and cause issues with rendering.
-
-Consider using data-sg-visit, the visit function, or redirect_back.`
+        if (
+          willReplaceCurrent &&
+          !!existingId &&
+          existingId != receivedId &&
+          !force
+        ) {
+          throw new MismatchedComponentError(
+            existingId,
+            receivedId,
+            currentPageKey
           )
         }
 
@@ -187,6 +205,7 @@ export const visit: VisitCreator = (
         const isGet = fetchArgs[1].method === 'GET'
 
         meta.suggestedAction = 'push'
+
         if (!rsp.redirected && !isGet) {
           meta.suggestedAction = 'replace'
         }

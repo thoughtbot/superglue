@@ -14,7 +14,7 @@ export const visitSuccess = () => {
   }
 }
 
-export const graftSuccessWithNewZip = () => {
+export const graftSuccessWithNewZip = (body) => {
   return {
     body: JSON.stringify({
       data: { zip: 91210 },
@@ -23,6 +23,7 @@ export const graftSuccessWithNewZip = () => {
       csrfToken: 'token',
       assets: ['application-new123.js', 'application-new123.js'],
       fragments: [],
+      ...body,
     }),
     headers: {
       'content-type': 'application/json',

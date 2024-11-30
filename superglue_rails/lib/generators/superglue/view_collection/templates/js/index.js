@@ -1,15 +1,15 @@
 import React from 'react'
-import { Form, TextField } from '@javascript/components'
-import { useSelector } from 'react-redux'
+import { Form, Layout } from '@javascript/components'
+import { usePage } from '@thoughtbot/superglue'
 
 export default function <%= js_plural_table_name(:upper) %>Index({
   // visit,
   // remote,
-  new<%= js_singular_table_name(:upper) %>Path,
-  <%= js_plural_table_name %> = [],
 }) {
-  const flash = useSelector((state) => state.flash)
-
+  const {
+    new<%= js_singular_table_name(:upper) %>Path,
+    <%= js_plural_table_name %> = [],
+  } = usePage().data
   const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>, key) => {
     const { deleteForm } = <%=js_singular_table_name%>;
     const { inputs, props, extras } = deleteForm;
@@ -31,9 +31,7 @@ export default function <%= js_plural_table_name(:upper) %>Index({
   })
 
   return (
-    <div>
-      <p id="notice">{flash && flash.notice}</p>
-
+    <Layout>
       <h1><%= js_plural_table_name(:upper) %></h1>
 
       <table>
@@ -52,6 +50,6 @@ export default function <%= js_plural_table_name(:upper) %>Index({
       </table>
       <br />
       <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= js_singular_table_name(:upper) %></a>
-    </div>
+    </Layout>
   )
 }

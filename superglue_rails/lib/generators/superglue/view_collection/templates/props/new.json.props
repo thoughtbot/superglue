@@ -1,8 +1,5 @@
 if @<%= singular_table_name %>.errors.any?
-  json.errors({
-    explanation: "#{pluralize(@<%= singular_table_name %>.errors.count, "error")} prohibited this <%= singular_table_name %> from being saved:",
-    messages: @<%= singular_table_name %>.errors.full_messages.map{|msg| {body: msg}}
-  })
+  flash.now["<%= js_singular_table_name%>Errors"] = @<%= singular_table_name %>.errors.to_h
 end
 
 json.form(partial: 'form') do

@@ -5,11 +5,24 @@ export const flashSlice = createSlice({
   name: 'flash',
   initialState: {},
   reducers: {
-    clearFlash() {
-      return {};
+    clearFlash(state, { payload }) {
+      const key = payload
+      if (!key){
+        return {}
+      }
+
+      delete state[key]
+
+      return {
+        ...state,
+        ...payload
+      };
     },
     flash(state, { payload }) {
-      return payload;
+      return {
+        ...state,
+        ...payload
+      };
     },
   },
   extraReducers: (builder) => {

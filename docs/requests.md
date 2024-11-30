@@ -1,7 +1,17 @@
 # Requests
 
 When you need more functionality than what UJS offers, Superglue comes with two
-functions that wrap around fetch, `visit` and `remote`.
+functions built around `fetch`, `visit` and `remote`. These are wrapped with
+your own implementation in [application_visit.js] and can be accessed via the
+NavigationContext.
+
+```js
+import { NavigationContext } from '@thoughtbot/superglue';
+
+const { remote, visit } = useContext(NavigationContext)
+```
+
+[application_visit.js]: configuration.md#application_visitjs
 
 ## visit
 

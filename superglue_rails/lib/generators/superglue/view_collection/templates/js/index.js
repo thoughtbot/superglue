@@ -2,10 +2,7 @@ import React from 'react'
 import { Form, Layout } from '@javascript/components'
 import { usePage } from '@thoughtbot/superglue'
 
-export default function <%= js_plural_table_name(:upper) %>Index({
-  // visit,
-  // remote,
-}) {
+export default function <%= js_plural_table_name(:upper) %>Index() {
   const {
     new<%= js_singular_table_name(:upper) %>Path,
     <%= js_plural_table_name %> = [],

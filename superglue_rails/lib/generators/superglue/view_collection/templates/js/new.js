@@ -9,10 +9,7 @@ import {
 import { useSelector } from 'react-redux'
 import { usePage } from '@thoughtbot/superglue'
 
-export default function <%= js_plural_table_name(:upper) %>New({
-  // visit,
-  // remote
-}) {
+export default function <%= js_plural_table_name(:upper) %>New() {
   const {
     form,
     <%= js_plural_table_name %>Path

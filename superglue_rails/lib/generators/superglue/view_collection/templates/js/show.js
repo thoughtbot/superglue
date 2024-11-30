@@ -2,10 +2,7 @@ import React from 'react'
 import { Layout } from '@javascript/components'
 import { usePage } from '@thoughtbot/superglue'
 
-export default function <%= js_plural_table_name(:upper) %>Show({
-  // visit,
-  // remote,
-}) {
+export default function <%= js_plural_table_name(:upper) %>Show() {
   const {
   <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
   <%=attr.camelize(:lower)%>,

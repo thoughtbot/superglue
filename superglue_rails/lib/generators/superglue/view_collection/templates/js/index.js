@@ -9,7 +9,7 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
   } = usePage().data
   const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>, key) => {
     const { deleteForm } = <%=js_singular_table_name%>;
-    const { inputs, props, extras } = deleteForm;
+    const { inputs, form, extras } = deleteForm;
 
     return (
       <tr key={<%= js_singular_table_name %>.id}>
@@ -19,7 +19,7 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
         <td><a href={ <%=js_singular_table_name%>.<%=js_singular_table_name%>Path } data-sg-visit>Show</a></td>
         <td><a href={ <%=js_singular_table_name%>.edit<%=js_singular_table_name(:upper)%>Path } data-sg-visit>Edit</a></td>
         <td>
-          <Form {...props} extras={extras} data-sg-visit>
+          <Form {...form} extras={extras} data-sg-visit>
             <button type="submit">Delete</button>
           </Form>
         </td>

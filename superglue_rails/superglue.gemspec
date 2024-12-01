@@ -13,5 +13,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "actionpack", ">= 7.0.0"
   s.add_dependency "props_template", ">= 0.32.0"
-  s.add_dependency "form_props", ">= 0.0.5"
+  s.add_dependency "form_props", ">= 0.1.0"
 end

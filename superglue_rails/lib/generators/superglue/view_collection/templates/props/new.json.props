@@ -2,7 +2,7 @@ if @<%= singular_table_name %>.errors.any?
   flash.now["<%= js_singular_table_name%>Errors"] = @<%= singular_table_name %>.errors.to_h
 end
 
-json.form(partial: 'form') do
+json.<%= js_singular_table_name %>Form(partial: 'form') do
 end
 
 json.<%= js_plural_table_name %>Path <%= plural_table_name %>_path

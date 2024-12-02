@@ -124,7 +124,10 @@ describe('ujs', () => {
       const { onClick } = builder.handlers()
       onClick(createFakeRemoteEvent())
 
-      expect(remote).toHaveBeenCalledWith('/foo', { method: 'GET' , pageKey: "/current"})
+      expect(remote).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        pageKey: '/current',
+      })
     })
 
     it('does not call visit on an link does not have the visit attribute data-visit', () => {
@@ -293,7 +296,7 @@ describe('ujs', () => {
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(remote).toHaveBeenCalledWith('/foo', {
         method: 'POST',
-        pageKey: "/current",
+        pageKey: '/current',
         body: { some: 'Body' },
       })
     })

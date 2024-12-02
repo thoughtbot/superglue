@@ -7,24 +7,29 @@ import {
   Meta,
   Handlers,
   UJSHandlers,
+  SuperglueStore,
 } from '../types'
 
 export class HandlerBuilder {
   public attributePrefix: string
   public visit: Visit
   public remote: Remote
+  private store: SuperglueStore
 
   constructor({
     ujsAttributePrefix,
     visit,
     remote,
+    store,
   }: {
     ujsAttributePrefix: string
     visit: Visit
     remote: Remote
+    store: SuperglueStore
   }) {
     this.attributePrefix = ujsAttributePrefix
     this.isUJS = this.isUJS.bind(this)
+    this.store = store
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -123,7 +128,8 @@ export class HandlerBuilder {
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {
-      return this.remote(url, opts)
+      const { currentPageKey } = this.store.getState().superglue
+      return this.remote(url, { ...opts, pageKey: currentPageKey })
     }
   }
 
@@ -139,11 +145,13 @@ export const ujsHandlers: UJSHandlers = ({
   ujsAttributePrefix,
   visit,
   remote,
+  store,
 }) => {
   const builder = new HandlerBuilder({
     visit,
     remote,
     ujsAttributePrefix,
+    store,
   })
 
   return builder.handlers()

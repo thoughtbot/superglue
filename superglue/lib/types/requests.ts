@@ -27,7 +27,7 @@ export interface Visit {
 /**
  * Options for Visit
  */
-export interface VisitProps extends BaseProps {
+export interface VisitProps extends Omit<BaseProps, 'signal'> {
   /**
    * When present, Superglue will use the page state located at that pageKey and
    * optimistally navigates to it as the next page's state while the requests
@@ -62,7 +62,7 @@ export interface Remote {
 /**
  * Basic options shared betwen {@link VisitProps} and {@link RemoteProps}
  */
-interface BaseProps {
+interface BaseProps extends RequestInit {
   /** The HTTP method */
   method?: string
   /** The HTTP body */

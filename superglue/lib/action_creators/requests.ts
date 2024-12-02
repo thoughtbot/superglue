@@ -25,6 +25,7 @@ import {
   Dispatch,
   RemoteCreator,
   VisitCreator,
+  SuggestedAction,
 } from '../types'
 
 function handleFetchErr(
@@ -79,27 +80,17 @@ sure you want to proceed, use force: true.
 export const remote: RemoteCreator = (
   path,
   {
-    method = 'GET',
-    headers,
-    body,
-    pageKey: rawPageKey,
+    pageKey: targetPageKey,
     force = false,
     beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
+    ...rest
   } = {}
 ) => {
   path = withoutBusters(path)
-  rawPageKey = rawPageKey && urlToPageKey(rawPageKey)
+  targetPageKey = targetPageKey && urlToPageKey(targetPageKey)
 
   return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, path, {
-      method,
-      headers,
-      body,
-    })
-    if (rawPageKey === undefined) {
-      rawPageKey = getState().superglue.currentPageKey
-    }
-    const pageKey = rawPageKey
+    const fetchArgs = argsForFetch(getState, path, rest)
     const currentPageKey = getState().superglue.currentPageKey
 
     dispatch(beforeRemote({ currentPageKey, fetchArgs }))
@@ -110,17 +101,19 @@ export const remote: RemoteCreator = (
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
 
+        let pageKey
+        if (targetPageKey === undefined) {
+          const isGet = fetchArgs[1].method === 'GET'
+          pageKey = calculatePageKey(rsp, isGet, currentPageKey)
+        } else {
+          pageKey = targetPageKey
+        }
+
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
-        const willReplaceCurrent = pageKey == currentPageKey
-        const existingId = pages[currentPageKey]?.componentIdentifier
+        const existingId = pages[pageKey]?.componentIdentifier
         const receivedId = json.componentIdentifier
 
-        if (
-          willReplaceCurrent &&
-          !!existingId &&
-          existingId != receivedId &&
-          !force
-        ) {
+        if (!!existingId && existingId != receivedId && !force) {
           throw new MismatchedComponentError(
             existingId,
             receivedId,
@@ -144,26 +137,19 @@ let lastVisitController = {
 export const visit: VisitCreator = (
   path,
   {
-    method = 'GET',
-    headers,
-    body,
     placeholderKey,
     beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
     revisit = false,
+    ...rest
   } = {}
 ) => {
   path = withoutBusters(path)
-  let pageKey = urlToPageKey(path)
 
   return (dispatch, getState) => {
     placeholderKey = placeholderKey && urlToPageKey(placeholderKey)
     const hasPlaceholder = !!(
       placeholderKey && getState().pages[placeholderKey]
     )
-
-    if (placeholderKey && hasPlaceholder) {
-      dispatch(copyPage({ from: placeholderKey, to: pageKey }))
-    }
 
     if (placeholderKey && !hasPlaceholder) {
       console.warn(
@@ -182,9 +168,7 @@ export const visit: VisitCreator = (
     const controller = new AbortController()
     const { signal } = controller
     const fetchArgs = argsForFetch(getState, path, {
-      headers,
-      body,
-      method,
+      ...rest,
       signal,
     })
 
@@ -199,47 +183,70 @@ export const visit: VisitCreator = (
       .then(parseResponse)
       .then(({ rsp, json }) => {
         const { superglue, pages = {} } = getState()
+        const isGet = fetchArgs[1].method === 'GET'
+        const pageKey = calculatePageKey(rsp, isGet, currentPageKey)
+        if (placeholderKey && hasPlaceholder) {
+          dispatch(copyPage({ from: placeholderKey, to: pageKey }))
+        }
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
-        const isGet = fetchArgs[1].method === 'GET'
-
-        meta.suggestedAction = 'push'
-
-        if (!rsp.redirected && !isGet) {
-          meta.suggestedAction = 'replace'
-        }
-        pageKey = urlToPageKey(rsp.url)
-
-        const isSamePage = pageKey == currentPageKey
-
-        if (isSamePage) {
-          meta.suggestedAction = 'none'
-        }
-
-        if (revisit && isGet) {
-          if (rsp.redirected) {
-            meta.suggestedAction = 'replace'
-          } else {
-            meta.suggestedAction = 'none'
-          }
-        }
-
-        if (!isGet && !rsp.redirected) {
-          pageKey = currentPageKey
-        }
-
-        const contentLocation = rsp.headers.get('content-location')
-        if (contentLocation) {
-          pageKey = urlToPageKey(contentLocation)
-        }
+        meta.suggestedAction = calculateNavAction(
+          meta,
+          rsp,
+          isGet,
+          pageKey,
+          currentPageKey,
+          revisit
+        )
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(() => {
-          meta.pageKey = pageKey
-          return meta
-        })
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }
+}
+
+function calculateNavAction(
+  meta: Meta,
+  rsp: Response,
+  isGet: boolean,
+  pageKey: string,
+  currentPageKey: string,
+  revisit: boolean
+) {
+  let suggestedAction: SuggestedAction = 'push'
+  if (!rsp.redirected && !isGet) {
+    suggestedAction = 'replace'
+  }
+  const isSamePage = pageKey == currentPageKey
+  if (isSamePage) {
+    suggestedAction = 'none'
+  }
+  if (revisit && isGet) {
+    if (rsp.redirected) {
+      suggestedAction = 'replace'
+    } else {
+      suggestedAction = 'none'
+    }
+  }
+
+  return suggestedAction
+}
+
+function calculatePageKey(
+  rsp: Response,
+  isGet: boolean,
+  currentPageKey: string
+) {
+  let pageKey = urlToPageKey(rsp.url)
+  if (!isGet && !rsp.redirected) {
+    pageKey = currentPageKey
+  }
+
+  const contentLocation = rsp.headers.get('content-location')
+  if (contentLocation) {
+    pageKey = urlToPageKey(contentLocation)
+  }
+  return pageKey
 }

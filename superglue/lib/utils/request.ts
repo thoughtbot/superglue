@@ -63,7 +63,13 @@ export function handleServerErrors(args: ParsedResponse): ParsedResponse {
 export function argsForFetch(
   getState: () => RootState,
   pathQuery: string,
-  { method = 'GET', headers = {}, body = '', signal }: BasicRequestInit = {}
+  {
+    method = 'GET',
+    headers = {},
+    body = '',
+    signal,
+    ...rest
+  }: BasicRequestInit = {}
 ): [string, BasicRequestInit] {
   method = method.toUpperCase()
   const currentState = getState().superglue
@@ -130,7 +136,7 @@ export function argsForFetch(
     delete options.body
   }
 
-  return [fetchPath.toString(), options]
+  return [fetchPath.toString(), { ...options, ...rest }]
 }
 
 export function extractJSON(rsp: Response): PromiseLike<ParsedResponse> {

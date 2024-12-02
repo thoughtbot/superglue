@@ -335,10 +335,12 @@ export type UJSHandlers = ({
   ujsAttributePrefix,
   visit,
   remote,
+  store,
 }: {
   ujsAttributePrefix: string
   visit: Visit
   remote: Remote
+  store: SuperglueStore
 }) => Handlers
 
 /**

@@ -80,23 +80,17 @@ sure you want to proceed, use force: true.
 export const remote: RemoteCreator = (
   path,
   {
-    method = 'GET',
-    headers,
-    body,
     pageKey: targetPageKey,
     force = false,
     beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
+    ...rest
   } = {}
 ) => {
   path = withoutBusters(path)
   targetPageKey = targetPageKey && urlToPageKey(targetPageKey)
 
   return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, path, {
-      method,
-      headers,
-      body,
-    })
+    const fetchArgs = argsForFetch(getState, path, rest)
     const currentPageKey = getState().superglue.currentPageKey
 
     dispatch(beforeRemote({ currentPageKey, fetchArgs }))
@@ -143,12 +137,10 @@ let lastVisitController = {
 export const visit: VisitCreator = (
   path,
   {
-    method = 'GET',
-    headers,
-    body,
     placeholderKey,
     beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
     revisit = false,
+    ...rest
   } = {}
 ) => {
   path = withoutBusters(path)
@@ -176,9 +168,7 @@ export const visit: VisitCreator = (
     const controller = new AbortController()
     const { signal } = controller
     const fetchArgs = argsForFetch(getState, path, {
-      headers,
-      body,
-      method,
+      ...rest,
       signal,
     })
 

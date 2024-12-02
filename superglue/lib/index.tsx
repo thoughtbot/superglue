@@ -197,6 +197,7 @@ const Application = forwardRef(function Application(
     visit,
     remote,
     ujsAttributePrefix: 'data-sg',
+    store
   })
 
   useEffect(() => {

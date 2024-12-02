@@ -59,18 +59,12 @@ describe('ujs', () => {
     it('calls visit on a valid link', () => {
       const ujsAttributePrefix = 'data'
       const visit = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
-        },
-      }
       const store = {}
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef,
       })
 
       const fakeEvent = createFakeEvent()
@@ -83,11 +77,6 @@ describe('ujs', () => {
     it('calls visit with a placeholder when props_at is present on a valid link', () => {
       const ujsAttributePrefix = 'data'
       const visit = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
-        },
-      }
       const store = {
         getState: () => {
           return {
@@ -102,7 +91,6 @@ describe('ujs', () => {
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef,
       })
 
       const { onClick } = builder.handlers()
@@ -117,41 +105,37 @@ describe('ujs', () => {
     it('calls remote if a link is enabled with remote', () => {
       const ujsAttributePrefix = 'data'
       const remote = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
+      const store = {
+        getState: () => {
+          return {
+            superglue: {
+              currentPageKey: '/current',
+            },
+          }
         },
       }
-      const store = {}
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         remote,
-        navigatorRef,
       })
 
       const { onClick } = builder.handlers()
       onClick(createFakeRemoteEvent())
 
-      expect(remote).toHaveBeenCalledWith('/foo', { method: 'GET' })
+      expect(remote).toHaveBeenCalledWith('/foo', { method: 'GET' , pageKey: "/current"})
     })
 
     it('does not call visit on an link does not have the visit attribute data-visit', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
-        },
-      }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef,
       })
 
       const fakeEvent = createFakeEvent()
@@ -171,17 +155,11 @@ describe('ujs', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
-        },
-      }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         visit,
         store,
-        navigatorRef,
       })
 
       const { onClick } = builder.handlers()
@@ -267,17 +245,11 @@ describe('ujs', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
-        },
-      }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         visit,
         store,
-        navigatorRef,
       })
       global.FormData = () => {}
       vi.spyOn(global, 'FormData').mockImplementation(() => ({ some: 'Body' }))
@@ -294,20 +266,22 @@ describe('ujs', () => {
     })
 
     it('succssfully posts a form with a remote attribute', () => {
-      const store = {}
-      const ujsAttributePrefix = 'data'
-      const remote = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
+      const store = {
+        getState: () => {
+          return {
+            superglue: {
+              currentPageKey: '/current',
+            },
+          }
         },
       }
+      const ujsAttributePrefix = 'data'
+      const remote = vi.fn()
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         remote,
-        navigatorRef,
       })
       global.FormData = () => {}
       vi.spyOn(global, 'FormData').mockImplementation(() => ({ some: 'Body' }))
@@ -319,6 +293,7 @@ describe('ujs', () => {
       expect(global.FormData).toHaveBeenCalledWith(fakeFormEvent.target)
       expect(remote).toHaveBeenCalledWith('/foo', {
         method: 'POST',
+        pageKey: "/current",
         body: { some: 'Body' },
       })
     })
@@ -327,17 +302,11 @@ describe('ujs', () => {
       const store = {}
       const ujsAttributePrefix = 'data'
       const visit = vi.fn()
-      const navigatorRef = {
-        current: {
-          navigateTo: () => {},
-        },
-      }
 
       const builder = new HandlerBuilder({
         ujsAttributePrefix,
         store,
         visit,
-        navigatorRef,
       })
       global.FormData = () => {}
       vi.spyOn(global, 'FormData').mockImplementation(() => ({ some: 'Body' }))

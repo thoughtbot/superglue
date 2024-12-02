@@ -56,8 +56,7 @@ as you want.
     Its possible to modify the remote payload before it saves
     to the store. See the [beforeSave](reference/types.requests.md#remoteprops) callback.
 
-By default, `remote` saves or updates the response to the current page that the
-user is seeing. At glance it looks like this:
+At glance it looks like this:
 
 ```mermaid
 sequenceDiagram
@@ -68,18 +67,17 @@ sequenceDiagram
     Superglue -->> Server: Re-request with format JSON `/posts/new.json`
     activate Server
     Server -->> Superglue: `/posts/new.json` response
-    Superglue -->> Superglue: Save response or update current page
+    Superglue -->> Superglue: Save response
     Superglue -->> Browser: User on current page sees update
     deactivate Server
     deactivate Superglue
   end
 ```
 
-If you provide a `pageKey` you can also target a different page in your store
-not visible to the user. Unlike `visit`, `remote` will not derive the target
-page key from the response. As long as the componentIdentifier from the
-response and target page is the same, `remote` will save and process the response
-to the provided `pageKey`.
+By default, `remote` derives a `pagekey` from the response to save the page.
+You can override this behavior and expliclity pass a `pageKey` option to target
+a different page in the store. If the user is not viewing the target page, they
+will not see an update.
 
 !!! warning
     The componentIdentifier from the page response **MUST** match the target page, otherwise
@@ -116,6 +114,10 @@ sequenceDiagram
 
 ## Differences from UJS
 
-Superglue UJS selectively exposes options of `visit` and `remote` as data
-attribute and is architected for forms and links. The `visit` and `remote`
-thunks are functions that return promises, allowing for greater flexibility.
+The `visit` and `remote` thunks are functions that return promises, allowing
+for greater flexibility. Superglue UJS selectively exposes options of `visit`
+and `remote` for easy dev exp when using with forms and links.
+
+!!! hint
+    Unlike `remote`, `data-sg-remote` does not derive the `pageKey`. Instead it
+    saves or grafts all page responses to current page.

@@ -878,8 +878,34 @@ describe('action creators', () => {
           expect(allSuperglueActions(store)).toEqual(expectedActions)
         })
     })
+    
+    it('defaults to the response url as the pageKey on GET requests', () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/current_url',
+          csrfToken: 'token',
+        },
+      })
 
-    it('defaults to the currentPageKey as the pageKey', () => {
+      fetchMock.mock('/foobar?format=json', {
+        body: successfulBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store
+        .dispatch(remote('/foobar', { method: 'GET' }))
+        .then((meta) => {
+          expect(meta).toEqual(
+            expect.objectContaining({
+              pageKey: '/foobar',
+            })
+          )
+        })
+    })
+
+    it('defaults to the currentPageKey as the pageKey when a non GET renders', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/current_url',
@@ -905,7 +931,7 @@ describe('action creators', () => {
         })
     })
 
-    it('uses the pageKey option to override the currentPageKey as the preferred pageKey', () => {
+    it('uses the pageKey option to explicitly specify where to store the response', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/url_to_be_overridden',
@@ -1464,16 +1490,16 @@ describe('action creators', () => {
 
         const expectedActions = [
           {
-            type: '@@superglue/COPY_PAGE',
-            payload: { from: '/current', to: '/details' },
-          },
-          {
             type: '@@superglue/BEFORE_VISIT',
             payload: expect.any(Object),
           },
           {
             type: '@@superglue/BEFORE_FETCH',
             payload: expect.any(Object),
+          },
+          {
+            type: '@@superglue/COPY_PAGE',
+            payload: { from: '/current', to: '/details' },
           },
           {
             type: '@@superglue/HANDLE_GRAFT',

@@ -73,9 +73,15 @@ tabs, notifications, etc.
 
 ## `data-sg-remote`
 
-Use `data-sg-remote` when you want to update parts of the current page without
-reloading the screen. You'd can use this with props_template's [digging]
-to selectively load content.
+Use `data-sg-remote` when you want to update parts of the **current page** without
+reloading the screen.
+
+<div class="grid cards" markdown>
+  -  [:octicons-arrow-right-24: See differences](requests.md#differences-from-ujs)
+     from `remote`
+</div>
+
+Combine this with props_template's [digging] to selectively load content.
 
 ```jsx
 <a href='/posts?page_num=2&props_at=data.body.postsList' data-sg-remote/>
@@ -91,3 +97,4 @@ You can also use `data-sg-remote` on forms.
   ....
 </form>
 ```
+

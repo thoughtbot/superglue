@@ -29,9 +29,9 @@ export interface Visit {
  */
 export interface VisitProps extends Omit<BaseProps, 'signal'> {
   /**
-   * When present, Superglue will use the page state located at that pageKey and
-   * optimistally navigates to it as the next page's state while the requests
-   * resolves.
+   * Defaults to the currentPageKey. When present, Superglue will use the page
+   * state located at that pageKey and optimistally navigates to it as the next
+   * page's state while the requests resolves.
    */
   placeholderKey?: PageKey
   /**
@@ -80,12 +80,17 @@ interface BaseProps extends RequestInit {
 export interface RemoteProps extends BaseProps {
   /**
    * Specifies where to store the remote payload, if not provided
-   * {@link Remote} will use the `currentPageKey` at {@link SuperglueState}
+   * {@link Remote} will derive a key from the response's url.
    */
   pageKey?: PageKey
   /**
-   * Forces {@link Remote} to allow mismatched components between the response
-   * and the target page.
+   * By default, remote {@link Remote} disallows grafting a page response using
+   * props_at if the target pageKey provided has a different componentIdentifier.
+   *
+   * Setting `force: true` will ignore this limitation. This can be useful if
+   * you are absolutely sure that the page your grafting onto has a compatible
+   * shape with the response received with using props_at. A good example of
+   * this is a shared global header.
    */
   force?: boolean
 }

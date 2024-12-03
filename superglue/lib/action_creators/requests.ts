@@ -5,6 +5,7 @@ import {
   urlToPageKey,
   withoutBusters,
   hasPropsAt,
+  propsAtParam,
   removePropsAt,
 } from '../utils'
 import {
@@ -59,19 +60,7 @@ function buildMeta(
 }
 
 export class MismatchedComponentError extends Error {
-  constructor(existingId: string, receivedId: string, currentPageKey: string) {
-    const message = `You are about to replace an existing page located at pages["${currentPageKey}"]
-that has the componentIdentifier "${existingId}" with the contents of a
-received page that has a componentIdentifier of "${receivedId}".
-
-This can happen if you're using data-sg-remote or remote but your response
-redirected to a completely different page. Since remote requests do not
-navigate or change the current page component, your current page component may
-receive a shape that is unexpected and cause issues with rendering.
-
-Consider using data-sg-visit, the visit function, or redirect_back to the same page. Or if you're
-sure you want to proceed, use force: true.
-`
+  constructor(message: string) {
     super(message)
     this.name = 'MismatchedComponentError'
   }
@@ -110,15 +99,27 @@ export const remote: RemoteCreator = (
         }
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
+
         const existingId = pages[pageKey]?.componentIdentifier
         const receivedId = json.componentIdentifier
-
         if (!!existingId && existingId != receivedId && !force) {
-          throw new MismatchedComponentError(
-            existingId,
-            receivedId,
-            currentPageKey
-          )
+          const message = `You cannot replace or update an existing page
+located at pages["${currentPageKey}"] that has a componentIdentifier
+of "${existingId}" with the contents of a page response that has a
+componentIdentifier of "${receivedId}".
+
+This can happen if you're using data-sg-remote or remote but your
+response redirected to a page with a different componentIdentifier
+than the target page.             
+
+This limitation exists because the resulting page shape from grafting
+"${receivedId}"'s "${propsAtParam(path)}" into "${existingId}" may not be
+compatible with the page component associated with "${existingId}".
+
+Consider using data-sg-visit, the visit function, or redirect_back to
+the same page. Or if you're sure you want to proceed, use force: true.
+          `
+          throw new MismatchedComponentError(message)
         }
 
         const page = beforeSave(pages[pageKey], json)
@@ -146,21 +147,14 @@ export const visit: VisitCreator = (
   path = withoutBusters(path)
 
   return (dispatch, getState) => {
-    placeholderKey = placeholderKey && urlToPageKey(placeholderKey)
-    const hasPlaceholder = !!(
-      placeholderKey && getState().pages[placeholderKey]
-    )
+    const currentPageKey = getState().superglue.currentPageKey
+    placeholderKey =
+      (placeholderKey && urlToPageKey(placeholderKey)) || currentPageKey
+    const hasPlaceholder = placeholderKey in getState().pages
 
-    if (placeholderKey && !hasPlaceholder) {
+    if (hasPropsAt(path) && !hasPlaceholder) {
       console.warn(
         `Could not find placeholder with key ${placeholderKey} in state. The props_at param will be ignored`
-      )
-      path = removePropsAt(path)
-    }
-
-    if (!placeholderKey && hasPropsAt(path)) {
-      console.warn(
-        `visit was called with props_at param in the path ${path}, this will be ignore unless you provide a placeholder.`
       )
       path = removePropsAt(path)
     }
@@ -172,7 +166,6 @@ export const visit: VisitCreator = (
       signal,
     })
 
-    const currentPageKey = getState().superglue.currentPageKey
     dispatch(beforeVisit({ currentPageKey, fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
@@ -185,7 +178,28 @@ export const visit: VisitCreator = (
         const { superglue, pages = {} } = getState()
         const isGet = fetchArgs[1].method === 'GET'
         const pageKey = calculatePageKey(rsp, isGet, currentPageKey)
-        if (placeholderKey && hasPlaceholder) {
+        if (placeholderKey && hasPropsAt(path) && hasPlaceholder) {
+          const existingId = pages[placeholderKey]?.componentIdentifier
+          const receivedId = json.componentIdentifier
+          if (!!existingId && existingId != receivedId) {
+            const message = `You received a page response with a
+componentIdentifier "${receivedId}" that is different than the
+componentIdentifier "${existingId}" located at ${placeholderKey}.
+
+This can happen if you're using data-sg-visit or visit with a
+props_at param, but the response redirected to a page with a
+different componentIdentifier than the target page. 
+
+This limitation exists because the resulting page shape from grafting
+"${receivedId}"'s "${propsAtParam(path)}" into "${existingId}" may not be
+compatible with the page component associated with "${existingId}".
+
+Check that you're rendering a page with a matching
+componentIdentifier, or consider using redirect_back_with_props_at
+to the same page.
+            `
+            throw new MismatchedComponentError(message)
+          }
           dispatch(copyPage({ from: placeholderKey, to: pageKey }))
         }
 

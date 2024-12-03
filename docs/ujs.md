@@ -16,7 +16,7 @@ Want to reload a shopping cart?
 Or maybe load a modal efficiently when the next page has one?
 
 ```
-<a href="/posts/new?props_at=data.modal" data-sg-visit data-sg-placeholder="/posts">Create Post</a>
+<a href="/posts/new?props_at=data.modal">Create Post</a>
 ```
 
 With Superglue, there is just one concept. No need for the complexity of
@@ -51,24 +51,6 @@ You can also use `data-sg-visit` on forms:
 
 ```javascript
 <form action='/some_url' data-sg-visit />
-```
-
-### `data-sg-placeholder`
-
-A companion attribute for use with `data-sg-visit`. By specifiying a
-placeholder, superglue will take the page props at that placeholder and
-optimistically copies it as the page props for the next page while a request is
-made.
-
-It's for cases when you know with certainty how the next page is going to
-look like, but you want to selectively fetch just the content you need to make
-an update without loading the entirety of the next page. For example, modals,
-tabs, notifications, etc.
-
-```jsx
-<a href="/posts/new?props_at=data.modal" data-sg-visit data-sg-placeholder="/posts">
-  Create Post
-</a>
 ```
 
 ## `data-sg-remote`

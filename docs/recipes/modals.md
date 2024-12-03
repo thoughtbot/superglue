@@ -267,43 +267,10 @@ end
 
 ```
 
-### **`posts/index.js`**
-
-Lastly add `data-sg-placeholder` to the link.
-
-```diff
-import Modal from './Modal'
-
-export default PostIndex = ({
-  newPostPath,
-  createPostModal,
-  ...rest
-}) => {
-
-  return (
-    ...
-    <a
-      href={newPostPath}
-      data-sg-visit
-+     data-sg-placeholder="/posts"
-      >
-      New Post
-    </a>
-    <Modal {...createPostModal} />
-    ...
-  )
-}
-```
-
-With the placeholder, the sequence becomes:
+With that change, the sequence becomes:
 
 1. Copy the state in `/posts` to `/posts/new` in the store.
 2. Fetch `/posts/new?props_at=data.createPostModal`
 3. Graft the result to the store at `/posts/new`
-3. Swap the page components
-4. Change the url
-
-!!! info
-    Normally, `props_at` cannot be used with `data-sg-visit`, that's because the state
-    needs to exist for Superglue to know where to graft. With `data-sg-placeholder`, we
-    take an existing page and copy that over as a placeholder for what doesn't exist yet.
+4. Swap the page components
+5. Change the url

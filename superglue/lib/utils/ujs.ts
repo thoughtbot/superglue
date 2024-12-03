@@ -117,14 +117,7 @@ export class HandlerBuilder {
     opts: VisitProps | RemoteProps
   ): Promise<Meta> | undefined {
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
-      const nextOpts: VisitProps = { ...opts }
-      const placeholderKey = linkOrForm.getAttribute(
-        this.attributePrefix + '-placeholder'
-      )
-      if (placeholderKey) {
-        nextOpts.placeholderKey = urlToPageKey(placeholderKey)
-      }
-      return this.visit(url, { ...nextOpts })
+      return this.visit(url, { ...opts })
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {

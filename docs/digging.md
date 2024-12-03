@@ -50,10 +50,8 @@ Digging is normally combined with using [data-sg-remote] or [remote] to update
 content in async fashion.
 
 !!! info
-    `props_at` can be used with `data-sg-visit`, but only combined with
-    [data-sg-placeholder].
+    `props_at` can be used with `data-sg-visit`
 
-[data-sg-placeholder]: ./ujs.md#data-sg-placeholder
 [data-sg-remote]: ./ujs.md#data-sg-remote
 [remote]: ./requests.md#remote
 

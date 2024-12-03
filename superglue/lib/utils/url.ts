@@ -20,6 +20,13 @@ export function hasPropsAt(url: string): boolean {
   return !!query['props_at']
 }
 
+export function propsAtParam(url: string): string | undefined {
+  const parsed = new parse(url, {}, true)
+  const query = parsed.query
+
+  return query['props_at']
+}
+
 export function withFormatJson(url: string): string {
   const parsed = new parse(url, {}, true)
   parsed.query['format'] = 'json'

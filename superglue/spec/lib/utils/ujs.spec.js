@@ -39,7 +39,6 @@ describe('ujs', () => {
       preventDefault: () => {},
       target: createFakeLinkTarget({
         href: '/foo?props_at=data.hello',
-        'data-placeholder': '/current',
         'data-visit': 'true',
       }),
     }
@@ -72,34 +71,6 @@ describe('ujs', () => {
       onClick(fakeEvent)
 
       expect(visit).toHaveBeenCalledWith('/foo', { method: 'GET' })
-    })
-
-    it('calls visit with a placeholder when props_at is present on a valid link', () => {
-      const ujsAttributePrefix = 'data'
-      const visit = vi.fn()
-      const store = {
-        getState: () => {
-          return {
-            superglue: {
-              currentPageKey: '/current',
-            },
-          }
-        },
-      }
-
-      const builder = new HandlerBuilder({
-        ujsAttributePrefix,
-        store,
-        visit,
-      })
-
-      const { onClick } = builder.handlers()
-      onClick(createFakeVisitGraftEvent())
-
-      expect(visit).toHaveBeenCalledWith('/foo?props_at=data.hello', {
-        method: 'GET',
-        placeholderKey: '/current',
-      })
     })
 
     it('calls remote if a link is enabled with remote', () => {

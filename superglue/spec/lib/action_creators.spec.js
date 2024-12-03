@@ -1191,7 +1191,7 @@ describe('action creators', () => {
       })
 
       expect(() => store.dispatch(remote('/bar'))).rejects.toThrow(
-        new MismatchedComponentError('bar-id', 'foo-id', '/bar')
+        MismatchedComponentError
       )
     })
 
@@ -1436,37 +1436,64 @@ describe('action creators', () => {
           })
       }))
 
-    it('warns when props_at is included but a placeholder was not passed', () =>
-      new Promise((done) => {
-        vi.spyOn(console, 'warn')
-        const initialState = {
-          superglue: {
-            assets: [],
-          },
-          pages: {
-            '/does-exist': {},
-          },
-        }
-
-        const store = buildStore(initialState)
-
-        fetchMock.mock('/first?format=json', rsp.visitSuccess())
-
-        const expectedFetchUrl = '/first?props_at=foo'
-        store.dispatch(visit(expectedFetchUrl)).then((meta) => {
-          expect(console.warn).toHaveBeenCalledWith(
-            'visit was called with props_at param in the path /first?props_at=foo, this will be ignore unless you provide a placeholder.'
-          )
-          done()
-        })
-      }))
-
-    it('uses a placeholder when attempting to graft', () =>
+    it('uses the currentPageKey as the placeholder implicitly when attempting to graft', () =>
       new Promise((done) => {
         const initialState = {
           superglue: {
             assets: [],
             currentPageKey: '/current',
+          },
+          pages: {
+            '/current': {
+              data: {
+                address: {},
+              },
+              csrfToken: 'token',
+              assets: ['application-new123.js', 'application-new123.js'],
+              fragments: [],
+            },
+          },
+        }
+
+        const store = buildStore(initialState)
+
+        let mockResponse = rsp.graftSuccessWithNewZip()
+        fetchMock.mock(
+          '/details?props_at=data.address&format=json',
+          mockResponse
+        )
+
+        const expectedActions = [
+          {
+            type: '@@superglue/BEFORE_VISIT',
+            payload: expect.any(Object),
+          },
+          {
+            type: '@@superglue/BEFORE_FETCH',
+            payload: expect.any(Object),
+          },
+          {
+            type: '@@superglue/COPY_PAGE',
+            payload: { from: '/current', to: '/details' },
+          },
+          {
+            type: '@@superglue/HANDLE_GRAFT',
+            payload: expect.any(Object),
+          },
+        ]
+
+        store.dispatch(visit('/details?props_at=data.address')).then((meta) => {
+          expect(allSuperglueActions(store)).toEqual(expectedActions)
+          done()
+        })
+      }))
+
+    it('uses an explicit placeholder when attempting to graft', () =>
+      new Promise((done) => {
+        const initialState = {
+          superglue: {
+            assets: [],
+            currentPageKey: '/home',
           },
           pages: {
             '/current': {
@@ -1518,5 +1545,39 @@ describe('action creators', () => {
             done()
           })
       }))
+
+    it('throws an error when the componentIdentifer of the placeholder is different when attempting to graft', () => {
+      const initialState = {
+        superglue: {
+          assets: [],
+          currentPageKey: '/home',
+        },
+        pages: {
+          '/current': {
+            data: {
+              address: {},
+            },
+            csrfToken: 'token',
+            assets: ['application-new123.js', 'application-new123.js'],
+            fragments: [],
+            componentIdentifier: 'Home',
+          },
+        },
+      }
+
+      const store = buildStore(initialState)
+
+      let mockResponse = rsp.graftSuccessWithNewZip()
+      mockResponse.componentIdentifier = 'DoesNotExist'
+      fetchMock.mock('/details?props_at=data.address&format=json', mockResponse)
+
+      expect(() => {
+        return store.dispatch(
+          visit('/details?props_at=data.address', {
+            placeholderKey: '/current',
+          })
+        )
+      }).rejects.toThrow(MismatchedComponentError)
+    })
   })
 })

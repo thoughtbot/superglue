@@ -114,10 +114,6 @@ export function saveAndProcessPage(
       })
     } else {
       dispatch(saveResponse({ pageKey, page }))
-      if (!getState().pages) {
-        console.log('here')
-        console.log(getState())
-      }
       const currentPage = getState().pages[pageKey]
 
       currentPage.fragments.forEach((fragment) => {

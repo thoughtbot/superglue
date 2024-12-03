@@ -27,10 +27,14 @@ describe('ujs', () => {
     return link
   }
 
-  function createFakeEvent(attrs) {
+  function createFakeEvent(attrs = {}) {
     return {
       preventDefault: () => {},
-      target: createFakeLinkTarget({ href: '/foo', 'data-visit': true }),
+      target: createFakeLinkTarget({
+        href: '/foo',
+        'data-visit': true,
+        ...attrs,
+      }),
     }
   }
 
@@ -44,12 +48,13 @@ describe('ujs', () => {
     }
   }
 
-  function createFakeRemoteEvent() {
+  function createFakeRemoteEvent(attrs = {}) {
     return {
       preventDefault: () => {},
       target: createFakeLinkTarget({
         href: '/foo',
         'data-remote': 'true',
+        ...attrs,
       }),
     }
   }
@@ -70,7 +75,31 @@ describe('ujs', () => {
       const { onClick } = builder.handlers()
       onClick(fakeEvent)
 
-      expect(visit).toHaveBeenCalledWith('/foo', { method: 'GET' })
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        dataset: { visit: 'true' },
+      })
+    })
+
+    it('calls visit with the dataset of the element', () => {
+      const ujsAttributePrefix = 'data'
+      const visit = vi.fn()
+      const store = {}
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        visit,
+      })
+
+      const fakeEvent = createFakeEvent({ 'data-abc-unrelated': 'hello' })
+      const { onClick } = builder.handlers()
+      onClick(fakeEvent)
+
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        dataset: { visit: 'true', abcUnrelated: 'hello' },
+      })
     })
 
     it('calls remote if a link is enabled with remote', () => {
@@ -98,6 +127,36 @@ describe('ujs', () => {
       expect(remote).toHaveBeenCalledWith('/foo', {
         method: 'GET',
         pageKey: '/current',
+        dataset: { remote: 'true' },
+      })
+    })
+
+    it('calls remote with the datasest of the element', () => {
+      const ujsAttributePrefix = 'data'
+      const remote = vi.fn()
+      const store = {
+        getState: () => {
+          return {
+            superglue: {
+              currentPageKey: '/current',
+            },
+          }
+        },
+      }
+
+      const builder = new HandlerBuilder({
+        ujsAttributePrefix,
+        store,
+        remote,
+      })
+
+      const { onClick } = builder.handlers()
+      onClick(createFakeRemoteEvent({ 'data-abc-unrelated': '123' }))
+
+      expect(remote).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        pageKey: '/current',
+        dataset: { remote: 'true', abcUnrelated: '123' },
       })
     })
 
@@ -122,7 +181,9 @@ describe('ujs', () => {
       const { onClick } = builder.handlers()
       onClick(fakeEvent)
 
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
     })
 
     it('does not call visit on an non-standard link', () => {
@@ -141,36 +202,51 @@ describe('ujs', () => {
       let fakeEvent = createFakeEvent()
       fakeEvent.which = 2
       onClick(fakeEvent)
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
 
       fakeEvent = createFakeEvent()
       fakeEvent.metaKey = 1
       onClick(fakeEvent)
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
 
       fakeEvent = createFakeEvent()
       fakeEvent.metaKey = 1
       onClick(fakeEvent)
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
 
       fakeEvent = createFakeEvent()
       fakeEvent.ctrlKey = 1
       onClick(fakeEvent)
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
 
       fakeEvent = createFakeEvent()
       fakeEvent.shiftKey = 1
       onClick(fakeEvent)
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
 
       fakeEvent = createFakeEvent()
       fakeEvent.altKey = 1
       onClick(fakeEvent)
-      expect(visit).not.toHaveBeenCalledWith('/foo', {})
+      expect(visit).not.toHaveBeenCalledWith('/foo', {
+        dataset: { visit: 'true' },
+      })
 
       fakeEvent = createFakeEvent()
       onClick(fakeEvent)
-      expect(visit).toHaveBeenCalledWith('/foo', { method: 'GET' })
+      expect(visit).toHaveBeenCalledWith('/foo', {
+        method: 'GET',
+        dataset: { visit: 'true' },
+      })
     })
   })
 
@@ -236,6 +312,7 @@ describe('ujs', () => {
       expect(visit).toHaveBeenCalledWith('/foo', {
         method: 'POST',
         body: { some: 'Body' },
+        dataset: { visit: 'true' },
       })
     })
 
@@ -269,6 +346,7 @@ describe('ujs', () => {
         method: 'POST',
         pageKey: '/current',
         body: { some: 'Body' },
+        dataset: { remote: 'true' },
       })
     })
 

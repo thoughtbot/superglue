@@ -28,7 +28,7 @@ Superglue operates like a multipage application. In other to transition to the
 next page without reloading you'll need to use UJS attributes `data-sg-remote`
 or `data-sg-visit`.
 
-## `data-sg-visit`
+### `data-sg-visit`
 
 Use `data-sg-visit` when you want to navigate to the next page and update the
 address bar without reloading.
@@ -53,7 +53,7 @@ You can also use `data-sg-visit` on forms:
 <form action='/some_url' data-sg-visit />
 ```
 
-## `data-sg-remote`
+### `data-sg-remote`
 
 Use `data-sg-remote` when you want to update parts of the **current page** without
 reloading the screen.
@@ -74,9 +74,20 @@ Combine this with props_template's [digging] to selectively load content.
 You can also use `data-sg-remote` on forms.
 
 ```jsx
-<form action="/posts"  method="GET" data-sg-remote>
+<form action="/posts" method="GET" data-sg-remote>
   <input type="search" .... />
   ....
 </form>
 ```
 
+## Expanding UJS
+
+The [dataset] of the element enabled with `data-sg-visit` or `data-sg-remote` is
+passed to your [application_visit.js]. You can add your own options to control the
+behavior of the UJS helpers. For example, if you want to selectively show a
+[progress bar] on some links.
+
+
+[dataset]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset
+[application_visit.js]: ./configuration.md
+[progress bar]: ./recipes/progress-bar.md

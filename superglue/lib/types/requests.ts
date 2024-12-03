@@ -49,9 +49,10 @@ export interface Remote {
    * store. Remote does not navigate, and it does not change the browser history.
    * There can be multiple Remote requests running concurrently.
    *
-   * This function is to be built, customized, and returned to superglue by the
-   * developer. This is usually generated as `application_visit.js` where you can
-   * make minimum edits to affect its global usage.
+   * This function is to be wrapped by a deverloper as a {@link ApplicationRemote}
+   * and returned to superglue.  This is usually generated as
+   * `application_visit.js` where you can make minimum edits to affect its
+   * global usage.
    *
    * @param input The first argument to Fetch
    * @param options The fetch RequestInit with additional options
@@ -116,4 +117,48 @@ export interface BeforeSave {
    *```
    */
   (prevPage: VisitResponse, receivedPage: VisitResponse): VisitResponse
+}
+
+export interface ApplicationRemote extends Remote {
+  /**
+   * ApplicationRemote is the developer provided wrapper around {@link Remote}.
+   *
+   * It contains custom functionality, but is bound by the interface that
+   * Superglue uses to make a `remote` call. See {@link Remote} for more details.
+   *
+   * The only difference between the two interfaces is ApplicationRemote will also
+   * be passed a dataset as an option. This is because Superglue UJS uses
+   * ApplicationRemote and will pass the dataset of the HTML element where UJS is
+   * enabled on.
+   */
+  (
+    input: string | PageKey,
+    options: RemoteProps & {
+      dataset?: {
+        [name: string]: string | undefined
+      }
+    }
+  ): Promise<Meta>
+}
+
+export interface ApplicationVisit {
+  /**
+   * ApplicationVisit is the developer provided wrapper around {@link Remote}.
+   *
+   * It contains custom functionality, but is bound by the interface that
+   * Superglue uses to make a `visit` call. See {@link Remote} for more details.
+   *
+   * The only difference between the two interfaces is ApplicationVisit will also
+   * be passed a dataset as an option. This is because Superglue UJS uses
+   * ApplicationVisit and will pass the dataset of the HTML element where UJS is
+   * enabled on.
+   */
+  (
+    input: string | PageKey,
+    options: VisitProps & {
+      dataset?: {
+        [name: string]: string | undefined
+      }
+    }
+  ): Promise<Meta>
 }

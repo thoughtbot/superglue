@@ -1,19 +1,19 @@
 import { withoutBusters, urlToPageKey } from './url'
 import {
-  Visit,
-  Remote,
-  VisitProps,
-  RemoteProps,
   Meta,
   Handlers,
   UJSHandlers,
   SuperglueStore,
+  ApplicationVisit,
+  ApplicationRemote,
+  RemoteProps,
+  VisitProps,
 } from '../types'
 
 export class HandlerBuilder {
   public attributePrefix: string
-  public visit: Visit
-  public remote: Remote
+  public visit: ApplicationVisit
+  public remote: ApplicationRemote
   private store: SuperglueStore
 
   constructor({
@@ -23,8 +23,8 @@ export class HandlerBuilder {
     store,
   }: {
     ujsAttributePrefix: string
-    visit: Visit
-    remote: Remote
+    visit: ApplicationVisit
+    remote: ApplicationRemote
     store: SuperglueStore
   }) {
     this.attributePrefix = ujsAttributePrefix
@@ -114,15 +114,21 @@ export class HandlerBuilder {
   visitOrRemote(
     linkOrForm: HTMLAnchorElement | HTMLFormElement,
     url: string,
-    opts: VisitProps | RemoteProps
+    opts: RemoteProps | VisitProps
   ): Promise<Meta> | undefined {
+    const dataset = { ...linkOrForm.dataset }
+
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
-      return this.visit(url, { ...opts })
+      return this.visit(url, { ...opts, dataset })
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {
       const { currentPageKey } = this.store.getState().superglue
-      return this.remote(url, { ...opts, pageKey: currentPageKey })
+      return this.remote(url, {
+        ...opts,
+        pageKey: currentPageKey,
+        dataset,
+      })
     }
   }
 

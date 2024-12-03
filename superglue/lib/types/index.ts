@@ -4,7 +4,14 @@ import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import { ConnectedComponent } from 'react-redux'
-import { Visit, Remote, VisitProps, RemoteProps } from './requests'
+import {
+  Visit,
+  Remote,
+  VisitProps,
+  RemoteProps,
+  ApplicationVisit,
+  ApplicationRemote,
+} from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
 import { NavigationProvider } from '../components/Navigation'
@@ -338,8 +345,8 @@ export type UJSHandlers = ({
   store,
 }: {
   ujsAttributePrefix: string
-  visit: Visit
-  remote: Remote
+  visit: ApplicationVisit
+  remote: ApplicationRemote
   store: SuperglueStore
 }) => Handlers
 
@@ -428,8 +435,8 @@ export type NavigateTo = (
  */
 export type NavigationContextProps = {
   navigateTo: NavigateTo
-  visit: Visit
-  remote: Remote
+  visit: ApplicationVisit
+  remote: ApplicationRemote
   pageKey: PageKey
 }
 
@@ -444,8 +451,8 @@ export type NavigationContextProps = {
  */
 export type NavigationProviderProps = {
   history: History
-  visit: Visit
-  remote: Remote
+  visit: ApplicationVisit
+  remote: ApplicationRemote
   mapping: Record<
     ComponentIdentifier,
     ConnectedComponent<React.ComponentType, PageOwnProps>

@@ -1,21 +1,46 @@
 import { visit, remote } from '@thoughtbot/superglue/action_creators'
 
+/**
+ * This function returns a wrapped visit and remote that will be used by UJS,
+ * the Navigation component, and passed to your page components through the
+ * NavigationContext.
+ * 
+ * You can customize both functions to your liking. For example, for a progress
+ * bar. This file also adds support for data-sg-remote.
+ */
 export function buildVisitAndRemote(ref, store) {
-  const appRemote = (...args) => {
-    return store.dispatch(remote(...args))
+  const appRemote = (path, {dataset, options} = {}) => {
+    /**
+     * You can make use of `dataset` to add custom UJS options.
+     * If you are implementing a progress bar, you can selectively
+     * hide it for some links. For example:
+     * 
+     * ```
+     * <a href="/posts?props_at=data.header" data-sg-remote data-sg-hide-progress>
+     *   Click me
+     * </a>
+     * ```
+     * 
+     * This would be available as `sgHideProgress` on the dataset
+     */
+    return store.dispatch(remote(path, options))
   }
 
-  const appVisit = (...args) => {
-    // Do something before
-    // e.g, show loading state, you can access the current pageKey
-    // via store.getState().superglue.currentPageKey
-    let { action } = args
-
+  const appVisit = (path, {dataset, ...options} = {}) => {
+    /**
+     * Do something before we make a request. 
+     * e.g, show a [progress bar](https://thoughtbot.github.io/superglue/recipes/progress-bar/).
+     * 
+     * Hint: you can access the current pageKey
+     * via `store.getState().superglue.currentPageKey`
+     */
     return store
-      .dispatch(visit(...args))
+      .dispatch(visit(path, options))
       .then((meta) => {
-        // The assets fingerprints changed, instead of transitioning
-        // just go to the URL directly to retrieve new assets
+        /**
+         * The assets fingerprints changed, instead of transitioning
+         * just go to the URL directly to retrieve new assets
+         */
         if (meta.needsRefresh) {
           window.location = meta.url
           return
@@ -24,27 +49,40 @@ export function buildVisitAndRemote(ref, store) {
         ref.current.navigateTo(meta.pageKey, {
           action: meta.suggestedAction,
         })
-
-        // always return meta
+        
+        /**
+         * Always return the meta object
+         */
         return meta
       })
       .finally(() => {
-        // Do something after
-        // e.g, hide loading state, you can access the changed pageKey
-        // via getState().superglue.currentPageKey
+        /**
+         * Do something after a request. 
+         * 
+         * This is where you hide a progress bar.
+         */
       })
       .catch((err) => {
         const response = err.response
 
         if (!response) {
+        /**
+         * This is for errors that are NOT from a HTTP request.
+         * 
+         * Tooling like Sentry can capture console errors. If not, feel
+         * free to customize to send the error to your telemetry tool of choice.
+         */
           console.error(err)
           return
         }
 
         if (response.ok) {
-          // err gets thrown, but if the response is ok,
-          // it must be an html body that
-          // superglue can't parse, just go to the location
+          /**
+           * This is for errors that are from a HTTP request.
+           * 
+           * If the response is OK, it must be an HTML body, we'll
+           * go to that locaton directly.
+           */
           window.location = response.url
         } else {
           if (response.status >= 400 && response.status < 500) {

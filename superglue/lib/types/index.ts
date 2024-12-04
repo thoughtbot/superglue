@@ -32,8 +32,8 @@ export type PageKey = string
  * When the page already exists in the store:
  * - `fromCacheOnly` - Use the cached page that exists on the store, only.
  * - `revisitOnly` - Ignore the cache and make a request for the latest page. If
- * the response was 200, the {@link SuggestedAction} would be `none` as we don't want
- * to push into history. If the response was redirected, the {@link SuggestedAction} would be set to
+ * the response was 200, the {@link NavigationAction} would be `none` as we don't want
+ * to push into history. If the response was redirected, the {@link NavigationAction} would be set to
  * `replace`.
  * - `fromCacheAndRevisitInBackground` - Use the cache version of the page so
  *    superglue can optimistically navigate to it, then make an additional request
@@ -45,11 +45,10 @@ export type RestoreStrategy =
   | 'fromCacheAndRevisitInBackground'
 
 /**
- * A SuggestedAction is used to tell Superglue to history.push, history.replace
+ * A NavigationAction is used to tell Superglue to history.push, history.replace
  * or do nothing.
  */
-export type SuggestedAction = 'push' | 'replace' | 'none'
-export type NavigationAction = SuggestedAction
+export type NavigationAction = 'push' | 'replace' | 'none'
 
 /**
  * An identifier that Superglue will uses to determine which page component to render
@@ -289,8 +288,8 @@ export interface Meta {
   componentIdentifier: ComponentIdentifier
   /** `true` when assets locally are detected to be out of date */
   needsRefresh: boolean
-  /** The {@link SuggestedAction}. This can be used for navigation.*/
-  suggestedAction?: SuggestedAction
+  /** The {@link NavigationAction}. This can be used for navigation.*/
+  navigationAction?: NavigationAction
 }
 
 // I can do Visit['props'] or better yet Visit['options']

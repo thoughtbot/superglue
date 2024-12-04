@@ -26,7 +26,7 @@ import {
   Dispatch,
   RemoteCreator,
   VisitCreator,
-  SuggestedAction,
+  NavigationAction,
 } from '../types'
 
 function handleFetchErr(
@@ -205,7 +205,7 @@ to the same page.
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
-        meta.suggestedAction = calculateNavAction(
+        meta.navigationAction = calculateNavAction(
           meta,
           rsp,
           isGet,
@@ -229,23 +229,23 @@ function calculateNavAction(
   currentPageKey: string,
   revisit: boolean
 ) {
-  let suggestedAction: SuggestedAction = 'push'
+  let navigationAction: NavigationAction = 'push'
   if (!rsp.redirected && !isGet) {
-    suggestedAction = 'replace'
+    navigationAction = 'replace'
   }
   const isSamePage = pageKey == currentPageKey
   if (isSamePage) {
-    suggestedAction = 'none'
+    navigationAction = 'none'
   }
   if (revisit && isGet) {
     if (rsp.redirected) {
-      suggestedAction = 'replace'
+      navigationAction = 'replace'
     } else {
-      suggestedAction = 'none'
+      navigationAction = 'none'
     }
   }
 
-  return suggestedAction
+  return navigationAction
 }
 
 function calculatePageKey(

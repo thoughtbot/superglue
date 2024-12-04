@@ -49,10 +49,10 @@ export function buildVisitAndRemote(ref, store) {
         /**
          * Your first expanded UJS option, `data-sg-replace`
          *
-         * This option overrides the `suggestedAction` to allow a link click or
+         * This option overrides the `navigationAction` to allow a link click or
          * a form submission to replace history instead of the usual push.
          */
-        const navigatonAction = !!dataset.sgReplace ? "replace" : meta.suggestedAction
+        const navigatonAction = !!dataset.sgReplace ? "replace" : meta.navigationAction
         ref.current.navigateTo(meta.pageKey, {
           action: navigatonAction,
         })

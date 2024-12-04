@@ -46,7 +46,7 @@ export function buildVisitAndRemote(ref, store) {
         }
 
         ref.current.navigateTo(meta.pageKey, {
-          action: meta.suggestedAction,
+          action: meta.navigationAction,
         })
 
         return meta

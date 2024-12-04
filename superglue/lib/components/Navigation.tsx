@@ -113,7 +113,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
                 )
               }
 
-              if (!!meta && meta.suggestedAction === 'none') {
+              if (!!meta && meta.navigationAction === 'none') {
                 setActivePage({ pageKey, ownProps: {} })
                 scrollTo(posX, posY)
               }
@@ -129,7 +129,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
             )
           }
 
-          if (!!meta && meta.suggestedAction === 'none') {
+          if (!!meta && meta.navigationAction === 'none') {
             setActivePage({ pageKey, ownProps: {} })
             scrollTo(posX, posY)
           }

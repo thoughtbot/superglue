@@ -1297,7 +1297,7 @@ describe('action creators', () => {
       }))
 
     describe('when initiated with a revisit indicator', () => {
-      it('returns a meta with suggestedAction of "replace" if was redirected', () => {
+      it('returns a meta with navigationAction of "replace" if was redirected', () => {
         const initialState = {
           pages: {},
           superglue: {
@@ -1321,11 +1321,11 @@ describe('action creators', () => {
           .dispatch(visit('/redirecting_url', { revisit: true }))
           .then((meta) => {
             expect(meta.redirected).toEqual(true)
-            expect(meta.suggestedAction).toEqual('replace')
+            expect(meta.navigationAction).toEqual('replace')
           })
       })
 
-      it('returns a meta with suggestedAction of "none" if was not redirected', () => {
+      it('returns a meta with navigationAction of "none" if was not redirected', () => {
         const initialState = {
           pages: {},
           superglue: {
@@ -1341,12 +1341,12 @@ describe('action creators', () => {
           .dispatch(visit('/first', { revisit: true }))
           .then((meta) => {
             expect(meta.redirected).toEqual(false)
-            expect(meta.suggestedAction).toEqual('none')
+            expect(meta.navigationAction).toEqual('none')
           })
       })
     })
 
-    it('returns a meta with suggestedAction of "none" if the next page has the same pageKey as the current page', () => {
+    it('returns a meta with navigationAction of "none" if the next page has the same pageKey as the current page', () => {
       const initialState = {
         pages: {},
         superglue: {
@@ -1361,7 +1361,7 @@ describe('action creators', () => {
 
       return store.dispatch(visit('/same_page')).then((meta) => {
         expect(meta.redirected).toEqual(false)
-        expect(meta.suggestedAction).toEqual('none')
+        expect(meta.navigationAction).toEqual('none')
       })
     })
 

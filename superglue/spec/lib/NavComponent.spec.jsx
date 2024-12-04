@@ -323,13 +323,13 @@ describe('Nav', () => {
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const suggestedAction = 'none'
+        const navigationAction = 'none'
 
         const fakeVisit = vi.fn((...args) => {
           return {
             then: vi.fn((fn) => {
               expect(scrollTo).not.toHaveBeenCalled()
-              fn({ suggestedAction })
+              fn({ navigationAction })
               expect(scrollTo).toHaveBeenCalledWith(5, 5)
             }),
           }
@@ -351,7 +351,7 @@ describe('Nav', () => {
         expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
       })
 
-      it('revisits the page and skips scroll when redirected (suggestedAction is not "none")', () => {
+      it('revisits the page and skips scroll when redirected (navigationAction is not "none")', () => {
         const history = createMemoryHistory({})
         history.replace('/home', {
           superglue: true,
@@ -385,13 +385,13 @@ describe('Nav', () => {
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const suggestedAction = 'push'
+        const navigationAction = 'push'
 
         const fakeVisit = vi.fn((...args) => {
           return {
             then: vi.fn((fn) => {
               // expect(scrollTo).not.toHaveBeenCalled()
-              fn({ suggestedAction })
+              fn({ navigationAction })
               expect(scrollTo).not.toHaveBeenCalled()
             }),
           }
@@ -451,7 +451,7 @@ describe('Nav', () => {
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const suggestedAction = 'none'
+        const navigationAction = 'none'
 
         const fakeVisit = vi.fn()
 
@@ -508,7 +508,7 @@ describe('Nav', () => {
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const suggestedAction = 'none'
+        const navigationAction = 'none'
 
         const fakeVisit = vi.fn((...args) => {
           expect(scrollTo).toHaveBeenCalledWith(5, 5)

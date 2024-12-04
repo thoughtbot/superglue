@@ -18,7 +18,7 @@ passes a `navigateTo` to all page components.
 
 ##### navigateTo()
 
-> **navigateTo**(`path`: `string`, `options`: \{`action`: [`SuggestedAction`](types.md#suggestedaction-1);`ownProps`: `Record`\<`string`, `unknown`\>; \}): `boolean`
+> **navigateTo**(`path`: `string`, `options`: \{`action`: [`NavigationAction`](types.md#navigationaction-1);`ownProps`: `Record`\<`string`, `unknown`\>; \}): `boolean`
 
 Passed to every page component. Manually navigate using pages that exists
 in the store and restores scroll position. This is what [Visit](types.requests.md#visit) in
@@ -35,7 +35,7 @@ call to `visit` or `remote`.
 | ------ | ------ | ------ |
 | `path` | `string` |  |
 | `options` | `object` | when `none`, immediately returns `false` |
-| `options.action` | [`SuggestedAction`](types.md#suggestedaction-1) | - |
+| `options.action` | [`NavigationAction`](types.md#navigationaction-1) | - |
 | `options.ownProps` | `Record`\<`string`, `unknown`\> | - |
 
 ###### Returns

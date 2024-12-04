@@ -38,7 +38,7 @@ export interface VisitProps extends Omit<BaseProps, 'signal'> {
    * When `true` and the request method is a GET, changes the
    * `suggestionAction` of the Meta object to `none` so that Superglue does
    * nothing to window.history.
-   * When the GET response was redirected, changes `suggestedAction` to `replace`
+   * When the GET response was redirected, changes `navigationAction` to `replace`
    */
   revisit?: boolean
 }

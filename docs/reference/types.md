@@ -402,7 +402,7 @@ Helpful props passed to the page component.
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
 | <a id="pagekey-5" name="pagekey-5"></a> `pageKey` | `string` | the pagekey of the current page | [lib/types/index.ts:242](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L242) |
-| <a id="navigateto" name="navigateto"></a> `navigateTo` | (`path`: `string`, `options`: \{`action`: [`SuggestedAction`](types.md#suggestedaction-1);`ownProps`: `Record`\<`string`, `unknown`\>; \}) => `boolean` | - | [lib/types/index.ts:243](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L243) |
+| <a id="navigateto" name="navigateto"></a> `navigateTo` | (`path`: `string`, `options`: \{`action`: [`NavigationAction`](types.md#navigationaction-1);`ownProps`: `Record`\<`string`, `unknown`\>; \}) => `boolean` | - | [lib/types/index.ts:243](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L243) |
 | <a id="visit-1" name="visit-1"></a> `visit` | [`Visit`](types.requests.md#visit) | - | [lib/types/index.ts:244](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L244) |
 | <a id="remote-1" name="remote-1"></a> `remote` | [`Remote`](types.requests.md#remote) | - | [lib/types/index.ts:245](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L245) |
 
@@ -427,7 +427,7 @@ navigation.
 | <a id="fetchargs-3" name="fetchargs-3"></a> `fetchArgs` | [`FetchArgs`](types.md#fetchargs-4) | The original args passed to fetch. | [lib/types/index.ts:277](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L277) |
 | <a id="componentidentifier-1" name="componentidentifier-1"></a> `componentIdentifier` | `string` | The [ComponentIdentifier](types.md#componentidentifier-2) extracted from the response. | [lib/types/index.ts:279](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L279) |
 | <a id="needsrefresh" name="needsrefresh"></a> `needsRefresh` | `boolean` | `true` when assets locally are detected to be out of date | [lib/types/index.ts:281](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L281) |
-| <a id="suggestedaction" name="suggestedaction"></a> `suggestedAction?` | [`SuggestedAction`](types.md#suggestedaction-1) | The [SuggestedAction](types.md#suggestedaction-1). This can be used for navigation. | [lib/types/index.ts:283](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L283) |
+| <a id="navigationaction" name="navigationaction"></a> `navigationAction?` | [`NavigationAction`](types.md#navigationaction-1) | The [NavigationAction](types.md#navigationaction-1). This can be used for navigation. | [lib/types/index.ts:283](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/types/index.ts#L283) |
 
 ***
 
@@ -587,13 +587,13 @@ When the page already exists in the store:
 
 ***
 
-<a id="suggestedaction-1" name="suggestedaction-1"></a>
+<a id="navigationaction-1" name="navigationaction-1"></a>
 
-### SuggestedAction
+### NavigationAction
 
-> **SuggestedAction**: `"push"` \| `"replace"` \| `"none"`
+> **NavigationAction**: `"push"` \| `"replace"` \| `"none"`
 
-A SuggestedAction is used to tell Superglue to history.push, history.replace
+A NavigationAction is used to tell Superglue to history.push, history.replace
 or do nothing.
 
 #### Defined in
@@ -606,7 +606,7 @@ or do nothing.
 
 ### NavigationAction
 
-> **NavigationAction**: [`SuggestedAction`](types.md#suggestedaction-1)
+> **NavigationAction**: [`NavigationAction`](types.md#navigationaction-1)
 
 #### Defined in
 

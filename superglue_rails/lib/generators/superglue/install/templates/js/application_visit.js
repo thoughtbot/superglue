@@ -4,7 +4,7 @@ import { visit, remote } from '@thoughtbot/superglue/action_creators'
  * This function returns a wrapped visit and remote that will be used by UJS,
  * the Navigation component, and passed to your page components through the
  * NavigationContext.
- * 
+ *
  * You can customize both functions to your liking. For example, for a progress
  * bar. This file also adds support for data-sg-remote.
  */
@@ -14,13 +14,13 @@ export function buildVisitAndRemote(ref, store) {
      * You can make use of `dataset` to add custom UJS options.
      * If you are implementing a progress bar, you can selectively
      * hide it for some links. For example:
-     * 
+     *
      * ```
      * <a href="/posts?props_at=data.header" data-sg-remote data-sg-hide-progress>
      *   Click me
      * </a>
      * ```
-     * 
+     *
      * This would be available as `sgHideProgress` on the dataset
      */
     return store.dispatch(remote(path, options))
@@ -28,9 +28,9 @@ export function buildVisitAndRemote(ref, store) {
 
   const appVisit = (path, {dataset, ...options} = {}) => {
     /**
-     * Do something before we make a request. 
+     * Do something before we make a request.
      * e.g, show a [progress bar](https://thoughtbot.github.io/superglue/recipes/progress-bar/).
-     * 
+     *
      * Hint: you can access the current pageKey
      * via `store.getState().superglue.currentPageKey`
      */
@@ -46,10 +46,17 @@ export function buildVisitAndRemote(ref, store) {
           return
         }
 
+        /**
+         * Your first expanded UJS option, `data-sg-replace`
+         *
+         * This option overrides the `suggestedAction` to allow a link click or
+         * a form submission to replace history instead of the usual push.
+         */
+        const navigatonAction = !!dataset.sgReplace ? "replace" : meta.suggestedAction
         ref.current.navigateTo(meta.pageKey, {
-          action: meta.suggestedAction,
+          action: navigatonAction,
         })
-        
+
         /**
          * Always return the meta object
          */
@@ -57,8 +64,8 @@ export function buildVisitAndRemote(ref, store) {
       })
       .finally(() => {
         /**
-         * Do something after a request. 
-         * 
+         * Do something after a request.
+         *
          * This is where you hide a progress bar.
          */
       })
@@ -68,7 +75,7 @@ export function buildVisitAndRemote(ref, store) {
         if (!response) {
         /**
          * This is for errors that are NOT from a HTTP request.
-         * 
+         *
          * Tooling like Sentry can capture console errors. If not, feel
          * free to customize to send the error to your telemetry tool of choice.
          */
@@ -79,7 +86,7 @@ export function buildVisitAndRemote(ref, store) {
         if (response.ok) {
           /**
            * This is for errors that are from a HTTP request.
-           * 
+           *
            * If the response is OK, it must be an HTML body, we'll
            * go to that locaton directly.
            */

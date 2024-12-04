@@ -238,7 +238,7 @@ export interface SuperglueState {
  * 2 keys in your app.
  */
 export interface RootState {
-  /** Caontain readonly metadata about the current page */
+  /** Contains readonly metadata about the current page */
   superglue: SuperglueState
   /** Every {@link PageResponse} that superglue recieves is stored here.*/
   pages: AllPages

@@ -88,6 +88,13 @@ behavior of the UJS helpers. For example, if you want to selectively show a
 [progress bar] on some links.
 
 
+### `data-sg-replace`
+
+Included in [application_visit.js] as a custom option is `data-sg-replace`.
+It pairs with `data-sg-visit` to replace history instead of pushing when a
+user clicks on a form or a link. This can be useful when working with data
+tables with a large number of click-to-filter options that push history.
+
 [dataset]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset
 [application_visit.js]: ./configuration.md
 [progress bar]: ./recipes/progress-bar.md

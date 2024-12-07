@@ -119,7 +119,7 @@ export interface BeforeSave {
   (prevPage: VisitResponse, receivedPage: VisitResponse): VisitResponse
 }
 
-export interface ApplicationRemote extends Remote {
+export interface ApplicationRemote {
   /**
    * ApplicationRemote is the developer provided wrapper around {@link Remote}.
    *

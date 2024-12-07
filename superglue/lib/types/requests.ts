@@ -160,5 +160,5 @@ export interface ApplicationVisit {
         [name: string]: string | undefined
       }
     }
-  ): Promise<Meta>
+  ): Promise<Meta | undefined | void>
 }

@@ -5,8 +5,6 @@ import { ThunkDispatch } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import { ConnectedComponent } from 'react-redux'
 import {
-  Visit,
-  Remote,
   VisitProps,
   RemoteProps,
   ApplicationVisit,
@@ -250,8 +248,8 @@ export interface PageOwnProps {
   /** the pagekey of the current page */
   pageKey: PageKey
   navigateTo: NavigateTo
-  visit: Visit
-  remote: Remote
+  visit: ApplicationVisit
+  remote: ApplicationRemote
 }
 
 /**
@@ -496,8 +494,8 @@ export interface BuildVisitAndRemote {
     navigatorRef: React.RefObject<typeof NavigationProvider>,
     store: SuperglueStore
   ): {
-    visit: Visit
-    remote: Remote
+    visit: ApplicationVisit
+    remote: ApplicationRemote
   }
 }
 

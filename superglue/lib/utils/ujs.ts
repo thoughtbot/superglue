@@ -1,6 +1,5 @@
-import { withoutBusters, urlToPageKey } from './url'
+import { withoutBusters } from './url'
 import {
-  Meta,
   Handlers,
   UJSHandlers,
   SuperglueStore,
@@ -115,16 +114,16 @@ export class HandlerBuilder {
     linkOrForm: HTMLAnchorElement | HTMLFormElement,
     url: string,
     opts: RemoteProps | VisitProps
-  ): Promise<Meta> | undefined {
+  ): void {
     const dataset = { ...linkOrForm.dataset }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-visit')) {
-      return this.visit(url, { ...opts, dataset })
+      this.visit(url, { ...opts, dataset })
     }
 
     if (linkOrForm.getAttribute(this.attributePrefix + '-remote')) {
       const { currentPageKey } = this.store.getState().superglue
-      return this.remote(url, {
+      this.remote(url, {
         ...opts,
         pageKey: currentPageKey,
         dataset,

@@ -151,8 +151,8 @@ export type Defer = {
  * using superglue_rails, the generators would have generated a props_template
  * layout and view that would shape the visit responses for you.
  */
-export type VisitResponse = {
-  data: JSONMappable
+export type VisitResponse<T = JSONMappable> = {
+  data: T
   componentIdentifier: ComponentIdentifier
   assets: string[]
   csrfToken?: string
@@ -167,7 +167,7 @@ export type VisitResponse = {
 /**
  * A Page is a VisitResponse that's been saved to the store
  */
-export type Page = VisitResponse & {
+export type Page<T = JSONMappable> = VisitResponse<T> & {
   savedAt: number
   pageKey: PageKey
 }
@@ -183,7 +183,7 @@ export type Page = VisitResponse & {
  * @property equals to `graft` to indicate a {@link GraftResponse}
  * @interface
  */
-export type GraftResponse = VisitResponse & {
+export type GraftResponse<T = JSONMappable> = VisitResponse<T> & {
   action: 'graft'
   path: Keypath
 }
@@ -211,7 +211,7 @@ export type Fragment = {
  * The store where all page responses are stored indexed by PageKey. You are encouraged
  * to mutate the Pages in this store.
  */
-export type AllPages = Record<PageKey, Page>
+export type AllPages<T = JSONMappable> = Record<PageKey, Page<T>>
 
 /**
  * A read only state that contains meta information about
@@ -236,11 +236,11 @@ export interface SuperglueState {
  * The root state for a Superglue application. It occupies
  * 2 keys in your app.
  */
-export interface RootState {
+export interface RootState<T = JSONMappable> {
   /** Contains readonly metadata about the current page */
   superglue: SuperglueState
   /** Every {@link PageResponse} that superglue recieves is stored here.*/
-  pages: AllPages
+  pages: AllPages<T>
 }
 
 /**
@@ -472,7 +472,7 @@ export type ConnectedMapping = Record<
  * @param initialState - A preconfigured intial state to pass to your store.
  * @param reducer - A preconfigured reducer
  */
-export interface buildStore {
+export interface BuildStore {
   (
     initialState: { pages: AllPages; [key: string]: JSONValue },
     reducer: typeof rootReducer
@@ -491,7 +491,7 @@ export interface buildStore {
  *
  * @returns
  */
-export interface buildVisitAndRemote {
+export interface BuildVisitAndRemote {
   (
     navigatorRef: React.RefObject<typeof NavigationProvider>,
     store: SuperglueStore
@@ -525,8 +525,8 @@ export interface ApplicationProps {
    * to setup UJS helpers.
    */
   appEl: HTMLElement
-  buildStore: buildStore
-  buildVisitAndRemote: buildVisitAndRemote
+  buildStore: BuildStore
+  buildVisitAndRemote: BuildVisitAndRemote
   mapping: Record<string, React.ComponentType>
   history: History
 }

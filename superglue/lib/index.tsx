@@ -12,7 +12,6 @@ import { History, createBrowserHistory, createMemoryHistory } from 'history'
 import { NavigationProvider } from './components/Navigation'
 export { NavigationProvider, NavigationContext } from './components/Navigation'
 export { saveAndProcessPage } from './action_creators'
-
 export {
   beforeFetch,
   beforeVisit,
@@ -24,14 +23,15 @@ export {
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
 } from './actions'
+export * from './types'
 
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
   SuperglueStore,
   VisitResponse,
   Page,
-  buildVisitAndRemote,
-  buildStore,
+  BuildVisitAndRemote,
+  BuildStore,
   ConnectedMapping,
   ApplicationProps,
 } from './types'
@@ -106,9 +106,9 @@ export function start(
   initialPage: VisitResponse,
   baseUrl: string,
   path: string,
-  buildStore: buildStore,
+  buildStore: BuildStore,
   mapping: Record<string, React.ComponentType>,
-  buildVisitAndRemote: buildVisitAndRemote,
+  buildVisitAndRemote: BuildVisitAndRemote,
   navigatorRef: React.RefObject<typeof NavigationProvider>,
   history: History
 ) {

@@ -12,7 +12,6 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
-import { NavigationProvider } from '../components/Navigation'
 
 export * from './requests'
 /**
@@ -286,8 +285,11 @@ export interface Meta {
   componentIdentifier: ComponentIdentifier
   /** `true` when assets locally are detected to be out of date */
   needsRefresh: boolean
+}
+
+export interface VisitMeta extends Meta {
   /** The {@link NavigationAction}. This can be used for navigation.*/
-  navigationAction?: NavigationAction
+  navigationAction: NavigationAction
 }
 
 // I can do Visit['props'] or better yet Visit['options']
@@ -299,7 +301,7 @@ export interface Meta {
 export type VisitCreator = (
   input: string | PageKey,
   options: VisitProps
-) => MetaThunk
+) => VisitMetaThunk
 
 /**
  * RemoteCreator is a Redux action creator that returns a thunk. Use this to build
@@ -371,6 +373,12 @@ export type SaveAndProcessPageThunk = ThunkAction<
 >
 
 export type MetaThunk = ThunkAction<Promise<Meta>, RootState, undefined, Action>
+export type VisitMetaThunk = ThunkAction<
+  Promise<VisitMeta>,
+  RootState,
+  undefined,
+  Action
+>
 
 export type DefermentThunk = ThunkAction<
   Promise<void[]>,
@@ -491,7 +499,7 @@ export interface BuildStore {
  */
 export interface BuildVisitAndRemote {
   (
-    navigatorRef: React.RefObject<typeof NavigationProvider>,
+    navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
     store: SuperglueStore
   ): {
     visit: ApplicationVisit

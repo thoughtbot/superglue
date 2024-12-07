@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef, useImperativeHandle } from 'react'
+import React, { useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import parse from 'url-parse'
 import { rootReducer } from './reducers'
 import { config } from './config'
@@ -34,6 +34,7 @@ import {
   BuildStore,
   ConnectedMapping,
   ApplicationProps,
+  NavigateTo
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
@@ -109,7 +110,7 @@ export function start(
   buildStore: BuildStore,
   mapping: Record<string, React.ComponentType>,
   buildVisitAndRemote: BuildVisitAndRemote,
-  navigatorRef: React.RefObject<typeof NavigationProvider>,
+  navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
   history: History
 ) {
   const { prepareStore, initialState, initialPageKey, reducer } = populateStore(
@@ -169,7 +170,7 @@ const Application = forwardRef(function Application(
   }: ApplicationProps,
   ref
 ) {
-  const navigatorRef = React.createRef<typeof NavigationProvider>()
+  const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
   history = history || createHistory()
 

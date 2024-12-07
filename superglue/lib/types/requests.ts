@@ -1,4 +1,4 @@
-import { Meta, PageKey, VisitResponse } from '.'
+import { Meta, VisitMeta, PageKey, VisitResponse } from '.'
 
 export interface Visit {
   /**
@@ -160,5 +160,5 @@ export interface ApplicationVisit {
         [name: string]: string | undefined
       }
     }
-  ): Promise<Meta | undefined | void>
+  ): Promise<VisitMeta | undefined | void>
 }

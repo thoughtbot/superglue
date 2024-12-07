@@ -1,32 +1,30 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { pagesSlice } from "./slices/pages"
+import { configureStore } from "@reduxjs/toolkit"
+import { useDispatch, useSelector, useStore } from "react-redux"
 import { flashSlice } from "./slices/flash"
 import {
   beforeVisit,
   beforeFetch,
   beforeRemote,
-} from '@thoughtbot/superglue'
+  rootReducer
+} from "@thoughtbot/superglue"
 
-export const buildStore = (initialState, reducer) => {
-  const {pages, superglue} = reducer
+const { pages, superglue } = rootReducer
 
-  return configureStore({
-    preloadedState: initialState,
-    devTools: process.env.NODE_ENV !== 'production',
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],
-        },
-      }),
-    reducer: {
-      superglue,
-      pages: (state, action) => {
-        const nextState = pages(state, action)
-        return pagesSlice.reducer(nextState, action)
-      },
-      flash: flashSlice.reducer
-    },
-  });
-};
+export const store = configureStore({
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type]
+      }
+    }),
+  reducer: {
+    superglue,
+    pages,
+    flash: flashSlice.reducer
+  }
+})
 
+export const useAppDispatch = useDispatch.withTypes()
+export const useAppSelector = useSelector.withTypes()
+export const useAppStore = useStore.withTypes()

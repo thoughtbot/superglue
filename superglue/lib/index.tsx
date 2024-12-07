@@ -1,6 +1,10 @@
-import React, { useEffect, forwardRef, useImperativeHandle } from 'react'
+import React, {
+  useEffect,
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+} from 'react'
 import parse from 'url-parse'
-import { rootReducer } from './reducers'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
@@ -12,7 +16,6 @@ import { History, createBrowserHistory, createMemoryHistory } from 'history'
 import { NavigationProvider } from './components/Navigation'
 export { NavigationProvider, NavigationContext } from './components/Navigation'
 export { saveAndProcessPage } from './action_creators'
-
 export {
   beforeFetch,
   beforeVisit,
@@ -24,73 +27,23 @@ export {
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
 } from './actions'
+export * from './types'
 
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
-  SuperglueStore,
   VisitResponse,
-  Page,
-  buildVisitAndRemote,
-  buildStore,
+  BuildVisitAndRemote,
   ConnectedMapping,
   ApplicationProps,
+  NavigateTo,
+  SuperglueStore,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
-export { usePage, useSuperglue } from './hooks'
+export * from './hooks'
 
 const hasWindow = typeof window !== 'undefined'
-
-function pageToInitialState(key: string, page: VisitResponse) {
-  const slices = page.slices || {}
-  const nextPage: Page = {
-    ...page,
-    pageKey: key, //TODO remove this
-    savedAt: Date.now(),
-  }
-
-  return {
-    pages: { [key]: nextPage },
-    ...slices,
-  }
-}
-
-function populateStore({
-  initialPage,
-  baseUrl = config.baseUrl,
-  maxPages = config.maxPages,
-  path,
-}: {
-  initialPage: VisitResponse
-  baseUrl: string
-  maxPages?: number
-  path: string
-}) {
-  const initialPageKey = urlToPageKey(parse(path).href)
-  const { csrfToken } = initialPage
-  const location = parse(path)
-
-  config.baseUrl = baseUrl
-  config.maxPages = maxPages
-
-  return {
-    reducer: rootReducer,
-    prepareStore: function (store: SuperglueStore) {
-      store.dispatch(
-        historyChange({
-          pathname: location.pathname,
-          search: location.query,
-          hash: location.hash,
-        })
-      )
-      store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-      store.dispatch(setCSRFToken({ csrfToken }))
-    },
-    initialState: pageToInitialState(initialPageKey, initialPage),
-    initialPageKey,
-  }
-}
 
 const createHistory = () => {
   if (hasWindow) {
@@ -102,31 +55,71 @@ const createHistory = () => {
   }
 }
 
+export const prepareStore = (
+  store: SuperglueStore,
+  initialPage: VisitResponse
+) => {
+  const location = window.location
+  const initialPageKey = urlToPageKey(location.href) // pass this
+  const { csrfToken } = initialPage
+
+  store.dispatch(
+    historyChange({
+      pathname: location.pathname,
+      search: location.search,
+      hash: location.hash,
+    })
+  )
+  store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
+  store.dispatch(setCSRFToken({ csrfToken }))
+}
+
 export function start(
-  initialPage: VisitResponse,
+  // initialPage: VisitResponse,
   baseUrl: string,
   path: string,
-  buildStore: buildStore,
+  store: SuperglueStore,
   mapping: Record<string, React.ComponentType>,
-  buildVisitAndRemote: buildVisitAndRemote,
-  navigatorRef: React.RefObject<typeof NavigationProvider>,
+  buildVisitAndRemote: BuildVisitAndRemote,
+  navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
   history: History
 ) {
-  const { prepareStore, initialState, initialPageKey, reducer } = populateStore(
-    {
-      initialPage,
-      baseUrl,
-      path,
-      // The max number of pages to keep in the store. Default is 20
-      // maxPages: 20
-    }
-  )
+  const initialPageKey = urlToPageKey(parse(path).href)
+  // const { csrfToken } = initialPage
+  // const location = parse(path)
 
-  const store = buildStore(initialState, reducer)
-  // Fire initial events and populate the store
-  prepareStore(store)
+  config.baseUrl = baseUrl
+  // const reducer = rootReducer
 
-  // const history = createHistory()
+  // const pathname = location.pathname
+  // const search = location.query
+  // const hash = location.hash
+  // const currentPageKey = urlToPageKey(pathname + search)
+  // const initialSuperglueState = {
+  //   pathname,
+  //   currentPageKey,
+  //   search,
+  //   hash,
+  //   assets: initialPage.assets,
+  //   csrfToken
+  // }
+
+  // const initialState : InitialState = {
+  //   pages: {
+  //     [initialPageKey]: {
+  //       ...initialPage,
+  //       pageKey: initialPageKey,
+  //       savedAt: Date.now()
+  //     }
+  //   },
+  //   superglue: initialSuperglueState,
+  //   ...initialPage.slices
+  // }
+
+  // Fire initial events
+  // const store = buildStore(initialState, reducer)
+  // store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
+
   history.replace(...argsForHistory(path))
 
   const unconnectedMapping = mapping
@@ -140,7 +133,7 @@ export function start(
   const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
 
   return {
-    store,
+    // store,
     visit,
     remote,
     connectedMapping,
@@ -161,7 +154,7 @@ const Application = forwardRef(function Application(
     initialPage,
     baseUrl,
     path,
-    buildStore,
+    store,
     buildVisitAndRemote,
     history,
     mapping,
@@ -169,15 +162,16 @@ const Application = forwardRef(function Application(
   }: ApplicationProps,
   ref
 ) {
-  const navigatorRef = React.createRef<typeof NavigationProvider>()
+  const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
   history = history || createHistory()
+  prepareStore(store, initialPage)
 
-  const { store, visit, remote, connectedMapping, initialPageKey } = start(
-    initialPage,
+  const { visit, remote, connectedMapping, initialPageKey } = start(
+    // initialPage,
     baseUrl,
     path,
-    buildStore,
+    store,
     mapping,
     buildVisitAndRemote,
     navigatorRef,

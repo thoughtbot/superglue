@@ -1,22 +1,33 @@
 import React from 'react'
-import {
-  Form,
+import { 
+  Form, 
+  FormProps,
   Layout,
   <%- attributes.each do |attr| -%>
   <%= js_component(attr)%>,
+  <%= js_component(attr)%>Props,
   <%- end -%>
   SubmitButton
+  SubmitButtonProps
 } from '@javascript/components'
 import { useContent } from '@thoughtbot/superglue'
 import { useAppSelector } from '@javascript/store'
 
-export default function <%= js_plural_table_name(:upper) %>Edit() {
+type ContentProps = {
+  <%= js_plural_table_name %>Path: string
+  <%= js_singular_table_name %>Form: FormProps<{
+    <%- attributes.each do |attr| -%>
+    <%= attr.column_name.camelize(:lower)%>: <%= js_component(attr)%>Props
+    <%- end -%>
+    submit: SubmitButtonProps
+  }>
+}
+
+export default function <%= js_plural_table_name(:upper) %>New() {
   const {
     <%= js_singular_table_name %>Form,
-    <%= js_singular_table_name %>Path,
     <%= js_plural_table_name %>Path,
-  } = useContent()
-
+  } = useContent<ContentProps>()
   const { 
     inputs, 
     form, 
@@ -33,7 +44,6 @@ export default function <%= js_plural_table_name(:upper) %>Edit() {
         <SubmitButton {...inputs.submit} type="submit"> {inputs.submit.text} </SubmitButton>
       </Form>
 
-      <a href={<%= js_singular_table_name %>Path} data-sg-visit>Show</a>
       <a href={<%= js_plural_table_name %>Path} data-sg-visit>Back</a>
     </Layout>
   )

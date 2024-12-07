@@ -10,6 +10,12 @@ module Superglue
 
       argument :attributes, type: :array, default: [], banner: "field:type field:type"
 
+      class_option :typescript, 
+        type: :boolean, 
+        required: false, 
+        default: false,
+        desc: "Use typescript"
+
       def create_root_folder
         path = File.join("app/views", controller_file_path)
         empty_directory path unless File.directory?(path)
@@ -36,21 +42,28 @@ module Superglue
       def copy_js_files
         available_views.each do |view|
           @action_name = view
-          filename = filename_with_js_extensions(view)
-          template "js/" + filename, File.join("app/views", controller_file_path, filename)
+          if options["typescript"]
+            filename = filename_with_tsx_extensions(view)
+            template "ts/" + filename, File.join("app/views", controller_file_path, filename)
+          else
+            filename = filename_with_js_extensions(view)
+            template "js/" + filename, File.join("app/views", controller_file_path, filename)
+          end
         end
-
-        template "props/_form.json.props", File.join("app/views", controller_file_path, "_form.json.props")
       end
 
       def append_mapping
         available_views.each do |action|
-          app_js = "#{app_js_path}/page_to_page_mapping.js"
+          app_js = if options["typescript"]
+            "#{app_js_path}/page_to_page_mapping.ts"
+          else
+            "#{app_js_path}/page_to_page_mapping.js"
+          end
 
           component_name = [plural_table_name, action].map(&:camelcase).join
 
           prepend_to_file app_js do
-            "\nimport #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'"
+            "import #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'\n"
           end
 
           inject_into_file app_js, after: "pageIdentifierToPageComponent = {" do
@@ -82,6 +95,25 @@ module Superglue
         end
       end
 
+      def json_mappable_type(attribute)
+        case attribute.type
+        when :string
+          "string"
+        when :text, :rich_text
+          "string"
+        when :integer, :float, :decimal
+          "number"
+        when :datetime, :timestamp, :time
+          "string"
+        when :date
+          "string"
+        when :boolean
+          "boolean"
+        else
+          "string"
+        end
+      end
+
       def js_singular_table_name(casing = :lower)
         singular_table_name.camelize(casing)
       end
@@ -95,7 +127,7 @@ module Superglue
       end
 
       def view_path
-        "../views"
+        "@views"
       end
 
       def app_js_path
@@ -115,9 +147,17 @@ module Superglue
       def filename_with_js_extensions(name)
         [name, :js].join(".")
       end
+      
+      def filename_with_tsx_extensions(name)
+        [name, :tsx].join(".")
+      end
 
       def filename_with_html_extensions(name)
         [name, :html, :erb].join(".")
+      end
+
+      def showable_attributes
+        attributes.reject { |attr| %w[password password_confirmation].include? attr.name }
       end
 
       def attributes_list_with_timestamps

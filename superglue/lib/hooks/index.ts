@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { Page, RootState, SuperglueState } from '../types'
+import { JSONMappable, Page, RootState, SuperglueState } from '../types'
 
 /**
  * A lightweight hook that grabs the superglue state from the store.
@@ -11,9 +11,18 @@ export function useSuperglue() {
 /**
  * A lightweight hook that grabs the current page from the store.
  */
-export function usePage() {
+export function usePage<T = JSONMappable>() {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
 
-  return useSelector<RootState, Page>((state) => state.pages[currentPageKey])
+  return useSelector<RootState<T>, Page<T>>(
+    (state) => state.pages[currentPageKey]
+  )
+}
+
+/**
+ * A lightweight hook that grabs the current page from the store.
+ */
+export function useContent<T = JSONMappable>() {
+  return usePage<T>().data
 }

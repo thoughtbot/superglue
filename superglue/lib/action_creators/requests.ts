@@ -27,6 +27,7 @@ import {
   RemoteCreator,
   VisitCreator,
   NavigationAction,
+  VisitMeta,
 } from '../types'
 
 function handleFetchErr(
@@ -205,17 +206,20 @@ to the same page.
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
-        meta.navigationAction = calculateNavAction(
-          meta,
-          rsp,
-          isGet,
-          pageKey,
-          currentPageKey,
-          revisit
-        )
+        const visitMeta: VisitMeta = {
+          ...meta,
+          navigationAction: calculateNavAction(
+            meta,
+            rsp,
+            isGet,
+            pageKey,
+            currentPageKey,
+            revisit
+          ),
+        }
 
         const page = beforeSave(pages[pageKey], json)
-        return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
+        return dispatch(saveAndProcessPage(pageKey, page)).then(() => visitMeta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
   }

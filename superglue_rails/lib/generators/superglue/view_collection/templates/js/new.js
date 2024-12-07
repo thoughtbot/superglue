@@ -5,18 +5,23 @@ import {
   <%- attributes.each do |attr| -%>
   <%= js_component(attr)%>,
   <%- end -%>
+  SubmitButton
 } from '@javascript/components'
-import { useSelector } from 'react-redux'
-import { usePage } from '@thoughtbot/superglue'
+import { useContent } from '@thoughtbot/superglue'
+import { useAppSelector } from '@javascript/store'
 
 export default function <%= js_plural_table_name(:upper) %>New() {
   const {
     <%= js_singular_table_name %>Form,
     <%= js_plural_table_name %>Path
-  } = usePage().data
+  } = useContent()
 
-  const { inputs, form, extras } = <%= js_singular_table_name %>Form
-  const validationErrors = useSelector((state) => state.flash["<%= js_singular_table_name%>FormErrors"])
+  const { 
+    inputs, 
+    form, 
+    extras 
+  } = <%= js_singular_table_name %>Form
+  const validationErrors = useAppSelector((state) => state.flash["<%= js_singular_table_name%>FormErrors"])
 
   return (
     <Layout>
@@ -24,7 +29,7 @@ export default function <%= js_plural_table_name(:upper) %>New() {
         <%- attributes.each do |attr| -%>
         <<%= js_component(attr)%> {...inputs.<%= attr.column_name.camelize(:lower)%>} label="<%= attr.column_name.humanize %>" errorKey="<%= attr.column_name %>" />
         <%- end -%>
-        <button {...inputs.submit} type="submit"> {...inputs.submit.text} </button>
+        <SubmitButton {...inputs.submit} type="submit"> {inputs.submit.text} </SubmitButton>
       </Form>
 
       <a href={<%= js_plural_table_name %>Path} data-sg-visit>Back</a>

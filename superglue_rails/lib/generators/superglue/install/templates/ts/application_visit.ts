@@ -1,4 +1,10 @@
-import { visit, remote } from "@thoughtbot/superglue/action_creators"
+import {
+  ApplicationRemote,
+  ApplicationVisit,
+  SuperglueStore,
+  BuildVisitAndRemote,
+} from "@thoughtbot/superglue";
+import { visit, remote } from "@thoughtbot/superglue/action_creators";
 
 /**
  * This function returns a wrapped visit and remote that will be used by UJS,
@@ -8,8 +14,11 @@ import { visit, remote } from "@thoughtbot/superglue/action_creators"
  * You can customize both functions to your liking. For example, for a progress
  * bar. This file also adds support for data-sg-remote.
  */
-export const buildVisitAndRemote = (ref, store) => {
-  const appRemote = (path, { dataset, ...options }) => {
+export const buildVisitAndRemote: BuildVisitAndRemote = (
+  ref,
+  store: SuperglueStore
+) => {
+  const appRemote: ApplicationRemote = (path, { dataset, ...options }) => {
     /**
      * You can make use of `dataset` to add custom UJS options.
      * If you are implementing a progress bar, you can selectively
@@ -23,10 +32,10 @@ export const buildVisitAndRemote = (ref, store) => {
      *
      * This would be available as `sgHideProgress` on the dataset
      */
-    return store.dispatch(remote(path, options))
-  }
+    return store.dispatch(remote(path, options));
+  };
 
-  const appVisit = (path, { dataset, ...options } = {}) => {
+  const appVisit: ApplicationVisit = (path, { dataset, ...options } = {}) => {
     /**
      * Do something before we make a request.
      * e.g, show a [progress bar](https://thoughtbot.github.io/superglue/recipes/progress-bar/).
@@ -36,14 +45,14 @@ export const buildVisitAndRemote = (ref, store) => {
      */
     return store
       .dispatch(visit(path, options))
-      .then(meta => {
+      .then((meta) => {
         /**
          * The assets fingerprints changed, instead of transitioning
          * just go to the URL directly to retrieve new assets
          */
         if (meta.needsRefresh) {
-          window.location.href = meta.pageKey
-          return meta
+          window.location.href = meta.pageKey;
+          return meta;
         }
 
         /**
@@ -54,11 +63,11 @@ export const buildVisitAndRemote = (ref, store) => {
          */
         const navigatonAction = !!dataset?.sgReplace
           ? "replace"
-          : meta.navigationAction
+          : meta.navigationAction;
         ref.current?.navigateTo(meta.pageKey, {
           action: navigatonAction,
-          ownProps: {}
-        })
+          ownProps: {},
+        });
       })
       .finally(() => {
         /**
@@ -67,8 +76,8 @@ export const buildVisitAndRemote = (ref, store) => {
          * This is where you hide a progress bar.
          */
       })
-      .catch(err => {
-        const response = err.response
+      .catch((err) => {
+        const response = err.response;
 
         if (!response) {
           /**
@@ -77,8 +86,8 @@ export const buildVisitAndRemote = (ref, store) => {
            * Tooling like Sentry can capture console errors. If not, feel
            * free to customize to send the error to your telemetry tool of choice.
            */
-          console.error(err)
-          return
+          console.error(err);
+          return;
         }
 
         if (response.ok) {
@@ -88,20 +97,20 @@ export const buildVisitAndRemote = (ref, store) => {
            * If the response is OK, it must be an HTML body, we'll
            * go to that locaton directly.
            */
-          window.location = response.url
+          window.location = response.url;
         } else {
           if (response.status >= 400 && response.status < 500) {
-            window.location.href = "/400.html"
-            return
+            window.location.href = "/400.html";
+            return;
           }
 
           if (response.status >= 500) {
-            window.location.href = "/500.html"
-            return
+            window.location.href = "/500.html";
+            return;
           }
         }
-      })
-  }
+      });
+  };
 
-  return { visit: appVisit, remote: appRemote }
-}
+  return { visit: appVisit, remote: appRemote };
+};

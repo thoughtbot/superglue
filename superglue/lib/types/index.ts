@@ -5,8 +5,6 @@ import { ThunkDispatch } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import { ConnectedComponent } from 'react-redux'
 import {
-  Visit,
-  Remote,
   VisitProps,
   RemoteProps,
   ApplicationVisit,
@@ -14,7 +12,6 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
-import { NavigationProvider } from '../components/Navigation'
 
 export * from './requests'
 /**
@@ -151,8 +148,8 @@ export type Defer = {
  * using superglue_rails, the generators would have generated a props_template
  * layout and view that would shape the visit responses for you.
  */
-export type VisitResponse = {
-  data: JSONMappable
+export type VisitResponse<T = JSONMappable> = {
+  data: T
   componentIdentifier: ComponentIdentifier
   assets: string[]
   csrfToken?: string
@@ -167,7 +164,7 @@ export type VisitResponse = {
 /**
  * A Page is a VisitResponse that's been saved to the store
  */
-export type Page = VisitResponse & {
+export type Page<T = JSONMappable> = VisitResponse<T> & {
   savedAt: number
   pageKey: PageKey
 }
@@ -183,7 +180,7 @@ export type Page = VisitResponse & {
  * @property equals to `graft` to indicate a {@link GraftResponse}
  * @interface
  */
-export type GraftResponse = VisitResponse & {
+export type GraftResponse<T = JSONMappable> = VisitResponse<T> & {
   action: 'graft'
   path: Keypath
 }
@@ -211,7 +208,7 @@ export type Fragment = {
  * The store where all page responses are stored indexed by PageKey. You are encouraged
  * to mutate the Pages in this store.
  */
-export type AllPages = Record<PageKey, Page>
+export type AllPages<T = JSONMappable> = Record<PageKey, Page<T>>
 
 /**
  * A read only state that contains meta information about
@@ -227,7 +224,7 @@ export interface SuperglueState {
   /** The hash of the current url.*/
   hash: string
   /** The Rails csrfToken that you can use for forms.*/
-  csrfToken: string
+  csrfToken?: string
   /** The tracked asset digests.*/
   assets: string[]
 }
@@ -236,11 +233,12 @@ export interface SuperglueState {
  * The root state for a Superglue application. It occupies
  * 2 keys in your app.
  */
-export interface RootState {
+export interface RootState<T = JSONMappable> {
   /** Contains readonly metadata about the current page */
   superglue: SuperglueState
   /** Every {@link PageResponse} that superglue recieves is stored here.*/
-  pages: AllPages
+  pages: AllPages<T>
+  [name: string]: unknown
 }
 
 /**
@@ -250,8 +248,8 @@ export interface PageOwnProps {
   /** the pagekey of the current page */
   pageKey: PageKey
   navigateTo: NavigateTo
-  visit: Visit
-  remote: Remote
+  visit: ApplicationVisit
+  remote: ApplicationRemote
 }
 
 /**
@@ -288,8 +286,11 @@ export interface Meta {
   componentIdentifier: ComponentIdentifier
   /** `true` when assets locally are detected to be out of date */
   needsRefresh: boolean
+}
+
+export interface VisitMeta extends Meta {
   /** The {@link NavigationAction}. This can be used for navigation.*/
-  navigationAction?: NavigationAction
+  navigationAction: NavigationAction
 }
 
 // I can do Visit['props'] or better yet Visit['options']
@@ -301,7 +302,7 @@ export interface Meta {
 export type VisitCreator = (
   input: string | PageKey,
   options: VisitProps
-) => MetaThunk
+) => VisitMetaThunk
 
 /**
  * RemoteCreator is a Redux action creator that returns a thunk. Use this to build
@@ -373,6 +374,12 @@ export type SaveAndProcessPageThunk = ThunkAction<
 >
 
 export type MetaThunk = ThunkAction<Promise<Meta>, RootState, undefined, Action>
+export type VisitMetaThunk = ThunkAction<
+  Promise<VisitMeta>,
+  RootState,
+  undefined,
+  Action
+>
 
 export type DefermentThunk = ThunkAction<
   Promise<void[]>,
@@ -472,11 +479,8 @@ export type ConnectedMapping = Record<
  * @param initialState - A preconfigured intial state to pass to your store.
  * @param reducer - A preconfigured reducer
  */
-export interface buildStore {
-  (
-    initialState: { pages: AllPages; [key: string]: JSONValue },
-    reducer: typeof rootReducer
-  ): SuperglueStore
+export interface BuildStore {
+  (initialState: RootState, reducer: typeof rootReducer): SuperglueStore
 }
 
 /**
@@ -491,13 +495,13 @@ export interface buildStore {
  *
  * @returns
  */
-export interface buildVisitAndRemote {
+export interface BuildVisitAndRemote {
   (
-    navigatorRef: React.RefObject<typeof NavigationProvider>,
+    navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
     store: SuperglueStore
   ): {
-    visit: Visit
-    remote: Remote
+    visit: ApplicationVisit
+    remote: ApplicationRemote
   }
 }
 
@@ -525,8 +529,9 @@ export interface ApplicationProps {
    * to setup UJS helpers.
    */
   appEl: HTMLElement
-  buildStore: buildStore
-  buildVisitAndRemote: buildVisitAndRemote
+  // buildStore: BuildStore
+  buildVisitAndRemote: BuildVisitAndRemote
   mapping: Record<string, React.ComponentType>
-  history: History
+  history?: History
+  store: SuperglueStore
 }

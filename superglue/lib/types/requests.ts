@@ -1,4 +1,4 @@
-import { Meta, PageKey, VisitResponse } from '.'
+import { Meta, VisitMeta, PageKey, VisitResponse } from '.'
 
 export interface Visit {
   /**
@@ -119,7 +119,7 @@ export interface BeforeSave {
   (prevPage: VisitResponse, receivedPage: VisitResponse): VisitResponse
 }
 
-export interface ApplicationRemote extends Remote {
+export interface ApplicationRemote {
   /**
    * ApplicationRemote is the developer provided wrapper around {@link Remote}.
    *
@@ -160,5 +160,5 @@ export interface ApplicationVisit {
         [name: string]: string | undefined
       }
     }
-  ): Promise<Meta>
+  ): Promise<VisitMeta | undefined | void>
 }

@@ -4,7 +4,6 @@ import { rootReducer } from './reducers'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { historyChange, setCSRFToken } from './actions'
 import { Provider, connect } from 'react-redux'
 
 import { History, createBrowserHistory, createMemoryHistory } from 'history'
@@ -27,14 +26,14 @@ export * from './types'
 
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
-  SuperglueStore,
   VisitResponse,
-  Page,
+  AllPages,
   BuildVisitAndRemote,
   BuildStore,
   ConnectedMapping,
   ApplicationProps,
-  NavigateTo
+  NavigateTo,
+  SuperglueState
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
@@ -42,56 +41,6 @@ export { urlToPageKey }
 export { usePage, useSuperglue } from './hooks'
 
 const hasWindow = typeof window !== 'undefined'
-
-function pageToInitialState(key: string, page: VisitResponse) {
-  const slices = page.slices || {}
-  const nextPage: Page = {
-    ...page,
-    pageKey: key, //TODO remove this
-    savedAt: Date.now(),
-  }
-
-  return {
-    pages: { [key]: nextPage },
-    ...slices,
-  }
-}
-
-function populateStore({
-  initialPage,
-  baseUrl = config.baseUrl,
-  maxPages = config.maxPages,
-  path,
-}: {
-  initialPage: VisitResponse
-  baseUrl: string
-  maxPages?: number
-  path: string
-}) {
-  const initialPageKey = urlToPageKey(parse(path).href)
-  const { csrfToken } = initialPage
-  const location = parse(path)
-
-  config.baseUrl = baseUrl
-  config.maxPages = maxPages
-
-  return {
-    reducer: rootReducer,
-    prepareStore: function (store: SuperglueStore) {
-      store.dispatch(
-        historyChange({
-          pathname: location.pathname,
-          search: location.query,
-          hash: location.hash,
-        })
-      )
-      store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-      store.dispatch(setCSRFToken({ csrfToken }))
-    },
-    initialState: pageToInitialState(initialPageKey, initialPage),
-    initialPageKey,
-  }
-}
 
 const createHistory = () => {
   if (hasWindow) {
@@ -101,6 +50,11 @@ const createHistory = () => {
     // This is used for server side rendering
     return createMemoryHistory({})
   }
+}
+type InitialState = {
+  pages: AllPages,
+  superglue: SuperglueState
+  [name: string]: unknown
 }
 
 export function start(
@@ -113,21 +67,42 @@ export function start(
   navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
   history: History
 ) {
-  const { prepareStore, initialState, initialPageKey, reducer } = populateStore(
-    {
-      initialPage,
-      baseUrl,
-      path,
-      // The max number of pages to keep in the store. Default is 20
-      // maxPages: 20
-    }
-  )
+  const initialPageKey = urlToPageKey(parse(path).href)
+  const { csrfToken } = initialPage
+  const location = parse(path)
 
+  config.baseUrl = baseUrl
+  const reducer = rootReducer
+
+  const pathname = location.pathname
+  const search = location.query
+  const hash = location.hash
+  const currentPageKey = urlToPageKey(pathname + search)
+  const initialSuperglueState = {
+    pathname,
+    currentPageKey,
+    search,
+    hash,
+    assets: initialPage.assets,
+    csrfToken
+  }
+
+  const initialState : InitialState = {
+    pages: {
+      [initialPageKey]: {
+        ...initialPage,
+        pageKey: initialPageKey,
+        savedAt: Date.now()
+      }
+    },
+    superglue: initialSuperglueState,
+    ...initialPage.slices
+  }
+
+  // Fire initial events
   const store = buildStore(initialState, reducer)
-  // Fire initial events and populate the store
-  prepareStore(store)
+  store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
 
-  // const history = createHistory()
   history.replace(...argsForHistory(path))
 
   const unconnectedMapping = mapping

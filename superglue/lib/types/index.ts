@@ -224,7 +224,7 @@ export interface SuperglueState {
   /** The hash of the current url.*/
   hash: string
   /** The Rails csrfToken that you can use for forms.*/
-  csrfToken: string
+  csrfToken?: string
   /** The tracked asset digests.*/
   assets: string[]
 }
@@ -238,6 +238,7 @@ export interface RootState<T = JSONMappable> {
   superglue: SuperglueState
   /** Every {@link PageResponse} that superglue recieves is stored here.*/
   pages: AllPages<T>
+  [name: string]: unknown
 }
 
 /**
@@ -479,10 +480,7 @@ export type ConnectedMapping = Record<
  * @param reducer - A preconfigured reducer
  */
 export interface BuildStore {
-  (
-    initialState: { pages: AllPages; [key: string]: JSONValue },
-    reducer: typeof rootReducer
-  ): SuperglueStore
+  (initialState: RootState, reducer: typeof rootReducer): SuperglueStore
 }
 
 /**

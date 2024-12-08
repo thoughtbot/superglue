@@ -187,9 +187,15 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
 }
 
 export function superglueReducer(
-  state: Partial<SuperglueState> = {},
+  state: SuperglueState = {
+    pathname: '',
+    currentPageKey: '',
+    search: '',
+    hash: '',
+    assets: [],
+  },
   action: Action
-): Partial<SuperglueState> {
+): SuperglueState {
   if (setCSRFToken.match(action)) {
     const { csrfToken } = action.payload
     return { ...state, csrfToken: csrfToken }

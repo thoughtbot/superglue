@@ -63,8 +63,6 @@ const buildStore = (initialState, reducer) => {
   return store
 }
 
-const App = Application
-
 describe('start', () => {
   it('sets the stage', () => {
     const history = createMemoryHistory({

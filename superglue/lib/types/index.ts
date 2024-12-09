@@ -532,5 +532,5 @@ export interface ApplicationProps {
   buildStore: BuildStore
   buildVisitAndRemote: BuildVisitAndRemote
   mapping: Record<string, React.ComponentType>
-  history: History
+  history?: History
 }

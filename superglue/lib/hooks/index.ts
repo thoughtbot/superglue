@@ -19,3 +19,10 @@ export function usePage<T = JSONMappable>() {
     (state) => state.pages[currentPageKey]
   )
 }
+
+/**
+ * A lightweight hook that grabs the current page from the store.
+ */
+export function useContent<T = JSONMappable>() {
+  return usePage<T>().data
+}

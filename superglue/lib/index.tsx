@@ -1,9 +1,9 @@
 import React, { useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import parse from 'url-parse'
-import { rootReducer } from './reducers'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
+import { historyChange, setCSRFToken } from './actions'
 import { Provider, connect } from 'react-redux'
 
 import { History, createBrowserHistory, createMemoryHistory } from 'history'
@@ -27,18 +27,16 @@ export * from './types'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
   VisitResponse,
-  AllPages,
   BuildVisitAndRemote,
-  BuildStore,
   ConnectedMapping,
   ApplicationProps,
   NavigateTo,
-  SuperglueState
+  SuperglueStore
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
-export { usePage, useSuperglue } from './hooks'
+export * from './hooks'
 
 const hasWindow = typeof window !== 'undefined'
 
@@ -51,57 +49,68 @@ const createHistory = () => {
     return createMemoryHistory({})
   }
 }
-type InitialState = {
-  pages: AllPages,
-  superglue: SuperglueState
-  [name: string]: unknown
+
+export const prepareStore = (store: SuperglueStore, initialPage: VisitResponse) => {
+  const location = window.location
+  const initialPageKey = urlToPageKey(location.href) // pass this
+  const { csrfToken } = initialPage
+
+  store.dispatch(
+    historyChange({
+      pathname: location.pathname,
+      search: location.search,
+      hash: location.hash,
+    })
+  )
+  store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
+  store.dispatch(setCSRFToken({ csrfToken }))
 }
 
 export function start(
-  initialPage: VisitResponse,
+  // initialPage: VisitResponse,
   baseUrl: string,
   path: string,
-  buildStore: BuildStore,
+  store: SuperglueStore,
   mapping: Record<string, React.ComponentType>,
   buildVisitAndRemote: BuildVisitAndRemote,
   navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
   history: History
 ) {
   const initialPageKey = urlToPageKey(parse(path).href)
-  const { csrfToken } = initialPage
-  const location = parse(path)
+  // const { csrfToken } = initialPage
+  // const location = parse(path)
 
   config.baseUrl = baseUrl
-  const reducer = rootReducer
+  // const reducer = rootReducer
 
-  const pathname = location.pathname
-  const search = location.query
-  const hash = location.hash
-  const currentPageKey = urlToPageKey(pathname + search)
-  const initialSuperglueState = {
-    pathname,
-    currentPageKey,
-    search,
-    hash,
-    assets: initialPage.assets,
-    csrfToken
-  }
+  // const pathname = location.pathname
+  // const search = location.query
+  // const hash = location.hash
+  // const currentPageKey = urlToPageKey(pathname + search)
+  // const initialSuperglueState = {
+  //   pathname,
+  //   currentPageKey,
+  //   search,
+  //   hash,
+  //   assets: initialPage.assets,
+  //   csrfToken
+  // }
 
-  const initialState : InitialState = {
-    pages: {
-      [initialPageKey]: {
-        ...initialPage,
-        pageKey: initialPageKey,
-        savedAt: Date.now()
-      }
-    },
-    superglue: initialSuperglueState,
-    ...initialPage.slices
-  }
+  // const initialState : InitialState = {
+  //   pages: {
+  //     [initialPageKey]: {
+  //       ...initialPage,
+  //       pageKey: initialPageKey,
+  //       savedAt: Date.now()
+  //     }
+  //   },
+  //   superglue: initialSuperglueState,
+  //   ...initialPage.slices
+  // }
 
   // Fire initial events
-  const store = buildStore(initialState, reducer)
-  store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
+  // const store = buildStore(initialState, reducer)
+  // store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
 
   history.replace(...argsForHistory(path))
 
@@ -116,7 +125,7 @@ export function start(
   const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
 
   return {
-    store,
+    // store,
     visit,
     remote,
     connectedMapping,
@@ -137,7 +146,7 @@ const Application = forwardRef(function Application(
     initialPage,
     baseUrl,
     path,
-    buildStore,
+    store,
     buildVisitAndRemote,
     history,
     mapping,
@@ -148,12 +157,13 @@ const Application = forwardRef(function Application(
   const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
   history = history || createHistory()
+  prepareStore(store, initialPage)
 
-  const { store, visit, remote, connectedMapping, initialPageKey } = start(
-    initialPage,
+  const { visit, remote, connectedMapping, initialPageKey } = start(
+    // initialPage,
     baseUrl,
     path,
-    buildStore,
+    store,
     mapping,
     buildVisitAndRemote,
     navigatorRef,

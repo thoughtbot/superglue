@@ -529,8 +529,9 @@ export interface ApplicationProps {
    * to setup UJS helpers.
    */
   appEl: HTMLElement
-  buildStore: BuildStore
+  // buildStore: BuildStore
   buildVisitAndRemote: BuildVisitAndRemote
   mapping: Record<string, React.ComponentType>
   history?: History
+  store: SuperglueStore
 }

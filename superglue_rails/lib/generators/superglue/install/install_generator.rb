@@ -3,10 +3,10 @@ require "rails/generators/resource_helpers"
 
 module Superglue
   module Generators
-    class InstallGenerator <  Rails::Generators::NamedBase
+    class InstallGenerator <  Rails::Generators::Base
       source_root File.expand_path("../templates", __FILE__)
       
-      class_option :typescript, banner: "TYPESCRIPT", 
+      class_option :typescript, 
         type: :boolean, 
         required: false, 
         default: false,
@@ -14,10 +14,13 @@ module Superglue
 
       def create_files
         use_typescript = options["typescript"]
+        puts "hiii"
+        puts use_typescript
+
         if use_typescript
-          copy_js_files
-        else
           copy_ts_files
+        else
+          copy_js_files
         end
 
         say "Copying Superglue initializer"
@@ -35,6 +38,10 @@ module Superglue
         say "Installing Superglue and friends"
         run "yarn add history react react-dom @reduxjs/toolkit react-redux @thoughtbot/superglue --save"
 
+        if use_typescript
+          run "yarn add -D @types/react-dom @types/node"
+        end
+
         say "Superglue is Installed! 🎉", :green
       end
 
@@ -44,28 +51,25 @@ module Superglue
         say "Copying application.tsx file to #{app_js_path}"
         copy_file "#{__dir__}/templates/ts/application.tsx", "#{app_js_path}/application.tsx"
 
-        say "Copying page_to_page_mapping.js file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/page_to_page_mapping.js", "#{app_js_path}/page_to_page_mapping.js"
+        say "Copying page_to_page_mapping.ts file to #{app_js_path}"
+        copy_file "#{__dir__}/templates/ts/page_to_page_mapping.ts", "#{app_js_path}/page_to_page_mapping.ts"
 
         say "Copying flash.ts file to #{app_js_path}"
         copy_file "#{__dir__}/templates/ts/flash.ts", "#{app_js_path}/slices/flash.ts"
 
-        say "Copying pages.js file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/pages.js", "#{app_js_path}/slices/pages.js"
+        say "Copying store.ts file to #{app_js_path}"
+        copy_file "#{__dir__}/templates/ts/store.ts", "#{app_js_path}/store.ts"
 
-        say "Copying store.js file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/store.js", "#{app_js_path}/store.js"
-
-        say "Copying application_visit.js file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/application_visit.ts", "#{app_js_path}/application_visit.ts"
+        say "Copying application_visit.ts file to #{app_js_path}"
+        copy_file "#{__dir__}/templates/ts/application_visit.ts", "#{app_js_path}/application_visit.ts"
 
         say "Copying components to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/inputs.js", "#{app_js_path}/components/Inputs.js"
-        copy_file "#{__dir__}/templates/js/layout.js", "#{app_js_path}/components/Layout.js"
-        copy_file "#{__dir__}/templates/js/components.js", "#{app_js_path}/components/index.js"
+        copy_file "#{__dir__}/templates/ts/inputs.tsx", "#{app_js_path}/components/inputs.tsx"
+        copy_file "#{__dir__}/templates/ts/layout.tsx", "#{app_js_path}/components/Layout.tsx"
+        copy_file "#{__dir__}/templates/ts/components.ts", "#{app_js_path}/components/index.ts"
 
-        say "Copying jsconfig.json file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/jsconfig.json", "jsconfig.json"
+        say "Copying tsconfig.json file to #{app_js_path}"
+        copy_file "#{__dir__}/templates/ts/tsconfig.json", "tsconfig.json"
       end
 
       def copy_js_files
@@ -77,9 +81,6 @@ module Superglue
 
         say "Copying flash.js file to #{app_js_path}"
         copy_file "#{__dir__}/templates/js/flash.js", "#{app_js_path}/slices/flash.js"
-
-        say "Copying pages.js file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/pages.js", "#{app_js_path}/slices/pages.js"
 
         say "Copying store.js file to #{app_js_path}"
         copy_file "#{__dir__}/templates/js/store.js", "#{app_js_path}/store.js"

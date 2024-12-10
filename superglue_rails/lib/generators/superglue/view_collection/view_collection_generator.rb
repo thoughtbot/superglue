@@ -63,7 +63,7 @@ module Superglue
           component_name = [plural_table_name, action].map(&:camelcase).join
 
           prepend_to_file app_js do
-            "\nimport #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'"
+            "import #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'\n"
           end
 
           inject_into_file app_js, after: "pageIdentifierToPageComponent = {" do

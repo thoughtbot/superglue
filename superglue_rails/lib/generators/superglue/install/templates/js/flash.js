@@ -1,45 +1,44 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { saveResponse, beforeVisit } from '@thoughtbot/superglue'
+import { createSlice } from "@reduxjs/toolkit"
+import { saveResponse, beforeVisit } from "@thoughtbot/superglue"
+
+const initialState = {}
 
 export const flashSlice = createSlice({
-  name: 'flash',
-  initialState: {},
+  name: "flash",
+  initialState: initialState,
   reducers: {
     clearFlash(state, { payload }) {
       const key = payload
-      if (!key){
+      if (!key) {
         return {}
       }
 
       delete state[key]
 
       return {
-        ...state,
-        ...payload
-      };
+        ...state
+      }
     },
     flash(state, { payload }) {
       return {
         ...state,
         ...payload
-      };
-    },
+      }
+    }
   },
-  extraReducers: (builder) => {
-    builder.addCase(beforeVisit, (state, action) => {
-      return {};
-    });
+  extraReducers: builder => {
+    builder.addCase(beforeVisit, (_state, _action) => {
+      return {}
+    })
     builder.addCase(saveResponse, (state, action) => {
-      const { page } = action.payload;
+      const { page } = action.payload
 
       return {
         ...state,
-        ...page.slices.flash,
-      };
-    });
-  },
-});
+        ...page.slices.flash
+      }
+    })
+  }
+})
 
-export const { clearFlash, flash } = flashSlice.actions;
-
-
+export const { clearFlash, flash } = flashSlice.actions

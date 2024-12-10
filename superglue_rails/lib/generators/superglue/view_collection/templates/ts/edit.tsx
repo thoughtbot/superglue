@@ -48,7 +48,7 @@ export default function <%= js_plural_table_name(:upper) %>Edit() {
       </Form>
 
       <a href={<%= js_singular_table_name %>Path} data-sg-visit>Show</a>
-      <a href={<%= js_plural_table_name %>Path}  data-sg-visit>Back</a>
+      <a href={<%= js_plural_table_name %>Path} data-sg-visit>Back</a>
     </Layout>
   )
 }

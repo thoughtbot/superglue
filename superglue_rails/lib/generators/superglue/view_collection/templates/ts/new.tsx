@@ -41,7 +41,7 @@ export default function <%= js_plural_table_name(:upper) %>New() {
         <%- attributes.each do |attr| -%>
         <<%= js_component(attr)%> {...inputs.<%= attr.column_name.camelize(:lower)%>} label="<%= attr.column_name.humanize %>" errorKey="<%= attr.column_name %>" />
         <%- end -%>
-        <SubmitButton {...inputs.submit} type="submit"> {inputs.submit.text} </button>
+        <SubmitButton {...inputs.submit} type="submit"> {inputs.submit.text} </SubmitButton>
       </Form>
 
       <a href={postsPath} data-sg-visit>Back</a>

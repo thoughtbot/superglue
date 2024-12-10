@@ -15,31 +15,21 @@ type ContentProps = {
 
 export default function <%= js_plural_table_name(:upper) %>Show() {
   const {
-    <%- attributes.each do |attr| -%>
-    <%= attr.column_name.camelize(:lower)%>,
+    <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
+    <%= attr.camelize(:lower) %>,
     <%- end -%>
-    <%= js_plural_table_name %>Path,
     edit<%= js_singular_table_name(:upper) %>Path,
-    createdAt,
-    updatedAt,
+    <%= js_plural_table_name %>Path,
   } = useContent<ContentProps>()
 
   return (
     <Layout>
-    <%- attributes.each do |attr| -%>
+    <%- attributes_list_with_timestamps.select{|attr| attr != :id }.each do |attr| -%>
       <p>
-        <strong><%= attr.column_name.humanize %>:</strong>
-        {<%= attr.column_name.camelize(:lower) %>}
+        <strong><%= attr.humanize %>:</strong>
+        {<%=attr.camelize(:lower)%>}
       </p>
     <%- end -%>
-      <p>
-        <strong>Created_at:</strong>
-        {createdAt}
-      </p>
-      <p>
-        <strong>Updated_at:</strong>
-        {updatedAt}
-      </p>
       <a href={ edit<%= js_singular_table_name(:upper) %>Path } data-sg-visit>Edit</a>
       <a href={ <%= js_plural_table_name %>Path } data-sg-visit>Back</a>
     </Layout>

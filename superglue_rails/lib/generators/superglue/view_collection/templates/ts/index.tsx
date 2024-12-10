@@ -15,16 +15,18 @@ type ContentProps = {
   }[]
 }
 
-export default function PostsIndex() {
+export default function <%= js_plural_table_name(:upper) %>Index() {
   const {
     new<%= js_singular_table_name(:upper) %>Path,
     <%= js_plural_table_name %> = [],
   } = useContent<ContentProps>()
 
-  const postItems = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>) => {
+  const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>) => {
     const {
       id,
-      body,
+      <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+      <%=attr.camelize(:lower)%>,
+      <%- end -%>
       edit<%= js_singular_table_name(:upper) %>Path,
       <%= js_singular_table_name %>Path,
       deleteForm
@@ -34,7 +36,9 @@ export default function PostsIndex() {
 
     return (
       <tr key={id}>
-        <td>{body}</td>
+        <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+        <td>{<%=attr.camelize(:lower)%>}</td>
+        <%- end -%>
         <td><a href={ <%= js_singular_table_name %>Path } data-sg-visit>Show</a></td>
         <td><a href={ edit<%= js_singular_table_name(:upper) %>Path } data-sg-visit>Edit</a></td>
         <td>
@@ -52,7 +56,9 @@ export default function PostsIndex() {
 
       <table>
         <thead>
-          <tr><th>Body</th></tr>
+          <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
+          <tr><th><%=attr.capitalize%></th></tr>
+          <%- end -%>
           <tr>
             <th colSpan={3}></th>
           </tr>
@@ -63,7 +69,7 @@ export default function PostsIndex() {
         </tbody>
       </table>
       <br />
-      <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= js_singular_table_name.humanize %></a>
+      <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= singular_table_name.humanize %></a>
     </Layout>
   )
 }

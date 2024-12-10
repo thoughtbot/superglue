@@ -1,15 +1,16 @@
 import React from 'react'
 import { Form, Layout } from '@javascript/components'
-import { usePage } from '@thoughtbot/superglue'
+import { useContent } from '@thoughtbot/superglue'
 
 export default function <%= js_plural_table_name(:upper) %>Index() {
   const {
     new<%= js_singular_table_name(:upper) %>Path,
     <%= js_plural_table_name %> = [],
-  } = usePage().data
-  const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>, key) => {
+  } = useContent<ContentProps>()
+
+  const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>) => {
     const { deleteForm } = <%=js_singular_table_name%>;
-    const { inputs, form, extras } = deleteForm;
+    const { form, extras } = deleteForm;
 
     return (
       <tr key={<%= js_singular_table_name %>.id}>
@@ -42,11 +43,11 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
         </thead>
 
         <tbody>
-          {<%= singular_table_name %>Items}
+          {<%= js_singular_table_name %>Items}
         </tbody>
       </table>
       <br />
-      <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= js_singular_table_name(:upper) %></a>
+      <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= singular_table_name.humanize %></a>
     </Layout>
   )
 }

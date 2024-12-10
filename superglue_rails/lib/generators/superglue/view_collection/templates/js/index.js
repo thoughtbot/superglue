@@ -6,7 +6,7 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
   const {
     new<%= js_singular_table_name(:upper) %>Path,
     <%= js_plural_table_name %> = [],
-  } = useContent<ContentProps>()
+  } = useContent()
 
   const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>) => {
     const { deleteForm } = <%=js_singular_table_name%>;

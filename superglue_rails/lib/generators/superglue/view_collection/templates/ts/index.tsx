@@ -3,10 +3,12 @@ import { Form, FormProps, Layout } from '@javascript/components'
 import { useContent } from '@thoughtbot/superglue'
 
 type ContentProps = {
-  newPostPath: string
+  new<%= js_singular_table_name(:upper) %>Path: string
   posts: {
     id: string,
-    body: string,
+    <%- attributes.each do |attr| -%>
+    <%= attr.column_name.camelize(:lower)%>: <%= json_mappable_type(attr)%>
+    <%- end -%>
     createdAt: string,
     updatedAt: string,
     edit<%= js_singular_table_name(:upper) %>Path: string,

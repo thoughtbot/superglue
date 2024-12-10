@@ -14,8 +14,6 @@ module Superglue
 
       def create_files
         use_typescript = options["typescript"]
-        puts "hiii"
-        puts use_typescript
 
         if use_typescript
           copy_ts_files

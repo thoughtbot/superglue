@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  forwardRef,
-  useRef,
-  useImperativeHandle,
-} from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import parse from 'url-parse'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
@@ -11,7 +6,7 @@ import { saveAndProcessPage } from './action_creators'
 import { historyChange, setCSRFToken } from './actions'
 import { Provider, connect } from 'react-redux'
 
-import { History, createBrowserHistory, createMemoryHistory } from 'history'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 
 import { NavigationProvider } from './components/Navigation'
 export { NavigationProvider, NavigationContext } from './components/Navigation'
@@ -32,7 +27,6 @@ export * from './types'
 import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
   VisitResponse,
-  BuildVisitAndRemote,
   ConnectedMapping,
   ApplicationProps,
   NavigateTo,
@@ -57,89 +51,38 @@ const createHistory = () => {
 
 export const prepareStore = (
   store: SuperglueStore,
-  initialPage: VisitResponse
+  initialPage: VisitResponse,
+  path: string
 ) => {
-  const location = window.location
-  const initialPageKey = urlToPageKey(location.href) // pass this
+  const location = parse(path)
+  const initialPageKey = urlToPageKey(location.href)
   const { csrfToken } = initialPage
+
+  const pathname = location.pathname
+  const search = location.query
+  const hash = location.hash
 
   store.dispatch(
     historyChange({
-      pathname: location.pathname,
-      search: location.search,
-      hash: location.hash,
+      pathname,
+      search,
+      hash,
     })
   )
   store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
   store.dispatch(setCSRFToken({ csrfToken }))
 }
 
-export function start(
-  // initialPage: VisitResponse,
-  baseUrl: string,
-  path: string,
-  store: SuperglueStore,
-  mapping: Record<string, React.ComponentType>,
-  buildVisitAndRemote: BuildVisitAndRemote,
-  navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
-  history: History
-) {
-  const initialPageKey = urlToPageKey(parse(path).href)
-  // const { csrfToken } = initialPage
-  // const location = parse(path)
-
-  config.baseUrl = baseUrl
-  // const reducer = rootReducer
-
-  // const pathname = location.pathname
-  // const search = location.query
-  // const hash = location.hash
-  // const currentPageKey = urlToPageKey(pathname + search)
-  // const initialSuperglueState = {
-  //   pathname,
-  //   currentPageKey,
-  //   search,
-  //   hash,
-  //   assets: initialPage.assets,
-  //   csrfToken
-  // }
-
-  // const initialState : InitialState = {
-  //   pages: {
-  //     [initialPageKey]: {
-  //       ...initialPage,
-  //       pageKey: initialPageKey,
-  //       savedAt: Date.now()
-  //     }
-  //   },
-  //   superglue: initialSuperglueState,
-  //   ...initialPage.slices
-  // }
-
-  // Fire initial events
-  // const store = buildStore(initialState, reducer)
-  // store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-
-  history.replace(...argsForHistory(path))
-
-  const unconnectedMapping = mapping
+export const connectMapping = (
+  unconnectedMapping: Record<string, React.ComponentType>
+) => {
   const nextMapping: ConnectedMapping = {}
   for (const key in unconnectedMapping) {
     const component = unconnectedMapping[key]
     nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)
   }
 
-  const connectedMapping = nextMapping
-  const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
-
-  return {
-    // store,
-    visit,
-    remote,
-    connectedMapping,
-    history,
-    initialPageKey,
-  }
+  return nextMapping
 }
 
 /**
@@ -149,52 +92,43 @@ export function start(
  * This is a simple component, you can override this by copying the source code and
  * use the exported methods used by this component (`start` and `ujsHandler`).
  */
-const Application = forwardRef(function Application(
-  {
-    initialPage,
-    baseUrl,
-    path,
-    store,
-    buildVisitAndRemote,
-    history,
-    mapping,
-    appEl,
-  }: ApplicationProps,
-  ref
-) {
+function Application({
+  initialPage,
+  baseUrl,
+  path,
+  store,
+  buildVisitAndRemote,
+  history,
+  mapping,
+  appEl,
+}: ApplicationProps) {
   const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
-  history = history || createHistory()
-  prepareStore(store, initialPage)
+  const { visit, remote, nextHistory, connectedMapping, initialPageKey } =
+    useMemo(() => {
+      config.baseUrl = baseUrl
 
-  const { visit, remote, connectedMapping, initialPageKey } = start(
-    // initialPage,
-    baseUrl,
-    path,
-    store,
-    mapping,
-    buildVisitAndRemote,
-    navigatorRef,
-    history
-  )
+      const initialPageKey = urlToPageKey(parse(path).href)
+      const nextHistory = history || createHistory()
+      nextHistory.replace(...argsForHistory(path))
+      prepareStore(store, initialPage, path)
 
-  useImperativeHandle(
-    ref,
-    () => {
       return {
-        store,
+        ...buildVisitAndRemote(navigatorRef, store),
+        connectedMapping: connectMapping(mapping),
+        nextHistory,
+        initialPageKey,
       }
-    },
-    []
-  )
-  const handlers = ujsHandlers({
-    visit,
-    remote,
-    ujsAttributePrefix: 'data-sg',
-    store,
-  })
+    }, [])
 
   useEffect(() => {
+    const handlers = ujsHandlers({
+      visit,
+      remote,
+      ujsAttributePrefix: 'data-sg',
+      store,
+    })
+
     const { onClick, onSubmit } = handlers
     appEl.addEventListener('click', onClick)
     appEl.addEventListener('submit', onSubmit)
@@ -203,7 +137,7 @@ const Application = forwardRef(function Application(
       appEl.removeEventListener('click', onClick)
       appEl.removeEventListener('submit', onSubmit)
     }
-  })
+  }, [])
 
   // The Nav component is pretty bare and can be inherited from for custom
   // behavior or replaced with your own.
@@ -214,11 +148,11 @@ const Application = forwardRef(function Application(
         visit={visit}
         remote={remote}
         mapping={connectedMapping}
-        history={history}
+        history={nextHistory}
         initialPageKey={initialPageKey}
       />
     </Provider>
   )
-})
+}
 
 export { Application }

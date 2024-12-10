@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { Application } from '../../lib/index'
+import { Application, rootReducer } from '../../lib/index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
@@ -80,22 +80,20 @@ describe('start', () => {
       csrfToken: 'token',
     }
 
-    let instance
+    const store = buildStore({}, rootReducer)
 
     render(
       <Application
         initialPage={initialPage}
-        ref={(node) => (instance = node)}
         baseUrl={'http://example.com/base'}
         path={'/home?some=123#title'}
         appEl={document}
         mapping={{ home: Home, about: About }}
         history={history}
-        buildStore={buildStore}
+        store={store}
         buildVisitAndRemote={buildVisitAndRemote}
       />
     )
-    const store = instance.store
 
     expect(store.getState()).toEqual({
       superglue: {
@@ -149,23 +147,20 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
 
       render(
         <Application
           initialPage={initialPage}
-          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/home'}
           appEl={document}
           history={history}
           mapping={{ home: Home, about: About }}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
-
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
 
@@ -218,22 +213,20 @@ describe('navigation', () => {
         }
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
 
       render(
         <Application
           initialPage={initialPage}
-          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/home'}
           appEl={document}
           history={history}
           mapping={{ home: ExampleHome, about: About }}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
 
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
@@ -300,21 +293,19 @@ describe('navigation', () => {
             }
           }
 
-          let instance
+          const store = buildStore({}, rootReducer)
           render(
             <Application
               initialPage={initialPage}
-              ref={(node) => (instance = node)}
               baseUrl={'http://example.com'}
               path={'/home'}
               appEl={document}
               mapping={{ home: ExampleHome }}
               history={history}
-              buildStore={buildStore}
+              store={store}
               buildVisitAndRemote={buildVisitAndRemote}
             />
           )
-          const store = instance.store
 
           expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
         }))
@@ -346,21 +337,19 @@ describe('navigation', () => {
         }
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
       render(
         <Application
           initialPage={initialPage}
-          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/home'}
           appEl={document}
           mapping={{ home: ExampleHome, about: About }}
           history={history}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
 
       expect(screen.getByRole('heading')).not.toHaveTextContent('Visit Success')
       const mockResponse = rsp.visitSuccess()
@@ -402,21 +391,20 @@ describe('navigation', () => {
         }
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
+
       render(
         <Application
           initialPage={initialPage}
-          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/home'}
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
 
       const user = userEvent.setup()
       await user.click(screen.getByText('click'))
@@ -449,22 +437,20 @@ describe('navigation', () => {
         restoreStrategy: 'fromCacheOnly',
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
 
       render(
         <Application
           initialPage={initialPage}
-          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/home'}
           appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
 
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
@@ -504,7 +490,7 @@ describe('navigation', () => {
           pageKey: '/home',
         })
         history.push('/home') // Gets replaced on Superglue.start
-        let store
+        const store = buildStore({}, rootReducer)
 
         history.listen(({ action, location }) => {
           const { pathname, hash } = location
@@ -534,23 +520,18 @@ describe('navigation', () => {
           }
         }
 
-        let instance
-
         render(
           <Application
             initialPage={initialPage}
-            ref={(node) => (instance = node)}
             baseUrl={'http://example.com'}
             path={'/home'}
             appEl={document}
             mapping={{ home: ExampleHome }}
             history={history}
-            buildStore={buildStore}
+            store={store}
             buildVisitAndRemote={buildVisitAndRemote}
           />
         )
-
-        store = instance.store
       }))
 
     it('requests the evicted page when encountering the page again using browser buttons', async () => {
@@ -574,21 +555,19 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
       render(
         <Application
           initialPage={initialPage}
-          ref={(node) => (instance = node)}
           baseUrl={'http://example.com'}
           path={'/home'}
           appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
 
       const pageState = {
         data: { heading: 'Visit Success Some heading 2' },
@@ -631,22 +610,20 @@ describe('navigation', () => {
         }
       }
 
-      let instance
+      const store = buildStore({}, rootReducer)
 
       render(
         <Application
           initialPage={initialPage}
           baseUrl={'http://example.com'}
-          ref={(node) => (instance = node)}
           path={'/about'}
           appEl={document}
           mapping={{ home: ExampleHome }}
           history={history}
-          buildStore={buildStore}
+          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
-      const store = instance.store
 
       const mockResponse = rsp.graftSuccessWithNewZip({
         componentIdentifier: 'home',

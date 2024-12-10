@@ -3,10 +3,17 @@ require "rails/generators/resource_helpers"
 
 module Superglue
   module Generators
-    class InstallGenerator < Rails::Generators::Base
+    class InstallGenerator <  Rails::Generators::NamedBase
       source_root File.expand_path("../templates", __FILE__)
+      
+      class_option :typescript, banner: "TYPESCRIPT", 
+        type: :boolean, 
+        required: false, 
+        default: false,
+        desc: "Use typescript"
 
       def create_files
+        @use_typescript = options["typescript"]
         say "Copying application.js file to #{app_js_path}"
         copy_file "#{__dir__}/templates/js/application.js", "#{app_js_path}/application.js"
 

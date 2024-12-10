@@ -2,41 +2,41 @@ import React from 'react'
 import { Form, FormProps, Layout } from '@javascript/components'
 import { useContent } from '@thoughtbot/superglue'
 
-type PostIndexProps = {
+type ContentProps = {
   newPostPath: string
   posts: {
     id: string,
     body: string,
     createdAt: string,
     updatedAt: string,
-    editPostPath: string,
-    postPath: string,
+    edit<%= js_singular_table_name(:upper) %>Path: string,
+    <%= js_singular_table_name %>Path: string,
     deleteForm: FormProps
   }[]
 }
 
 export default function PostsIndex() {
   const {
-    newPostPath,
-    posts = [],
-  } = useContent<PostIndexProps>()
+    new<%= js_singular_table_name(:upper) %>Path,
+    <%= js_plural_table_name %> = [],
+  } = useContent<ContentProps>()
 
-  const postItems = posts.map((post) => {
+  const postItems = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>) => {
     const {
       id,
       body,
-      editPostPath,
-      postPath,
+      edit<%= js_singular_table_name(:upper) %>Path,
+      <%= js_singular_table_name %>Path,
       deleteForm
-    } = post
+    } = <%= js_singular_table_name %>
 
     const { form, extras } = deleteForm;
 
     return (
       <tr key={id}>
         <td>{body}</td>
-        <td><a href={ postPath } data-sg-visit>Show</a></td>
-        <td><a href={ editPostPath } data-sg-visit>Edit</a></td>
+        <td><a href={ <%= js_singular_table_name %>Path } data-sg-visit>Show</a></td>
+        <td><a href={ edit<%= js_singular_table_name(:upper) %>Path } data-sg-visit>Edit</a></td>
         <td>
           <Form {...form} extras={extras} data-sg-visit>
             <button type="submit">Delete</button>
@@ -48,7 +48,7 @@ export default function PostsIndex() {
 
   return (
     <Layout>
-      <h1>Posts</h1>
+      <h1><%= js_plural_table_name(:upper) %></h1>
 
       <table>
         <thead>
@@ -59,11 +59,11 @@ export default function PostsIndex() {
         </thead>
 
         <tbody>
-          {postItems}
+          {<%= js_singular_table_name %>Items}
         </tbody>
       </table>
       <br />
-      <a href={newPostPath} data-sg-visit>New Post</a>
+      <a href={new<%= js_singular_table_name(:upper) %>Path} data-sg-visit>New <%= js_singular_table_name.humanize %></a>
     </Layout>
   )
 }

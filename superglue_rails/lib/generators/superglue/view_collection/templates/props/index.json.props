@@ -1,7 +1,7 @@
 json.<%= js_plural_table_name %> do
   json.array! @<%= plural_table_name %> do |<%= singular_table_name %>|
     <%- attributes_list_with_timestamps.each do |attr| -%>
-    json.<%=attr%> <%= js_singular_table_name %>.<%=attr%>
+    json.<%=attr.to_s.camelize(:lower)%> <%= singular_table_name %>.<%=attr%>
     <%- end -%>
     json.edit<%=js_singular_table_name(:upper)%>Path edit_<%=singular_table_name%>_path(<%=singular_table_name%>)
     json.<%=js_singular_table_name%>Path <%=singular_table_name%>_path(<%=singular_table_name%>)

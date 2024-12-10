@@ -4,7 +4,7 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
-  ForwardedRef
+  ForwardedRef,
 } from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
 import { removePage, historyChange } from '../actions'
@@ -45,7 +45,7 @@ const notFound = (identifier: string | undefined): never => {
 
 const NavigationProvider = forwardRef(function NavigationProvider(
   { history, visit, remote, initialPageKey, mapping }: NavigationProviderProps,
-  ref: ForwardedRef<{ navigateTo: NavigateTo; }>
+  ref: ForwardedRef<{ navigateTo: NavigateTo }>
 ) {
   const [activePage, setActivePage] = useState({
     pageKey: initialPageKey,

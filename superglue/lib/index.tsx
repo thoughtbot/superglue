@@ -1,4 +1,9 @@
-import React, { useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
+import React, {
+  useEffect,
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+} from 'react'
 import parse from 'url-parse'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
@@ -31,7 +36,7 @@ import {
   ConnectedMapping,
   ApplicationProps,
   NavigateTo,
-  SuperglueStore
+  SuperglueStore,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
@@ -50,7 +55,10 @@ const createHistory = () => {
   }
 }
 
-export const prepareStore = (store: SuperglueStore, initialPage: VisitResponse) => {
+export const prepareStore = (
+  store: SuperglueStore,
+  initialPage: VisitResponse
+) => {
   const location = window.location
   const initialPageKey = urlToPageKey(location.href) // pass this
   const { csrfToken } = initialPage

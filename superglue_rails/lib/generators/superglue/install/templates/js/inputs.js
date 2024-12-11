@@ -7,7 +7,7 @@
  * There is no style and structured with bare necessities. You should modify
  * these components to fit your design needs.
  */
-import React, { useContext, createContext, useMemo } from 'react';
+import React, { useContext, createContext, useMemo } from "react";
 export const ValidationContext = createContext({});
 export const useErrorKeyValidation = ({ errorKey, }) => {
     const errors = useContext(ValidationContext);
@@ -32,7 +32,7 @@ export const Extras = (hiddenInputAttributes) => {
  * It's meant to be used with FormProps and mimics the ways that
  * Rails forms are generated.
  */
-export const Form = ({ extras, validationErrors, children, ...props }) => {
+export const Form = ({ extras, validationErrors = {}, children, ...props }) => {
     return (<form {...props}>
       <ValidationContext.Provider value={validationErrors}>
         <Extras {...extras}></Extras>
@@ -59,7 +59,7 @@ export const FieldError = ({ errorKey }) => {
     const errorMessages = Array.isArray(validationError)
         ? validationError
         : [validationError];
-    return <span>{errorMessages.join(' ')}</span>;
+    return <span>{errorMessages.join(" ")}</span>;
 };
 /**
  * A Field component.
@@ -95,7 +95,7 @@ export const CollectionCheckboxes = ({ includeHidden, collection, label, errorKe
     });
     const { name } = collection[0];
     return (<>
-      {includeHidden && (<input type="hidden" name={name} defaultValue={''} autoComplete="off"/>)}
+      {includeHidden && (<input type="hidden" name={name} defaultValue={""} autoComplete="off"/>)}
       <label>{label}</label>
       {checkboxes}
       <FieldError errorKey={errorKey}/>
@@ -119,7 +119,7 @@ export const CollectionRadioButtons = ({ includeHidden, collection, label, error
     });
     const { name } = collection[0];
     return (<>
-      {includeHidden && (<input type="hidden" name={name} defaultValue={''} autoComplete="off"/>)}
+      {includeHidden && (<input type="hidden" name={name} defaultValue={""} autoComplete="off"/>)}
       <label>{label}</label>
       {radioButtons}
       <FieldError errorKey={errorKey}/>
@@ -253,7 +253,7 @@ export const PasswordField = ({ type: _type, ...rest }) => {
 export const Select = ({ includeHidden, name, id, children, options, multiple, type: _type, ...rest }) => {
     const addHidden = includeHidden && multiple;
     const optionElements = options.map((item) => {
-        if ('options' in item) {
+        if ("options" in item) {
             return (<optgroup label={item.label} key={item.label}>
           {item.options.map((opt) => (<option key={opt.label} {...opt}/>))}
         </optgroup>);
@@ -263,7 +263,7 @@ export const Select = ({ includeHidden, name, id, children, options, multiple, t
         }
     });
     return (<>
-      {addHidden && (<input type="hidden" name={name} value={''} autoComplete="off"/>)}
+      {addHidden && (<input type="hidden" name={name} value={""} autoComplete="off"/>)}
       <select name={name} id={id} multiple={multiple} {...rest}>
         {children}
         {optionElements}
@@ -278,9 +278,9 @@ export const Select = ({ includeHidden, name, id, children, options, multiple, t
  */
 export const TextArea = ({ type: _type, errorKey, ...rest }) => {
     const { label } = rest;
-    return <FieldBase label={label} errorKey={errorKey} id={rest.id}>
+    return (<FieldBase label={label} errorKey={errorKey} id={rest.id}>
       <textarea {...rest}/>
-    </FieldBase>;
+    </FieldBase>);
 };
 /**
  * A file field component.
@@ -291,4 +291,12 @@ export const TextArea = ({ type: _type, errorKey, ...rest }) => {
 export const FileField = ({ type: _type, ...rest }) => {
     return <FieldBase {...rest} type="file"/>;
 };
-
+/**
+ * A SubmitButton component.
+ *
+ * Designed to work with a payload form_props's [submit helper](https://github.com/thoughtbot/form_props?tab=readme-ov-file#form-helpers).
+ * Mimics the rails equivalent. Please modify to your liking.
+ */
+export const SubmitButton = ({ type: _type, text, ...rest }) => {
+    return <button {...rest} type="submit"> {text} </button>;
+};

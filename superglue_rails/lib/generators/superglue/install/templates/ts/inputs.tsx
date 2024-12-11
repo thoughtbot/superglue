@@ -32,9 +32,7 @@ import {
   TextArea as RailsTextArea,
   ValidationErrors,
   SubmitProps as RailsSubmitButton
-} from "./types";
-
-// TODO: release candywrapper and rename to tsx
+} from '@thoughtbot/candy_wrapper'
 
 export const ValidationContext = createContext<ValidationErrors>({});
 

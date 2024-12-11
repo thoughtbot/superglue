@@ -214,16 +214,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   }
 
   const { pageKey, ownProps } = activePage
-  if(pages[pageKey] === undefined){
-    console.log('ohhhhhhhh')
-    console.log("pages")
-
-    console.log(pages)
-    console.log(pageKey)
-
-  }
-
-  console.log(pages[pageKey].componentIdentifier)
   const { componentIdentifier } = pages[pageKey]
   const Component = mapping[componentIdentifier]
 

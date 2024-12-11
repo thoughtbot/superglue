@@ -1,12 +1,12 @@
 import React from 'react'
 import { 
   Form, 
+  FormProps,
   Layout,
   <%- attributes.each do |attr| -%>
   <%= js_component(attr)%>,
   <%= js_component(attr)%>Props,
   <%- end -%>
-  FormProps,
   SubmitButton
   SubmitButtonProps
 } from '@javascript/components'
@@ -44,7 +44,7 @@ export default function <%= js_plural_table_name(:upper) %>New() {
         <SubmitButton {...inputs.submit} type="submit"> {inputs.submit.text} </SubmitButton>
       </Form>
 
-      <a href={postsPath} data-sg-visit>Back</a>
+      <a href={<%= js_plural_table_name %>Path} data-sg-visit>Back</a>
     </Layout>
   )
 }

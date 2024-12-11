@@ -156,6 +156,10 @@ module Superglue
         [name, :html, :erb].join(".")
       end
 
+      def showable_attributes
+        attributes.reject { |attr| %w[password password_confirmation].include? attr.name }
+      end
+
       def attributes_list_with_timestamps
         attributes_list(attributes_names + %w[created_at updated_at])
       end

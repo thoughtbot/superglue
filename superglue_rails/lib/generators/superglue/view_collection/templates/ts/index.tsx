@@ -4,9 +4,9 @@ import { useContent } from '@thoughtbot/superglue'
 
 type ContentProps = {
   new<%= js_singular_table_name(:upper) %>Path: string
-  posts: {
-    id: string,
-    <%- attributes.each do |attr| -%>
+  <%= js_plural_table_name(:upper) %>: {
+    id: number,
+    <%- showable_attributes.each do |attr| -%>
     <%= attr.column_name.camelize(:lower)%>: <%= json_mappable_type(attr)%>
     <%- end -%>
     createdAt: string,
@@ -26,8 +26,8 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
   const <%= js_singular_table_name %>Items = <%= js_plural_table_name %>.map((<%= js_singular_table_name %>) => {
     const {
       id,
-      <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-      <%=attr.camelize(:lower)%>,
+      <%- showable_attributes.each do |attr| -%>
+      <%= attr.column_name.camelize(:lower)%>,
       <%- end -%>
       edit<%= js_singular_table_name(:upper) %>Path,
       <%= js_singular_table_name %>Path,
@@ -38,8 +38,8 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
 
     return (
       <tr key={id}>
-        <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-        <td>{<%=attr.camelize(:lower)%>}</td>
+        <%- showable_attributes.each do |attr| -%>
+        <td>{<%=attr.column_name.camelize(:lower)%>}</td>
         <%- end -%>
         <td><a href={ <%= js_singular_table_name %>Path } data-sg-visit>Show</a></td>
         <td><a href={ edit<%= js_singular_table_name(:upper) %>Path } data-sg-visit>Edit</a></td>
@@ -58,8 +58,8 @@ export default function <%= js_plural_table_name(:upper) %>Index() {
 
       <table>
         <thead>
-          <%- attributes_list.select{|attr| attr != :id }.each do |attr| -%>
-          <tr><th><%=attr.capitalize%></th></tr>
+          <%- showable_attributes.each do |attr| -%>
+          <tr><th><%=attr.column_name.humanize%></th></tr>
           <%- end -%>
           <tr>
             <th colSpan={3}></th>

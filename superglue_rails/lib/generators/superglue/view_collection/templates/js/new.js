@@ -16,8 +16,12 @@ export default function <%= js_plural_table_name(:upper) %>New() {
     <%= js_plural_table_name %>Path
   } = useContent()
 
-  const { inputs, form, extras } = <%= js_singular_table_name %>Form
-  const validationErrors = useSelector((state) => state.flash["<%= js_singular_table_name%>FormErrors"])
+  const { 
+    inputs, 
+    form, 
+    extras 
+  } = <%= js_singular_table_name %>Form
+  const validationErrors = useAppSelector((state) => state.flash["<%= js_singular_table_name%>FormErrors"])
 
   return (
     <Layout>

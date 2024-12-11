@@ -1,12 +1,12 @@
 import React from 'react'
 import { 
   Form, 
+  FormProps,
   Layout,
   <%- attributes.each do |attr| -%>
   <%= js_component(attr)%>,
   <%= js_component(attr)%>Props,
   <%- end -%>
-  FormProps,
   SubmitButton
   SubmitButtonProps
 } from '@javascript/components'

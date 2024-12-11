@@ -127,7 +127,7 @@ module Superglue
       end
 
       def view_path
-        "../views"
+        "@views"
       end
 
       def app_js_path

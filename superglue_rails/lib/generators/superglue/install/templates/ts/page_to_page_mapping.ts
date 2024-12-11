@@ -6,4 +6,5 @@
 // scaffold, it will auto append the identifers for you.
 //
 // e.g {'posts/new': PostNew}
-export const pageIdentifierToPageComponent = {};
+export const pageIdentifierToPageComponent = {
+};

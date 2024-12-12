@@ -4,7 +4,7 @@ import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { historyChange, setCSRFToken } from './actions'
-import { Provider, connect } from 'react-redux'
+import { Provider } from 'react-redux'
 
 import { createBrowserHistory, createMemoryHistory } from 'history'
 
@@ -24,10 +24,8 @@ export {
 } from './actions'
 export * from './types'
 
-import { mapStateToProps, mapDispatchToProps } from './utils/react'
 import {
   VisitResponse,
-  ConnectedMapping,
   ApplicationProps,
   NavigateTo,
   SuperglueStore,
@@ -73,18 +71,6 @@ export const prepareStore = (
   store.dispatch(setCSRFToken({ csrfToken }))
 }
 
-export const connectMapping = (
-  unconnectedMapping: Record<string, React.ComponentType>
-) => {
-  const nextMapping: ConnectedMapping = {}
-  for (const key in unconnectedMapping) {
-    const component = unconnectedMapping[key]
-    nextMapping[key] = connect(mapStateToProps, mapDispatchToProps)(component)
-  }
-
-  return nextMapping
-}
-
 /**
  * The entry point to your superglue application. It sets up the redux Provider,
  * redux state and the Navigation component.
@@ -104,33 +90,31 @@ function Application({
 }: ApplicationProps) {
   const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
-  const { visit, remote, nextHistory, connectedMapping, initialPageKey, ujs } =
-    useMemo(() => {
-      config.baseUrl = baseUrl
+  const { visit, remote, nextHistory, initialPageKey, ujs } = useMemo(() => {
+    config.baseUrl = baseUrl
 
-      const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
+    const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
 
-      const initialPageKey = urlToPageKey(parse(path).href)
-      const nextHistory = history || createHistory()
-      nextHistory.replace(...argsForHistory(path))
-      prepareStore(store, initialPage, path)
+    const initialPageKey = urlToPageKey(parse(path).href)
+    const nextHistory = history || createHistory()
+    nextHistory.replace(...argsForHistory(path))
+    prepareStore(store, initialPage, path)
 
-      const handlers = ujsHandlers({
-        visit,
-        remote,
-        ujsAttributePrefix: 'data-sg',
-        store,
-      })
+    const handlers = ujsHandlers({
+      visit,
+      remote,
+      ujsAttributePrefix: 'data-sg',
+      store,
+    })
 
-      return {
-        visit,
-        remote,
-        connectedMapping: connectMapping(mapping),
-        nextHistory,
-        initialPageKey,
-        ujs: handlers,
-      }
-    }, [])
+    return {
+      visit,
+      remote,
+      nextHistory,
+      initialPageKey,
+      ujs: handlers,
+    }
+  }, [])
 
   // The Nav component is pretty bare and can be inherited from for custom
   // behavior or replaced with your own.
@@ -141,7 +125,7 @@ function Application({
           ref={navigatorRef}
           visit={visit}
           remote={remote}
-          mapping={connectedMapping}
+          mapping={mapping}
           history={nextHistory}
           initialPageKey={initialPageKey}
         />

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { JSDOM } from 'jsdom'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import { Provider } from 'react-redux'
@@ -9,31 +9,24 @@ import configureMockStore from 'redux-mock-store'
 import { NavigationProvider } from '../../lib/components/Navigation'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { NavigationContext } from '../../lib/components/Navigation'
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props)
-    this.enhancedVisit = this.visit.bind(this)
+const Home = () => {
+  const { navigateTo } = useContext(NavigationContext)
+  const visit = () => {
+    navigateTo('/about')
   }
 
-  visit() {
-    this.props.navigateTo('/about')
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Home Page</h1>
-        <button onClick={this.enhancedVisit}> click </button>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <h1>Home Page</h1>
+      <button onClick={visit}> click </button>
+    </div>
+  )
 }
 
-class About extends React.Component {
-  render() {
-    return <h1>About Page</h1>
-  }
+const About = () => {
+  return <h1>About Page</h1>
 }
 
 describe('Nav', () => {
@@ -46,9 +39,6 @@ describe('Nav', () => {
         posX: 0,
         posY: 0,
       })
-      let expected = '<div><h1>About Page</h1></div>'
-
-      class ExampleAbout extends About {}
 
       const mockStore = configureMockStore()
       const store = mockStore({
@@ -217,27 +207,41 @@ describe('Nav', () => {
       let visitedAbout = false
       let returnedHome = false
 
-      class ExampleHome extends Home {
-        componentDidMount() {
+      const Home = () => {
+        const { navigateTo } = useContext(NavigationContext)
+        const visit = () => {
+          navigateTo('/about')
+        }
+
+        useEffect(() => {
           if (mountTimes == 1) {
             returnedHome = true
           }
           mountTimes++
-        }
+        }, [])
+      
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={visit}> click </button>
+          </div>
+        )
       }
-
-      class ExampleAbout extends About {
-        componentDidMount() {
+      
+      const About = () => {
+        useEffect(() => {
           visitedAbout = true
           history.back()
-        }
+        }, [])
+
+        return <h1>About Page</h1>
       }
 
       render(
         <Provider store={store}>
           <NavigationProvider
             store={store}
-            mapping={{ home: ExampleHome, about: ExampleAbout }}
+            mapping={{ home: Home, about: About }}
             initialPageKey={'/home'}
             history={history}
           />

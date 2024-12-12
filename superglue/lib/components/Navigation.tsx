@@ -222,7 +222,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       <NavigationContext.Provider
         value={{ pageKey, navigateTo, visit, remote, ownProps }}
       >
-        <Component />
+        <Component {...ownProps}/>
       </NavigationContext.Provider>
     )
   } else {

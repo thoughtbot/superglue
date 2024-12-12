@@ -106,7 +106,6 @@ describe('start', () => {
       },
       pages: {
         '/home?some=123': {
-          pageKey: '/home?some=123',
           fragments: [],
           data: {
             heading: 'this is page 1',
@@ -173,7 +172,6 @@ describe('navigation', () => {
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
-        pageKey: '/about',
         fragments: [],
         savedAt: expect.any(Number),
       }
@@ -240,7 +238,6 @@ describe('navigation', () => {
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
-        pageKey: '/about',
         fragments: [],
         savedAt: expect.any(Number),
       }
@@ -574,7 +571,6 @@ describe('navigation', () => {
         csrfToken: 'token',
         assets: ['application-123.js', 'application-123.js'],
         componentIdentifier: 'about',
-        pageKey: '/about',
         fragments: [],
         savedAt: expect.any(Number),
       }

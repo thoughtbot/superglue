@@ -334,8 +334,8 @@ export type SuperglueStore = EnhancedStore<
 >
 
 export interface Handlers {
-  onClick: (event: MouseEvent) => void
-  onSubmit: (event: Event) => void
+  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onSubmit: (event: React.FormEvent<HTMLDivElement>) => void
 }
 
 export type UJSHandlers = ({

@@ -108,7 +108,7 @@ function Application({
     useMemo(() => {
       config.baseUrl = baseUrl
 
-      const {visit, remote} =  buildVisitAndRemote(navigatorRef, store)
+      const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
 
       const initialPageKey = urlToPageKey(parse(path).href)
       const nextHistory = history || createHistory()
@@ -128,10 +128,10 @@ function Application({
         connectedMapping: connectMapping(mapping),
         nextHistory,
         initialPageKey,
-        ujs: handlers
+        ujs: handlers,
       }
     }, [])
-  
+
   // The Nav component is pretty bare and can be inherited from for custom
   // behavior or replaced with your own.
   return (

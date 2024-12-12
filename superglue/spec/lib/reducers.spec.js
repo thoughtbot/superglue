@@ -388,7 +388,6 @@ describe('reducers', () => {
             data: {},
             csrfToken: 'token',
             assets: ['application-123.js'],
-            pageKey: '/foo',
             fragments: [],
             savedAt: expect.any(Number),
           })
@@ -436,7 +435,6 @@ describe('reducers', () => {
                 },
               },
             },
-            pageKey: '/foo',
             defers: [
               { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
             ],
@@ -472,7 +470,6 @@ describe('reducers', () => {
               },
             },
           },
-          pageKey: '/foo',
           defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
           fragments: [],
           savedAt: expect.any(Number),
@@ -489,7 +486,6 @@ describe('reducers', () => {
                 },
               },
             },
-            pageKey: '/bar',
             defers: [
               { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
             ],
@@ -527,7 +523,6 @@ describe('reducers', () => {
             },
             baz: 'received',
           },
-          pageKey: '/bar',
           defers: [{ url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' }],
           fragments: [{ type: 'info', partial: 'info', path: 'data.foo.bar' }],
           savedAt: expect.any(Number),
@@ -544,7 +539,6 @@ describe('reducers', () => {
                 },
               },
             },
-            pageKey: '/bar',
             defers: [
               { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
             ],
@@ -576,7 +570,6 @@ describe('reducers', () => {
               bar: {},
             },
           },
-          pageKey: '/foo',
           defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
           fragments: [{ type: 'info', partial: 'info', path: 'data.foo.bar' }],
           savedAt: expect.any(Number),

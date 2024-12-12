@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useRef, useMemo } from 'react'
 import parse from 'url-parse'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
@@ -100,58 +100,53 @@ function Application({
   buildVisitAndRemote,
   history,
   mapping,
-  appEl,
+  ...rest
 }: ApplicationProps) {
   const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
-  const { visit, remote, nextHistory, connectedMapping, initialPageKey } =
+  const { visit, remote, nextHistory, connectedMapping, initialPageKey, ujs } =
     useMemo(() => {
       config.baseUrl = baseUrl
+
+      const {visit, remote} =  buildVisitAndRemote(navigatorRef, store)
 
       const initialPageKey = urlToPageKey(parse(path).href)
       const nextHistory = history || createHistory()
       nextHistory.replace(...argsForHistory(path))
       prepareStore(store, initialPage, path)
 
+      const handlers = ujsHandlers({
+        visit,
+        remote,
+        ujsAttributePrefix: 'data-sg',
+        store,
+      })
+
       return {
-        ...buildVisitAndRemote(navigatorRef, store),
+        visit,
+        remote,
         connectedMapping: connectMapping(mapping),
         nextHistory,
         initialPageKey,
+        ujs: handlers
       }
     }, [])
-
-  useEffect(() => {
-    const handlers = ujsHandlers({
-      visit,
-      remote,
-      ujsAttributePrefix: 'data-sg',
-      store,
-    })
-
-    const { onClick, onSubmit } = handlers
-    appEl.addEventListener('click', onClick)
-    appEl.addEventListener('submit', onSubmit)
-
-    return () => {
-      appEl.removeEventListener('click', onClick)
-      appEl.removeEventListener('submit', onSubmit)
-    }
-  }, [])
-
+  
   // The Nav component is pretty bare and can be inherited from for custom
   // behavior or replaced with your own.
   return (
-    <Provider store={store}>
-      <NavigationProvider
-        ref={navigatorRef}
-        visit={visit}
-        remote={remote}
-        mapping={connectedMapping}
-        history={nextHistory}
-        initialPageKey={initialPageKey}
-      />
-    </Provider>
+    <div onClick={ujs.onClick} onSubmit={ujs.onSubmit} {...rest}>
+      <Provider store={store}>
+        <NavigationProvider
+          ref={navigatorRef}
+          visit={visit}
+          remote={remote}
+          mapping={connectedMapping}
+          history={nextHistory}
+          initialPageKey={initialPageKey}
+        />
+      </Provider>
+    </div>
   )
 }
 

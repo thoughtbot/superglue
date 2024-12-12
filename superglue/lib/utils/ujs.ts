@@ -45,9 +45,11 @@ export class HandlerBuilder {
     }
   }
 
-  isNonStandardClick(event: MouseEvent): boolean {
+  isNonStandardClick(
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): boolean {
     return (
-      event.which > 1 ||
+      event.button > 0 ||
       event.metaKey ||
       event.ctrlKey ||
       event.shiftKey ||
@@ -62,7 +64,7 @@ export class HandlerBuilder {
     return hasVisit || hasRemote
   }
 
-  handleSubmit(event: Event): void {
+  handleSubmit(event: React.FormEvent<HTMLDivElement>): void {
     const form = event.target
 
     if (!(form instanceof HTMLFormElement)) {
@@ -89,7 +91,7 @@ export class HandlerBuilder {
     })
   }
 
-  handleClick(event: MouseEvent): void {
+  handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
     if (!(event.target instanceof Element)) {
       return
     }

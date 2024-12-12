@@ -55,7 +55,7 @@ function handleSaveResponse(
   state = { ...state }
 
   let nextPage: Page = {
-    pageKey,
+    // pageKey,
     ...page,
     savedAt: Date.now(),
   }

@@ -166,7 +166,7 @@ export type VisitResponse<T = JSONMappable> = {
  */
 export type Page<T = JSONMappable> = VisitResponse<T> & {
   savedAt: number
-  pageKey: PageKey
+  // pageKey: PageKey
 }
 
 /**

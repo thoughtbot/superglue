@@ -220,15 +220,9 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   if (Component) {
     return (
       <NavigationContext.Provider
-        value={{ pageKey, navigateTo, visit, remote }}
+        value={{ pageKey, navigateTo, visit, remote, ownProps }}
       >
-        <Component
-          pageKey={pageKey}
-          navigateTo={navigateTo}
-          visit={visit}
-          remote={remote}
-          {...ownProps}
-        />
+        <Component {...ownProps}/>
       </NavigationContext.Provider>
     )
   } else {

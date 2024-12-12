@@ -1,10 +1,10 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { Application, rootReducer } from '../../lib/index'
+import { Application, rootReducer, useContent } from '../../lib/index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
-import React, { forwardRef, useImperativeHandle } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { createMemoryHistory } from 'history'
 import { config } from '../../lib/config'
 import { visit, remote } from '../../lib/action_creators'
@@ -13,37 +13,31 @@ import { thunk } from 'redux-thunk'
 import 'regenerator-runtime/runtime'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { NavigationContext } from '../../lib/index'
 
 const flushPromises = () => new Promise((res) => process.nextTick(res))
 
 process.on('unhandledRejection', (r) => console.error(r))
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props)
-    this.visit = this.visit.bind(this)
-  }
-
-  visit() {
-    this.props.visit('/about').then(() => {
-      this.props.navigateTo('/about')
+const Home = () => {
+  const { navigateTo, visit } = useContext(NavigationContext)
+  const handleClick = () => {
+    visit('/about').then(() => {
+      navigateTo('/about')
     })
   }
 
-  render() {
-    return (
-      <div>
-        <h1>Home Page, {this.props.heading}</h1>
-        <button onClick={this.visit}> click </button>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <h1>Home Page</h1>
+      <button onClick={handleClick}> click </button>
+    </div>
+  )
 }
 
-class About extends React.Component {
-  render() {
-    return <h1>About Page, {this.props.heading}</h1>
-  }
+const About = () => {
+  const {heading} = useContent()
+  return <h1>About Page, {heading}</h1>
 }
 
 const buildVisitAndRemote = (navRef, store) => {
@@ -87,7 +81,6 @@ describe('start', () => {
         initialPage={initialPage}
         baseUrl={'http://example.com/base'}
         path={'/home?some=123#title'}
-        appEl={document}
         mapping={{ home: Home, about: About }}
         history={history}
         store={store}
@@ -153,7 +146,6 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/home'}
-          appEl={document}
           history={history}
           mapping={{ home: Home, about: About }}
           store={store}
@@ -202,13 +194,20 @@ describe('navigation', () => {
         fragments: [],
         csrfToken: 'token',
       }
-
-      class ExampleHome extends Home {
-        visit() {
-          this.props
-            .visit('/about#title')
-            .then(() => this.props.navigateTo('/about#title'))
+      const Home = () => {
+        const { navigateTo, visit } = useContext(NavigationContext)
+        const handleClick = () => {
+          visit('/about#title').then(() => {
+            navigateTo('/about#title')
+          })
         }
+      
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={handleClick}> click </button>
+          </div>
+        )
       }
 
       const store = buildStore({}, rootReducer)
@@ -218,9 +217,8 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/home'}
-          appEl={document}
           history={history}
-          mapping={{ home: ExampleHome, about: About }}
+          mapping={{ home: Home, about: About }}
           store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
@@ -284,10 +282,24 @@ describe('navigation', () => {
             restoreStrategy: 'fromCacheOnly',
           }
 
-          class ExampleHome extends Home {
-            componentDidMount() {
+          const Home = () => {
+            useEffect(() => {
               process.nextTick(() => history.push('/some_html_page'))
+            }, [])
+
+            const { navigateTo, visit } = useContext(NavigationContext)
+            const handleClick = () => {
+              visit('/about').then(() => {
+                navigateTo('/about')
+              })
             }
+
+            return (
+              <div>
+                <h1>Home Page</h1>
+                <button onClick={handleClick}> click </button>
+              </div>
+            )
           }
 
           const store = buildStore({}, rootReducer)
@@ -296,8 +308,7 @@ describe('navigation', () => {
               initialPage={initialPage}
               baseUrl={'http://example.com'}
               path={'/home'}
-              appEl={document}
-              mapping={{ home: ExampleHome }}
+              mapping={{ home: Home }}
               history={history}
               store={store}
               buildVisitAndRemote={buildVisitAndRemote}
@@ -326,12 +337,20 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      class ExampleHome extends Home {
-        visit() {
-          this.props.visit('/about').then(() => {
-            this.props.navigateTo('/about', { action: 'replace' })
+      const Home = () => {
+        const { visit, navigateTo} = useContext(NavigationContext)
+        const handleClick = () => {
+          visit('/about').then(() => {
+            navigateTo('/about', { action: 'replace' })
           })
         }
+      
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={handleClick}> click </button>
+          </div>
+        )
       }
 
       const store = buildStore({}, rootReducer)
@@ -340,8 +359,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/home'}
-          appEl={document}
-          mapping={{ home: ExampleHome, about: About }}
+          mapping={{ home: Home, about: About }}
           history={history}
           store={store}
           buildVisitAndRemote={buildVisitAndRemote}
@@ -382,12 +400,19 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      class ExampleHome extends Home {
-        visit() {
-          this.props.navigateTo('/home', { action: 'replace' })
+      const Home = () => {
+        const { navigateTo } = useContext(NavigationContext)
+        const handleClick = () => {
+          navigateTo('/home', {action: 'replace'})
         }
+      
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={handleClick}> click </button>
+          </div>
+        )
       }
-
       const store = buildStore({}, rootReducer)
 
       render(
@@ -395,8 +420,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/home'}
-          appEl={document}
-          mapping={{ home: ExampleHome }}
+          mapping={{ home: Home }}
           history={history}
           store={store}
           buildVisitAndRemote={buildVisitAndRemote}
@@ -441,7 +465,6 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/home'}
-          appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
           store={store}
@@ -511,10 +534,16 @@ describe('navigation', () => {
           restoreStrategy: 'fromCacheOnly',
         }
 
-        class ExampleHome extends Home {
-          componentDidMount() {
+        const Home = () => {
+          useEffect(() => {
             process.nextTick(() => history.back())
-          }
+          },[])
+        
+          return (
+            <div>
+              <h1>Home Page</h1>
+            </div>
+          )
         }
 
         render(
@@ -522,8 +551,7 @@ describe('navigation', () => {
             initialPage={initialPage}
             baseUrl={'http://example.com'}
             path={'/home'}
-            appEl={document}
-            mapping={{ home: ExampleHome }}
+            mapping={{ home: Home }}
             history={history}
             store={store}
             buildVisitAndRemote={buildVisitAndRemote}
@@ -558,7 +586,6 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/home'}
-          appEl={document}
           mapping={{ home: Home, about: About }}
           history={history}
           store={store}
@@ -600,10 +627,18 @@ describe('navigation', () => {
         componentIdentifier: 'home',
       }
 
-      class ExampleHome extends Home {
-        visit() {
-          this.props.remote('/about?props_at=address')
+      const Home = () => {
+        const { remote } = useContext(NavigationContext)
+        const handleClick = () => {
+          remote('/about?props_at=address')
         }
+      
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={handleClick}> click </button>
+          </div>
+        )
       }
 
       const store = buildStore({}, rootReducer)
@@ -613,8 +648,7 @@ describe('navigation', () => {
           initialPage={initialPage}
           baseUrl={'http://example.com'}
           path={'/about'}
-          appEl={document}
-          mapping={{ home: ExampleHome }}
+          mapping={{ home: Home }}
           history={history}
           store={store}
           buildVisitAndRemote={buildVisitAndRemote}

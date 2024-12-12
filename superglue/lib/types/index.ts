@@ -3,7 +3,6 @@ import type { Action } from '@reduxjs/toolkit'
 import { EnhancedStore, Tuple, StoreEnhancer } from '@reduxjs/toolkit'
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
-import { ConnectedComponent } from 'react-redux'
 import {
   VisitProps,
   RemoteProps,
@@ -242,28 +241,6 @@ export interface RootState<T = JSONMappable> {
 }
 
 /**
- * Helpful props passed to the page component.
- */
-export interface PageOwnProps {
-  /** the pagekey of the current page */
-  pageKey: PageKey
-  navigateTo: NavigateTo
-  visit: ApplicationVisit
-  remote: ApplicationRemote
-}
-
-/**
- * Your Page's content in the data node in {@link VisitResponse} merged with additional
- * helpers
- */
-export type Content = PageOwnProps & {
-  pageKey: PageKey
-  fragments: Fragment[]
-  csrfToken?: string
-  [key: string]: unknown
-}
-
-/**
  * Meta is passed to the Promise when visit or remote
  * resolves and contains additional information for
  * navigation.
@@ -444,6 +421,7 @@ export type NavigationContextProps = {
   visit: ApplicationVisit
   remote: ApplicationRemote
   pageKey: PageKey
+  ownProps: Record<string, unknown>
 }
 
 /**
@@ -459,17 +437,9 @@ export type NavigationProviderProps = {
   history: History
   visit: ApplicationVisit
   remote: ApplicationRemote
-  mapping: Record<
-    ComponentIdentifier,
-    ConnectedComponent<React.ComponentType, PageOwnProps>
-  >
+  mapping: Record<ComponentIdentifier, React.ComponentType>
   initialPageKey: PageKey
 }
-
-export type ConnectedMapping = Record<
-  ComponentIdentifier,
-  ConnectedComponent<React.ComponentType, PageOwnProps>
->
 
 /**
  * Provide this callback to {@link ApplicationProps} returning a Redux store for

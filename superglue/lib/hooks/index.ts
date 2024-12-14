@@ -9,20 +9,13 @@ export function useSuperglue() {
 }
 
 /**
- * A lightweight hook that grabs the current page from the store.
+ * A lightweight hook that grabs the current page's content from the store.
  */
-export function usePage<T = JSONMappable>() {
+export function useContent<T = JSONMappable>() {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
 
   return useSelector<RootState<T>, Page<T>>(
     (state) => state.pages[currentPageKey]
-  )
-}
-
-/**
- * A lightweight hook that grabs the current page from the store.
- */
-export function useContent<T = JSONMappable>() {
-  return usePage<T>().data
+  ).data
 }

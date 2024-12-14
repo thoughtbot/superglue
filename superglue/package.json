@@ -79,11 +79,9 @@
     "vitest": "^2.0.2"
   },
   "peerDependencies": {
-    "@reduxjs/toolkit": "^2.2.8",
-    "react": ">=16",
-    "react-redux": ">=7.2",
-    "redux": ">=4.1",
-    "redux-thunk": ">=2.3"
+    "react": "^18 || ^19",
+    "react-redux": "^9 | ^8",
+    "@reduxjs/toolkit": "^2.2.8"
   },
   "dependencies": {
     "history": "^5.3.0",

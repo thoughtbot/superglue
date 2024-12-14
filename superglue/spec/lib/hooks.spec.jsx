@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import { usePage, useSuperglue } from '../../lib'
+import { useContent, useSuperglue } from '../../lib'
 import { describe, it } from 'vitest'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
@@ -30,8 +30,8 @@ describe('hooks', () => {
     })
   })
 
-  describe('usePage', () => {
-    it('returns the page state', () => {
+  describe('useContent', () => {
+    it('returns the page content', () => {
       const preloadedState = {
         superglue: {
           currentPageKey: '/current?abc=123',
@@ -61,12 +61,10 @@ describe('hooks', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => usePage(), { wrapper })
+      const { result } = renderHook(() => useContent(), { wrapper })
 
       expect(result.current).toEqual({
-        data: {
-          heading: 'selected',
-        },
+        heading: 'selected',
       })
     })
   })

@@ -25,7 +25,7 @@ const NavigationContext = createContext<NavigationContextProps | undefined>(
 
 const hasWindow = typeof window !== 'undefined'
 
-const scrollTo = (posX: number, posY: number): void => {
+const setWindowScroll = (posX: number, posY: number): void => {
   hasWindow && window.scrollTo(posX, posY)
 }
 
@@ -96,11 +96,11 @@ const NavigationProvider = forwardRef(function NavigationProvider(
         switch (restoreStrategy) {
           case 'fromCacheOnly':
             setActivePage({ pageKey, ownProps: {} })
-            scrollTo(posX, posY)
+            setWindowScroll(posX, posY)
             break
           case 'fromCacheAndRevisitInBackground':
             setActivePage({ pageKey, ownProps: {} })
-            scrollTo(posX, posY)
+            setWindowScroll(posX, posY)
             visit(pageKey, { revisit: true })
             break
           case 'revisitOnly':
@@ -116,7 +116,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
               if (!!meta && meta.navigationAction === 'none') {
                 setActivePage({ pageKey, ownProps: {} })
-                scrollTo(posX, posY)
+                setWindowScroll(posX, posY)
               }
             })
         }
@@ -132,7 +132,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
           if (!!meta && meta.navigationAction === 'none') {
             setActivePage({ pageKey, ownProps: {} })
-            scrollTo(posX, posY)
+            setWindowScroll(posX, posY)
           }
         })
       }
@@ -195,7 +195,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       }
 
       setActivePage({ pageKey: nextPageKey, ownProps })
-      scrollTo(0, 0)
+      setWindowScroll(0, 0)
 
       if (action === 'replace' && prevPageKey && prevPageKey !== nextPageKey) {
         dispatch(removePage({ pageKey: prevPageKey }))

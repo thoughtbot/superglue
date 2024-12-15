@@ -493,12 +493,6 @@ export interface ApplicationProps {
    * `location.search` + `location.hash`
    */
   path: string
-  /**
-   * The app element that was passed to React's `createRoot`. This will be used
-   * to setup UJS helpers.
-   */
-  appEl: HTMLElement
-  // buildStore: BuildStore
   buildVisitAndRemote: BuildVisitAndRemote
   mapping: Record<string, React.ComponentType>
   history?: History

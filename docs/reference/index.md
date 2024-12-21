@@ -1,248 +1,342 @@
-## Classes
+## References
 
-<a id="applicationbase" name="applicationbase"></a>
+<a id="usesuperglue" name="usesuperglue"></a>
 
-### `abstract` ApplicationBase
+### useSuperglue
 
-The entry point to your superglue application. You should create a class
-(Application) that inherit from the ApplicationBase component and override
-the [buildStore](index.md#buildstore), [mapping](index.md#mapping), and [visitAndRemote](index.md#visitandremote) methods.
+Re-exports [useSuperglue](hooks.md#usesuperglue)
 
-This would be setup for you when installing Superglue at `application.js`.
+<a id="usecontent" name="usecontent"></a>
 
-#### Extends
+### useContent
 
-- `Component`\<`ApplicationProps`\>
+Re-exports [useContent](hooks.md#usecontent)
 
-#### Constructors
+<a id="navigationprovider" name="navigationprovider"></a>
 
-<a id="constructors" name="constructors"></a>
+### NavigationProvider
 
-##### new ApplicationBase()
+Re-exports [NavigationProvider](components.Navigation.md#navigationprovider)
 
-> **new ApplicationBase**(`props`: `ApplicationProps`): [`ApplicationBase`](index.md#applicationbase)
+<a id="navigationcontext" name="navigationcontext"></a>
 
-The constructor of the `ApplicationBase` class.
+### NavigationContext
 
-###### Parameters
+Re-exports [NavigationContext](components.Navigation.md#navigationcontext)
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `props` | `ApplicationProps` |  |
+<a id="supergluereducer" name="supergluereducer"></a>
 
-###### Returns
+### superglueReducer
 
-[`ApplicationBase`](index.md#applicationbase)
+Re-exports superglue
 
-###### Overrides
+<a id="pagereducer" name="pagereducer"></a>
 
-`React.Component<ApplicationProps>.constructor`
+### pageReducer
 
-###### Defined in
+Re-exports pages
 
-[lib/index.tsx:151](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L151)
+<a id="fetchargs" name="fetchargs"></a>
 
-#### Methods
+### FetchArgs
 
-<a id="visitandremote" name="visitandremote"></a>
+Re-exports [FetchArgs](types.actions.md#fetchargs)
 
-##### visitAndRemote()
+<a id="graftingsuccessaction" name="graftingsuccessaction"></a>
 
-> `abstract` **visitAndRemote**(`navigatorRef`: `RefObject`\<[`default`](components.Nav.md#default)\>, `store`: [`SuperglueStore`](types.md#supergluestore)): \{`visit`: [`Visit`](types.requests.md#visit);`remote`: [`Remote`](types.requests.md#remote); \}
+### GraftingSuccessAction
 
-Override this method to return a visit and remote function. These functions
-will be used by Superglue to power its UJS attributes and passed to your
-page components. You may customize this functionality to your liking, e.g,
-adding a progress bar.
+Re-exports [GraftingSuccessAction](types.actions.md#graftingsuccessaction)
 
-###### Parameters
+<a id="graftingerroraction" name="graftingerroraction"></a>
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `navigatorRef` | `RefObject`\<[`default`](components.Nav.md#default)\> |  |
-| `store` | [`SuperglueStore`](types.md#supergluestore) |  |
+### GraftingErrorAction
 
-###### Returns
+Re-exports [GraftingErrorAction](types.actions.md#graftingerroraction)
 
-\{`visit`: [`Visit`](types.requests.md#visit);`remote`: [`Remote`](types.requests.md#remote); \}
+<a id="pagekey" name="pagekey"></a>
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| `visit` | [`Visit`](types.requests.md#visit) | [lib/index.tsx:215](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L215) |
-| `remote` | [`Remote`](types.requests.md#remote) | [lib/index.tsx:215](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L215) |
+### PageKey
 
-###### Defined in
+Re-exports [PageKey](types.md#pagekey-4)
 
-[lib/index.tsx:211](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L211)
+<a id="restorestrategy" name="restorestrategy"></a>
 
-<a id="componentdidmount" name="componentdidmount"></a>
+### RestoreStrategy
 
-##### componentDidMount()
+Re-exports [RestoreStrategy](types.md#restorestrategy-1)
 
-> **componentDidMount**(): `void`
+<a id="navigationaction" name="navigationaction"></a>
 
-Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+### NavigationAction
 
-###### Returns
+Re-exports [NavigationAction](types.md#navigationaction-1)
 
-`void`
+<a id="componentidentifier" name="componentidentifier"></a>
 
-###### Overrides
+### ComponentIdentifier
 
-`React.Component.componentDidMount`
+Re-exports [ComponentIdentifier](types.md#componentidentifier-3)
 
-###### Defined in
+<a id="keypath" name="keypath"></a>
 
-[lib/index.tsx:217](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L217)
+### Keypath
 
-<a id="componentwillunmount" name="componentwillunmount"></a>
+Re-exports [Keypath](types.md#keypath)
 
-##### componentWillUnmount()
+<a id="jsonprimitive" name="jsonprimitive"></a>
 
-> **componentWillUnmount**(): `void`
+### JSONPrimitive
 
-Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
-cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
+Re-exports [JSONPrimitive](types.md#jsonprimitive)
 
-###### Returns
+<a id="jsonobject" name="jsonobject"></a>
 
-`void`
+### JSONObject
 
-###### Overrides
+Re-exports [JSONObject](types.md#jsonobject)
 
-`React.Component.componentWillUnmount`
+<a id="jsonmappable" name="jsonmappable"></a>
 
-###### Defined in
+### JSONMappable
 
-[lib/index.tsx:232](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L232)
+Re-exports [JSONMappable](types.md#jsonmappable)
+
+<a id="jsonkeyable" name="jsonkeyable"></a>
+
+### JSONKeyable
+
+Re-exports [JSONKeyable](types.md#jsonkeyable)
+
+<a id="jsonvalue" name="jsonvalue"></a>
+
+### JSONValue
+
+Re-exports [JSONValue](types.md#jsonvalue)
+
+<a id="parsedresponse" name="parsedresponse"></a>
+
+### ParsedResponse
+
+Re-exports [ParsedResponse](types.md#parsedresponse)
+
+<a id="defer" name="defer"></a>
+
+### Defer
+
+Re-exports [Defer](types.md#defer)
+
+<a id="visitresponse" name="visitresponse"></a>
+
+### VisitResponse
+
+Re-exports [VisitResponse](types.md#visitresponset)
+
+<a id="page" name="page"></a>
+
+### Page
+
+Re-exports [Page](types.md#paget)
+
+<a id="graftresponse" name="graftresponse"></a>
+
+### GraftResponse
+
+Re-exports [GraftResponse](types.md#graftresponset)
+
+<a id="pageresponse" name="pageresponse"></a>
+
+### PageResponse
+
+Re-exports [PageResponse](types.md#pageresponse)
+
+<a id="fragment" name="fragment"></a>
+
+### Fragment
+
+Re-exports [Fragment](types.md#fragment)
+
+<a id="allpages" name="allpages"></a>
+
+### AllPages
+
+Re-exports [AllPages](types.md#allpagest)
+
+<a id="supergluestate" name="supergluestate"></a>
+
+### SuperglueState
+
+Re-exports [SuperglueState](types.md#supergluestate)
+
+<a id="rootstate" name="rootstate"></a>
+
+### RootState
+
+Re-exports [RootState](types.md#rootstatet)
+
+<a id="meta" name="meta"></a>
+
+### Meta
+
+Re-exports [Meta](types.md#meta)
+
+<a id="visitmeta" name="visitmeta"></a>
+
+### VisitMeta
+
+Re-exports [VisitMeta](types.md#visitmeta)
+
+<a id="visitcreator" name="visitcreator"></a>
+
+### VisitCreator
+
+Re-exports [VisitCreator](types.md#visitcreator)
+
+<a id="remotecreator" name="remotecreator"></a>
+
+### RemoteCreator
+
+Re-exports [RemoteCreator](types.md#remotecreator)
+
+<a id="dispatch" name="dispatch"></a>
+
+### Dispatch
+
+Re-exports [Dispatch](types.md#dispatch)
+
+<a id="supergluestore" name="supergluestore"></a>
+
+### SuperglueStore
+
+Re-exports [SuperglueStore](types.md#supergluestore)
+
+<a id="handlers" name="handlers"></a>
+
+### Handlers
+
+Re-exports [Handlers](types.md#handlers)
+
+<a id="ujshandlers" name="ujshandlers"></a>
+
+### UJSHandlers
+
+Re-exports [UJSHandlers](types.md#ujshandlers)
+
+<a id="historystate" name="historystate"></a>
+
+### HistoryState
+
+Re-exports [HistoryState](types.md#historystate)
+
+<a id="saveandprocesspagethunk" name="saveandprocesspagethunk"></a>
+
+### SaveAndProcessPageThunk
+
+Re-exports [SaveAndProcessPageThunk](types.md#saveandprocesspagethunk)
+
+<a id="metathunk" name="metathunk"></a>
+
+### MetaThunk
+
+Re-exports [MetaThunk](types.md#metathunk)
+
+<a id="visitmetathunk" name="visitmetathunk"></a>
+
+### VisitMetaThunk
+
+Re-exports [VisitMetaThunk](types.md#visitmetathunk)
+
+<a id="defermentthunk" name="defermentthunk"></a>
+
+### DefermentThunk
+
+Re-exports [DefermentThunk](types.md#defermentthunk)
+
+<a id="basicrequestinit" name="basicrequestinit"></a>
+
+### BasicRequestInit
+
+Re-exports [BasicRequestInit](types.md#basicrequestinit)
+
+<a id="navigateto" name="navigateto"></a>
+
+### NavigateTo
+
+Re-exports [NavigateTo](types.md#navigateto-1)
+
+<a id="navigationcontextprops" name="navigationcontextprops"></a>
+
+### NavigationContextProps
+
+Re-exports [NavigationContextProps](types.md#navigationcontextprops)
+
+<a id="navigationproviderprops" name="navigationproviderprops"></a>
+
+### NavigationProviderProps
+
+Re-exports [NavigationProviderProps](types.md#navigationproviderprops)
 
 <a id="buildstore" name="buildstore"></a>
 
-##### buildStore()
+### BuildStore
 
-> `abstract` **buildStore**(`initialState`: \{`[key: string]`: [`JSONValue`](types.md#jsonvalue); `pages`: [`AllPages`](types.md#allpages); \}, `reducer`: \{`superglue`: `superglueReducer`;`pages`: `pageReducer`; \}): [`SuperglueStore`](types.md#supergluestore)
+Re-exports [BuildStore](types.md#buildstore)
 
-Override this method and return a Redux store for Superglue to use. This
-would be setup and generated for you in `store.js`. We recommend using
-using Redux toolkit's `configureStore` to build the store.
+<a id="buildvisitandremote" name="buildvisitandremote"></a>
 
-###### Parameters
+### BuildVisitAndRemote
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `initialState` | `object` | A preconfigured intial state to pass to your store. |
-| `initialState.pages` | [`AllPages`](types.md#allpages) | - |
-| `reducer` | `object` | A preconfigured reducer |
-| `reducer.superglue` | (`state`: `Partial`\<[`SuperglueState`](types.md#supergluestate)\>, `action`: `UnknownAction` \| [`SuperglueReducerAction`](types.md#supergluereduceraction)) => `Partial`\<[`SuperglueState`](types.md#supergluestate)\> | - |
-| `reducer.pages` | (`state`: [`AllPages`](types.md#allpages), `action`: `UnknownAction` \| [`PageReducerAction`](types.md#pagereduceraction)) => [`AllPages`](types.md#allpages) | - |
+Re-exports [BuildVisitAndRemote](types.md#buildvisitandremote)
 
-###### Returns
+<a id="applicationprops" name="applicationprops"></a>
 
-[`SuperglueStore`](types.md#supergluestore)
+### ApplicationProps
 
-###### Defined in
+Re-exports [ApplicationProps](types.md#applicationprops)
 
-[lib/index.tsx:248](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L248)
+<a id="visit" name="visit"></a>
 
-<a id="createhistory" name="createhistory"></a>
+### Visit
 
-##### createHistory()
+Re-exports [Visit](types.requests.md#visit)
 
-> **createHistory**(): `BrowserHistory`
+<a id="visitprops" name="visitprops"></a>
 
-###### Returns
+### VisitProps
 
-`BrowserHistory`
+Re-exports [VisitProps](types.requests.md#visitprops)
 
-###### Defined in
+<a id="remote" name="remote"></a>
 
-[lib/index.tsx:253](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L253)
+### Remote
 
-<a id="mapping" name="mapping"></a>
+Re-exports [Remote](types.requests.md#remote)
 
-##### mapping()
+<a id="remoteprops" name="remoteprops"></a>
 
-> `abstract` **mapping**(): `Record`\<`string`, `ComponentType`\<\{\}\>\>
+### RemoteProps
 
-Override this method and return a mapping between a componentIdentifier and
-a PageComponent. This will be passed to Superglue to determine which Page component
-to render with which payload.
+Re-exports [RemoteProps](types.requests.md#remoteprops)
 
-###### Returns
+<a id="beforesave" name="beforesave"></a>
 
-`Record`\<`string`, `ComponentType`\<\{\}\>\>
+### BeforeSave
 
-###### Defined in
+Re-exports [BeforeSave](types.requests.md#beforesave-2)
 
-[lib/index.tsx:270](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L270)
+<a id="applicationremote" name="applicationremote"></a>
 
-<a id="render" name="render"></a>
+### ApplicationRemote
 
-##### render()
+Re-exports [ApplicationRemote](types.requests.md#applicationremote)
 
-> **render**(): `Element`
+<a id="applicationvisit" name="applicationvisit"></a>
 
-###### Returns
+### ApplicationVisit
 
-`Element`
-
-###### Overrides
-
-`React.Component.render`
-
-###### Defined in
-
-[lib/index.tsx:272](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/index.tsx#L272)
+Re-exports [ApplicationVisit](types.requests.md#applicationvisit)
 
 ## Variables
-
-<a id="before_fetch" name="before_fetch"></a>
-
-### BEFORE\_FETCH
-
-> `const` **BEFORE\_FETCH**: `"@@superglue/BEFORE_FETCH"` = `'@@superglue/BEFORE_FETCH'`
-
-#### Defined in
-
-[lib/actions.ts:1](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L1)
-
-***
-
-<a id="before_visit" name="before_visit"></a>
-
-### BEFORE\_VISIT
-
-> `const` **BEFORE\_VISIT**: `"@@superglue/BEFORE_VISIT"` = `'@@superglue/BEFORE_VISIT'`
-
-#### Defined in
-
-[lib/actions.ts:2](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L2)
-
-***
-
-<a id="before_remote" name="before_remote"></a>
-
-### BEFORE\_REMOTE
-
-> `const` **BEFORE\_REMOTE**: `"@@superglue/BEFORE_REMOTE"` = `'@@superglue/BEFORE_REMOTE'`
-
-#### Defined in
-
-[lib/actions.ts:3](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L3)
-
-***
-
-<a id="save_response" name="save_response"></a>
-
-### SAVE\_RESPONSE
-
-> `const` **SAVE\_RESPONSE**: `"@@superglue/SAVE_RESPONSE"` = `'@@superglue/SAVE_RESPONSE'`
-
-#### Defined in
-
-[lib/actions.ts:5](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L5)
-
-***
 
 <a id="grafting_error" name="grafting_error"></a>
 
@@ -252,7 +346,7 @@ to render with which payload.
 
 #### Defined in
 
-[lib/actions.ts:9](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L9)
+[lib/actions.ts:12](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L12)
 
 ***
 
@@ -264,101 +358,354 @@ to render with which payload.
 
 #### Defined in
 
-[lib/actions.ts:10](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L10)
+[lib/actions.ts:13](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L13)
 
 ***
 
-<a id="history_change" name="history_change"></a>
+<a id="rootreducer" name="rootreducer"></a>
 
-### HISTORY\_CHANGE
+### rootReducer
 
-> `const` **HISTORY\_CHANGE**: `"@@superglue/HISTORY_CHANGE"` = `'@@superglue/HISTORY_CHANGE'`
+> `const` **rootReducer**: \{`superglue`: `superglueReducer`;`pages`: `pageReducer`; \}
 
-#### Defined in
+#### Type declaration
 
-[lib/actions.ts:12](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L12)
-
-***
-
-<a id="remove_page" name="remove_page"></a>
-
-### REMOVE\_PAGE
-
-> `const` **REMOVE\_PAGE**: `"@@superglue/REMOVE_PAGE"` = `'@@superglue/REMOVE_PAGE'`
+| Name | Type | Default value | Defined in |
+| ------ | ------ | ------ | ------ |
+| `superglue` | (`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`) => [`SuperglueState`](types.md#supergluestate) | superglueReducer | [lib/reducers/index.ts:229](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/reducers/index.ts#L229) |
+| `pages` | (`state`: [`AllPages`](types.md#allpagest), `action`: `Action`) => [`AllPages`](types.md#allpagest) | pageReducer | [lib/reducers/index.ts:230](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/reducers/index.ts#L230) |
 
 #### Defined in
 
-[lib/actions.ts:14](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L14)
-
-***
-
-<a id="copy_page" name="copy_page"></a>
-
-### COPY\_PAGE
-
-> `const` **COPY\_PAGE**: `"@@superglue/COPY_PAGE"` = `'@@superglue/COPY_PAGE'`
-
-#### Defined in
-
-[lib/actions.ts:15](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L15)
-
-***
-
-<a id="update_fragments" name="update_fragments"></a>
-
-### UPDATE\_FRAGMENTS
-
-> `const` **UPDATE\_FRAGMENTS**: `"@@superglue/UPDATE_FRAGMENTS"` = `'@@superglue/UPDATE_FRAGMENTS'`
-
-#### Defined in
-
-[lib/actions.ts:16](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/actions.ts#L16)
+[lib/reducers/index.ts:228](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/reducers/index.ts#L228)
 
 ## Functions
 
-<a id="fragmentmiddleware" name="fragmentmiddleware"></a>
+<a id="saveandprocesspage" name="saveandprocesspage"></a>
 
-### fragmentMiddleware()
+### saveAndProcessPage()
 
-> **fragmentMiddleware**(`api`: `MiddlewareAPI`\<[`Dispatch`](types.md#dispatch), [`RootState`](types.md#rootstate)\>): (`next`: (`action`: `unknown`) => `unknown`) => (`action`: `unknown`) => `unknown`
+> **saveAndProcessPage**(`pageKey`: `string`, `page`: [`VisitResponse`](types.md#visitresponset) \| [`GraftResponse`](types.md#graftresponset)): [`SaveAndProcessPageThunk`](types.md#saveandprocesspagethunk)
 
-**`Experimental`**
+Save and process a rendered view from PropsTemplate. This is the primitive
+function that `visit` and `remote` calls when it receives a page.
 
-A middleware that will update all Fragment across the AllPages slice, if a fragment on any page was mutated.
+If you render a page outside the normal request response cycle, e.g,
+websocket, you can use this function to save the payload.
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `api` | `MiddlewareAPI`\<[`Dispatch`](types.md#dispatch), [`RootState`](types.md#rootstate)\> |
+| `pageKey` | `string` |
+| `page` | [`VisitResponse`](types.md#visitresponset) \| [`GraftResponse`](types.md#graftresponset) |
 
 #### Returns
 
-`Function`
-
-##### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `next` | (`action`: `unknown`) => `unknown` |
-
-##### Returns
-
-`Function`
-
-###### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `action` | `unknown` |
-
-###### Returns
-
-`unknown`
+[`SaveAndProcessPageThunk`](types.md#saveandprocesspagethunk)
 
 #### Defined in
 
-[lib/middleware.ts:15](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/middleware.ts#L15)
+[lib/action\_creators/index.ts:74](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/action_creators/index.ts#L74)
+
+***
+
+<a id="saveresponse" name="saveresponse"></a>
+
+### saveResponse()
+
+> **saveResponse**(...`args`: [\{`pageKey`: `string`;`page`: [`VisitResponse`](types.md#visitresponset); \}]): \{\}
+
+Calling this redux#ActionCreator with `Args` will return
+an Action with a payload of type `P` and (depending on the `PrepareAction`
+method used) a `meta`- and `error` property of types `M` and `E` respectively.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| ...`args` | [\{`pageKey`: `string`;`page`: [`VisitResponse`](types.md#visitresponset); \}] |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:15](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L15)
+
+***
+
+<a id="updatefragments" name="updatefragments"></a>
+
+### updateFragments()
+
+> **updateFragments**(`payload`: \{`name`: `string`;`path`: `string`;`pageKey`: `string`;`value`: [`JSONMappable`](types.md#jsonmappable);`previousValue`: [`JSONMappable`](types.md#jsonmappable); \}): \{\}
+
+A redux action called whenever a fragment is received from `visit` or updated
+using `remote`. Its a useful action to use for cross cutting concerns like a
+shared header or a shopping cart. For example:
+
+```
+import { updateFragments } from '@thoughtbot/superglue'
+
+export const exampleSlice = createSlice({
+ name: 'Example',
+ initialState: {},
+ extraReducers: (builder) => {
+   builder.addCase(updateFragments, (state, action) => {
+     // Update the slice using the latest and greatest.
+     return action.value
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `payload` | `object` |
+| `payload.name` | `string` |
+| `payload.path` | `string` |
+| `payload.pageKey` | `string` |
+| `payload.value` | [`JSONMappable`](types.md#jsonmappable) |
+| `payload.previousValue`? | [`JSONMappable`](types.md#jsonmappable) |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:64](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L64)
+
+***
+
+<a id="copypage" name="copypage"></a>
+
+### copyPage()
+
+> **copyPage**(`payload`: \{`from`: `string`;`to`: `string`; \}): \{\}
+
+A redux action you can dispatch to copy a page from one pageKey to another. Its
+a very useful way to create optimistic updates with a URL change. For example:
+
+```
+import { copyPage, remote } from '@thoughtbot/superglue'
+
+dispatch(copyPage({ from: originalKey, to: targetKey}))
+
+... make edits to target page and finally
+
+navigateTo(targetKey)
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `payload` | `object` |
+| `payload.from` | `string` |
+| `payload.to` | `string` |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:86](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L86)
+
+***
+
+<a id="removepage" name="removepage"></a>
+
+### removePage()
+
+> **removePage**(`payload`: \{`pageKey`: `string`; \}): \{\}
+
+A redux action you can dispatch to remove a page from your store.
+
+```
+import { removePage } from '@thoughtbot/superglue'
+
+dispatch(removePage({ pageKey: '/delete_me_please"}))
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `payload` | `object` |
+| `payload.pageKey` | `string` |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:99](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L99)
+
+***
+
+<a id="beforefetch" name="beforefetch"></a>
+
+### beforeFetch()
+
+> **beforeFetch**(`payload`: \{`fetchArgs`: [`FetchArgs`](types.actions.md#fetchargs); \}): \{\}
+
+A redux action called before a `fetch` takes place. It will fire in `remote`
+and `visit`. You can hook into this event in your redux slices like this:
+
+```
+import { beforeFetch } from '@thoughtbot/superglue'
+
+export const exampleSlice = createSlice({
+ name: 'Example',
+ initialState: {},
+ extraReducers: (builder) => {
+   builder.addCase(beforeFetch, (state, action) => {
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `payload` | `object` |
+| `payload.fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:117](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L117)
+
+***
+
+<a id="beforevisit" name="beforevisit"></a>
+
+### beforeVisit()
+
+> **beforeVisit**(`payload`: \{`currentPageKey`: `string`;`fetchArgs`: [`FetchArgs`](types.actions.md#fetchargs); \}): \{\}
+
+A redux action called before a `visit` takes place. You can hook into this event
+in your redux slices like this:
+
+```
+import { beforeVisit } from '@thoughtbot/superglue'
+
+export const exampleSlice = createSlice({
+ name: 'Example',
+ initialState: {},
+ extraReducers: (builder) => {
+   builder.addCase(beforeVisit, (state, action) => {
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `payload` | `object` |
+| `payload.currentPageKey` | `string` |
+| `payload.fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:135](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L135)
+
+***
+
+<a id="beforeremote" name="beforeremote"></a>
+
+### beforeRemote()
+
+> **beforeRemote**(`payload`: \{`currentPageKey`: `string`;`fetchArgs`: [`FetchArgs`](types.actions.md#fetchargs); \}): \{\}
+
+A redux action called before `remote` takes place. You can hook into this event
+in your redux slices like this:
+
+```
+import { beforeRemote } from '@thoughtbot/superglue'
+
+export const exampleSlice = createSlice({
+ name: 'Example',
+ initialState: {},
+ extraReducers: (builder) => {
+   builder.addCase(beforeRemote, (state, action) => {
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `payload` | `object` |
+| `payload.currentPageKey` | `string` |
+| `payload.fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) |
+
+#### Returns
+
+\{\}
+
+#### Defined in
+
+[lib/actions.ts:154](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L154)
+
+***
+
+<a id="preparestore" name="preparestore"></a>
+
+### prepareStore()
+
+> **prepareStore**(`store`: [`SuperglueStore`](types.md#supergluestore), `initialPage`: [`VisitResponse`](types.md#visitresponset), `path`: `string`): `void`
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `store` | [`SuperglueStore`](types.md#supergluestore) |
+| `initialPage` | [`VisitResponse`](types.md#visitresponset) |
+| `path` | `string` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[lib/index.tsx:50](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/index.tsx#L50)
+
+***
+
+<a id="application" name="application"></a>
+
+### Application()
+
+> **Application**(`__namedParameters`: [`ApplicationProps`](types.md#applicationprops)): `Element`
+
+The entry point to your superglue application. It sets up the redux Provider,
+redux state and the Navigation component.
+
+This is a simple component, you can override this by copying the source code and
+use the exported methods used by this component (`start` and `ujsHandler`).
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | [`ApplicationProps`](types.md#applicationprops) |
+
+#### Returns
+
+`Element`
+
+#### Defined in
+
+[lib/index.tsx:81](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/index.tsx#L81)
 
 ***
 
@@ -368,7 +715,7 @@ A middleware that will update all Fragment across the AllPages slice, if a fragm
 
 > **getIn**(`node`: [`JSONMappable`](types.md#jsonmappable), `path`: `string`): [`JSONValue`](types.md#jsonvalue)
 
-Retrieves data from a JSON object using a [Keypath](types.md#keypath-2)
+Retrieves data from a JSON object using a [Keypath](types.md#keypath)
 
 #### Parameters
 
@@ -383,7 +730,7 @@ Retrieves data from a JSON object using a [Keypath](types.md#keypath-2)
 
 #### Defined in
 
-[lib/utils/immutability.ts:22](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/utils/immutability.ts#L22)
+[lib/utils/immutability.ts:22](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/utils/immutability.ts#L22)
 
 ***
 
@@ -391,7 +738,7 @@ Retrieves data from a JSON object using a [Keypath](types.md#keypath-2)
 
 ### urlToPageKey()
 
-> **urlToPageKey**(`url`: `string`): [`PageKey`](types.md#pagekey-8)
+> **urlToPageKey**(`url`: `string`): [`PageKey`](types.md#pagekey-4)
 
 Converts a url to a PageKey.
 
@@ -403,8 +750,8 @@ Converts a url to a PageKey.
 
 #### Returns
 
-[`PageKey`](types.md#pagekey-8)
+[`PageKey`](types.md#pagekey-4)
 
 #### Defined in
 
-[lib/utils/url.ts:57](https://github.com/thoughtbot/superglue/blob/be017596661ef6ab66e199643ed384e7715f12ba/superglue/lib/utils/url.ts#L57)
+[lib/utils/url.ts:64](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/utils/url.ts#L64)

@@ -8,7 +8,7 @@
 
 #### Defined in
 
-[lib/components/Navigation.tsx:21](https://github.com/thoughtbot/superglue/blob/a9e7ccc5bb692a6252667269b22576a099431ece/superglue/lib/components/Navigation.tsx#L21)
+[lib/components/Navigation.tsx:22](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/components/Navigation.tsx#L22)
 
 ## Functions
 
@@ -16,13 +16,13 @@
 
 ### NavigationProvider()
 
-> **NavigationProvider**(`props`: [`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<`unknown`\>): `ReactNode`
+> **NavigationProvider**(`props`: [`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<\{`navigateTo`: [`NavigateTo`](types.md#navigateto-1); \}\>): `ReactNode`
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `props` | [`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<`unknown`\> |
+| `props` | [`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<\{`navigateTo`: [`NavigateTo`](types.md#navigateto-1); \}\> |
 
 #### Returns
 
@@ -30,4 +30,4 @@
 
 #### Defined in
 
-[lib/components/Navigation.tsx:45](https://github.com/thoughtbot/superglue/blob/a9e7ccc5bb692a6252667269b22576a099431ece/superglue/lib/components/Navigation.tsx#L45)
+[lib/components/Navigation.tsx:46](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/components/Navigation.tsx#L46)

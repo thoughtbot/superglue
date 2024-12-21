@@ -14,22 +14,28 @@ A lightweight hook that grabs the superglue state from the store.
 
 #### Defined in
 
-[lib/hooks/index.ts:7](https://github.com/thoughtbot/superglue/blob/a9e7ccc5bb692a6252667269b22576a099431ece/superglue/lib/hooks/index.ts#L7)
+[lib/hooks/index.ts:7](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/hooks/index.ts#L7)
 
 ***
 
-<a id="usepage" name="usepage"></a>
+<a id="usecontent" name="usecontent"></a>
 
-### usePage()
+### useContent()
 
-> **usePage**(): [`Page`](types.md#page-1)
+> **useContent**\<`T`\>(): `T`
 
-A lightweight hook that grabs the current page from the store.
+A lightweight hook that grabs the current page's content from the store.
+
+#### Type Parameters
+
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` | [`JSONMappable`](types.md#jsonmappable) |
 
 #### Returns
 
-[`Page`](types.md#page-1)
+`T`
 
 #### Defined in
 
-[lib/hooks/index.ts:14](https://github.com/thoughtbot/superglue/blob/a9e7ccc5bb692a6252667269b22576a099431ece/superglue/lib/hooks/index.ts#L14)
+[lib/hooks/index.ts:14](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/hooks/index.ts#L14)

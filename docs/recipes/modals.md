@@ -38,6 +38,8 @@ controller and the `page_to_page_mapping.js` the same way.
 === "`page_to_page_mapping.js`"
     !!! info
         Similarly, we tie the `componentIdentifier` to the same page component.
+
+        Vite users: This step can be optional see recipie
     ```js
     import PostIndex from '../views/posts/index'
 
@@ -65,10 +67,10 @@ direct the user to `/posts/new`. As seen previously, both `/posts` and
 
 === "`posts/index.js`"
     ```js
-    export default PostIndex = ({
-      newPostPath,
-      ...rest
-    }) => {
+    import { useContent } from '@thoughtbot/superglue'
+
+    export default PostIndex = () => {
+      const { newPostPath, ...rest } = useContent()
 
       return (
         ...
@@ -83,7 +85,7 @@ direct the user to `/posts/new`. As seen previously, both `/posts` and
     ```
 
 ## The modal
-Now the link appears and we're able to navigate to `/posts/new`, but
+The link appears and we're able to navigate to `/posts/new`, but
 `/posts/new` is missing a modal. Not surprising as both routes are
 rendering the same content.
 
@@ -199,7 +201,7 @@ a conditional render.
 ## Finish!
 
 Awesome! We have modals! Unfortunately, clicking `<a href={newPostPath}>New Post</a>`
-will cause a new page load. We can move the page load by adding
+will cause a new page load. We can remove the page load by adding
 `data-sg-visit` to the link. With `data-sg-visit`, Superglue will navigate to the next
 page without reloading the page, just like Turbo.
 
@@ -209,18 +211,20 @@ page without reloading the page, just like Turbo.
 
 ```diff
 import Modal from './Modal'
+import { useContent } from '@thoughtbot/superglue'
 
-export default PostIndex = ({
-  newPostPath,
-  createPostModal,
-  ...rest
-}) => {
+export default PostIndex = () => {
+  const {
+    newPostPath,
+    createPostModal,
+    ...rest
+  } = useContent()
 
   return (
     ...
     <a
       href={newPostPath}
-+     data-sg-remote
++     data-sg-visit
     >
       New Post
     </a>

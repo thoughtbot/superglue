@@ -1,6 +1,9 @@
+You've installed Superglue and now you're ready to configure your app.
+Chances are, the first thing you'll want to add a progress bar to your app.
+
 ## `application_visit.js`
 
-!!! hint
+!!! tip
     If you want a progress bar, this is likely the first thing you'll
     want to configure after installation.
 
@@ -21,8 +24,12 @@ when the internet is down.
 
 ## `page_to_page_mapping.js`
 
-!!! hint
-    Stop by the [tutorial] to get an idea of how to work with this file.
+!!! info
+    Stop by the [tutorial] to learn how to work with this file.
+
+    **Vite Users** This step can be entirely optional if you're using Vite. See
+    the recipie for more information.
+
 
 This file exports a mapping between a `componentIdentifier` to an imported page
 component. This gets used in your `application.js` so that superglue knows
@@ -61,7 +68,7 @@ inspiration.
 
 <div class="grid cards" markdown>
   -  [:octicons-arrow-right-24: See complete reference](reference/index.md#application)
-     for `Application` and source reference under [Defined in](reference/index.md#defined-in_13)
+     for `Application`
 </div>
 
 ## `flash.js`

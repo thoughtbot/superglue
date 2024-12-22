@@ -9,12 +9,11 @@ add complexity as we progress to highlight the power of Superglue.
     You'll need to install Superglue before proceeding. If you haven't already
     stop by the [Installation](./installation.md) section for instructions.
 
-### Start with the usual
-Lets begin by adding a route and a controller to an app.
-
-!!! info
     The installation steps will include a layout `application.json.props` that's
     **implicitly used** in this tutorial.
+
+### Start with the usual
+Lets begin by adding a route and a controller to an app.
 
 === "`routes.rb`"
     in `app/config/routes.rb`

@@ -1,11 +1,9 @@
 # The return of Rails UJS
 
 Unobtrusive Javascript is an easy way to added single page app like features to
-HTML links and form tags. Its been a staple feature since Rails 6, but will
-sunset with the release of Rails 8 in favor of Hotwire and friends.
-
-Superglue puts UJS back in the forefront and embues it with superpowers (curtesy
-of props_template) that makes building SPA-like functionality easy and consistent.
+HTML links and form tags. Its taken a backseat since the introduction of Hotwire,
+but Superglue puts UJS back in the forefront and packs it with functionality
+that makes building SPA-like functionality easy and consistent.
 
 Want to reload a shopping cart?
 
@@ -42,10 +40,13 @@ make a request for `/posts/new.json`, swap your page component, and pass the pay
 
 
 !!! note
-    You are not able to specify the HTTP method used in a UJS link. This is
-    intentional. If you want to create a link that can support different HTML
-    methods, create a form component that looks like a link and use props
-    generated from [form_props](https://github.com/thoughtbot/form_props)
+    You are not able to specify the HTTP method used in a UJS link.
+
+    This is intentional. If you want to create a link that can support `POST`,
+    `PUT`, `DELETE` methods, create a form component that looks like a link and
+    use props generated from [form_props]
+
+    [form_props]: https://github.com/thoughtbot/form_props
 
 You can also use `data-sg-visit` on forms:
 
@@ -58,10 +59,17 @@ You can also use `data-sg-visit` on forms:
 Use `data-sg-remote` when you want to update parts of the **current page** without
 reloading the screen.
 
-<div class="grid cards" markdown>
-  -  [:octicons-arrow-right-24: See differences](requests.md#differences-from-ujs)
-     from `remote`
-</div>
+!!! tip "Differences from `remote`"
+    The only difference between `data-sg-remote` and `remote`, is that
+    `data-sg-remote` passes the current page as the target `pageKey` of
+    `remote`.
+
+    `remote`, normally would work like a background `visit` that doesn't change
+    the url and will use the URL of the response to save the payload.
+
+    But most of the time, if you're using `data-sg-remote` on a page, you want
+    to dig for `props` and attach that somewhere in the current page. For
+    convienence, we've modified the call so that we set the `pageKey` for you.
 
 Combine this with props_template's [digging] to selectively load content.
 
@@ -90,7 +98,7 @@ behavior of the UJS helpers. For example, if you want to selectively show a
 
 ### `data-sg-replace`
 
-Included in [application_visit.js] as a custom option is `data-sg-replace`.
+Included in [application_visit.js] as an expanded option is `data-sg-replace`.
 It pairs with `data-sg-visit` to replace history instead of pushing when a
 user clicks on a form or a link. This can be useful when working with data
 tables with a large number of click-to-filter options that push history.

@@ -22,7 +22,7 @@ Superglue is built from the ground up for
 
 - **Teams fighting complexity**: Its not easy pivoting from complexity.
   Superglue empowers teams to take small steps back without giving up the
-  effort invested in pre-existing components.
+  effort invested in React components.
 
 - **Startups moving fast**: Founders looking to hit the ground running by
   combining the speed of Rails development with React's vast ecosystem of

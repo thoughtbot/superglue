@@ -5,7 +5,11 @@
 // to register any new page level component you create. If you are using the
 // scaffold, it will auto append the identifers for you.
 //
-// e.g {'posts/new': PostNew}
+// For example:
+//
+// const pageIdentifierToPageComponent =  {
+//   'posts/new': PostNew
+// };
 //
 //
 // If you are using a build tool that supports globbing, you can automatically
@@ -24,5 +28,7 @@
 // }
 // ```
 //
-export const pageIdentifierToPageComponent = {
+const pageIdentifierToPageComponent = {
 };
+
+export { pageIdentifierToPageComponent }

@@ -494,8 +494,22 @@ export interface ApplicationProps {
    * `location.search` + `location.hash`
    */
   path: string
+  /**
+   * A factory function that will return a `visit` and `remote`
+   * function. All of Superglue and UJS will use these functions. You should
+   * customize the function, for example, to add a progress bar.
+   * 
+   */
   buildVisitAndRemote: BuildVisitAndRemote
+  /**
+   * A mapping between your page props and page component. This is setup
+   * for you in page_to_page_mapping.
+   */
   mapping: Record<string, React.ComponentType>
   history?: History
+  /**
+   * The exported store from store.js. If you used the generators
+   * it would contain slices for superglue, pages, and the flash.
+   */
   store: SuperglueStore
 }

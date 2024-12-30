@@ -93,7 +93,6 @@ describe('start', () => {
         currentPageKey: '/home?some=123',
         pathname: '/home',
         search: '?some=123',
-        hash: '#title',
         csrfToken: 'token',
         assets: ['123.js', '123.css'],
       },

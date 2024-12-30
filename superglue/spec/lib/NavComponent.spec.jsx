@@ -1,15 +1,33 @@
 import { describe, it, expect, vi } from 'vitest'
-import { JSDOM } from 'jsdom'
 import React, { useContext, useEffect } from 'react'
-import fetchMock from 'fetch-mock'
-import * as rsp from '../fixtures'
 import { Provider } from 'react-redux'
 import { createMemoryHistory } from 'history'
-import configureMockStore from 'redux-mock-store'
 import { NavigationProvider } from '../../lib/components/Navigation'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { NavigationContext } from '../../lib/components/Navigation'
+import { configureStore } from '@reduxjs/toolkit'
+import { rootReducer } from '../../lib'
+
+const buildStore = (preloadedState) => {
+  let resultsReducer = (state = [], action) => {
+    return state.concat([action])
+  }
+
+  return configureStore({
+    preloadedState,
+    reducer: {
+      ...rootReducer,
+      results: resultsReducer,
+    },
+  })
+}
+
+const allSuperglueActions = (store) => {
+  return store
+    .getState()
+    .results.filter((action) => !action.type.startsWith('@@redux'))
+}
 
 const Home = () => {
   const { navigateTo } = useContext(NavigationContext)
@@ -40,8 +58,7 @@ describe('Nav', () => {
         posY: 0,
       })
 
-      const mockStore = configureMockStore()
-      const store = mockStore({
+      const store = buildStore({
         pages: {
           '/about': {
             componentIdentifier: 'about',
@@ -54,6 +71,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
+          currentPageKey: "/home"
         },
       })
 
@@ -81,8 +99,7 @@ describe('Nav', () => {
 
     it('does not navigate to the specified page if the page is not in the store', async () => {
       const history = createMemoryHistory({})
-      const mockStore = configureMockStore()
-      const store = mockStore({
+      const store = buildStore({
         pages: {
           '/home': {
             componentIdentifier: 'home',
@@ -91,6 +108,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
+          currentPageKey: '/home'
         },
       })
 
@@ -99,7 +117,6 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -123,8 +140,7 @@ describe('Nav', () => {
         posX: 0,
         posY: 0,
       })
-      const mockStore = configureMockStore()
-      const store = mockStore({
+      const store = buildStore({
         pages: {
           '/about': {
             componentIdentifier: 'about',
@@ -137,6 +153,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
+          currentPageKey: '/home'
         },
       })
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
@@ -145,7 +162,6 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -175,7 +191,7 @@ describe('Nav', () => {
           },
         },
       ]
-      expect(store.getActions()).toEqual(expectedActions)
+      expect(allSuperglueActions(store)).toEqual(expectedActions)
     })
 
     it('navigates to the page when history changes', async () => {
@@ -186,8 +202,7 @@ describe('Nav', () => {
         posX: 0,
         posY: 0,
       })
-      const mockStore = configureMockStore()
-      const store = mockStore({
+      const store = buildStore({
         pages: {
           '/home': {
             componentIdentifier: 'home',
@@ -200,6 +215,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
+          currentPageKey: '/home'
         },
       })
 
@@ -242,7 +258,6 @@ describe('Nav', () => {
           <NavigationProvider
             store={store}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -256,8 +271,7 @@ describe('Nav', () => {
 
     it('returns false when action is none', () => {
       const history = createMemoryHistory({})
-      const mockStore = configureMockStore()
-      const store = mockStore({
+      const store = buildStore({
         pages: {
           '/home': {
             componentIdentifier: 'home',
@@ -270,6 +284,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
+          currentPageKey: '/home'
         },
       })
 
@@ -281,7 +296,6 @@ describe('Nav', () => {
             store={store}
             ref={(node) => (instance = node)}
             mapping={{ home: Home, about: About }}
-            initialPageKey={'/home'}
             history={history}
           />
         </Provider>
@@ -308,8 +322,8 @@ describe('Nav', () => {
           posX: 10,
           posY: 10,
         })
-        const mockStore = configureMockStore()
-        const store = mockStore({
+
+        const store = buildStore({
           pages: {
             '/home': {
               componentIdentifier: 'home',
@@ -322,6 +336,7 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
+            currentPageKey: '/about'
           },
         })
         const scrollTo = vi
@@ -370,8 +385,8 @@ describe('Nav', () => {
           posX: 10,
           posY: 10,
         })
-        const mockStore = configureMockStore()
-        const store = mockStore({
+        
+        const store = buildStore({
           pages: {
             '/home': {
               componentIdentifier: 'home',
@@ -384,6 +399,7 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
+            currentPageKey: '/about'
           },
         })
         const scrollTo = vi
@@ -436,8 +452,7 @@ describe('Nav', () => {
           posX: 10,
           posY: 10,
         })
-        const mockStore = configureMockStore()
-        const store = mockStore({
+        const store = buildStore({
           pages: {
             '/home': {
               componentIdentifier: 'home',
@@ -450,12 +465,12 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
+            currentPageKey: '/home'
           },
         })
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const navigationAction = 'none'
 
         const fakeVisit = vi.fn()
 
@@ -465,7 +480,6 @@ describe('Nav', () => {
               store={store}
               visit={fakeVisit}
               mapping={{ home: Home, about: About }}
-              initialPageKey={'/home'}
               history={history}
             />
           </Provider>
@@ -493,8 +507,7 @@ describe('Nav', () => {
           posX: 10,
           posY: 10,
         })
-        const mockStore = configureMockStore()
-        const store = mockStore({
+        const store = buildStore({
           pages: {
             '/home': {
               componentIdentifier: 'home',
@@ -507,12 +520,12 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
+            currentPageKey: '/home'
           },
         })
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const navigationAction = 'none'
 
         const fakeVisit = vi.fn((...args) => {
           expect(scrollTo).toHaveBeenCalledWith(5, 5)

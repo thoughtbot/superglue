@@ -56,8 +56,7 @@ export const buildVisitAndRemote = (ref, store) => {
           ? "replace"
           : meta.navigationAction
         ref.current?.navigateTo(meta.pageKey, {
-          action: navigatonAction,
-          ownProps: {}
+          action: navigatonAction
         })
       })
       .finally(() => {

@@ -66,7 +66,6 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
           : meta.navigationAction;
         ref.current?.navigateTo(meta.pageKey, {
           action: navigatonAction,
-          ownProps: {},
         });
       })
       .finally(() => {

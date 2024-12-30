@@ -67,6 +67,13 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
         ref.current?.navigateTo(meta.pageKey, {
           action: navigatonAction,
         });
+
+        /**
+         * Return the meta object, it's used for scroll restoration when
+         * handling the back button. You can skip returning, but Superglue
+         * will warn you about scroll restoration.
+         */
+        return meta;
       })
       .finally(() => {
         /**

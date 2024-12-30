@@ -67,6 +67,32 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     []
   )
 
+  const visitAndRestore = (pageKey: PageKey, posX: number, posY: number) => {
+    // When the application visit gets called with revisit: true
+    // -  In cases where the response was not redirected, the calculated
+    //    navigationAction is set to 'none' (meaning `navigateTo` immediately returned `false`)
+    //    and so we have restore scroll and the set the active page
+    // -  In cases where the response was redirected, the calculated
+    //    navigationAction is set to 'replace', and is handled gracefully by navigateTo,
+    //    before this method gets called. 
+    // That's why we're only concerned with the first case, but we gracefully warn
+    // if the application visit did not return the meta object like the dev was supposed to.
+    return visit(pageKey, { revisit: true }).then((meta) => {
+      if (meta) {
+        if (meta.navigationAction === "none") {
+          dispatch(setActivePage({ pageKey }))
+          setWindowScroll(posX, posY)
+        }
+      } else {
+        console.warn(
+          `scoll restoration was skipped. Your visit's then funtion
+          should return the meta object it recieved if you want your
+          application to restore the page's previous scroll.`
+        )
+      }
+    })
+  }
+
   const onHistoryChange = ({ location, action }: Update): void => {
     const { pathname, search, hash } = location
     const state = location.state as HistoryState
@@ -92,46 +118,20 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
         switch (restoreStrategy) {
           case 'fromCacheOnly':
-            setActivePage({ pageKey })
+            dispatch(setActivePage({ pageKey }))
             setWindowScroll(posX, posY)
             break
           case 'fromCacheAndRevisitInBackground':
-            setActivePage({ pageKey })
+            dispatch(setActivePage({ pageKey }))
             setWindowScroll(posX, posY)
             visit(pageKey, { revisit: true })
             break
           case 'revisitOnly':
           default:
-            visit(pageKey, { revisit: true }).then((meta) => {
-              if (meta === undefined) {
-                console.warn(
-                  `scoll restoration was skipped. Your visit's then funtion
-                  should return the meta object it recieved if you want your
-                  application to restore the page's previous scroll.`
-                )
-              }
-
-              if (!!meta && meta.navigationAction === 'none') {
-                setActivePage({ pageKey })
-                setWindowScroll(posX, posY)
-              }
-            })
+            visitAndRestore(pageKey, posX, posY)
         }
       } else {
-        visit(pageKey, { revisit: true }).then((meta) => {
-          if (meta === undefined) {
-            console.warn(
-              `scoll restoration was skipped. Your visit's then funtion
-              should return the meta object it recieved if you want your
-              application to restore the page's previous scroll.`
-            )
-          }
-
-          if (!!meta && meta.navigationAction === 'none') {
-            setActivePage({ pageKey })
-            setWindowScroll(posX, posY)
-          }
-        })
+        visitAndRestore(pageKey, posX, posY)
       }
     }
   }

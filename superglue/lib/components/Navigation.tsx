@@ -13,6 +13,9 @@ import {
   NavigateTo,
   NavigationContextProps,
   NavigationProviderProps,
+  AllPages,
+  SuperglueState,
+  PageKey
 } from '../types'
 import { Update } from 'history'
 import { useDispatch, useSelector, useStore } from 'react-redux'
@@ -46,10 +49,8 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   ref: ForwardedRef<{ navigateTo: NavigateTo }>
 ) {
   const dispatch = useDispatch()
-  const {
-    pages,
-    superglue
-   } = useSelector<RootState,RootState>((state) => state)
+  const pages = useSelector<RootState,AllPages>((state) => state.pages)
+  const superglue = useSelector<RootState,SuperglueState>((state) => state.superglue)
   const store = useStore()
 
   useEffect(() => {

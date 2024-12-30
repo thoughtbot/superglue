@@ -29,6 +29,7 @@ import {
   ApplicationProps,
   NavigateTo,
   SuperglueStore,
+  SetupProps
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
@@ -72,6 +73,44 @@ export const prepareStore = (
 }
 
 /**
+ * This is the setup function that the Application calls. Use this function if
+ * you like to build your own Application component.
+ */
+export const setup = ({
+  initialPage,
+  baseUrl,
+  path,
+  store,
+  buildVisitAndRemote,
+  history,
+  navigatorRef
+} : SetupProps) => {
+  config.baseUrl = baseUrl
+
+  const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
+
+  const initialPageKey = urlToPageKey(parse(path).href)
+  const nextHistory = history || createHistory()
+  nextHistory.replace(...argsForHistory(path))
+  prepareStore(store, initialPage, path)
+
+  const handlers = ujsHandlers({
+    visit,
+    remote,
+    ujsAttributePrefix: 'data-sg',
+    store,
+  })
+
+  return {
+    visit,
+    remote,
+    nextHistory,
+    initialPageKey,
+    ujs: handlers,
+  }
+}
+
+/**
  * The entry point to your superglue application. It sets up the redux Provider,
  * redux state and the Navigation component.
  *
@@ -91,29 +130,15 @@ function Application({
   const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
 
   const { visit, remote, nextHistory, initialPageKey, ujs } = useMemo(() => {
-    config.baseUrl = baseUrl
-
-    const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
-
-    const initialPageKey = urlToPageKey(parse(path).href)
-    const nextHistory = history || createHistory()
-    nextHistory.replace(...argsForHistory(path))
-    prepareStore(store, initialPage, path)
-
-    const handlers = ujsHandlers({
-      visit,
-      remote,
-      ujsAttributePrefix: 'data-sg',
+    return setup({
+      initialPage,
+      baseUrl,
+      path,
       store,
+      buildVisitAndRemote,
+      history,
+      navigatorRef,
     })
-
-    return {
-      visit,
-      remote,
-      nextHistory,
-      initialPageKey,
-      ujs: handlers,
-    }
   }, [])
 
   // The Nav component is pretty bare and can be inherited from for custom

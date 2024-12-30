@@ -390,7 +390,6 @@ export interface BasicRequestInit extends RequestInit {
  *
  * @param path
  * @param options.action when `none`, `navigateTo` will immediately return `false`
- * @param options.ownProps additional props that will be passed to the page component
  * @returns `true` if the navigation was a success, `false` if the page was not found in the
  * store.
  */
@@ -398,7 +397,6 @@ export type NavigateTo = (
   path: Keypath,
   options: {
     action: NavigationAction
-    ownProps: Record<string, unknown>
   }
 ) => boolean
 
@@ -418,7 +416,6 @@ export type NavigationContextProps = {
   visit: ApplicationVisit
   remote: ApplicationRemote
   pageKey: PageKey
-  ownProps: Record<string, unknown>
 }
 
 /**
@@ -536,7 +533,7 @@ export interface ApplicationProps {
    * A factory function that will return a `visit` and `remote`
    * function. All of Superglue and UJS will use these functions. You should
    * customize the function, for example, to add a progress bar.
-   * 
+   *
    */
   buildVisitAndRemote: BuildVisitAndRemote
   /**

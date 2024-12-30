@@ -13,6 +13,9 @@ import {
   NavigateTo,
   NavigationContextProps,
   NavigationProviderProps,
+  AllPages,
+  SuperglueState,
+  PageKey
 } from '../types'
 import { Update } from 'history'
 import { useDispatch, useSelector, useStore } from 'react-redux'
@@ -46,10 +49,8 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   ref: ForwardedRef<{ navigateTo: NavigateTo }>
 ) {
   const dispatch = useDispatch()
-  const {
-    pages,
-    superglue
-   } = useSelector<RootState,RootState>((state) => state)
+  const pages = useSelector<RootState,AllPages>((state) => state.pages)
+  const superglue = useSelector<RootState,SuperglueState>((state) => state.superglue)
   const store = useStore()
 
   useEffect(() => {
@@ -91,11 +92,11 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
         switch (restoreStrategy) {
           case 'fromCacheOnly':
-            setActivePage({ pageKey, ownProps: {} })
+            setActivePage({ pageKey })
             setWindowScroll(posX, posY)
             break
           case 'fromCacheAndRevisitInBackground':
-            setActivePage({ pageKey, ownProps: {} })
+            setActivePage({ pageKey })
             setWindowScroll(posX, posY)
             visit(pageKey, { revisit: true })
             break
@@ -111,7 +112,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
               }
 
               if (!!meta && meta.navigationAction === 'none') {
-                setActivePage({ pageKey, ownProps: {} })
+                setActivePage({ pageKey })
                 setWindowScroll(posX, posY)
               }
             })
@@ -127,7 +128,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
           }
 
           if (!!meta && meta.navigationAction === 'none') {
-            setActivePage({ pageKey, ownProps: {} })
+            setActivePage({ pageKey })
             setWindowScroll(posX, posY)
           }
         })
@@ -137,11 +138,11 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
   const navigateTo: NavigateTo = (
     path,
-    { action, ownProps } = {
-      action: 'push',
-      ownProps: {},
+    { action } = {
+      action: 'push'
     }
   ) => {
+
     if (action === 'none') {
       return false
     }
@@ -190,7 +191,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
         history.replace(...historyArgs)
       }
 
-      setActivePage({ pageKey: nextPageKey, ownProps })
+      setActivePage({ pageKey: nextPageKey })
       setWindowScroll(0, 0)
 
       if (action === 'replace' && prevPageKey && prevPageKey !== nextPageKey) {
@@ -200,7 +201,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       return true
     } else {
       console.warn(
-        `\`navigateTo\` was called , but could not find.
+        `\`navigateTo\` was called , but could not find
         the pageKey in the store. This may happen when the wrong
         content_location was set in your non-get controller action.
         No navigation will take place`
@@ -209,16 +210,16 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
   }
 
-  const { pageKey, ownProps } = activePage
-  const { componentIdentifier } = pages[pageKey]
+  const currentPageKey = superglue.currentPageKey
+  const { componentIdentifier } = pages[currentPageKey]
   const Component = mapping[componentIdentifier]
 
   if (Component) {
     return (
       <NavigationContext.Provider
-        value={{ pageKey, navigateTo, visit, remote, ownProps }}
+        value={{ pageKey: currentPageKey, navigateTo, visit, remote }}
       >
-        <Component {...ownProps}/>
+        <Component/>
       </NavigationContext.Provider>
     )
   } else {

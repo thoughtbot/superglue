@@ -18,7 +18,6 @@ describe('reducers', () => {
           payload: {
             pathname: '/some_url',
             search: '?foo=123',
-            hash: '#title',
           },
         }
         const nextState = superglueReducer(prevState, action)
@@ -27,7 +26,6 @@ describe('reducers', () => {
           foo: 'bar',
           pathname: '/some_url',
           search: '?foo=123',
-          hash: '#title',
           currentPageKey: '/some_url?foo=123',
         })
       })

@@ -7,7 +7,7 @@ import {
   <%= js_component(attr)%>,
   <%= js_component(attr)%>Props,
   <%- end -%>
-  SubmitButton
+  SubmitButton,
   SubmitButtonProps
 } from '@javascript/components'
 import { useContent } from '@thoughtbot/superglue'

@@ -131,7 +131,8 @@ the same page. Or if you're sure you want to proceed, use force: true.
 }
 
 let lastVisitController = {
-  abort: () => {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  abort: (_reason: string) => {
     // noop
   },
 }
@@ -170,7 +171,9 @@ export const visit: VisitCreator = (
     dispatch(beforeVisit({ currentPageKey, fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
-    lastVisitController.abort()
+    lastVisitController.abort(
+      'Aborting the previous `visit`. There can be one visit at a time. Use `remote` if there is a need for async requests.'
+    )
     lastVisitController = controller
 
     return fetch(...fetchArgs)

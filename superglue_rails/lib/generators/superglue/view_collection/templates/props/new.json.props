@@ -1,5 +1,5 @@
 if @<%= singular_table_name %>.errors.any?
-  flash.now["<%= js_singular_table_name%>Errors"] = @<%= singular_table_name %>.errors.to_h
+  flash.now["<%= js_singular_table_name%>FormErrors"] = @<%= singular_table_name %>.errors.as_json
 end
 
 json.<%= js_singular_table_name %>Form(partial: 'form') do

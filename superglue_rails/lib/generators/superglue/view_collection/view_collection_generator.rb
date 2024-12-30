@@ -62,7 +62,7 @@ module Superglue
 
           component_name = [plural_table_name, action].map(&:camelcase).join
 
-          if /pageIdentifierToPageComponent = {$/.match?(content)
+          if match_file(app_js, /pageIdentifierToPageComponent = {$/)
             prepend_to_file app_js do
               "import #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'\n"
             end
@@ -71,7 +71,7 @@ module Superglue
               "\n  '#{[controller_file_path, action].join("/")}': #{component_name},"
             end
           else
-            say "Skipping append mapping, you may be using a bundler that supports globing."
+            say "Skipping appending to #{app_js}, you may be using a bundler that supports globing."
           end
         end
       end
@@ -135,7 +135,7 @@ module Superglue
       end
 
       def app_js_path
-        "app/javascript/"
+        "app/javascript"
       end
 
       attr_reader :action_name

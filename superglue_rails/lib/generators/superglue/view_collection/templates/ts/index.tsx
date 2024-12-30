@@ -4,7 +4,7 @@ import { useContent } from '@thoughtbot/superglue'
 
 type ContentProps = {
   new<%= js_singular_table_name(:upper) %>Path: string
-  <%= js_plural_table_name(:upper) %>: {
+  <%= js_plural_table_name %>: {
     id: number,
     <%- showable_attributes.each do |attr| -%>
     <%= attr.column_name.camelize(:lower)%>: <%= json_mappable_type(attr)%>

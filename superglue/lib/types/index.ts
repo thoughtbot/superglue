@@ -472,6 +472,47 @@ export interface BuildVisitAndRemote {
   }
 }
 
+export interface SetupProps {
+  /**
+   * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
+   * template, e.g., index.html.erb
+   */
+  initialPage: VisitResponse
+  /**
+   * The base url prefixed to all calls made by `visit` and
+   * `remote`.
+   */
+  baseUrl: string
+  /**
+   * The path of the current page. It should equal to the `location.pathname` +
+   * `location.search` + `location.hash`
+   */
+  path: string
+  /**
+   * The exported store from store.js. If you used the generators
+   * it would contain slices for superglue, pages, and the flash.
+   */
+  store: SuperglueStore
+  /**
+   * A factory function that will return a `visit` and `remote`
+   * function. All of Superglue and UJS will use these functions. You should
+   * customize the function, for example, to add a progress bar.
+   *
+   */
+  buildVisitAndRemote: BuildVisitAndRemote
+  /**
+   * An optional history object https://github.com/remix-run/history. If none
+   * is provided Superglue will create one for you.
+   */
+  history?: History
+  /**
+   * A ref object created from the Application component that will be passed to buildVisitAndRemote
+   */
+  navigatorRef: React.RefObject<{
+    navigateTo: NavigateTo
+  }>
+}
+
 /**
  * Props for the `Application` component
  */
@@ -503,6 +544,10 @@ export interface ApplicationProps {
    * for you in page_to_page_mapping.
    */
   mapping: Record<string, React.ComponentType>
+  /**
+   * An optional history object https://github.com/remix-run/history. If none
+   * is provided Superglue will create one for you.
+   */
   history?: History
   /**
    * The exported store from store.js. If you used the generators

@@ -219,8 +219,6 @@ export interface SuperglueState {
   pathname: string
   /** The query string of the current url.*/
   search: string
-  /** The hash of the current url.*/
-  hash: string
   /** The Rails csrfToken that you can use for forms.*/
   csrfToken?: string
   /** The tracked asset digests.*/

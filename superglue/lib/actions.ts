@@ -165,3 +165,7 @@ export const historyChange = createAction<{
   search: string
   hash: string
 }>('@@superglue/HISTORY_CHANGE')
+
+export const setActivePage = createAction<{
+  pageKey: PageKey
+}>('@@superglue/SET_ACTIVE_PAGE')

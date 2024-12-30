@@ -92,3 +92,12 @@ export function formatForXHR(url: string): string {
 
   return formats.reduce((memo, f) => f(memo), url)
 }
+
+export function parsePageKey(pageKey: PageKey) {
+  const { pathname, query } = new parse(pageKey, {})
+
+  return {
+    pathname,
+    search: query,
+  }
+}

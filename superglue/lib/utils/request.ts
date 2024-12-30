@@ -42,7 +42,7 @@ export function validateResponse(args: ParsedResponse): ParsedResponse {
 
 export function handleServerErrors(args: ParsedResponse): ParsedResponse {
   const { rsp } = args
-  if (!rsp.ok) {
+  if (!rsp.ok && rsp.status !== 422) {
     if (rsp.status === 406) {
       console.error(
         "Superglue encountered a 406 Not Acceptable response. This can happen if you used respond_to and didn't specify format.json in the block. Try adding it to your respond_to. For example:\n\n" +

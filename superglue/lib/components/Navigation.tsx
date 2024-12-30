@@ -1,20 +1,18 @@
 import React, {
   createContext,
   useEffect,
-  useState,
   forwardRef,
   useImperativeHandle,
   ForwardedRef,
 } from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
-import { removePage, historyChange } from '../actions'
+import { removePage, historyChange, setActivePage } from '../actions'
 import {
   HistoryState,
   RootState,
   NavigateTo,
   NavigationContextProps,
   NavigationProviderProps,
-  AllPages,
 } from '../types'
 import { Update } from 'history'
 import { useDispatch, useSelector, useStore } from 'react-redux'
@@ -44,16 +42,14 @@ const notFound = (identifier: string | undefined): never => {
 }
 
 const NavigationProvider = forwardRef(function NavigationProvider(
-  { history, visit, remote, initialPageKey, mapping }: NavigationProviderProps,
+  { history, visit, remote, mapping }: NavigationProviderProps,
   ref: ForwardedRef<{ navigateTo: NavigateTo }>
 ) {
-  const [activePage, setActivePage] = useState({
-    pageKey: initialPageKey,
-    ownProps: {},
-  })
-
   const dispatch = useDispatch()
-  const pages = useSelector<RootState, AllPages>((state) => state.pages)
+  const {
+    pages,
+    superglue
+   } = useSelector<RootState,RootState>((state) => state)
   const store = useStore()
 
   useEffect(() => {

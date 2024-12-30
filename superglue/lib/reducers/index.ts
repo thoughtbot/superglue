@@ -1,4 +1,4 @@
-import { setIn, getIn, urlToPageKey } from '../utils'
+import { setIn, getIn, urlToPageKey, parsePageKey } from '../utils'
 import type { Action } from '@reduxjs/toolkit'
 import {
   saveResponse,
@@ -6,6 +6,7 @@ import {
   historyChange,
   copyPage,
   setCSRFToken,
+  setActivePage,
   removePage,
 } from '../actions'
 import { config } from '../config'
@@ -191,7 +192,6 @@ export function superglueReducer(
     pathname: '',
     currentPageKey: '',
     search: '',
-    hash: '',
     assets: [],
   },
   action: Action
@@ -201,8 +201,20 @@ export function superglueReducer(
     return { ...state, csrfToken: csrfToken }
   }
 
+  if (setActivePage.match(action)) {
+    const { pageKey } = action.payload
+    const { pathname, search } = parsePageKey(pageKey)
+
+    return {
+      ...state,
+      pathname,
+      search,
+      currentPageKey: pageKey,
+    }
+  }
+
   if (historyChange.match(action)) {
-    const { pathname, search, hash } = action.payload
+    const { pathname, search } = action.payload
     const currentPageKey = urlToPageKey(pathname + search)
 
     return {
@@ -210,7 +222,6 @@ export function superglueReducer(
       currentPageKey,
       pathname,
       search,
-      hash,
     }
   }
 

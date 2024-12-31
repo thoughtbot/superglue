@@ -18,8 +18,8 @@ The `props_at` param is a keypath to the content in your PropsTemplate. As a sim
 example, imagine this page with no layouts:
 
 ```ruby
-path = param_to_search_path(params[:props_at])
-json.data(search: path) do
+path = param_to_dig_path(params[:props_at])
+json.data(dig: path) do
   json.header do
     json.search do
       # Results is a leaf node
@@ -60,8 +60,8 @@ content in async fashion.
 There are two ways to query collections. Looking at the following example:
 
 ```ruby
-path = param_to_search_path(params[:props_at])
-json.data(search: path) do
+path = param_to_dig_path(params[:props_at])
+json.data(dig: path) do
   json.posts do
     json.array! @posts do |post|
       json.details do
@@ -103,8 +103,8 @@ To enable this, you are required to implement `member_by(attribute, value)` on
 the passed collection AND use the option `:key` in `json.array!`. For example:
 
 ```ruby
-path = param_to_search_path(params[:props_at])
-json.data(search: params[:props_at]) do
+path = param_to_dig_path(params[:props_at])
+json.data(dig: params[:props_at]) do
   json.posts do
     json.array! @posts, key: :some_id do |post|
       json.details do
@@ -127,7 +127,7 @@ remote('/dashboard?props_at=data.posts.some_id=1.details')
 ```
 
 ```ruby
-json.data(search: params[:props_at]) do
+json.data(dig: params[:props_at]) do
   json.posts(partial: 'list_of_posts')do
   end
 end

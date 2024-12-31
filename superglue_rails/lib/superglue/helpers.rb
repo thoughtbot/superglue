@@ -14,7 +14,7 @@ module Superglue
       end
     end
 
-    def param_to_search_path(param)
+    def param_to_dig_path(param)
       if param
         param
           .gsub(/[^\da-zA-Z_=.]+/, "")

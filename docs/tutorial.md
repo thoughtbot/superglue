@@ -169,7 +169,7 @@ the tabs to see what happens when `@path` changes for the example below.
 
 
 ```ruby
-json.data(search: @path) do
+json.data(dig: @path) do
   json.body do
     json.chart do
       sleep 10

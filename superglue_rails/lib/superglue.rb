@@ -9,7 +9,7 @@ module Superglue
 
     def self.included(base)
       if base.respond_to?(:helper_method)
-        base.helper_method :param_to_search_path
+        base.helper_method :param_to_dig_path
       end
     end
   end

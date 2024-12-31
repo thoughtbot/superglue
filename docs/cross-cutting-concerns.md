@@ -6,9 +6,9 @@ If you have state that is shared between pages, simply put it in your layout.
 For example. In the generated `application.json.props`
 
 ```ruby
-path = request.format.json? ? param_to_search_path(params[:props_at]) : nil
+path = request.format.json? ? param_to_dig_path(params[:props_at]) : nil
 
-json.data(search: path) do
+json.data(dig: path) do
   json.temperature "HOT HOT HOT"
   yield json
 end

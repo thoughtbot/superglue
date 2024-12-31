@@ -13,8 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["3.3", "3.2", "3.1"]
-        version: ["70", "71"]
-
+        version: ["70", "71", "72", "80"]
+        exclude:
+          - ruby: 3.1
+            version: 80
     runs-on: "ubuntu-latest"
 
     steps:

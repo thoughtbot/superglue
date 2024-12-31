@@ -46,7 +46,7 @@ module Superglue
             filename = filename_with_tsx_extensions(view)
             template "ts/" + filename, File.join("app/views", controller_file_path, filename)
           else
-            filename = filename_with_js_extensions(view)
+            filename = filename_with_jsx_extensions(view)
             template "js/" + filename, File.join("app/views", controller_file_path, filename)
           end
         end
@@ -148,8 +148,8 @@ module Superglue
         [name, :json, :props].join(".")
       end
 
-      def filename_with_js_extensions(name)
-        [name, :js].join(".")
+      def filename_with_jsx_extensions(name)
+        [name, :jsx].join(".")
       end
 
       def filename_with_tsx_extensions(name)

@@ -72,7 +72,7 @@ module Superglue
 
       def copy_js_files
         say "Copying application.js file to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/application.js", "#{app_js_path}/application.js"
+        copy_file "#{__dir__}/templates/js/application.jsx", "#{app_js_path}/application.jsx"
 
         say "Copying page_to_page_mapping.js file to #{app_js_path}"
         copy_file "#{__dir__}/templates/js/page_to_page_mapping.js", "#{app_js_path}/page_to_page_mapping.js"
@@ -87,8 +87,8 @@ module Superglue
         copy_file "#{__dir__}/templates/js/application_visit.js", "#{app_js_path}/application_visit.js"
 
         say "Copying components to #{app_js_path}"
-        copy_file "#{__dir__}/templates/js/inputs.js", "#{app_js_path}/components/Inputs.js"
-        copy_file "#{__dir__}/templates/js/layout.js", "#{app_js_path}/components/Layout.js"
+        copy_file "#{__dir__}/templates/js/inputs.jsx", "#{app_js_path}/components/Inputs.jsx"
+        copy_file "#{__dir__}/templates/js/layout.jsx", "#{app_js_path}/components/Layout.jsx"
         copy_file "#{__dir__}/templates/js/components.js", "#{app_js_path}/components/index.js"
 
         say "Copying jsconfig.json file to #{app_js_path}"

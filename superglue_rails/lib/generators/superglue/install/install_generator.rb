@@ -37,7 +37,7 @@ module Superglue
         run "yarn add history react react-dom @reduxjs/toolkit react-redux @thoughtbot/superglue --save"
 
         if use_typescript
-          run "yarn add -D @types/react-dom @types/node @thoughtbot/candy_wrapper"
+          run "yarn add -D @types/react-dom @types/react @types/node @thoughtbot/candy_wrapper"
         end
 
         say "Superglue is Installed! 🎉", :green

@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+gemspec
+
+gem 'rails', '~> 8.0.0'
+gem 'selenium-webdriver'
+gem 'props_template'
+gem 'standard'
+gem 'capybara'
+gem 'minitest'
+gem 'rake'
+gem 'sqlite3'

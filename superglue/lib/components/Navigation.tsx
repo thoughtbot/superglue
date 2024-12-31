@@ -46,7 +46,7 @@ const notFound = (identifier: string | undefined): never => {
 
 const NavigationProvider = forwardRef(function NavigationProvider(
   { history, visit, remote, mapping }: NavigationProviderProps,
-  ref: ForwardedRef<{ navigateTo: NavigateTo }>
+  ref: ForwardedRef<{ navigateTo: NavigateTo | null }>
 ) {
   const dispatch = useDispatch()
   const pages = useSelector<RootState, AllPages>((state) => state.pages)

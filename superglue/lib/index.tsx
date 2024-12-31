@@ -127,7 +127,7 @@ function Application({
   mapping,
   ...rest
 }: ApplicationProps) {
-  const navigatorRef = useRef<{ navigateTo: NavigateTo }>(null)
+  const navigatorRef = useRef<{ navigateTo: NavigateTo } | null>(null)
 
   const { visit, remote, nextHistory, initialPageKey, ujs } = useMemo(() => {
     return setup({

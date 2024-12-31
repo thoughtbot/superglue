@@ -461,7 +461,7 @@ export interface BuildStore {
  */
 export interface BuildVisitAndRemote {
   (
-    navigatorRef: React.RefObject<{ navigateTo: NavigateTo }>,
+    navigatorRef: React.RefObject<{ navigateTo: NavigateTo } | null>,
     store: SuperglueStore
   ): {
     visit: ApplicationVisit
@@ -507,7 +507,7 @@ export interface SetupProps {
    */
   navigatorRef: React.RefObject<{
     navigateTo: NavigateTo
-  }>
+  } | null>
 }
 
 /**

@@ -112,12 +112,10 @@ sequenceDiagram
     `application_visit.js`. If you need a global customization, e.g, progress
     bars, you can add them there.
 
-## Differences from UJS
+## Relationship to UJS
 
-The `visit` and `remote` thunks are functions that return promises, allowing
-for greater flexibility. Superglue UJS selectively exposes options of `visit`
-and `remote` for easy dev exp when using with forms and links.
+The `visit` and `remote` thunks are called by the UJS implementation.
 
-!!! hint
-    Unlike `remote`, `data-sg-remote` does not derive the `pageKey`. Instead it
-    saves or grafts all page responses to current page.
+Only `data-sg-remote` has a slightly modified behavior. Unlike `remote`,
+`data-sg-remote` does not derive the `pageKey`. Instead it saves or grafts all
+page responses to current page.

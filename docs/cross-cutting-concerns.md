@@ -15,13 +15,11 @@ end
 ```
 
 In the above, every page that gets rendered will have `temperature` as part of
-the [page response]. For a good number of use cases, this approach would be
-enough.
+the [page response]. 
 
-## Advanced functionality
+## Partials
 
-When building pages, we commonly use partials to extract crosscutting concerns.
-For example, a shared header:
+We can also use partials to extract crosscutting concerns. For example, a shared header:
 
 ```treeview
 app/
@@ -63,11 +61,16 @@ across our `pages` slice:
 }
 ```
 
-While a duplicated header with an email address may be a fine tradeoff for
-simplicity, sometimes we have global concerns that we'd like to keep updated.
-This can be for across pages when navigating or if we'd like to perform
-client-side updates. For example, if we're showing a shopping cart quantity on
-the header, we want to keep that updated as we navigate back, and when updating
+
+## Advanced functionality
+
+For most cases where you don't have to mutate your store, using layouts or
+partials would be good enough. Its a fine tradeoff for simplicity.
+
+Sometimes we have global concerns that we'd like to keep updated. This can be
+for across pages when navigating or if we'd like to perform client-side
+updates. For example, if we're showing a shopping cart quantity on the
+header, we want to keep that updated as we navigate back, and when updating
 line items locally.
 
 For this, Superglue has fragments and Redux slices.

@@ -98,10 +98,14 @@ module Superglue
       def add_member_methods
         inject_into_file "app/models/application_record.rb", after: "class ApplicationRecord < ActiveRecord::Base\n" do
           <<-RUBY
+        # This enables digging by index when used with props_template
+        # see https://thoughtbot.github.io/superglue/digging/#index-based-selection
         def self.member_at(index)
           offset(index).limit(1).first
         end
 
+        # This enables digging by attribute when used with props_template
+        # see https://thoughtbot.github.io/superglue/digging/#attribute-based-selection
         def self.member_by(attr, value)
           find_by(Hash[attr, value])
         end

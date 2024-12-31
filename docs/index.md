@@ -1,10 +1,10 @@
 # Overview
 
 Superglue is a library that thoughtfully pairs Rails and React. Its built with
-The Rails Way in mind and aims to provide a simple developer experience that is
-on par with Hotwire, Stimulus, and Turbo. Confidently use Rails routes,
-controllers, views as you normally would in a multi-page application and
-integrate with React's vast ecosystem.
+a laser focus on The Rails Way and aims to provide a simple developer
+experience that is on par with Hotwire, Stimulus, and Turbo. Confidently use
+Rails routes, controllers, views as you normally would in a multi-page
+application and integrate with React's vast ecosystem.
 
 
 !!! warning
@@ -13,61 +13,24 @@ integrate with React's vast ecosystem.
 
 ## Who is it for?
 
-Superglue is built from the ground up for Rails developers who
+Superglue is built from the ground up for
 
-- Have a complex React integration and want to move back to to a simple rails
-  workflow without giving up components already built.
-- Want to use normal controllers, server side routing, views, helpers, etc. to
-  develop interactive React applications
-- Want to hit the ground running with React and easily access all the components
-  that the React eco-system offers.
-- Don't want to write another custom React integration
-- Don't want to build APIs.
-- Are tired of JS complexity and just want to get work done!
+- **The Rails developer**: For those of us who want to harness the full power
+  of ALL of Rails --controllers, server-side routing, views, form helpers,
+  and more — to create seamless, interactive React applications **without** the
+  hassle of APIs and client side routing.
 
-## One-stop shop
+- **Teams fighting complexity**: Its not easy pivoting from complexity.
+  Superglue empowers teams to take small steps back without giving up the
+  effort invested in React components.
 
-We know first hand how complex React can be, but we don't shy away from
-complexity. We want to make things better for everyone and to that end, we
-built a supporting cast of tooling under one shop to bring ease and consistancy
-to your team.
+- **Startups moving fast**: Founders looking to hit the ground running by
+  combining the speed of Rails development with React's vast ecosystem of
+  prebuilt UI libraries.
 
-<div class="grid cards" markdown>
+- **Javascript fatigue**: Anyone tired of JS complexity and just want to get
+  work done.
 
--   __Superglue Rails__
-
-    ---
-
-    Integrates Superglue with Rails, and generates a new
-    app.
-
-
--   __PropsTemplate__
-
-    ---
-
-    A very fast JSON builder. The secret sauce that enabled much more than just Rails/React integration
-
-    [:octicons-arrow-right-24: props_template](https://github.com/thoughtbot/props_template)
-
--   __Humid__
-
-    ---
-
-    Server Side Rendering using MiniRacer and V8 isolates.
-
-    [:octicons-arrow-right-24: Humid](recipes/ssr.md)
-
--   __Form Props__
-
-    ---
-
-    Just use Rails forms with React. Combine it with React
-    components.
-
-    [:octicons-arrow-right-24: form_props](https://github.com/thoughtbot/form_props)
-
-</div>
 
 ## How does it work?
 
@@ -79,11 +42,11 @@ templates.
 
 - `foobar.json.props` A presenter written in a jbuilder-like template that
   builds your page props.
-- `foobar.js` Your page component that receives the props from above.
+- `foobar.(jsx|tsx)` Your page component that receives the props from above.
 - `foobar.html.erb` Injects your page props into Redux when the browser loads
   it.
 
-Shape your `props` to roughly how your components are presented. For example:
+Shape your `props` to roughly match your component structure. For example:
 
 ```ruby
 json.header do
@@ -119,21 +82,31 @@ json.footer do
 end
 ```
 
-Familiar Rails conveniences include [form props], a fork of `form_with` made for
-React; the [flash] is integrated as a [Redux slice]; and [Unobtrusive Javascript] (UJS) helpers.
+Familiar Rails conveniences include form_props (a fork of `form_with` made for React),
+flash messages integrated as a [Redux slice], and [Unobtrusive Javascript]
+(UJS) helpers.
 
 ### It’s React
 
 But there are no APIs! The above is injected as a script tag in the DOM so everything
 loads in the initial request. Its added to [your Redux state] and passed to
-`foobar.js` as props, for example:
+the page component in a hook, for example:
 
 ```js
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Drawer, Header, Footer, ProductList, ProductFilter } from './components';
+import { useContent } from '@thoughtbot/superglue'
 
-export default function FooBar({ header, products = [], productFilter, rightDrawer, footer }) {
+export default function FooBar() {
+  const {
+    header,
+    products = [],
+    productFilter,
+    rightDrawer,
+    footer
+  } = useContent()
+
   const flash = useSelector((state) => state.flash);
 
   return (
@@ -155,8 +128,8 @@ export default function FooBar({ header, products = [], productFilter, rightDraw
 
 ### It’s Turbolinks and UJS
 
-At heart, Superglue is a fork of [Turbolinks 3], but instead of sending your
-`foobar.html.erb` over the wire and swapping the `<body>`, it sends
+Superglue drew inspiration fromthe original Turbolinks, but instead of sending
+your `foobar.html.erb` over the wire and swapping the `<body>`, it sends
 `foobar.json.props` over the wire to your React and Redux app and swaps the
 page component.
 
@@ -192,4 +165,68 @@ skipping other nodes, and immutably graft it to your Redux store.
 
 This works well for [modals], chat, streaming, and [more]!
 
+[secret sauce]: digging.md
+[UJS]: ujs.md
 
+## One-stop shop
+
+We know first hand how complex React can be, but we don't shy away from
+complexity. We want to make things better for everyone and to that end, we have
+a supporting cast of tooling under one shop to bring ease and consistancy to
+your team.
+
+<div class="grid cards" markdown>
+
+-   __Superglue JS__
+
+    ---
+
+    The javascript library thoughfully pairing Rails and React.
+
+    [:octicons-arrow-right-24: SuperglueJs](https://github.com/thoughtbot/superglue)
+
+
+-   __Superglue Rails__
+
+    ---
+
+    Integration helpers, and generators for installation and scaffolding.
+
+    [:octicons-arrow-right-24: SuperglueJs](https://github.com/thoughtbot/superglue/tree/main/superglue_rails)
+
+-   __PropsTemplate__
+
+    ---
+
+    A very fast JSON builder. The [secret sauce] that give [UJS] superpowers.
+
+    [:octicons-arrow-right-24: props_template](https://github.com/thoughtbot/props_template)
+
+
+-   __Humid__
+
+    ---
+
+    Server Side Rendering using MiniRacer and V8 isolates.
+
+    [:octicons-arrow-right-24: Humid](recipes/ssr.md)
+
+-   __FormProps__
+
+    ---
+
+    A `form_with` FormBuilder that lets you use Rails forms with React.
+
+    [:octicons-arrow-right-24: form_props](https://github.com/thoughtbot/form_props)
+
+-   __CandyWrapper__
+
+    ---
+
+    Lightweight wrapper components around popular React UI libraries made to work with
+    FormProps.
+
+
+    [:octicons-arrow-right-24: candy_wrapper](https://github.com/thoughtbot/candy_wrapper)
+
+</div>

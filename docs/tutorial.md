@@ -2,15 +2,18 @@
 
 ## Hello World
 
-Lets build a simple app to get familiar with Superglue.
+For this tutorial, you will be building a hello world page. Its one page, but we'll
+add complexity as we progress to highlight the power of Superglue.
 
+!!! tip "Installation"
+    You'll need to install Superglue before proceeding. If you haven't already
+    stop by the [Installation](./installation.md) section for instructions.
 
-### Start with the usual
-Add a route and a controller to an app that followed the installation steps.
-
-!!! info
     The installation steps will include a layout `application.json.props` that's
     **implicitly used** in this tutorial.
+
+### Start with the usual
+Lets begin by adding a route and a controller to an app.
 
 === "`routes.rb`"
     in `app/config/routes.rb`
@@ -36,6 +39,8 @@ Next lets add the following views. Here we're splitting the usual `show.html.erb
 - `app/views/greet/show.json.props`
 - `app/views/greet/show.js`
 - `app/views/greet/show.html.erb`
+
+Click the tabs below to see the contents:
 
 === "1. `show.json.props`"
     If you've used Jbuidler, this should look familiar. Here, we're using
@@ -98,19 +103,20 @@ Next lets add the following views. Here we're splitting the usual `show.html.erb
 
 ### Connect the dots
 
-The json [payload] that gets rendered into `show.html.erb` also contains information about
-the template it rendered from the `componentIdentifier`.
+The json [payload] that gets rendered into `show.html.erb` contains an the
+`componentIdentifier`. We're going to use the `componentIdentifier` to tie
+`show.json.props` to `show.js` so superglue knows which component to render
+with which response by modifying `app/javascript/page_to_page_mapping.js`.
 
   [payload]: page-response.md
 
 !!! info
     If you do not knowing what the `componentIdentifier` of a page is, you can
-    go to the `json` version of the page on your browser to see what gets rendered. In our case:
-    http://localhost:3000/greet.json
+    always go to the `json` version of the page on your browser to see what
+    gets rendered. In our case: http://localhost:3000/greet.json
 
-We're going to use the `componentIdentifier` to tie `show.json.props` to `show.js` so
-superglue knows which component to render with which response by modifying
-`app/javascript/page_to_page_mapping.js`.
+    **Vite Users** This step can be entirely optional if you're using Vite. See
+    the recipie for more information.
 
 === "1. Example `greet.json`"
     The layout for `show.json.props` is located at `app/views/layouts/application.json.props`. It
@@ -140,6 +146,8 @@ superglue knows which component to render with which response by modifying
 
     ```
 
+
+
 ### Finish
 
 Run a rails server and go to http://localhost:3000/greet.
@@ -156,8 +164,8 @@ Let's add some complexity to the previous sample.
 
 ### Digging for content
 
-But first! A quick dive into [props_template]. Click on the tabs to see what happens
-when `@path` changes for the example below.
+But first! A quick dive into [props_template] and how digging works. Click on
+the tabs to see what happens when `@path` changes for the example below.
 
 
 ```ruby
@@ -335,7 +343,7 @@ add a link that will dig for the missing content to replace "Waiting for greet".
 
 === "`show.json.props`"
     Add a url for the `href` link with `props_at` param. This is used on the
-    `application.json.props` layout that instructs PropsTemplate to dig.
+    `application.json.props` layout that instructs `props_template` to dig.
 
     ```ruby
     json.body(defer: :manual)
@@ -354,13 +362,16 @@ add a link that will dig for the missing content to replace "Waiting for greet".
 
     ```js
     import React from 'react'
+    import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetShow({
-      body,
-      footer,
-      loadGreetPath
-    }) {
-      const {greet} = body
+    export default function GreetShow() {
+      const {
+        body,
+        footer,
+        loadGreetPath
+      } = useContent()
+
+      const { greet } = body
 
       return (
         <h1>{greet || "Waiting for greet"}</h1>
@@ -372,19 +383,21 @@ add a link that will dig for the missing content to replace "Waiting for greet".
 
 ### **`show.js` alternative**
 
-This version does the same thing. Every page component receives a `remote` and
-`visit` thunk.
+This version does the same thing, but we're using the function directly.
 
 ```js
-import React from 'react'
+import React, { useContext } from 'react'
+import { useContent, Navigationcontext } from '@thoughtbot/superglue'
 
-export default function GreetShow({
-  body,
-  remote,
-  footer,
-  loadGreetPath
-}) {
-  const {greet} = body
+export default function GreetShow() {
+  const {
+    body,
+    footer,
+    loadGreetPath
+  } = useContent()
+  const { greet } = body
+
+  const { remote } = useContext(NavigationContext)
   const handleClick = (e) => {
     e.preventDefault()
     remote(loadGreetPath)
@@ -443,12 +456,14 @@ above without a button.
 
     ```js
     import React from 'react'
+    import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetShow({
-      body,
-      footer
-    }) {
-      const {greet} = body
+    export default function GreetShow() {
+      const {
+        body,
+        footer
+      } = useContent()
+      const { greet } = body
 
       return (
         <h1>{greet}</h1>

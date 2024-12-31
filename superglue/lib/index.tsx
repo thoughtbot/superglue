@@ -29,7 +29,7 @@ import {
   ApplicationProps,
   NavigateTo,
   SuperglueStore,
-  SetupProps
+  SetupProps,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
@@ -83,8 +83,8 @@ export const setup = ({
   store,
   buildVisitAndRemote,
   history,
-  navigatorRef
-} : SetupProps) => {
+  navigatorRef,
+}: SetupProps) => {
   config.baseUrl = baseUrl
 
   const { visit, remote } = buildVisitAndRemote(navigatorRef, store)

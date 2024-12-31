@@ -71,7 +71,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
-          currentPageKey: "/home"
+          currentPageKey: '/home',
         },
       })
 
@@ -108,7 +108,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
-          currentPageKey: '/home'
+          currentPageKey: '/home',
         },
       })
 
@@ -153,7 +153,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
-          currentPageKey: '/home'
+          currentPageKey: '/home',
         },
       })
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
@@ -215,7 +215,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
-          currentPageKey: '/home'
+          currentPageKey: '/home',
         },
       })
 
@@ -235,7 +235,7 @@ describe('Nav', () => {
           }
           mountTimes++
         }, [])
-      
+
         return (
           <div>
             <h1>Home Page</h1>
@@ -243,7 +243,7 @@ describe('Nav', () => {
           </div>
         )
       }
-      
+
       const About = () => {
         useEffect(() => {
           visitedAbout = true
@@ -284,7 +284,7 @@ describe('Nav', () => {
         },
         superglue: {
           csrfToken: 'abc',
-          currentPageKey: '/home'
+          currentPageKey: '/home',
         },
       })
 
@@ -336,7 +336,7 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
-            currentPageKey: '/about'
+            currentPageKey: '/about',
           },
         })
         const scrollTo = vi
@@ -385,7 +385,7 @@ describe('Nav', () => {
           posX: 10,
           posY: 10,
         })
-        
+
         const store = buildStore({
           pages: {
             '/home': {
@@ -399,7 +399,7 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
-            currentPageKey: '/about'
+            currentPageKey: '/about',
           },
         })
         const scrollTo = vi
@@ -465,7 +465,7 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
-            currentPageKey: '/home'
+            currentPageKey: '/home',
           },
         })
         const scrollTo = vi
@@ -520,7 +520,7 @@ describe('Nav', () => {
           },
           superglue: {
             csrfToken: 'abc',
-            currentPageKey: '/home'
+            currentPageKey: '/home',
           },
         })
         const scrollTo = vi

@@ -36,7 +36,7 @@ const Home = () => {
 }
 
 const About = () => {
-  const {heading} = useContent()
+  const { heading } = useContent()
   return <h1>About Page, {heading}</h1>
 }
 
@@ -200,7 +200,7 @@ describe('navigation', () => {
             navigateTo('/about#title')
           })
         }
-      
+
         return (
           <div>
             <h1>Home Page</h1>
@@ -337,13 +337,13 @@ describe('navigation', () => {
       }
 
       const Home = () => {
-        const { visit, navigateTo} = useContext(NavigationContext)
+        const { visit, navigateTo } = useContext(NavigationContext)
         const handleClick = () => {
           visit('/about').then(() => {
             navigateTo('/about', { action: 'replace' })
           })
         }
-      
+
         return (
           <div>
             <h1>Home Page</h1>
@@ -402,9 +402,9 @@ describe('navigation', () => {
       const Home = () => {
         const { navigateTo } = useContext(NavigationContext)
         const handleClick = () => {
-          navigateTo('/home', {action: 'replace'})
+          navigateTo('/home', { action: 'replace' })
         }
-      
+
         return (
           <div>
             <h1>Home Page</h1>
@@ -536,8 +536,8 @@ describe('navigation', () => {
         const Home = () => {
           useEffect(() => {
             process.nextTick(() => history.back())
-          },[])
-        
+          }, [])
+
           return (
             <div>
               <h1>Home Page</h1>
@@ -631,7 +631,7 @@ describe('navigation', () => {
         const handleClick = () => {
           remote('/about?props_at=address')
         }
-      
+
         return (
           <div>
             <h1>Home Page</h1>

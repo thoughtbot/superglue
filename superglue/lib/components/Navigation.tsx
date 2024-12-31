@@ -15,7 +15,7 @@ import {
   NavigationProviderProps,
   AllPages,
   SuperglueState,
-  PageKey
+  PageKey,
 } from '../types'
 import { Update } from 'history'
 import { useDispatch, useSelector, useStore } from 'react-redux'
@@ -49,8 +49,10 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   ref: ForwardedRef<{ navigateTo: NavigateTo }>
 ) {
   const dispatch = useDispatch()
-  const pages = useSelector<RootState,AllPages>((state) => state.pages)
-  const superglue = useSelector<RootState,SuperglueState>((state) => state.superglue)
+  const pages = useSelector<RootState, AllPages>((state) => state.pages)
+  const superglue = useSelector<RootState, SuperglueState>(
+    (state) => state.superglue
+  )
   const store = useStore()
 
   useEffect(() => {
@@ -74,12 +76,12 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     //    and so we have restore scroll and the set the active page
     // -  In cases where the response was redirected, the calculated
     //    navigationAction is set to 'replace', and is handled gracefully by navigateTo,
-    //    before this method gets called. 
+    //    before this method gets called.
     // That's why we're only concerned with the first case, but we gracefully warn
     // if the application visit did not return the meta object like the dev was supposed to.
     return visit(pageKey, { revisit: true }).then((meta) => {
       if (meta) {
-        if (meta.navigationAction === "none") {
+        if (meta.navigationAction === 'none') {
           dispatch(setActivePage({ pageKey }))
           setWindowScroll(posX, posY)
         }
@@ -139,10 +141,9 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   const navigateTo: NavigateTo = (
     path,
     { action } = {
-      action: 'push'
+      action: 'push',
     }
   ) => {
-
     if (action === 'none') {
       return false
     }
@@ -219,7 +220,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       <NavigationContext.Provider
         value={{ pageKey: currentPageKey, navigateTo, visit, remote }}
       >
-        <Component/>
+        <Component />
       </NavigationContext.Provider>
     )
   } else {

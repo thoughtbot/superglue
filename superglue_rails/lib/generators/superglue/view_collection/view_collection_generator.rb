@@ -10,9 +10,9 @@ module Superglue
 
       argument :attributes, type: :array, default: [], banner: "field:type field:type"
 
-      class_option :typescript, 
-        type: :boolean, 
-        required: false, 
+      class_option :typescript,
+        type: :boolean,
+        required: false,
         default: false,
         desc: "Use typescript"
 
@@ -62,12 +62,16 @@ module Superglue
 
           component_name = [plural_table_name, action].map(&:camelcase).join
 
-          prepend_to_file app_js do
-            "import #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'\n"
-          end
+          if /pageIdentifierToPageComponent = {$/.match?(content)
+            prepend_to_file app_js do
+              "import #{component_name} from '#{view_path}/#{controller_file_path}/#{action}'\n"
+            end
 
-          inject_into_file app_js, after: "pageIdentifierToPageComponent = {" do
-            "\n  '#{[controller_file_path, action].join("/")}': #{component_name},"
+            inject_into_file app_js, after: /pageIdentifierToPageComponent = {$/ do
+              "\n  '#{[controller_file_path, action].join("/")}': #{component_name},"
+            end
+          else
+            say "Skipping append mapping, you may be using a bundler that supports globing."
           end
         end
       end
@@ -123,7 +127,7 @@ module Superglue
       end
 
       def available_views
-        %w(index edit show new)
+        %w[index edit show new]
       end
 
       def view_path
@@ -147,7 +151,7 @@ module Superglue
       def filename_with_js_extensions(name)
         [name, :js].join(".")
       end
-      
+
       def filename_with_tsx_extensions(name)
         [name, :tsx].join(".")
       end
@@ -174,4 +178,3 @@ module Superglue
     end
   end
 end
-

@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { saveResponse, beforeVisit } from "@thoughtbot/superglue";
 
-const initialState: { [name: string]: any } = {};
+type FlashState = Record<string, any>
+
+const initialState: FlashState = {};
 
 export const flashSlice = createSlice({
   name: "flash",
@@ -35,7 +37,7 @@ export const flashSlice = createSlice({
 
       return {
         ...state,
-        ...page.slices.flash,
+        ...(page.slices.flash as FlashState),
       };
     });
   },

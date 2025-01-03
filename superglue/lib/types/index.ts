@@ -513,7 +513,7 @@ export interface SetupProps {
 /**
  * Props for the `Application` component
  */
-export interface ApplicationProps {
+export interface ApplicationProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
    * template, e.g., index.html.erb

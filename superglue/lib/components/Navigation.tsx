@@ -20,8 +20,8 @@ import {
 import { Update } from 'history'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 
-const NavigationContext = createContext<NavigationContextProps | undefined>(
-  undefined
+const NavigationContext = createContext<NavigationContextProps>(
+  {} as NavigationContextProps
 )
 
 const hasWindow = typeof window !== 'undefined'

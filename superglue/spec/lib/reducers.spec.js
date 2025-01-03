@@ -16,16 +16,14 @@ describe('reducers', () => {
         const action = {
           type: '@@superglue/HISTORY_CHANGE',
           payload: {
-            pathname: '/some_url',
-            search: '?foo=123',
+            pageKey: '/some_url?foo=123',
           },
         }
         const nextState = superglueReducer(prevState, action)
 
         expect(nextState).toEqual({
           foo: 'bar',
-          pathname: '/some_url',
-          search: '?foo=123',
+          search: {foo: '123'},
           currentPageKey: '/some_url?foo=123',
         })
       })

@@ -161,9 +161,7 @@ export const setCSRFToken = createAction<{
 }>('@@superglue/SET_CSRF_TOKEN')
 
 export const historyChange = createAction<{
-  pathname: string
-  search: string
-  hash: string
+  pageKey: PageKey
 }>('@@superglue/HISTORY_CHANGE')
 
 export const setActivePage = createAction<{

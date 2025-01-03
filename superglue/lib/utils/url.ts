@@ -94,7 +94,7 @@ export function formatForXHR(url: string): string {
 }
 
 export function parsePageKey(pageKey: PageKey) {
-  const { pathname, query } = new parse(pageKey, {})
+  const { pathname, query } = new parse(pageKey, {}, true)
 
   return {
     pathname,

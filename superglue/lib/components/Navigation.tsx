@@ -96,15 +96,12 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   }
 
   const onHistoryChange = ({ location, action }: Update): void => {
-    const { pathname, search, hash } = location
     const state = location.state as HistoryState
 
     if (state && 'superglue' in state) {
       dispatch(
         historyChange({
-          pathname,
-          search,
-          hash,
+          pageKey: state.pageKey
         })
       )
 
@@ -211,14 +208,14 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
   }
 
-  const currentPageKey = superglue.currentPageKey
+  const { currentPageKey, search } = superglue
   const { componentIdentifier } = pages[currentPageKey]
   const Component = mapping[componentIdentifier]
 
   if (Component) {
     return (
       <NavigationContext.Provider
-        value={{ pageKey: currentPageKey, navigateTo, visit, remote }}
+        value={{ pageKey: currentPageKey, search, navigateTo, visit, remote }}
       >
         <Component />
       </NavigationContext.Provider>

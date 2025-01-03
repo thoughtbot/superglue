@@ -177,17 +177,13 @@ describe('Nav', () => {
         {
           type: '@@superglue/HISTORY_CHANGE',
           payload: {
-            pathname: '/home',
-            search: '',
-            hash: '',
+            pageKey: '/home',
           },
         },
         {
           type: '@@superglue/HISTORY_CHANGE',
           payload: {
-            pathname: '/about',
-            search: '',
-            hash: '',
+            pageKey: '/about',
           },
         },
       ]

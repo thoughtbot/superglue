@@ -91,14 +91,12 @@ describe('start', () => {
     expect(store.getState()).toEqual({
       superglue: {
         currentPageKey: '/home?some=123',
-        pathname: '/home',
-        search: '?some=123',
+        search: {some: "123"},
         csrfToken: 'token',
         assets: ['123.js', '123.css'],
       },
       pages: {
         '/home?some=123': {
-          fragments: [],
           data: {
             heading: 'this is page 1',
           },

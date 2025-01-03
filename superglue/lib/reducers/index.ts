@@ -188,9 +188,8 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
 
 export function superglueReducer(
   state: SuperglueState = {
-    pathname: '',
     currentPageKey: '',
-    search: '',
+    search: {},
     assets: [],
   },
   action: Action
@@ -202,24 +201,22 @@ export function superglueReducer(
 
   if (setActivePage.match(action)) {
     const { pageKey } = action.payload
-    const { pathname, search } = parsePageKey(pageKey)
+    const { search } = parsePageKey(pageKey)
 
     return {
       ...state,
-      pathname,
       search,
       currentPageKey: pageKey,
     }
   }
 
   if (historyChange.match(action)) {
-    const { pathname, search } = action.payload
-    const currentPageKey = urlToPageKey(pathname + search)
+    const { pageKey } = action.payload
+    const { search } = parsePageKey(pageKey)
 
     return {
       ...state,
-      currentPageKey,
-      pathname,
+      currentPageKey: pageKey,
       search,
     }
   }

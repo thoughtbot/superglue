@@ -57,15 +57,9 @@ export const prepareStore = (
   const initialPageKey = urlToPageKey(location.href)
   const { csrfToken } = initialPage
 
-  const pathname = location.pathname
-  const search = location.query
-  const hash = location.hash
-
   store.dispatch(
     historyChange({
-      pathname,
-      search,
-      hash,
+      pageKey: initialPageKey
     })
   )
   store.dispatch(saveAndProcessPage(initialPageKey, initialPage))

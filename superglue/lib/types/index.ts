@@ -213,12 +213,10 @@ export type AllPages<T = JSONMappable> = Record<PageKey, Page<T>>
  * the current page.
  */
 export interface SuperglueState {
-  /** The {@link PageKey} of the current page. This can be pass to {@link Remote}.*/
+  /** The {@link PageKey} (url pathname + search) of the current page. This can be pass to {@link Remote}.*/
   currentPageKey: PageKey
-  /** The pathname of the current url.*/
-  pathname: string
-  /** The query string of the current url.*/
-  search: string
+  /** The query string object of the current url.*/
+  search: Record<string, string | undefined>
   /** The Rails csrfToken that you can use for forms.*/
   csrfToken?: string
   /** The tracked asset digests.*/
@@ -415,7 +413,8 @@ export type NavigationContextProps = {
   navigateTo: NavigateTo
   visit: ApplicationVisit
   remote: ApplicationRemote
-  pageKey: PageKey
+  pageKey: SuperglueState['currentPageKey']
+  search: SuperglueState['search']
 }
 
 /**
@@ -513,7 +512,8 @@ export interface SetupProps {
 /**
  * Props for the `Application` component
  */
-export interface ApplicationProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface ApplicationProps
+  extends React.ComponentPropsWithoutRef<'div'> {
   /**
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
    * template, e.g., index.html.erb

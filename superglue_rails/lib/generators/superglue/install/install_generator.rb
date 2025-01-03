@@ -31,9 +31,6 @@ module Superglue
         say "Adding required member methods to ApplicationRecord"
         add_member_methods
 
-        say "Installing FormProps"
-        run "bundle add form_props"
-
         say "Installing Superglue and friends"
         run "yarn add history react react-dom @reduxjs/toolkit react-redux @thoughtbot/superglue --save"
 

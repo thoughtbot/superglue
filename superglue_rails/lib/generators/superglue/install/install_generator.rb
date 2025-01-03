@@ -63,7 +63,7 @@ module Superglue
         copy_file "#{__dir__}/templates/ts/application_visit.ts", "#{app_js_path}/application_visit.ts"
 
         say "Copying components to #{app_js_path}"
-        copy_file "#{__dir__}/templates/ts/inputs.tsx", "#{app_js_path}/components/inputs.tsx"
+        copy_file "#{__dir__}/templates/ts/inputs.tsx", "#{app_js_path}/components/Inputs.tsx"
         copy_file "#{__dir__}/templates/ts/layout.tsx", "#{app_js_path}/components/Layout.tsx"
         copy_file "#{__dir__}/templates/ts/components.ts", "#{app_js_path}/components/index.ts"
 

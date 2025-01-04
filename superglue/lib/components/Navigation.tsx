@@ -121,7 +121,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     if (state && 'superglue' in state) {
       dispatch(
         historyChange({
-          pageKey: state.pageKey
+          pageKey: state.pageKey,
         })
       )
 

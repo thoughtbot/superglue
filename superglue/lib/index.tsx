@@ -59,7 +59,7 @@ export const prepareStore = (
 
   store.dispatch(
     historyChange({
-      pageKey: initialPageKey
+      pageKey: initialPageKey,
     })
   )
   store.dispatch(saveAndProcessPage(initialPageKey, initialPage))

@@ -305,22 +305,22 @@ describe('Nav', () => {
         </Provider>
       )
 
-      expect(history.location.hash).toEqual("")
+      expect(history.location.hash).toEqual('')
       expect(history.location.state).toEqual({
-        "pageKey": "/home",
-        "posX": 0,
-        "posY": 0,
-        "superglue": true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+        superglue: true,
       })
       const user = userEvent.setup()
       await user.click(screen.getByText('click'))
 
-      expect(history.location.hash).toEqual("#top")
+      expect(history.location.hash).toEqual('#top')
       expect(history.location.state).toEqual({
-        "pageKey": "/home",
-        "posX": 0,
-        "posY": 0,
-        "superglue": true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+        superglue: true,
       })
     })
 

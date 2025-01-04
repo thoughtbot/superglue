@@ -23,7 +23,7 @@ describe('reducers', () => {
 
         expect(nextState).toEqual({
           foo: 'bar',
-          search: {foo: '123'},
+          search: { foo: '123' },
           currentPageKey: '/some_url?foo=123',
         })
       })

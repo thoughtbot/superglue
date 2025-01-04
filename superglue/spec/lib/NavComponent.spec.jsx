@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import React, { useContext, useEffect } from 'react'
 import { Provider } from 'react-redux'
-import { createMemoryHistory } from 'history'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 import { NavigationProvider } from '../../lib/components/Navigation'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -263,6 +263,65 @@ describe('Nav', () => {
       await user.click(screen.getByText('click'))
       expect(visitedAbout).toBe(true)
       expect(returnedHome).toBe(true)
+    })
+
+    it('navigates to the page when the hash changes', async () => {
+      const history = createBrowserHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      const Home = () => {
+        return (
+          <div>
+            <h1 id="top">Home Page</h1>
+            <a href="#top">click</a>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider
+            store={store}
+            mapping={{ home: Home, about: About }}
+            history={history}
+          />
+        </Provider>
+      )
+
+      expect(history.location.hash).toEqual("")
+      expect(history.location.state).toEqual({
+        "pageKey": "/home",
+        "posX": 0,
+        "posY": 0,
+        "superglue": true,
+      })
+      const user = userEvent.setup()
+      await user.click(screen.getByText('click'))
+
+      expect(history.location.hash).toEqual("#top")
+      expect(history.location.state).toEqual({
+        "pageKey": "/home",
+        "posX": 0,
+        "posY": 0,
+        "superglue": true,
+      })
     })
 
     it('returns false when action is none', () => {

@@ -98,6 +98,26 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   const onHistoryChange = ({ location, action }: Update): void => {
     const state = location.state as HistoryState
 
+    if (!state && location.hash !== '' && action === 'POP') {
+      const nextPageKey = urlToPageKey(location.pathname + location.search)
+      const containsKey = !!pages[nextPageKey]
+      if (containsKey) {
+        history.replace(
+          {
+            pathname: location.pathname,
+            search: location.search,
+            hash: location.hash,
+          },
+          {
+            pageKey: nextPageKey,
+            superglue: true,
+            posY: window.pageYOffset,
+            posX: window.pageXOffset,
+          }
+        )
+      }
+    }
+
     if (state && 'superglue' in state) {
       dispatch(
         historyChange({

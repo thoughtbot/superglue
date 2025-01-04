@@ -1,6 +1,7 @@
 require "superglue/helpers"
 require "superglue/redirection"
 require "props_template"
+require "form_props"
 
 module Superglue
   module Controller

@@ -98,10 +98,6 @@ nav:
     - Demo: demo.md
     - Configuration: configuration.md
 
-    - Concepts:
-      - Page response: page-response.md
-      - Store shape: redux-state-shape.md
-
     - Navigation:
       - The return of Rails UJS: ujs.md
       - Advanced requests: requests.md
@@ -111,12 +107,19 @@ nav:
       - Cross-cutting concerns: cross-cutting-concerns.md
       - Deferments: deferments.md
 
+    - Concepts:
+      - Page response: page-response.md
+      - Store shape: redux-state-shape.md
+
   - Recipes:
     - Modals: recipes/modals.md
     - Server Side Rendering: recipes/ssr.md
-    - Easy SPA Navigation: recipes/spa-pagination.md
+    - Paginate without reloading: recipes/spa-pagination.md
+    - Infinite Scroll: recipes/infinite-scroll.md
     - Progress Bars: recipes/progress-bar.md
     - Turbo Nav: recipes/turbo.md
+    - Vite: recipes/vite.md
+    - Shopping cart: recipes/shopping-cart.md
 
   - Reference:
     - Rails Utilities: rails-utils.md

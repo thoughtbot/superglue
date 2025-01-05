@@ -14,7 +14,7 @@ A lightweight hook that grabs the superglue state from the store.
 
 #### Defined in
 
-[lib/hooks/index.ts:7](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/hooks/index.ts#L7)
+[lib/hooks/index.ts:7](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/hooks/index.ts#L7)
 
 ***
 
@@ -38,4 +38,4 @@ A lightweight hook that grabs the current page's content from the store.
 
 #### Defined in
 
-[lib/hooks/index.ts:14](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/hooks/index.ts#L14)
+[lib/hooks/index.ts:14](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/hooks/index.ts#L14)

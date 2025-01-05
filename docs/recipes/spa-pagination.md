@@ -1,6 +1,7 @@
-# Easy SPA Pagination
+# SPA (Single Page Application) Pagination
 
-Pagination without reload is easy to add.
+In this recipe, we'll be adding pagination that works without reloading the
+page.
 
 ## Starting point
 
@@ -16,11 +17,16 @@ Lets pretend that we're already able to see a list of posts.
     ```
 
 === "`index.json.props`"
+    !!! info
+        In this example, we have a `sleep` that we will optimize
+        for later
+
     ```ruby
     # app/views/posts/index.json.props
 
-    json.rightNav do
-      ...
+    json.header do
+      json.name "bob"
+      sleep 2
     end
 
     json.posts do
@@ -35,20 +41,32 @@ Lets pretend that we're already able to see a list of posts.
     ```
 
 === "`index.js`"
+    !!! info
+        Let's assume `Header` is a simple component that exist.
+
     ```js
-    # app/views/posts/index.js
+    // app/views/posts/index.js
 
     import React from 'react'
-    import PostList from './PostList'
-    import RightNav from './RightNav'
+    import {useContent} from '@thoughtbot/superglue'
+    import Header from './Header'
 
-    export default PostIndex = ({
-      posts,
-      rightNav
-    }) => {
+    export default PostIndex = () => {
+      const {
+        posts,
+        header
+      } = useContent()
+
       return (
         <>
-          <RightNav {...rightNav}>
+          <Header {...header}/>
+          <div>
+            {
+              posts.list.map(({id, body}) => (
+                <p key={id}>{body}</p>
+              ))
+            }
+          </div>
           <PostList items={posts}>
         </>
       )
@@ -58,16 +76,19 @@ Lets pretend that we're already able to see a list of posts.
 
 ## Add gems
 
-Lets also add Kaminari.
+Lets also add Kaminari to your gem file
 
 ```terminal
-bundle install kaminari
+gem 'kaminari'
 ```
+
+and `bundle`
 
 ## Add pagination
 
 The changes here are almost same with the `.erb` counterpart. We're using
-`path_to_next_page` and `path_to_prev_page` which come with Kaminari.
+`path_to_next_page` and `path_to_prev_page` which come with Kaminari, both
+methods return `nil` if there are no subsequent pages.
 
 !!! info
     Some [helpers] like `paginate` output HTML instead of
@@ -92,10 +113,6 @@ The changes here are almost same with the `.erb` counterpart. We're using
     ```diff
     # app/views/posts/index.json.props
 
-    json.rightNav do
-      ...
-    end
-
     json.posts do
       json.list do
         json.array! @posts do |post|
@@ -111,35 +128,38 @@ The changes here are almost same with the `.erb` counterpart. We're using
     ```
 
 === "`index.js`"
-    ```diff
-    # app/views/posts/index.js
-    import React from 'react'
-    import PostList from './PostList'
-    import RightNav from './RightNav'
 
-    export default PostIndex = ({
-      posts,
-      rightNav
-    +  pathToNextPage,
-    +  pathToPrevPage
-    }) => {
+
+    ```diff
+    // app/views/posts/index.js
+
+    import React from 'react'
+    import {useContent} from '@thoughtbot/superglue'
+    import Header from './Header'
+
+    export default PostIndex = () => {
+      const {
+        posts,
+        header,
+    +   pathToNextPage,
+    +   pathToPrevPage
+      } = useContent()
+
       return (
         <>
-          <PostList items={posts}>
-    +     <a
-    +       href={pathToNextPage}
-    +     >
-    +       Next Page
-    +     </a>
-    +     <a
-    +       href={pathToPrevPage}
-    +     >
-    +       Prev Page
-    +     </a>
+          <Header {...header}/>
+          <div>
+            {
+              posts.list.map(({id, body}) => (
+                <p key={id}>{body}</p>
+              ))
+            }
+          </div>
+    +     {pathToPrevPage && <a href={pathToPrevPage}>Prev Page</a>}
+    +     {pathToNextPage && <a href={pathToNextPage}>Next Page</a>}
         </>
       )
     }
-
     ```
 
 ## Smooth navigation
@@ -147,53 +167,54 @@ The changes here are almost same with the `.erb` counterpart. We're using
 The above adds pagination, but each click on **Next Page** is
 a new page load.
 
-Lets navigate without a reload. In this example, we're using `data-sg-remote`,
+Lets navigate without a reload. In this example, we're using the [UJS] helper `data-sg-visit`,
 which would set the current page's state to the response without changing the URL.
 
 **`index.js`**
 
 ```diff
-# app/views/posts/index.js
-import React from 'react'
-import PostList from './PostList'
-import RightNav from './RightNav'
+// app/views/posts/index.js
 
-export default PostIndex = ({
-  posts,
-  rightNav,
-  pathToNextPage,
-  pathToPrevPage
-}) => {
+import React from 'react'
+import {useContent} from '@thoughtbot/superglue'
+import PostList from './PostList'
+import Header from './Header'
+
+export default PostIndex = () => {
+  const {
+    posts,
+    header,
+    pathToNextPage,
+    pathToPrevPage
+  } = useContent()
+
   return (
     <>
-      <PostList items={posts}>
-      <a
-        href={pathToNextPage}
-+       data-sg-remote
-      >
-        Next Page
-      </a>
-      <a
-        href={pathToPrevPage}
-+       data-sg-remote
-      >
-        Prev Page
-      </a>
+      <Header {...header}/>
+      <div>
+        {
+          posts.list.map(({id, body}) => (
+            <p key={id}>{body}</p>
+          ))
+        }
+      </div>
+-     {pathToPrevPage && <a href={pathToPrevPage}>Prev Page</a>}
++     {pathToPrevPage && <a href={pathToPrevPage} data-sg-visit>Prev Page</a>}
+-     {pathToNextPage && <a href={pathToNextPage}>Next Page</a>}
++     {pathToNextPage && <a href={pathToNextPage} data-sg-visit>Next Page</a>}
     </>
   )
 }
-
 ```
 
 ## Optimize!
 
-Lets skip `data.rightNav` when navigating and dig for `data.posts`. For the
-user, only the posts lists change, but the rightNav stays the same.
+Lets skip `data.header` when navigating and dig for `data.posts`. For the
+user, only the posts lists change, but the header stays the same.
 
 !!! info
     In effect, this achieves the same functionality as [Turbo Frames], but
-    Superglue leans more on Unobtrusive Javascript and a simple `props_at` for
-    better ergonomics.
+    Superglue leans more on Unobtrusive Javascript for better ergonomics.
 
 [Turbo Frames]: https://turbo.hotwired.dev/handbook/frames
 
@@ -207,7 +228,7 @@ the `json.posts` while skipping other content on that page.
 ```diff
 # app/views/posts/index.json.props
 
-json.rightNav do
+json.header do
   ...
 end
 
@@ -227,4 +248,9 @@ json.posts do
 end
 ```
 
+<div class="grid cards" markdown>
+  -  [:octicons-arrow-right-24: Interested in infinite-scroll?](./infinite-scroll.md)
+     for `visit`
+</div>
 
+[UJS]: ../ujs.md

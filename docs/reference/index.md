@@ -288,6 +288,12 @@ Re-exports [BuildStore](types.md#buildstore)
 
 Re-exports [BuildVisitAndRemote](types.md#buildvisitandremote)
 
+<a id="setupprops" name="setupprops"></a>
+
+### SetupProps
+
+Re-exports [SetupProps](types.md#setupprops)
+
 <a id="applicationprops" name="applicationprops"></a>
 
 ### ApplicationProps
@@ -346,7 +352,7 @@ Re-exports [ApplicationVisit](types.requests.md#applicationvisit)
 
 #### Defined in
 
-[lib/actions.ts:12](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L12)
+[lib/actions.ts:12](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L12)
 
 ***
 
@@ -358,7 +364,7 @@ Re-exports [ApplicationVisit](types.requests.md#applicationvisit)
 
 #### Defined in
 
-[lib/actions.ts:13](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L13)
+[lib/actions.ts:13](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L13)
 
 ***
 
@@ -372,12 +378,12 @@ Re-exports [ApplicationVisit](types.requests.md#applicationvisit)
 
 | Name | Type | Default value | Defined in |
 | ------ | ------ | ------ | ------ |
-| `superglue` | (`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`) => [`SuperglueState`](types.md#supergluestate) | superglueReducer | [lib/reducers/index.ts:229](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/reducers/index.ts#L229) |
-| `pages` | (`state`: [`AllPages`](types.md#allpagest), `action`: `Action`) => [`AllPages`](types.md#allpagest) | pageReducer | [lib/reducers/index.ts:230](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/reducers/index.ts#L230) |
+| `superglue` | (`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`) => [`SuperglueState`](types.md#supergluestate) | superglueReducer | [lib/reducers/index.ts:236](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/reducers/index.ts#L236) |
+| `pages` | (`state`: [`AllPages`](types.md#allpagest), `action`: `Action`) => [`AllPages`](types.md#allpagest) | pageReducer | [lib/reducers/index.ts:237](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/reducers/index.ts#L237) |
 
 #### Defined in
 
-[lib/reducers/index.ts:228](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/reducers/index.ts#L228)
+[lib/reducers/index.ts:235](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/reducers/index.ts#L235)
 
 ## Functions
 
@@ -406,7 +412,7 @@ websocket, you can use this function to save the payload.
 
 #### Defined in
 
-[lib/action\_creators/index.ts:74](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/action_creators/index.ts#L74)
+[lib/action\_creators/index.ts:74](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/action_creators/index.ts#L74)
 
 ***
 
@@ -432,7 +438,7 @@ method used) a `meta`- and `error` property of types `M` and `E` respectively.
 
 #### Defined in
 
-[lib/actions.ts:15](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L15)
+[lib/actions.ts:15](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L15)
 
 ***
 
@@ -475,7 +481,7 @@ export const exampleSlice = createSlice({
 
 #### Defined in
 
-[lib/actions.ts:64](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L64)
+[lib/actions.ts:64](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L64)
 
 ***
 
@@ -512,7 +518,7 @@ navigateTo(targetKey)
 
 #### Defined in
 
-[lib/actions.ts:86](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L86)
+[lib/actions.ts:86](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L86)
 
 ***
 
@@ -543,7 +549,7 @@ dispatch(removePage({ pageKey: '/delete_me_please"}))
 
 #### Defined in
 
-[lib/actions.ts:99](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L99)
+[lib/actions.ts:99](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L99)
 
 ***
 
@@ -579,7 +585,7 @@ export const exampleSlice = createSlice({
 
 #### Defined in
 
-[lib/actions.ts:117](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L117)
+[lib/actions.ts:117](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L117)
 
 ***
 
@@ -616,7 +622,7 @@ export const exampleSlice = createSlice({
 
 #### Defined in
 
-[lib/actions.ts:135](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L135)
+[lib/actions.ts:135](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L135)
 
 ***
 
@@ -653,7 +659,7 @@ export const exampleSlice = createSlice({
 
 #### Defined in
 
-[lib/actions.ts:154](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/actions.ts#L154)
+[lib/actions.ts:154](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/actions.ts#L154)
 
 ***
 
@@ -677,7 +683,40 @@ export const exampleSlice = createSlice({
 
 #### Defined in
 
-[lib/index.tsx:50](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/index.tsx#L50)
+[lib/index.tsx:51](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L51)
+
+***
+
+<a id="setup" name="setup"></a>
+
+### setup()
+
+> **setup**(`__namedParameters`: [`SetupProps`](types.md#setupprops)): \{`visit`: [`ApplicationVisit`](types.requests.md#applicationvisit);`remote`: [`ApplicationRemote`](types.requests.md#applicationremote);`nextHistory`: `History`;`initialPageKey`: `string`;`ujs`: `handlers`; \}
+
+This is the setup function that the Application calls. Use this function if
+you like to build your own Application component.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | [`SetupProps`](types.md#setupprops) |
+
+#### Returns
+
+\{`visit`: [`ApplicationVisit`](types.requests.md#applicationvisit);`remote`: [`ApplicationRemote`](types.requests.md#applicationremote);`nextHistory`: `History`;`initialPageKey`: `string`;`ujs`: `handlers`; \}
+
+| Name | Type | Default value | Defined in |
+| ------ | ------ | ------ | ------ |
+| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [lib/index.tsx:99](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L99) |
+| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [lib/index.tsx:100](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L100) |
+| `nextHistory` | `History` | - | [lib/index.tsx:101](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L101) |
+| `initialPageKey` | `string` | - | [lib/index.tsx:102](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L102) |
+| `ujs` | [`Handlers`](types.md#handlers) | handlers | [lib/index.tsx:103](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L103) |
+
+#### Defined in
+
+[lib/index.tsx:73](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L73)
 
 ***
 
@@ -705,7 +744,7 @@ use the exported methods used by this component (`start` and `ujsHandler`).
 
 #### Defined in
 
-[lib/index.tsx:81](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/index.tsx#L81)
+[lib/index.tsx:114](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/index.tsx#L114)
 
 ***
 
@@ -730,7 +769,7 @@ Retrieves data from a JSON object using a [Keypath](types.md#keypath)
 
 #### Defined in
 
-[lib/utils/immutability.ts:22](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/utils/immutability.ts#L22)
+[lib/utils/immutability.ts:22](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/utils/immutability.ts#L22)
 
 ***
 
@@ -754,4 +793,4 @@ Converts a url to a PageKey.
 
 #### Defined in
 
-[lib/utils/url.ts:64](https://github.com/thoughtbot/superglue/blob/596d8e2334d11fa65762247bc4e1bdc41ab87e3e/superglue/lib/utils/url.ts#L64)
+[lib/utils/url.ts:64](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/utils/url.ts#L64)

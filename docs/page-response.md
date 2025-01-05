@@ -23,10 +23,7 @@ used Superglue's generators, this would be all set for you in
 ```
 
 ### `data`
-Passed to your page component as its props. In a Superglue application, this would
-be the contents of your templates, e.g., `index.json.props`. Note that `csrfToken`, 
-`fragments`, and `pageKey` will be merged with your props. `ownProps` are also 
-merged when [navigating](functions-passed.md#navigateto)
+Your page's content. This can be accessed using the 
 
 ### `componentIdentifier`
 A `string` to instruct Superglue which component to render. The generated

@@ -407,6 +407,7 @@ export type NavigateTo = (
  * @prop pageKey The pagekey that's being used to render the current page
  * component. Useful when used in combination with {@link Remote} to create
  * requests that target the current page.
+ * @prop search The current pageKey (current url) query params as an object.
  * @interface
  */
 export type NavigationContextProps = {

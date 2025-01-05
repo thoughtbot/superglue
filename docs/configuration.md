@@ -1,11 +1,10 @@
 You've installed Superglue and now you're ready to configure your app.
-Chances are, the first thing you'll want to add a progress bar to your app.
 
 ## `application_visit.js`
 
 !!! tip
-    If you want a progress bar, this is likely the first thing you'll
-    want to configure after installation.
+    If you want a [progress bar], this is the first thing you'll want to
+    configure after installation.
 
 This file contains the factory that builds the [remote] and [visit]
 function that will be passed to your page components and used by the
@@ -28,8 +27,7 @@ when the internet is down.
     Stop by the [tutorial] to learn how to work with this file.
 
     **Vite Users** This step can be entirely optional if you're using Vite. See
-    the recipie for more information.
-
+    the [recipe](recipe/vite.md) for more information.
 
 This file exports a mapping between a `componentIdentifier` to an imported page
 component. This gets used in your `application.js` so that superglue knows
@@ -46,17 +44,6 @@ const pageIdentifierToPageComponent = {
 }
 ```
 
-It's not uncommon to have multiple identifiers pointing to the same component.
-This can be used when building `index` pages use modals instead of a new page for
-`show`.
-
-```js
-const pageIdentifierToPageComponent = {
-  'posts/index': PostsIndex,
-  'posts/show': PostsIndex,
-}
-```
-
 [tutorial]: tutorial.md
 
 ## `application.js`
@@ -65,6 +52,8 @@ This is the entry point of your application and uses Superglue's [Application]
 component. There's nothing to do here, but if you need finer control of
 how redux is setup, you can build your own Application using the [source] as
 inspiration.
+
+[source]: https://github.com/thoughtbot/superglue/blob/main/superglue/lib/index.tsx#L114
 
 <div class="grid cards" markdown>
   -  [:octicons-arrow-right-24: See complete reference](reference/index.md#application)

@@ -44,13 +44,13 @@ app/
 |-- controllers/
 |-- views/
 |   |-- dashboard/
-|   |   |-- index.js # The React page component
+|   |   |-- index.jsx # The React page component
 |   |   |-- index.json.props # The json for the page component
 |   |   |-- index.html.erb
 ```
 
 ### PropsTemplate
-Powering the JSON responses is PropsTemplate, a digable JSON templating DSL
+Powering the JSON responses is PropsTemplate, a diggable JSON templating DSL
 inspired by JBuilder. With PropsTemplate you can specify a path of the node you
 want, and PropsTemplate will walk the tree to it, skipping the execution of nodes
 that don't match the keypath.
@@ -85,14 +85,14 @@ new JS code, etc.
 With Superglue, this can be done with a simple `onChange`
 
 ```js
+import {NavigationContext} from '@thoughtbot/superglue'
+
+const {remote} = useContext(NavigationContext)
+
 const onChange = (e) => (
   remote(`/dashboard?qry=${e.target.value}&props_at=data.header.search`)}
 )
 ```
-
-?> `remote` and `visit` is a thunk [passed] to every page component.
-
-  [passed]: ./navigation.md
 
 With `props_at`, the above will make a request to `/dashboard?qry=haircut`,
 dig your template for the `data.header.search` node, return it in the response,

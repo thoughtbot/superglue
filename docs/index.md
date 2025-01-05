@@ -83,13 +83,12 @@ end
 ```
 
 Familiar Rails conveniences include form_props (a fork of `form_with` made for React),
-flash messages integrated as a [Redux slice], and [Unobtrusive Javascript]
-(UJS) helpers.
+flash messages integrated as a Redux [slice], and [Unobtrusive Javascript](UJS) helpers.
 
 ### It’s React
 
 But there are no APIs! The above is injected as a script tag in the DOM so everything
-loads in the initial request. Its added to [your Redux state] and passed to
+loads in the initial request. Its added to your [Redux state] and passed to
 the page component in a hook, for example:
 
 ```js
@@ -140,15 +139,19 @@ your React components to SPA transition to the next page.
 <a href=”/next_page” data-sg-visit> Next Page </a>
 ```
 
-### It’s more!
+## A thoughtful pairing
 
-Being able to easily use React in place of ERB isn't enough. Superglue’s secret
-sauce is that your `foobar.json.props` is diggable; making any part of your page
-dynamic by using a query string. It’s a simpler approach to Turbo Frames and
-Turbo Stream.
+Superglue is about thoughfully pairing React and Rails that brings out the best
+of both frameworks.
+
+### The return of UJS and diggable templates
+
+Superglue’s secret sauce is that your `foobar.json.props` is diggable; making
+any part of your page dynamic by using a query string. It’s a simpler approach
+to Turbo Frames and Turbo Stream.
 
 Need to reload a part of the page? Just add a query parameter and combine with
-the [UJS helper] attribute `data-sg-remote`:
+the [UJS] helper attribute `data-sg-remote`:
 
 ```jsx
 <Header {...header}>
@@ -168,7 +171,7 @@ This works well for [modals], chat, streaming, and [more]!
 [secret sauce]: digging.md
 [UJS]: ujs.md
 
-## One-stop shop
+### One-stop shop
 
 We know first hand how complex React can be, but we don't shy away from
 complexity. We want to make things better for everyone and to that end, we have
@@ -192,7 +195,7 @@ your team.
 
     Integration helpers, and generators for installation and scaffolding.
 
-    [:octicons-arrow-right-24: SuperglueJs](https://github.com/thoughtbot/superglue/tree/main/superglue_rails)
+    [:octicons-arrow-right-24: superglue_rails](https://github.com/thoughtbot/superglue/tree/main/superglue_rails)
 
 -   __PropsTemplate__
 
@@ -230,3 +233,9 @@ your team.
     [:octicons-arrow-right-24: candy_wrapper](https://github.com/thoughtbot/candy_wrapper)
 
 </div>
+
+
+[Redux state]: ./redux-state-shape.md
+[modals]: ./recipes/modals.md
+[more]: ./recipes
+[slice]: ./cross-cutting-concerns.md#slices

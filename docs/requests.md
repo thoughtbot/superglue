@@ -1,9 +1,17 @@
 # Requests
 
-When you need more functionality than what UJS offers, Superglue comes with two
-functions built around `fetch`, `visit` and `remote`. These are wrapped with
-your own implementation in [application_visit.js] and can be accessed via the
-NavigationContext.
+If you prefer to navigate using Javascript, or need more functionality than what UJS
+offers, Superglue comes with two functions built around `fetch`, `visit` and
+`remote`. These are wrapped with your own implementation in
+[application_visit.js] and can be accessed via the [NavigationContext].
+
+[NavigationContext]: ../reference/types/#navigationcontextprops
+
+
+!!! tip
+    Superglue does not come with a `<Link>` component. Instead we encourage you to
+    build one that is unique to your projects needs using the functions provided by
+    the [NavigationContext].
 
 ```js
 import { NavigationContext } from '@thoughtbot/superglue';
@@ -106,16 +114,14 @@ sequenceDiagram
      for `remote`
 </div>
 
+<div class="grid cards" markdown>
+  -  [:octicons-arrow-right-24: See note](./ujs.md#data-sg-remote)
+     for differences between `remote` and `data-sg-remote`
+</div>
 
 !!! tip "Customizations"
     You can modify the behavior of `visit` and `remote` functions globally from
     `application_visit.js`. If you need a global customization, e.g, progress
     bars, you can add them there.
 
-## Relationship to UJS
 
-The `visit` and `remote` thunks are called by the UJS implementation.
-
-Only `data-sg-remote` has a slightly modified behavior. Unlike `remote`,
-`data-sg-remote` does not derive the `pageKey`. Instead it saves or grafts all
-page responses to current page.

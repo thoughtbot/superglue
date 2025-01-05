@@ -40,7 +40,7 @@ controller and the `page_to_page_mapping.js` the same way.
         Similarly, we tie the `componentIdentifier` to the same page component.
 
         **Vite Users** This step can be entirely optional if you're using Vite. See
-        the recipie for more information.
+        the [recipe](recipe/vite.md) for more information.
 
     ```js
     import PostIndex from '../views/posts/index'

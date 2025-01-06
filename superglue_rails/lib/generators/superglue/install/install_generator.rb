@@ -32,7 +32,7 @@ module Superglue
         add_member_methods
 
         say "Installing Superglue and friends"
-        run "yarn add history react react-dom @reduxjs/toolkit react-redux @thoughtbot/superglue --save"
+        run "yarn add react react-dom @reduxjs/toolkit react-redux @thoughtbot/superglue"
 
         if use_typescript
           run "yarn add -D @types/react-dom @types/react @types/node @thoughtbot/candy_wrapper"

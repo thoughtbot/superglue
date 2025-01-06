@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.0
+Release 1.0.0. Significant backward breaking changes from 0.54.0. To migrate:
+
+1. Run `rails g superglue:install` and manage the diffs. Pay note to 
+- The Application class. This has been converted to a functional component.
+Its no longer necessary to pass a store factory (buildStore) to the application.
+- store.js no longer requires a factory function.
+2. content is no longer passed as props to the page components. To migrate, use
+the `useContent` hook.
+3. `visit` and `remote` are also no longer passed in the the page component. Instead
+import the `NavigationContext` and combine it with React's `useContext`. See newly
+updated documentation for more information.
+4. `navigateTo` no longer accepts a `ownProps` hash.
+5. `data-sg-placeholder` has been removed.
+6. `remote` will, by default, try to determine the pageKey from the response first, and will
+no longer use the current pageKey. To migrate, be explicit about the pageKey and pass 
+accordingly to `remote`.
+
+
 ## 0.54.0
 Migrated to typescript and mkdocs. There are no backward incompatible
 changse. This is may be the last release before 1.0.

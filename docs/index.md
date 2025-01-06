@@ -6,11 +6,6 @@ experience that is on par with Hotwire, Stimulus, and Turbo. Confidently use
 Rails routes, controllers, views as you normally would in a multi-page
 application and integrate with React's vast ecosystem.
 
-
-!!! warning
-    Superglue is in active development as it approaches 1.0.  While its
-    interface and behavior are stablizing, changes are expected.
-
 ## Who is it for?
 
 Superglue is built from the ground up for

@@ -8,13 +8,13 @@ In your `application_visit.js` file:
 
 ```diff
 
-import { urlToPageKey } from '@thoughtbot/superglue/utils/url'
++ import { urlToPageKey } from '@thoughtbot/superglue'
 
 const appVisit = (...args) => {
 
   const pageKey = urlToPageKey(args[0])
 + // attempt to navigate first
-+ this.ref.current.navigateTo(pageKey)
++ ref.current?.navigateTo(pageKey)
 
   return store
     .dispatch(visit(...args))

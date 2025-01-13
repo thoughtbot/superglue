@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "baseUrl": ".", // Usually the root of your project
-    "paths": {
-      "@javascript/*": ["app/javascript/*"],
-      "@views/*": ["app/views/*"]
-    }
-  }
-}

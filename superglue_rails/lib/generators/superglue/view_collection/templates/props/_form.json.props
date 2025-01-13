@@ -1,6 +1,0 @@
-form_props(model: @<%= model_resource_name %>) do |f|
-<%- attributes.each do |attr| -%>
-  f.<%= attr.field_type %>(:<%= attr.column_name %>)
-<%- end -%>
-  f.submit
-end

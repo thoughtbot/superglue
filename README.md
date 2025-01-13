@@ -8,7 +8,6 @@ Use classic Rails to build rich React Redux applications with **NO APIs** and
 **NO client-side routing**.
 
 [![Test superglue_js](https://github.com/thoughtbot/superglue/actions/workflows/build_js.yml/badge.svg)](https://github.com/thoughtbot/superglue/actions/workflows/build_js.yml)
-[![Test superglue_rails](https://github.com/thoughtbot/superglue/actions/workflows/build_rails.yml/badge.svg)](https://github.com/thoughtbot/superglue/actions/workflows/build_rails.yml)
 
 Superglue makes React and Redux as productive as Hotwire, Turbo and Stimulus.
 Its inspired by Turbolinks and designed to feel like a natural extension of

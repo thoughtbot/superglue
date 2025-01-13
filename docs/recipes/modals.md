@@ -11,8 +11,8 @@ chooses instead to directly visit `/posts/new`.
 
 ## The setup
 
-Arriving at both urls results in a seeing list of posts. Lets set up the
-controller and the `page_to_page_mapping.js` the same way.
+Both urls render a list of posts. Lets set up the controller and the
+`page_to_page_mapping.js` the same way.
 
 
 === "`posts_controller.rb`"

@@ -102,6 +102,7 @@ nav:
     - Navigation:
       - The return of Rails UJS: ujs.md
       - Advanced requests: requests.md
+      - navigateTo: navigation-context.md
 
     - Partial updates:
       - Digging: digging.md
@@ -124,11 +125,9 @@ nav:
 
   - Reference:
     - Rails Utilities: rails-utils.md
-    - Page utilities: functions-passed.md
     - Hooks: reference/hooks.md
     - Navigation: reference/components.Navigation.md
     - Superglue: reference/index.md
     - Types: reference/types.md
     - Requests: reference/types.requests.md
     - Actions: reference/types.actions.md
-

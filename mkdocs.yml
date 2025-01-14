@@ -12,6 +12,7 @@ copyright: Copyright &copy; 2024 thoughtbot
 
 theme:
   name: material
+  logo: images/s-color.svg
   features:
     - header.autohide
     - navigation.footer

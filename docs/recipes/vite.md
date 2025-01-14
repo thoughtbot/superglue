@@ -43,7 +43,7 @@ Make sure you're using `vite_javascript_tag` in your layout,
 
 And finally, one of the more manual process of using superglue is the [manual build]
 of your `page_to_page_mapping.js` file. We can improve the developer experience by 
-removing that step by by using this snippet:
+removing that step by using this snippet:
 
 [manual build]: ../configuration
 

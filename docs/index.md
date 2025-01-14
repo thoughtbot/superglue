@@ -1,8 +1,8 @@
 # Overview
 
-Superglue is a library that thoughtfully pairs Rails and React. Its built with
-a laser focus on The Rails Way and aims to provide a simple developer
-experience that is on par with Hotwire, Stimulus, and Turbo. Confidently use
+Superglue is a library that thoughtfully pairs Rails and React. Its
+built with a laser focus on The Rails Way and aims to provide a simple
+developer experience on par with Hotwire, Stimulus, and Turbo. Confidently use
 Rails routes, controllers, views as you normally would in a multi-page
 application and integrate with React's vast ecosystem.
 

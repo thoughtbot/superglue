@@ -22,7 +22,7 @@ and name are likely to change drastically before a major version release.
 
 ### No APIs
 
-Instead of APIs, Superglue leans on Rail's ability to respond to different
+Instead of APIs, Superglue leans on Rails' ability to respond to different
 [mime types](https://apidock.com/rails/ActionController/MimeResponds/InstanceMethods/respond_to)
 on the same route. In a Superglue application, if you direct your browser to
 `/dashboard.html`, you would see the HTML version of the content, and if you
@@ -108,7 +108,7 @@ See the [documentation for server-side rendering][ssr docs].
 
 ## Documentation
 
-Documentation is hosted on [Github pages](https://thoughtbot.github.io/superglue).
+Documentation is hosted on [GitHub pages](https://thoughtbot.github.io/superglue).
 
 ## Contributing
 

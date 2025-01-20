@@ -320,12 +320,14 @@ props_template to skip over the block.
 
     ```js
     import React from 'react'
+    import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetShow({
-      body,
-      footer,
-      loadGreetPath
-    }) {
+    export default function GreetShow() {
+      const {
+        body,
+        footer,
+        loadGreetPath
+      } = useContent()
       const {greet} = body
 
       return (

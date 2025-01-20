@@ -121,7 +121,7 @@ with which response by modifying `app/javascript/page_to_page_mapping.js`.
     gets rendered. In our case: http://localhost:3000/greet.json
 
     **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](recipe/vite.md) for more information.
+    the [recipe](/superglue/recipes/vite/) for more information.
 
 === "1. Example `greet.json`"
     The layout for `show.json.props` is located at `app/views/layouts/application.json.props`. It

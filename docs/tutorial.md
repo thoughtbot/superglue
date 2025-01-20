@@ -65,11 +65,14 @@ Click the tabs below to see the contents:
 
     ```js
     import React from 'react'
+    import { useContent } from '@thoughtbot/superglue';
 
-    export default function GreetShow({
-      body,
-      footer
-    }) {
+    export default function GreetShow() {
+      const {
+        body,
+        footer
+      } = useContent();
+  
       const {greet} = body
 
       return (

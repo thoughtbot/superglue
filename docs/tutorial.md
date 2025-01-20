@@ -73,8 +73,10 @@ Click the tabs below to see the contents:
       const {greet} = body
 
       return (
-        <h1>{greet}</h1>
-        <span>{footer}</span>
+        <>
+          <h1>{greet}</h1>
+          <span>{footer}</span>
+        </>
       )
     }
     ```
@@ -331,9 +333,11 @@ props_template to skip over the block.
       const {greet} = body
 
       return (
-        <h1>{greet || "Waiting for greet"}</h1>
-        <a href={loadGreetPath} data-sg-remote>Load Greet</a>
-        <span>{footer}</span>
+        <>
+          <h1>{greet || "Waiting for greet"}</h1>
+          <a href={loadGreetPath} data-sg-remote>Load Greet</a>
+          <span>{footer}</span>
+        </>
       )
     }
     ```
@@ -376,9 +380,11 @@ add a link that will dig for the missing content to replace "Waiting for greet".
       const { greet } = body
 
       return (
-        <h1>{greet || "Waiting for greet"}</h1>
-        <a href={loadGreetPath} data-sg-remote>Greet!</a>
-        <span>{footer}</span>
+        <>
+          <h1>{greet || "Waiting for greet"}</h1>
+          <a href={loadGreetPath} data-sg-remote>Greet!</a>
+          <span>{footer}</span>
+        </>
       )
     }
     ```
@@ -406,9 +412,11 @@ export default function GreetShow() {
   }
 
   return (
-    <h1>{greet || "Waiting for greet"}</h1>
-    <a href={loadGreetPath} onClick={handleClick}>Greet!</a>
-    <span>{footer}</span>
+    <>
+      <h1>{greet || "Waiting for greet"}</h1>
+      <a href={loadGreetPath} onClick={handleClick}>Greet!</a>
+      <span>{footer}</span>
+    </>
   )
 }
 ```
@@ -468,8 +476,10 @@ above without a button.
       const { greet } = body
 
       return (
-        <h1>{greet}</h1>
-        <span>{footer}</span>
+        <>
+          <h1>{greet}</h1>
+          <span>{footer}</span>
+        </>
       )
     }
     ```

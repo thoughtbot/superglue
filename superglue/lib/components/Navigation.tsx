@@ -1,12 +1,13 @@
 import React, {
   createContext,
   useEffect,
+  useLayoutEffect,
   forwardRef,
   useImperativeHandle,
   ForwardedRef,
 } from 'react'
 import { urlToPageKey, pathWithoutBZParams } from '../utils'
-import { removePage, historyChange, setActivePage } from '../actions'
+import { removePage, setActivePage } from '../actions'
 import {
   HistoryState,
   RootState,
@@ -15,7 +16,6 @@ import {
   NavigationProviderProps,
   AllPages,
   SuperglueState,
-  PageKey,
 } from '../types'
 import { Update } from 'history'
 import { useDispatch, useSelector, useStore } from 'react-redux'
@@ -53,11 +53,22 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   const superglue = useSelector<RootState, SuperglueState>(
     (state) => state.superglue
   )
+  const currentPageKey = useSelector<RootState, string>(
+    (state) => state.superglue.currentPageKey
+  )
   const store = useStore()
 
   useEffect(() => {
     return history.listen(onHistoryChange)
   }, [])
+
+  useLayoutEffect(() => {
+    const state = history.location.state as HistoryState
+    if (state && 'superglue' in state) {
+      const { posX, posY } = state
+      setWindowScroll(posX, posY)
+    }
+  }, [currentPageKey])
 
   useImperativeHandle(
     ref,
@@ -68,32 +79,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     },
     []
   )
-
-  const visitAndRestore = (pageKey: PageKey, posX: number, posY: number) => {
-    // When the application visit gets called with revisit: true
-    // -  In cases where the response was not redirected, the calculated
-    //    navigationAction is set to 'none' (meaning `navigateTo` immediately returned `false`)
-    //    and so we have restore scroll and the set the active page
-    // -  In cases where the response was redirected, the calculated
-    //    navigationAction is set to 'replace', and is handled gracefully by navigateTo,
-    //    before this method gets called.
-    // That's why we're only concerned with the first case, but we gracefully warn
-    // if the application visit did not return the meta object like the dev was supposed to.
-    return visit(pageKey, { revisit: true }).then((meta) => {
-      if (meta) {
-        if (meta.navigationAction === 'none') {
-          dispatch(setActivePage({ pageKey }))
-          setWindowScroll(posX, posY)
-        }
-      } else {
-        console.warn(
-          `scoll restoration was skipped. Your visit's then funtion
-          should return the meta object it recieved if you want your
-          application to restore the page's previous scroll.`
-        )
-      }
-    })
-  }
 
   const onHistoryChange = ({ location, action }: Update): void => {
     const state = location.state as HistoryState
@@ -119,38 +104,62 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
 
     if (state && 'superglue' in state) {
-      dispatch(
-        historyChange({
-          pageKey: state.pageKey,
-        })
-      )
+      const prevPageKey = superglue.currentPageKey
 
-      if (action !== 'POP') {
-        return
+      if (action === 'PUSH') {
+        const { pageKey } = state
+        dispatch(setActivePage({ pageKey }))
       }
 
-      const { pageKey, posX, posY } = state
-      const containsKey = !!pages[pageKey]
-
-      if (containsKey) {
-        const { restoreStrategy } = pages[pageKey]
-
-        switch (restoreStrategy) {
-          case 'fromCacheOnly':
-            dispatch(setActivePage({ pageKey }))
-            setWindowScroll(posX, posY)
-            break
-          case 'fromCacheAndRevisitInBackground':
-            dispatch(setActivePage({ pageKey }))
-            setWindowScroll(posX, posY)
-            visit(pageKey, { revisit: true })
-            break
-          case 'revisitOnly':
-          default:
-            visitAndRestore(pageKey, posX, posY)
+      if (action === 'REPLACE') {
+        const { pageKey } = state
+        if (prevPageKey && prevPageKey !== pageKey) {
+          dispatch(removePage({ pageKey: prevPageKey }))
+          dispatch(setActivePage({ pageKey }))
         }
-      } else {
-        visitAndRestore(pageKey, posX, posY)
+      }
+
+      if (action === 'POP') {
+        const { pageKey } = state
+        const containsKey = !!pages[pageKey]
+
+        if (containsKey) {
+          const { restoreStrategy } = pages[pageKey]
+
+          switch (restoreStrategy) {
+            case 'fromCacheOnly':
+              dispatch(setActivePage({ pageKey }))
+              break
+            case 'fromCacheAndRevisitInBackground':
+              dispatch(setActivePage({ pageKey }))
+              visit(pageKey, { revisit: true })
+              break
+            case 'revisitOnly':
+            default:
+              visit(pageKey, { revisit: true }).then(() => {
+                const noNav =
+                  prevPageKey === store.getState().superglue.currentPageKey
+                if (noNav) {
+                  // When "POP'ed", revisiting (using revisit: true) a page can result in
+                  // a redirect, or a render of the same page.
+                  //
+                  // When its a redirect, calculateNavAction  will correctly set the
+                  // navigationAction to `replace` and fire this function again. When
+                  // its the same page, navigationAction is set to `none`, in that
+                  // scenario we have to set the activePage expliclity here.
+                  dispatch(setActivePage({ pageKey }))
+                }
+              })
+          }
+        } else {
+          visit(pageKey, { revisit: true }).then(() => {
+            const noNav =
+              prevPageKey === store.getState().superglue.currentPageKey
+            if (noNav) {
+              dispatch(setActivePage({ pageKey }))
+            }
+          })
+        }
       }
     }
   }
@@ -175,7 +184,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     if (hasPage) {
       const location = history.location
       const state = location.state as HistoryState
-      const prevPageKey = state.pageKey
       const historyArgs = [
         path,
         {
@@ -196,8 +204,8 @@ const NavigationProvider = forwardRef(function NavigationProvider(
             },
             {
               ...state,
-              posY: window.pageYOffset,
-              posX: window.pageXOffset,
+              posY: window.scrollY,
+              posX: window.scrollX,
             }
           )
         }
@@ -207,13 +215,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
       if (action === 'replace') {
         history.replace(...historyArgs)
-      }
-
-      setActivePage({ pageKey: nextPageKey })
-      setWindowScroll(0, 0)
-
-      if (action === 'replace' && prevPageKey && prevPageKey !== nextPageKey) {
-        dispatch(removePage({ pageKey: prevPageKey }))
       }
 
       return true
@@ -228,7 +229,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
   }
 
-  const { currentPageKey, search } = superglue
+  const { search } = superglue
   const { componentIdentifier } = pages[currentPageKey]
   const Component = mapping[componentIdentifier]
 

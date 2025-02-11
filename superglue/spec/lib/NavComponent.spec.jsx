@@ -353,6 +353,60 @@ describe('Nav', () => {
 
       expect(instance.navigateTo('/blah', { action: 'none' })).toEqual(false)
     })
+    
+    it('navigates optimistically to a copied page with new params', () => {
+      const history = createMemoryHistory({})
+      history.replace('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 5,
+        posY: 5,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/about': {
+            componentIdentifier: 'about',
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      let instance
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider
+            store={store}
+            ref={(node) => (instance = node)}
+            mapping={{ home: Home, about: About }}
+            history={history}
+          />
+        </Provider>
+      )
+
+      instance.navigateTo('/home', { search: {hello: "world" }})
+
+      const pages = store.getState().pages
+      expect(pages['/home?hello=world']).toMatchObject(
+        pages['/home']
+      )
+      expect(pages['/home?hello=world']).not.toBe(
+        pages['/home']
+      )
+
+      expect(store.getState().superglue.currentPageKey).toEqual("/home?hello=world")
+      expect(history.location.pathname).toEqual('/home')
+      expect(history.location.search).toEqual('?hello=world')
+    })
   })
 
   describe('history pop', () => {

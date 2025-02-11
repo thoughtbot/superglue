@@ -6,8 +6,8 @@ import React, {
   useImperativeHandle,
   ForwardedRef,
 } from 'react'
-import { urlToPageKey, pathWithoutBZParams } from '../utils'
-import { removePage, setActivePage } from '../actions'
+import { urlToPageKey, pathWithoutBZParams, mergeQuery } from '../utils'
+import { removePage, setActivePage, copyPage } from '../actions'
 import {
   HistoryState,
   RootState,
@@ -164,26 +164,30 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
   }
 
-  const navigateTo: NavigateTo = (
-    path,
-    { action } = {
-      action: 'push',
-    }
-  ) => {
+  const navigateTo: NavigateTo = (path, { action, search } = {}) => {
+    action ||= 'push'
+    search ||= {}
+
     if (action === 'none') {
       return false
     }
 
     path = pathWithoutBZParams(path)
-    const nextPageKey = urlToPageKey(path)
-    const hasPage = Object.prototype.hasOwnProperty.call(
-      store.getState().pages,
-      nextPageKey
-    )
+    let nextPageKey = urlToPageKey(path)
+    // store is untyped?
+    const page = store.getState().pages[nextPageKey]
 
-    if (hasPage) {
+    if (page) {
+      if (Object.keys(search).length > 0) {
+        const originalKey = nextPageKey
+        nextPageKey = mergeQuery(nextPageKey, search)
+        dispatch(copyPage({ from: originalKey, to: nextPageKey }))
+        path = mergeQuery(path, search)
+      }
+
       const location = history.location
       const state = location.state as HistoryState
+
       const historyArgs = [
         path,
         {

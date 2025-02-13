@@ -8,6 +8,7 @@ import userEvent from '@testing-library/user-event'
 import { NavigationContext } from '../../lib/components/Navigation'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib'
+import { setActivePage } from '../../lib/actions'
 
 const buildStore = (preloadedState) => {
   let resultsReducer = (state = [], action) => {
@@ -175,13 +176,7 @@ describe('Nav', () => {
 
       const expectedActions = [
         {
-          type: '@@superglue/HISTORY_CHANGE',
-          payload: {
-            pageKey: '/home',
-          },
-        },
-        {
-          type: '@@superglue/HISTORY_CHANGE',
+          type: '@@superglue/SET_ACTIVE_PAGE',
           payload: {
             pageKey: '/about',
           },
@@ -362,7 +357,7 @@ describe('Nav', () => {
 
   describe('history pop', () => {
     describe('when the previous page was set to "revisitOnly"', () => {
-      it('revisits the page and scrolls when finished', () => {
+      it('revisits the page and scrolls when finished', async () => {
         const history = createMemoryHistory({})
         history.replace('/home', {
           superglue: true,
@@ -402,9 +397,7 @@ describe('Nav', () => {
         const fakeVisit = vi.fn((...args) => {
           return {
             then: vi.fn((fn) => {
-              expect(scrollTo).not.toHaveBeenCalled()
               fn({ navigationAction })
-              expect(scrollTo).toHaveBeenCalledWith(5, 5)
             }),
           }
         })
@@ -421,11 +414,19 @@ describe('Nav', () => {
           </Provider>
         )
 
+        expect(scrollTo).toHaveBeenCalledWith(10, 10)
         history.back()
+        expect(scrollTo).not.toHaveBeenCalledWith(5, 5)
         expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
+
+        await expect.poll(() => scrollTo.toHaveBeenCalledWith(5, 5))
       })
 
-      it('revisits the page and skips scroll when redirected (navigationAction is not "none")', () => {
+      it('revisits the page and when redirected replaces with the new page', async () => {
+        const Login = () => {
+          return <h1>Login Page</h1>
+        }
+
         const history = createMemoryHistory({})
         history.replace('/home', {
           superglue: true,
@@ -451,6 +452,10 @@ describe('Nav', () => {
               componentIdentifier: 'about',
               restoreStrategy: 'revisitOnly',
             },
+            '/login': {
+              componentIdentifier: 'login',
+              restoreStrategy: 'fromCacheOnly',
+            },
           },
           superglue: {
             csrfToken: 'abc',
@@ -460,39 +465,45 @@ describe('Nav', () => {
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
-        const navigationAction = 'push'
+        const navigationAction = 'replace'
 
         const fakeVisit = vi.fn((...args) => {
           return {
             then: vi.fn((fn) => {
-              // expect(scrollTo).not.toHaveBeenCalled()
+              store.dispatch(setActivePage({ pageKey: '/login' }))
               fn({ navigationAction })
-              expect(scrollTo).not.toHaveBeenCalled()
             }),
           }
         })
-
-        // scroll to 0 0
 
         render(
           <Provider store={store}>
             <NavigationProvider
               store={store}
               visit={fakeVisit}
-              mapping={{ home: Home, about: About }}
+              mapping={{ home: Home, about: About, login: Login }}
               initialPageKey={'/home'}
               history={history}
             />
           </Provider>
         )
 
+        expect(screen.getByRole('heading')).toHaveTextContent('About Page')
+        expect(screen.getByRole('heading')).not.toHaveTextContent('Login Page')
+
         history.back()
-        expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
+
+        await expect.poll(() =>
+          screen.getByRole('heading').not.toHaveTextContent('About Page')
+        )
+        await expect.poll(() =>
+          screen.getByRole('heading').toHaveTextContent('Login Page')
+        )
       })
     })
 
     describe('when the previous page was set to "fromCacheOnly"', () => {
-      it('restores without visiting and scrolls', () => {
+      it('restores without visiting and scrolls', async () => {
         const history = createMemoryHistory({})
         history.replace('/home', {
           superglue: true,
@@ -541,13 +552,14 @@ describe('Nav', () => {
         )
 
         history.back()
-        expect(scrollTo).toHaveBeenCalledWith(5, 5)
         expect(fakeVisit).not.toHaveBeenCalled()
+        expect(scrollTo).not.toHaveBeenCalledWith(5, 5)
+        await expect.poll(() => scrollTo.toHaveBeenCalledWith(5, 5))
       })
     })
 
     describe('and the previous page was set to "fromCacheAndRevisitInBackground"', () => {
-      it('restores, scrolls, and revisits the page in the background', () => {
+      it('restores, scrolls, and revisits the page in the background', async () => {
         const history = createMemoryHistory({})
         history.replace('/home', {
           superglue: true,
@@ -582,9 +594,7 @@ describe('Nav', () => {
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
 
-        const fakeVisit = vi.fn((...args) => {
-          expect(scrollTo).toHaveBeenCalledWith(5, 5)
-        })
+        const fakeVisit = vi.fn((...args) => {})
 
         render(
           <Provider store={store}>
@@ -600,6 +610,8 @@ describe('Nav', () => {
 
         history.back()
         expect(fakeVisit).toHaveBeenCalledWith('/home', { revisit: true })
+        expect(scrollTo).not.toHaveBeenCalledWith(5, 5)
+        await expect.poll(() => scrollTo.toHaveBeenCalledWith(5, 5))
       })
     })
   })

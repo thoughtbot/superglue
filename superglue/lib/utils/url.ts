@@ -101,3 +101,13 @@ export function parsePageKey(pageKey: PageKey) {
     search: query,
   }
 }
+
+export function mergeQuery(pageKey: PageKey, search: Record<string, string>) {
+  const parsed = new parse(pageKey, {}, true)
+
+  Object.keys(search).forEach((key) => {
+    parsed.query[key] = search[key]
+  })
+
+  return parsed.toString()
+}

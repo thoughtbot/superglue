@@ -5,6 +5,7 @@ import {
   handleGraft,
   historyChange,
   copyPage,
+  movePage,
   setCSRFToken,
   setActivePage,
   removePage,
@@ -167,6 +168,16 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
     const { from, to } = action.payload
 
     nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
+
+    return nextState
+  }
+
+  if (movePage.match(action)) {
+    const nextState = { ...state }
+    const { from, to } = action.payload
+
+    nextState[to] = nextState[from]
+    delete nextState[from]
 
     return nextState
   }

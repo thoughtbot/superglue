@@ -6,8 +6,8 @@ import React, {
   useImperativeHandle,
   ForwardedRef,
 } from 'react'
-import { urlToPageKey, pathWithoutBZParams } from '../utils'
-import { removePage, setActivePage } from '../actions'
+import { urlToPageKey, pathWithoutBZParams, mergeQuery } from '../utils'
+import { removePage, setActivePage, movePage, copyPage } from '../actions'
 import {
   HistoryState,
   RootState,
@@ -153,29 +153,31 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       }
     }
   }
+  const navigateTo: NavigateTo = (path, { action, search } = {}) => {
+    action ||= 'push'
+    search ||= {}
 
-  const navigateTo: NavigateTo = (
-    path,
-    { action } = {
-      action: 'push',
-    }
-  ) => {
     if (action === 'none') {
       return false
     }
 
-    path = pathWithoutBZParams(path)
-    const nextPageKey = urlToPageKey(path)
-    const hasPage = Object.prototype.hasOwnProperty.call(
-      store.getState().pages,
-      nextPageKey
-    )
+    let nextPath = pathWithoutBZParams(path)
+    const originalPageKey = urlToPageKey(nextPath)
+    let nextPageKey = urlToPageKey(originalPageKey)
+    // store is untyped?
+    const page = store.getState().pages[nextPageKey]
 
-    if (hasPage) {
+    if (page) {
+      const isOptimisticNav = Object.keys(search).length > 0
+      if (isOptimisticNav) {
+        nextPageKey = mergeQuery(nextPageKey, search)
+        nextPath = mergeQuery(nextPath, search)
+      }
+
       const location = history.location
       const state = location.state as HistoryState
       const historyArgs = [
-        path,
+        nextPath,
         {
           pageKey: nextPageKey,
           superglue: true,
@@ -200,6 +202,10 @@ const NavigationProvider = forwardRef(function NavigationProvider(
           )
         }
 
+        if (isOptimisticNav) {
+          dispatch(copyPage({ from: originalPageKey, to: nextPageKey }))
+        }
+
         history.push(...historyArgs)
         dispatch(setActivePage({ pageKey: nextPageKey }))
       }
@@ -207,7 +213,10 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       if (action === 'replace') {
         history.replace(...historyArgs)
 
-        if (currentPageKey !== nextPageKey) {
+        if (isOptimisticNav) {
+          dispatch(movePage({ from: originalPageKey, to: nextPageKey }))
+          dispatch(setActivePage({ pageKey: nextPageKey }))
+        } else if (currentPageKey !== nextPageKey) {
           dispatch(setActivePage({ pageKey: nextPageKey }))
           dispatch(removePage({ pageKey: currentPageKey }))
         }

@@ -88,6 +88,13 @@ export const copyPage = createAction<{ from: PageKey; to: PageKey }>(
 )
 
 /**
+ * A redux action you can dispatch to move a page from one pageKey to another.
+ */
+export const movePage = createAction<{ from: PageKey; to: PageKey }>(
+  '@@superglue/MOVE_PAGE'
+)
+
+/**
  * A redux action you can dispatch to remove a page from your store.
  *
  * ```

@@ -355,6 +355,121 @@ describe('Nav', () => {
     })
   })
 
+  it('navigates using "push" to a copied page with new params', () => {
+    const history = createMemoryHistory({})
+    history.replace('/home', {
+      superglue: true,
+      pageKey: '/home',
+      posX: 5,
+      posY: 5,
+    })
+    
+    vi
+      .spyOn(window, 'scrollTo')
+      .mockImplementation(() => {})
+
+    const store = buildStore({
+      pages: {
+        '/home': {
+          componentIdentifier: 'home',
+          restoreStrategy: 'fromCacheOnly',
+        },
+        '/about': {
+          componentIdentifier: 'about',
+          restoreStrategy: 'fromCacheOnly',
+        },
+      },
+      superglue: {
+        csrfToken: 'abc',
+        currentPageKey: '/home',
+      },
+    })
+
+    let instance
+
+    render(
+      <Provider store={store}>
+        <NavigationProvider
+          store={store}
+          ref={(node) => (instance = node)}
+          mapping={{ home: Home, about: About }}
+          history={history}
+        />
+      </Provider>
+    )
+
+    instance.navigateTo('/home', { search: {hello: "world" }})
+
+    const pages = store.getState().pages
+    expect(pages['/home?hello=world']).toMatchObject(
+      pages['/home']
+    )
+    expect(pages['/home?hello=world']).not.toBe(
+      pages['/home']
+    )
+
+    expect(store.getState().superglue.currentPageKey).toEqual("/home?hello=world")
+    expect(history.location.pathname).toEqual('/home')
+    expect(history.location.search).toEqual('?hello=world')
+  })
+  
+  it('navigates using "replace" to a moved page with new params', () => {
+    const history = createMemoryHistory({})
+    history.replace('/home', {
+      superglue: true,
+      pageKey: '/home',
+      posX: 5,
+      posY: 5,
+    })
+    
+    vi
+      .spyOn(window, 'scrollTo')
+      .mockImplementation(() => {})
+
+    const homeProps = {
+      componentIdentifier: 'home',
+      restoreStrategy: 'fromCacheOnly',
+    }
+
+    const store = buildStore({
+      pages: {
+        '/home': homeProps,
+        '/about': {
+          componentIdentifier: 'about',
+          restoreStrategy: 'fromCacheOnly',
+        },
+      },
+      superglue: {
+        csrfToken: 'abc',
+        currentPageKey: '/home',
+      },
+    })
+
+    let instance
+
+    render(
+      <Provider store={store}>
+        <NavigationProvider
+          store={store}
+          ref={(node) => (instance = node)}
+          mapping={{ home: Home, about: About }}
+          history={history}
+        />
+      </Provider>
+    )
+
+    instance.navigateTo('/home', { action: "replace", search: {hello: "world" }})
+
+    const pages = store.getState().pages
+    expect(pages['/home?hello=world']).toBe(
+      homeProps
+    )
+
+    expect(store.getState().superglue.currentPageKey).toEqual("/home?hello=world")
+    expect(history.location.pathname).toEqual('/home')
+    expect(history.location.search).toEqual('?hello=world')
+  })
+
   describe('history pop', () => {
     describe('when the previous page was set to "revisitOnly"', () => {
       it('revisits the page and scrolls when finished', async () => {

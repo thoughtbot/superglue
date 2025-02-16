@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1
+Fixes for scroll management
+
 ## 1.0.0
 Release 1.0.0. Significant backward breaking changes from 0.54.0. To migrate:
 

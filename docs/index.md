@@ -1,10 +1,10 @@
 # Overview
 
-Superglue is a library that thoughtfully pairs Rails and React. Its
-built with a laser focus on The Rails Way and aims to provide a simple
-developer experience on par with Hotwire, Stimulus, and Turbo. Confidently use
-Rails routes, controllers, views as you normally would in a multi-page
-application and integrate with React's vast ecosystem.
+Superglue and friends [thoughtfully pairs Rails and React]. Its built with a
+laser focus on The Rails Way and aims to provide a simple developer experience
+on par with Hotwire, Stimulus, and Turbo. Confidently use Rails routes,
+controllers, views as you normally would in a multi-page application and
+integrate with React's vast ecosystem.
 
 ## Who is it for?
 
@@ -78,7 +78,7 @@ end
 ```
 
 Familiar Rails conveniences include form_props (a fork of `form_with` made for React),
-flash messages integrated as a Redux [slice], and [Unobtrusive Javascript](UJS) helpers.
+flash messages integrated as a Redux [slice], and [Unobtrusive Javascript][UJS] helpers.
 
 ### It’s React
 
@@ -120,7 +120,7 @@ export default function FooBar() {
 }
 ```
 
-### It’s Turbolinks and UJS
+### It’s Turbolinks
 
 Superglue drew inspiration fromthe original Turbolinks, but instead of sending
 your `foobar.html.erb` over the wire and swapping the `<body>`, it sends
@@ -134,12 +134,7 @@ your React components to SPA transition to the next page.
 <a href=”/next_page” data-sg-visit> Next Page </a>
 ```
 
-## A thoughtful pairing
-
-Superglue is about thoughfully pairing React and Rails that brings out the best
-of both frameworks.
-
-### The return of UJS and diggable templates
+### The return of UJS
 
 Superglue’s secret sauce is that your `foobar.json.props` is diggable; making
 any part of your page dynamic by using a query string. It’s a simpler approach
@@ -231,6 +226,7 @@ your team.
 
 
 [Redux state]: ./redux-state-shape.md
-[modals]: ./recipes/modals.md
-[more]: ./recipes
+[modals]: recipes/modals.md
+[more]: recipes/
 [slice]: ./cross-cutting-concerns.md#slices
+[thoughtfully pairs Rails and React]: https://thoughtbot.com/blog/superglue-1-0-react-rails-a-new-era-of-thoughtfulness

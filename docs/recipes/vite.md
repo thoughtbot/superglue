@@ -45,7 +45,7 @@ And finally, one of the more manual process of using superglue is the [manual bu
 of your `page_to_page_mapping.js` file. We can improve the developer experience by 
 removing that step by using this snippet:
 
-[manual build]: ../configuration
+[manual build]: ../configuration.md
 
 ```javascript
 const pageIdentifierToPageComponent = {}

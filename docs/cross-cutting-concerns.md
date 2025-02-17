@@ -30,11 +30,9 @@ app/
 |   |-- posts/
 |   |   |-- index.js
 |   |   |-- index.json.props
-|   |   |-- index.html.erb
 |   |-- comments/
 |   |   |-- index.js
 |   |   |-- index.json.props
-|   |   |-- index.html.erb
 ```
 
 By [design](./redux-state-shape.md) this results in duplicate JSON nodes

@@ -27,7 +27,7 @@ when the internet is down.
     Stop by the [tutorial] to learn how to work with this file.
 
     **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](recipe/vite.md) for more information.
+    the [recipe](recipes/vite.md) for more information.
 
 This file exports a mapping between a `componentIdentifier` to an imported page
 component. This gets used in your `application.js` so that superglue knows

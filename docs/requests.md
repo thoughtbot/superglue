@@ -5,7 +5,7 @@ offers, Superglue comes with two functions built around `fetch`, `visit` and
 `remote`. These are wrapped with your own implementation in
 [application_visit.js] and can be accessed via the [NavigationContext].
 
-[NavigationContext]: ../reference/types/#navigationcontextprops
+[NavigationContext]: reference/types.md#navigationcontextprops
 
 
 !!! tip

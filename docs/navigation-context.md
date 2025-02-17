@@ -17,7 +17,7 @@ const {
 ```
 
 <div class="grid cards" markdown>
-  -  [:octicons-arrow-right-24: See complete reference](../reference/types/#navigationcontextprops)
+  -  [:octicons-arrow-right-24: See complete reference](reference/types.md#navigationcontextprops)
      for `NavigationContext`
 </div>
 
@@ -73,5 +73,5 @@ the URL.
      for `navigateTo`
 </div>
 
-[saving]: ../reference/#saveandprocesspage
-[copyPage]: ../reference/#copypage
+[saving]: ./reference/index.md#saveandprocesspage
+[copyPage]: ./reference/index.md#copypage

@@ -33,7 +33,7 @@ setHumidRenderer((json, baseUrl, path) => {
       // and `remote` thunks.
       baseUrl={baseUrl}
       // The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-      // template, e.g., index.html.erb
+      // template, e.g., application/superglue.html.erb
       initialPage={initialState}
       // The initial path of the page, e.g., /foobar
       path={path}
@@ -125,9 +125,14 @@ Add a line to your `package.json` like so:
 +    "build:ssr": "node ./build-ssr.mjs"
 ```
 
-Use `Humid.render` in all your ERB templates `index.html.erb`:
+Use `Humid.render` in all your `html` templates, e.g., `index.html.erb` or `superglue.html.erb`:
 
 ```diff
+  <script type="text/javascript">
+-   window.SUPERGLUE_INITIAL_PAGE_STATE=<%= render_props %>;<%# erblint:disable ErbSafety %>
++   <% initial_state = render_props %>
++   window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state %>;<%# erblint:disable ErbSafety %>
+  </script>
 - <div id="app"></div>
 + <div id="app"><%= Humid.render(initial_state, request.scheme + '://' + request.host_with_port, request.fullpath).html_safe %></div>
 ```

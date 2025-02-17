@@ -472,7 +472,7 @@ export interface BuildVisitAndRemote {
 export interface SetupProps {
   /**
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-   * template, e.g., index.html.erb
+   * template, e.g., application/superglue.html.erb
    */
   initialPage: VisitResponse
   /**
@@ -517,7 +517,7 @@ export interface ApplicationProps
   extends React.ComponentPropsWithoutRef<'div'> {
   /**
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-   * template, e.g., index.html.erb
+   * template, e.g., application/superglue.html.erb
    */
   initialPage: VisitResponse
   /**

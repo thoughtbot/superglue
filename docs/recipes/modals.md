@@ -40,7 +40,7 @@ Both urls render a list of posts. Lets set up the controller and the
         Similarly, we tie the `componentIdentifier` to the same page component.
 
         **Vite Users** This step can be entirely optional if you're using Vite. See
-        the [recipe](recipe/vite.md) for more information.
+        the [recipe](./vite.md) for more information.
 
     ```js
     import PostIndex from '../views/posts/index'

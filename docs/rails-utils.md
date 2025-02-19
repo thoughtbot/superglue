@@ -8,11 +8,11 @@ Superglue typically requires 3 templates.
 ```
 app/views/
   posts/
-    index.html.erb # typically duplicated
+    index.html.erb # duplicated
     index.jsx
     index.json.props
   users/
-    index.html.erb
+    index.html.erb # duplicated
     index.jsx
     index.json.props
 ```
@@ -46,15 +46,13 @@ app/views
     index.json.props
 ```
 
-and allow for `props` files for cases where you don't need props.
+and omit `props` files for cases when there is no content.
 
 ```
 app/views
   application/
     superglue.html.erb
-  posts/
-    index.jsx
-  users/
+  about/
     index.jsx
 ```
 

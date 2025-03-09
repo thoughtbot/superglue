@@ -50,7 +50,6 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/node": "^22.10.1",
-    "@types/url-parse": "^1.4.11",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -79,12 +78,11 @@
     "vitest": "^2.0.2"
   },
   "peerDependencies": {
+    "@reduxjs/toolkit": "^2.2.8",
     "react": "^18 || ^19",
-    "react-redux": "^9 || ^8",
-    "@reduxjs/toolkit": "^2.2.8"
+    "react-redux": "^9 || ^8"
   },
   "dependencies": {
-    "history": "^5.3.0",
-    "url-parse": "^1.5.1"
+    "history": "^5.3.0"
   }
 }

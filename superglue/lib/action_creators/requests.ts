@@ -3,7 +3,6 @@ import {
   parseResponse,
   needsRefresh,
   urlToPageKey,
-  withoutBusters,
   hasPropsAt,
   propsAtParam,
   removePropsAt,
@@ -76,7 +75,6 @@ export const remote: RemoteCreator = (
     ...rest
   } = {}
 ) => {
-  path = withoutBusters(path)
   targetPageKey = targetPageKey && urlToPageKey(targetPageKey)
 
   return (dispatch, getState) => {
@@ -146,8 +144,6 @@ export const visit: VisitCreator = (
     ...rest
   } = {}
 ) => {
-  path = withoutBusters(path)
-
   return (dispatch, getState) => {
     const currentPageKey = getState().superglue.currentPageKey
     placeholderKey =

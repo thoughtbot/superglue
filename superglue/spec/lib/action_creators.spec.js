@@ -198,7 +198,7 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/foo?props_at=body&format=json', {
+      fetchMock.mock('https://example.com/foo?props_at=body&format=json', {
         body: JSON.stringify({
           data: 'success',
           action: 'graft',
@@ -245,7 +245,7 @@ describe('action creators', () => {
         ],
       }
 
-      fetchMock.mock('/foo?props_at=data.body&format=json', {
+      fetchMock.mock('https://example.com/foo?props_at=data.body&format=json', {
         body: JSON.stringify({
           data: {
             aside: {
@@ -264,45 +264,51 @@ describe('action creators', () => {
         },
       })
 
-      fetchMock.mock('/foo?props_at=data.body.aside.top&format=json', {
-        body: JSON.stringify({
-          data: {
-            greeting: {
-              hello: 'world',
+      fetchMock.mock(
+        'https://example.com/foo?props_at=data.body.aside.top&format=json',
+        {
+          body: JSON.stringify({
+            data: {
+              greeting: {
+                hello: 'world',
+              },
             },
+            action: 'graft',
+            path: 'data.body.aside.top',
+            csrfToken: 'token',
+            fragments: [
+              { type: 'greeting', path: 'data.body.aside.top.greeting' },
+            ],
+            assets: [],
+            defers: [],
+          }),
+          headers: {
+            'content-type': 'application/json',
           },
-          action: 'graft',
-          path: 'data.body.aside.top',
-          csrfToken: 'token',
-          fragments: [
-            { type: 'greeting', path: 'data.body.aside.top.greeting' },
-          ],
-          assets: [],
-          defers: [],
-        }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
+        }
+      )
 
-      fetchMock.mock('/foo?props_at=data.footer&format=json', {
-        body: JSON.stringify({
-          data: {
-            copyright: {
-              author: 'john',
+      fetchMock.mock(
+        'https://example.com/foo?props_at=data.footer&format=json',
+        {
+          body: JSON.stringify({
+            data: {
+              copyright: {
+                author: 'john',
+              },
             },
+            action: 'graft',
+            path: 'data.footer',
+            csrfToken: 'token',
+            fragments: [{ type: 'copyright', path: 'data.footer.copyright' }],
+            assets: [],
+            defers: [],
+          }),
+          headers: {
+            'content-type': 'application/json',
           },
-          action: 'graft',
-          path: 'data.footer',
-          csrfToken: 'token',
-          fragments: [{ type: 'copyright', path: 'data.footer.copyright' }],
-          assets: [],
-          defers: [],
-        }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
+        }
+      )
 
       const expectedActions = [
         {
@@ -483,7 +489,7 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/foo?props_at=body&format=json', {
+      fetchMock.mock('https://example.com/foo?props_at=body&format=json', {
         body: JSON.stringify({
           data: 'success',
           action: 'graft',
@@ -677,7 +683,10 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/some_defered_request?props_at=body&format=json', 500)
+      fetchMock.mock(
+        'https://example.com/some_defered_request?props_at=body&format=json',
+        500
+      )
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
         expect(allSuperglueActions(store)).toEqual(expectedActions)
@@ -737,7 +746,10 @@ describe('action creators', () => {
         },
       ]
 
-      fetchMock.mock('/some_defered_request?props_at=body&format=json', 500)
+      fetchMock.mock(
+        'https://example.com/some_defered_request?props_at=body&format=json',
+        500
+      )
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
         expect(allSuperglueActions(store)).toEqual(expectedActions)
@@ -754,7 +766,7 @@ describe('action creators', () => {
     it('fetches with correct headers and fires SAVE_RESPONSE', () => {
       const store = buildStore(initialState())
 
-      fetchMock.mock('/foo?format=json', {
+      fetchMock.mock('https://example.com/foo?format=json', {
         body: successfulBody(),
         headers: {
           'content-type': 'application/json',
@@ -766,12 +778,20 @@ describe('action creators', () => {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
             currentPageKey: '/bar',
-            fetchArgs: ['/foo?format=json', expect.any(Object)],
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
           },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
-          payload: { fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
+          },
         },
         {
           type: '@@superglue/SAVE_RESPONSE',
@@ -789,7 +809,9 @@ describe('action creators', () => {
       ]
 
       return store.dispatch(remote('/foo', { pageKey: '/foo' })).then(() => {
-        const requestheaders = fetchMock.lastCall('/foo?format=json')[1].headers
+        const requestheaders = fetchMock.lastCall(
+          'https://example.com/foo?format=json'
+        )[1].headers
 
         expect(requestheaders).toEqual({
           accept: 'application/json',
@@ -829,7 +851,7 @@ describe('action creators', () => {
         defers: [],
       }
 
-      fetchMock.mock('/foo?format=json', {
+      fetchMock.mock('https://example.com/foo?format=json', {
         body,
         headers: {
           'content-type': 'application/json',
@@ -842,12 +864,20 @@ describe('action creators', () => {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
             currentPageKey: '/bar',
-            fetchArgs: ['/foo?format=json', expect.any(Object)],
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
           },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
-          payload: { fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
+          },
         },
         {
           type: '@@superglue/SAVE_RESPONSE',
@@ -887,7 +917,7 @@ describe('action creators', () => {
         },
       })
 
-      fetchMock.mock('/foobar?format=json', {
+      fetchMock.mock('https://example.com/foobar?format=json', {
         body: successfulBody(),
         headers: {
           'content-type': 'application/json',
@@ -913,7 +943,7 @@ describe('action creators', () => {
         },
       })
 
-      fetchMock.mock('/foobar?format=json', {
+      fetchMock.mock('https://example.com/foobar?format=json', {
         body: successfulBody(),
         headers: {
           'content-type': 'application/json',
@@ -939,7 +969,7 @@ describe('action creators', () => {
         },
       })
 
-      fetchMock.mock('/foobar?format=json', {
+      fetchMock.mock('https://example.com/foobar?format=json', {
         body: successfulBody(),
         headers: {
           'content-type': 'application/json',
@@ -966,7 +996,10 @@ describe('action creators', () => {
       new Promise((done) => {
         const store = buildStore(initialState())
 
-        fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
+        fetchMock.mock(
+          'https://example.com/first?props_at=foo&format=json',
+          rsp.visitSuccess()
+        )
         store.dispatch(remote('/first?props_at=foo')).then((meta) => {
           done()
         })
@@ -975,7 +1008,7 @@ describe('action creators', () => {
     it('returns a meta with redirected true if was redirected', () => {
       const store = buildStore(initialState())
 
-      fetchMock.mock('/redirecting_url?format=json', {
+      fetchMock.mock('https://example.com/redirecting_url?format=json', {
         status: 200,
         redirectUrl: '/foo',
         headers: {
@@ -992,19 +1025,30 @@ describe('action creators', () => {
 
     it('fires SUPERGLUE_REQUEST_ERROR on a bad server response status', () => {
       const store = buildStore(initialState())
-      fetchMock.mock('/foo?format=json', { body: '{}', status: 500 })
+      fetchMock.mock('https://example.com/foo?format=json', {
+        body: '{}',
+        status: 500,
+      })
 
       const expectedActions = [
         {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
             currentPageKey: '/bar',
-            fetchArgs: ['/foo?format=json', expect.any(Object)],
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
           },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
-          payload: { fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
+          },
         },
         {
           type: '@@superglue/ERROR',
@@ -1024,7 +1068,7 @@ describe('action creators', () => {
 
     it('fires SUPERGLUE_REQUEST_ERROR on a invalid response', () => {
       const store = buildStore(initialState())
-      fetchMock.mock('/foo?format=json', {
+      fetchMock.mock('https://example.com/foo?format=json', {
         status: 200,
         headers: {
           'content-type': 'text/bad',
@@ -1037,25 +1081,33 @@ describe('action creators', () => {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
             currentPageKey: '/bar',
-            fetchArgs: ['/foo?format=json', expect.any(Object)],
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
           },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
-          payload: { fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
+          },
         },
         {
           type: '@@superglue/ERROR',
           payload: {
             message:
-              'invalid json response body at /foo?format=json reason: Unexpected end of JSON input',
+              'invalid json response body at https://example.com/foo?format=json reason: Unexpected end of JSON input',
           },
         },
       ]
 
       return store.dispatch(remote('/foo')).catch((err) => {
         expect(err.message).toEqual(
-          'invalid json response body at /foo?format=json reason: Unexpected end of JSON input'
+          'invalid json response body at https://example.com/foo?format=json reason: Unexpected end of JSON input'
         )
         expect(err.response.status).toEqual(200)
         expect(allSuperglueActions(store)).toEqual(
@@ -1067,7 +1119,7 @@ describe('action creators', () => {
     it('fires SUPERGLUE_REQUEST_ERROR when the SJR returns nothing', () => {
       const store = buildStore(initialState())
 
-      fetchMock.mock('/foo?format=json', {
+      fetchMock.mock('https://example.com/foo?format=json', {
         body: ``,
         headers: {
           'content-type': 'application/json',
@@ -1079,25 +1131,33 @@ describe('action creators', () => {
           type: '@@superglue/BEFORE_REMOTE',
           payload: {
             currentPageKey: '/bar',
-            fetchArgs: ['/foo?format=json', expect.any(Object)],
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
           },
         },
         {
           type: '@@superglue/BEFORE_FETCH',
-          payload: { fetchArgs: ['/foo?format=json', expect.any(Object)] },
+          payload: {
+            fetchArgs: [
+              'https://example.com/foo?format=json',
+              expect.any(Object),
+            ],
+          },
         },
         {
           type: '@@superglue/ERROR',
           payload: {
             message:
-              'invalid json response body at /foo?format=json reason: Unexpected end of JSON input',
+              'invalid json response body at https://example.com/foo?format=json reason: Unexpected end of JSON input',
           },
         },
       ]
 
       return store.dispatch(remote('/foo')).catch((err) => {
         expect(err.message).toEqual(
-          'invalid json response body at /foo?format=json reason: Unexpected end of JSON input'
+          'invalid json response body at https://example.com/foo?format=json reason: Unexpected end of JSON input'
         )
         expect(err.response.status).toEqual(200)
         expect(allSuperglueActions(store)).toEqual(
@@ -1119,7 +1179,7 @@ describe('action creators', () => {
             },
           },
         })
-        fetchMock.mock('/foo?format=json', {
+        fetchMock.mock('https://example.com/foo?format=json', {
           body: JSON.stringify({
             data: 'success',
             action: 'graft',
@@ -1183,7 +1243,7 @@ describe('action creators', () => {
         fragments: [],
       }
 
-      fetchMock.mock('/bar?format=json', {
+      fetchMock.mock('https://example.com/bar?format=json', {
         body: successfulBody,
         headers: {
           'content-type': 'application/json',
@@ -1218,7 +1278,7 @@ describe('action creators', () => {
         fragments: [],
       }
 
-      fetchMock.mock('/bar?format=json', {
+      fetchMock.mock('https://example.com/bar?format=json', {
         body: successfulBody,
         headers: {
           'content-type': 'application/json',
@@ -1258,7 +1318,7 @@ describe('action creators', () => {
         fragments: [],
       }
 
-      fetchMock.mock('/bar?format=json', {
+      fetchMock.mock('https://example.com/bar?format=json', {
         body: successfulBody,
         headers: {
           'content-type': 'application/json',
@@ -1288,7 +1348,10 @@ describe('action creators', () => {
 
         const store = buildStore(initialState)
 
-        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+        fetchMock.mock(
+          'https://example.com/first?format=json',
+          rsp.visitSuccess()
+        )
         store
           .dispatch(visit('/first?props_at=foo&format=json'))
           .then((meta) => {
@@ -1307,7 +1370,7 @@ describe('action creators', () => {
 
         const store = buildStore(initialState)
 
-        fetchMock.mock('/redirecting_url?format=json', {
+        fetchMock.mock('https://example.com/redirecting_url?format=json', {
           status: 200,
           redirectUrl: '/foo',
           headers: {
@@ -1335,7 +1398,10 @@ describe('action creators', () => {
 
         const store = buildStore(initialState)
 
-        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+        fetchMock.mock(
+          'https://example.com/first?format=json',
+          rsp.visitSuccess()
+        )
 
         return store
           .dispatch(visit('/first', { revisit: true }))
@@ -1357,7 +1423,10 @@ describe('action creators', () => {
 
       const store = buildStore(initialState)
 
-      fetchMock.mock('/same_page?format=json', rsp.visitSuccess())
+      fetchMock.mock(
+        'https://example.com/same_page?format=json',
+        rsp.visitSuccess()
+      )
 
       return store.dispatch(visit('/same_page')).then((meta) => {
         expect(meta.redirected).toEqual(false)
@@ -1376,7 +1445,10 @@ describe('action creators', () => {
 
         const store = buildStore(initialState)
 
-        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+        fetchMock.mock(
+          'https://example.com/first?format=json',
+          rsp.visitSuccess()
+        )
         store.dispatch(visit('/first')).catch((err) => {
           expect(err.message).toEqual('The operation was aborted.')
           done()
@@ -1396,7 +1468,10 @@ describe('action creators', () => {
 
         const store = buildStore(initialState)
 
-        fetchMock.mock('/first?format=json', rsp.visitSuccess())
+        fetchMock.mock(
+          'https://example.com/first?format=json',
+          rsp.visitSuccess()
+        )
 
         const expectedFetchUrl = '/first?props_at=foo&format=json'
         store
@@ -1426,7 +1501,10 @@ describe('action creators', () => {
 
         const store = buildStore(initialState)
 
-        fetchMock.mock('/first?props_at=foo&format=json', rsp.visitSuccess())
+        fetchMock.mock(
+          'https://example.com/first?props_at=foo&format=json',
+          rsp.visitSuccess()
+        )
 
         const expectedFetchUrl = '/first?props_at=foo&format=json'
         store
@@ -1459,7 +1537,7 @@ describe('action creators', () => {
 
         let mockResponse = rsp.graftSuccessWithNewZip()
         fetchMock.mock(
-          '/details?props_at=data.address&format=json',
+          'https://example.com/details?props_at=data.address&format=json',
           mockResponse
         )
 
@@ -1511,7 +1589,7 @@ describe('action creators', () => {
 
         let mockResponse = rsp.graftSuccessWithNewZip()
         fetchMock.mock(
-          '/details?props_at=data.address&format=json',
+          'https://example.com/details?props_at=data.address&format=json',
           mockResponse
         )
 
@@ -1569,7 +1647,10 @@ describe('action creators', () => {
 
       let mockResponse = rsp.graftSuccessWithNewZip()
       mockResponse.componentIdentifier = 'DoesNotExist'
-      fetchMock.mock('/details?props_at=data.address&format=json', mockResponse)
+      fetchMock.mock(
+        'https://example.com/details?props_at=data.address&format=json',
+        mockResponse
+      )
 
       expect(() => {
         return store.dispatch(

@@ -1,4 +1,3 @@
-import { withoutBusters } from './url'
 import {
   Handlers,
   UJSHandlers,
@@ -77,13 +76,12 @@ export class HandlerBuilder {
 
     event.preventDefault()
 
-    let url = form.getAttribute('action')
+    const url = form.getAttribute('action')
     if (!url) {
       return
     }
 
     const method = (form.getAttribute('method') || 'POST').toUpperCase()
-    url = withoutBusters(url)
 
     this.visitOrRemote(form, url, {
       method,
@@ -103,11 +101,10 @@ export class HandlerBuilder {
     }
 
     event.preventDefault()
-    let url = link.getAttribute('href')
+    const url = link.getAttribute('href')
     if (!url) {
       return
     }
-    url = withoutBusters(url)
 
     this.visitOrRemote(link, url, { method: 'GET' })
   }

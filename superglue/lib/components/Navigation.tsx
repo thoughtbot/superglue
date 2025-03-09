@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
   ForwardedRef,
 } from 'react'
-import { urlToPageKey, pathWithoutBZParams } from '../utils'
+import { urlToPageKey } from '../utils'
 import { removePage, setActivePage } from '../actions'
 import {
   HistoryState,
@@ -164,7 +164,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       return false
     }
 
-    path = pathWithoutBZParams(path)
     const nextPageKey = urlToPageKey(path)
     const hasPage = Object.prototype.hasOwnProperty.call(
       store.getState().pages,

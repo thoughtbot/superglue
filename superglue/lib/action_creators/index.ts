@@ -1,5 +1,4 @@
-import { urlToPageKey, getIn } from '../utils'
-import parse from 'url-parse'
+import { urlToPageKey, getIn, propsAtParam } from '../utils'
 import {
   saveResponse,
   GRAFTING_ERROR,
@@ -31,11 +30,9 @@ function fetchDeferments(
         successAction = GRAFTING_SUCCESS,
         failAction = GRAFTING_ERROR,
       }) {
-        const parsedUrl = new parse(url, true)
-
         // props_at will always be present in a graft response
         // That's why this is marked `as string`
-        const keyPath = parsedUrl.query.props_at as string
+        const keyPath = propsAtParam(url) as string
 
         return dispatch(remote(url, { pageKey }))
           .then(() => {

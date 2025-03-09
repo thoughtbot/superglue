@@ -4,7 +4,6 @@ import {
   argsForFetch,
   handleServerErrors,
 } from '../../../lib/utils/request'
-import parse from 'url-parse'
 import Headers from 'fetch-headers'
 
 describe('isValidResponse', () => {
@@ -59,7 +58,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo')
 
     expect(args).toEqual([
-      '/foo?format=json',
+      'https://example.com/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -85,7 +84,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo', { signal })
 
     expect(args).toEqual([
-      '/foo?format=json',
+      'https://example.com/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -109,7 +108,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo', { method: 'PUT' })
 
     expect(args).toEqual([
-      '/foo?format=json',
+      'https://example.com/foo?format=json',
       {
         method: 'POST',
         headers: {
@@ -138,7 +137,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo')
 
     expect(args).toEqual([
-      '/foo?format=json',
+      'https://example.com/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -148,7 +147,7 @@ describe('argsForFetch', () => {
         },
         signal: undefined,
         credentials: 'same-origin',
-        referrer: '/some_current_url',
+        referrer: 'https://example.com/some_current_url',
       },
     ])
   })
@@ -163,7 +162,7 @@ describe('argsForFetch', () => {
     const args = argsForFetch(getState, '/foo', { body: 'ignored' })
 
     expect(args).toEqual([
-      '/foo?format=json',
+      'https://example.com/foo?format=json',
       {
         method: 'GET',
         headers: {
@@ -182,7 +181,7 @@ describe('argsForFetch', () => {
     })
 
     expect(args2).toEqual([
-      '/foo?format=json',
+      'https://example.com/foo?format=json',
       {
         method: 'HEAD',
         headers: {

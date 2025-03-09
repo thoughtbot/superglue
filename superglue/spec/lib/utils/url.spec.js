@@ -6,33 +6,32 @@ import {
   pathQueryHash,
   hasPropsAt,
 } from '../../../lib/utils/url'
-import parse from 'url-parse'
 
 describe('.withoutHash', () => {
-  it('take a url and removes the hash', () => {
-    const url = withoutHash('http://www.github.com#abc')
+  it('take a path and removes the hash', () => {
+    const url = withoutHash('/hello#abc')
 
-    expect(url).toEqual('http://www.github.com/')
+    expect(url).toEqual('/hello')
   })
 
-  it('takes a blank and returns blank', () => {
-    const url = withoutHash('http://www.github.com#abc')
+  it('takes a blank and returns a slash', () => {
+    const url = withoutHash('')
 
-    expect(url).toEqual('http://www.github.com/')
+    expect(url).toEqual('/')
   })
 })
 
 describe('.removePropsAt', () => {
-  it('take a url and removes the props_at param', () => {
-    const url = removePropsAt('http://www.github.com?props_at=hello')
+  it('take a path and removes the props_at param', () => {
+    const url = removePropsAt('/posts?a=1&props_at=hello')
 
-    expect(url).toEqual('http://www.github.com/')
+    expect(url).toEqual('/posts?a=1')
   })
 
   it('take a blank url and returns blank', () => {
     const url = removePropsAt('')
 
-    expect(url).toEqual('')
+    expect(url).toEqual('/')
   })
 })
 
@@ -43,10 +42,10 @@ describe('.pathQuery', () => {
     expect(url).toEqual('/path?props_at=hello')
   })
 
-  it('take a blank url and returns blank', () => {
+  it('take a blank url and returns a slash', () => {
     const url = pathQuery('')
 
-    expect(url).toEqual('')
+    expect(url).toEqual('/')
   })
 })
 
@@ -57,10 +56,10 @@ describe('.pathQueryHash', () => {
     expect(url).toEqual('/?props_at=hello#fooo')
   })
 
-  it('take a blank url and returns blank', () => {
+  it('take a blank url and returns a slash', () => {
     const url = pathQueryHash('')
 
-    expect(url).toEqual('')
+    expect(url).toEqual('/')
   })
 })
 

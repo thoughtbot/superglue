@@ -1,5 +1,4 @@
 import React, { useRef, useMemo } from 'react'
-import parse from 'url-parse'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
@@ -53,8 +52,7 @@ export const prepareStore = (
   initialPage: VisitResponse,
   path: string
 ) => {
-  const location = parse(path)
-  const initialPageKey = urlToPageKey(location.href)
+  const initialPageKey = urlToPageKey(path)
   const { csrfToken } = initialPage
 
   store.dispatch(
@@ -83,7 +81,7 @@ export const setup = ({
 
   const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
 
-  const initialPageKey = urlToPageKey(parse(path).href)
+  const initialPageKey = urlToPageKey(path)
   const nextHistory = history || createHistory()
   nextHistory.replace(...argsForHistory(path))
   prepareStore(store, initialPage, path)

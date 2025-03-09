@@ -1,58 +1,43 @@
-import parse from 'url-parse'
 import { PageKey } from '../types'
 
+const FAKE_ORIGIN = 'https://example.com'
+
 export function pathQuery(url: string): string {
-  const { pathname, query } = new parse(url, {})
+  const { pathname, search: query } = new URL(url, FAKE_ORIGIN)
 
   return pathname + query
 }
 
 export function pathQueryHash(url: string): string {
-  const { pathname, query, hash } = new parse(url, {})
+  const { pathname, hash, search: query } = new URL(url, FAKE_ORIGIN)
 
   return pathname + query + hash
 }
 
 export function hasPropsAt(url: string): boolean {
-  const parsed = new parse(url, {}, true)
-  const query = parsed.query
+  const { searchParams } = new URL(url, FAKE_ORIGIN)
 
-  return !!query['props_at']
+  return searchParams.has('props_at')
 }
 
-export function propsAtParam(url: string): string | undefined {
-  const parsed = new parse(url, {}, true)
-  const query = parsed.query
+export function propsAtParam(url: string): string | null {
+  const { searchParams } = new URL(url, FAKE_ORIGIN)
 
-  return query['props_at']
+  return searchParams.get('props_at')
 }
 
 export function withFormatJson(url: string): string {
-  const parsed = new parse(url, {}, true)
-  parsed.query['format'] = 'json'
+  const parsed = new URL(url, FAKE_ORIGIN)
+  parsed.searchParams.set('format', 'json')
 
-  return parsed.toString()
-}
-
-export function pathWithoutBZParams(url: string): string {
-  const parsed = new parse(url, {}, true)
-  const query = parsed.query
-
-  delete query['props_at']
-  delete query['format']
-  parsed.set('query', query)
-
-  return pathQueryHash(parsed.toString())
+  return parsed.href.replace(parsed.origin, '')
 }
 
 export function removePropsAt(url: string): string {
-  const parsed = new parse(url, {}, true)
-  const query = parsed.query
+  const parsed = new URL(url, FAKE_ORIGIN)
+  parsed.searchParams.delete('props_at')
 
-  delete query['props_at']
-  parsed.set('query', query)
-
-  return parsed.toString()
+  return parsed.href.replace(parsed.origin, '')
 }
 
 /**
@@ -62,29 +47,18 @@ export function removePropsAt(url: string): string {
  * @returns
  */
 export function urlToPageKey(url: string): PageKey {
-  const parsed = new parse(url, {}, true)
-  const query = parsed.query
-
-  delete query['props_at']
-  delete query['format']
-  parsed.set('query', query)
+  const parsed = new URL(url, FAKE_ORIGIN)
+  parsed.searchParams.delete('props_at')
+  parsed.searchParams.delete('format')
 
   return pathQuery(parsed.toString())
 }
 
 export function withoutHash(url: string): string {
-  const parsed = new parse(url, {}, true)
-  parsed.set('hash', '')
-  return parsed.toString()
-}
+  const parsed = new URL(url, FAKE_ORIGIN)
+  parsed.hash = ''
 
-export function withoutBusters(url: string): string {
-  const parsed = new parse(url, {}, true)
-  const query = parsed.query
-  delete query['format']
-  parsed.set('query', query)
-
-  return pathQuery(parsed.toString())
+  return parsed.href.replace(parsed.origin, '')
 }
 
 export function formatForXHR(url: string): string {
@@ -94,10 +68,12 @@ export function formatForXHR(url: string): string {
 }
 
 export function parsePageKey(pageKey: PageKey) {
-  const { pathname, query } = new parse(pageKey, {}, true)
+  const { pathname, searchParams } = new URL(pageKey, FAKE_ORIGIN)
+
+  const search = Object.fromEntries(searchParams)
 
   return {
     pathname,
-    search: query,
+    search,
   }
 }

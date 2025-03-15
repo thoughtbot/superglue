@@ -15,11 +15,6 @@ Rails. Enjoy the benefits of Redux state management and React components
 without giving up the productivity of Rails form helpers, UJS, tag helpers,
 flash, cookie auth, and more.
 
-## Caution
-
-This project is in its early phases of development. Its interface, behavior,
-and name are likely to change drastically before a major version release.
-
 ### No APIs
 
 Instead of APIs, Superglue leans on Rails' ability to respond to different

@@ -54,7 +54,7 @@ setHumidRenderer((json, baseUrl, path) => {
 Next
 
 ```terminal
-yarn add esbuild-plugin-polyfill-node text-encoding
+yarn add esbuild-plugin-polyfill-node text-encoding whatwg-url
 ```
 
 and add a esbuild build file.
@@ -62,6 +62,7 @@ and add a esbuild build file.
 ```js
 import * as esbuild from 'esbuild'
 import { polyfillNode } from "esbuild-plugin-polyfill-node";
+
 
 await esbuild.build({
   entryPoints: ['app/javascript/server_rendering.js'],
@@ -90,6 +91,7 @@ Add a `shim.js` for the above. We'll need this for the v8 environment that mini-
 
 ```javascript
 export {TextEncoder, TextDecoder} from 'text-encoding'
+export { URL, URLSearchParams } from 'whatwg-url'
 
 export function MessageChannel() {
   this.port1 = {

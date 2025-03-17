@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.2
+Remove url-parse which was deduping params and replaced it with Browser's own
+URLSearchParams. Users using SSR via Humid should add a shim to export a
+URLSearchParams and URL Polyfill. For example:
+
+```
+export { URL, URLSearchParams } from 'whatwg-url'
+```
+
 ## 1.0.1
 Fixes for scroll management
 

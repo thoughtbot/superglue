@@ -194,6 +194,83 @@ describe('argsForFetch', () => {
       },
     ])
   })
+
+  it('returns fetch args and converts FormData into url search params on GET or HEAD', () => {
+    const getState = () => {
+      return {
+        superglue: {},
+      }
+    }
+
+    const formData = new FormData()
+    formData.append('title', 'hello')
+
+    const args = argsForFetch(getState, '/foo', { body: formData })
+
+    expect(args).toEqual([
+      'https://example.com/foo?format=json&title=hello',
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'x-requested-with': 'XMLHttpRequest',
+          'x-superglue-request': 'true',
+        },
+        signal: undefined,
+        credentials: 'same-origin',
+      },
+    ])
+
+    const args2 = argsForFetch(getState, '/foo', {
+      method: 'HEAD',
+      body: formData,
+    })
+
+    expect(args2).toEqual([
+      'https://example.com/foo?format=json&title=hello',
+      {
+        method: 'HEAD',
+        headers: {
+          accept: 'application/json',
+          'x-requested-with': 'XMLHttpRequest',
+          'x-superglue-request': 'true',
+        },
+        signal: undefined,
+        credentials: 'same-origin',
+      },
+    ])
+  })
+
+  it('returns fetch args and merges FormData into the existing url search params', () => {
+    const getState = () => {
+      return {
+        superglue: {},
+      }
+    }
+
+    const formData = new FormData()
+    formData.append('title', 'hello')
+    formData.append('option', '1')
+    formData.append('option', '2')
+
+    const args = argsForFetch(getState, '/foo?title=news&name=jim&option=100', {
+      body: formData,
+    })
+
+    expect(args).toEqual([
+      'https://example.com/foo?name=jim&format=json&title=hello&option=1&option=2',
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'x-requested-with': 'XMLHttpRequest',
+          'x-superglue-request': 'true',
+        },
+        signal: undefined,
+        credentials: 'same-origin',
+      },
+    ])
+  })
 })
 
 describe('handleServerErrors', () => {

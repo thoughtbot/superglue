@@ -119,7 +119,6 @@ export function argsForFetch(
         options.body as unknown as Record<string, string>
       )
 
-      // TODO: Add coverage for this
       // Form data should override anything in the URL params First we
       // delete every key. Then append the new keys accounting for
       // duplicate keys that represent structural arrays.

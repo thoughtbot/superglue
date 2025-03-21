@@ -78,7 +78,7 @@ Click the tabs below to see the contents:
     json.footer "Made with hearts"
     ```
 
-=== "2. `show.js`"
+=== "2. `show.jsx`"
     This is the page component that will recieve the result of `show.json.props`.
 
     ```js
@@ -120,7 +120,7 @@ Click the tabs below to see the contents:
 ### Connect the dots
 
 The json [payload] that gets injected contains a `componentIdentifier`.  We're
-going to use the `componentIdentifier` to tie `show.json.props` to `show.js` so
+going to use the `componentIdentifier` to tie `show.json.props` to `show.jsx` so
 superglue knows which component to render with which response by modifying
 `app/javascript/page_to_page_mapping.js`.
 
@@ -327,7 +327,7 @@ props_template to skip over the block.
     }
     ```
 
-=== "`show.js`"
+=== "`show.jsx`"
 
     We'll also have to handle the case when there is no greeting.
 
@@ -366,7 +366,7 @@ add a link that will dig for the missing content to replace "Waiting for greet".
     `application.json.props` layout that instructs `props_template` to dig.
 
     ```ruby
-    json.body(defer: :manual)
+    json.body(defer: :manual) do
       sleep 5
       json.greet "Hello world"
     end
@@ -403,7 +403,7 @@ add a link that will dig for the missing content to replace "Waiting for greet".
     }
     ```
 
-### **`show.js` alternative**
+### **`show.jsx` alternative**
 
 This version does the same thing, but we're using the function directly.
 
@@ -465,7 +465,7 @@ above without a button.
     2. Automatically create a remote request for the missing node
 
     ```ruby hl_lines="1"
-    json.body(defer: [:auto, placeholder: { greet: "Waiting for Greet"})
+    json.body(defer: [:auto, placeholder: { greet: "Waiting for Greet"}) do
       sleep 5
       json.greet "Hello world"
     end
@@ -473,9 +473,9 @@ above without a button.
     json.footer "Made with hearts"
     ```
 
-=== "`show.js`"
+=== "`show.jsx`"
 
-    No changes to the original `show.js` component. We don't even have to create
+    No changes to the original `show.jsx` component. We don't even have to create
     a conditional, the initial page response will contain a placeholder.
 
     ```js

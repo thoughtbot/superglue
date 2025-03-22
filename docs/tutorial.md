@@ -5,12 +5,17 @@
 For this tutorial, you will be building a hello world page. Its one page, but we'll
 add complexity as we progress to highlight the power of Superglue.
 
-!!! tip "Installation"
-    You'll need to install Superglue before proceeding. If you haven't already
-    stop by the [Installation](./installation.md) section for instructions.
+Lets build a new rails project:
 
-    The installation steps will include a layout `application.json.props` that's
-    **implicitly used** in this tutorial.
+```
+rails new tutorial -j esbuild --skip-hotwire
+```
+
+!!! tip
+    We're using esbuild here, but you can also use [vite](recipes/vite.md)
+
+then follow the [installation](./installation.md) instructions to setup
+Superglue.
 
 ### Start with the usual
 Lets begin by adding a route and a controller to an app.
@@ -22,8 +27,8 @@ Lets begin by adding a route and a controller to an app.
     resource :greet, only: :show
     ```
 
-=== "`greet_controller.rb`"
-    in `app/controllers/greet_controller.rb`
+=== "`greets_controller.rb`"
+    in `app/controllers/greets_controller.rb`
 
     !!! tip Enable jsx rendering defaults
         `use_jsx_rendering_defaults` enables Rails to look for `.jsx` files and
@@ -41,7 +46,7 @@ Lets begin by adding a route and a controller to an app.
         ```
 
     ```ruby
-    class GreetController < ApplicationController
+    class GreetsController < ApplicationController
       before_action :use_jsx_rendering_defaults
 
       def show
@@ -52,8 +57,9 @@ Lets begin by adding a route and a controller to an app.
 ### Add the views
 
 Next lets add the following views.
-- `app/views/greet/show.json.props`
-- `app/views/greet/show.jsx`
+
+- `app/views/greets/show.json.props`
+- `app/views/greets/show.jsx`
 
 The Superglue installation generator also adds a `application/superglue.html.erb`, which
 will be used as the default html template for every controller action.
@@ -85,11 +91,11 @@ Click the tabs below to see the contents:
     import React from 'react'
     import { useContent } from '@thoughtbot/superglue';
 
-    export default function GreetShow() {
+    export default function GreetsShow() {
       const {
         body,
         footer
-      } = useContent();
+      } = useContent()
 
       const {greet} = body
 
@@ -154,19 +160,18 @@ superglue knows which component to render with which response by modifying
 
 === "2. `page_to_page_mapping.js`"
     ```js
-    import GreetShow from '../views/greet/show'
+    import GreetsShow from '../views/greets/show'
 
     export const pageIdentifierToPageComponent = {
-      'greet/show': GreetShow,
+      'greets/show': GreetsShow,
     };
 
     ```
 
 
-
 ### Finish
 
-Run a rails server and go to http://localhost:3000/greet.
+Run `bin/dev` and go to http://localhost:3000/greet.
 
 
 ## Productivity
@@ -178,103 +183,102 @@ Turbo, Hotwire and friends.
 
 Let's add some complexity to the previous sample.
 
-### Digging for content
+!!! Sidequest
+    But first, A quick dive into [props_template] and how digging works. Click
+    on the tabs to see what happens when `@path` changes for the example below.
 
-But first! A quick dive into [props_template] and how digging works. Click on
-the tabs to see what happens when `@path` changes for the example below.
 
+    ```ruby
+    json.data(dig: @path) do
+      json.body do
+        json.chart do
+          sleep 10
+          json.header "Sales"
+        end
 
-```ruby
-json.data(dig: @path) do
-  json.body do
-    json.chart do
-      sleep 10
-      json.header "Sales"
+        json.user do
+          json.name "John"
+        end
+      end
+
+      json.footer do
+        json.year "2003"
+      end
     end
 
-    json.user do
-      json.name "John"
-    end
-  end
+    json.componentIdentifier "someId"
+    ```
 
-  json.footer do
-    json.year "2003"
-  end
-end
+    === "`data`"
 
-json.componentIdentifier "someId"
-```
+        When `@path = ['data']`. There's a 10 second sleep, and the output will be:
 
-=== "`data`"
-
-    When `@path = ['data']`. There's a 10 second sleep, and the output will be:
-
-    ```json
-    {
-      data: {
-        body: {
-          chart: {
-            header: "Sales"
+        ```json
+        {
+          data: {
+            body: {
+              chart: {
+                header: "Sales"
+              },
+              user: {
+                name: "John"
+              }
+            },
+            footer: {
+              year: "2003"
+            }
           },
-          user: {
-            name: "John"
-          }
-        },
-        footer: {
-          year: "2003"
+          componentIdentifier: "someId"
         }
-      },
-      componentIdentifier: "someId"
-    }
 
-    ```
+        ```
 
-=== "`data.body`"
+    === "`data.body`"
 
-    When `@path = ['data', 'body']`. There's a 10 second sleep, and the output will be:
+        When `@path = ['data', 'body']`. There's a 10 second sleep, and the output will be:
 
-    ```json
-    {
-      data: {
-        chart: {
-          header: "Sales"
-        },
-        user: {
-          name: "John"
+        ```json
+        {
+          data: {
+            chart: {
+              header: "Sales"
+            },
+            user: {
+              name: "John"
+            }
+          },
+          componentIdentifier: "someId"
         }
-      },
-      componentIdentifier: "someId"
-    }
 
-    ```
+        ```
 
-=== "`data.body.user`"
+    === "`data.body.user`"
 
-    When `@path = ['data', 'body', 'user']`, there is no wait, and the `json` will be:
+        When `@path = ['data', 'body', 'user']`, there is no wait, and the `json` will be:
 
-    ```json
-    {
-      data: {
-        name: "john"
-      },
-      componentIdentifier: "someId"
-    }
+        ```json
+        {
+          data: {
+            name: "john"
+          },
+          componentIdentifier: "someId"
+        }
 
-    ```
+        ```
 
-=== "`data.footer`"
+    === "`data.footer`"
 
-    When `@path = ['data', 'year']`, there is no wait, and the `json` will be:
+        When `@path = ['data', 'year']`, there is no wait, and the `json` will be:
 
-    ```json
-    {
-      data: {
-        year: "2003"
-      },
-      componentIdentifier: "someId"
-    }
+        ```json
+        {
+          data: {
+            year: "2003"
+          },
+          componentIdentifier: "someId"
+        }
 
-    ```
+        ```
 
 ### Continuing where we last left off
 
@@ -298,13 +302,15 @@ How should we improve the user experience?
 ### Load the content later (Manual deferment)
 
 What if we add a link on the page that would load the greeting async? Sounds
-like a good start, lets do that. We'll use `defer: :manual` to tell
-props_template to skip over the block.
+like a good start, lets do that.
+
+First, we'll use `defer: :manual` to tell props_template to skip over the
+block.
 
 === "`show.json.props`"
 
     ```ruby hl_lines="1"
-    json.body(defer: :manual)
+    json.body(defer: :manual) do
       sleep 5
       json.greet "Hello world"
     end
@@ -338,18 +344,16 @@ props_template to skip over the block.
     import React from 'react'
     import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetShow() {
+    export default function GreetsShow() {
       const {
         body,
         footer,
-        loadGreetPath
       } = useContent()
       const {greet} = body
 
       return (
         <>
           <h1>{greet || "Waiting for greet"}</h1>
-          <a href={loadGreetPath} data-sg-remote>Load Greet</a>
           <span>{footer}</span>
         </>
       )
@@ -376,22 +380,28 @@ add a link that will dig for the missing content to replace "Waiting for greet".
     json.footer "Made with hearts"
     ```
 
-=== "`show.js`"
+=== "`show.jsx`"
     Superglue embraces Unobtrusive Javascript. Add a `data-sg-remote` to any link,
     and superglue will take care of making the fetch call.
+
+
+    !!! Tip
+        Clicking on a link won't show a progress indiciator. In practice, the first
+        thing you want to do with a new Superglue project is add a [progress bar].
+
 
     ```js
     import React from 'react'
     import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetShow() {
+    export default function GreetsShow() {
       const {
         body,
         footer,
         loadGreetPath
       } = useContent()
 
-      const { greet } = body
+      const {greet} = body
 
       return (
         <>
@@ -402,38 +412,6 @@ add a link that will dig for the missing content to replace "Waiting for greet".
       )
     }
     ```
-
-### **`show.jsx` alternative**
-
-This version does the same thing, but we're using the function directly.
-
-```js
-import React, { useContext } from 'react'
-import { useContent, Navigationcontext } from '@thoughtbot/superglue'
-
-export default function GreetShow() {
-  const {
-    body,
-    footer,
-    loadGreetPath
-  } = useContent()
-  const { greet } = body
-
-  const { remote } = useContext(NavigationContext)
-  const handleClick = (e) => {
-    e.preventDefault()
-    remote(loadGreetPath)
-  }
-
-  return (
-    <>
-      <h1>{greet || "Waiting for greet"}</h1>
-      <a href={loadGreetPath} onClick={handleClick}>Greet!</a>
-      <span>{footer}</span>
-    </>
-  )
-}
-```
 
 ### Finish
 
@@ -451,6 +429,39 @@ grabbed the content at `data.greet` from `show.json.props` AND stored it on
 
 Now that's productive!
 
+!!! tip
+    This `show.jsx` alternative does the same thing, but we're using the `remote`
+    function directly. 
+
+    ```js
+    import React, { useContext } from 'react'
+    import { useContent, Navigationcontext } from '@thoughtbot/superglue'
+
+    export default function GreetsShow() {
+      const {
+        body,
+        footer,
+        loadGreetPath
+      } = useContent()
+      const {greet} = body
+
+      const { remote } = useContext(NavigationContext)
+      const handleClick = (e) => {
+        e.preventDefault()
+        remote(loadGreetPath)
+      }
+
+      return (
+        <>
+          <h1>{greet || "Waiting for greet"}</h1>
+          <a href={loadGreetPath} onClick={handleClick}>Greet!</a>
+          <span>{footer}</span>
+        </>
+      )
+    }
+    ```
+
+
 
 ## Improvements
 In practice, there's a far simpler solution: `defer: :auto`, which would do all of the
@@ -465,7 +476,7 @@ above without a button.
     2. Automatically create a remote request for the missing node
 
     ```ruby hl_lines="1"
-    json.body(defer: [:auto, placeholder: { greet: "Waiting for Greet"}) do
+    json.body(defer: [:auto, placeholder: { greet: "Waiting for Greet"}]) do
       sleep 5
       json.greet "Hello world"
     end
@@ -482,12 +493,12 @@ above without a button.
     import React from 'react'
     import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetShow() {
+    export default function GreetsShow() {
       const {
         body,
         footer
       } = useContent()
-      const { greet } = body
+      const {greet} = body
 
       return (
         <>
@@ -498,3 +509,4 @@ above without a button.
     }
     ```
 
+[progress bar]: recipes/progress-bar.md

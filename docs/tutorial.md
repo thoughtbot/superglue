@@ -2,10 +2,10 @@
 
 ## Hello World
 
-For this tutorial, you will be building a hello world page. Its one page, but we'll
+For this tutorial, you will be building a "Hello World" page. It's one page, but we'll
 add complexity as we progress to highlight the power of Superglue.
 
-Lets build a new rails project:
+Let's build a new rails project:
 
 ```
 rails new tutorial -j esbuild --skip-hotwire
@@ -18,7 +18,7 @@ then follow the [installation](./installation.md) instructions to setup
 Superglue.
 
 ### Start with the usual
-Lets begin by adding a route and a controller to an app.
+Let's begin by adding a route and a controller to an app.
 
 === "`routes.rb`"
     in `app/config/routes.rb`
@@ -56,19 +56,19 @@ Lets begin by adding a route and a controller to an app.
 
 ### Add the views
 
-Next lets add the following views.
+Next, let's add the following views.
 
 - `app/views/greets/show.json.props`
 - `app/views/greets/show.jsx`
 
-The Superglue installation generator also adds a `application/superglue.html.erb`, which
-will be used as the default html template for every controller action.
+The Superglue installation generator also adds an `application/superglue.html.erb`, which
+will be used as the default HTML template for every controller action.
 
 Click the tabs below to see the contents:
 
 === "1. `show.json.props`"
     If you've used Jbuidler, this should look familiar. Here, we're using
-    [props_template], a Jbuilder inspired templating DSL built for superglue.
+    [props_template], a Jbuilder inspired templating DSL built for Superglue.
 
     [props_template]: https://github.com/thoughtbot/props_template
 
@@ -85,7 +85,7 @@ Click the tabs below to see the contents:
     ```
 
 === "2. `show.jsx`"
-    This is the page component that will recieve the result of `show.json.props`.
+    This is the page component that will receive the result of `show.json.props`.
 
     ```js
     import React from 'react'
@@ -119,21 +119,21 @@ Click the tabs below to see the contents:
     <div id="app"></div>
     ```
 
-    This file renders `show.json.props`, injects it globally as the initial
+    This file renders `show.json.props` and injects it globally as the initial
     state to be picked up by Superglue on the browser.
 
 
 ### Connect the dots
 
-The json [payload] that gets injected contains a `componentIdentifier`.  We're
+The JSON [payload] that gets injected contains a `componentIdentifier`.  We're
 going to use the `componentIdentifier` to tie `show.json.props` to `show.jsx` so
-superglue knows which component to render with which response by modifying
+Superglue knows which component to render with which response by modifying
 `app/javascript/page_to_page_mapping.js`.
 
   [payload]: page-response.md
 
 !!! info
-    If you do not knowing what the `componentIdentifier` of a page is, you can
+    If you do not know what the `componentIdentifier` of a page is, you can
     always go to the `json` version of the page on your browser to see what
     gets rendered. In our case: http://localhost:3000/greet.json
 
@@ -142,7 +142,7 @@ superglue knows which component to render with which response by modifying
 
 === "1. Example `greet.json`"
     The layout for `show.json.props` is located at `app/views/layouts/application.json.props`. It
-    conforms to superglue's [payload] response, and uses the `active_template_virtual_path` as the
+    conforms to Superglue's [payload] response and uses the `active_template_virtual_path` as the
     `componentIdentifier`.
 
     ```json
@@ -211,7 +211,7 @@ Let's add some complexity to the previous sample.
 
     === "`data`"
 
-        When `@path = ['data']`. There's a 10 second sleep, and the output will be:
+        When `@path = ['data']`. There's a 10-second sleep, and the output will be:
 
         ```json
         {
@@ -235,7 +235,7 @@ Let's add some complexity to the previous sample.
 
     === "`data.body`"
 
-        When `@path = ['data', 'body']`. There's a 10 second sleep, and the output will be:
+        When `@path = ['data', 'body']`. There's a 10-second sleep, and the output will be:
 
         ```json
         {
@@ -282,7 +282,7 @@ Let's add some complexity to the previous sample.
 
 ### Continuing where we last left off
 
-Lets add a 5 second sleep to `show.json.props` so ever user is waiting 5
+Let's add a 5-second sleep to `show.json.props` so every user is waiting for 5
 seconds for every page load.
 
 
@@ -366,7 +366,7 @@ Now when the user lands on the page, we're no longer waiting 5 seconds. Lets
 add a link that will dig for the missing content to replace "Waiting for greet".
 
 === "`show.json.props`"
-    Add a url for the `href` link with `props_at` param. This is used on the
+    Add a URL for the `href` link with the `props_at` param. This is used on the
     `application.json.props` layout that instructs `props_template` to dig.
 
     ```ruby
@@ -382,11 +382,11 @@ add a link that will dig for the missing content to replace "Waiting for greet".
 
 === "`show.jsx`"
     Superglue embraces Unobtrusive Javascript. Add a `data-sg-remote` to any link,
-    and superglue will take care of making the fetch call.
+    and Superglue will take care of making the fetch call.
 
 
     !!! Tip
-        Clicking on a link won't show a progress indiciator. In practice, the first
+        Clicking on a link won't show a progress indicator. In practice, the first
         thing you want to do with a new Superglue project is add a [progress bar].
 
 
@@ -415,8 +415,8 @@ add a link that will dig for the missing content to replace "Waiting for greet".
 
 ### Finish
 
-And that's it. Now you have a button that will load content in async fashion,
-but how does it all work? Lets take a look at `loadGreetPath`
+And that's it. Now you have a button that will load content in an async fashion,
+but how does it all work? Let's take a look at `loadGreetPath`
 
 ```
 /greet?props_at=data.greet
@@ -431,7 +431,7 @@ Now that's productive!
 
 !!! tip
     This `show.jsx` alternative does the same thing, but we're using the `remote`
-    function directly. 
+    function directly.
 
     ```js
     import React, { useContext } from 'react'

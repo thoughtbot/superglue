@@ -107,6 +107,8 @@ Documentation is hosted on [GitHub pages](https://thoughtbot.github.io/superglue
 
 ## Contributing
 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Thank you, [contributors]!
 
   [contributors]: https://github.com/thoughtbot/superglue/graphs/contributors

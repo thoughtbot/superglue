@@ -107,7 +107,7 @@ export function appendReceivedFragmentsOntoPage(
   return nextState
 }
 
-export function graftNodeOntoPage<T extends JSONMappable>(
+export function graftNodeOntoTarget<T extends JSONMappable>(
   state: T,
   pageKey: string,
   node: JSONMappable,
@@ -147,7 +147,7 @@ function handleGraftResponse(
 
   return [
     (nextState: AllPages) =>
-      graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
+      graftNodeOntoTarget(nextState, pageKey, receivedNode, pathToNode),
     (nextState: AllPages) =>
       appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
   ].reduce((memo, fn) => fn(memo), state)

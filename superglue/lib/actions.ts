@@ -167,3 +167,39 @@ export const historyChange = createAction<{
 export const setActivePage = createAction<{
   pageKey: PageKey
 }>('@@superglue/SET_ACTIVE_PAGE')
+
+export const handleFragmentGraft = createAction(
+  '@@superglue/HANDLE_FRAGMENT_GRAFT',
+  ({
+    fragmentKey,
+    response,
+  }: {
+    fragmentKey: string
+    response: GraftResponse
+  }) => {
+    return {
+      payload: {
+        response,
+        fragmentKey,
+      },
+    }
+  }
+)
+
+export const saveFragment = createAction(
+  '@@superglue/SAVE_FRAGMENT',
+  ({
+    fragmentKey,
+    fragment,
+  }: {
+    fragmentKey: string
+    fragment: JSONMappable
+  }) => {
+    return {
+      payload: {
+        fragmentKey,
+        fragment,
+      },
+    }
+  }
+)

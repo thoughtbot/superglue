@@ -8,6 +8,8 @@ import {
   setCSRFToken,
   setActivePage,
   removePage,
+  handleFragmentGraft,
+  saveFragment,
 } from '../actions'
 import { config } from '../config'
 import {
@@ -18,6 +20,7 @@ import {
   GraftResponse,
   SuperglueState,
   JSONMappable,
+  AllFragments,
 } from '../types'
 
 function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
@@ -127,6 +130,24 @@ export function graftNodeOntoTarget<T extends JSONMappable>(
   return setIn(state, fullPathToNode, node)
 }
 
+function handleFragmentGraftResponse(
+  state: AllFragments,
+  key: string,
+  response: GraftResponse
+): AllFragments {
+  const target = state[key]
+
+  if (!target) {
+    const error = new Error(
+      `Superglue was looking for ${key} in your fragments, but could not find it.`
+    )
+    throw error
+  }
+  const { data: receivedNode, path: pathToNode } = response
+
+  return graftNodeOntoTarget(state, key, receivedNode, pathToNode)
+}
+
 function handleGraftResponse(
   state: AllPages,
   pageKey: string,
@@ -232,7 +253,25 @@ export function superglueReducer(
   return state
 }
 
+export function fragmentReducer(
+  state: AllFragments = {},
+  action: Action
+): AllFragments {
+  if (handleFragmentGraft.match(action)) {
+    const { fragmentKey, response } = action.payload
+    return handleFragmentGraftResponse(state, fragmentKey, response)
+  }
+
+  if (saveFragment.match(action)) {
+    const { fragmentKey, fragment } = action.payload
+    return { ...state, [fragmentKey]: fragment }
+  }
+
+  return state
+}
+
 export const rootReducer = {
   superglue: superglueReducer,
   pages: pageReducer,
+  fragments: fragmentReducer,
 }

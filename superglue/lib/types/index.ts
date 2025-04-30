@@ -181,6 +181,7 @@ export type Page<T = JSONMappable> = VisitResponse<T> & {
 export type GraftResponse<T = JSONMappable> = VisitResponse<T> & {
   action: 'graft'
   path: Keypath
+  fragmentContext?: string
 }
 
 /**
@@ -209,6 +210,12 @@ export type Fragment = {
 export type AllPages<T = JSONMappable> = Record<PageKey, Page<T>>
 
 /**
+ * The store where all page responses are stored indexed by PageKey. You are encouraged
+ * to mutate the Pages in this store.
+ */
+export type AllFragments = Record<string, JSONMappable>
+
+/**
  * A read only state that contains meta information about
  * the current page.
  */
@@ -232,6 +239,7 @@ export interface RootState<T = JSONMappable> {
   superglue: SuperglueState
   /** Every {@link PageResponse} that superglue recieves is stored here.*/
   pages: AllPages<T>
+  fragments: AllFragments
   [name: string]: unknown
 }
 

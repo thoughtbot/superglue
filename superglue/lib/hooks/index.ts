@@ -19,3 +19,19 @@ export function useContent<T = JSONMappable>() {
     (state) => state.pages[currentPageKey]
   ).data
 }
+
+/**
+ * A lightweight hook that grabs a fragment
+ */
+export function useFragment<T>(fragmentRef: string | { __id: string }): T {
+  let fragmentKey
+  if (typeof fragmentRef === 'string') {
+    fragmentKey = fragmentRef
+  } else {
+    fragmentKey = fragmentRef.__id
+  }
+
+  return useSelector<RootState<T>, T>(
+    (state) => state.fragments[fragmentKey] as T
+  )
+}

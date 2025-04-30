@@ -107,12 +107,12 @@ export function appendReceivedFragmentsOntoPage(
   return nextState
 }
 
-export function graftNodeOntoPage(
-  state: AllPages,
+export function graftNodeOntoPage<T extends JSONMappable>(
+  state: T,
   pageKey: string,
   node: JSONMappable,
   pathToNode: string
-): AllPages {
+): T {
   if (!node) {
     console.warn(
       'There was no node returned in the response. Do you have the correct key path in your props_at?'

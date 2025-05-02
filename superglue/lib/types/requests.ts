@@ -133,7 +133,7 @@ export interface ApplicationRemote {
    */
   (
     input: string | PageKey,
-    options: RemoteProps & {
+    options?: RemoteProps & {
       dataset?: {
         [name: string]: string | undefined
       }
@@ -155,7 +155,7 @@ export interface ApplicationVisit {
    */
   (
     input: string | PageKey,
-    options: VisitProps & {
+    options?: VisitProps & {
       dataset?: {
         [name: string]: string | undefined
       }

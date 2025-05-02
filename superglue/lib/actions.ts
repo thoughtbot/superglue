@@ -203,3 +203,129 @@ export const saveFragment = createAction(
     }
   }
 )
+
+export const replaceFragment = createAction(
+  '@@superglue/REPLACE_FRAGMENT',
+  ({ target, data }: { target: string; data: JSONMappable }) => {
+    return {
+      payload: {
+        data,
+        target,
+      },
+    }
+  }
+)
+
+export const appendToFragment = createAction(
+  '@@superglue/APPEND_TO_FRAGMENT',
+  ({ data, target }: { data: JSONMappable; target: string }) => {
+    return {
+      payload: {
+        data,
+        target,
+      },
+    }
+  }
+)
+
+export const prependToFragment = createAction(
+  '@@superglue/PREPEND_TO_FRAGMENT',
+  ({ data, target }: { data: JSONMappable; target: string }) => {
+    return {
+      payload: {
+        data,
+        target,
+      },
+    }
+  }
+)
+
+// export const mergeFragment = createAction(
+//   '@@superglue/MERGE_FRAGMENT',
+//   ({
+//     fragmentKey,
+//     fragment,
+//     target,
+//   }: {
+//     fragmentKey: string
+//     fragment: JSONMappable
+//     target: string
+//   }) => {
+//     return {
+//       payload: {
+//         fragmentKey,
+//         fragment,
+//         target,
+//       },
+//     }
+//   }
+// )
+
+// export const reverseMergeFragment = createAction(
+//   '@@superglue/REVERSE_MERGE_FRAGMENT',
+//   ({
+//     fragmentKey,
+//     fragment,
+//     target,
+//   }: {
+//     fragmentKey: string
+//     fragment: JSONMappable
+//     target: string
+//   }) => {
+//     return {
+//       payload: {
+//         fragmentKey,
+//         fragment,
+//         target,
+//       },
+//     }
+//   }
+// )
+
+// export const beforeFragment = createAction(
+//   '@@superglue/BEFORE_FRAGMENT',
+//   ({
+//     fragmentKey,
+//     fragment,
+//     target,
+//     within,
+//   }: {
+//     fragmentKey: string
+//     fragment: JSONMappable
+//     target: string
+//     within: string
+//   }) => {
+//     return {
+//       payload: {
+//         fragmentKey,
+//         fragment,
+//         target,
+//         within,
+//       },
+//     }
+//   }
+// )
+
+// export const afterFragment = createAction(
+//   '@@superglue/AFTER_FRAGMENT',
+//   ({
+//     fragmentKey,
+//     fragment,
+//     target,
+//     within,
+//   }: {
+//     fragmentKey: string
+//     fragment: JSONMappable
+//     target: string
+//     within: string
+//   }) => {
+//     return {
+//       payload: {
+//         fragmentKey,
+//         fragment,
+//         target,
+//         within,
+//       },
+//     }
+//   }
+// )

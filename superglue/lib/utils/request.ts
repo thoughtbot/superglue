@@ -1,6 +1,10 @@
 import { formatForXHR } from './url'
 import { config } from '../config'
 import { BasicRequestInit, ParsedResponse, RootState } from '../types'
+import { LimitedSet } from './limited_set'
+import { v4 as uuidv4 } from 'uuid'
+
+export const lastRequestIds = new LimitedSet(20)
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -77,6 +81,10 @@ export function argsForFetch(
   nextHeaders['x-requested-with'] = 'XMLHttpRequest'
   nextHeaders['accept'] = 'application/json'
   nextHeaders['x-superglue-request'] = 'true'
+
+  const requestId = uuidv4()
+  lastRequestIds.add(requestId)
+  nextHeaders['X-Superglue-Request-Id'] = requestId
 
   if (method != 'GET' && method != 'HEAD') {
     nextHeaders['content-type'] = 'application/json'

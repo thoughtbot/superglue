@@ -151,20 +151,18 @@ describe('fragments', () => {
           },
         })
       })
-      
+
       it('denormalizes new fragments found in the received graft response', async () => {
         const page = buildPage({
           action: 'graft',
-          fragments: [
-            {type: 'personDetails', path: "data.contactDetails"}
-          ],
+          fragments: [{ type: 'personDetails', path: 'data.contactDetails' }],
           data: {
             name: 'John Smith',
             contactDetails: {
               address: {
-                zip: 10001
-              }
-            }
+                zip: 10001,
+              },
+            },
           },
           fragmentContext: 'header',
           path: 'avatar',
@@ -204,13 +202,16 @@ describe('fragments', () => {
 
         expect(state.fragments).toEqual({
           header: {
-            avatar: { name: 'John Smith', contactDetails: {__id: "personDetails"} },
+            avatar: {
+              name: 'John Smith',
+              contactDetails: { __id: 'personDetails' },
+            },
           },
           personDetails: {
             address: {
-              zip: 10001
-            }
-          } 
+              zip: 10001,
+            },
+          },
         })
       })
     })

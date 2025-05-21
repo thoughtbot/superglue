@@ -16,7 +16,6 @@ export {
   beforeFetch,
   beforeVisit,
   beforeRemote,
-  updateFragments,
   copyPage,
   removePage,
   saveResponse,

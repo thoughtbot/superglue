@@ -45,31 +45,6 @@ export const superglueError = createAction<{ message: string }>(
 )
 
 /**
- * A redux action called whenever a fragment is received from `visit` or updated
- * using `remote`. Its a useful action to use for cross cutting concerns like a
- * shared header or a shopping cart. For example:
- *
- * ```
- * import { updateFragments } from '@thoughtbot/superglue'
- *
- * export const exampleSlice = createSlice({
- *  name: 'Example',
- *  initialState: {},
- *  extraReducers: (builder) => {
- *    builder.addCase(updateFragments, (state, action) => {
- *      // Update the slice using the latest and greatest.
- *      return action.value
- * ```
- */
-export const updateFragments = createAction<{
-  name: string
-  path: Keypath
-  pageKey: PageKey
-  value: JSONMappable
-  previousValue?: JSONMappable
-}>('@@superglue/UPDATE_FRAGMENTS')
-
-/**
  * A redux action you can dispatch to copy a page from one pageKey to another. Its
  * a very useful way to create optimistic updates with a URL change. For example:
  *

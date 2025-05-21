@@ -195,12 +195,22 @@ export type GraftResponse<T = JSONMappable> = {
   fragmentContext?: string
 }
 
+export type FragmentResponse<T = JSONMappable> = {
+  data: T
+  assets: string[]
+  csrfToken?: string
+  fragments: Fragment[]
+  action: 'handleFagments'
+
+  renderedAt: number
+}
+
 /**
  * A PageResponse can be either a {@link GraftResponse} or a {@link SaveResponse}.
  * Its meant to be implemented by the server and if you are using
  * superglue_rails, the generators will handle both cases.
  */
-export type PageResponse = GraftResponse | SaveResponse
+export type PageResponse = GraftResponse | SaveResponse | FragmentResponse
 
 /**
  * A Fragment identifies a cross cutting concern, like a shared header or footer.
@@ -274,7 +284,7 @@ export interface Meta {
   /** The original args passed to fetch.*/
   fetchArgs: FetchArgs
   /** The {@link ComponentIdentifier} extracted from the response.*/
-  componentIdentifier: ComponentIdentifier
+  componentIdentifier?: ComponentIdentifier
   /** `true` when assets locally are detected to be out of date */
   needsRefresh: boolean
 }

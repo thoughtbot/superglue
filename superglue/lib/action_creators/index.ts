@@ -15,6 +15,7 @@ import {
   GraftResponse,
   Defer,
   JSONMappable,
+  FragmentResponse,
 } from '../types'
 export * from './requests'
 
@@ -71,7 +72,7 @@ function fetchDeferments(
  */
 export function saveAndProcessPage(
   pageKey: string,
-  page: SaveResponse | GraftResponse
+  page: SaveResponse | GraftResponse | FragmentResponse
 ): SaveAndProcessPageThunk {
   return (dispatch) => {
     pageKey = urlToPageKey(pageKey)
@@ -102,8 +103,10 @@ export function saveAndProcessPage(
       } else {
         dispatch(handleGraft({ pageKey, page: nextPage }))
       }
-    } else {
+    } else if (nextPage.action === 'savePage') {
       dispatch(saveResponse({ pageKey, page: nextPage }))
+    } else {
+      return Promise.resolve()
     }
 
     const hasFetch = typeof fetch != 'undefined'

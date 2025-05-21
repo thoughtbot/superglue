@@ -116,7 +116,8 @@ export interface BeforeSave {
    * remote("/posts", {beforeSave})
    *```
    */
-  (prevPage: SaveResponse, receivedPage: PageResponse): PageResponse
+
+  <T extends PageResponse>(prevPage: SaveResponse, receivedPage: T): T
 }
 
 export interface ApplicationRemote {

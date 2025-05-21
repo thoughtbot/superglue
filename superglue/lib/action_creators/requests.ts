@@ -221,6 +221,7 @@ to the same page.
           navigationAction: calculateNavAction(
             meta,
             rsp,
+            json,
             isGet,
             pageKey,
             currentPageKey,
@@ -238,12 +239,18 @@ to the same page.
 function calculateNavAction(
   meta: Meta,
   rsp: Response,
+  json: PageResponse,
   isGet: boolean,
   pageKey: string,
   currentPageKey: string,
   revisit: boolean
 ) {
   let navigationAction: NavigationAction = 'push'
+
+  if (json.action === 'handleFagments') {
+    return 'none'
+  }
+
   if (!rsp.redirected && !isGet) {
     navigationAction = 'replace'
   }

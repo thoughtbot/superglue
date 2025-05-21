@@ -155,7 +155,7 @@ export type VisitResponse<T = JSONMappable> = {
   fragments: Fragment[]
   defers: Defer[]
   slices: JSONObject
-
+  action: 'visit'
   renderedAt: number
   restoreStrategy: RestoreStrategy
 }
@@ -178,8 +178,18 @@ export type Page<T = JSONMappable> = VisitResponse<T> & {
  * @property equals to `graft` to indicate a {@link GraftResponse}
  * @interface
  */
-export type GraftResponse<T = JSONMappable> = VisitResponse<T> & {
+export type GraftResponse<T = JSONMappable> = {
+  data: T
+  componentIdentifier: ComponentIdentifier
+  assets: string[]
+  csrfToken?: string
+  fragments: Fragment[]
+  defers: Defer[]
+  slices: JSONObject
   action: 'graft'
+  renderedAt: number
+  restoreStrategy: RestoreStrategy
+
   path: Keypath
   fragmentContext?: string
 }

@@ -103,10 +103,10 @@ export function saveAndProcessPage(
       } else {
         dispatch(handleGraft({ pageKey, page: nextPage }))
       }
-    } else if (nextPage.action === 'savePage') {
-      dispatch(saveResponse({ pageKey, page: nextPage }))
-    } else {
+    } else if (nextPage.action === 'handleFagments') {
       return Promise.resolve()
+    } else {
+      dispatch(saveResponse({ pageKey, page: nextPage }))
     }
 
     const hasFetch = typeof fetch != 'undefined'

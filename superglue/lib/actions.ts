@@ -3,7 +3,7 @@ import {
   FetchArgs,
   PageKey,
   GraftResponse,
-  VisitResponse,
+  SaveResponse,
   JSONMappable,
   Keypath,
 } from './types'
@@ -14,7 +14,7 @@ export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
 
 export const saveResponse = createAction(
   '@@superglue/SAVE_RESPONSE',
-  ({ pageKey, page }: { pageKey: string; page: VisitResponse }) => {
+  ({ pageKey, page }: { pageKey: string; page: SaveResponse }) => {
     pageKey = urlToPageKey(pageKey)
 
     return {

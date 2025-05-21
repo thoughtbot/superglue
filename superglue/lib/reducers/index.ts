@@ -22,7 +22,7 @@ import { config } from '../config'
 import {
   AllPages,
   Page,
-  VisitResponse,
+  SaveResponse,
   Fragment,
   GraftResponse,
   SuperglueState,
@@ -61,7 +61,7 @@ function constrainPagesSize(state: AllPages) {
 function handleSaveResponse(
   state: AllPages,
   pageKey: string,
-  page: VisitResponse
+  page: SaveResponse
 ): AllPages {
   state = { ...state }
 

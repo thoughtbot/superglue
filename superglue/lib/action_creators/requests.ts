@@ -17,7 +17,7 @@ import {
 import { saveAndProcessPage } from './index'
 import {
   FetchArgs,
-  VisitResponse,
+  SaveResponse,
   PageResponse,
   Page,
   SuperglueState,
@@ -40,7 +40,7 @@ function handleFetchErr(
 
 function buildMeta(
   pageKey: string,
-  page: VisitResponse,
+  page: SaveResponse,
   state: SuperglueState,
   rsp: Response,
   fetchArgs: FetchArgs

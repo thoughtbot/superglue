@@ -1,7 +1,7 @@
-import { GraftResponse, HistoryState, VisitResponse } from '../types'
+import { GraftResponse, HistoryState, SaveResponse } from '../types'
 import { urlToPageKey } from './url'
 
-export function isGraft(page: GraftResponse | VisitResponse): boolean {
+export function isGraft(page: GraftResponse | SaveResponse): boolean {
   return 'action' in page && page.action === 'graft'
 }
 

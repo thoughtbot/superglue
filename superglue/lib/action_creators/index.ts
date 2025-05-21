@@ -9,7 +9,7 @@ import {
 } from '../actions'
 import { remote } from './requests'
 import {
-  VisitResponse,
+  SaveResponse,
   SaveAndProcessPageThunk,
   DefermentThunk,
   GraftResponse,
@@ -71,7 +71,7 @@ function fetchDeferments(
  */
 export function saveAndProcessPage(
   pageKey: string,
-  page: VisitResponse | GraftResponse
+  page: SaveResponse | GraftResponse
 ): SaveAndProcessPageThunk {
   return (dispatch) => {
     pageKey = urlToPageKey(pageKey)

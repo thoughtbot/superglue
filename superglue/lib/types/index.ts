@@ -142,12 +142,12 @@ export type Defer = {
 }
 
 /**
- * The VisitResponse is a protocol, a shape that is responsible for full page
+ * The SaveResponse is a protocol, a shape that is responsible for full page
  * visits in Superglue. Its meant to be implemented by the server and if you are
  * using superglue_rails, the generators would have generated a props_template
  * layout and view that would shape the visit responses for you.
  */
-export type VisitResponse<T = JSONMappable> = {
+export type SaveResponse<T = JSONMappable> = {
   data: T
   componentIdentifier: ComponentIdentifier
   assets: string[]
@@ -161,9 +161,9 @@ export type VisitResponse<T = JSONMappable> = {
 }
 
 /**
- * A Page is a VisitResponse that's been saved to the store
+ * A Page is a SaveResponse that's been saved to the store
  */
-export type Page<T = JSONMappable> = VisitResponse<T> & {
+export type Page<T = JSONMappable> = SaveResponse<T> & {
   savedAt: number
 }
 
@@ -195,11 +195,11 @@ export type GraftResponse<T = JSONMappable> = {
 }
 
 /**
- * A PageResponse can be either a {@link GraftResponse} or a {@link VisitResponse}.
+ * A PageResponse can be either a {@link GraftResponse} or a {@link SaveResponse}.
  * Its meant to be implemented by the server and if you are using
  * superglue_rails, the generators will handle both cases.
  */
-export type PageResponse = GraftResponse | VisitResponse
+export type PageResponse = GraftResponse | SaveResponse
 
 /**
  * A Fragment identifies a cross cutting concern, like a shared header or footer.
@@ -261,11 +261,11 @@ export interface RootState<T = JSONMappable> {
 export interface Meta {
   /**
    * The URL of the response converted to a pageKey. Superglue uses this to
-   * persist the {@link VisitResponse} to store, when that happens.
+   * persist the {@link SaveResponse} to store, when that happens.
    */
   pageKey: PageKey
-  /** The {@link VisitResponse} of the page */
-  page: VisitResponse
+  /** The {@link SaveResponse} of the page */
+  page: SaveResponse
   /** Indicates if response was redirected */
   redirected: boolean
   /** The original response object*/
@@ -492,7 +492,7 @@ export interface SetupProps {
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
    * template, e.g., application/superglue.html.erb
    */
-  initialPage: VisitResponse
+  initialPage: SaveResponse
   /**
    * The base url prefixed to all calls made by `visit` and
    * `remote`.
@@ -537,7 +537,7 @@ export interface ApplicationProps
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
    * template, e.g., application/superglue.html.erb
    */
-  initialPage: VisitResponse
+  initialPage: SaveResponse
   /**
    * The base url prefixed to all calls made by `visit` and
    * `remote`.

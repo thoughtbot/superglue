@@ -25,7 +25,7 @@ export {
 export * from './types'
 
 import {
-  VisitResponse,
+  SaveResponse,
   ApplicationProps,
   NavigateTo,
   SuperglueStore,
@@ -52,7 +52,7 @@ const createHistory = () => {
 
 export const prepareStore = (
   store: SuperglueStore,
-  initialPage: VisitResponse,
+  initialPage: SaveResponse,
   path: string
 ) => {
   const initialPageKey = urlToPageKey(path)

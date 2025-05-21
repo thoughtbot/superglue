@@ -1,4 +1,4 @@
-import { Meta, VisitMeta, PageKey, VisitResponse } from '.'
+import { Meta, VisitMeta, PageKey, SaveResponse } from '.'
 
 export interface Visit {
   /**
@@ -116,7 +116,7 @@ export interface BeforeSave {
    * remote("/posts", {beforeSave})
    *```
    */
-  (prevPage: VisitResponse, receivedPage: VisitResponse): VisitResponse
+  (prevPage: SaveResponse, receivedPage: SaveResponse): SaveResponse
 }
 
 export interface ApplicationRemote {

@@ -91,7 +91,7 @@ export function saveAndProcessPage(
       )
     })
 
-    if ('action' in nextPage && typeof nextPage.action === 'string') {
+    if (nextPage.action === 'graft') {
       if (typeof nextPage.fragmentContext === 'string') {
         dispatch(
           handleFragmentGraft({

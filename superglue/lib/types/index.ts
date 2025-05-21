@@ -155,7 +155,8 @@ export type SaveResponse<T = JSONMappable> = {
   fragments: Fragment[]
   defers: Defer[]
   slices: JSONObject
-  action: 'visit'
+  action: 'savePage'
+
   renderedAt: number
   restoreStrategy: RestoreStrategy
 }
@@ -265,7 +266,7 @@ export interface Meta {
    */
   pageKey: PageKey
   /** The {@link SaveResponse} of the page */
-  page: SaveResponse
+  page: PageResponse
   /** Indicates if response was redirected */
   redirected: boolean
   /** The original response object*/

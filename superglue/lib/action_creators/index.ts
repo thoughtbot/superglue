@@ -5,6 +5,8 @@ import {
   GRAFTING_SUCCESS,
   handleGraft,
   saveFragment,
+  appendToFragment,
+  prependToFragment,
   handleFragmentGraft,
 } from '../actions'
 import { remote } from './requests'
@@ -90,6 +92,25 @@ export function saveAndProcessPage(
           fragment: node,
         })
       )
+
+      if ('action' in fragment) {
+        if (fragment.action === 'append') {
+          // need to add unique option
+          dispatch(
+            appendToFragment({
+              target: fragment.target,
+              data: { __id: fragment.type },
+            })
+          )
+        } else {
+          dispatch(
+            prependToFragment({
+              target: fragment.target,
+              data: { __id: fragment.type },
+            })
+          )
+        }
+      }
     })
 
     if (nextPage.action === 'graft') {

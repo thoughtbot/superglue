@@ -5,7 +5,6 @@ import {
   GraftResponse,
   SaveResponse,
   JSONMappable,
-  Keypath,
 } from './types'
 import { urlToPageKey } from './utils'
 

@@ -219,10 +219,19 @@ export type PageResponse = GraftResponse | SaveResponse | FragmentResponse
  * @prop path A Keypath specifying the location of the fragment
  * @interface
  */
-export type Fragment = {
+type FragmentBase = {
   type: string
   path: Keypath
 }
+export type Fragment =
+  | FragmentBase
+  | (FragmentBase & {
+      target: string
+      action: 'prepend' | 'append'
+      options?: {
+        unique?: boolean
+      }
+    })
 
 /**
  * The store where all page responses are stored indexed by PageKey. You are encouraged

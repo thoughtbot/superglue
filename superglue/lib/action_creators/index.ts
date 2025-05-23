@@ -125,6 +125,8 @@ export function saveAndProcessPage(
         dispatch(handleGraft({ pageKey, page: nextPage }))
       }
     } else if (nextPage.action === 'handleFagments') {
+      // We resolve the promise here because fragment responses
+      // have deferment disabled.
       return Promise.resolve()
     } else {
       dispatch(saveResponse({ pageKey, page: nextPage }))

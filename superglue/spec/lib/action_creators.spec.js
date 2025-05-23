@@ -530,6 +530,46 @@ describe('action creators', () => {
         expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
+
+    it('handles a fragmentResponse', () => {
+      const page = {
+        data: { 
+          body: {
+            footer: {
+              note: 'buy paper'
+            }
+          },
+          sideBar: {
+            message: 'hello'
+          },
+          notFragment: {
+            chart: 'this should be ignored'
+          }
+        },
+        csrfToken: 'token',
+        assets: [],
+        action: "handleFagments",
+        fragments: [
+          {type: "footer", path: "data.body.footer"},
+          {type: "side", path: "data.sideBar"}
+        ],
+      }
+      const store = buildStore(initialState())
+ 
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getState()).toMatchObject({
+          fragments: {
+            footer: {
+              note: "buy paper",
+            },
+            side: {
+              message: "hello"
+            }
+          },
+          pages: {}
+        })
+      })
+    })
   })
 
   describe('remote', () => {

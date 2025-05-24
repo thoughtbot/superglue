@@ -60,6 +60,19 @@ const successfulBody = () => {
   })
 }
 
+const successfulFragmentBody = () => {
+  return JSON.stringify({
+    data: { heading: 'Some heading 2' },
+    csrfToken: 'token',
+    assets: [],
+    fragments: [{
+      type: 'heading',
+      path: 'data.heading'
+    }],
+    action: 'handleFagments'
+  })
+}
+
 fetchMock.mock()
 
 describe('action creators', () => {
@@ -1474,6 +1487,32 @@ describe('action creators', () => {
           })
         )
       }).rejects.toThrow(MismatchedComponentError)
+    })
+
+    it('sets the navigation action on meta to none for fragment responses', () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/current_url',
+          csrfToken: 'token',
+        },
+      })
+
+      fetchMock.mock('https://example.com/foobar?format=json', {
+        body: successfulFragmentBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store
+        .dispatch(visit('/foobar'))
+        .then((meta) => {
+          expect(meta).toEqual(
+            expect.objectContaining({
+              navigationAction: 'none',
+            })
+          )
+        })
     })
   })
 })

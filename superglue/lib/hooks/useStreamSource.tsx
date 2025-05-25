@@ -196,7 +196,7 @@ export default function useStreamSource(channel: StreamSourceProps) {
 
     subscriptionRef.current = null
     setConnected(false)
-  }, [cable, currentPageKey, channel])
+  }, [cable, channel.channel, channel.signed_stream_name, currentPageKey])
 
   return {
     connected,

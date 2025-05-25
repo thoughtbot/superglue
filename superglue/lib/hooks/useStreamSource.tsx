@@ -1,5 +1,5 @@
 import { Channel } from 'actioncable'
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import {
   appendToFragment,
   prependToFragment,
@@ -175,22 +175,31 @@ export default function useStreamSource(channel: StreamSourceProps) {
   const { cable, streamActions } = useContext(CableContext)
   const [connected, setConnected] = useState(false)
   const { currentPageKey } = useSuperglue()
+  const subscriptionRef = useRef<Channel | null>(null)
 
   useEffect(() => {
-    let subscription: Channel | null = null
-
     if (cable) {
-      subscription = cable.subscriptions.create(channel, {
+      const subscription = cable.subscriptions.create(channel, {
         received: (message) => {
+          console.log('message')
+          console.log(message)
           streamActions?.handle(message, currentPageKey)
         },
         connected: () => setConnected(true),
         disconnected: () => setConnected(false),
       })
+
+      subscriptionRef.current = subscription
+
+      return () => subscription.unsubscribe()
     }
 
-    return () => subscription?.unsubscribe()
+    subscriptionRef.current = null
+    setConnected(false)
   }, [cable, currentPageKey, channel])
 
-  return { connected }
+  return {
+    connected,
+    subscription: subscriptionRef.current,
+  }
 }

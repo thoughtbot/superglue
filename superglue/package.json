@@ -88,6 +88,7 @@
     "actioncable": "^5.2.8-1",
     "history": "^5.3.0",
     "lodash.debounce": "^4.0.8",
+    "mock-socket": "^2.0.0",
     "uuid": "^11.1.0"
   }
 }

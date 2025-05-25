@@ -181,11 +181,11 @@ export default function useStreamSource(channel: StreamSourceProps) {
     if (cable) {
       const subscription = cable.subscriptions.create(channel, {
         received: (message) => {
-          console.log('message')
-          console.log(message)
           streamActions?.handle(message, currentPageKey)
         },
-        connected: () => setConnected(true),
+        connected: () => {
+          setConnected(true)
+        },
         disconnected: () => setConnected(false),
       })
 

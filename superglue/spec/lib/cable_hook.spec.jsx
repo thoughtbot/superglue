@@ -1,5 +1,5 @@
 import { Server as MockServer } from 'mock-socket'
-import { renderHook } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import useStreamSource, { CableContext } from '../../lib/hooks/useStreamSource'
 import { describe, it, assert, expect, vi } from 'vitest'
 import * as ActionCable from 'actioncable'
@@ -10,7 +10,6 @@ export const testURL = 'ws://cable.example.com/'
 
 export function defer(callback) {
   if(callback) {
-    console.log('deffering')
     setTimeout(callback, 5)
   }
 }
@@ -35,7 +34,6 @@ const consumerTest = function (name, options, callback) {
         consumer.addSubProtocol(options.subprotocols)
 
       server.on('connection', function () {
-        console.log('connected')
         const clients = server.clients()
         assert.equal(clients.length, 1)
         assert.equal(clients[0].readyState, WebSocket.OPEN)
@@ -83,92 +81,86 @@ const consumerTest = function (name, options, callback) {
 }
 
 describe('hooks', () => {
-  consumerTest("#connected callback", ({server, consumer, done}) => {
-    const subscription = consumer.subscriptions.create("chat", {
-      received(message) {
-        console.log('message')
-        console.log(message)
-        streamActions?.handle(message, currentPageKey)
-        done()
-      },
-      connected() {
-        console.log('connected one')
-        // assert.ok(true)
-        // defer(()=> {
-        //   // console.log('deffering');
-        //   server.broadcastTo(subscription, {message_type: "confirmation"})
-        // })
-      }
-    })
-    console.log(subscription)
-    // subscription.connect()
-    // consumer.connect()
-    // server.broadcastTo(subscription, {message_type: "confirmation"})
-  })
-
-  // describe('useContent', () => {
-    // consumerTest('connects well', async ({ server, consumer, done }) => {
-    //   const streamActions = {
-    //     handle: vi.fn(),
-    //   }
-
-    //   const preloadedState = {
-    //     superglue: {
-    //       currentPageKey: '/current?abc=123',
-    //       pathname: '/current',
-    //       search: '?abc=123',
-    //       csrfToken: 'csrf123',
-    //       assets: ['js-asset-123'],
-    //     },
-    //   }
-    //   let store = configureStore({
-    //     preloadedState,
-    //     reducer: (state) => state,
-    //   })
-
-    //   const wrapper = ({ children }) => (
-    //     <Provider store={store}>
-    //       <CableContext.Provider value={{ cable: consumer, streamActions }}>
-    //         {children}
-    //       </CableContext.Provider>
-    //     </Provider>
-    //   )
-
-    //   const { result, rerender } = renderHook(
-    //     () =>
-    //       useStreamSource({
-    //         channel: 'TestChannel',
-    //         signed_stream_name: 'abc',
-    //       }),
-    //     { wrapper }
-    //   )
-
-    //   console.log(result)
-    //   rerender()
-    //   console.log(result)
-    //   rerender()
-    //   console.log(result)
-
-    //   const spy = vi.spyOn(streamActions, 'handle')
-
-    //   server.broadcastTo(result.current.subscription, {
-    //     type: 'message',
-    //     action: 'append',
-    //     data: { id: 1, name: 'foo' },
-    //     targets: ['stream_1'],
-    //     options: {},
-    //   })
-
-    //   await new Promise((r) => setTimeout(r, 5))
-
-    //   expect(spy).toHaveBeenCalledWith({})
-    //   // expect(result.current.connected).toBe(true)
-
-    //   // consumer.disconnect()
-    //   // server.close()
-    //   // expect(result.current.connected).toBe(false)
-
-    //   done()
-    // })
+  // consumerTest("#connected callback", ({server, consumer, done}) => {
+  //   const subscription = consumer.subscriptions.create("chat", {
+  //     received(message) {
+  //       assert.ok(true)
+  //       done()
+  //     },
+  //     connected() {
+  //     }
+  //   })
+  //   server.broadcastTo(subscription, {message: "hello"})
   // })
+
+  describe('useStreamSource', () => {
+    consumerTest('connects well', async ({ server, consumer, done }) => {
+      const streamActions = {
+        handle: vi.fn(),
+      }
+
+      const preloadedState = {
+        superglue: {
+          currentPageKey: '/current?abc=123',
+          pathname: '/current',
+          search: '?abc=123',
+          csrfToken: 'csrf123',
+          assets: ['js-asset-123'],
+        },
+      }
+      let store = configureStore({
+        preloadedState,
+        reducer: (state) => state,
+      })
+
+      const wrapper = ({ children }) => (
+        <Provider store={store}>
+          <CableContext.Provider value={{ cable: consumer, streamActions }}>
+            {children}
+          </CableContext.Provider>
+        </Provider>
+      )
+
+      const { result, rerender, waitForNextUpdate } = renderHook(
+        () =>
+          useStreamSource({
+            channel: 'TestChannel',
+            signed_stream_name: 'abc',
+          }),
+        { wrapper }
+      )
+
+      rerender()
+
+      expect(result.current.subscription).not.equal(null)
+      expect(result.current.connected).toBe(false)
+      act(() => {
+        server.broadcastTo(result.current.subscription, {message_type: "confirmation"})
+      })
+
+      expect(result.current.connected).toBe(true)
+
+      const spy = vi.spyOn(streamActions, 'handle')
+
+      const message = JSON.stringify({
+        type: 'message',
+        action: 'append',
+        data: { id: 1, name: 'foo' },
+        targets: ['stream_1'],
+        options: {},
+      })
+
+      server.broadcastTo(result.current.subscription, {message})
+
+      await new Promise((r) => setTimeout(r, 5))
+
+      expect(spy).toHaveBeenCalledWith(message, preloadedState.superglue.currentPageKey)
+
+      act(() => {
+        consumer.disconnect()
+      })
+      expect(result.current.connected).toBe(false)
+      done()
+    })
+  })
 })

@@ -1,4 +1,4 @@
-import { Channel } from 'actioncable'
+import { Consumer, Subscription } from '@rails/actioncable'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import {
   appendToFragment,
@@ -164,7 +164,7 @@ export class StreamActions {
 }
 
 export const CableContext = createContext<{
-  cable: ActionCable.Cable | null
+  cable: Consumer | null
   streamActions: StreamActions | null
 }>({
   cable: null,
@@ -175,7 +175,7 @@ export default function useStreamSource(channel: StreamSourceProps) {
   const { cable, streamActions } = useContext(CableContext)
   const [connected, setConnected] = useState(false)
   const { currentPageKey } = useSuperglue()
-  const subscriptionRef = useRef<Channel | null>(null)
+  const subscriptionRef = useRef<Subscription | null>(null)
 
   useEffect(() => {
     if (cable) {
@@ -192,10 +192,12 @@ export default function useStreamSource(channel: StreamSourceProps) {
       subscriptionRef.current = subscription
 
       return () => subscription.unsubscribe()
-    }
+    } else {
+      subscriptionRef.current = null
+      setConnected(false)
 
-    subscriptionRef.current = null
-    setConnected(false)
+      return () => {}
+    }
   }, [cable, channel.channel, channel.signed_stream_name, currentPageKey])
 
   return {

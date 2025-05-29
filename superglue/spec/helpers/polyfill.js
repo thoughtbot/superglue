@@ -10,6 +10,11 @@ function setUpDomEnvironment() {
   window.WebSocket = MockWebSocket
   global.WebSocket = MockWebSocket
 
+  /// JSON doesn't include event listeners???
+  // fix this
+  global.addEventListener = () => {}
+  global.removeEventListener = () => {}
+
   global.window = window
   global.document = window.document
   global.navigator = {

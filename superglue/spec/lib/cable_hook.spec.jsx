@@ -1,8 +1,9 @@
+import React from 'react'
 import { Server as MockServer } from 'mock-socket'
-import { renderHook, act, waitFor } from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react'
 import useStreamSource, { CableContext } from '../../lib/hooks/useStreamSource'
 import { describe, it, assert, expect, vi } from 'vitest'
-import * as ActionCable from 'actioncable'
+import * as ActionCable from '@rails/actioncable'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
@@ -121,7 +122,7 @@ describe('hooks', () => {
         </Provider>
       )
 
-      const { result, rerender, waitForNextUpdate } = renderHook(
+      const { result, rerender } = renderHook(
         () =>
           useStreamSource({
             channel: 'TestChannel',

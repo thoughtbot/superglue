@@ -49,7 +49,6 @@
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
-    "@types/actioncable": "^5.2.11",
     "@types/node": "^22.10.1",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
@@ -84,8 +83,9 @@
     "react-redux": "^9 || ^8"
   },
   "dependencies": {
+    "@rails/actioncable": "^8.0.200",
     "@types/lodash.debounce": "^4.0.9",
-    "actioncable": "^5.2.8-1",
+    "@types/rails__actioncable": "^6.1.11",
     "history": "^5.3.0",
     "lodash.debounce": "^4.0.8",
     "mock-socket": "^2.0.0",

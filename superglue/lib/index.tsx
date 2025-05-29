@@ -6,7 +6,8 @@ import { historyChange, setCSRFToken } from './actions'
 import { Provider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
-import { createConsumer } from 'actioncable'
+import { createConsumer } from '@rails/actioncable'
+
 import { createBrowserHistory, createMemoryHistory } from 'history'
 
 import { NavigationProvider } from './components/Navigation'

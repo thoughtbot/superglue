@@ -36,6 +36,8 @@ export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
 export * from './hooks'
+import useStreamSource from './hooks/useStreamSource'
+export { useStreamSource }
 
 const cable = createConsumer()
 

@@ -1,5 +1,11 @@
 import { useSelector } from 'react-redux'
-import { JSONMappable, Page, RootState, SuperglueState, AllFragments } from '../types'
+import {
+  JSONMappable,
+  Page,
+  RootState,
+  SuperglueState,
+  AllFragments,
+} from '../types'
 export { useFragment } from './useFragment'
 
 /**
@@ -23,60 +29,106 @@ export function useContent<T = JSONMappable>() {
 
 type ContentSelector<T, R> = (content: T) => R
 type ProxiedContent<T> = T & {
-  [K in keyof T]: T[K] extends { __id: string } 
+  [K in keyof T]: T[K] extends { __id: string }
     ? T[K] & (() => any)
-    : T[K] extends (infer U)[] 
-      ? ProxiedContent<U>[]
-      : T[K] extends object
-        ? ProxiedContent<T[K]>
-        : T[K]
+    : T[K] extends (infer U)[]
+    ? ProxiedContent<U>[]
+    : T[K] extends object
+    ? ProxiedContent<T[K]>
+    : T[K]
+}
+
+function validateResult(
+  value: any,
+  getProxyTarget: (proxy: any) => any,
+  getFragmentRef: (id: string) => any
+): any {
+  if (value === null || value === undefined) {
+    return value
+  }
+
+  if (typeof value !== 'object' && typeof value !== 'function') {
+    return value // primitives are allowed
+  }
+
+  // Handle callable fragment references
+  if (typeof value === 'function' && value.__id) {
+    return getFragmentRef(value.__id)
+  }
+
+  if (value.__isContentProxy === true) {
+    return getProxyTarget(value) // my proxy - unwrap it
+  }
+
+  throw new Error(
+    'useContentV2 selector must return primitives or proxy objects from the page. ' +
+      'Avoid creating plain objects/arrays like {...obj}, arr.map(), or new Proxy()'
+  )
 }
 
 function createContentProxy<T extends JSONMappable>(
-  content: T, 
-  fragments: AllFragments
+  content: T,
+  fragments: AllFragments,
+  proxyTargets: WeakMap<object, any>,
+  fragmentTargets: WeakMap<string, any>
 ): ProxiedContent<T> {
-  return new Proxy(content as any, {
+  const proxy = new Proxy(content as any, {
     get(target: any, prop: string | symbol) {
+      if (prop === '__isContentProxy') {
+        return true
+      }
+
       const value = target[prop]
-      
+
       if (value && typeof value === 'object') {
         if (value.__id && typeof value.__id === 'string') {
           const fragmentRef = { ...value }
+          fragmentTargets.set(value.__id, value)
           const callable = () => fragments[value.__id]
           Object.setPrototypeOf(callable, fragmentRef)
           Object.assign(callable, fragmentRef)
           return callable
         }
-        
+
         if (Array.isArray(value)) {
-          return new Proxy(value, {
+          const arrayProxy = new Proxy(value, {
             get(target, prop) {
+              if (prop === '__isContentProxy') {
+                return true
+              }
+
               const item = target[prop]
-              
+
               if (item && typeof item === 'object') {
                 if (item.__id && typeof item.__id === 'string') {
                   const fragmentRef = { ...item }
+                  fragmentTargets.set(item.__id, item)
                   const callable = () => fragments[item.__id]
                   Object.setPrototypeOf(callable, fragmentRef)
                   Object.assign(callable, fragmentRef)
                   return callable
                 }
-                
-                return createContentProxy(item, fragments)
+
+                return createContentProxy(item, fragments, proxyTargets, fragmentTargets)
               }
-              
+
               return item
-            }
+            },
           })
+
+          proxyTargets.set(arrayProxy, value)
+          return arrayProxy
         }
-        
-        return createContentProxy(value, fragments)
+
+        return createContentProxy(value, fragments, proxyTargets, fragmentTargets)
       }
-      
+
       return value
-    }
+    },
   })
+
+  proxyTargets.set(proxy, content)
+  return proxy
 }
 
 /**
@@ -102,7 +154,17 @@ export function useContentV2<T = JSONMappable, R = any>(
   return useSelector<RootState<T>, R>((state) => {
     const pageData = state.pages[currentPageKey].data
     const fragments = state.fragments
-    const proxiedContent = createContentProxy(pageData, fragments)
-    return selector(proxiedContent)
+
+    // Create WeakMaps to track targets - scoped to this selector execution
+    const proxyTargets = new WeakMap<object, any>()      // proxy → original target
+    const fragmentTargets = new WeakMap<string, any>()   // fragment ID → original reference
+
+    // Helper functions for lookup
+    const getProxyTarget = (proxy: any) => proxyTargets.get(proxy)
+    const getFragmentRef = (id: string) => fragmentTargets.get(id)
+
+    const proxiedContent = createContentProxy(pageData, fragments, proxyTargets, fragmentTargets)
+    const result = selector(proxiedContent)
+    return validateResult(result, getProxyTarget, getFragmentRef)
   })
 }

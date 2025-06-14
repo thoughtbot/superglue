@@ -70,199 +70,216 @@ describe('hooks', () => {
   })
 
   describe('useContentV2', () => {
-    const createTestState = () => ({
+    const testState = {
       superglue: {
-        currentPageKey: '/current?abc=123',
-        pathname: '/current',
-        search: '?abc=123',
-        csrfToken: 'csrf123',
-        assets: ['js-asset-123'],
+        currentPageKey: '/dashboard',
+        pathname: '/dashboard',
+        search: '',
+        csrfToken: 'token123',
+        assets: ['app.js'],
       },
       pages: {
-        '/current?abc=123': {
+        '/dashboard': {
           data: {
-            heading: 'Dashboard',
-            user: { __id: 'current_user' },
-            bestPost: { __id: 'post_1' },
-            worstPost: { __id: 'post_2' },
+            title: 'Dashboard',
+            user: { __id: 'user_1' },
+            post: { __id: 'post_1' },
             posts: [
               { __id: 'post_1' },
               { __id: 'post_2' },
-              { title: 'Regular post' }
+              { title: 'Plain post' }
             ],
-            metadata: {
+            settings: {
               theme: 'dark',
-              nested: { __id: 'nested_fragment' }
+              profile: { __id: 'user_1' }
             }
-          },
-        },
+          }
+        }
       },
       fragments: {
-        current_user: {
-          id: 123,
-          name: 'John Doe',
-          email: 'john@example.com'
+        user_1: {
+          id: 1,
+          name: 'Alice',
+          email: 'alice@example.com'
         },
         post_1: {
-          id: 1,
-          title: 'Best Post',
-          likes: 100,
-          content: 'This is the best post'
+          id: 101,
+          title: 'First Post',
+          likes: 50
         },
         post_2: {
-          id: 2,
-          title: 'Worst Post',
-          likes: 5,
-          content: 'This is the worst post'
-        },
-        nested_fragment: {
-          value: 'nested data'
+          id: 102,
+          title: 'Second Post',
+          likes: 25
         }
       }
-    })
+    }
 
-    const createWrapper = (preloadedState) => {
+    const createWrapper = (state = testState) => {
       const store = configureStore({
-        preloadedState,
+        preloadedState: state,
         reducer: (state) => state,
       })
       return ({ children }) => <Provider store={store}>{children}</Provider>
     }
 
-    it('returns the whole page when no selector is provided', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => useContentV2(), { wrapper })
-
-      expect(result.current).toEqual(preloadedState.pages['/current?abc=123'].data)
-    })
-
-    it('resolves fragments when called with parentheses', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => page.bestPost()), 
-        { wrapper }
-      )
-
-      expect(result.current).toEqual({
-        id: 1,
-        title: 'Best Post',
-        likes: 100,
-        content: 'This is the best post'
+    describe('without selector', () => {
+      it('returns whole page data', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => useContentV2(), { wrapper })
+        
+        expect(result.current).toEqual(testState.pages['/dashboard'].data)
       })
     })
 
-    it('returns fragment reference when not called', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => page.bestPost), 
-        { wrapper }
-      )
+    describe('primitives pass through', () => {
+      it('returns strings unchanged', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.title), 
+          { wrapper }
+        )
+        
+        expect(result.current).toBe('Dashboard')
+      })
 
-      expect(result.current.__id).toBe('post_1')
-    })
-
-    it('handles array access with fragments', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => page.posts[0]()), 
-        { wrapper }
-      )
-
-      expect(result.current).toEqual({
-        id: 1,
-        title: 'Best Post',
-        likes: 100,
-        content: 'This is the best post'
+      it('returns numbers unchanged', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.posts.length), 
+          { wrapper }
+        )
+        
+        expect(result.current).toBe(3)
       })
     })
 
-    it('handles complex expressions with multiple fragments', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => page.bestPost().likes + page.worstPost().likes), 
-        { wrapper }
-      )
+    describe('fragment resolution', () => {
+      it('resolves fragment with () call', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.user()), 
+          { wrapper }
+        )
+        
+        expect(result.current).toEqual({
+          id: 1,
+          name: 'Alice',
+          email: 'alice@example.com'
+        })
+      })
 
-      expect(result.current).toBe(105) // 100 + 5
-    })
-
-    it('handles nested object access', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => page.metadata.nested()), 
-        { wrapper }
-      )
-
-      expect(result.current).toEqual({
-        value: 'nested data'
+      it('resolves nested fragment data', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.user().name), 
+          { wrapper }
+        )
+        
+        expect(result.current).toBe('Alice')
       })
     })
 
-    it('handles mixed fragment and non-fragment data', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => ({
-          title: page.heading,
-          userName: page.user().name,
-          postTitle: page.bestPost().title
-        })), 
-        { wrapper }
-      )
-
-      expect(result.current).toEqual({
-        title: 'Dashboard',
-        userName: 'John Doe',
-        postTitle: 'Best Post'
+    describe('fragment references', () => {
+      it('returns unwrapped fragment reference without ()', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.user), 
+          { wrapper }
+        )
+        
+        expect(result.current).toEqual({ __id: 'user_1' })
       })
     })
 
-    it('handles arrays with mixed fragment and non-fragment items', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      const { result } = renderHook(() => 
-        useContentV2(page => [
-          page.posts[0]().title,  // Fragment
-          page.posts[2].title     // Non-fragment
-        ]), 
-        { wrapper }
-      )
+    describe('proxy unwrapping', () => {
+      it('unwraps object proxy to store data', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.settings), 
+          { wrapper }
+        )
+        
+        expect(result.current).toEqual({
+          theme: 'dark',
+          profile: { __id: 'user_1' }
+        })
+      })
 
-      expect(result.current).toEqual([
-        'Best Post',
-        'Regular post'
-      ])
+      it('unwraps array proxy to store data', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.posts), 
+          { wrapper }
+        )
+        
+        expect(result.current).toEqual([
+          { __id: 'post_1' },
+          { __id: 'post_2' },
+          { title: 'Plain post' }
+        ])
+      })
     })
 
-    it('proxy scope is limited to selector function', () => {
-      const preloadedState = createTestState()
-      const wrapper = createWrapper(preloadedState)
-      
-      // This should work - proxy used within selector
-      const { result: result1 } = renderHook(() => 
-        useContentV2(page => page.bestPost), 
-        { wrapper }
-      )
-      
-      expect(result1.current.__id).toBe('post_1')
-      
-      // The returned result should not be callable
-      expect(typeof result1.current).toBe('object')
-      expect(typeof result1.current.call).toBe('undefined')
+    describe('array access', () => {
+      it('resolves array element fragment', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.posts[0]()), 
+          { wrapper }
+        )
+        
+        expect(result.current).toEqual({
+          id: 101,
+          title: 'First Post',
+          likes: 50
+        })
+      })
+
+      it('returns array element reference', () => {
+        const wrapper = createWrapper()
+        const { result } = renderHook(() => 
+          useContentV2(page => page.posts[0]), 
+          { wrapper }
+        )
+        
+        expect(result.current).toEqual({ __id: 'post_1' })
+      })
+    })
+
+    describe('validation errors', () => {
+      it('rejects user-created objects', () => {
+        const wrapper = createWrapper()
+        
+        expect(() => {
+          renderHook(() => 
+            useContentV2(page => ({ custom: page.title })), 
+            { wrapper }
+          )
+        }).toThrow('useContentV2 selector must return primitives or proxy objects')
+      })
+
+      it('rejects user-created arrays', () => {
+        const wrapper = createWrapper()
+        
+        expect(() => {
+          renderHook(() => 
+            useContentV2(page => [page.title]), 
+            { wrapper }
+          )
+        }).toThrow('useContentV2 selector must return primitives or proxy objects')
+      })
+
+      it('rejects spread operations', () => {
+        const wrapper = createWrapper()
+        
+        expect(() => {
+          renderHook(() => 
+            useContentV2(page => ({ ...page.user })), 
+            { wrapper }
+          )
+        }).toThrow('useContentV2 selector must return primitives or proxy objects')
+      })
     })
   })
 })

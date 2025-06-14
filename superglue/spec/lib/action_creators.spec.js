@@ -643,6 +643,7 @@ describe('action creators', () => {
 
         expect(requestheaders).toEqual({
           accept: 'application/json',
+          "X-Superglue-Request-Id": expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
           'x-csrf-token': 'token',

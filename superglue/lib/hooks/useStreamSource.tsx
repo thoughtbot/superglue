@@ -1,4 +1,8 @@
-import { Consumer, Subscription } from '@rails/actioncable'
+import {
+  ChannelNameWithParams,
+  Consumer,
+  Subscription,
+} from '@rails/actioncable'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import {
   appendToFragment,
@@ -10,10 +14,7 @@ import { useSuperglue } from '.'
 import { debounce, DebouncedFunc } from 'lodash'
 import { lastRequestIds } from '../utils'
 
-type StreamSourceProps = {
-  channel: string
-  signed_stream_name: string
-}
+type StreamSourceProps = string | ChannelNameWithParams
 
 type StreamMessage =
   | {
@@ -198,7 +199,7 @@ export default function useStreamSource(channel: StreamSourceProps) {
 
       return () => {}
     }
-  }, [cable, channel.channel, channel.signed_stream_name, currentPageKey])
+  }, [cable, channel, currentPageKey])
 
   return {
     connected,

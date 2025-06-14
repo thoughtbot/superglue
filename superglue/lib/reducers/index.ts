@@ -13,10 +13,6 @@ import {
   appendToFragment,
   prependToFragment,
   replaceFragment,
-  // mergeFragment,
-  // reverseMergeFragment,
-  // beforeFragment,
-  // afterFragment,
 } from '../actions'
 import { config } from '../config'
 import {
@@ -309,90 +305,14 @@ export function fragmentReducer(
 
     if (Array.isArray(targetFragment)) {
       targetFragment = [data, ...targetFragment]
-    }
-    return {
-      ...state,
-      [target]: targetFragment,
+      return {
+        ...state,
+        [target]: targetFragment,
+      }
+    } else {
+      return state
     }
   }
-
-  // if (mergeFragment.match(action)) {
-  //   const { fragmentKey, fragment } = action.payload
-  //   const targetFragment = state[fragmentKey]
-
-  //   if (
-  //     typeof targetFragment === 'object' &&
-  //     !Array.isArray(targetFragment) &&
-  //     targetFragment !== null
-  //   ) {
-  //     state[fragmentKey] = { ...targetFragment, ...fragment }
-  //   }
-  // }
-
-  // if (reverseMergeFragment.match(action)) {
-  //   const { fragmentKey, fragment } = action.payload
-  //   const targetFragment = state[fragmentKey]
-
-  //   if (
-  //     typeof targetFragment === 'object' &&
-  //     !Array.isArray(targetFragment) &&
-  //     targetFragment !== null
-  //   ) {
-  //     state[fragmentKey] = { ...fragment, ...targetFragment }
-  //   }
-  // }
-
-  // if (beforeFragment.match(action)) {
-  //   const { fragmentKey, fragment, target, within } = action.payload
-  //   let collection = state[within]
-
-  //   if (Array.isArray(collection)) {
-  //     const targetFragmentIndex = collection.findIndex((item) => {
-  //       if (typeof item === 'object' && !Array.isArray(item) && item !== null) {
-  //         return item['__id'] === target
-  //       } else {
-  //         return false
-  //       }
-  //     })
-
-  //     if (targetFragmentIndex >= 0) {
-  //       collection = [...collection]
-  //       collection.splice(targetFragmentIndex, 0, { __id: fragmentKey })
-  //     }
-  //   }
-
-  //   return {
-  //     ...state,
-  //     [fragmentKey]: fragment,
-  //     [within]: collection,
-  //   }
-  // }
-
-  // if (afterFragment.match(action)) {
-  //   const { fragmentKey, fragment, target, within } = action.payload
-  //   let collection = state[within]
-
-  //   if (Array.isArray(collection)) {
-  //     const targetFragmentIndex = collection.findIndex((item) => {
-  //       if (typeof item === 'object' && !Array.isArray(item) && item !== null) {
-  //         return item['__id'] === target
-  //       } else {
-  //         return false
-  //       }
-  //     })
-
-  //     if (targetFragmentIndex >= 0) {
-  //       collection = [...collection]
-  //       collection.splice(targetFragmentIndex + 1, 0, { __id: fragmentKey })
-  //     }
-  //   }
-
-  //   return {
-  //     ...state,
-  //     [fragmentKey]: fragment,
-  //     [within]: collection,
-  //   }
-  // }
 
   return state
 }

@@ -160,8 +160,21 @@ export function useContentV2<T = JSONMappable, R = any>(
     const fragmentTargets = new WeakMap<string, any>()   // fragment ID → original reference
 
     // Helper functions for lookup
-    const getProxyTarget = (proxy: any) => proxyTargets.get(proxy)
-    const getFragmentRef = (id: string) => fragmentTargets.get(id)
+    const getProxyTarget = (proxy: any) => {
+      const target = proxyTargets.get(proxy)
+      if (target === undefined) {
+        throw new Error('Proxy target not found - this should never happen')
+      }
+      return target
+    }
+    
+    const getFragmentRef = (id: string) => {
+      const reference = fragmentTargets.get(id)
+      if (reference === undefined) {
+        throw new Error(`Fragment reference not found for ID: ${id}`)
+      }
+      return reference
+    }
 
     const proxiedContent = createContentProxy(pageData, fragments, proxyTargets, fragmentTargets)
     const result = selector(proxiedContent)

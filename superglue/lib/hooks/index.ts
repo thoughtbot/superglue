@@ -7,6 +7,7 @@ import {
   AllFragments,
 } from '../types'
 export { useFragment } from './useFragment'
+export { useContentV3 } from './useContentV3'
 
 /**
  * A lightweight hook that grabs the superglue state from the store.

@@ -70,7 +70,7 @@ function createContentProxy<T extends JSONMappable>(
   content: T,
   fragments: AllFragments,
   proxyTargets: WeakMap<object, any>,
-  fragmentTargets: WeakMap<string, any>
+  fragmentTargets: Record<string, any>
 ): ProxiedContent<T> {
   const proxy = new Proxy(content as any, {
     get(target: any, prop: string | symbol) {
@@ -83,7 +83,7 @@ function createContentProxy<T extends JSONMappable>(
       if (value && typeof value === 'object') {
         if (value.__id && typeof value.__id === 'string') {
           const fragmentRef = { ...value }
-          fragmentTargets.set(value.__id, value)
+          fragmentTargets[value.__id] = value
           const callable = () => fragments[value.__id]
           Object.setPrototypeOf(callable, fragmentRef)
           Object.assign(callable, fragmentRef)
@@ -102,7 +102,7 @@ function createContentProxy<T extends JSONMappable>(
               if (item && typeof item === 'object') {
                 if (item.__id && typeof item.__id === 'string') {
                   const fragmentRef = { ...item }
-                  fragmentTargets.set(item.__id, item)
+                  fragmentTargets[item.__id] = item
                   const callable = () => fragments[item.__id]
                   Object.setPrototypeOf(callable, fragmentRef)
                   Object.assign(callable, fragmentRef)
@@ -155,9 +155,9 @@ export function useContentV2<T = JSONMappable, R = any>(
     const pageData = state.pages[currentPageKey].data
     const fragments = state.fragments
 
-    // Create WeakMaps to track targets - scoped to this selector execution
+    // Create maps to track targets - scoped to this selector execution
     const proxyTargets = new WeakMap<object, any>()      // proxy → original target
-    const fragmentTargets = new WeakMap<string, any>()   // fragment ID → original reference
+    const fragmentTargets: Record<string, any> = {}      // fragment ID → original reference
 
     // Helper functions for lookup
     const getProxyTarget = (proxy: any) => {
@@ -169,7 +169,7 @@ export function useContentV2<T = JSONMappable, R = any>(
     }
     
     const getFragmentRef = (id: string) => {
-      const reference = fragmentTargets.get(id)
+      const reference = fragmentTargets[id]
       if (reference === undefined) {
         throw new Error(`Fragment reference not found for ID: ${id}`)
       }

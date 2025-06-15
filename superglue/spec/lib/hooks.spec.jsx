@@ -70,215 +70,173 @@ describe('hooks', () => {
   })
 
   describe('useContentV2', () => {
-    const testState = {
+    // Simple, focused test state
+    const state = {
       superglue: {
-        currentPageKey: '/dashboard',
-        pathname: '/dashboard',
-        search: '',
-        csrfToken: 'token123',
-        assets: ['app.js'],
+        currentPageKey: '/page',
       },
       pages: {
-        '/dashboard': {
+        '/page': {
           data: {
-            title: 'Dashboard',
-            user: { __id: 'user_1' },
-            post: { __id: 'post_1' },
+            title: 'Page Title',
+            count: 42,
+            user: { __id: 'user_123' },
             posts: [
               { __id: 'post_1' },
               { __id: 'post_2' },
-              { title: 'Plain post' }
+              { title: 'Non-fragment post' }
             ],
-            settings: {
-              theme: 'dark',
-              profile: { __id: 'user_1' }
+            meta: {
+              theme: 'light',
+              author: { __id: 'user_123' }
             }
           }
         }
       },
       fragments: {
-        user_1: {
-          id: 1,
-          name: 'Alice',
-          email: 'alice@example.com'
+        user_123: {
+          name: 'John',
+          role: 'admin'
         },
         post_1: {
-          id: 101,
-          title: 'First Post',
-          likes: 50
+          title: 'Hello World',
+          views: 100
         },
         post_2: {
-          id: 102,
-          title: 'Second Post',
-          likes: 25
+          title: 'Another Post',
+          views: 50
         }
       }
     }
 
-    const createWrapper = (state = testState) => {
+    const wrapper = ({ children }) => {
       const store = configureStore({
         preloadedState: state,
         reducer: (state) => state,
       })
-      return ({ children }) => <Provider store={store}>{children}</Provider>
+      return <Provider store={store}>{children}</Provider>
     }
 
-    describe('without selector', () => {
-      it('returns whole page data', () => {
-        const wrapper = createWrapper()
+    describe('basic behavior', () => {
+      it('returns whole page without selector', () => {
         const { result } = renderHook(() => useContentV2(), { wrapper })
-        
-        expect(result.current).toEqual(testState.pages['/dashboard'].data)
-      })
-    })
-
-    describe('primitives pass through', () => {
-      it('returns strings unchanged', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.title), 
-          { wrapper }
-        )
-        
-        expect(result.current).toBe('Dashboard')
+        expect(result.current).toBe(state.pages['/page'].data)
       })
 
-      it('returns numbers unchanged', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.posts.length), 
-          { wrapper }
-        )
+      it('returns primitives unchanged', () => {
+        const { result } = renderHook(() => useContentV2(page => page.title), { wrapper })
+        expect(result.current).toBe('Page Title')
         
-        expect(result.current).toBe(3)
-      })
-    })
-
-    describe('fragment resolution', () => {
-      it('resolves fragment with () call', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.user()), 
-          { wrapper }
-        )
-        
-        expect(result.current).toEqual({
-          id: 1,
-          name: 'Alice',
-          email: 'alice@example.com'
-        })
-      })
-
-      it('resolves nested fragment data', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.user().name), 
-          { wrapper }
-        )
-        
-        expect(result.current).toBe('Alice')
+        const { result: count } = renderHook(() => useContentV2(page => page.count), { wrapper })
+        expect(count.current).toBe(42)
       })
     })
 
     describe('fragment references', () => {
-      it('returns unwrapped fragment reference without ()', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.user), 
-          { wrapper }
-        )
+      it('returns stable fragment reference', () => {
+        const { result: result1 } = renderHook(() => useContentV2(page => page.user), { wrapper })
+        const { result: result2 } = renderHook(() => useContentV2(page => page.user), { wrapper })
         
-        expect(result.current).toEqual({ __id: 'user_1' })
-      })
-    })
-
-    describe('proxy unwrapping', () => {
-      it('unwraps object proxy to store data', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.settings), 
-          { wrapper }
-        )
-        
-        expect(result.current).toEqual({
-          theme: 'dark',
-          profile: { __id: 'user_1' }
-        })
+        // Should return original store object for stable reference equality
+        expect(result1.current).toBe(result2.current)
+        expect(result1.current).toEqual({ __id: 'user_123' })
       })
 
-      it('unwraps array proxy to store data', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.posts), 
-          { wrapper }
-        )
-        
-        expect(result.current).toEqual([
-          { __id: 'post_1' },
-          { __id: 'post_2' },
-          { title: 'Plain post' }
-        ])
-      })
-    })
-
-    describe('array access', () => {
-      it('resolves array element fragment', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.posts[0]()), 
-          { wrapper }
-        )
-        
-        expect(result.current).toEqual({
-          id: 101,
-          title: 'First Post',
-          likes: 50
-        })
+      it('handles nested fragment references', () => {
+        const { result } = renderHook(() => useContentV2(page => page.meta.author), { wrapper })
+        expect(result.current).toEqual({ __id: 'user_123' })
       })
 
-      it('returns array element reference', () => {
-        const wrapper = createWrapper()
-        const { result } = renderHook(() => 
-          useContentV2(page => page.posts[0]), 
-          { wrapper }
-        )
-        
+      it('handles array fragment references', () => {
+        const { result } = renderHook(() => useContentV2(page => page.posts[0]), { wrapper })
         expect(result.current).toEqual({ __id: 'post_1' })
       })
     })
 
-    describe('validation errors', () => {
-      it('rejects user-created objects', () => {
-        const wrapper = createWrapper()
+    describe('fragment resolution', () => {
+      it('resolves fragments with ()', () => {
+        const { result } = renderHook(() => useContentV2(page => page.user()), { wrapper })
+        expect(result.current).toEqual({ name: 'John', role: 'admin' })
+      })
+
+      it('resolves array fragments', () => {
+        const { result } = renderHook(() => useContentV2(page => page.posts[0]()), { wrapper })
+        expect(result.current).toEqual({ title: 'Hello World', views: 100 })
+      })
+
+      it('allows chaining after resolution', () => {
+        const { result } = renderHook(() => useContentV2(page => page.user().name), { wrapper })
+        expect(result.current).toBe('John')
+      })
+    })
+
+    describe('proxy unwrapping', () => {
+      it('unwraps object proxies to stable references', () => {
+        const { result: result1 } = renderHook(() => useContentV2(page => page.meta), { wrapper })
+        const { result: result2 } = renderHook(() => useContentV2(page => page.meta), { wrapper })
         
+        // Should return same reference for performance
+        expect(result1.current).toBe(result2.current)
+        expect(result1.current).toEqual({
+          theme: 'light',
+          author: { __id: 'user_123' }
+        })
+      })
+
+      it('unwraps array proxies to stable references', () => {
+        const { result: result1 } = renderHook(() => useContentV2(page => page.posts), { wrapper })
+        const { result: result2 } = renderHook(() => useContentV2(page => page.posts), { wrapper })
+        
+        expect(result1.current).toBe(result2.current)
+        expect(result1.current).toEqual([
+          { __id: 'post_1' },
+          { __id: 'post_2' },
+          { title: 'Non-fragment post' }
+        ])
+      })
+    })
+
+    describe('validation', () => {
+      it('rejects plain objects', () => {
         expect(() => {
-          renderHook(() => 
-            useContentV2(page => ({ custom: page.title })), 
-            { wrapper }
-          )
+          renderHook(() => useContentV2(page => ({ title: page.title })), { wrapper })
         }).toThrow('useContentV2 selector must return primitives or proxy objects')
       })
 
-      it('rejects user-created arrays', () => {
-        const wrapper = createWrapper()
-        
+      it('rejects plain arrays', () => {
         expect(() => {
-          renderHook(() => 
-            useContentV2(page => [page.title]), 
-            { wrapper }
-          )
+          renderHook(() => useContentV2(page => [page.title]), { wrapper })
         }).toThrow('useContentV2 selector must return primitives or proxy objects')
       })
 
-      it('rejects spread operations', () => {
-        const wrapper = createWrapper()
-        
+      it('rejects spread syntax', () => {
         expect(() => {
-          renderHook(() => 
-            useContentV2(page => ({ ...page.user })), 
-            { wrapper }
-          )
+          renderHook(() => useContentV2(page => ({ ...page.user })), { wrapper })
         }).toThrow('useContentV2 selector must return primitives or proxy objects')
+      })
+
+      it('rejects map operations', () => {
+        expect(() => {
+          renderHook(() => useContentV2(page => page.posts.map(p => p.title)), { wrapper })
+        }).toThrow('useContentV2 selector must return primitives or proxy objects')
+      })
+    })
+
+    describe('complex expressions', () => {
+      it('handles arithmetic with resolved fragments', () => {
+        const { result } = renderHook(() => 
+          useContentV2(page => page.posts[0]().views + page.posts[1]().views), 
+          { wrapper }
+        )
+        expect(result.current).toBe(150) // 100 + 50
+      })
+
+      it('handles string operations', () => {
+        const { result } = renderHook(() => 
+          useContentV2(page => `Hello ${page.user().name}`), 
+          { wrapper }
+        )
+        expect(result.current).toBe('Hello John')
       })
     })
   })

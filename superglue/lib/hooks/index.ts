@@ -41,7 +41,8 @@ type ProxiedContent<T> = T & {
 function validateResult(
   value: any,
   getProxyTarget: (proxy: any) => any,
-  getFragmentRef: (id: string) => any
+  getFragmentRef: (id: string) => any,
+  isResolvedFragment: (obj: any) => boolean
 ): any {
   if (value === null || value === undefined) {
     return value
@@ -60,6 +61,11 @@ function validateResult(
     return getProxyTarget(value) // my proxy - unwrap it
   }
 
+  // Allow resolved fragment data
+  if (isResolvedFragment(value)) {
+    return value // resolved fragment data - allow it
+  }
+
   throw new Error(
     'useContentV2 selector must return primitives or proxy objects from the page. ' +
       'Avoid creating plain objects/arrays like {...obj}, arr.map(), or new Proxy()'
@@ -70,7 +76,8 @@ function createContentProxy<T extends JSONMappable>(
   content: T,
   fragments: AllFragments,
   proxyTargets: WeakMap<object, any>,
-  fragmentTargets: Record<string, any>
+  fragmentTargets: Record<string, any>,
+  resolvedFragments: WeakSet<object>
 ): ProxiedContent<T> {
   const proxy = new Proxy(content as any, {
     get(target: any, prop: string | symbol) {
@@ -84,7 +91,14 @@ function createContentProxy<T extends JSONMappable>(
         if (value.__id && typeof value.__id === 'string') {
           const fragmentRef = { ...value }
           fragmentTargets[value.__id] = value
-          const callable = () => fragments[value.__id]
+          const callable = () => {
+            const fragmentData = fragments[value.__id]
+            // Track resolved fragment data to distinguish from user-created objects
+            if (fragmentData && typeof fragmentData === 'object') {
+              resolvedFragments.add(fragmentData)
+            }
+            return fragmentData
+          }
           Object.setPrototypeOf(callable, fragmentRef)
           Object.assign(callable, fragmentRef)
           return callable
@@ -103,13 +117,20 @@ function createContentProxy<T extends JSONMappable>(
                 if (item.__id && typeof item.__id === 'string') {
                   const fragmentRef = { ...item }
                   fragmentTargets[item.__id] = item
-                  const callable = () => fragments[item.__id]
+                  const callable = () => {
+                    const fragmentData = fragments[item.__id]
+                    // Track resolved fragment data to distinguish from user-created objects
+                    if (fragmentData && typeof fragmentData === 'object') {
+                      resolvedFragments.add(fragmentData)
+                    }
+                    return fragmentData
+                  }
                   Object.setPrototypeOf(callable, fragmentRef)
                   Object.assign(callable, fragmentRef)
                   return callable
                 }
 
-                return createContentProxy(item, fragments, proxyTargets, fragmentTargets)
+                return createContentProxy(item, fragments, proxyTargets, fragmentTargets, resolvedFragments)
               }
 
               return item
@@ -120,7 +141,7 @@ function createContentProxy<T extends JSONMappable>(
           return arrayProxy
         }
 
-        return createContentProxy(value, fragments, proxyTargets, fragmentTargets)
+        return createContentProxy(value, fragments, proxyTargets, fragmentTargets, resolvedFragments)
       }
 
       return value
@@ -158,6 +179,7 @@ export function useContentV2<T = JSONMappable, R = any>(
     // Create maps to track targets - scoped to this selector execution
     const proxyTargets = new WeakMap<object, any>()      // proxy → original target
     const fragmentTargets: Record<string, any> = {}      // fragment ID → original reference
+    const resolvedFragments = new WeakSet<object>()      // resolved fragment objects
 
     // Helper functions for lookup
     const getProxyTarget = (proxy: any) => {
@@ -176,8 +198,10 @@ export function useContentV2<T = JSONMappable, R = any>(
       return reference
     }
 
-    const proxiedContent = createContentProxy(pageData, fragments, proxyTargets, fragmentTargets)
+    const isResolvedFragment = (obj: any) => resolvedFragments.has(obj)
+
+    const proxiedContent = createContentProxy(pageData, fragments, proxyTargets, fragmentTargets, resolvedFragments)
     const result = selector(proxiedContent)
-    return validateResult(result, getProxyTarget, getFragmentRef)
+    return validateResult(result, getProxyTarget, getFragmentRef, isResolvedFragment)
   })
 }

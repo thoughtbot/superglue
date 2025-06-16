@@ -126,6 +126,9 @@ export function useContentV3<T = JSONMappable>(): ProxiedContent<T> {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
   const dependenciesRef = useRef<Set<string>>(new Set())
+  const proxyCache = useRef<Map<string, ProxiedContent<JSONMappable>>>(
+    new Map()
+  )
 
   const pageData = useSelector(
     (state: RootState) => state.pages[currentPageKey].data
@@ -134,21 +137,29 @@ export function useContentV3<T = JSONMappable>(): ProxiedContent<T> {
   const fragments = useSelector(
     (state: RootState) => state.fragments,
     (oldFragments, newFragments) => {
-      const oldDeps: JSONMappable[] = []
-      const newDeps: JSONMappable[] = []
+      if (oldFragments === newFragments) {
+        return true
+      }
+
+      let isEqual = true
 
       dependenciesRef.current.forEach((id) => {
-        oldDeps.push(oldFragments[id])
-        newDeps.push(newFragments[id])
+        const prevVal = oldFragments[id]
+        const nextVal = newFragments[id]
+
+        if (prevVal !== nextVal) {
+          proxyCache.current.delete(id)
+          isEqual = false
+        }
       })
 
-      return shallowEqual(oldDeps, newDeps)
+      return isEqual
     }
   )
 
   const proxy = useMemo(() => {
     return createContentProxy(pageData, fragments, dependenciesRef)
-  }, [pageData, fragments])
+  }, [pageData])
 
   return proxy
 }

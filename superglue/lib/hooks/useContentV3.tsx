@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector, useStore } from 'react-redux'
 import { useMemo, useRef, MutableRefObject } from 'react'
 import { JSONMappable, AllFragments, RootState } from '../types'
 import { useSuperglue } from './index'
@@ -23,9 +23,9 @@ function createArrayProxy(
   return new Proxy(arrayData, {
     get(target, prop) {
       if (prop === '__isContentProxy') return true
-      
+
       const item = target[prop]
-      
+
       if (item && typeof item === 'object') {
         if (item.__id && typeof item.__id === 'string') {
           const fragmentRef = { ...item }
@@ -37,24 +37,30 @@ function createArrayProxy(
           Object.assign(callable, fragmentRef)
           return callable
         }
-        
+
         return createContentProxy(item, fragments, dependenciesRef)
       }
-      
+
       return item
     },
-    
+
     set() {
-      throw new Error('Cannot mutate proxy array. Use Redux actions to update state.')
+      throw new Error(
+        'Cannot mutate proxy array. Use Redux actions to update state.'
+      )
     },
-    
+
     deleteProperty() {
-      throw new Error('Cannot delete properties on proxy array. Use Redux actions to update state.')
+      throw new Error(
+        'Cannot delete properties on proxy array. Use Redux actions to update state.'
+      )
     },
-    
+
     defineProperty() {
-      throw new Error('Cannot define properties on proxy array. Use Redux actions to update state.')
-    }
+      throw new Error(
+        'Cannot define properties on proxy array. Use Redux actions to update state.'
+      )
+    },
   })
 }
 
@@ -66,9 +72,9 @@ function createContentProxy<T extends JSONMappable>(
   return new Proxy(content as any, {
     get(target: any, prop: string | symbol) {
       if (prop === '__isContentProxy') return true
-      
+
       const value = target[prop]
-      
+
       if (value && typeof value === 'object') {
         if (value.__id && typeof value.__id === 'string') {
           const fragmentRef = { ...value }
@@ -80,28 +86,34 @@ function createContentProxy<T extends JSONMappable>(
           Object.assign(callable, fragmentRef)
           return callable
         }
-        
+
         if (Array.isArray(value)) {
           return createArrayProxy(value, fragments, dependenciesRef)
         }
-        
+
         return createContentProxy(value, fragments, dependenciesRef)
       }
-      
+
       return value
     },
-    
+
     set() {
-      throw new Error('Cannot mutate page proxy. Use Redux actions to update state.')
+      throw new Error(
+        'Cannot mutate page proxy. Use Redux actions to update state.'
+      )
     },
-    
+
     deleteProperty() {
-      throw new Error('Cannot delete properties on page proxy. Use Redux actions to update state.')
+      throw new Error(
+        'Cannot delete properties on page proxy. Use Redux actions to update state.'
+      )
     },
-    
+
     defineProperty() {
-      throw new Error('Cannot define properties on page proxy. Use Redux actions to update state.')
-    }
+      throw new Error(
+        'Cannot define properties on page proxy. Use Redux actions to update state.'
+      )
+    },
   })
 }
 
@@ -114,26 +126,29 @@ export function useContentV3<T = JSONMappable>(): ProxiedContent<T> {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
   const dependenciesRef = useRef<Set<string>>(new Set())
-  
-  // Get current page and fragments data
-  const { pageData, fragments } = useSelector((state: RootState) => ({
-    pageData: state.pages[currentPageKey].data,
-    fragments: state.fragments
-  }))
-  
-  // Track accessed fragments for dependency management
-  const dependencyData = useSelector((state: RootState) => {
-    const deps = Array.from(dependenciesRef.current)
-    return deps.reduce((acc, fragmentId) => {
-      acc[fragmentId] = state.fragments[fragmentId]
-      return acc
-    }, {} as Record<string, any>)
-  })
-  
-  // Create stable proxy
+
+  const pageData = useSelector(
+    (state: RootState) => state.pages[currentPageKey].data
+  )
+
+  const fragments = useSelector(
+    (state: RootState) => state.fragments,
+    (oldFragments, newFragments) => {
+      const oldDeps: JSONMappable[] = []
+      const newDeps: JSONMappable[] = []
+
+      dependenciesRef.current.forEach((id) => {
+        oldDeps.push(oldFragments[id])
+        newDeps.push(newFragments[id])
+      })
+
+      return shallowEqual(oldDeps, newDeps)
+    }
+  )
+
   const proxy = useMemo(() => {
     return createContentProxy(pageData, fragments, dependenciesRef)
-  }, [pageData, fragments, dependencyData])
-  
+  }, [pageData, fragments])
+
   return proxy
 }

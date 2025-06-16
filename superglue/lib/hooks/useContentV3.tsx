@@ -18,7 +18,8 @@ type ProxiedContent<T> = T & {
 function createArrayProxy(
   arrayData: any[],
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>
+  dependenciesRef: MutableRefObject<Set<string>>,
+  proxyCache: MutableRefObject<Map<string, () => JSONMappable>>
 ) {
   return new Proxy(arrayData, {
     get(target, prop) {
@@ -28,6 +29,11 @@ function createArrayProxy(
 
       if (item && typeof item === 'object') {
         if (item.__id && typeof item.__id === 'string') {
+          // Check cache first!
+          if (proxyCache.current.has(item.__id)) {
+            return proxyCache.current.get(item.__id)
+          }
+
           const fragmentRef = { ...item }
           const callable = () => {
             dependenciesRef.current.add(item.__id)
@@ -35,10 +41,13 @@ function createArrayProxy(
           }
           Object.setPrototypeOf(callable, fragmentRef)
           Object.assign(callable, fragmentRef)
+
+          // Cache the new proxy
+          proxyCache.current.set(item.__id, callable)
           return callable
         }
 
-        return createContentProxy(item, fragments, dependenciesRef)
+        return createContentProxy(item, fragments, dependenciesRef, proxyCache)
       }
 
       return item
@@ -67,7 +76,8 @@ function createArrayProxy(
 function createContentProxy<T extends JSONMappable>(
   content: T,
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>
+  dependenciesRef: MutableRefObject<Set<string>>,
+  proxyCache: MutableRefObject<Map<string, () => JSONMappable>>
 ): ProxiedContent<T> {
   return new Proxy(content as any, {
     get(target: any, prop: string | symbol) {
@@ -77,6 +87,11 @@ function createContentProxy<T extends JSONMappable>(
 
       if (value && typeof value === 'object') {
         if (value.__id && typeof value.__id === 'string') {
+          // Check cache first!
+          if (proxyCache.current.has(value.__id)) {
+            return proxyCache.current.get(value.__id)
+          }
+
           const fragmentRef = { ...value }
           const callable = () => {
             dependenciesRef.current.add(value.__id)
@@ -84,14 +99,17 @@ function createContentProxy<T extends JSONMappable>(
           }
           Object.setPrototypeOf(callable, fragmentRef)
           Object.assign(callable, fragmentRef)
+
+          // Cache the new proxy
+          proxyCache.current.set(value.__id, callable)
           return callable
         }
 
         if (Array.isArray(value)) {
-          return createArrayProxy(value, fragments, dependenciesRef)
+          return createArrayProxy(value, fragments, dependenciesRef, proxyCache)
         }
 
-        return createContentProxy(value, fragments, dependenciesRef)
+        return createContentProxy(value, fragments, dependenciesRef, proxyCache)
       }
 
       return value
@@ -126,9 +144,7 @@ export function useContentV3<T = JSONMappable>(): ProxiedContent<T> {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
   const dependenciesRef = useRef<Set<string>>(new Set())
-  const proxyCache = useRef<Map<string, ProxiedContent<JSONMappable>>>(
-    new Map()
-  )
+  const proxyCache = useRef<Map<string, () => JSONMappable>>(new Map())
 
   const pageData = useSelector(
     (state: RootState) => state.pages[currentPageKey].data
@@ -158,7 +174,7 @@ export function useContentV3<T = JSONMappable>(): ProxiedContent<T> {
   )
 
   const proxy = useMemo(() => {
-    return createContentProxy(pageData, fragments, dependenciesRef)
+    return createContentProxy(pageData, fragments, dependenciesRef, proxyCache)
   }, [pageData])
 
   return proxy

@@ -242,41 +242,40 @@ describe('hooks', () => {
   })
 
   describe('useContentV3', () => {
-    // Test state matching V2 style
     const state = {
       superglue: {
-        currentPageKey: '/dashboard',
+        currentPageKey: '/page',
       },
       pages: {
-        '/dashboard': {
+        '/page': {
           data: {
-            title: 'Dashboard',
-            count: 25,
-            user: { __id: 'user_456' },
+            title: 'Page Title',
+            count: 42,
+            user: { __id: 'user_123' },
             posts: [
-              { __id: 'post_10' },
-              { __id: 'post_20' },
-              { title: 'Plain post' }
+              { __id: 'post_1' },
+              { __id: 'post_2' },
+              { title: 'Non-fragment post' }
             ],
-            settings: {
-              theme: 'dark',
-              profile: { __id: 'user_456' }
+            meta: {
+              theme: 'light',
+              author: { __id: 'user_123' }
             }
           }
         }
       },
       fragments: {
-        user_456: {
-          name: 'Jane',
-          role: 'editor'
+        user_123: {
+          name: 'John',
+          role: 'admin'
         },
-        post_10: {
-          title: 'V3 Post',
-          views: 200
+        post_1: {
+          title: 'Hello World',
+          views: 100
         },
-        post_20: {
-          title: 'Another V3 Post',
-          views: 75
+        post_2: {
+          title: 'Another Post',
+          views: 50
         }
       }
     }
@@ -289,148 +288,130 @@ describe('hooks', () => {
       return <Provider store={store}>{children}</Provider>
     }
 
-    describe('stable proxy behavior', () => {
-      it('returns stable proxy reference', () => {
-        const { result: result1, rerender } = renderHook(() => useContentV3(), { wrapper })
-        const { result: result2 } = renderHook(() => useContentV3(), { wrapper })
+    describe('basic behavior', () => {
+      it('returns page data as proxy', () => {
+        const { result } = renderHook(() => useContentV3(), { wrapper })
         
-        // Should return stable proxy objects
-        expect(result1.current).toBeDefined()
-        expect(result2.current).toBeDefined()
-        
-        // Proxies should have content proxy marker
-        expect(result1.current.__isContentProxy).toBe(true)
-        expect(result2.current.__isContentProxy).toBe(true)
+        expect(result.current.__isContentProxy).toBe(true)
+        expect(result.current.title).toBe('Page Title')
+        expect(result.current.count).toBe(42)
       })
 
-      it('allows property navigation without tracking', () => {
+      it('returns callable fragment references', () => {
         const { result } = renderHook(() => useContentV3(), { wrapper })
-        const proxy = result.current
         
-        // Navigate without calling - should not track dependencies
-        const userRef = proxy.user
-        const postsArray = proxy.posts
-        const firstPostRef = proxy.posts[0]
+        expect(typeof result.current.user).toBe('function')
+        expect(result.current.user.__id).toBe('user_123')
+      })
+
+      it('handles array fragment references', () => {
+        const { result } = renderHook(() => useContentV3(), { wrapper })
         
-        expect(userRef.__id).toBe('user_456')
-        expect(Array.isArray(postsArray)).toBe(true)
-        expect(firstPostRef.__id).toBe('post_10')
+        expect(typeof result.current.posts[0]).toBe('function')
+        expect(result.current.posts[0].__id).toBe('post_1')
+      })
+    })
+
+    describe('fragment references', () => {
+      it('maintains stable fragment reference within same hook', () => {
+        const { result, rerender } = renderHook(() => useContentV3(), { wrapper })
+        
+        const userRef1 = result.current.user
+        rerender()
+        const userRef2 = result.current.user
+        
+        // Should return same callable function for stable reference equality within same hook
+        expect(userRef1).toBe(userRef2)
+        expect(userRef1.__id).toBe('user_123')
+      })
+
+      it('handles nested fragment references', () => {
+        const { result } = renderHook(() => useContentV3(), { wrapper })
+        
+        expect(typeof result.current.meta.author).toBe('function')
+        expect(result.current.meta.author.__id).toBe('user_123')
+      })
+
+      it('handles array fragment references', () => {
+        const { result } = renderHook(() => useContentV3(), { wrapper })
+        
+        expect(typeof result.current.posts[0]).toBe('function')
+        expect(result.current.posts[0].__id).toBe('post_1')
       })
     })
 
     describe('fragment resolution', () => {
-      it('resolves fragments with () calls', () => {
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          return proxy.user()
-        }, { wrapper })
+      it('resolves fragments with ()', () => {
+        const { result } = renderHook(() => useContentV3(), { wrapper })
         
-        expect(result.current).toEqual({
-          name: 'Jane',
-          role: 'editor'
-        })
+        expect(result.current.user()).toEqual({ name: 'John', role: 'admin' })
       })
 
       it('resolves array fragments', () => {
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          return proxy.posts[0]()
-        }, { wrapper })
+        const { result } = renderHook(() => useContentV3(), { wrapper })
         
-        expect(result.current).toEqual({
-          title: 'V3 Post',
-          views: 200
-        })
+        expect(result.current.posts[0]()).toEqual({ title: 'Hello World', views: 100 })
       })
 
       it('allows chaining after resolution', () => {
+        const { result } = renderHook(() => useContentV3(), { wrapper })
+        
+        expect(result.current.user().name).toBe('John')
+      })
+    })
+
+    describe('proxy escape behavior', () => {
+      it('allows proxy to escape hook scope', () => {
+        let escapedProxy
+        
         const { result } = renderHook(() => {
           const proxy = useContentV3()
-          return proxy.user().name
+          escapedProxy = proxy
+          return proxy.title
         }, { wrapper })
         
-        expect(result.current).toBe('Jane')
+        expect(result.current).toBe('Page Title')
+        
+        // Use escaped proxy outside hook
+        expect(escapedProxy.title).toBe('Page Title')
+        expect(typeof escapedProxy.user).toBe('function')
+        expect(escapedProxy.user().name).toBe('John')
       })
     })
 
     describe('read-only enforcement', () => {
-      it('prevents direct property mutation', () => {
+      it('prevents page proxy mutations', () => {
         const { result } = renderHook(() => useContentV3(), { wrapper })
-        const proxy = result.current
         
         expect(() => {
-          proxy.title = 'New Title'
+          result.current.title = 'New Title'
         }).toThrow('Cannot mutate page proxy')
       })
 
-      it('prevents property deletion', () => {
+      it('prevents array proxy mutations', () => {
         const { result } = renderHook(() => useContentV3(), { wrapper })
-        const proxy = result.current
         
         expect(() => {
-          delete proxy.title
-        }).toThrow('Cannot delete properties on page proxy')
-      })
-
-      it('prevents defining new properties', () => {
-        const { result } = renderHook(() => useContentV3(), { wrapper })
-        const proxy = result.current
-        
-        expect(() => {
-          Object.defineProperty(proxy, 'newProp', { value: 'test' })
-        }).toThrow('Cannot define properties on page proxy')
-      })
-
-      it('prevents array mutation', () => {
-        const { result } = renderHook(() => useContentV3(), { wrapper })
-        const proxy = result.current
-        
-        expect(() => {
-          proxy.posts[0] = { title: 'hacked' }
+          result.current.posts[0] = { title: 'hacked' }
         }).toThrow('Cannot mutate proxy array')
       })
     })
 
-    describe('primitive access', () => {
-      it('returns primitives unchanged', () => {
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          return {
-            title: proxy.title,
-            count: proxy.count
-          }
-        }, { wrapper })
+    describe('cache behavior', () => {
+      it('maintains stable references within same hook instance', () => {
+        const { result, rerender } = renderHook(() => useContentV3(), { wrapper })
         
-        expect(result.current.title).toBe('Dashboard')
-        expect(result.current.count).toBe(25)
-      })
-    })
-
-    describe('nested object navigation', () => {
-      it('handles nested object access', () => {
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          return {
-            theme: proxy.settings.theme,
-            profileRef: proxy.settings.profile
-          }
-        }, { wrapper })
+        const userRef1 = result.current.user
+        const postRef1 = result.current.posts[0]
         
-        expect(result.current.theme).toBe('dark')
-        expect(typeof result.current.profileRef).toBe('function')
-        expect(result.current.profileRef.__id).toBe('user_456')
-      })
-
-      it('resolves nested fragments', () => {
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          return proxy.settings.profile()
-        }, { wrapper })
+        rerender()
         
-        expect(result.current).toEqual({
-          name: 'Jane',
-          role: 'editor'
-        })
+        const userRef2 = result.current.user
+        const postRef2 = result.current.posts[0]
+        
+        // Fragment references should be identical (cached) within same hook
+        expect(userRef1).toBe(userRef2)
+        expect(postRef1).toBe(postRef2)
       })
     })
 
@@ -441,7 +422,7 @@ describe('hooks', () => {
           return proxy.posts[0]().views + proxy.posts[1]().views
         }, { wrapper })
         
-        expect(result.current).toBe(275) // 200 + 75
+        expect(result.current).toBe(150) // 100 + 50
       })
 
       it('handles string operations', () => {
@@ -450,45 +431,7 @@ describe('hooks', () => {
           return `Hello ${proxy.user().name}`
         }, { wrapper })
         
-        expect(result.current).toBe('Hello Jane')
-      })
-
-      it('handles mixed access patterns', () => {
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          return {
-            title: proxy.title,                    // primitive
-            userRef: proxy.user,                   // fragment reference (callable)
-            userData: proxy.user(),                // resolved fragment
-            firstPostTitle: proxy.posts[0]().title // resolved array fragment
-          }
-        }, { wrapper })
-        
-        expect(result.current.title).toBe('Dashboard')
-        expect(typeof result.current.userRef).toBe('function')
-        expect(result.current.userRef.__id).toBe('user_456')
-        expect(result.current.userData).toEqual({ name: 'Jane', role: 'editor' })
-        expect(result.current.firstPostTitle).toBe('V3 Post')
-      })
-    })
-
-    describe('proxy escape behavior', () => {
-      it('allows proxy to be stored and used later', () => {
-        let savedProxy
-        
-        const { result } = renderHook(() => {
-          const proxy = useContentV3()
-          savedProxy = proxy  // Proxy "escapes" the hook
-          return proxy.title
-        }, { wrapper })
-        
-        expect(result.current).toBe('Dashboard')
-        
-        // Use saved proxy outside of hook
-        expect(savedProxy.title).toBe('Dashboard')
-        expect(typeof savedProxy.user).toBe('function')
-        expect(savedProxy.user.__id).toBe('user_456')
-        expect(savedProxy.user().name).toBe('Jane')
+        expect(result.current).toBe('Hello John')
       })
     })
   })

@@ -80,7 +80,25 @@ function createArrayProxy(
         const method = target[prop]
         if (typeof method === 'function') {
           return function(...args: any[]) {
-            const result = method.apply(target, args)
+            // Create a mapped version of the target with resolved fragments for the method call
+            const resolvedTarget = target.map((item, index) => {
+              if (isFragmentReference(item)) {
+                dependenciesRef.current.add(item.__id)
+                const fragmentData = fragments[item.__id]
+                if (!fragmentData) {
+                  throw new Error(`Fragment with id "${item.__id}" not found`)
+                }
+                return createProxy(fragmentData, fragments, dependenciesRef)
+              }
+              
+              if (item && typeof item === 'object') {
+                return createProxy(item, fragments, dependenciesRef)
+              }
+              
+              return item
+            })
+            
+            const result = method.apply(resolvedTarget, args)
             
             // For methods that return arrays, we need to proxy them too
             if (Array.isArray(result)) {

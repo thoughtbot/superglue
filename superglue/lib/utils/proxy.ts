@@ -5,7 +5,7 @@ type AccessKeyType = string | symbol | number
 // Global mapping from proxy back to original value for unproxy() functionality
 const proxyToOriginalMap = new WeakMap<any, any>()
 
-// Global mapping from fragment data back to fragment reference for toRef() functionality
+// Global mapping from fragment data back to fragment reference for popRef() functionality
 const fragmentToReferenceMap = new WeakMap<any, { __id: string }>()
 
 const ARRAY_GETTER_METHODS = new Set<AccessKeyType>([
@@ -97,7 +97,7 @@ function createArrayProxy(
                   proxyCache
                 )
                 
-                // Store mapping for toRef() functionality
+                // Store mapping for popRef() functionality
                 fragmentToReferenceMap.set(proxy, item)
                 
                 // Define cleanup function directly on proxy
@@ -157,7 +157,7 @@ function createArrayProxy(
 
           const proxy = createProxy(fragmentData, fragments, dependencies, proxyCache)
           
-          // Store mapping for toRef() functionality
+          // Store mapping for popRef() functionality
           fragmentToReferenceMap.set(proxy, item)
           
           // Define cleanup function directly on proxy
@@ -240,7 +240,7 @@ function createObjectProxy(
 
         const proxy = createProxy(fragmentData, fragments, dependencies, proxyCache)
         
-        // Store mapping for toRef() functionality
+        // Store mapping for popRef() functionality
         fragmentToReferenceMap.set(proxy, value)
         
         // Define cleanup function directly on proxy
@@ -320,7 +320,7 @@ export function unproxy<T>(proxy: T): T {
   return proxyToOriginalMap.get(proxy) || proxy
 }
 
-export function toRef<T>(fragmentData: T): { __id: string } {
+export function popRef<T>(fragmentData: T): { __id: string } {
   const ref = fragmentToReferenceMap.get(fragmentData)
   if (!ref) {
     throw new Error('Cannot convert to fragment reference: data was not resolved from a fragment')

@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, act, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import { useContentV4, unproxy, toRef } from '../../lib/hooks/useContentV4'
+import { useContentV4, unproxy, popRef } from '../../lib/hooks/useContentV4'
 import { useSuperglue } from '../../lib/hooks/index'
 
 // Mock the useSuperglue hook
@@ -678,7 +678,7 @@ describe('useContentV4', () => {
     })
   })
 
-  describe('toRef functionality', () => {
+  describe('popRef functionality', () => {
     it('returns fragment references for resolved fragments', () => {
       let capturedPage
 
@@ -693,9 +693,9 @@ describe('useContentV4', () => {
       expect(user.name).toBe('John Doe')
       expect(firstPost.title).toBe('Hello World')
 
-      // toRef should return the original fragment references
-      const userRef = toRef(user)
-      const postRef = toRef(firstPost)
+      // popRef should return the original fragment references
+      const userRef = popRef(user)
+      const postRef = popRef(firstPost)
       
       expect(userRef).toEqual({ __id: 'user_123' })
       expect(postRef).toEqual({ __id: 'post_456' })
@@ -712,8 +712,8 @@ describe('useContentV4', () => {
       const postAuthor = capturedPage.posts[0].author
       expect(postAuthor.name).toBe('John Doe')
 
-      // toRef should return the author fragment reference
-      const authorRef = toRef(postAuthor)
+      // popRef should return the author fragment reference
+      const authorRef = popRef(postAuthor)
       expect(authorRef).toEqual({ __id: 'user_123' })
     })
 
@@ -725,12 +725,12 @@ describe('useContentV4', () => {
       )
 
       // Try to get reference for non-fragment data
-      expect(() => toRef(capturedPage.title)).toThrow('Cannot convert to fragment reference')
-      expect(() => toRef(capturedPage.count)).toThrow('Cannot convert to fragment reference')
+      expect(() => popRef(capturedPage.title)).toThrow('Cannot convert to fragment reference')
+      expect(() => popRef(capturedPage.count)).toThrow('Cannot convert to fragment reference')
       
       // Regular post in array (not a fragment)
       const regularPost = capturedPage.posts[1] // Regular Post
-      expect(() => toRef(regularPost)).toThrow('Cannot convert to fragment reference')
+      expect(() => popRef(regularPost)).toThrow('Cannot convert to fragment reference')
     })
 
     it('enables reference equality for React.memo optimization', () => {
@@ -764,8 +764,8 @@ describe('useContentV4', () => {
       expect(user1).not.toBe(user2)
       
       // But their references should be the same
-      const ref1 = toRef(user1)
-      const ref2 = toRef(user2)
+      const ref1 = popRef(user1)
+      const ref2 = popRef(user2)
       expect(ref1).toBe(ref2) // Same reference object
       expect(ref1).toEqual({ __id: 'user_123' })
     })

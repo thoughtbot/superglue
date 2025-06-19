@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { createProxy, unproxy, toRef } from '../../lib/utils/proxy'
+import { createProxy, unproxy, popRef } from '../../lib/utils/proxy'
 
 describe('proxy utilities', () => {
   let dependencies
@@ -519,7 +519,7 @@ describe('proxy utilities', () => {
     })
   })
 
-  describe('toRef functionality', () => {
+  describe('popRef functionality', () => {
     it('returns fragment reference for resolved fragment data', () => {
       const data = { user: { __id: 'user_123' } }
       const proxy = createProxy(data, fragments, dependencies, proxyCache)
@@ -528,8 +528,8 @@ describe('proxy utilities', () => {
       const userProxy = proxy.user
       expect(userProxy.name).toBe('John Doe')
       
-      // toRef should return the original fragment reference
-      const userRef = toRef(userProxy)
+      // popRef should return the original fragment reference
+      const userRef = popRef(userProxy)
       expect(userRef).toEqual({ __id: 'user_123' })
     })
 
@@ -541,8 +541,8 @@ describe('proxy utilities', () => {
       const authorProxy = proxy.post.author
       expect(authorProxy.name).toBe('John Doe')
       
-      // toRef should return the author fragment reference
-      const authorRef = toRef(authorProxy)
+      // popRef should return the author fragment reference
+      const authorRef = popRef(authorProxy)
       expect(authorRef).toEqual({ __id: 'user_123' })
     })
 
@@ -562,9 +562,9 @@ describe('proxy utilities', () => {
       expect(firstPost.title).toBe('Hello World')
       expect(secondPost.title).toBe('Another Post')
       
-      // toRef should return correct references
-      const firstRef = toRef(firstPost)
-      const secondRef = toRef(secondPost)
+      // popRef should return correct references
+      const firstRef = popRef(firstPost)
+      const secondRef = popRef(secondPost)
       
       expect(firstRef).toEqual({ __id: 'post_456' })
       expect(secondRef).toEqual({ __id: 'post_789' })
@@ -584,24 +584,24 @@ describe('proxy utilities', () => {
       expect(firstPost.title).toBe('Hello World')
       expect(secondPost.title).toBe('Another Tech Post')
       
-      // toRef should work on fragments accessed directly
-      const firstRef = toRef(firstPost)
+      // popRef should work on fragments accessed directly
+      const firstRef = popRef(firstPost)
       expect(firstRef).toEqual({ __id: 'post_456' })
       
-      // toRef should throw for non-fragments
-      expect(() => toRef(secondPost)).toThrow('Cannot convert to fragment reference')
+      // popRef should throw for non-fragments
+      expect(() => popRef(secondPost)).toThrow('Cannot convert to fragment reference')
     })
 
     it('throws error for non-fragment data', () => {
       const regularObject = { name: 'John', age: 30 }
       
-      expect(() => toRef(regularObject)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+      expect(() => popRef(regularObject)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
     })
 
     it('throws error for primitive values', () => {
-      expect(() => toRef('string')).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
-      expect(() => toRef(42)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
-      expect(() => toRef(null)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+      expect(() => popRef('string')).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+      expect(() => popRef(42)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+      expect(() => popRef(null)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
     })
 
     it('round trip: fragment reference → resolved data → fragment reference', () => {
@@ -614,7 +614,7 @@ describe('proxy utilities', () => {
       expect(resolvedUser.name).toBe('John Doe')
       
       // Convert back to reference
-      const backToRef = toRef(resolvedUser)
+      const backToRef = popRef(resolvedUser)
       expect(backToRef).toEqual(originalRef)
       expect(backToRef).toBe(originalRef) // Should be same object reference
     })
@@ -636,12 +636,12 @@ describe('proxy utilities', () => {
       const firstPost = proxy.page.posts[0]
       const secondPost = proxy.page.posts[1] // Regular object, not fragment
       
-      // toRef should work for fragments
-      expect(toRef(author)).toEqual({ __id: 'user_123' })
-      expect(toRef(firstPost)).toEqual({ __id: 'post_456' })
+      // popRef should work for fragments
+      expect(popRef(author)).toEqual({ __id: 'user_123' })
+      expect(popRef(firstPost)).toEqual({ __id: 'post_456' })
       
-      // toRef should throw for non-fragments
-      expect(() => toRef(secondPost)).toThrow('Cannot convert to fragment reference')
+      // popRef should throw for non-fragments
+      expect(() => popRef(secondPost)).toThrow('Cannot convert to fragment reference')
     })
   })
 
@@ -713,7 +713,7 @@ describe('proxy utilities', () => {
       expect(dependencies.has('user_123')).toBe(false)
     })
 
-    it('toRef automatically calls __POP_DEPENDENCY__', () => {
+    it('popRef automatically calls __POP_DEPENDENCY__', () => {
       const data = { user: { __id: 'user_123' } }
       const proxy = createProxy(data, fragments, dependencies, proxyCache)
       
@@ -722,8 +722,8 @@ describe('proxy utilities', () => {
       expect(user.name).toBe('John Doe')
       expect(dependencies.has('user_123')).toBe(true)
       
-      // toRef should automatically remove dependency
-      const userRef = toRef(user)
+      // popRef should automatically remove dependency
+      const userRef = popRef(user)
       expect(userRef).toEqual({ __id: 'user_123' })
       expect(dependencies.has('user_123')).toBe(false) // Removed!
     })
@@ -741,14 +741,14 @@ describe('proxy utilities', () => {
       expect(dependencies.has('post_456')).toBe(true)
       expect(dependencies.has('user_123')).toBe(true)
       
-      // toRef on author should only remove user_123
-      const authorRef = toRef(author)
+      // popRef on author should only remove user_123
+      const authorRef = popRef(author)
       expect(authorRef).toEqual({ __id: 'user_123' })
       expect(dependencies.has('user_123')).toBe(false) // Removed
       expect(dependencies.has('post_456')).toBe(true)  // Still there
       
-      // toRef on post should remove post_456
-      const postRef = toRef(post)
+      // popRef on post should remove post_456
+      const postRef = popRef(post)
       expect(postRef).toEqual({ __id: 'post_456' })
       expect(dependencies.has('post_456')).toBe(false) // Removed
     })
@@ -771,14 +771,14 @@ describe('proxy utilities', () => {
       expect(dependencies.has('post_456')).toBe(true)
       expect(dependencies.has('post_789')).toBe(true)
       
-      // toRef on first post should only remove post_456
-      const firstRef = toRef(firstPost)
+      // popRef on first post should only remove post_456
+      const firstRef = popRef(firstPost)
       expect(firstRef).toEqual({ __id: 'post_456' })
       expect(dependencies.has('post_456')).toBe(false) // Removed
       expect(dependencies.has('post_789')).toBe(true)  // Still there
       
-      // toRef on second post should remove post_789
-      const secondRef = toRef(secondPost)
+      // popRef on second post should remove post_789
+      const secondRef = popRef(secondPost)
       expect(secondRef).toEqual({ __id: 'post_789' })
       expect(dependencies.has('post_789')).toBe(false) // Removed
     })
@@ -806,8 +806,8 @@ describe('proxy utilities', () => {
       expect(dependencies.size).toBe(2) // user_123, post_456
       
       // Convert to refs for passing to child components
-      const userRef = toRef(user)
-      const postRef = toRef(post)
+      const userRef = popRef(user)
+      const postRef = popRef(post)
       
       // Fragment dependencies should be removed
       expect(dependencies.has('user_123')).toBe(false)

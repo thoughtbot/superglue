@@ -1,11 +1,6 @@
 import { JSONMappable, AllFragments } from '../types'
-import { MutableRefObject } from 'react'
 
 type AccessKeyType = string | symbol | number
-
-// Global proxy caches using WeakMaps for automatic memory management
-const globalProxyCache = new WeakMap<object, any>()
-const globalFragmentCache = new Map<string, any>()
 
 // Global mapping from proxy back to original value for unproxy() functionality
 const proxyToOriginalMap = new WeakMap<any, any>()
@@ -69,12 +64,11 @@ function isFragmentReference(value: any): value is { __id: string } {
 function createArrayProxy(
   arrayData: any[],
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>,
-  localCache?: WeakMap<object, any>
+  dependencies: Set<string>,
+  proxyCache: WeakMap<object, any>
 ): any[] {
-  // Check local cache if provided (for hook-specific caching)
-  if (localCache && localCache.has(arrayData)) {
-    return localCache.get(arrayData)
+  if (proxyCache && proxyCache.has(arrayData)) {
+    return proxyCache.get(arrayData)
   }
 
   const proxy = new Proxy(arrayData, {
@@ -83,32 +77,42 @@ function createArrayProxy(
       if (isArrayGetter(prop)) {
         const method = target[prop]
         if (typeof method === 'function') {
-          return function(...args: any[]) {
+          return function (...args: any[]) {
             // Create a mapped version of the target with resolved fragments for the method call
-            const resolvedTarget = target.map((item, index) => {
+            const resolvedTarget = target.map((item) => {
               if (isFragmentReference(item)) {
-                dependenciesRef.current.add(item.__id)
+                dependencies.add(item.__id)
                 const fragmentData = fragments[item.__id]
                 if (!fragmentData) {
                   throw new Error(`Fragment with id "${item.__id}" not found`)
                 }
-                return createProxy(fragmentData, fragments, dependenciesRef, localCache)
+                return createProxy(
+                  fragmentData,
+                  fragments,
+                  dependencies,
+                  proxyCache
+                )
               }
-              
+
               if (item && typeof item === 'object') {
-                return createProxy(item, fragments, dependenciesRef, localCache)
+                return createProxy(item, fragments, dependencies, proxyCache)
               }
-              
+
               return item
             })
-            
+
             const result = method.apply(resolvedTarget, args)
-            
+
             // For methods that return arrays, we need to proxy them too
             if (Array.isArray(result)) {
-              return createArrayProxy(result, fragments, dependenciesRef, localCache)
+              return createArrayProxy(
+                result,
+                fragments,
+                dependencies,
+                proxyCache
+              )
             }
-            
+
             return result
           }
         }
@@ -126,23 +130,23 @@ function createArrayProxy(
       const index = convertToInt(prop)
       if (index !== null && index >= 0 && index < target.length) {
         const item = target[index]
-        
+
         if (isFragmentReference(item)) {
           // Track dependency and resolve fragment
-          dependenciesRef.current.add(item.__id)
+          dependencies.add(item.__id)
           const fragmentData = fragments[item.__id]
-          
+
           if (!fragmentData) {
             throw new Error(`Fragment with id "${item.__id}" not found`)
           }
-          
-          return createProxy(fragmentData, fragments, dependenciesRef, localCache)
+
+          return createProxy(fragmentData, fragments, dependencies, proxyCache)
         }
-        
+
         if (item && typeof item === 'object') {
-          return createProxy(item, fragments, dependenciesRef, localCache)
+          return createProxy(item, fragments, dependencies, proxyCache)
         }
-        
+
         return item
       }
 
@@ -169,26 +173,23 @@ function createArrayProxy(
     },
   })
 
-  // Store proxy -> original mapping for unproxy functionality
   proxyToOriginalMap.set(proxy, arrayData)
-  
-  // Cache in local cache if provided
-  if (localCache) {
-    localCache.set(arrayData, proxy)
+
+  if (proxyCache) {
+    proxyCache.set(arrayData, proxy)
   }
-  
+
   return proxy
 }
 
 function createObjectProxy(
   objectData: object,
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>,
-  localCache?: WeakMap<object, any>
+  dependencies: Set<string>,
+  proxyCache: WeakMap<object, any>
 ): any {
-  // Check local cache if provided (for hook-specific caching)
-  if (localCache && localCache.has(objectData)) {
-    return localCache.get(objectData)
+  if (proxyCache && proxyCache.has(objectData)) {
+    return proxyCache.get(objectData)
   }
 
   const proxy = new Proxy(objectData as any, {
@@ -196,22 +197,21 @@ function createObjectProxy(
       const value = target[prop]
 
       if (isFragmentReference(value)) {
-        // Track dependency and resolve fragment
-        dependenciesRef.current.add(value.__id)
+        dependencies.add(value.__id)
         const fragmentData = fragments[value.__id]
-        
+
         if (!fragmentData) {
           throw new Error(`Fragment with id "${value.__id}" not found`)
         }
-        
-        return createProxy(fragmentData, fragments, dependenciesRef, localCache)
+
+        return createProxy(fragmentData, fragments, dependencies, proxyCache)
       }
 
       if (value && typeof value === 'object') {
         if (Array.isArray(value)) {
-          return createArrayProxy(value, fragments, dependenciesRef, localCache)
+          return createArrayProxy(value, fragments, dependencies, proxyCache)
         }
-        return createObjectProxy(value, fragments, dependenciesRef, localCache)
+        return createObjectProxy(value, fragments, dependencies, proxyCache)
       }
 
       return value
@@ -238,81 +238,31 @@ function createObjectProxy(
 
   // Store proxy -> original mapping for unproxy functionality
   proxyToOriginalMap.set(proxy, objectData)
-  
-  // Cache in local cache if provided
-  if (localCache) {
-    localCache.set(objectData, proxy)
+
+  if (proxyCache) {
+    proxyCache.set(objectData, proxy)
   }
-  
+
   return proxy
 }
 
-/**
- * Creates a reactive proxy for content data with global caching and fragment resolution.
- * 
- * @param content - The data to proxy (object or array)
- * @param fragments - All available fragments for resolution
- * @param dependenciesRef - Ref to track fragment dependencies for this hook instance
- * @returns Proxied content with automatic fragment resolution
- */
 export function createProxy<T extends JSONMappable>(
   content: T,
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>,
-  localCache?: WeakMap<object, any>
+  dependencies: Set<string>,
+  proxyCache: WeakMap<object, any>
 ): T {
   if (!content || typeof content !== 'object') {
     return content
   }
 
   if (Array.isArray(content)) {
-    return createArrayProxy(content, fragments, dependenciesRef, localCache) as T
+    return createArrayProxy(content, fragments, dependencies, proxyCache) as T
   }
 
-  return createObjectProxy(content, fragments, dependenciesRef, localCache) as T
+  return createObjectProxy(content, fragments, dependencies, proxyCache) as T
 }
 
-/**
- * Clears cached proxies for specific fragment IDs.
- * Used by Redux middleware when fragments are updated.
- */
-export function invalidateFragmentProxies(fragmentIds: string[]): void {
-  fragmentIds.forEach(id => {
-    globalFragmentCache.delete(id)
-  })
-}
-
-/**
- * Clears all cached proxies. Use sparingly, mainly for testing.
- */
-export function clearAllProxyCaches(): void {
-  globalFragmentCache.clear()
-  // Note: WeakMap doesn't have clear() method, it will be GC'd naturally
-}
-
-/**
- * Returns the original underlying value from a proxy for reference equality checks.
- * 
- * This enables reference equality comparisons across different hook instances:
- * 
- * @example
- * ```tsx
- * // Hook A
- * const pageA = useContentV4()
- * const userA = pageA.user
- * 
- * // Hook B  
- * const pageB = useContentV4()
- * const userB = pageB.user
- * 
- * // Different proxies, but same underlying data
- * userA === userB                    // ❌ false (different proxy instances)
- * unproxy(userA) === unproxy(userB)  // ✅ true (same underlying fragment data)
- * ```
- * 
- * @param proxy - The proxy object to unwrap
- * @returns The original underlying value, or the input if not a proxy
- */
 export function unproxy<T>(proxy: T): T {
   return proxyToOriginalMap.get(proxy) || proxy
 }

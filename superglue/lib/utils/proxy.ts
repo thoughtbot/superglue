@@ -100,6 +100,12 @@ function createArrayProxy(
                 // Store mapping for toRef() functionality
                 fragmentToReferenceMap.set(proxy, item)
                 
+                // Define cleanup function directly on proxy
+                // We can't use Object.defineProperty because the proxy traps block it
+                ;(proxy as any).__POP_DEPENDENCY__ = () => {
+                  dependencies.delete(item.__id)
+                }
+                
                 return proxy
               }
 
@@ -153,6 +159,12 @@ function createArrayProxy(
           
           // Store mapping for toRef() functionality
           fragmentToReferenceMap.set(proxy, item)
+          
+          // Define cleanup function directly on proxy
+          // We can't use Object.defineProperty because the proxy traps block it
+          ;(proxy as any).__POP_DEPENDENCY__ = () => {
+            dependencies.delete(item.__id)
+          }
 
           return proxy
         }
@@ -168,7 +180,11 @@ function createArrayProxy(
       return target[prop]
     },
 
-    set() {
+    set(target, prop, value) {
+      // Allow setting __POP_DEPENDENCY__ for internal use
+      if (prop === '__POP_DEPENDENCY__') {
+        return Reflect.set(target, prop, value)
+      }
       throw new Error(
         'Cannot mutate proxy array. Use Redux actions to update state.'
       )
@@ -180,7 +196,11 @@ function createArrayProxy(
       )
     },
 
-    defineProperty() {
+    defineProperty(target, prop, descriptor) {
+      // Allow defining __POP_DEPENDENCY__ for internal use
+      if (prop === '__POP_DEPENDENCY__') {
+        return true // Allow this property to be defined
+      }
       throw new Error(
         'Cannot define properties on proxy array. Use Redux actions to update state.'
       )
@@ -222,6 +242,12 @@ function createObjectProxy(
         
         // Store mapping for toRef() functionality
         fragmentToReferenceMap.set(proxy, value)
+        
+        // Define cleanup function directly on proxy
+        // We can't use Object.defineProperty because the proxy traps block it
+        ;(proxy as any).__POP_DEPENDENCY__ = () => {
+          dependencies.delete(value.__id)
+        }
 
         return proxy
       }
@@ -236,7 +262,11 @@ function createObjectProxy(
       return value
     },
 
-    set() {
+    set(target, prop, value) {
+      // Allow setting __POP_DEPENDENCY__ for internal use
+      if (prop === '__POP_DEPENDENCY__') {
+        return Reflect.set(target, prop, value)
+      }
       throw new Error(
         'Cannot mutate proxy object. Use Redux actions to update state.'
       )
@@ -248,7 +278,11 @@ function createObjectProxy(
       )
     },
 
-    defineProperty() {
+    defineProperty(target, prop, descriptor) {
+      // Allow defining __POP_DEPENDENCY__ for internal use
+      if (prop === '__POP_DEPENDENCY__') {
+        return Reflect.defineProperty(target, prop, descriptor)
+      }
       throw new Error(
         'Cannot define properties on proxy object. Use Redux actions to update state.'
       )
@@ -291,5 +325,11 @@ export function toRef<T>(fragmentData: T): { __id: string } {
   if (!ref) {
     throw new Error('Cannot convert to fragment reference: data was not resolved from a fragment')
   }
+  
+  // Call the cleanup function if it exists to remove dependency
+  if (fragmentData && typeof fragmentData === 'object' && '__POP_DEPENDENCY__' in fragmentData) {
+    ;(fragmentData as any).__POP_DEPENDENCY__()
+  }
+  
   return ref
 }

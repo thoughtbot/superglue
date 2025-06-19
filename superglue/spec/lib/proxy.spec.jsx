@@ -645,6 +645,181 @@ describe('proxy utilities', () => {
     })
   })
 
+  describe('__POP_DEPENDENCY__ functionality', () => {
+    it('adds __POP_DEPENDENCY__ function to fragment proxies', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      const user = proxy.user
+      expect(user.name).toBe('John Doe')
+      
+      // Should have __POP_DEPENDENCY__ function
+      expect(typeof user.__POP_DEPENDENCY__).toBe('function')
+    })
+
+    it('adds __POP_DEPENDENCY__ function as accessible property', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      const user = proxy.user
+      
+      // Should be accessible as a function
+      expect(typeof user.__POP_DEPENDENCY__).toBe('function')
+      
+      // Note: Due to direct assignment, it will be enumerable 
+      // This is a trade-off for simplicity vs proxy trap complexity
+      expect(Object.keys(user)).toContain('__POP_DEPENDENCY__')
+      
+      // Should not appear in JSON.stringify (functions are not serialized)
+      expect(JSON.stringify(user)).not.toContain('__POP_DEPENDENCY__')
+    })
+
+    it('allows __POP_DEPENDENCY__ to be overwritten (implementation limitation)', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      const user = proxy.user
+      const originalFunction = user.__POP_DEPENDENCY__
+      
+      // Due to direct assignment, it is writable
+      // This is a known trade-off for implementation simplicity
+      expect(() => {
+        user.__POP_DEPENDENCY__ = () => console.log('hacked')
+      }).not.toThrow()
+      
+      // The function can be replaced
+      expect(user.__POP_DEPENDENCY__).not.toBe(originalFunction)
+      
+      // Reset for deletion test
+      user.__POP_DEPENDENCY__ = originalFunction
+      
+      // Test deletion - should not be allowed by proxy deleteProperty trap
+      expect(() => {
+        delete user.__POP_DEPENDENCY__
+      }).toThrow('Cannot delete properties on proxy object')
+    })
+
+    it('removes dependency when __POP_DEPENDENCY__ is called', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access fragment to add dependency
+      const user = proxy.user
+      expect(user.name).toBe('John Doe')
+      expect(dependencies.has('user_123')).toBe(true)
+      
+      // Call __POP_DEPENDENCY__ to remove dependency
+      user.__POP_DEPENDENCY__()
+      expect(dependencies.has('user_123')).toBe(false)
+    })
+
+    it('toRef automatically calls __POP_DEPENDENCY__', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access fragment to add dependency
+      const user = proxy.user
+      expect(user.name).toBe('John Doe')
+      expect(dependencies.has('user_123')).toBe(true)
+      
+      // toRef should automatically remove dependency
+      const userRef = toRef(user)
+      expect(userRef).toEqual({ __id: 'user_123' })
+      expect(dependencies.has('user_123')).toBe(false) // Removed!
+    })
+
+    it('dependency removal works for nested fragments', () => {
+      const data = { post: { __id: 'post_456' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access nested fragment chain
+      const post = proxy.post
+      const author = post.author
+      
+      expect(post.title).toBe('Hello World')
+      expect(author.name).toBe('John Doe')
+      expect(dependencies.has('post_456')).toBe(true)
+      expect(dependencies.has('user_123')).toBe(true)
+      
+      // toRef on author should only remove user_123
+      const authorRef = toRef(author)
+      expect(authorRef).toEqual({ __id: 'user_123' })
+      expect(dependencies.has('user_123')).toBe(false) // Removed
+      expect(dependencies.has('post_456')).toBe(true)  // Still there
+      
+      // toRef on post should remove post_456
+      const postRef = toRef(post)
+      expect(postRef).toEqual({ __id: 'post_456' })
+      expect(dependencies.has('post_456')).toBe(false) // Removed
+    })
+
+    it('dependency removal works for array fragments', () => {
+      const data = {
+        posts: [
+          { __id: 'post_456' },
+          { __id: 'post_789' }
+        ]
+      }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access array elements
+      const firstPost = proxy.posts[0]
+      const secondPost = proxy.posts[1]
+      
+      expect(firstPost.title).toBe('Hello World')
+      expect(secondPost.title).toBe('Another Post')
+      expect(dependencies.has('post_456')).toBe(true)
+      expect(dependencies.has('post_789')).toBe(true)
+      
+      // toRef on first post should only remove post_456
+      const firstRef = toRef(firstPost)
+      expect(firstRef).toEqual({ __id: 'post_456' })
+      expect(dependencies.has('post_456')).toBe(false) // Removed
+      expect(dependencies.has('post_789')).toBe(true)  // Still there
+      
+      // toRef on second post should remove post_789
+      const secondRef = toRef(secondPost)
+      expect(secondRef).toEqual({ __id: 'post_789' })
+      expect(dependencies.has('post_789')).toBe(false) // Removed
+    })
+
+    it('works with component isolation scenario', () => {
+      // Simulate parent component accessing fragments
+      const data = {
+        title: 'Page Title',
+        user: { __id: 'user_123' },
+        posts: [{ __id: 'post_456' }]
+      }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Parent accesses title (should remain tracked)
+      expect(proxy.title).toBe('Page Title')
+      
+      // Parent accesses fragments for passing to children
+      const user = proxy.user
+      const post = proxy.posts[0]
+      
+      expect(user.name).toBe('John Doe')
+      expect(post.title).toBe('Hello World')
+      
+      // All dependencies tracked initially
+      expect(dependencies.size).toBe(2) // user_123, post_456
+      
+      // Convert to refs for passing to child components
+      const userRef = toRef(user)
+      const postRef = toRef(post)
+      
+      // Fragment dependencies should be removed
+      expect(dependencies.has('user_123')).toBe(false)
+      expect(dependencies.has('post_456')).toBe(false)
+      
+      // Parent should only track what it actually renders
+      // (Note: this specific test might still have user_123 from post.author access)
+      expect(userRef).toEqual({ __id: 'user_123' })
+      expect(postRef).toEqual({ __id: 'post_456' })
+    })
+  })
+
   describe('dependency tracking isolation', () => {
     it('tracks dependencies independently per dependency set', () => {
       const data1 = { user: { __id: 'user_123' } }

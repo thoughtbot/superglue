@@ -7,6 +7,9 @@ type AccessKeyType = string | symbol | number
 const globalProxyCache = new WeakMap<object, any>()
 const globalFragmentCache = new Map<string, any>()
 
+// Global mapping from proxy back to original value for unproxy() functionality
+const proxyToOriginalMap = new WeakMap<any, any>()
+
 const ARRAY_GETTER_METHODS = new Set<AccessKeyType>([
   Symbol.iterator,
   'concat',
@@ -66,11 +69,12 @@ function isFragmentReference(value: any): value is { __id: string } {
 function createArrayProxy(
   arrayData: any[],
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>
+  dependenciesRef: MutableRefObject<Set<string>>,
+  localCache?: WeakMap<object, any>
 ): any[] {
-  // Check global cache first
-  if (globalProxyCache.has(arrayData)) {
-    return globalProxyCache.get(arrayData)
+  // Check local cache if provided (for hook-specific caching)
+  if (localCache && localCache.has(arrayData)) {
+    return localCache.get(arrayData)
   }
 
   const proxy = new Proxy(arrayData, {
@@ -88,11 +92,11 @@ function createArrayProxy(
                 if (!fragmentData) {
                   throw new Error(`Fragment with id "${item.__id}" not found`)
                 }
-                return createProxy(fragmentData, fragments, dependenciesRef)
+                return createProxy(fragmentData, fragments, dependenciesRef, localCache)
               }
               
               if (item && typeof item === 'object') {
-                return createProxy(item, fragments, dependenciesRef)
+                return createProxy(item, fragments, dependenciesRef, localCache)
               }
               
               return item
@@ -102,7 +106,7 @@ function createArrayProxy(
             
             // For methods that return arrays, we need to proxy them too
             if (Array.isArray(result)) {
-              return createArrayProxy(result, fragments, dependenciesRef)
+              return createArrayProxy(result, fragments, dependenciesRef, localCache)
             }
             
             return result
@@ -132,11 +136,11 @@ function createArrayProxy(
             throw new Error(`Fragment with id "${item.__id}" not found`)
           }
           
-          return createProxy(fragmentData, fragments, dependenciesRef)
+          return createProxy(fragmentData, fragments, dependenciesRef, localCache)
         }
         
         if (item && typeof item === 'object') {
-          return createProxy(item, fragments, dependenciesRef)
+          return createProxy(item, fragments, dependenciesRef, localCache)
         }
         
         return item
@@ -165,19 +169,26 @@ function createArrayProxy(
     },
   })
 
-  // Cache the proxy
-  globalProxyCache.set(arrayData, proxy)
+  // Store proxy -> original mapping for unproxy functionality
+  proxyToOriginalMap.set(proxy, arrayData)
+  
+  // Cache in local cache if provided
+  if (localCache) {
+    localCache.set(arrayData, proxy)
+  }
+  
   return proxy
 }
 
 function createObjectProxy(
   objectData: object,
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>
+  dependenciesRef: MutableRefObject<Set<string>>,
+  localCache?: WeakMap<object, any>
 ): any {
-  // Check global cache first
-  if (globalProxyCache.has(objectData)) {
-    return globalProxyCache.get(objectData)
+  // Check local cache if provided (for hook-specific caching)
+  if (localCache && localCache.has(objectData)) {
+    return localCache.get(objectData)
   }
 
   const proxy = new Proxy(objectData as any, {
@@ -193,14 +204,14 @@ function createObjectProxy(
           throw new Error(`Fragment with id "${value.__id}" not found`)
         }
         
-        return createProxy(fragmentData, fragments, dependenciesRef)
+        return createProxy(fragmentData, fragments, dependenciesRef, localCache)
       }
 
       if (value && typeof value === 'object') {
         if (Array.isArray(value)) {
-          return createArrayProxy(value, fragments, dependenciesRef)
+          return createArrayProxy(value, fragments, dependenciesRef, localCache)
         }
-        return createObjectProxy(value, fragments, dependenciesRef)
+        return createObjectProxy(value, fragments, dependenciesRef, localCache)
       }
 
       return value
@@ -225,8 +236,14 @@ function createObjectProxy(
     },
   })
 
-  // Cache the proxy
-  globalProxyCache.set(objectData, proxy)
+  // Store proxy -> original mapping for unproxy functionality
+  proxyToOriginalMap.set(proxy, objectData)
+  
+  // Cache in local cache if provided
+  if (localCache) {
+    localCache.set(objectData, proxy)
+  }
+  
   return proxy
 }
 
@@ -241,17 +258,18 @@ function createObjectProxy(
 export function createProxy<T extends JSONMappable>(
   content: T,
   fragments: AllFragments,
-  dependenciesRef: MutableRefObject<Set<string>>
+  dependenciesRef: MutableRefObject<Set<string>>,
+  localCache?: WeakMap<object, any>
 ): T {
   if (!content || typeof content !== 'object') {
     return content
   }
 
   if (Array.isArray(content)) {
-    return createArrayProxy(content, fragments, dependenciesRef) as T
+    return createArrayProxy(content, fragments, dependenciesRef, localCache) as T
   }
 
-  return createObjectProxy(content, fragments, dependenciesRef) as T
+  return createObjectProxy(content, fragments, dependenciesRef, localCache) as T
 }
 
 /**
@@ -270,4 +288,31 @@ export function invalidateFragmentProxies(fragmentIds: string[]): void {
 export function clearAllProxyCaches(): void {
   globalFragmentCache.clear()
   // Note: WeakMap doesn't have clear() method, it will be GC'd naturally
+}
+
+/**
+ * Returns the original underlying value from a proxy for reference equality checks.
+ * 
+ * This enables reference equality comparisons across different hook instances:
+ * 
+ * @example
+ * ```tsx
+ * // Hook A
+ * const pageA = useContentV4()
+ * const userA = pageA.user
+ * 
+ * // Hook B  
+ * const pageB = useContentV4()
+ * const userB = pageB.user
+ * 
+ * // Different proxies, but same underlying data
+ * userA === userB                    // ❌ false (different proxy instances)
+ * unproxy(userA) === unproxy(userB)  // ✅ true (same underlying fragment data)
+ * ```
+ * 
+ * @param proxy - The proxy object to unwrap
+ * @returns The original underlying value, or the input if not a proxy
+ */
+export function unproxy<T>(proxy: T): T {
+  return proxyToOriginalMap.get(proxy) || proxy
 }

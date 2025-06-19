@@ -8,6 +8,7 @@ import {
 } from '../types'
 export { useFragment } from './useFragment'
 export { useContentV3 } from './useContentV3'
+export { useContentV4, unproxy } from './useContentV4'
 
 /**
  * A lightweight hook that grabs the superglue state from the store.

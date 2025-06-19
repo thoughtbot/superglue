@@ -5,6 +5,9 @@ type AccessKeyType = string | symbol | number
 // Global mapping from proxy back to original value for unproxy() functionality
 const proxyToOriginalMap = new WeakMap<any, any>()
 
+// Global mapping from fragment data back to fragment reference for toRef() functionality
+const fragmentToReferenceMap = new WeakMap<any, { __id: string }>()
+
 const ARRAY_GETTER_METHODS = new Set<AccessKeyType>([
   Symbol.iterator,
   'concat',
@@ -86,12 +89,18 @@ function createArrayProxy(
                 if (!fragmentData) {
                   throw new Error(`Fragment with id "${item.__id}" not found`)
                 }
-                return createProxy(
+                
+                const proxy = createProxy(
                   fragmentData,
                   fragments,
                   dependencies,
                   proxyCache
                 )
+                
+                // Store mapping for toRef() functionality
+                fragmentToReferenceMap.set(proxy, item)
+                
+                return proxy
               }
 
               if (item && typeof item === 'object') {
@@ -140,7 +149,12 @@ function createArrayProxy(
             throw new Error(`Fragment with id "${item.__id}" not found`)
           }
 
-          return createProxy(fragmentData, fragments, dependencies, proxyCache)
+          const proxy = createProxy(fragmentData, fragments, dependencies, proxyCache)
+          
+          // Store mapping for toRef() functionality
+          fragmentToReferenceMap.set(proxy, item)
+
+          return proxy
         }
 
         if (item && typeof item === 'object') {
@@ -204,7 +218,12 @@ function createObjectProxy(
           throw new Error(`Fragment with id "${value.__id}" not found`)
         }
 
-        return createProxy(fragmentData, fragments, dependencies, proxyCache)
+        const proxy = createProxy(fragmentData, fragments, dependencies, proxyCache)
+        
+        // Store mapping for toRef() functionality
+        fragmentToReferenceMap.set(proxy, value)
+
+        return proxy
       }
 
       if (value && typeof value === 'object') {
@@ -265,4 +284,12 @@ export function createProxy<T extends JSONMappable>(
 
 export function unproxy<T>(proxy: T): T {
   return proxyToOriginalMap.get(proxy) || proxy
+}
+
+export function toRef<T>(fragmentData: T): { __id: string } {
+  const ref = fragmentToReferenceMap.get(fragmentData)
+  if (!ref) {
+    throw new Error('Cannot convert to fragment reference: data was not resolved from a fragment')
+  }
+  return ref
 }

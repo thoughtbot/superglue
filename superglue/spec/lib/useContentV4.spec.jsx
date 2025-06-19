@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, act, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import { useContentV4, unproxy } from '../../lib/hooks/useContentV4'
+import { useContentV4, unproxy, toRef } from '../../lib/hooks/useContentV4'
 import { useSuperglue } from '../../lib/hooks/index'
 
 // Mock the useSuperglue hook
@@ -675,6 +675,99 @@ describe('useContentV4', () => {
       expect(unproxy(capturedPage.count)).toBe(42)
       expect(unproxy(null)).toBe(null)
       expect(unproxy(undefined)).toBe(undefined)
+    })
+  })
+
+  describe('toRef functionality', () => {
+    it('returns fragment references for resolved fragments', () => {
+      let capturedPage
+
+      renderWithProvider(
+        <TestComponent onRender={(page) => { capturedPage = page }} />
+      )
+
+      // Access fragments to resolve them
+      const user = capturedPage.user
+      const firstPost = capturedPage.posts[0]
+      
+      expect(user.name).toBe('John Doe')
+      expect(firstPost.title).toBe('Hello World')
+
+      // toRef should return the original fragment references
+      const userRef = toRef(user)
+      const postRef = toRef(firstPost)
+      
+      expect(userRef).toEqual({ __id: 'user_123' })
+      expect(postRef).toEqual({ __id: 'post_456' })
+    })
+
+    it('works with nested fragment chains', () => {
+      let capturedPage
+
+      renderWithProvider(
+        <TestComponent onRender={(page) => { capturedPage = page }} />
+      )
+
+      // Access nested fragment chain
+      const postAuthor = capturedPage.posts[0].author
+      expect(postAuthor.name).toBe('John Doe')
+
+      // toRef should return the author fragment reference
+      const authorRef = toRef(postAuthor)
+      expect(authorRef).toEqual({ __id: 'user_123' })
+    })
+
+    it('throws error for non-fragment data', () => {
+      let capturedPage
+
+      renderWithProvider(
+        <TestComponent onRender={(page) => { capturedPage = page }} />
+      )
+
+      // Try to get reference for non-fragment data
+      expect(() => toRef(capturedPage.title)).toThrow('Cannot convert to fragment reference')
+      expect(() => toRef(capturedPage.count)).toThrow('Cannot convert to fragment reference')
+      
+      // Regular post in array (not a fragment)
+      const regularPost = capturedPage.posts[1] // Regular Post
+      expect(() => toRef(regularPost)).toThrow('Cannot convert to fragment reference')
+    })
+
+    it('enables reference equality for React.memo optimization', () => {
+      let page1, page2
+
+      const Component1 = () => {
+        page1 = useContentV4()
+        return <div>{page1.user.name}</div>
+      }
+
+      const Component2 = () => {
+        page2 = useContentV4()
+        return <div>{page2.user.name}</div>
+      }
+
+      renderWithProvider(
+        <div>
+          <Component1 />
+          <Component2 />
+        </div>
+      )
+
+      // Access fragments
+      const user1 = page1.user
+      const user2 = page2.user
+      
+      expect(user1.name).toBe('John Doe')
+      expect(user2.name).toBe('John Doe')
+
+      // Proxies are different across hook instances
+      expect(user1).not.toBe(user2)
+      
+      // But their references should be the same
+      const ref1 = toRef(user1)
+      const ref2 = toRef(user2)
+      expect(ref1).toBe(ref2) // Same reference object
+      expect(ref1).toEqual({ __id: 'user_123' })
     })
   })
 

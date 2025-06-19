@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { useMemo, useRef } from 'react'
 import { JSONMappable, RootState } from '../types'
 import { useSuperglue } from './index'
-import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
+import { createProxy, unproxy as unproxyUtil, toRef as toRefUtil } from '../utils/proxy'
 
 type ProxiedContent<T> = T & {
   readonly [K in keyof T]: T[K] extends { __id: string }
@@ -55,4 +55,8 @@ export function useContentV4<T = JSONMappable>(): ProxiedContent<T> {
 // auto detect type
 export function unproxy<T>(proxy: T): T {
   return unproxyUtil(proxy)
+}
+
+export function toRef<T>(fragmentData: T): { __id: string } {
+  return toRefUtil(fragmentData)
 }

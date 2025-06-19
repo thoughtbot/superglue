@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { createProxy, unproxy } from '../../lib/utils/proxy'
+import { createProxy, unproxy, toRef } from '../../lib/utils/proxy'
 
 describe('proxy utilities', () => {
   let dependencies
@@ -39,11 +39,25 @@ describe('proxy utilities', () => {
           { text: 'Great post!', author: 'Alice' }
         ]
       },
+      post_789: {
+        id: 789,
+        title: 'Another Post',
+        content: 'Second test post',
+        views: 150,
+        author: { __id: 'user_456' },
+        tags: ['testing', 'demo']
+      },
       comment_789: {
         id: 789,
         text: 'Nice work!',
         author: { __id: 'user_123' },
         likes: 5
+      },
+      user_456: {
+        id: 456,
+        name: 'Jane Smith',
+        email: 'jane@example.com',
+        role: 'editor'
       },
       category_101: {
         id: 101,
@@ -502,6 +516,132 @@ describe('proxy utilities', () => {
       // Unproxy should return the original fragment data
       const unproxiedUser = unproxy(userProxy)
       expect(unproxiedUser).toBe(fragments.user_123)
+    })
+  })
+
+  describe('toRef functionality', () => {
+    it('returns fragment reference for resolved fragment data', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access the fragment to resolve it
+      const userProxy = proxy.user
+      expect(userProxy.name).toBe('John Doe')
+      
+      // toRef should return the original fragment reference
+      const userRef = toRef(userProxy)
+      expect(userRef).toEqual({ __id: 'user_123' })
+    })
+
+    it('works with nested resolved fragments', () => {
+      const data = { post: { __id: 'post_456' } }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access nested fragment chain: post -> author
+      const authorProxy = proxy.post.author
+      expect(authorProxy.name).toBe('John Doe')
+      
+      // toRef should return the author fragment reference
+      const authorRef = toRef(authorProxy)
+      expect(authorRef).toEqual({ __id: 'user_123' })
+    })
+
+    it('works with fragments in arrays', () => {
+      const data = {
+        posts: [
+          { __id: 'post_456' },
+          { __id: 'post_789' }
+        ]
+      }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access array fragment elements
+      const firstPost = proxy.posts[0]
+      const secondPost = proxy.posts[1]
+      
+      expect(firstPost.title).toBe('Hello World')
+      expect(secondPost.title).toBe('Another Post')
+      
+      // toRef should return correct references
+      const firstRef = toRef(firstPost)
+      const secondRef = toRef(secondPost)
+      
+      expect(firstRef).toEqual({ __id: 'post_456' })
+      expect(secondRef).toEqual({ __id: 'post_789' })
+    })
+
+    it('works with directly accessed fragments from arrays', () => {
+      const data = {
+        category: { __id: 'category_101' }
+      }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access fragments directly from array
+      const allPosts = proxy.category.posts
+      const firstPost = allPosts[0]  // This is a fragment (post_456)
+      const secondPost = allPosts[1]  // This is a regular object
+      
+      expect(firstPost.title).toBe('Hello World')
+      expect(secondPost.title).toBe('Another Tech Post')
+      
+      // toRef should work on fragments accessed directly
+      const firstRef = toRef(firstPost)
+      expect(firstRef).toEqual({ __id: 'post_456' })
+      
+      // toRef should throw for non-fragments
+      expect(() => toRef(secondPost)).toThrow('Cannot convert to fragment reference')
+    })
+
+    it('throws error for non-fragment data', () => {
+      const regularObject = { name: 'John', age: 30 }
+      
+      expect(() => toRef(regularObject)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+    })
+
+    it('throws error for primitive values', () => {
+      expect(() => toRef('string')).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+      expect(() => toRef(42)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+      expect(() => toRef(null)).toThrow('Cannot convert to fragment reference: data was not resolved from a fragment')
+    })
+
+    it('round trip: fragment reference → resolved data → fragment reference', () => {
+      const originalRef = { __id: 'user_123' }
+      const data = { user: originalRef }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Resolve fragment
+      const resolvedUser = proxy.user
+      expect(resolvedUser.name).toBe('John Doe')
+      
+      // Convert back to reference
+      const backToRef = toRef(resolvedUser)
+      expect(backToRef).toEqual(originalRef)
+      expect(backToRef).toBe(originalRef) // Should be same object reference
+    })
+
+    it('works with complex nested structures', () => {
+      const data = {
+        page: {
+          author: { __id: 'user_123' },
+          posts: [
+            { __id: 'post_456' },
+            { title: 'Regular Post', id: 999 }
+          ]
+        }
+      }
+      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      
+      // Access various nested fragments
+      const author = proxy.page.author
+      const firstPost = proxy.page.posts[0]
+      const secondPost = proxy.page.posts[1] // Regular object, not fragment
+      
+      // toRef should work for fragments
+      expect(toRef(author)).toEqual({ __id: 'user_123' })
+      expect(toRef(firstPost)).toEqual({ __id: 'post_456' })
+      
+      // toRef should throw for non-fragments
+      expect(() => toRef(secondPost)).toThrow('Cannot convert to fragment reference')
     })
   })
 

@@ -336,7 +336,7 @@ export function createProxy<T extends JSONMappable>(
 }
 
 export function unproxy<T>(proxy: T): T {
-  return proxyToOriginalMap.get(proxy) || proxy
+  return proxyToOriginalMap.get(proxy)// || proxy
 }
 
 export function popRef<T>(fragmentData: T): { __id: string } {

@@ -76,11 +76,6 @@ function createArrayProxy(
 
   const proxy = new Proxy(arrayData, {
     get(target, prop) {
-      // Handle React internals and element validation
-      if (typeof prop === 'symbol' || prop === '$$typeof' || (typeof prop === 'string' && (prop.startsWith('_') || prop === 'constructor' || prop === 'props'))) {
-        return Reflect.get(target, prop)
-      }
-      
       // Handle array methods
       if (isArrayGetter(prop)) {
         const method = target[prop]
@@ -113,7 +108,12 @@ function createArrayProxy(
                 
                 return proxy
               }
-
+     
+              // Handle React elements - pass through without proxying
+              if ('$$typeof' in item) {
+                return item
+              }
+      
               if (item && typeof item === 'object') {
                 return createProxy(item, fragments, dependencies, proxyCache)
               }
@@ -233,11 +233,6 @@ function createObjectProxy(
 
   const proxy = new Proxy(objectData as any, {
     get(target: any, prop: string | symbol) {
-      // Handle React internals and element validation
-      if (typeof prop === 'symbol' || prop === '$$typeof' || (typeof prop === 'string' && (prop.startsWith('_') || prop === 'constructor' || prop === 'props'))) {
-        return Reflect.get(target, prop)
-      }
-      
       const value = target[prop]
 
       if (isFragmentReference(value)) {
@@ -316,6 +311,11 @@ export function createProxy<T extends JSONMappable>(
   proxyCache: WeakMap<object, any>
 ): T {
   if (!content || typeof content !== 'object') {
+    return content
+  }
+
+  // Don't proxy React elements
+  if ('$$typeof' in content) {
     return content
   }
 

@@ -228,8 +228,8 @@ function createObjectProxy(
 
   const proxy = new Proxy(objectData as any, {
     get(target: any, prop: string | symbol) {
-      // Handle React internal properties and symbols
-      if (typeof prop === 'symbol' || prop.startsWith('_') || prop === 'constructor' || prop === 'props') {
+      // Early exit for React internals and symbols - avoid any proxy logic
+      if (typeof prop === 'symbol' || (typeof prop === 'string' && (prop.startsWith('_') || prop === 'constructor' || prop === 'props'))) {
         return Reflect.get(target, prop)
       }
 
@@ -264,6 +264,7 @@ function createObjectProxy(
         return createObjectProxy(value, fragments, dependencies, proxyCache)
       }
 
+      // For primitive values and undefined, direct access
       return value
     },
 

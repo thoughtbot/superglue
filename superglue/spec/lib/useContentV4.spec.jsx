@@ -1395,5 +1395,96 @@ describe('useContentV4', () => {
       expect(postItems[1].querySelector('[data-testid="title"]')).toHaveTextContent('My Second Post')
       expect(postItems[1].querySelector('[data-testid="views"]')).toHaveTextContent('75')
     })
+
+    it('handles direct JSX rendering of proxy objects in arrays', () => {
+      const Component = () => {
+        const page = useContentV4()
+        
+        return (
+          <div>
+            {/* Direct rendering of proxy objects without spread - the "problematic" pattern */}
+            {page.posts.map((post, index) => (
+              <div key={index} data-testid={`direct-post-${index}`}>
+                <span data-testid="title">{post.title}</span>
+                <span data-testid="views">{post.views}</span>
+                <span data-testid="draft">{post.draft ? 'draft' : 'published'}</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      const { getAllByTestId } = renderWithProvider(<Component />)
+      
+      const postItems = getAllByTestId(/^direct-post-/)
+      expect(postItems).toHaveLength(3)
+      
+      // Check first post (fragment)
+      expect(postItems[0].querySelector('[data-testid="title"]')).toHaveTextContent('Hello World')
+      expect(postItems[0].querySelector('[data-testid="views"]')).toHaveTextContent('250')
+      expect(postItems[0].querySelector('[data-testid="draft"]')).toHaveTextContent('published')
+      
+      // Check second post (regular object)
+      expect(postItems[1].querySelector('[data-testid="title"]')).toHaveTextContent('Regular Post')
+      expect(postItems[1].querySelector('[data-testid="views"]')).toHaveTextContent('100')
+      expect(postItems[1].querySelector('[data-testid="draft"]')).toHaveTextContent('published')
+      
+      // Check third post (fragment)
+      expect(postItems[2].querySelector('[data-testid="title"]')).toHaveTextContent('Advanced Topics')
+      expect(postItems[2].querySelector('[data-testid="views"]')).toHaveTextContent('500')
+      expect(postItems[2].querySelector('[data-testid="draft"]')).toHaveTextContent('draft')
+    })
+
+    it('handles direct JSX rendering of fragment-scoped proxy objects in arrays', () => {
+      const Component = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        
+        return (
+          <div>
+            {/* Direct rendering in fragment-scoped mode */}
+            {user.posts.map((post, index) => (
+              <div key={`user-direct-${index}`} data-testid={`direct-user-post-${index}`}>
+                <span data-testid="title">{post.title}</span>
+                <span data-testid="views">{post.views}</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      const { getAllByTestId } = renderWithProvider(<Component />)
+      
+      const postItems = getAllByTestId(/^direct-user-post-/)
+      expect(postItems).toHaveLength(2)
+      
+      // Check user's posts from fragment data
+      expect(postItems[0].querySelector('[data-testid="title"]')).toHaveTextContent('My First Post')
+      expect(postItems[0].querySelector('[data-testid="views"]')).toHaveTextContent('150')
+      
+      expect(postItems[1].querySelector('[data-testid="title"]')).toHaveTextContent('My Second Post')
+      expect(postItems[1].querySelector('[data-testid="views"]')).toHaveTextContent('75')
+    })
+
+    it('prevents rendering whole proxy objects directly (should throw error)', () => {
+      const originalError = console.error
+      console.error = vi.fn()
+
+      const Component = () => {
+        const page = useContentV4()
+        
+        return (
+          <div>
+            {/* This should fail - trying to render a whole proxy object */}
+            {page.user}
+          </div>
+        )
+      }
+
+      expect(() => {
+        renderWithProvider(<Component />)
+      }).toThrow(/Objects are not valid as a React child/)
+      
+      console.error = originalError
+    })
   })
 })

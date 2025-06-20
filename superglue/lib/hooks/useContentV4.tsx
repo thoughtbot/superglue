@@ -14,16 +14,29 @@ type ProxiedContent<T> = T & {
     : T[K]
 }
 
-export function useContentV4<T = JSONMappable>(): ProxiedContent<T> {
+// Overloaded function signatures
+export function useContentV4<T = JSONMappable>(): ProxiedContent<T>
+export function useContentV4<T = JSONMappable>(fragmentRef: { __id: string }): ProxiedContent<T>
+export function useContentV4<T = JSONMappable>(fragmentRef?: { __id: string }): ProxiedContent<T> {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
 
   const dependencies = useRef<Set<string>>(new Set())
   const proxyCache = useRef<WeakMap<object, any>>(new WeakMap())
 
-  const pageData = useSelector(
-    (state: RootState) => state.pages[currentPageKey].data
-  )
+  // Get the fragment ID if in fragment-scoped mode
+  const fragmentId = fragmentRef?.__id
+
+  // Always call useSelector, but return different data based on mode
+  const sourceData = useSelector((state: RootState) => {
+    if (fragmentId) {
+      // Fragment-scoped mode: return the specific fragment
+      return state.fragments[fragmentId]
+    } else {
+      // Page-scoped mode: return current page data
+      return state.pages[currentPageKey].data
+    }
+  })
 
   const fragments = useSelector(
     (state: RootState) => state.fragments,
@@ -41,13 +54,17 @@ export function useContentV4<T = JSONMappable>(): ProxiedContent<T> {
   )
 
   const proxy = useMemo(() => {
+    if (fragmentId && !sourceData) {
+      throw new Error(`Fragment with id "${fragmentId}" not found`)
+    }
+
     return createProxy(
-      pageData,
+      sourceData,
       fragments,
       dependencies.current,
       proxyCache.current
     )
-  }, [pageData])
+  }, [sourceData]) // Only recreate when source data changes
 
   return proxy as ProxiedContent<T>
 }

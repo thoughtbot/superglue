@@ -1036,4 +1036,280 @@ describe('useContentV4', () => {
       expect(getByTestId('invalid3')).toHaveTextContent('true')
     })
   })
+
+  describe('fragment-scoped hooks', () => {
+    it('works with fragment references', () => {
+      let capturedUser
+
+      const Component = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        capturedUser = user
+        return <div>{user.name}</div>
+      }
+
+      const { container } = renderWithProvider(<Component />)
+      
+      expect(container.textContent).toBe('John Doe')
+      expect(capturedUser.name).toBe('John Doe')
+      expect(capturedUser.email).toBe('john@example.com')
+      expect(capturedUser.role).toBe('admin')
+    })
+
+    it('resolves nested fragments in fragment-scoped mode', () => {
+      let capturedPost
+
+      const Component = () => {
+        const post = useContentV4({ __id: 'post_456' })
+        capturedPost = post
+        return <div>{post.title}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      expect(capturedPost.title).toBe('Hello World')
+      expect(capturedPost.author.name).toBe('John Doe')
+      expect(capturedPost.author.email).toBe('john@example.com')
+    })
+
+    it('handles arrays in fragment-scoped mode', () => {
+      let capturedUser
+
+      const Component = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        capturedUser = user
+        return <div>{user.posts.length}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      expect(capturedUser.posts.length).toBe(2)
+      expect(capturedUser.posts[0].title).toBe('My First Post')
+      expect(capturedUser.posts[1].title).toBe('My Second Post')
+    })
+
+    it('throws error for non-existent fragment', () => {
+      const originalError = console.error
+      console.error = vi.fn()
+
+      const Component = () => {
+        const fragment = useContentV4({ __id: 'missing_fragment' })
+        return <div>{fragment.name}</div>
+      }
+
+      expect(() => {
+        renderWithProvider(<Component />)
+      }).toThrow('Fragment with id "missing_fragment" not found')
+      
+      console.error = originalError
+    })
+
+    it('maintains separate dependency tracking for fragment-scoped hooks', () => {
+      let fragmentRenderCount = 0
+      let pageRenderCount = 0
+
+      const FragmentComponent = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        fragmentRenderCount++
+        return <div>{user.name}</div>
+      }
+
+      const PageComponent = () => {
+        const page = useContentV4()
+        pageRenderCount++
+        return <div>{page.title}</div>
+      }
+
+      renderWithProvider(
+        <div>
+          <FragmentComponent />
+          <PageComponent />
+        </div>
+      )
+
+      expect(fragmentRenderCount).toBe(1)
+      expect(pageRenderCount).toBe(1)
+
+      // Update user_123 fragment - should only affect FragmentComponent
+      act(() => {
+        store.dispatch({
+          type: 'UPDATE_SINGLE_FRAGMENT',
+          fragmentId: 'user_123',
+          fragmentData: {
+            ...store.getState().fragments.user_123,
+            name: 'Jane Doe'
+          }
+        })
+      })
+
+      // Fragment-scoped hook re-renders when its specific fragment changes
+      expect(fragmentRenderCount).toBe(2) // Re-rendered when user_123 changed
+      expect(pageRenderCount).toBe(1) // Page component not affected
+    })
+
+    it('works with popRef for component isolation', () => {
+      let parentPage, childUser
+
+      const Parent = () => {
+        const page = useContentV4()
+        parentPage = page
+        const userRef = popRef(page.user)
+        return <Child userRef={userRef} />
+      }
+
+      const Child = ({ userRef }) => {
+        const user = useContentV4(userRef)
+        childUser = user
+        return <div>{user.name}</div>
+      }
+
+      const { container } = renderWithProvider(<Parent />)
+      
+      expect(container.textContent).toBe('John Doe')
+      expect(childUser.name).toBe('John Doe')
+      expect(childUser.email).toBe('john@example.com')
+      
+      // Parent should have popped the user dependency
+      // Child should be tracking user_123 independently
+    })
+
+    it('supports nested fragment chains in fragment-scoped mode', () => {
+      let capturedComment
+
+      const Component = () => {
+        const comment = useContentV4({ __id: 'comment_111' })
+        capturedComment = comment
+        return <div>{comment.text}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      expect(capturedComment.text).toBe('Excellent work!')
+      expect(capturedComment.author.name).toBe('Jane Smith')
+      expect(capturedComment.author.role).toBe('editor')
+      expect(capturedComment.replies[0].author.name).toBe('John Doe')
+    })
+
+    it('works with array methods in fragment-scoped mode', () => {
+      let capturedCategory
+
+      const Component = () => {
+        const category = useContentV4({ __id: 'category_101' })
+        capturedCategory = category
+        return <div>{category.posts.length}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      const postTitles = capturedCategory.posts.map(post => post.title)
+      expect(postTitles).toEqual(['Hello World', 'Advanced Topics', 'Static Post'])
+      
+      const fragmentPosts = capturedCategory.posts.filter(post => post.views > 200)
+      expect(fragmentPosts).toHaveLength(2)
+      expect(fragmentPosts[0].title).toBe('Hello World')
+      expect(fragmentPosts[1].title).toBe('Advanced Topics')
+    })
+
+    it('prevents mutations in fragment-scoped mode', () => {
+      let capturedUser
+
+      const Component = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        capturedUser = user
+        return <div>{user.name}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      expect(() => capturedUser.name = 'Hacked').toThrow('Cannot mutate proxy object')
+      expect(() => capturedUser.profile.bio = 'Hacked').toThrow('Cannot mutate proxy object')
+      expect(() => delete capturedUser.email).toThrow('Cannot delete properties on proxy object')
+    })
+
+    it('supports unproxy in fragment-scoped mode', () => {
+      let capturedUser
+
+      const Component = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        capturedUser = user
+        return <div>{user.name}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      const unproxiedUser = unproxy(capturedUser)
+      expect(unproxiedUser).toBe(store.getState().fragments.user_123)
+      expect(unproxiedUser.name).toBe('John Doe')
+    })
+
+    it('supports popRef in fragment-scoped mode', () => {
+      let capturedPost
+
+      const Component = () => {
+        const post = useContentV4({ __id: 'post_456' })
+        capturedPost = post
+        return <div>{post.title}</div>
+      }
+
+      renderWithProvider(<Component />)
+      
+      const authorRef = popRef(capturedPost.author)
+      expect(authorRef).toEqual({ __id: 'user_123' })
+    })
+
+    it('maintains proxy caching consistency across different hook modes', () => {
+      let pageUser, fragmentUser
+
+      const Component = () => {
+        const page = useContentV4()
+        const user = useContentV4({ __id: 'user_123' })
+        
+        pageUser = page.user
+        fragmentUser = user
+        
+        return (
+          <div>
+            <span data-testid="page-user">{page.user.name}</span>
+            <span data-testid="fragment-user">{user.name}</span>
+          </div>
+        )
+      }
+
+      const { getByTestId } = renderWithProvider(<Component />)
+      
+      expect(getByTestId('page-user')).toHaveTextContent('John Doe')
+      expect(getByTestId('fragment-user')).toHaveTextContent('John Doe')
+      
+      // Both should reference the same underlying data
+      expect(unproxy(pageUser)).toBe(unproxy(fragmentUser))
+      expect(unproxy(pageUser)).toBe(store.getState().fragments.user_123)
+    })
+
+    it('handles component hierarchies with mixed hook modes', () => {
+      const GrandParent = () => {
+        const page = useContentV4()
+        return (
+          <div data-testid="grandparent">
+            <span>{page.title}</span>
+            <Parent userRef={popRef(page.user)} />
+          </div>
+        )
+      }
+
+      const Parent = ({ userRef }) => {
+        const user = useContentV4(userRef)
+        return (
+          <div data-testid="parent">
+            <span>{user.name}</span>
+            <span data-testid="post-count">{user.posts.length}</span>
+          </div>
+        )
+      }
+
+      const { getByTestId } = renderWithProvider(<GrandParent />)
+      
+      expect(getByTestId('grandparent')).toHaveTextContent('Test Page')
+      expect(getByTestId('parent')).toHaveTextContent('John Doe')
+      expect(getByTestId('post-count')).toHaveTextContent('2')
+    })
+  })
 })

@@ -109,13 +109,13 @@ function createArrayProxy(
                 return proxy
               }
      
-              // Handle React elements - pass through without proxying
-              if ('$$typeof' in item) {
-                return item
-              }
-      
-              if (item && typeof item === 'object') {
-                return createProxy(item, fragments, dependencies, proxyCache)
+              if (typeof item === 'object' && item !== null) {
+                if ('$$typeof' in item) {
+                  // Handle React elements - pass through without proxying
+                  return item
+                } else {
+                  return createProxy(item, fragments, dependencies, proxyCache)
+                }
               }
 
               return item
@@ -174,8 +174,13 @@ function createArrayProxy(
           return proxy
         }
 
-        if (item && typeof item === 'object') {
-          return createProxy(item, fragments, dependencies, proxyCache)
+        if (typeof item === 'object' && item !== null) {
+          if ('$$typeof' in item) {
+            // Handle React elements - pass through without proxying
+            return item
+          } else {
+            return createProxy(item, fragments, dependencies, proxyCache)
+          }
         }
 
         return item
@@ -256,11 +261,15 @@ function createObjectProxy(
 
         return proxy
       }
-      if (value && typeof value === 'object') {
-        if (Array.isArray(value)) {
+      if (typeof value === 'object' && value !== null) {
+        if ('$$typeof' in value) {
+          // Handle React elements - pass through without proxying
+          return value
+        } else if (Array.isArray(value)) {
           return createArrayProxy(value, fragments, dependencies, proxyCache)
+        } else {
+          return createObjectProxy(value, fragments, dependencies, proxyCache)
         }
-        return createObjectProxy(value, fragments, dependencies, proxyCache)
       }
 
       // For primitive values and undefined, direct access

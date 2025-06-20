@@ -76,10 +76,11 @@ function createArrayProxy(
 
   const proxy = new Proxy(arrayData, {
     get(target, prop) {
-      console.log(`=== ACCESSING: ${String(prop)} ===`)
-      console.log('Target type:', target.$$typeof ? 'REACT_ELEMENT' :
-    'FRAGMENT_DATA')
-      console.log('Target keys:', Object.keys(target))
+      // Handle React internals and element validation
+      if (typeof prop === 'symbol' || prop === '$$typeof' || (typeof prop === 'string' && (prop.startsWith('_') || prop === 'constructor' || prop === 'props'))) {
+        return Reflect.get(target, prop)
+      }
+      
       // Handle array methods
       if (isArrayGetter(prop)) {
         const method = target[prop]
@@ -232,17 +233,11 @@ function createObjectProxy(
 
   const proxy = new Proxy(objectData as any, {
     get(target: any, prop: string | symbol) {
-      console.log(`=== ACCESSING: ${String(prop)} ===`)
-      console.log('Target type:', target.$$typeof ? 'REACT_ELEMENT' :
-    'FRAGMENT_DATA')
-      console.log('Target keys:', Object.keys(target))
-// console.log(prop)
-// console.log(target)
-      // Early exit for React internals and symbols - avoid any proxy logic
-      if (typeof prop === 'symbol' || (typeof prop === 'string' && (prop.startsWith('_') || prop === 'constructor' || prop === 'props'))) {
+      // Handle React internals and element validation
+      if (typeof prop === 'symbol' || prop === '$$typeof' || (typeof prop === 'string' && (prop.startsWith('_') || prop === 'constructor' || prop === 'props'))) {
         return Reflect.get(target, prop)
       }
-
+      
       const value = target[prop]
 
       if (isFragmentReference(value)) {

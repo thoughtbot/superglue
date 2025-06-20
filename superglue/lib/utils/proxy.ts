@@ -229,9 +229,9 @@ function createObjectProxy(
   const proxy = new Proxy(objectData as any, {
     get(target: any, prop: string | symbol) {
       // Handle React internal properties and symbols
-      // if (typeof prop === 'symbol' || prop.startsWith('_') || prop === 'constructor') {
-      //   return Reflect.get(target, prop)
-      // }
+      if (typeof prop === 'symbol' || prop.startsWith('_') || prop === 'constructor' || prop === 'props') {
+        return Reflect.get(target, prop)
+      }
 
       const value = target[prop]
 

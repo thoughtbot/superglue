@@ -1311,5 +1311,89 @@ describe('useContentV4', () => {
       expect(getByTestId('parent')).toHaveTextContent('John Doe')
       expect(getByTestId('post-count')).toHaveTextContent('2')
     })
+
+    it('handles complex JSX operations on proxy arrays', () => {
+      const PostItem = ({ title, views, draft }) => (
+        <div data-testid="post-item">
+          <span data-testid="title">{title}</span>
+          <span data-testid="views">{views}</span>
+          <span data-testid="draft">{draft ? 'draft' : 'published'}</span>
+        </div>
+      )
+
+      const Component = () => {
+        const page = useContentV4()
+        
+        return (
+          <div>
+            {/* This is the complex JSX pattern that might trigger React conflicts */}
+            {page.posts.map((post, index) => (
+              <PostItem 
+                key={index} 
+                {...post}  // Spread operator on proxy object
+                data-testid={`post-${index}`}
+              />
+            ))}
+          </div>
+        )
+      }
+
+      const { getAllByTestId } = renderWithProvider(<Component />)
+      
+      const postItems = getAllByTestId('post-item')
+      expect(postItems).toHaveLength(3)
+      
+      // Check first post (fragment)
+      expect(postItems[0].querySelector('[data-testid="title"]')).toHaveTextContent('Hello World')
+      expect(postItems[0].querySelector('[data-testid="views"]')).toHaveTextContent('250')
+      expect(postItems[0].querySelector('[data-testid="draft"]')).toHaveTextContent('published')
+      
+      // Check second post (regular object)
+      expect(postItems[1].querySelector('[data-testid="title"]')).toHaveTextContent('Regular Post')
+      expect(postItems[1].querySelector('[data-testid="views"]')).toHaveTextContent('100')
+      expect(postItems[1].querySelector('[data-testid="draft"]')).toHaveTextContent('published')
+      
+      // Check third post (fragment)
+      expect(postItems[2].querySelector('[data-testid="title"]')).toHaveTextContent('Advanced Topics')
+      expect(postItems[2].querySelector('[data-testid="views"]')).toHaveTextContent('500')
+      expect(postItems[2].querySelector('[data-testid="draft"]')).toHaveTextContent('draft')
+    })
+
+    it('handles complex JSX operations on fragment-scoped proxy arrays', () => {
+      const PostItem = ({ title, views }) => (
+        <div data-testid="user-post-item">
+          <span data-testid="title">{title}</span>
+          <span data-testid="views">{views}</span>
+        </div>
+      )
+
+      const Component = () => {
+        const user = useContentV4({ __id: 'user_123' })
+        
+        return (
+          <div>
+            {/* Fragment-scoped array with JSX spread operations */}
+            {user.posts.map((post, index) => (
+              <PostItem 
+                key={`user-post-${index}`}
+                {...post}  // Spread on items from fragment-scoped proxy
+              />
+            ))}
+          </div>
+        )
+      }
+
+      const { getAllByTestId } = renderWithProvider(<Component />)
+      
+      const postItems = getAllByTestId('user-post-item')
+      expect(postItems).toHaveLength(2)
+      
+      // Check user's posts from fragment data
+      expect(postItems[0].querySelector('[data-testid="title"]')).toHaveTextContent('My First Post')
+      expect(postItems[0].querySelector('[data-testid="views"]')).toHaveTextContent('150')
+      
+      expect(postItems[1].querySelector('[data-testid="title"]')).toHaveTextContent('My Second Post')
+      expect(postItems[1].querySelector('[data-testid="views"]')).toHaveTextContent('75')
+    })
   })
 })

@@ -132,7 +132,13 @@ function createContentProxy<T extends JSONMappable>(
                   return callable
                 }
 
-                return createContentProxy(item, fragments, proxyTargets, fragmentTargets, resolvedFragments)
+                return createContentProxy(
+                  item,
+                  fragments,
+                  proxyTargets,
+                  fragmentTargets,
+                  resolvedFragments
+                )
               }
 
               return item
@@ -143,7 +149,13 @@ function createContentProxy<T extends JSONMappable>(
           return arrayProxy
         }
 
-        return createContentProxy(value, fragments, proxyTargets, fragmentTargets, resolvedFragments)
+        return createContentProxy(
+          value,
+          fragments,
+          proxyTargets,
+          fragmentTargets,
+          resolvedFragments
+        )
       }
 
       return value
@@ -152,58 +164,4 @@ function createContentProxy<T extends JSONMappable>(
 
   proxyTargets.set(proxy, content)
   return proxy
-}
-
-/**
- * Enhanced version of useContent with proxy support for fragment resolution.
- * Can be used with or without a selector function.
- */
-export function useContentV2<T = JSONMappable>(): T
-export function useContentV2<T = JSONMappable, R = any>(
-  selector: ContentSelector<ProxiedContent<T>, R>
-): R
-export function useContentV2<T = JSONMappable, R = any>(
-  selector?: ContentSelector<ProxiedContent<T>, R>
-) {
-  const superglueState = useSuperglue()
-  const currentPageKey = superglueState.currentPageKey
-
-  if (!selector) {
-    return useSelector<RootState<T>, T>(
-      (state) => state.pages[currentPageKey].data
-    )
-  }
-
-  return useSelector<RootState<T>, R>((state) => {
-    const pageData = state.pages[currentPageKey].data
-    const fragments = state.fragments
-
-    // Create maps to track targets - scoped to this selector execution
-    const proxyTargets = new WeakMap<object, any>()      // proxy → original target
-    const fragmentTargets: Record<string, any> = {}      // fragment ID → original reference
-    const resolvedFragments = new WeakSet<object>()      // resolved fragment objects
-
-    // Helper functions for lookup
-    const getProxyTarget = (proxy: any) => {
-      const target = proxyTargets.get(proxy)
-      if (target === undefined) {
-        throw new Error('Proxy target not found - this should never happen')
-      }
-      return target
-    }
-    
-    const getFragmentRef = (id: string) => {
-      const reference = fragmentTargets[id]
-      if (reference === undefined) {
-        throw new Error(`Fragment reference not found for ID: ${id}`)
-      }
-      return reference
-    }
-
-    const isResolvedFragment = (obj: any) => resolvedFragments.has(obj)
-
-    const proxiedContent = createContentProxy(pageData, fragments, proxyTargets, fragmentTargets, resolvedFragments)
-    const result = selector(proxiedContent)
-    return validateResult(result, getProxyTarget, getFragmentRef, isResolvedFragment)
-  })
 }

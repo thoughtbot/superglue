@@ -7,7 +7,6 @@ import {
   AllFragments,
 } from '../types'
 export { useFragment } from './useFragment'
-export { useContentV3 } from './useContentV3'
 export { useContentV4, unproxy } from './useContentV4'
 
 /**

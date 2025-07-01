@@ -8,16 +8,21 @@ import {
   setCSRFToken,
   setActivePage,
   removePage,
+  handleFragmentGraft,
+  saveFragment,
+  appendToFragment,
+  prependToFragment,
 } from '../actions'
 import { config } from '../config'
 import {
   AllPages,
   Page,
-  VisitResponse,
+  SaveResponse,
   Fragment,
   GraftResponse,
   SuperglueState,
   JSONMappable,
+  AllFragments,
 } from '../types'
 
 function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
@@ -51,7 +56,7 @@ function constrainPagesSize(state: AllPages) {
 function handleSaveResponse(
   state: AllPages,
   pageKey: string,
-  page: VisitResponse
+  page: SaveResponse
 ): AllPages {
   state = { ...state }
 
@@ -107,12 +112,12 @@ export function appendReceivedFragmentsOntoPage(
   return nextState
 }
 
-export function graftNodeOntoPage(
-  state: AllPages,
+export function graftNodeOntoTarget<T extends JSONMappable>(
+  state: T,
   pageKey: string,
   node: JSONMappable,
   pathToNode: string
-): AllPages {
+): T {
   if (!node) {
     console.warn(
       'There was no node returned in the response. Do you have the correct key path in your props_at?'
@@ -125,6 +130,24 @@ export function graftNodeOntoPage(
   }
   const fullPathToNode = [pageKey, pathToNode].join('.')
   return setIn(state, fullPathToNode, node)
+}
+
+function handleFragmentGraftResponse(
+  state: AllFragments,
+  key: string,
+  response: GraftResponse
+): AllFragments {
+  const target = state[key]
+
+  if (!target) {
+    const error = new Error(
+      `Superglue was looking for ${key} in your fragments, but could not find it.`
+    )
+    throw error
+  }
+  const { data: receivedNode, path: pathToNode } = response
+
+  return graftNodeOntoTarget(state, key, receivedNode, pathToNode)
 }
 
 function handleGraftResponse(
@@ -147,7 +170,7 @@ function handleGraftResponse(
 
   return [
     (nextState: AllPages) =>
-      graftNodeOntoPage(nextState, pageKey, receivedNode, pathToNode),
+      graftNodeOntoTarget(nextState, pageKey, receivedNode, pathToNode),
     (nextState: AllPages) =>
       appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
   ].reduce((memo, fn) => fn(memo), state)
@@ -232,7 +255,61 @@ export function superglueReducer(
   return state
 }
 
+export function fragmentReducer(
+  state: AllFragments = {},
+  action: Action
+): AllFragments {
+  if (handleFragmentGraft.match(action)) {
+    const { fragmentKey, response } = action.payload
+    return handleFragmentGraftResponse(state, fragmentKey, response)
+  }
+
+  if (saveFragment.match(action)) {
+    const { fragmentKey, data } = action.payload
+
+    return {
+      ...state,
+      [fragmentKey]: data,
+    }
+  }
+
+
+  if (appendToFragment.match(action)) {
+    const { data, fragmentKey } = action.payload
+    let targetFragment = state[fragmentKey]
+
+    if (Array.isArray(targetFragment)) {
+      targetFragment = [...targetFragment, data]
+
+      return {
+        ...state,
+        [fragmentKey]: targetFragment,
+      }
+    } else {
+      return state
+    }
+  }
+
+  if (prependToFragment.match(action)) {
+    const { data, fragmentKey } = action.payload
+    let targetFragment = state[fragmentKey]
+
+    if (Array.isArray(targetFragment)) {
+      targetFragment = [data, ...targetFragment]
+      return {
+        ...state,
+        [fragmentKey]: targetFragment,
+      }
+    } else {
+      return state
+    }
+  }
+
+  return state
+}
+
 export const rootReducer = {
   superglue: superglueReducer,
   pages: pageReducer,
+  fragments: fragmentReducer,
 }

@@ -1,12 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import {
-  pageReducer,
-  superglueReducer,
-  graftNodeOntoPage,
-  updateSameFragmentsOnPage,
-  appendReceivedFragmentsOntoPage,
-  handleGraft,
-} from '../../lib/reducers'
+import { pageReducer, superglueReducer } from '../../lib/reducers'
 
 describe('reducers', () => {
   describe('superglue reducer', () => {

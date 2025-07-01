@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { JSONMappable, Page, RootState, SuperglueState } from '../types'
+export { useFragment } from './useFragment'
 
 /**
  * A lightweight hook that grabs the superglue state from the store.

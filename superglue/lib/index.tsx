@@ -5,6 +5,9 @@ import { saveAndProcessPage } from './action_creators'
 import { historyChange, setCSRFToken } from './actions'
 import { Provider } from 'react-redux'
 
+import { CableContext, StreamActions } from './hooks/useStreamSource'
+import { createConsumer } from '@rails/actioncable'
+
 import { createBrowserHistory, createMemoryHistory } from 'history'
 
 import { NavigationProvider } from './components/Navigation'
@@ -14,7 +17,6 @@ export {
   beforeFetch,
   beforeVisit,
   beforeRemote,
-  updateFragments,
   copyPage,
   removePage,
   saveResponse,
@@ -24,7 +26,7 @@ export {
 export * from './types'
 
 import {
-  VisitResponse,
+  SaveResponse,
   ApplicationProps,
   NavigateTo,
   SuperglueStore,
@@ -34,6 +36,10 @@ export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
 export * from './hooks'
+import useStreamSource from './hooks/useStreamSource'
+export { useStreamSource }
+
+const cable = createConsumer()
 
 const hasWindow = typeof window !== 'undefined'
 
@@ -49,7 +55,7 @@ const createHistory = () => {
 
 export const prepareStore = (
   store: SuperglueStore,
-  initialPage: VisitResponse,
+  initialPage: SaveResponse,
   path: string
 ) => {
   const initialPageKey = urlToPageKey(path)
@@ -93,12 +99,15 @@ export const setup = ({
     store,
   })
 
+  const streamActions = new StreamActions({ remote, store })
+
   return {
     visit,
     remote,
     nextHistory,
     initialPageKey,
     ujs: handlers,
+    streamActions,
   }
 }
 
@@ -121,31 +130,34 @@ function Application({
 }: ApplicationProps) {
   const navigatorRef = useRef<{ navigateTo: NavigateTo } | null>(null)
 
-  const { visit, remote, nextHistory, initialPageKey, ujs } = useMemo(() => {
-    return setup({
-      initialPage,
-      baseUrl,
-      path,
-      store,
-      buildVisitAndRemote,
-      history,
-      navigatorRef,
-    })
-  }, [])
+  const { visit, remote, nextHistory, initialPageKey, ujs, streamActions } =
+    useMemo(() => {
+      return setup({
+        initialPage,
+        baseUrl,
+        path,
+        store,
+        buildVisitAndRemote,
+        history,
+        navigatorRef,
+      })
+    }, [])
 
   // The Nav component is pretty bare and can be inherited from for custom
   // behavior or replaced with your own.
   return (
     <div onClick={ujs.onClick} onSubmit={ujs.onSubmit} {...rest}>
       <Provider store={store}>
-        <NavigationProvider
-          ref={navigatorRef}
-          visit={visit}
-          remote={remote}
-          mapping={mapping}
-          history={nextHistory}
-          initialPageKey={initialPageKey}
-        />
+        <CableContext.Provider value={{ streamActions, cable }}>
+          <NavigationProvider
+            ref={navigatorRef}
+            visit={visit}
+            remote={remote}
+            mapping={mapping}
+            history={nextHistory}
+            initialPageKey={initialPageKey}
+          />
+        </CableContext.Provider>
       </Provider>
     </div>
   )

@@ -1,14 +1,15 @@
-import { urlToPageKey, getIn, propsAtParam } from '../utils'
+import { urlToPageKey, getIn, setIn, propsAtParam } from '../utils'
 import {
   saveResponse,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
-  updateFragments,
   handleGraft,
+  saveFragment,
+  handleFragmentGraft,
 } from '../actions'
 import { remote } from './requests'
 import {
-  VisitResponse,
+  SaveResponse,
   SaveAndProcessPageThunk,
   DefermentThunk,
   GraftResponse,
@@ -70,67 +71,44 @@ function fetchDeferments(
  */
 export function saveAndProcessPage(
   pageKey: string,
-  page: VisitResponse | GraftResponse
+  page: SaveResponse | GraftResponse
 ): SaveAndProcessPageThunk {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     pageKey = urlToPageKey(pageKey)
 
-    const { defers = [] } = page
+    let nextPage = page
 
-    if ('action' in page) {
-      const prevPage = getState().pages[pageKey]
-      dispatch(handleGraft({ pageKey, page }))
-      const currentPage = getState().pages[pageKey]
+    page.fragments.reverse().forEach((fragment) => {
+      const { type, path } = fragment
+      const node = getIn(nextPage, path) as JSONMappable
+      nextPage = setIn(page, path, { __id: type })
 
-      currentPage.fragments.forEach((fragment) => {
-        const { type, path } = fragment
-        // A fragment only works on a block in props_template. So using getIn
-        // will always return a JSONMappable
-        const currentFragment = getIn(currentPage, path) as JSONMappable
-        const prevFragment = getIn(prevPage, path) as JSONMappable
-        if (!prevFragment) {
-          dispatch(
-            updateFragments({
-              name: type,
-              pageKey: pageKey,
-              value: currentFragment,
-              path,
-            })
-          )
-        } else if (currentFragment !== prevFragment) {
-          dispatch(
-            updateFragments({
-              name: type,
-              pageKey: pageKey,
-              value: currentFragment,
-              previousValue: prevFragment,
-              path,
-            })
-          )
-        }
-      })
-    } else {
-      dispatch(saveResponse({ pageKey, page }))
-      const currentPage = getState().pages[pageKey]
+      dispatch(
+        saveFragment({
+          fragmentKey: type,
+          data: node,
+        })
+      )
+    })
 
-      currentPage.fragments.forEach((fragment) => {
-        const { type, path } = fragment
-        const currentFragment = getIn(currentPage, path) as JSONMappable
-
+    if (nextPage.action === 'graft') {
+      if (typeof nextPage.fragmentContext === 'string') {
         dispatch(
-          updateFragments({
-            name: type,
-            pageKey: pageKey,
-            value: currentFragment,
-            path,
+          handleFragmentGraft({
+            fragmentKey: nextPage.fragmentContext,
+            response: nextPage,
           })
         )
-      })
+      } else {
+        dispatch(handleGraft({ pageKey, page: nextPage }))
+      }
+    } else {
+      dispatch(saveResponse({ pageKey, page: nextPage }))
     }
 
     const hasFetch = typeof fetch != 'undefined'
     if (hasFetch) {
-      return dispatch(fetchDeferments(pageKey, defers)).then(() =>
+      return dispatch(fetchDeferments(pageKey, nextPage.defers)).then(() =>
         Promise.resolve()
       )
     } else {

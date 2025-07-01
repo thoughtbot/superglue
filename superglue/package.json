@@ -1,6 +1,6 @@
 {
   "name": "@thoughtbot/superglue",
-  "version": "1.0.2",
+  "version": "2.0.0-alpha.1",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
     "build": "tsup",
@@ -66,8 +66,7 @@
     "prettier-eslint": "^16.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-redux": "^7.2.9",
-    "redux": "^5.0.1",
+    "react-redux": "^9.1.2",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
     "tsup": "^8.1.0",
@@ -83,6 +82,13 @@
     "react-redux": "^9 || ^8"
   },
   "dependencies": {
-    "history": "^5.3.0"
+    "immer": "^10.0.3",
+    "@rails/actioncable": "^8.0.200",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/rails__actioncable": "^6.1.11",
+    "history": "^5.3.0",
+    "lodash.debounce": "^4.0.8",
+    "mock-socket": "^2.0.0",
+    "uuid": "^11.1.0"
   }
 }

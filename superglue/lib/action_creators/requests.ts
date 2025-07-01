@@ -17,7 +17,6 @@ import {
 import { saveAndProcessPage } from './index'
 import {
   FetchArgs,
-  VisitResponse,
   PageResponse,
   Page,
   SuperglueState,
@@ -27,6 +26,7 @@ import {
   VisitCreator,
   NavigationAction,
   VisitMeta,
+  BeforeSave,
 } from '../types'
 
 function handleFetchErr(
@@ -40,7 +40,7 @@ function handleFetchErr(
 
 function buildMeta(
   pageKey: string,
-  page: VisitResponse,
+  page: PageResponse,
   state: SuperglueState,
   rsp: Response,
   fetchArgs: FetchArgs
@@ -66,12 +66,14 @@ export class MismatchedComponentError extends Error {
   }
 }
 
+const defaultBeforeSave: BeforeSave = (prevPage, receivedPage) => receivedPage
+
 export const remote: RemoteCreator = (
   path,
   {
     pageKey: targetPageKey,
     force = false,
-    beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
+    beforeSave = defaultBeforeSave,
     ...rest
   } = {}
 ) => {
@@ -233,6 +235,7 @@ function calculateNavAction(
   revisit: boolean
 ) {
   let navigationAction: NavigationAction = 'push'
+
   if (!rsp.redirected && !isGet) {
     navigationAction = 'replace'
   }

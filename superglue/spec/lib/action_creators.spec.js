@@ -60,6 +60,19 @@ const successfulBody = () => {
   })
 }
 
+const successfulFragmentBody = () => {
+  return JSON.stringify({
+    data: { heading: 'Some heading 2' },
+    csrfToken: 'token',
+    assets: [],
+    fragments: [{
+      type: 'heading',
+      path: 'data.heading'
+    }],
+    action: 'handleFagments'
+  })
+}
+
 fetchMock.mock()
 
 describe('action creators', () => {
@@ -215,179 +228,6 @@ describe('action creators', () => {
 
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
         expect(allSuperglueActions(store)).toEqual(expectedActions)
-      })
-    })
-
-    it('handles nested deferments to complete what it needs to complete while calling for an encountered fragment ', () => {
-      const preloadedState = {
-        superglue: {
-          currentPageKey: '/bar',
-          csrfToken: 'token',
-        },
-        pages: {
-          '/foo': {
-            fragments: [],
-          },
-        },
-        results: [],
-      }
-
-      let store = buildStore(preloadedState)
-
-      const page = {
-        data: { heading: 'Some heading 2', body: {}, footer: {} },
-        csrfToken: 'token',
-        assets: [],
-        fragments: [{ type: 'body', path: 'data.body' }],
-        defers: [
-          { url: '/foo?props_at=data.body', type: 'auto' },
-          { url: '/foo?props_at=data.footer', type: 'auto' },
-        ],
-      }
-
-      fetchMock.mock('https://example.com/foo?props_at=data.body&format=json', {
-        body: JSON.stringify({
-          data: {
-            aside: {
-              top: {},
-            },
-          },
-          action: 'graft',
-          path: 'data.body',
-          csrfToken: 'token',
-          fragments: [],
-          assets: [],
-          defers: [{ url: '/foo?props_at=data.body.aside.top', type: 'auto' }],
-        }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
-
-      fetchMock.mock(
-        'https://example.com/foo?props_at=data.body.aside.top&format=json',
-        {
-          body: JSON.stringify({
-            data: {
-              greeting: {
-                hello: 'world',
-              },
-            },
-            action: 'graft',
-            path: 'data.body.aside.top',
-            csrfToken: 'token',
-            fragments: [
-              { type: 'greeting', path: 'data.body.aside.top.greeting' },
-            ],
-            assets: [],
-            defers: [],
-          }),
-          headers: {
-            'content-type': 'application/json',
-          },
-        }
-      )
-
-      fetchMock.mock(
-        'https://example.com/foo?props_at=data.footer&format=json',
-        {
-          body: JSON.stringify({
-            data: {
-              copyright: {
-                author: 'john',
-              },
-            },
-            action: 'graft',
-            path: 'data.footer',
-            csrfToken: 'token',
-            fragments: [{ type: 'copyright', path: 'data.footer.copyright' }],
-            assets: [],
-            defers: [],
-          }),
-          headers: {
-            'content-type': 'application/json',
-          },
-        }
-      )
-
-      const expectedActions = [
-        {
-          type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: {
-            name: 'body',
-            pageKey: '/foo',
-            value: {},
-            path: 'data.body',
-          },
-        },
-        {
-          type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: {
-            name: 'body',
-            pageKey: '/foo',
-            value: {
-              aside: {
-                top: {},
-              },
-            },
-            previousValue: {},
-            path: 'data.body',
-          },
-        },
-        {
-          type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: {
-            name: 'copyright',
-            pageKey: '/foo',
-            value: {
-              author: 'john',
-            },
-            path: 'data.footer.copyright',
-          },
-        },
-        {
-          type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: {
-            name: 'body',
-            pageKey: '/foo',
-            value: {
-              aside: {
-                top: {
-                  greeting: {
-                    hello: 'world',
-                  },
-                },
-              },
-            },
-            previousValue: {
-              aside: {
-                top: {},
-              },
-            },
-            path: 'data.body',
-          },
-        },
-        {
-          type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: {
-            name: 'greeting',
-            pageKey: '/foo',
-            value: {
-              hello: 'world',
-            },
-            path: 'data.body.aside.top.greeting',
-          },
-        },
-      ]
-
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        const actions = store
-          .getState()
-          .results.filter((action) =>
-            action.type.startsWith('@@superglue/UPDATE_FRAGMENTS')
-          )
-
-        expect(actions).toEqual(expectedActions)
       })
     })
 
@@ -582,58 +422,6 @@ describe('action creators', () => {
       })
     })
 
-    it('fires HANDLE_GRAFT, and process a page with a fragment', () => {
-      const store = buildStore({
-        ...initialState(),
-        pages: {
-          '/foo': {
-            data: {
-              heading: {
-                cart: {},
-              },
-            },
-            fragments: [],
-          },
-        },
-      })
-
-      const page = {
-        data: { status: 'success' },
-        action: 'graft',
-        path: 'data.heading.cart',
-        csrfToken: '',
-        fragments: [{ path: 'data.heading.cart', type: 'cart' }],
-      }
-
-      // Figure out a better way to test this, the last element in the
-      // array isn't correct because getState on a mockstore doesn't work
-      const expectedActions = [
-        {
-          type: '@@superglue/HANDLE_GRAFT',
-          payload: {
-            pageKey: '/foo',
-            page,
-          },
-        },
-        {
-          type: '@@superglue/UPDATE_FRAGMENTS',
-          payload: {
-            name: 'cart',
-            pageKey: '/foo',
-            path: 'data.heading.cart',
-            previousValue: {},
-            value: {
-              status: 'success',
-            },
-          },
-        },
-      ]
-
-      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
-        expect(allSuperglueActions(store)).toEqual(expectedActions)
-      })
-    })
-
     //TODO: add tests for when type is mannual
 
     it('fires a GRAFTING_ERROR when a fetch fails', () => {
@@ -755,6 +543,46 @@ describe('action creators', () => {
         expect(allSuperglueActions(store)).toEqual(expectedActions)
       })
     })
+
+    it('handles a fragmentResponse', () => {
+      const page = {
+        data: { 
+          body: {
+            footer: {
+              note: 'buy paper'
+            }
+          },
+          sideBar: {
+            message: 'hello'
+          },
+          notFragment: {
+            chart: 'this should be ignored'
+          }
+        },
+        csrfToken: 'token',
+        assets: [],
+        action: "handleFagments",
+        fragments: [
+          {type: "footer", path: "data.body.footer"},
+          {type: "side", path: "data.sideBar"}
+        ],
+      }
+      const store = buildStore(initialState())
+ 
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(store.getState()).toMatchObject({
+          fragments: {
+            footer: {
+              note: "buy paper",
+            },
+            side: {
+              message: "hello"
+            }
+          },
+          pages: {}
+        })
+      })
+    })
   })
 
   describe('remote', () => {
@@ -815,6 +643,7 @@ describe('action creators', () => {
 
         expect(requestheaders).toEqual({
           accept: 'application/json',
+          "X-Superglue-Request-Id": expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
           'x-csrf-token': 'token',

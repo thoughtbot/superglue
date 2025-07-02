@@ -60,16 +60,27 @@ const successfulBody = () => {
   })
 }
 
-const successfulFragmentBody = () => {
+const successfulStreamResponseBody = () => {
   return JSON.stringify({
-    data: { heading: 'Some heading 2' },
+    data: [{ 
+      type: 'message',
+      data: {
+        heading: {
+          title: 'hello', 
+          comment: {rating: 'great!'}
+        }
+      },
+      fragmentKeys: ['top'],
+      action: 'save',
+      options: {}
+    }],
     csrfToken: 'token',
     assets: [],
     fragments: [{
-      type: 'heading',
-      path: 'data.heading'
+      type: 'comment',
+      path: 'data.0.data.heading.comment'
     }],
-    action: 'handleFagments'
+    action: 'stream'
   })
 }
 
@@ -1488,6 +1499,32 @@ describe('action creators', () => {
           })
         )
       }).rejects.toThrow(MismatchedComponentError)
+    })
+
+    it('sets the navigation action on meta to none for fragment responses', () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/current_url',
+          csrfToken: 'token',
+        },
+      })
+
+      fetchMock.mock('https://example.com/foobar?format=json', {
+        body: successfulStreamResponseBody(),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+
+      return store
+        .dispatch(visit('/foobar'))
+        .then((meta) => {
+          expect(meta).toEqual(
+            expect.objectContaining({
+              navigationAction: 'none',
+            })
+          )
+        })
     })
   })
 })

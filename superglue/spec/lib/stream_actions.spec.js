@@ -135,14 +135,15 @@ describe('Stream Actions', () => {
   })
 
   describe('handle', () => {
-    it('calls append with correct arguments', () => {
+    it('handles append action and updates fragments state', () => {
       const store = buildStore({
-        fragments: {},
+        fragments: {
+          foo: []
+        },
         superglue: { currentPageKey: '/posts' },
       })
       const actions = new StreamActions({ store, remote: vi.fn() })
 
-      const stub = vi.spyOn(actions, 'append').mockImplementation(() => {})
       const msg = JSON.stringify({
         type: 'message',
         action: 'append',
@@ -153,17 +154,22 @@ describe('Stream Actions', () => {
       })
 
       actions.handle(msg, '/posts')
-      expect(stub).toHaveBeenCalledWith(['foo'], { id: 1 }, {})
+      
+      const nextState = store.getState()
+      expect(nextState.fragments).toEqual({
+        foo: [{ id: 1 }],
+      })
     })
 
-    it('calls prepend with correct arguments', () => {
+    it('handles prepend action and updates fragments state', () => {
       const store = buildStore({
-        fragments: {},
+        fragments: {
+          bar: [{ id: 0 }]
+        },
         superglue: { currentPageKey: '/posts' },
       })
       const actions = new StreamActions({ store, remote: vi.fn() })
 
-      const stub = vi.spyOn(actions, 'prepend').mockImplementation(() => {})
       const msg = JSON.stringify({
         type: 'message',
         action: 'prepend',
@@ -174,17 +180,20 @@ describe('Stream Actions', () => {
       })
 
       actions.handle(msg, '/posts')
-      expect(stub).toHaveBeenCalledWith(['bar'], { id: 2 }, {})
+      
+      const nextState = store.getState()
+      expect(nextState.fragments).toEqual({
+        bar: [{ id: 2 }, { id: 0 }],
+      })
     })
 
-    it('calls save with correct arguments', () => {
+    it('handles save action and updates fragments state', () => {
       const store = buildStore({
         fragments: {},
         superglue: { currentPageKey: '/posts' },
       })
       const actions = new StreamActions({ store, remote: vi.fn() })
 
-      const stub = vi.spyOn(actions, 'save').mockImplementation(() => {})
       const msg = JSON.stringify({
         type: 'message',
         action: 'save',
@@ -195,7 +204,11 @@ describe('Stream Actions', () => {
       })
 
       actions.handle(msg, '/posts')
-      expect(stub).toHaveBeenCalledWith('baz', { id: 3 })
+      
+      const nextState = store.getState()
+      expect(nextState.fragments).toEqual({
+        baz: { id: 3 },
+      })
     })
 
     it('calls refresh if page keys match', () => {
@@ -238,12 +251,13 @@ describe('Stream Actions', () => {
 
     it('denormalizes fragments from message and stores them in fragments slice', () => {
       const store = buildStore({
-        fragments: {},
+        fragments: {
+          posts: []
+        },
         superglue: { currentPageKey: '/posts' },
       })
       const actions = new StreamActions({ store, remote: vi.fn() })
 
-      const stub = vi.spyOn(actions, 'append').mockImplementation(() => {})
       const msg = JSON.stringify({
         type: 'message',
         action: 'append',
@@ -273,13 +287,10 @@ describe('Stream Actions', () => {
         header: {
           avatar: { __id: 'user' },
         },
+        posts: [{
+          header: { __id: 'header' },
+        }],
       })
-
-      expect(stub).toHaveBeenCalledWith(['posts'], {             
-        header: {
-         __id: 'header',
-        } 
-      }, {})
     })
 
     it('skips fragment processing for refresh actions', () => {

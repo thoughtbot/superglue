@@ -9,13 +9,13 @@ import {
 } from '../actions'
 import { remote } from './requests'
 import {
-  SaveResponse,
   SaveAndProcessPageThunk,
   DefermentThunk,
-  GraftResponse,
   Defer,
   JSONMappable,
+  PageResponse,
 } from '../types'
+import { handleStreamResponse } from './stream'
 export * from './requests'
 
 function fetchDeferments(
@@ -71,7 +71,7 @@ function fetchDeferments(
  */
 export function saveAndProcessPage(
   pageKey: string,
-  page: SaveResponse | GraftResponse
+  page: PageResponse
 ): SaveAndProcessPageThunk {
   return (dispatch) => {
     pageKey = urlToPageKey(pageKey)
@@ -102,6 +102,11 @@ export function saveAndProcessPage(
       } else {
         dispatch(handleGraft({ pageKey, page: nextPage }))
       }
+    } else if (nextPage.action === 'stream') {
+      // We resolve the promise here because fragment responses
+      // have deferment disabled.
+      dispatch(handleStreamResponse(nextPage))
+      return Promise.resolve()
     } else {
       dispatch(saveResponse({ pageKey, page: nextPage }))
     }

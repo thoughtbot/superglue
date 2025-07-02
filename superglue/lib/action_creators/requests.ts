@@ -48,15 +48,20 @@ function buildMeta(
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
-  return {
+  const meta: Meta = {
     pageKey,
     page,
     redirected: rsp.redirected,
     rsp,
     fetchArgs,
-    componentIdentifier: page.componentIdentifier,
     needsRefresh: needsRefresh(prevAssets, nextAssets),
   }
+
+  if (page.action !== 'stream') {
+    meta.componentIdentifier = page.componentIdentifier
+  }
+
+  return meta
 }
 
 export class MismatchedComponentError extends Error {
@@ -101,10 +106,11 @@ export const remote: RemoteCreator = (
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
-        const existingId = pages[pageKey]?.componentIdentifier
-        const receivedId = json.componentIdentifier
-        if (!!existingId && existingId != receivedId && !force) {
-          const message = `You cannot replace or update an existing page
+        if (json.action !== 'stream') {
+          const existingId = pages[pageKey]?.componentIdentifier
+          const receivedId = json.componentIdentifier
+          if (!!existingId && existingId != receivedId && !force) {
+            const message = `You cannot replace or update an existing page
 located at pages["${currentPageKey}"] that has a componentIdentifier
 of "${existingId}" with the contents of a page response that has a
 componentIdentifier of "${receivedId}".
@@ -120,7 +126,8 @@ compatible with the page component associated with "${existingId}".
 Consider using data-sg-visit, the visit function, or redirect_back to
 the same page. Or if you're sure you want to proceed, use force: true.
           `
-          throw new MismatchedComponentError(message)
+            throw new MismatchedComponentError(message)
+          }
         }
 
         const page = beforeSave(pages[pageKey], json)
@@ -180,11 +187,15 @@ export const visit: VisitCreator = (
         const { superglue, pages = {} } = getState()
         const isGet = fetchArgs[1].method === 'GET'
         const pageKey = calculatePageKey(rsp, isGet, currentPageKey)
-        if (placeholderKey && hasPropsAt(path) && hasPlaceholder) {
-          const existingId = pages[placeholderKey]?.componentIdentifier
-          const receivedId = json.componentIdentifier
-          if (!!existingId && existingId != receivedId) {
-            const message = `You received a page response with a
+
+        const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
+
+        if (json.action !== 'stream') {
+          if (placeholderKey && hasPropsAt(path) && hasPlaceholder) {
+            const existingId = pages[placeholderKey]?.componentIdentifier
+            const receivedId = json.componentIdentifier
+            if (!!existingId && existingId != receivedId) {
+              const message = `You received a page response with a
 componentIdentifier "${receivedId}" that is different than the
 componentIdentifier "${existingId}" located at ${placeholderKey}.
 
@@ -200,18 +211,17 @@ Check that you're rendering a page with a matching
 componentIdentifier, or consider using redirect_back_with_props_at
 to the same page.
             `
-            throw new MismatchedComponentError(message)
+              throw new MismatchedComponentError(message)
+            }
+            dispatch(copyPage({ from: placeholderKey, to: pageKey }))
           }
-          dispatch(copyPage({ from: placeholderKey, to: pageKey }))
         }
-
-        const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
-
         const visitMeta: VisitMeta = {
           ...meta,
           navigationAction: calculateNavAction(
             meta,
             rsp,
+            json,
             isGet,
             pageKey,
             currentPageKey,
@@ -229,12 +239,17 @@ to the same page.
 function calculateNavAction(
   meta: Meta,
   rsp: Response,
+  json: PageResponse,
   isGet: boolean,
   pageKey: string,
   currentPageKey: string,
   revisit: boolean
 ) {
   let navigationAction: NavigationAction = 'push'
+
+  if (json.action === 'stream') {
+    return 'none'
+  }
 
   if (!rsp.redirected && !isGet) {
     navigationAction = 'replace'

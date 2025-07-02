@@ -11,6 +11,7 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
+import { StreamMutateMessage } from '../hooks/useStreamSource'
 
 export * from './requests'
 /**
@@ -195,12 +196,30 @@ export type GraftResponse<T = JSONMappable> = {
   fragmentContext?: string
 }
 
+export type FragmentResponse<T = JSONMappable> = {
+  data: T
+  assets: string[]
+  csrfToken?: string
+  fragments: Fragment[]
+  action: 'handleFagments'
+
+  renderedAt: number
+}
+
+export type StreamResponse = {
+  data: StreamMutateMessage[]
+  fragments: Fragment[]
+  assets: string[]
+  csrfToken?: string
+  action: 'stream'
+}
+
 /**
  * A PageResponse can be either a {@link GraftResponse} or a {@link SaveResponse}.
  * Its meant to be implemented by the server and if you are using
  * superglue_rails, the generators will handle both cases.
  */
-export type PageResponse = GraftResponse | SaveResponse
+export type PageResponse = GraftResponse | SaveResponse | StreamResponse
 
 /**
  * A Fragment identifies a cross cutting concern, like a shared header or footer.
@@ -209,10 +228,19 @@ export type PageResponse = GraftResponse | SaveResponse
  * @prop path A Keypath specifying the location of the fragment
  * @interface
  */
-export type Fragment = {
+type FragmentBase = {
   type: string
   path: Keypath
 }
+export type Fragment =
+  | FragmentBase
+  | (FragmentBase & {
+      target: string
+      action: 'prepend' | 'append'
+      options?: {
+        unique?: boolean
+      }
+    })
 
 /**
  * The store where all page responses are stored indexed by PageKey. You are encouraged
@@ -274,7 +302,7 @@ export interface Meta {
   /** The original args passed to fetch.*/
   fetchArgs: FetchArgs
   /** The {@link ComponentIdentifier} extracted from the response.*/
-  componentIdentifier: ComponentIdentifier
+  componentIdentifier?: ComponentIdentifier
   /** `true` when assets locally are detected to be out of date */
   needsRefresh: boolean
 }

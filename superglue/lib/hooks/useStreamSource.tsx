@@ -3,17 +3,29 @@ import {
   Consumer,
   Subscription,
 } from '@rails/actioncable'
-import { setIn, getIn } from '../utils'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
-import { appendToFragment, prependToFragment, saveFragment } from '../actions'
 import { ApplicationRemote, Fragment } from '../types'
 import { useSuperglue } from '.'
 import { debounce, DebouncedFunc } from 'lodash'
 import { lastRequestIds } from '../utils'
+import {
+  streamPrepend,
+  streamAppend,
+  streamSave,
+  handleStreamMessage,
+} from '../action_creators/stream'
 
 type StreamSourceProps = string | ChannelNameWithParams
 
-type StreamMessage =
+export type StreamMutateMessage = {
+  type: 'message'
+  data: JSONMappable
+  fragmentKeys: string[]
+  action: 'append' | 'prepend' | 'save'
+  options: Record<string, string>
+}
+
+export type StreamMessage =
   | {
       type: 'message'
       data: JSONMappable
@@ -56,44 +68,11 @@ export class StreamActions {
     data: JSONMappable,
     options: { saveAs?: string } = {}
   ) {
-    if (options.saveAs) {
-      const { saveAs } = options
-      this.store.dispatch(
-        saveFragment({
-          fragmentKey: saveAs,
-          data,
-        })
-      )
-
-      fragments.forEach((fragmentKey) => {
-        this.store.dispatch(
-          prependToFragment({
-            fragmentKey,
-            data: {
-              __id: saveAs,
-            },
-          })
-        )
-      })
-    } else {
-      fragments.forEach((fragmentKey) => {
-        this.store.dispatch(
-          prependToFragment({
-            fragmentKey: fragmentKey,
-            data: data,
-          })
-        )
-      })
-    }
+    this.store.dispatch(streamPrepend(fragments, data, options))
   }
 
   save(fragment: string, data: JSONMappable) {
-    this.store.dispatch(
-      saveFragment({
-        fragmentKey: fragment,
-        data,
-      })
-    )
+    this.store.dispatch(streamSave(fragment, data))
   }
 
   append(
@@ -101,35 +80,7 @@ export class StreamActions {
     data: JSONMappable,
     options: { saveAs?: string } = {}
   ) {
-    if (options.saveAs) {
-      const { saveAs } = options
-      this.store.dispatch(
-        saveFragment({
-          fragmentKey: saveAs,
-          data,
-        })
-      )
-
-      fragments.forEach((fragmentKey) => {
-        this.store.dispatch(
-          appendToFragment({
-            fragmentKey,
-            data: {
-              __id: saveAs,
-            },
-          })
-        )
-      })
-    } else {
-      fragments.forEach((fragmentKey) => {
-        this.store.dispatch(
-          appendToFragment({
-            fragmentKey,
-            data,
-          })
-        )
-      })
-    }
+    this.store.dispatch(streamAppend(fragments, data, options))
   }
 
   handle(rawMessage: string, currentPageKey: string) {
@@ -137,51 +88,17 @@ export class StreamActions {
     const { superglue } = this.store.getState()
     const nextPageKey = superglue.currentPageKey
 
-    let nextMessage = message
-
-    if (message.action !== 'refresh') {
-      message.fragments.reverse().forEach((fragment) => {
-        const { type, path } = fragment
-        const node = getIn(nextMessage as JSONMappable, path) as JSONMappable
-        nextMessage = setIn(nextMessage, path, { __id: type })
-
-        this.store.dispatch(
-          saveFragment({
-            fragmentKey: type,
-            data: node,
-          })
-        )
-      })
-    }
-
-    if (nextMessage.type === 'message') {
-      if (nextMessage.action === 'append') {
-        this.append(
-          nextMessage.fragmentKeys,
-          nextMessage.data,
-          nextMessage.options
-        )
-      }
-
-      if (nextMessage.action === 'prepend') {
-        this.prepend(
-          nextMessage.fragmentKeys,
-          nextMessage.data,
-          nextMessage.options
-        )
-      }
-
-      if (nextMessage.action === 'save') {
-        // replace should not be targets... but target
-        this.save(nextMessage.fragmentKeys[0], nextMessage.data)
-      }
-
+    if (message.type === 'message') {
       if (
         message.action === 'refresh' &&
         currentPageKey === nextPageKey &&
         !lastRequestIds.has(message.requestId)
       ) {
         this.refresh(currentPageKey)
+      }
+
+      if (message.action !== 'refresh') {
+        this.store.dispatch(handleStreamMessage(rawMessage))
       }
     }
   }

@@ -6,7 +6,7 @@ export class LimitedSet extends Set {
     this.maxSize = maxSize
   }
 
-  add(value: any) {
+  add(value: unknown) {
     if (this.size >= this.maxSize) {
       const iterator = this.values()
       const oldestValue = iterator.next().value

@@ -106,6 +106,32 @@ export type JSONKeyable = JSONObject[] | JSONObject
  */
 export type JSONValue = JSONPrimitive | JSONMappable
 
+/**
+ * A Fragment type that marks a property as containing a fragment reference.
+ * This is used to provide type information about which parts of the data structure
+ * are fragment references that will be resolved by the proxy system.
+ *
+ * @example
+ * type PageData = {
+ *   title: string;
+ *   author: Fragment<{ name: string; email: string }>;
+ *   posts: Fragment<{ title: string; content: string }>[];
+ * }
+ */
+export type Fragment<T> = { __id: string } & { __fragmentType?: T }
+
+/**
+ * Utility type for unproxy that converts Fragment types to fragment references.
+ * This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.
+ */
+export type Unproxied<T> = T extends Fragment<unknown>
+  ? { __id: string } // Fragment becomes a reference
+  : T extends (infer U)[]
+  ? Unproxied<U>[] // Process array elements
+  : T extends object
+  ? { [K in keyof T]: Unproxied<T[K]> } // Process object properties
+  : T // Primitives pass through unchanged
+
 // todo: change rsp to response
 
 export interface ParsedResponse {
@@ -153,7 +179,7 @@ export type SaveResponse<T = JSONMappable> = {
   componentIdentifier: ComponentIdentifier
   assets: string[]
   csrfToken?: string
-  fragments: Fragment[]
+  fragments: FragmentRef[]
   defers: Defer[]
   slices: JSONObject
   action: 'savePage'
@@ -185,7 +211,7 @@ export type GraftResponse<T = JSONMappable> = {
   componentIdentifier: ComponentIdentifier
   assets: string[]
   csrfToken?: string
-  fragments: Fragment[]
+  fragments: FragmentRef[]
   defers: Defer[]
   slices: JSONObject
   action: 'graft'
@@ -200,7 +226,7 @@ export type FragmentResponse<T = JSONMappable> = {
   data: T
   assets: string[]
   csrfToken?: string
-  fragments: Fragment[]
+  fragments: FragmentRef[]
   action: 'handleFagments'
 
   renderedAt: number
@@ -208,7 +234,7 @@ export type FragmentResponse<T = JSONMappable> = {
 
 export type StreamResponse = {
   data: StreamMutateMessage[]
-  fragments: Fragment[]
+  fragments: FragmentRef[]
   assets: string[]
   csrfToken?: string
   action: 'stream'
@@ -222,25 +248,17 @@ export type StreamResponse = {
 export type PageResponse = GraftResponse | SaveResponse | StreamResponse
 
 /**
- * A Fragment identifies a cross cutting concern, like a shared header or footer.
+ * A FragmentRef identifies a cross cutting concern, like a shared header or footer.
  * @prop type A user supplied string identifying a fragment. This is usually created using
  * [props_template](https://github.com/thoughtbot/props_template?tab=readme-ov-file#jsonfragments)
  * @prop path A Keypath specifying the location of the fragment
  * @interface
  */
-type FragmentBase = {
-  type: string
+
+export type FragmentRef = {
+  id: string
   path: Keypath
 }
-export type Fragment =
-  | FragmentBase
-  | (FragmentBase & {
-      target: string
-      action: 'prepend' | 'append'
-      options?: {
-        unique?: boolean
-      }
-    })
 
 /**
  * The store where all page responses are stored indexed by PageKey. You are encouraged

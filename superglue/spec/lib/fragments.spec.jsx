@@ -62,8 +62,8 @@ describe('fragments', () => {
           },
         },
         fragments: [
-          { type: 'header', path: 'data.header' },
-          { type: 'user', path: 'data.header.avatar' },
+          { id: 'header', path: 'data.header' },
+          { id: 'user', path: 'data.header.avatar' },
         ],
       })
       const store = buildStore(initialState())
@@ -112,7 +112,7 @@ describe('fragments', () => {
                   __id: 'header',
                 },
               },
-              fragments: [{ type: 'header', path: 'data.header' }],
+              fragments: [{ id: 'header', path: 'data.header' }],
             }),
           },
           fragments: {
@@ -145,7 +145,7 @@ describe('fragments', () => {
       it('denormalizes new fragments found in the received graft response', async () => {
         const page = buildPage({
           action: 'graft',
-          fragments: [{ type: 'personDetails', path: 'data.contactDetails' }],
+          fragments: [{ id: 'personDetails', path: 'data.contactDetails' }],
           data: {
             name: 'John Smith',
             contactDetails: {
@@ -167,7 +167,7 @@ describe('fragments', () => {
                   __id: 'header',
                 },
               },
-              fragments: [{ type: 'header', path: 'data.header' }],
+              fragments: [{ id: 'header', path: 'data.header' }],
             }),
           },
           fragments: {

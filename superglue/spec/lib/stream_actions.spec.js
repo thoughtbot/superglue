@@ -271,8 +271,8 @@ describe('Stream Actions', () => {
         },
         options: {},
         fragments: [
-          { type: 'header', path: 'data.header' },
-          { type: 'user', path: 'data.header.avatar' },
+          { id: 'header', path: 'data.header' },
+          { id: 'user', path: 'data.header.avatar' },
         ]
       })
 

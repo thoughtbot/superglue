@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import { JSONMappable, RootState } from '../types'
+import { JSONMappable, RootState, Unproxied } from '../types'
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
@@ -67,6 +67,6 @@ export function useContentV4<T = JSONMappable>(fragmentRef?: {
   return proxy as ProxiedContent<T>
 }
 
-export function unproxy<T>(proxy: T): T {
+export function unproxy<T>(proxy: T): Unproxied<T> {
   return unproxyUtil(proxy)
 }

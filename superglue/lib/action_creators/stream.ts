@@ -122,13 +122,13 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
 
     if (message.action !== 'refresh') {
       message.fragments.reverse().forEach((fragment) => {
-        const { type, path } = fragment
+        const { id, path } = fragment
         const node = getIn(nextMessage as JSONMappable, path) as JSONMappable
-        nextMessage = setIn(nextMessage, path, { __id: type })
+        nextMessage = setIn(nextMessage, path, { __id: id })
 
         dispatch(
           saveFragment({
-            fragmentKey: type,
+            fragmentKey: id,
             data: node,
           })
         )
@@ -170,13 +170,13 @@ export const handleStreamResponse = (
     let nextResponse = response
 
     nextResponse.fragments.reverse().forEach((fragment) => {
-      const { type, path } = fragment
+      const { id, path } = fragment
       const node = getIn(nextResponse as JSONMappable, path) as JSONMappable
-      nextResponse = setIn(nextResponse, path, { __id: type })
+      nextResponse = setIn(nextResponse, path, { __id: id })
 
       dispatch(
         saveFragment({
-          fragmentKey: type,
+          fragmentKey: id,
           data: node,
         })
       )

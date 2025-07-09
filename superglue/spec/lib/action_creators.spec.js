@@ -574,8 +574,8 @@ describe('action creators', () => {
         assets: [],
         action: "handleFagments",
         fragments: [
-          {type: "footer", path: "data.body.footer"},
-          {type: "side", path: "data.sideBar"}
+          {id: "footer", path: "data.body.footer"},
+          {id: "side", path: "data.sideBar"}
         ],
       }
       const store = buildStore(initialState())

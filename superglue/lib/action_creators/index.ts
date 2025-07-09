@@ -79,13 +79,13 @@ export function saveAndProcessPage(
     let nextPage = page
 
     page.fragments.reverse().forEach((fragment) => {
-      const { type, path } = fragment
+      const { id, path } = fragment
       const node = getIn(nextPage, path) as JSONMappable
-      nextPage = setIn(page, path, { __id: type })
+      nextPage = setIn(page, path, { __id: id })
 
       dispatch(
         saveFragment({
-          fragmentKey: type,
+          fragmentKey: id,
           data: node,
         })
       )

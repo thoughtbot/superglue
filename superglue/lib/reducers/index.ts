@@ -18,7 +18,7 @@ import {
   AllPages,
   Page,
   SaveResponse,
-  Fragment,
+  FragmentRef,
   GraftResponse,
   SuperglueState,
   JSONMappable,
@@ -79,7 +79,7 @@ function handleSaveResponse(
 export function appendReceivedFragmentsOntoPage(
   state: AllPages,
   pageKey: string,
-  receivedFragments: Fragment[]
+  receivedFragments: FragmentRef[]
 ): AllPages {
   if (!pageKey) {
     return state

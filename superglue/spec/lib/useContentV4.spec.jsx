@@ -20,25 +20,17 @@ const buildStore = (preloadedState) => {
 describe('useContentV4', () => {
   const TestComponent = ({ onRender, onMount, children }) => {
     const page = useContentV4()
-    
+
     useEffect(() => {
       onMount?.(page)
     }, [])
-    
+
     onRender?.(page)
-    return (
-      <div data-testid="test-component">
-        {children || page.title}
-      </div>
-    )
+    return <div data-testid="test-component">{children || page.title}</div>
   }
 
   const renderWithProvider = (component, store) => {
-    return render(
-      <Provider store={store}>
-        {component}
-      </Provider>
-    )
+    return render(<Provider store={store}>{component}</Provider>)
   }
 
   describe('basic functionality', () => {
@@ -53,17 +45,21 @@ describe('useContentV4', () => {
           '/posts': {
             data: {
               title: 'All Posts',
-              count: 10
-            }
-          }
+              count: 10,
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -87,20 +83,24 @@ describe('useContentV4', () => {
                   name: 'John',
                   settings: {
                     theme: 'dark',
-                    notifications: true
-                  }
-                }
-              }
-            }
-          }
+                    notifications: true,
+                  },
+                },
+              },
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -122,19 +122,23 @@ describe('useContentV4', () => {
               posts: [
                 { title: 'First Post', id: 1 },
                 { title: 'Second Post', id: 2 },
-                { title: 'Third Post', id: 3 }
+                { title: 'Third Post', id: 3 },
               ],
-              tags: ['javascript', 'react', 'redux']
-            }
-          }
+              tags: ['javascript', 'react', 'redux'],
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -156,17 +160,17 @@ describe('useContentV4', () => {
           '/home': {
             data: {
               title: 'Home Page',
-              welcome: 'Welcome home!'
-            }
+              welcome: 'Welcome home!',
+            },
           },
           '/about': {
             data: {
               title: 'About Page',
-              description: 'Learn more about us'
-            }
-          }
+              description: 'Learn more about us',
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
@@ -208,24 +212,28 @@ describe('useContentV4', () => {
         pages: {
           '/profile': {
             data: {
-              currentUser: { __id: 'user_001' }
-            }
-          }
+              currentUser: { __id: 'user_001' },
+            },
+          },
         },
         fragments: {
           user_001: {
             id: 1,
             name: 'Alice Johnson',
             email: 'alice@example.com',
-            role: 'developer'
-          }
-        }
+            role: 'developer',
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -244,9 +252,9 @@ describe('useContentV4', () => {
         pages: {
           '/settings': {
             data: {
-              user: { __id: 'user_nested' }
-            }
-          }
+              user: { __id: 'user_nested' },
+            },
+          },
         },
         fragments: {
           user_nested: {
@@ -254,21 +262,25 @@ describe('useContentV4', () => {
               personal: {
                 firstName: 'Bob',
                 lastName: 'Smith',
-                age: 30
+                age: 30,
               },
               preferences: {
                 language: 'en',
-                timezone: 'UTC'
-              }
-            }
-          }
-        }
+                timezone: 'UTC',
+              },
+            },
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -287,9 +299,9 @@ describe('useContentV4', () => {
         pages: {
           '/author': {
             data: {
-              author: { __id: 'author_001' }
-            }
-          }
+              author: { __id: 'author_001' },
+            },
+          },
         },
         fragments: {
           author_001: {
@@ -297,16 +309,20 @@ describe('useContentV4', () => {
             books: [
               { title: 'Book One', year: 2020 },
               { title: 'Book Two', year: 2021 },
-              { title: 'Book Three', year: 2022 }
-            ]
-          }
-        }
+              { title: 'Book Three', year: 2022 },
+            ],
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -328,29 +344,33 @@ describe('useContentV4', () => {
               articles: [
                 { __id: 'article_001' },
                 { title: 'Static Article', id: 999 },
-                { __id: 'article_002' }
-              ]
-            }
-          }
+                { __id: 'article_002' },
+              ],
+            },
+          },
         },
         fragments: {
           article_001: {
             id: 1,
             title: 'Dynamic Article 1',
-            content: 'Content 1'
+            content: 'Content 1',
           },
           article_002: {
             id: 2,
             title: 'Dynamic Article 2',
-            content: 'Content 2'
-          }
-        }
+            content: 'Content 2',
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -370,33 +390,37 @@ describe('useContentV4', () => {
           '/post-detail': {
             data: {
               post: { __id: 'post_001' },
-              relatedAuthor: { __id: 'user_writer' }
-            }
-          }
+              relatedAuthor: { __id: 'user_writer' },
+            },
+          },
         },
         fragments: {
           post_001: {
             title: 'Great Post',
-            author: { __id: 'user_writer' }
+            author: { __id: 'user_writer' },
           },
           user_writer: {
             name: 'Writer Name',
-            bio: 'Professional writer'
-          }
-        }
+            bio: 'Professional writer',
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
       // post -> author (user_writer)
       expect(capturedPage.post.author.name).toBe('Writer Name')
       expect(capturedPage.post.author.bio).toBe('Professional writer')
-      
+
       // Direct reference
       expect(capturedPage.relatedAuthor.name).toBe('Writer Name')
     })
@@ -411,11 +435,9 @@ describe('useContentV4', () => {
         pages: {
           '/comments': {
             data: {
-              comments: [
-                { __id: 'comment_001' }
-              ]
-            }
-          }
+              comments: [{ __id: 'comment_001' }],
+            },
+          },
         },
         fragments: {
           comment_001: {
@@ -424,31 +446,37 @@ describe('useContentV4', () => {
             replies: [
               {
                 text: 'Thanks!',
-                author: { __id: 'user_writer' }
-              }
-            ]
+                author: { __id: 'user_writer' },
+              },
+            ],
           },
           user_commenter: {
             name: 'Commenter',
-            verified: true
+            verified: true,
           },
           user_writer: {
             name: 'Article Author',
-            verified: true
-          }
-        }
+            verified: true,
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
       expect(capturedPage.comments[0].text).toBe('Great article!')
       expect(capturedPage.comments[0].author.name).toBe('Commenter')
-      expect(capturedPage.comments[0].replies[0].author.name).toBe('Article Author')
+      expect(capturedPage.comments[0].replies[0].author.name).toBe(
+        'Article Author'
+      )
     })
 
     it('handles mixed fragment and non-fragment arrays', () => {
@@ -461,9 +489,9 @@ describe('useContentV4', () => {
         pages: {
           '/category': {
             data: {
-              category: { __id: 'category_tech' }
-            }
-          }
+              category: { __id: 'category_tech' },
+            },
+          },
         },
         fragments: {
           category_tech: {
@@ -471,24 +499,28 @@ describe('useContentV4', () => {
             items: [
               { __id: 'item_001' },
               { title: 'Static Item', id: 100 },
-              { __id: 'item_002' }
-            ]
+              { __id: 'item_002' },
+            ],
           },
           item_001: {
             title: 'Dynamic Tech Item 1',
-            price: 99.99
+            price: 99.99,
           },
           item_002: {
             title: 'Dynamic Tech Item 2',
-            price: 149.99
-          }
-        }
+            price: 149.99,
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -515,42 +547,53 @@ describe('useContentV4', () => {
               products: [
                 { __id: 'product_001' },
                 { name: 'Static Product', price: 50, inStock: true },
-                { __id: 'product_002' }
-              ]
-            }
-          }
+                { __id: 'product_002' },
+              ],
+            },
+          },
         },
         fragments: {
           product_001: {
             name: 'Premium Product',
             price: 200,
-            inStock: true
+            inStock: true,
           },
           product_002: {
             name: 'Budget Product',
             price: 25,
-            inStock: false
-          }
-        }
+            inStock: false,
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      const productNames = capturedPage.products.map(p => p.name)
-      expect(productNames).toEqual(['Premium Product', 'Static Product', 'Budget Product'])
+      const productNames = capturedPage.products.map((p) => p.name)
+      expect(productNames).toEqual([
+        'Premium Product',
+        'Static Product',
+        'Budget Product',
+      ])
 
-      const inStockProducts = capturedPage.products.filter(p => p.inStock)
+      const inStockProducts = capturedPage.products.filter((p) => p.inStock)
       expect(inStockProducts).toHaveLength(2)
 
-      const expensiveProduct = capturedPage.products.find(p => p.price > 100)
+      const expensiveProduct = capturedPage.products.find((p) => p.price > 100)
       expect(expensiveProduct.name).toBe('Premium Product')
 
-      const totalPrice = capturedPage.products.reduce((sum, p) => sum + p.price, 0)
+      const totalPrice = capturedPage.products.reduce(
+        (sum, p) => sum + p.price,
+        0
+      )
       expect(totalPrice).toBe(275)
     })
 
@@ -564,9 +607,9 @@ describe('useContentV4', () => {
         pages: {
           '/store': {
             data: {
-              store: { __id: 'store_001' }
-            }
-          }
+              store: { __id: 'store_001' },
+            },
+          },
         },
         fragments: {
           store_001: {
@@ -574,23 +617,29 @@ describe('useContentV4', () => {
             inventory: [
               { name: 'Laptop', quantity: 5 },
               { name: 'Mouse', quantity: 20 },
-              { name: 'Keyboard', quantity: 0 }
-            ]
-          }
-        }
+              { name: 'Keyboard', quantity: 0 },
+            ],
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      const itemNames = capturedPage.store.inventory.map(item => item.name)
+      const itemNames = capturedPage.store.inventory.map((item) => item.name)
       expect(itemNames).toEqual(['Laptop', 'Mouse', 'Keyboard'])
 
-      const inStock = capturedPage.store.inventory.filter(item => item.quantity > 0)
+      const inStock = capturedPage.store.inventory.filter(
+        (item) => item.quantity > 0
+      )
       expect(inStock).toHaveLength(2)
     })
 
@@ -604,38 +653,41 @@ describe('useContentV4', () => {
         pages: {
           '/filtered': {
             data: {
-              items: [
-                { __id: 'item_a' },
-                { __id: 'item_b' }
-              ]
-            }
-          }
+              items: [{ __id: 'item_a' }, { __id: 'item_b' }],
+            },
+          },
         },
         fragments: {
           item_a: {
             name: 'Item A',
             score: 100,
-            creator: { __id: 'user_1' }
+            creator: { __id: 'user_1' },
           },
           item_b: {
             name: 'Item B',
             score: 150,
-            creator: { __id: 'user_2' }
+            creator: { __id: 'user_2' },
           },
           user_1: { name: 'Creator 1' },
-          user_2: { name: 'Creator 2' }
-        }
+          user_2: { name: 'Creator 2' },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      const highScoreItems = capturedPage.items.filter(item => item.score > 50)
-      
+      const highScoreItems = capturedPage.items.filter(
+        (item) => item.score > 50
+      )
+
       // Should still resolve nested fragments
       expect(highScoreItems[0].creator.name).toBe('Creator 1')
       expect(highScoreItems[1].creator.name).toBe('Creator 2')
@@ -654,25 +706,36 @@ describe('useContentV4', () => {
           '/readonly': {
             data: {
               title: 'Original Title',
-              count: 42
-            }
-          }
+              count: 42,
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      expect(() => capturedPage.title = 'New Title').toThrow('Cannot mutate proxy object. Use Redux actions to update state.')
-      expect(() => capturedPage.count = 100).toThrow('Cannot mutate proxy object')
-      expect(() => delete capturedPage.title).toThrow('Cannot delete properties on proxy object')
-      expect(() => Object.defineProperty(capturedPage, 'newProp', { value: 'test' }))
-        .toThrow('Cannot define properties on proxy object')
+      expect(() => (capturedPage.title = 'New Title')).toThrow(
+        'Cannot mutate proxy object. Use Redux actions to update state.'
+      )
+      expect(() => (capturedPage.count = 100)).toThrow(
+        'Cannot mutate proxy object'
+      )
+      expect(() => delete capturedPage.title).toThrow(
+        'Cannot delete properties on proxy object'
+      )
+      expect(() =>
+        Object.defineProperty(capturedPage, 'newProp', { value: 'test' })
+      ).toThrow('Cannot define properties on proxy object')
     })
 
     it('prevents nested object mutations', () => {
@@ -687,24 +750,32 @@ describe('useContentV4', () => {
             data: {
               config: {
                 settings: {
-                  theme: 'light'
-                }
-              }
-            }
-          }
+                  theme: 'light',
+                },
+              },
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      expect(() => capturedPage.config.settings.theme = 'dark').toThrow('Cannot mutate proxy object')
-      expect(() => delete capturedPage.config.settings).toThrow('Cannot delete properties on proxy object')
+      expect(() => (capturedPage.config.settings.theme = 'dark')).toThrow(
+        'Cannot mutate proxy object'
+      )
+      expect(() => delete capturedPage.config.settings).toThrow(
+        'Cannot delete properties on proxy object'
+      )
     })
 
     it('prevents array mutations', () => {
@@ -717,23 +788,33 @@ describe('useContentV4', () => {
         pages: {
           '/array-readonly': {
             data: {
-              items: ['one', 'two', 'three']
-            }
-          }
+              items: ['one', 'two', 'three'],
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      expect(() => capturedPage.items.push('four')).toThrow('Cannot mutate proxy array')
-      expect(() => capturedPage.items[0] = 'changed').toThrow('Cannot mutate proxy array')
-      expect(() => capturedPage.items.splice(0, 1)).toThrow('Cannot mutate proxy array')
+      expect(() => capturedPage.items.push('four')).toThrow(
+        'Cannot mutate proxy array'
+      )
+      expect(() => (capturedPage.items[0] = 'changed')).toThrow(
+        'Cannot mutate proxy array'
+      )
+      expect(() => capturedPage.items.splice(0, 1)).toThrow(
+        'Cannot mutate proxy array'
+      )
     })
 
     it('prevents mutations on resolved fragments', () => {
@@ -746,30 +827,40 @@ describe('useContentV4', () => {
         pages: {
           '/fragment-readonly': {
             data: {
-              user: { __id: 'user_readonly' }
-            }
-          }
+              user: { __id: 'user_readonly' },
+            },
+          },
         },
         fragments: {
           user_readonly: {
             name: 'Read Only User',
             profile: {
-              bio: 'Original bio'
-            }
-          }
-        }
+              bio: 'Original bio',
+            },
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
-      expect(() => capturedPage.user.name = 'Changed').toThrow('Cannot mutate proxy object')
-      expect(() => capturedPage.user.profile.bio = 'New bio').toThrow('Cannot mutate proxy object')
-      expect(() => delete capturedPage.user.profile).toThrow('Cannot delete properties on proxy object')
+      expect(() => (capturedPage.user.name = 'Changed')).toThrow(
+        'Cannot mutate proxy object'
+      )
+      expect(() => (capturedPage.user.profile.bio = 'New bio')).toThrow(
+        'Cannot mutate proxy object'
+      )
+      expect(() => delete capturedPage.user.profile).toThrow(
+        'Cannot delete properties on proxy object'
+      )
     })
   })
 
@@ -785,21 +876,25 @@ describe('useContentV4', () => {
           '/tracking': {
             data: {
               user: { __id: 'user_track' },
-              post: { __id: 'post_track' }
-            }
-          }
+              post: { __id: 'post_track' },
+            },
+          },
         },
         fragments: {
           user_track: { name: 'Tracked User' },
-          post_track: { title: 'Tracked Post' }
-        }
+          post_track: { title: 'Tracked Post' },
+        },
       })
 
       const Component = () => {
         const page = useContentV4()
         const userName = page.user.name
         const postTitle = page.post.title
-        return <div>{userName} - {postTitle}</div>
+        return (
+          <div>
+            {userName} - {postTitle}
+          </div>
+        )
       }
 
       const { container } = renderWithProvider(<Component />, store)
@@ -816,17 +911,17 @@ describe('useContentV4', () => {
         pages: {
           '/deps': {
             data: {
-              user: { __id: 'user_deps' }
-            }
-          }
+              user: { __id: 'user_deps' },
+            },
+          },
         },
         fragments: {
-          user_deps: { name: 'Initial Name' }
-        }
+          user_deps: { name: 'Initial Name' },
+        },
       })
 
       let latestPage
-      
+
       const Component = () => {
         const page = useContentV4()
         latestPage = page
@@ -838,10 +933,12 @@ describe('useContentV4', () => {
 
       // Update the tracked fragment
       act(() => {
-        store.dispatch(saveFragment({
-          fragmentId: 'user_deps',
-          fragment: { name: 'Updated Name' }
-        }))
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'user_deps',
+            fragment: { name: 'Updated Name' },
+          })
+        )
       })
 
       // Current implementation doesn't auto-rerender on fragment changes
@@ -859,18 +956,18 @@ describe('useContentV4', () => {
           '/selective': {
             data: {
               user: { __id: 'user_sel' },
-              post: { __id: 'post_sel' }
-            }
-          }
+              post: { __id: 'post_sel' },
+            },
+          },
         },
         fragments: {
           user_sel: { name: 'Selected User' },
-          post_sel: { title: 'Untracked Post' }
-        }
+          post_sel: { title: 'Untracked Post' },
+        },
       })
 
       let renderCount = 0
-      
+
       const Component = () => {
         const page = useContentV4()
         renderCount++
@@ -882,10 +979,12 @@ describe('useContentV4', () => {
 
       // Update a non-tracked fragment
       act(() => {
-        store.dispatch(saveFragment({
-          fragmentId: 'post_sel',
-          fragment: { title: 'Updated Post' }
-        }))
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'post_sel',
+            fragment: { title: 'Updated Post' },
+          })
+        )
       })
 
       // Should not re-render since post wasn't accessed
@@ -902,15 +1001,15 @@ describe('useContentV4', () => {
         pages: {
           '/reactive': {
             data: {
-              title: 'Initial Title'
-            }
-          }
+              title: 'Initial Title',
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let renderCount = 0
-      
+
       const Component = () => {
         const page = useContentV4()
         renderCount++
@@ -922,10 +1021,12 @@ describe('useContentV4', () => {
 
       act(() => {
         // Using saveAndProcessPage to update page
-        store.dispatch(saveAndProcessPage('/reactive', {
-          data: { title: 'Updated Title' },
-          fragments: []
-        }))
+        store.dispatch(
+          saveAndProcessPage('/reactive', {
+            data: { title: 'Updated Title' },
+            fragments: [],
+          })
+        )
       })
 
       expect(renderCount).toBe(2)
@@ -942,14 +1043,14 @@ describe('useContentV4', () => {
           '/multi': {
             data: {
               user: { __id: 'user_multi' },
-              post: { __id: 'post_multi' }
-            }
-          }
+              post: { __id: 'post_multi' },
+            },
+          },
         },
         fragments: {
           user_multi: { name: 'Multi User' },
-          post_multi: { title: 'Multi Post' }
-        }
+          post_multi: { title: 'Multi Post' },
+        },
       })
 
       let comp1Renders = 0
@@ -979,20 +1080,24 @@ describe('useContentV4', () => {
       expect(comp2Renders).toBe(1)
 
       act(() => {
-        store.dispatch(saveFragment({
-          fragmentId: 'user_multi',
-          fragment: { name: 'Updated Multi User' }
-        }))
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'user_multi',
+            fragment: { name: 'Updated Multi User' },
+          })
+        )
       })
 
       expect(comp1Renders).toBe(2)
       expect(comp2Renders).toBe(1)
 
       act(() => {
-        store.dispatch(saveFragment({
-          fragmentId: 'post_multi',
-          fragment: { title: 'Updated Multi Post' }
-        }))
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'post_multi',
+            fragment: { title: 'Updated Multi Post' },
+          })
+        )
       })
 
       expect(comp1Renders).toBe(2)
@@ -1013,19 +1118,23 @@ describe('useContentV4', () => {
             data: {
               title: 'Unproxy Test',
               count: 123,
-              user: { __id: 'user_unproxy' }
-            }
-          }
+              user: { __id: 'user_unproxy' },
+            },
+          },
         },
         fragments: {
-          user_unproxy: { name: 'Test User' }
-        }
+          user_unproxy: { name: 'Test User' },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -1046,22 +1155,26 @@ describe('useContentV4', () => {
         pages: {
           '/unproxy-fragment': {
             data: {
-              author: { __id: 'author_unproxy' }
-            }
-          }
+              author: { __id: 'author_unproxy' },
+            },
+          },
         },
         fragments: {
           author_unproxy: {
             name: 'Author Name',
-            books: ['Book 1', 'Book 2']
-          }
-        }
+            books: ['Book 1', 'Book 2'],
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -1081,31 +1194,35 @@ describe('useContentV4', () => {
         pages: {
           '/nested-unproxy': {
             data: {
-              article: { __id: 'article_nested' }
-            }
-          }
+              article: { __id: 'article_nested' },
+            },
+          },
         },
         fragments: {
           article_nested: {
             title: 'Article',
-            author: { __id: 'author_nested' }
+            author: { __id: 'author_nested' },
           },
           author_nested: {
-            name: 'Nested Author'
-          }
-        }
+            name: 'Nested Author',
+          },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
       const unproxiedArticle = unproxy(capturedPage.article)
       expect(unproxiedArticle).toBe(store.getState().fragments.article_nested)
-      
+
       const unproxiedAuthor = unproxy(capturedPage.article.author)
       expect(unproxiedAuthor).toBe(store.getState().fragments.author_nested)
     })
@@ -1121,17 +1238,21 @@ describe('useContentV4', () => {
           '/primitives': {
             data: {
               title: 'Test',
-              count: 42
-            }
-          }
+              count: 42,
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -1140,7 +1261,7 @@ describe('useContentV4', () => {
       expect(unproxy(capturedPage.count)).toBe(42)
       expect(unproxy(null)).toBe(null)
       expect(unproxy(undefined)).toBe(undefined)
-      
+
       // But the primitive values themselves should be accessible normally
       expect(capturedPage.title).toBe('Test')
       expect(capturedPage.count).toBe(42)
@@ -1158,13 +1279,13 @@ describe('useContentV4', () => {
         pages: {
           '/memo-opt': {
             data: {
-              sharedUser: { __id: 'shared_user' }
-            }
-          }
+              sharedUser: { __id: 'shared_user' },
+            },
+          },
         },
         fragments: {
-          shared_user: { name: 'Shared User' }
-        }
+          shared_user: { name: 'Shared User' },
+        },
       })
 
       let page1, page2
@@ -1190,13 +1311,13 @@ describe('useContentV4', () => {
       // Access fragments
       const user1 = page1.sharedUser
       const user2 = page2.sharedUser
-      
+
       expect(user1.name).toBe('Shared User')
       expect(user2.name).toBe('Shared User')
 
       // Proxies are different across hook instances
       expect(user1).not.toBe(user2)
-      
+
       // But their underlying references should be the same
       const ref1 = unproxy(page1).sharedUser
       const ref2 = unproxy(page2).sharedUser
@@ -1217,19 +1338,23 @@ describe('useContentV4', () => {
           '/caching': {
             data: {
               primary: { __id: 'cached_obj' },
-              secondary: { __id: 'cached_obj' }
-            }
-          }
+              secondary: { __id: 'cached_obj' },
+            },
+          },
         },
         fragments: {
-          cached_obj: { value: 'Cached Value' }
-        }
+          cached_obj: { value: 'Cached Value' },
+        },
       })
 
       let capturedPage
 
       renderWithProvider(
-        <TestComponent onRender={(page) => { capturedPage = page }} />,
+        <TestComponent
+          onRender={(page) => {
+            capturedPage = page
+          }}
+        />,
         store
       )
 
@@ -1254,11 +1379,11 @@ describe('useContentV4', () => {
           '/instances': {
             data: {
               title: 'Instance Test',
-              data: { value: 123 }
-            }
-          }
+              data: { value: 123 },
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       let page1, page2
@@ -1297,10 +1422,10 @@ describe('useContentV4', () => {
         },
         pages: {
           '/cleanup': {
-            data: { title: 'Cleanup Test' }
-          }
+            data: { title: 'Cleanup Test' },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       const Component = () => {
@@ -1326,13 +1451,13 @@ describe('useContentV4', () => {
         pages: {
           '/memo': {
             data: {
-              user: { __id: 'memo_user' }
-            }
-          }
+              user: { __id: 'memo_user' },
+            },
+          },
         },
         fragments: {
-          memo_user: { name: 'Memo User' }
-        }
+          memo_user: { name: 'Memo User' },
+        },
       })
 
       let memoRenderCount = 0
@@ -1371,13 +1496,13 @@ describe('useContentV4', () => {
         pages: {
           '/effect': {
             data: {
-              user: { __id: 'effect_user' }
-            }
-          }
+              user: { __id: 'effect_user' },
+            },
+          },
         },
         fragments: {
-          effect_user: { name: 'Effect User' }
-        }
+          effect_user: { name: 'Effect User' },
+        },
       })
 
       let effectCallCount = 0
@@ -1385,7 +1510,7 @@ describe('useContentV4', () => {
 
       const Component = () => {
         const page = useContentV4()
-        
+
         useEffect(() => {
           effectCallCount++
           latestUserName = page.user.name
@@ -1400,10 +1525,12 @@ describe('useContentV4', () => {
 
       // Change user name
       act(() => {
-        store.dispatch(saveFragment({
-          fragmentId: 'effect_user',
-          fragment: { name: 'Updated Effect User' }
-        }))
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'effect_user',
+            fragment: { name: 'Updated Effect User' },
+          })
+        )
       })
 
       // Current implementation: effect won't re-run automatically
@@ -1421,11 +1548,11 @@ describe('useContentV4', () => {
         pages: {
           '/concurrent': {
             data: {
-              title: 'Initial'
-            }
-          }
+              title: 'Initial',
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       const Component = () => {
@@ -1434,19 +1561,23 @@ describe('useContentV4', () => {
       }
 
       const { getByTestId } = renderWithProvider(<Component />, store)
-      
+
       expect(getByTestId('title')).toHaveTextContent('Initial')
 
       // Multiple rapid updates
       act(() => {
-        store.dispatch(saveAndProcessPage('/concurrent', {
-          data: { title: 'Update 1' },
-          fragments: []
-        }))
-        store.dispatch(saveAndProcessPage('/concurrent', {
-          data: { title: 'Update 2' },
-          fragments: []
-        }))
+        store.dispatch(
+          saveAndProcessPage('/concurrent', {
+            data: { title: 'Update 1' },
+            fragments: [],
+          })
+        )
+        store.dispatch(
+          saveAndProcessPage('/concurrent', {
+            data: { title: 'Update 2' },
+            fragments: [],
+          })
+        )
       })
 
       await waitFor(() => {
@@ -1467,11 +1598,11 @@ describe('useContentV4', () => {
           '/missing': {
             data: {
               title: 'Missing Fragment Test',
-              missingRef: { __id: 'does_not_exist' }
-            }
-          }
+              missingRef: { __id: 'does_not_exist' },
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       const Component = () => {
@@ -1485,7 +1616,7 @@ describe('useContentV4', () => {
 
       const originalError = console.error
       console.error = vi.fn()
-      
+
       expect(() => {
         const ComponentWithMissingRef = () => {
           const page = useContentV4()
@@ -1495,7 +1626,7 @@ describe('useContentV4', () => {
 
         renderWithProvider(<ComponentWithMissingRef />, store)
       }).toThrow('Fragment with id "does_not_exist" not found')
-      
+
       console.error = originalError
     })
 
@@ -1510,16 +1641,20 @@ describe('useContentV4', () => {
           '/empty-fragments': {
             data: {
               title: 'Empty Fragments Test',
-              count: 999
-            }
-          }
+              count: 999,
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       const Component = () => {
         const page = useContentV4()
-        return <div>{page.title} - {page.count}</div>
+        return (
+          <div>
+            {page.title} - {page.count}
+          </div>
+        )
       }
 
       // Should still work for non-fragment data
@@ -1535,7 +1670,7 @@ describe('useContentV4', () => {
           assets: [],
         },
         pages: {},
-        fragments: {}
+        fragments: {},
       })
 
       const originalError = console.error
@@ -1550,7 +1685,7 @@ describe('useContentV4', () => {
       expect(() => {
         renderWithProvider(<Component />, store)
       }).toThrow()
-      
+
       console.error = originalError
     })
 
@@ -1567,11 +1702,11 @@ describe('useContentV4', () => {
               title: 'Malformed Test',
               invalidRef1: { __id: null },
               invalidRef2: { __id: 123 },
-              invalidRef3: { __id: true }
-            }
-          }
+              invalidRef3: { __id: true },
+            },
+          },
         },
-        fragments: {}
+        fragments: {},
       })
 
       const Component = () => {
@@ -1580,13 +1715,15 @@ describe('useContentV4', () => {
           <div>
             <span data-testid="invalid1">{typeof page.invalidRef1.__id}</span>
             <span data-testid="invalid2">{page.invalidRef2.__id}</span>
-            <span data-testid="invalid3">{page.invalidRef3.__id.toString()}</span>
+            <span data-testid="invalid3">
+              {page.invalidRef3.__id.toString()}
+            </span>
           </div>
         )
       }
 
       const { getByTestId } = renderWithProvider(<Component />, store)
-      
+
       // Should treat these as regular objects, not fragment references
       expect(getByTestId('invalid1')).toHaveTextContent('object')
       expect(getByTestId('invalid2')).toHaveTextContent('123')
@@ -1607,9 +1744,9 @@ describe('useContentV4', () => {
           scoped_user: {
             name: 'Scoped User',
             email: 'scoped@example.com',
-            active: true
-          }
-        }
+            active: true,
+          },
+        },
       })
 
       let capturedUser
@@ -1621,7 +1758,7 @@ describe('useContentV4', () => {
       }
 
       const { container } = renderWithProvider(<Component />, store)
-      
+
       expect(container.textContent).toBe('Scoped User')
       expect(capturedUser.name).toBe('Scoped User')
       expect(capturedUser.email).toBe('scoped@example.com')
@@ -1639,13 +1776,13 @@ describe('useContentV4', () => {
         fragments: {
           scoped_post: {
             title: 'Scoped Post',
-            author: { __id: 'scoped_author' }
+            author: { __id: 'scoped_author' },
           },
           scoped_author: {
             name: 'Post Author',
-            verified: true
-          }
-        }
+            verified: true,
+          },
+        },
       })
 
       let capturedPost
@@ -1657,7 +1794,7 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
+
       expect(capturedPost.title).toBe('Scoped Post')
       expect(capturedPost.author.name).toBe('Post Author')
       expect(capturedPost.author.verified).toBe(true)
@@ -1674,9 +1811,9 @@ describe('useContentV4', () => {
         fragments: {
           scoped_list: {
             name: 'Shopping List',
-            items: ['Milk', 'Bread', 'Eggs']
-          }
-        }
+            items: ['Milk', 'Bread', 'Eggs'],
+          },
+        },
       })
 
       let capturedList
@@ -1688,7 +1825,7 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
+
       expect(capturedList.items.length).toBe(3)
       expect(capturedList.items[0]).toBe('Milk')
       expect(capturedList.items[2]).toBe('Eggs')
@@ -1702,7 +1839,7 @@ describe('useContentV4', () => {
           assets: [],
         },
         pages: {},
-        fragments: {}
+        fragments: {},
       })
 
       const originalError = console.error
@@ -1716,7 +1853,7 @@ describe('useContentV4', () => {
       expect(() => {
         renderWithProvider(<Component />, store)
       }).toThrow('Fragment with id "missing_scoped_fragment" not found')
-      
+
       console.error = originalError
     })
 
@@ -1730,15 +1867,15 @@ describe('useContentV4', () => {
         pages: {
           '/tracking-test': {
             data: {
-              title: 'Page Title'
-            }
-          }
+              title: 'Page Title',
+            },
+          },
         },
         fragments: {
           tracked_fragment: {
-            value: 'Fragment Value'
-          }
-        }
+            value: 'Fragment Value',
+          },
+        },
       })
 
       let fragmentRenderCount = 0
@@ -1769,10 +1906,12 @@ describe('useContentV4', () => {
 
       // Update fragment - should only affect FragmentComponent
       act(() => {
-        store.dispatch(saveFragment({
-          fragmentId: 'tracked_fragment',
-          data: { value: 'Updated Fragment Value' }
-        }))
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'tracked_fragment',
+            data: { value: 'Updated Fragment Value' },
+          })
+        )
       })
 
       // Fragment-scoped hook re-renders when its specific fragment changes
@@ -1790,13 +1929,13 @@ describe('useContentV4', () => {
         pages: {
           '/isolation': {
             data: {
-              selectedUser: { __id: 'iso_user' }
-            }
-          }
+              selectedUser: { __id: 'iso_user' },
+            },
+          },
         },
         fragments: {
-          iso_user: { name: 'Isolated User' }
-        }
+          iso_user: { name: 'Isolated User' },
+        },
       })
 
       let parentPage, childUser
@@ -1815,7 +1954,7 @@ describe('useContentV4', () => {
       }
 
       const { container } = renderWithProvider(<Parent />, store)
-      
+
       expect(container.textContent).toBe('Isolated User')
       expect(childUser.name).toBe('Isolated User')
     })
@@ -1834,14 +1973,14 @@ describe('useContentV4', () => {
             replies: [
               {
                 text: 'Reply 1',
-                author: { __id: 'reply_author' }
-              }
-            ]
+                author: { __id: 'reply_author' },
+              },
+            ],
           },
           reply_author: {
-            name: 'Reply Author'
-          }
-        }
+            name: 'Reply Author',
+          },
+        },
       })
 
       let capturedComment
@@ -1853,7 +1992,7 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
+
       expect(capturedComment.text).toBe('Top comment')
       expect(capturedComment.replies[0].text).toBe('Reply 1')
       expect(capturedComment.replies[0].author.name).toBe('Reply Author')
@@ -1873,12 +2012,12 @@ describe('useContentV4', () => {
             items: [
               { __id: 'item_1' },
               { name: 'Static Item', price: 50 },
-              { __id: 'item_2' }
-            ]
+              { __id: 'item_2' },
+            ],
           },
           item_1: { name: 'Dynamic Item 1', price: 100 },
-          item_2: { name: 'Dynamic Item 2', price: 200 }
-        }
+          item_2: { name: 'Dynamic Item 2', price: 200 },
+        },
       })
 
       let capturedCollection
@@ -1890,11 +2029,17 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
-      const itemNames = capturedCollection.items.map(item => item.name)
-      expect(itemNames).toEqual(['Dynamic Item 1', 'Static Item', 'Dynamic Item 2'])
-      
-      const expensiveItems = capturedCollection.items.filter(item => item.price > 75)
+
+      const itemNames = capturedCollection.items.map((item) => item.name)
+      expect(itemNames).toEqual([
+        'Dynamic Item 1',
+        'Static Item',
+        'Dynamic Item 2',
+      ])
+
+      const expensiveItems = capturedCollection.items.filter(
+        (item) => item.price > 75
+      )
       expect(expensiveItems).toHaveLength(2)
       expect(expensiveItems[0].name).toBe('Dynamic Item 1')
       expect(expensiveItems[1].name).toBe('Dynamic Item 2')
@@ -1911,9 +2056,9 @@ describe('useContentV4', () => {
         fragments: {
           readonly_fragment: {
             value: 'Read Only',
-            nested: { locked: true }
-          }
-        }
+            nested: { locked: true },
+          },
+        },
       })
 
       let capturedFragment
@@ -1925,10 +2070,16 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
-      expect(() => capturedFragment.value = 'Hacked').toThrow('Cannot mutate proxy object')
-      expect(() => capturedFragment.nested.locked = false).toThrow('Cannot mutate proxy object')
-      expect(() => delete capturedFragment.value).toThrow('Cannot delete properties on proxy object')
+
+      expect(() => (capturedFragment.value = 'Hacked')).toThrow(
+        'Cannot mutate proxy object'
+      )
+      expect(() => (capturedFragment.nested.locked = false)).toThrow(
+        'Cannot mutate proxy object'
+      )
+      expect(() => delete capturedFragment.value).toThrow(
+        'Cannot delete properties on proxy object'
+      )
     })
 
     it('supports unproxy in fragment-scoped mode', () => {
@@ -1941,9 +2092,9 @@ describe('useContentV4', () => {
         pages: {},
         fragments: {
           unproxy_fragment: {
-            data: 'Fragment Data'
-          }
-        }
+            data: 'Fragment Data',
+          },
+        },
       })
 
       let capturedFragment
@@ -1955,9 +2106,11 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
+
       const unproxiedFragment = unproxy(capturedFragment)
-      expect(unproxiedFragment).toBe(store.getState().fragments.unproxy_fragment)
+      expect(unproxiedFragment).toBe(
+        store.getState().fragments.unproxy_fragment
+      )
       expect(unproxiedFragment.data).toBe('Fragment Data')
     })
 
@@ -1972,12 +2125,12 @@ describe('useContentV4', () => {
         fragments: {
           parent_fragment: {
             name: 'Parent',
-            child: { __id: 'child_fragment' }
+            child: { __id: 'child_fragment' },
           },
           child_fragment: {
-            name: 'Child'
-          }
-        }
+            name: 'Child',
+          },
+        },
       })
 
       let capturedParent
@@ -1989,7 +2142,7 @@ describe('useContentV4', () => {
       }
 
       renderWithProvider(<Component />, store)
-      
+
       const childRef = unproxy(capturedParent).child
       expect(childRef).toEqual({ __id: 'child_fragment' })
     })
@@ -2004,15 +2157,15 @@ describe('useContentV4', () => {
         pages: {
           '/consistency': {
             data: {
-              user: { __id: 'shared_fragment' }
-            }
-          }
+              user: { __id: 'shared_fragment' },
+            },
+          },
         },
         fragments: {
           shared_fragment: {
-            name: 'Shared Data'
-          }
-        }
+            name: 'Shared Data',
+          },
+        },
       })
 
       let pageUser, fragmentUser
@@ -2020,10 +2173,10 @@ describe('useContentV4', () => {
       const Component = () => {
         const page = useContentV4()
         const user = useContentV4({ __id: 'shared_fragment' })
-        
+
         pageUser = page.user
         fragmentUser = user
-        
+
         return (
           <div>
             <span data-testid="page-user">{page.user.name}</span>
@@ -2033,10 +2186,10 @@ describe('useContentV4', () => {
       }
 
       const { getByTestId } = renderWithProvider(<Component />, store)
-      
+
       expect(getByTestId('page-user')).toHaveTextContent('Shared Data')
       expect(getByTestId('fragment-user')).toHaveTextContent('Shared Data')
-      
+
       // Both should reference the same underlying data
       expect(unproxy(pageUser)).toBe(unproxy(fragmentUser))
       expect(unproxy(pageUser)).toBe(store.getState().fragments.shared_fragment)
@@ -2053,19 +2206,19 @@ describe('useContentV4', () => {
           '/hierarchy': {
             data: {
               title: 'Hierarchy Test',
-              profile: { __id: 'profile_fragment' }
-            }
-          }
+              profile: { __id: 'profile_fragment' },
+            },
+          },
         },
         fragments: {
           profile_fragment: {
             name: 'User Profile',
             stats: {
               posts: 42,
-              followers: 100
-            }
-          }
-        }
+              followers: 100,
+            },
+          },
+        },
       })
 
       const GrandParent = () => {
@@ -2089,7 +2242,7 @@ describe('useContentV4', () => {
       }
 
       const { getByTestId } = renderWithProvider(<GrandParent />, store)
-      
+
       expect(getByTestId('grandparent')).toHaveTextContent('Hierarchy Test')
       expect(getByTestId('parent')).toHaveTextContent('User Profile')
       expect(getByTestId('post-count')).toHaveTextContent('42')
@@ -2108,15 +2261,15 @@ describe('useContentV4', () => {
               posts: [
                 { __id: 'jsx_post_1' },
                 { title: 'Static Post', views: 50, draft: false },
-                { __id: 'jsx_post_2' }
-              ]
-            }
-          }
+                { __id: 'jsx_post_2' },
+              ],
+            },
+          },
         },
         fragments: {
           jsx_post_1: { title: 'Dynamic Post 1', views: 100, draft: false },
-          jsx_post_2: { title: 'Dynamic Post 2', views: 200, draft: true }
-        }
+          jsx_post_2: { title: 'Dynamic Post 2', views: 200, draft: true },
+        },
       })
 
       const PostItem = ({ title, views, draft }) => (
@@ -2129,14 +2282,14 @@ describe('useContentV4', () => {
 
       const Component = () => {
         const page = useContentV4()
-        
+
         return (
           <div>
             {/* This is the complex JSX pattern that might trigger React conflicts */}
             {page.posts.map((post, index) => (
-              <PostItem 
-                key={index} 
-                {...post}  // Spread operator on proxy object
+              <PostItem
+                key={index}
+                {...post} // Spread operator on proxy object
                 data-testid={`post-${index}`}
               />
             ))}
@@ -2145,24 +2298,42 @@ describe('useContentV4', () => {
       }
 
       const { getAllByTestId } = renderWithProvider(<Component />, store)
-      
+
       const postItems = getAllByTestId('post-item')
       expect(postItems).toHaveLength(3)
-      
+
       // Check first post (fragment)
-      expect(postItems[0].querySelector('[data-testid="title"]')).toHaveTextContent('Dynamic Post 1')
-      expect(postItems[0].querySelector('[data-testid="views"]')).toHaveTextContent('100')
-      expect(postItems[0].querySelector('[data-testid="draft"]')).toHaveTextContent('published')
-      
+      expect(
+        postItems[0].querySelector('[data-testid="title"]')
+      ).toHaveTextContent('Dynamic Post 1')
+      expect(
+        postItems[0].querySelector('[data-testid="views"]')
+      ).toHaveTextContent('100')
+      expect(
+        postItems[0].querySelector('[data-testid="draft"]')
+      ).toHaveTextContent('published')
+
       // Check second post (regular object)
-      expect(postItems[1].querySelector('[data-testid="title"]')).toHaveTextContent('Static Post')
-      expect(postItems[1].querySelector('[data-testid="views"]')).toHaveTextContent('50')
-      expect(postItems[1].querySelector('[data-testid="draft"]')).toHaveTextContent('published')
-      
+      expect(
+        postItems[1].querySelector('[data-testid="title"]')
+      ).toHaveTextContent('Static Post')
+      expect(
+        postItems[1].querySelector('[data-testid="views"]')
+      ).toHaveTextContent('50')
+      expect(
+        postItems[1].querySelector('[data-testid="draft"]')
+      ).toHaveTextContent('published')
+
       // Check third post (fragment)
-      expect(postItems[2].querySelector('[data-testid="title"]')).toHaveTextContent('Dynamic Post 2')
-      expect(postItems[2].querySelector('[data-testid="views"]')).toHaveTextContent('200')
-      expect(postItems[2].querySelector('[data-testid="draft"]')).toHaveTextContent('draft')
+      expect(
+        postItems[2].querySelector('[data-testid="title"]')
+      ).toHaveTextContent('Dynamic Post 2')
+      expect(
+        postItems[2].querySelector('[data-testid="views"]')
+      ).toHaveTextContent('200')
+      expect(
+        postItems[2].querySelector('[data-testid="draft"]')
+      ).toHaveTextContent('draft')
     })
 
     it('handles complex JSX operations on fragment-scoped proxy arrays', () => {
@@ -2178,10 +2349,10 @@ describe('useContentV4', () => {
             name: 'Collection',
             items: [
               { title: 'Item 1', active: true },
-              { title: 'Item 2', active: false }
-            ]
-          }
-        }
+              { title: 'Item 2', active: false },
+            ],
+          },
+        },
       })
 
       const ItemDisplay = ({ title, active }) => (
@@ -2193,14 +2364,14 @@ describe('useContentV4', () => {
 
       const Component = () => {
         const collection = useContentV4({ __id: 'jsx_collection' })
-        
+
         return (
           <div>
             {/* Fragment-scoped array with JSX spread operations */}
             {collection.items.map((item, index) => (
-              <ItemDisplay 
+              <ItemDisplay
                 key={`collection-item-${index}`}
-                {...item}  // Spread on items from fragment-scoped proxy
+                {...item} // Spread on items from fragment-scoped proxy
               />
             ))}
           </div>
@@ -2208,15 +2379,23 @@ describe('useContentV4', () => {
       }
 
       const { getAllByTestId } = renderWithProvider(<Component />, store)
-      
+
       const items = getAllByTestId('collection-item')
       expect(items).toHaveLength(2)
-      
-      expect(items[0].querySelector('[data-testid="title"]')).toHaveTextContent('Item 1')
-      expect(items[0].querySelector('[data-testid="active"]')).toHaveTextContent('active')
-      
-      expect(items[1].querySelector('[data-testid="title"]')).toHaveTextContent('Item 2')
-      expect(items[1].querySelector('[data-testid="active"]')).toHaveTextContent('inactive')
+
+      expect(items[0].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Item 1'
+      )
+      expect(
+        items[0].querySelector('[data-testid="active"]')
+      ).toHaveTextContent('active')
+
+      expect(items[1].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Item 2'
+      )
+      expect(
+        items[1].querySelector('[data-testid="active"]')
+      ).toHaveTextContent('inactive')
     })
 
     it('handles direct JSX rendering of proxy objects in arrays', () => {
@@ -2232,20 +2411,20 @@ describe('useContentV4', () => {
               items: [
                 { __id: 'direct_1' },
                 { title: 'Direct Static', status: 'ready' },
-                { __id: 'direct_2' }
-              ]
-            }
-          }
+                { __id: 'direct_2' },
+              ],
+            },
+          },
         },
         fragments: {
           direct_1: { title: 'Direct Dynamic 1', status: 'pending' },
-          direct_2: { title: 'Direct Dynamic 2', status: 'complete' }
-        }
+          direct_2: { title: 'Direct Dynamic 2', status: 'complete' },
+        },
       })
 
       const Component = () => {
         const page = useContentV4()
-        
+
         return (
           <div>
             {/* Direct rendering of proxy objects without spread - the "problematic" pattern */}
@@ -2260,21 +2439,33 @@ describe('useContentV4', () => {
       }
 
       const { getAllByTestId } = renderWithProvider(<Component />, store)
-      
+
       const items = getAllByTestId(/^direct-item-/)
       expect(items).toHaveLength(3)
-      
+
       // Check first item (fragment)
-      expect(items[0].querySelector('[data-testid="title"]')).toHaveTextContent('Direct Dynamic 1')
-      expect(items[0].querySelector('[data-testid="status"]')).toHaveTextContent('pending')
-      
+      expect(items[0].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Direct Dynamic 1'
+      )
+      expect(
+        items[0].querySelector('[data-testid="status"]')
+      ).toHaveTextContent('pending')
+
       // Check second item (regular object)
-      expect(items[1].querySelector('[data-testid="title"]')).toHaveTextContent('Direct Static')
-      expect(items[1].querySelector('[data-testid="status"]')).toHaveTextContent('ready')
-      
+      expect(items[1].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Direct Static'
+      )
+      expect(
+        items[1].querySelector('[data-testid="status"]')
+      ).toHaveTextContent('ready')
+
       // Check third item (fragment)
-      expect(items[2].querySelector('[data-testid="title"]')).toHaveTextContent('Direct Dynamic 2')
-      expect(items[2].querySelector('[data-testid="status"]')).toHaveTextContent('complete')
+      expect(items[2].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Direct Dynamic 2'
+      )
+      expect(
+        items[2].querySelector('[data-testid="status"]')
+      ).toHaveTextContent('complete')
     })
 
     it('handles direct JSX rendering of fragment-scoped proxy objects in arrays', () => {
@@ -2289,15 +2480,15 @@ describe('useContentV4', () => {
           direct_scoped: {
             tasks: [
               { title: 'Task 1', done: true },
-              { title: 'Task 2', done: false }
-            ]
-          }
-        }
+              { title: 'Task 2', done: false },
+            ],
+          },
+        },
       })
 
       const Component = () => {
         const data = useContentV4({ __id: 'direct_scoped' })
-        
+
         return (
           <div>
             {/* Direct rendering in fragment-scoped mode */}
@@ -2312,15 +2503,23 @@ describe('useContentV4', () => {
       }
 
       const { getAllByTestId } = renderWithProvider(<Component />, store)
-      
+
       const tasks = getAllByTestId(/^direct-task-/)
       expect(tasks).toHaveLength(2)
-      
-      expect(tasks[0].querySelector('[data-testid="title"]')).toHaveTextContent('Task 1')
-      expect(tasks[0].querySelector('[data-testid="done"]')).toHaveTextContent('done')
-      
-      expect(tasks[1].querySelector('[data-testid="title"]')).toHaveTextContent('Task 2')
-      expect(tasks[1].querySelector('[data-testid="done"]')).toHaveTextContent('pending')
+
+      expect(tasks[0].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Task 1'
+      )
+      expect(tasks[0].querySelector('[data-testid="done"]')).toHaveTextContent(
+        'done'
+      )
+
+      expect(tasks[1].querySelector('[data-testid="title"]')).toHaveTextContent(
+        'Task 2'
+      )
+      expect(tasks[1].querySelector('[data-testid="done"]')).toHaveTextContent(
+        'pending'
+      )
     })
 
     it('prevents rendering whole proxy objects directly (should throw error)', () => {
@@ -2333,13 +2532,13 @@ describe('useContentV4', () => {
         pages: {
           '/render-proxy': {
             data: {
-              user: { __id: 'render_user' }
-            }
-          }
+              user: { __id: 'render_user' },
+            },
+          },
         },
         fragments: {
-          render_user: { name: 'Cannot Render' }
-        }
+          render_user: { name: 'Cannot Render' },
+        },
       })
 
       const originalError = console.error
@@ -2347,7 +2546,7 @@ describe('useContentV4', () => {
 
       const Component = () => {
         const page = useContentV4()
-        
+
         return (
           <div>
             {/* This should fail - trying to render a whole proxy object */}
@@ -2359,7 +2558,7 @@ describe('useContentV4', () => {
       expect(() => {
         renderWithProvider(<Component />, store)
       }).toThrow(/Objects are not valid as a React child/)
-      
+
       console.error = originalError
     })
   })

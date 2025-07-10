@@ -62,25 +62,29 @@ const successfulBody = () => {
 
 const successfulStreamResponseBody = () => {
   return JSON.stringify({
-    data: [{ 
-      type: 'message',
-      data: {
-        heading: {
-          title: 'hello', 
-          comment: {rating: 'great!'}
-        }
+    data: [
+      {
+        type: 'message',
+        data: {
+          heading: {
+            title: 'hello',
+            comment: { rating: 'great!' },
+          },
+        },
+        fragmentIds: ['top'],
+        action: 'save',
+        options: {},
       },
-      fragmentIds: ['top'],
-      action: 'save',
-      options: {}
-    }],
+    ],
     csrfToken: 'token',
     assets: [],
-    fragments: [{
-      type: 'comment',
-      path: 'data.0.data.heading.comment'
-    }],
-    action: 'handleStreamResponse'
+    fragments: [
+      {
+        type: 'comment',
+        path: 'data.0.data.heading.comment',
+      },
+    ],
+    action: 'handleStreamResponse',
   })
 }
 
@@ -557,40 +561,40 @@ describe('action creators', () => {
 
     it('handles a streamResponse', () => {
       const page = {
-        data: { 
+        data: {
           body: {
             footer: {
-              note: 'buy paper'
-            }
+              note: 'buy paper',
+            },
           },
           sideBar: {
-            message: 'hello'
+            message: 'hello',
           },
           notFragment: {
-            chart: 'this should be ignored'
-          }
+            chart: 'this should be ignored',
+          },
         },
         csrfToken: 'token',
         assets: [],
-        action: "handleFagments",
+        action: 'handleFagments',
         fragments: [
-          {id: "footer", path: "data.body.footer"},
-          {id: "side", path: "data.sideBar"}
+          { id: 'footer', path: 'data.body.footer' },
+          { id: 'side', path: 'data.sideBar' },
         ],
       }
       const store = buildStore(initialState())
- 
+
       return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
         expect(store.getState()).toMatchObject({
           fragments: {
             footer: {
-              note: "buy paper",
+              note: 'buy paper',
             },
             side: {
-              message: "hello"
-            }
+              message: 'hello',
+            },
           },
-          pages: {}
+          pages: {},
         })
       })
     })
@@ -654,7 +658,7 @@ describe('action creators', () => {
 
         expect(requestheaders).toEqual({
           accept: 'application/json',
-          "X-Superglue-Request-Id": expect.any(String),
+          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
           'x-csrf-token': 'token',
@@ -1516,15 +1520,13 @@ describe('action creators', () => {
         },
       })
 
-      return store
-        .dispatch(visit('/foobar'))
-        .then((meta) => {
-          expect(meta).toEqual(
-            expect.objectContaining({
-              navigationAction: 'none',
-            })
-          )
-        })
+      return store.dispatch(visit('/foobar')).then((meta) => {
+        expect(meta).toEqual(
+          expect.objectContaining({
+            navigationAction: 'none',
+          })
+        )
+      })
     })
   })
 })

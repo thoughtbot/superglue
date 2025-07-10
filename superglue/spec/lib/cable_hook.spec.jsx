@@ -10,7 +10,7 @@ import { configureStore } from '@reduxjs/toolkit'
 export const testURL = 'ws://cable.example.com/'
 
 export function defer(callback) {
-  if(callback) {
+  if (callback) {
     setTimeout(callback, 5)
   }
 }
@@ -26,7 +26,7 @@ const consumerTest = function (name, options, callback) {
 
   return it(name, () => {
     return new Promise((doneAsync) => {
-      const server = new MockServer(options.url, {mock: false})
+      const server = new MockServer(options.url, { mock: false })
       const consumer = ActionCable.createConsumer(options.url)
       const connection = consumer.connection
       const monitor = connection.monitor
@@ -41,7 +41,9 @@ const consumerTest = function (name, options, callback) {
       })
 
       server.broadcastTo = function (subscription, data, callback) {
-        if (data == null) { data = {} }
+        if (data == null) {
+          data = {}
+        }
         data.identifier = subscription.identifier
 
         if (data.message_type) {
@@ -124,7 +126,9 @@ describe('hooks', () => {
       expect(result.current.subscription).not.equal(null)
       expect(result.current.connected).toBe(false)
       act(() => {
-        server.broadcastTo(result.current.subscription, {message_type: "confirmation"})
+        server.broadcastTo(result.current.subscription, {
+          message_type: 'confirmation',
+        })
       })
 
       expect(result.current.connected).toBe(true)
@@ -139,11 +143,14 @@ describe('hooks', () => {
         options: {},
       })
 
-      server.broadcastTo(result.current.subscription, {message})
+      server.broadcastTo(result.current.subscription, { message })
 
       await new Promise((r) => setTimeout(r, 5))
 
-      expect(spy).toHaveBeenCalledWith(message, preloadedState.superglue.currentPageKey)
+      expect(spy).toHaveBeenCalledWith(
+        message,
+        preloadedState.superglue.currentPageKey
+      )
 
       act(() => {
         consumer.disconnect()

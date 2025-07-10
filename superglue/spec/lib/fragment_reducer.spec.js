@@ -15,7 +15,7 @@ describe('reducers', () => {
           data: { title: 'Welcome Message' },
           fragmentId: 'greeting',
         })
-        
+
         const nextState = fragmentReducer(prevState, action)
 
         expect(nextState).toEqual({
@@ -25,17 +25,17 @@ describe('reducers', () => {
 
       it('preserves existing fragments when saving a new one', () => {
         const prevState = {
-          posts: [{ content: "Hello" }],
+          posts: [{ content: 'Hello' }],
         }
         const action = saveFragment({
           data: { title: 'Getting Started' },
           fragmentId: 'tutorial',
         })
-        
+
         const nextState = fragmentReducer(prevState, action)
 
         expect(nextState).toEqual({
-          posts: [{ content: "Hello" }],
+          posts: [{ content: 'Hello' }],
           tutorial: { title: 'Getting Started' },
         })
       })
@@ -143,7 +143,6 @@ describe('reducers', () => {
           posts: [{ title: 'New First Post' }, { title: 'Existing Post' }],
         })
       })
-
 
       it('does not modify non-array fragments', () => {
         const prevState = {

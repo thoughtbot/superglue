@@ -2,9 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib'
 import fetchMock from 'fetch-mock'
 import { describe, expect, afterEach, it } from 'vitest'
-import {
-  saveAndProcessPage,
-} from '../../lib/action_creators'
+import { saveAndProcessPage } from '../../lib/action_creators'
 
 const buildStore = (preloadedState) => {
   let resultsReducer = (state = [], action) => {

@@ -11,7 +11,6 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
-import { StreamMutateMessage } from '../hooks/useStreamSource'
 
 export * from './requests'
 /**
@@ -222,14 +221,11 @@ export type GraftResponse<T = JSONMappable> = {
   fragmentContext?: string
 }
 
-export type FragmentResponse<T = JSONMappable> = {
-  data: T
-  assets: string[]
-  csrfToken?: string
-  fragments: FragmentRef[]
-  action: 'handleFagments'
-
-  renderedAt: number
+export type StreamMutateMessage = {
+  data: JSONMappable
+  fragmentIds: string[]
+  method: 'append' | 'prepend' | 'save'
+  options: Record<string, string>
 }
 
 export type StreamResponse = {
@@ -237,7 +233,8 @@ export type StreamResponse = {
   fragments: FragmentRef[]
   assets: string[]
   csrfToken?: string
-  action: 'stream'
+  action: 'handleStreamResponse'
+  renderedAt: number
 }
 
 /**

@@ -57,7 +57,7 @@ function buildMeta(
     needsRefresh: needsRefresh(prevAssets, nextAssets),
   }
 
-  if (page.action !== 'stream') {
+  if (page.action !== 'handleStreamResponse') {
     meta.componentIdentifier = page.componentIdentifier
   }
 
@@ -106,7 +106,7 @@ export const remote: RemoteCreator = (
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
-        if (json.action !== 'stream') {
+        if (json.action !== 'handleStreamResponse') {
           const existingId = pages[pageKey]?.componentIdentifier
           const receivedId = json.componentIdentifier
           if (!!existingId && existingId != receivedId && !force) {
@@ -190,7 +190,7 @@ export const visit: VisitCreator = (
 
         const meta = buildMeta(pageKey, json, superglue, rsp, fetchArgs)
 
-        if (json.action !== 'stream') {
+        if (json.action !== 'handleStreamResponse') {
           if (placeholderKey && hasPropsAt(path) && hasPlaceholder) {
             const existingId = pages[placeholderKey]?.componentIdentifier
             const receivedId = json.componentIdentifier
@@ -247,7 +247,7 @@ function calculateNavAction(
 ) {
   let navigationAction: NavigationAction = 'push'
 
-  if (json.action === 'stream') {
+  if (json.action === 'handleStreamResponse') {
     return 'none'
   }
 

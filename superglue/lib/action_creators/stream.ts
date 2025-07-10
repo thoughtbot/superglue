@@ -120,7 +120,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
 
     let nextMessage = message
 
-    if (message.action !== 'refresh') {
+    if (message.method !== 'refresh') {
       message.fragments.reverse().forEach((fragment) => {
         const { id, path } = fragment
         const node = getIn(nextMessage as JSONMappable, path) as JSONMappable
@@ -135,8 +135,8 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
       })
     }
 
-    if (nextMessage.type === 'message') {
-      if (nextMessage.action === 'append') {
+    if (nextMessage.action === 'handleStreamMessage') {
+      if (nextMessage.method === 'append') {
         dispatch(
           streamAppend(
             nextMessage.fragmentIds,
@@ -146,7 +146,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
         )
       }
 
-      if (nextMessage.action === 'prepend') {
+      if (nextMessage.method === 'prepend') {
         dispatch(
           streamPrepend(
             nextMessage.fragmentIds,
@@ -156,7 +156,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
         )
       }
 
-      if (nextMessage.action === 'save') {
+      if (nextMessage.method === 'save') {
         dispatch(streamSave(nextMessage.fragmentIds[0], nextMessage.data))
       }
     }
@@ -183,19 +183,19 @@ export const handleStreamResponse = (
     })
 
     nextResponse.data.forEach((message) => {
-      if (message.action === 'append') {
+      if (message.method === 'append') {
         dispatch(
           streamAppend(message.fragmentIds, message.data, message.options)
         )
       }
 
-      if (message.action === 'prepend') {
+      if (message.method === 'prepend') {
         dispatch(
           streamPrepend(message.fragmentIds, message.data, message.options)
         )
       }
 
-      if (message.action === 'save') {
+      if (message.method === 'save') {
         dispatch(streamSave(message.fragmentIds[0], message.data))
       }
     })

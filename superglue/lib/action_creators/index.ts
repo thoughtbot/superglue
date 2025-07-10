@@ -102,7 +102,7 @@ export function saveAndProcessPage(
       } else {
         dispatch(handleGraft({ pageKey, page: nextPage }))
       }
-    } else if (nextPage.action === 'stream') {
+    } else if (nextPage.action === 'handleStreamResponse') {
       // We resolve the promise here because fragment responses
       // have deferment disabled.
       dispatch(handleStreamResponse(nextPage))

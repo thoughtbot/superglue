@@ -145,8 +145,8 @@ describe('Stream Actions', () => {
       const actions = new StreamActions({ store, remote: vi.fn() })
 
       const msg = JSON.stringify({
-        type: 'message',
-        action: 'append',
+        action: 'handleStreamMessage',
+        method: 'append',
         fragmentIds: ['foo'],
         data: { id: 1 },
         options: {},
@@ -171,8 +171,8 @@ describe('Stream Actions', () => {
       const actions = new StreamActions({ store, remote: vi.fn() })
 
       const msg = JSON.stringify({
-        type: 'message',
-        action: 'prepend',
+        action: 'handleStreamMessage',
+        method: 'prepend',
         fragmentIds: ['bar'],
         data: { id: 2 },
         options: {},
@@ -195,8 +195,8 @@ describe('Stream Actions', () => {
       const actions = new StreamActions({ store, remote: vi.fn() })
 
       const msg = JSON.stringify({
-        type: 'message',
-        action: 'save',
+        action: 'handleStreamMessage',
+        method: 'save',
         fragmentIds: ['baz'],
         data: { id: 3 },
         options: {},
@@ -220,8 +220,8 @@ describe('Stream Actions', () => {
 
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
       const msg = JSON.stringify({ 
-        type: 'message', 
-        action: 'refresh',
+        action: 'handleStreamMessage', 
+        method: 'refresh',
         requestId: 'test-request-id',
         options: {}
       })
@@ -239,8 +239,8 @@ describe('Stream Actions', () => {
 
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
       const msg = JSON.stringify({ 
-        type: 'message', 
-        action: 'refresh',
+        action: 'handleStreamMessage', 
+        method: 'refresh',
         requestId: 'test-request-id',
         options: {}
       })
@@ -259,8 +259,8 @@ describe('Stream Actions', () => {
       const actions = new StreamActions({ store, remote: vi.fn() })
 
       const msg = JSON.stringify({
-        type: 'message',
-        action: 'append',
+        action: 'handleStreamMessage',
+        method: 'append',
         fragmentIds: ['posts'],
         data: {
           header: {
@@ -302,8 +302,8 @@ describe('Stream Actions', () => {
 
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
       const msg = JSON.stringify({
-        type: 'message',
-        action: 'refresh',
+        action: 'handleStreamMessage',
+        method: 'refresh',
         requestId: 'test-request-id',
         options: {},
       })

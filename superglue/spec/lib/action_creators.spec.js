@@ -80,7 +80,7 @@ const successfulStreamResponseBody = () => {
       type: 'comment',
       path: 'data.0.data.heading.comment'
     }],
-    action: 'stream'
+    action: 'handleStreamResponse'
   })
 }
 
@@ -555,7 +555,7 @@ describe('action creators', () => {
       })
     })
 
-    it('handles a fragmentResponse', () => {
+    it('handles a streamResponse', () => {
       const page = {
         data: { 
           body: {

@@ -17,26 +17,18 @@ import {
 
 type StreamSourceProps = string | ChannelNameWithParams
 
-export type StreamMutateMessage = {
-  type: 'message'
-  data: JSONMappable
-  fragmentIds: string[]
-  action: 'append' | 'prepend' | 'save'
-  options: Record<string, string>
-}
-
 export type StreamMessage =
   | {
-      type: 'message'
+      action: 'handleStreamMessage'
       data: JSONMappable
       fragmentIds: string[]
-      action: 'append' | 'prepend' | 'save'
+      method: 'append' | 'prepend' | 'save'
       options: Record<string, string>
       fragments: FragmentRef[]
     }
   | {
-      type: 'message'
-      action: 'refresh'
+      action: 'handleStreamMessage'
+      method: 'refresh'
       requestId: string
       options: Record<string, string>
     }
@@ -88,16 +80,16 @@ export class StreamActions {
     const { superglue } = this.store.getState()
     const nextPageKey = superglue.currentPageKey
 
-    if (message.type === 'message') {
+    if (message.action === 'handleStreamMessage') {
       if (
-        message.action === 'refresh' &&
+        message.method === 'refresh' &&
         currentPageKey === nextPageKey &&
         !lastRequestIds.has(message.requestId)
       ) {
         this.refresh(currentPageKey)
       }
 
-      if (message.action !== 'refresh') {
+      if (message.method !== 'refresh') {
         this.store.dispatch(handleStreamMessage(rawMessage))
       }
     }

@@ -18,20 +18,20 @@ type FragmentSetter<T> = {
 export function useFragment<T = unknown>(
   fragmentRef: FragmentRef
 ): [T | undefined, FragmentSetter<T>] {
-  const fragmentKey =
+  const fragmentId =
     typeof fragmentRef === 'string' ? fragmentRef : fragmentRef.__id
 
   const dispatch = useDispatch()
 
   const fragment = useSelector<RootState, T | undefined>(
-    (state) => state.fragments[fragmentKey] as T
+    (state) => state.fragments[fragmentId] as T
   )
 
   const setFragment: FragmentSetter<T> = (updater: FragmentUpdater<T>) => {
     const currentFragment = fragment
     if (currentFragment === undefined) {
       console.warn(
-        `Fragment '${fragmentKey}' is undefined. Cannot apply update.`
+        `Fragment '${fragmentId}' is undefined. Cannot apply update.`
       )
       return
     }
@@ -40,7 +40,7 @@ export function useFragment<T = unknown>(
 
     dispatch(
       saveFragment({
-        fragmentKey,
+        fragmentId,
         data: updatedFragment as JSONMappable,
       })
     )

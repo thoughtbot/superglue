@@ -260,30 +260,30 @@ export function fragmentReducer(
   action: Action
 ): AllFragments {
   if (handleFragmentGraft.match(action)) {
-    const { fragmentKey, response } = action.payload
-    return handleFragmentGraftResponse(state, fragmentKey, response)
+    const { fragmentId, response } = action.payload
+    return handleFragmentGraftResponse(state, fragmentId, response)
   }
 
   if (saveFragment.match(action)) {
-    const { fragmentKey, data } = action.payload
+    const { fragmentId, data } = action.payload
 
     return {
       ...state,
-      [fragmentKey]: data,
+      [fragmentId]: data,
     }
   }
 
 
   if (appendToFragment.match(action)) {
-    const { data, fragmentKey } = action.payload
-    let targetFragment = state[fragmentKey]
+    const { data, fragmentId } = action.payload
+    let targetFragment = state[fragmentId]
 
     if (Array.isArray(targetFragment)) {
       targetFragment = [...targetFragment, data]
 
       return {
         ...state,
-        [fragmentKey]: targetFragment,
+        [fragmentId]: targetFragment,
       }
     } else {
       return state
@@ -291,14 +291,14 @@ export function fragmentReducer(
   }
 
   if (prependToFragment.match(action)) {
-    const { data, fragmentKey } = action.payload
-    let targetFragment = state[fragmentKey]
+    const { data, fragmentId } = action.payload
+    let targetFragment = state[fragmentId]
 
     if (Array.isArray(targetFragment)) {
       targetFragment = [data, ...targetFragment]
       return {
         ...state,
-        [fragmentKey]: targetFragment,
+        [fragmentId]: targetFragment,
       }
     } else {
       return state

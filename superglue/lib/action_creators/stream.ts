@@ -26,15 +26,15 @@ export const streamPrepend = (
       const { saveAs } = options
       dispatch(
         saveFragment({
-          fragmentKey: saveAs,
+          fragmentId: saveAs,
           data,
         })
       )
 
-      fragments.forEach((fragmentKey) => {
+      fragments.forEach((fragmentId) => {
         dispatch(
           prependToFragment({
-            fragmentKey,
+            fragmentId,
             data: {
               __id: saveAs,
             },
@@ -42,10 +42,10 @@ export const streamPrepend = (
         )
       })
     } else {
-      fragments.forEach((fragmentKey) => {
+      fragments.forEach((fragmentId) => {
         dispatch(
           prependToFragment({
-            fragmentKey: fragmentKey,
+            fragmentId: fragmentId,
             data: data,
           })
         )
@@ -68,15 +68,15 @@ export const streamAppend = (
       const { saveAs } = options
       dispatch(
         saveFragment({
-          fragmentKey: saveAs,
+          fragmentId: saveAs,
           data,
         })
       )
 
-      fragments.forEach((fragmentKey) => {
+      fragments.forEach((fragmentId) => {
         dispatch(
           appendToFragment({
-            fragmentKey,
+            fragmentId,
             data: {
               __id: saveAs,
             },
@@ -84,10 +84,10 @@ export const streamAppend = (
         )
       })
     } else {
-      fragments.forEach((fragmentKey) => {
+      fragments.forEach((fragmentId) => {
         dispatch(
           appendToFragment({
-            fragmentKey,
+            fragmentId,
             data,
           })
         )
@@ -107,7 +107,7 @@ export const streamSave = (
   return (dispatch) => {
     dispatch(
       saveFragment({
-        fragmentKey: fragment,
+        fragmentId: fragment,
         data,
       })
     )
@@ -128,7 +128,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
 
         dispatch(
           saveFragment({
-            fragmentKey: id,
+            fragmentId: id,
             data: node,
           })
         )
@@ -139,7 +139,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
       if (nextMessage.action === 'append') {
         dispatch(
           streamAppend(
-            nextMessage.fragmentKeys,
+            nextMessage.fragmentIds,
             nextMessage.data,
             nextMessage.options
           )
@@ -149,7 +149,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
       if (nextMessage.action === 'prepend') {
         dispatch(
           streamPrepend(
-            nextMessage.fragmentKeys,
+            nextMessage.fragmentIds,
             nextMessage.data,
             nextMessage.options
           )
@@ -157,7 +157,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
       }
 
       if (nextMessage.action === 'save') {
-        dispatch(streamSave(nextMessage.fragmentKeys[0], nextMessage.data))
+        dispatch(streamSave(nextMessage.fragmentIds[0], nextMessage.data))
       }
     }
   }
@@ -176,7 +176,7 @@ export const handleStreamResponse = (
 
       dispatch(
         saveFragment({
-          fragmentKey: id,
+          fragmentId: id,
           data: node,
         })
       )
@@ -185,18 +185,18 @@ export const handleStreamResponse = (
     nextResponse.data.forEach((message) => {
       if (message.action === 'append') {
         dispatch(
-          streamAppend(message.fragmentKeys, message.data, message.options)
+          streamAppend(message.fragmentIds, message.data, message.options)
         )
       }
 
       if (message.action === 'prepend') {
         dispatch(
-          streamPrepend(message.fragmentKeys, message.data, message.options)
+          streamPrepend(message.fragmentIds, message.data, message.options)
         )
       }
 
       if (message.action === 'save') {
-        dispatch(streamSave(message.fragmentKeys[0], message.data))
+        dispatch(streamSave(message.fragmentIds[0], message.data))
       }
     })
   }

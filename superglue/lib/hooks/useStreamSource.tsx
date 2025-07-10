@@ -20,7 +20,7 @@ type StreamSourceProps = string | ChannelNameWithParams
 export type StreamMutateMessage = {
   type: 'message'
   data: JSONMappable
-  fragmentKeys: string[]
+  fragmentIds: string[]
   action: 'append' | 'prepend' | 'save'
   options: Record<string, string>
 }
@@ -29,7 +29,7 @@ export type StreamMessage =
   | {
       type: 'message'
       data: JSONMappable
-      fragmentKeys: string[]
+      fragmentIds: string[]
       action: 'append' | 'prepend' | 'save'
       options: Record<string, string>
       fragments: FragmentRef[]

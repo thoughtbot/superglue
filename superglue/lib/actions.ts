@@ -145,16 +145,16 @@ export const setActivePage = createAction<{
 export const handleFragmentGraft = createAction(
   '@@superglue/HANDLE_FRAGMENT_GRAFT',
   ({
-    fragmentKey,
+    fragmentId,
     response,
   }: {
-    fragmentKey: string
+    fragmentId: string
     response: GraftResponse
   }) => {
     return {
       payload: {
         response,
-        fragmentKey,
+        fragmentId,
       },
     }
   }
@@ -162,10 +162,10 @@ export const handleFragmentGraft = createAction(
 
 export const saveFragment = createAction(
   '@@superglue/SAVE_FRAGMENT',
-  ({ fragmentKey, data }: { fragmentKey: string; data: JSONMappable }) => {
+  ({ fragmentId, data }: { fragmentId: string; data: JSONMappable }) => {
     return {
       payload: {
-        fragmentKey,
+        fragmentId,
         data,
       },
     }
@@ -174,11 +174,11 @@ export const saveFragment = createAction(
 
 export const appendToFragment = createAction(
   '@@superglue/APPEND_TO_FRAGMENT',
-  ({ data, fragmentKey }: { data: JSONMappable; fragmentKey: string }) => {
+  ({ data, fragmentId }: { data: JSONMappable; fragmentId: string }) => {
     return {
       payload: {
         data,
-        fragmentKey,
+        fragmentId,
       },
     }
   }
@@ -186,11 +186,11 @@ export const appendToFragment = createAction(
 
 export const prependToFragment = createAction(
   '@@superglue/PREPEND_TO_FRAGMENT',
-  ({ data, fragmentKey }: { data: JSONMappable; fragmentKey: string }) => {
+  ({ data, fragmentId }: { data: JSONMappable; fragmentId: string }) => {
     return {
       payload: {
         data,
-        fragmentKey: fragmentKey,
+        fragmentId: fragmentId,
       },
     }
   }

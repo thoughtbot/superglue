@@ -147,7 +147,7 @@ describe('Stream Actions', () => {
       const msg = JSON.stringify({
         type: 'message',
         action: 'append',
-        fragmentKeys: ['foo'],
+        fragmentIds: ['foo'],
         data: { id: 1 },
         options: {},
         fragments: []
@@ -173,7 +173,7 @@ describe('Stream Actions', () => {
       const msg = JSON.stringify({
         type: 'message',
         action: 'prepend',
-        fragmentKeys: ['bar'],
+        fragmentIds: ['bar'],
         data: { id: 2 },
         options: {},
         fragments: []
@@ -197,7 +197,7 @@ describe('Stream Actions', () => {
       const msg = JSON.stringify({
         type: 'message',
         action: 'save',
-        fragmentKeys: ['baz'],
+        fragmentIds: ['baz'],
         data: { id: 3 },
         options: {},
         fragments: []
@@ -261,7 +261,7 @@ describe('Stream Actions', () => {
       const msg = JSON.stringify({
         type: 'message',
         action: 'append',
-        fragmentKeys: ['posts'],
+        fragmentIds: ['posts'],
         data: {
           header: {
             avatar: {

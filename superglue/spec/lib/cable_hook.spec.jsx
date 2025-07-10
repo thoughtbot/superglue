@@ -33,13 +33,6 @@ const consumerTest = function (name, options, callback) {
 
       if ('subprotocols' in options)
         consumer.addSubProtocol(options.subprotocols)
-
-      server.on('connection', function () {
-        const clients = server.clients()
-        assert.equal(clients.length, 1)
-        assert.equal(clients[0].readyState, WebSocket.OPEN)
-      })
-
       server.broadcastTo = function (subscription, data, callback) {
         if (data == null) {
           data = {}
@@ -73,8 +66,16 @@ const consumerTest = function (name, options, callback) {
       if (options.connect === false) {
         callback(testData)
       } else {
+        let connectionHandled = false
         server.on('connection', function () {
-          testData.client = server.clients()[0]
+          // Prevent multiple handling of connection events
+          if (connectionHandled) return
+          connectionHandled = true
+
+          const clients = server.clients()
+          assert.equal(clients.length, 1)
+          assert.equal(clients[0].readyState, WebSocket.OPEN)
+          testData.client = clients[0]
           callback(testData)
         })
         consumer.connect()

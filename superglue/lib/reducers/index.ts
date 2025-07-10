@@ -273,7 +273,6 @@ export function fragmentReducer(
     }
   }
 
-
   if (appendToFragment.match(action)) {
     const { data, fragmentId } = action.payload
     let targetFragment = state[fragmentId]

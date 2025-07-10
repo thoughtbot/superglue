@@ -13,13 +13,13 @@ describe('hooks', () => {
         fragments: {
           'post-1': {
             title: 'My First Blog Post',
-          }
-        }
+          },
+        },
       }
 
       const store = configureStore({
         preloadedState,
-        reducer: {fragments: fragmentReducer},
+        reducer: { fragments: fragmentReducer },
       })
 
       const wrapper = ({ children }) => (
@@ -29,26 +29,28 @@ describe('hooks', () => {
       const { result } = renderHook(() => useFragment('post-1'), { wrapper })
 
       expect(result.current[0]).toEqual({
-        title: 'My First Blog Post'
+        title: 'My First Blog Post',
       })
       expect(typeof result.current[1]).toBe('function')
     })
 
     it('returns undefined for non-existent fragment', () => {
       const preloadedState = {
-        fragments: {}
+        fragments: {},
       }
 
       const store = configureStore({
         preloadedState,
-        reducer: {fragments: fragmentReducer},
+        reducer: { fragments: fragmentReducer },
       })
 
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
 
-      const { result } = renderHook(() => useFragment('user-profile-999'), { wrapper })
+      const { result } = renderHook(() => useFragment('user-profile-999'), {
+        wrapper,
+      })
 
       expect(result.current[0]).toBeUndefined()
       expect(typeof result.current[1]).toBe('function')
@@ -59,13 +61,13 @@ describe('hooks', () => {
         fragments: {
           'post-1': {
             title: 'This is a great article!',
-          }
-        }
+          },
+        },
       }
 
       const store = configureStore({
         preloadedState,
-        reducer: {fragments: fragmentReducer},
+        reducer: { fragments: fragmentReducer },
       })
 
       const wrapper = ({ children }) => (
@@ -83,26 +85,26 @@ describe('hooks', () => {
       const preloadedState = {
         fragments: {
           'shopping-cart': {
-            items: [
-              { id: 1, name: 'Laptop', price: 10 },
-            ],
+            items: [{ id: 1, name: 'Laptop', price: 10 }],
             discounts: {
-              total: 10
-            }
-          }
-        }
+              total: 10,
+            },
+          },
+        },
       }
 
       const store = configureStore({
         preloadedState,
-        reducer: {fragments: fragmentReducer},
+        reducer: { fragments: fragmentReducer },
       })
 
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
 
-      const { result } = renderHook(() => useFragment('shopping-cart'), { wrapper })
+      const { result } = renderHook(() => useFragment('shopping-cart'), {
+        wrapper,
+      })
 
       act(() => {
         const [, setFragment] = result.current
@@ -114,32 +116,34 @@ describe('hooks', () => {
       const cart = store.getState().fragments['shopping-cart']
       expect(cart).toEqual({
         items: [
-          { id: 1, name: 'Laptop', price: 10},
-          { id: 2, name: 'Keyboard', price: 5}
+          { id: 1, name: 'Laptop', price: 10 },
+          { id: 2, name: 'Keyboard', price: 5 },
         ],
         discounts: {
-          total: 10
-        }
+          total: 10,
+        },
       })
-      expect(cart.discounts).toBe(preloadedState.fragments['shopping-cart'].discounts)
+      expect(cart.discounts).toBe(
+        preloadedState.fragments['shopping-cart'].discounts
+      )
     })
 
     it('updates fragment by returning new draft', () => {
       const preloadedState = {
         fragments: {
-          'user': {
+          user: {
             name: 'John Smith',
             language: 'en',
             address: {
-              zip: "11222"
-            }
-          }
-        }
+              zip: '11222',
+            },
+          },
+        },
       }
 
       const store = configureStore({
         preloadedState,
-        reducer: {fragments: fragmentReducer},
+        reducer: { fragments: fragmentReducer },
       })
 
       const wrapper = ({ children }) => (
@@ -151,23 +155,23 @@ describe('hooks', () => {
       act(() => {
         const [, setFragment] = result.current
         setFragment(() => {
-          return { 
-            name: 'Jimmy Smith', 
-            language: 'es', 
+          return {
+            name: 'Jimmy Smith',
+            language: 'es',
             address: {
-              zip: "11222"
-            }
+              zip: '11222',
+            },
           }
         })
       })
       const user = store.getState().fragments['user']
 
       expect(user).toEqual({
-        name: 'Jimmy Smith', 
-        language: 'es', 
+        name: 'Jimmy Smith',
+        language: 'es',
         address: {
-          zip: "11222"
-        }
+          zip: '11222',
+        },
       })
 
       expect(user.address).not.toBe(preloadedState.fragments.user.address)
@@ -175,21 +179,23 @@ describe('hooks', () => {
 
     it('warns and does not dispatch when fragment is undefined', () => {
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-      
+
       const preloadedState = {
-        fragments: {}
+        fragments: {},
       }
 
       const store = configureStore({
         preloadedState,
-        reducer: {fragments: fragmentReducer},
+        reducer: { fragments: fragmentReducer },
       })
 
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
 
-      const { result } = renderHook(() => useFragment('does-not-exist'), { wrapper })
+      const { result } = renderHook(() => useFragment('does-not-exist'), {
+        wrapper,
+      })
 
       act(() => {
         const [, setFragment] = result.current

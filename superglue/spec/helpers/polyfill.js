@@ -1,6 +1,6 @@
 import { AbortController } from 'abortcontroller-polyfill/dist/cjs-ponyfill'
 import { JSDOM } from 'jsdom'
-import { WebSocket as MockWebSocket} from 'mock-socket'
+import { WebSocket as MockWebSocket } from 'mock-socket'
 
 function setUpDomEnvironment() {
   const dom = new JSDOM('<!doctype html><html><body></body></html>', {

@@ -268,7 +268,9 @@ export function createProxy<T extends JSONMappable>(
 
 export function unproxy<T>(proxy: T): Unproxied<T> {
   if (proxy && typeof proxy === 'object') {
-    return (proxyToOriginalMap.get(proxy) as Unproxied<T>) || (proxy as Unproxied<T>)
+    return (
+      (proxyToOriginalMap.get(proxy) as Unproxied<T>) || (proxy as Unproxied<T>)
+    )
   }
   return proxy as Unproxied<T>
 }

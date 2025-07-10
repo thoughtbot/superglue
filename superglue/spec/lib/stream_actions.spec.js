@@ -50,7 +50,7 @@ describe('Stream Actions', () => {
       })
       const remote = vi.fn()
 
-      const actions = new StreamActions({ store, remote})
+      const actions = new StreamActions({ store, remote })
       actions.refresh('/posts')
       expect(remote).not.toHaveBeenCalled()
 
@@ -138,7 +138,7 @@ describe('Stream Actions', () => {
     it('handles append action and updates fragments state', () => {
       const store = buildStore({
         fragments: {
-          foo: []
+          foo: [],
         },
         superglue: { currentPageKey: '/posts' },
       })
@@ -150,11 +150,11 @@ describe('Stream Actions', () => {
         fragmentIds: ['foo'],
         data: { id: 1 },
         options: {},
-        fragments: []
+        fragments: [],
       })
 
       actions.handle(msg, '/posts')
-      
+
       const nextState = store.getState()
       expect(nextState.fragments).toEqual({
         foo: [{ id: 1 }],
@@ -164,7 +164,7 @@ describe('Stream Actions', () => {
     it('handles prepend action and updates fragments state', () => {
       const store = buildStore({
         fragments: {
-          bar: [{ id: 0 }]
+          bar: [{ id: 0 }],
         },
         superglue: { currentPageKey: '/posts' },
       })
@@ -176,11 +176,11 @@ describe('Stream Actions', () => {
         fragmentIds: ['bar'],
         data: { id: 2 },
         options: {},
-        fragments: []
+        fragments: [],
       })
 
       actions.handle(msg, '/posts')
-      
+
       const nextState = store.getState()
       expect(nextState.fragments).toEqual({
         bar: [{ id: 2 }, { id: 0 }],
@@ -200,11 +200,11 @@ describe('Stream Actions', () => {
         fragmentIds: ['baz'],
         data: { id: 3 },
         options: {},
-        fragments: []
+        fragments: [],
       })
 
       actions.handle(msg, '/posts')
-      
+
       const nextState = store.getState()
       expect(nextState.fragments).toEqual({
         baz: { id: 3 },
@@ -219,11 +219,11 @@ describe('Stream Actions', () => {
       const actions = new StreamActions({ store, remote: vi.fn() })
 
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
-      const msg = JSON.stringify({ 
-        action: 'handleStreamMessage', 
+      const msg = JSON.stringify({
+        action: 'handleStreamMessage',
         method: 'refresh',
         requestId: 'test-request-id',
-        options: {}
+        options: {},
       })
 
       actions.handle(msg, '/posts')
@@ -238,11 +238,11 @@ describe('Stream Actions', () => {
       const actions = new StreamActions({ store, remote: vi.fn() })
 
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
-      const msg = JSON.stringify({ 
-        action: 'handleStreamMessage', 
+      const msg = JSON.stringify({
+        action: 'handleStreamMessage',
         method: 'refresh',
         requestId: 'test-request-id',
-        options: {}
+        options: {},
       })
 
       actions.handle(msg, '/posts')
@@ -252,7 +252,7 @@ describe('Stream Actions', () => {
     it('denormalizes fragments from message and stores them in fragments slice', () => {
       const store = buildStore({
         fragments: {
-          posts: []
+          posts: [],
         },
         superglue: { currentPageKey: '/posts' },
       })
@@ -273,7 +273,7 @@ describe('Stream Actions', () => {
         fragments: [
           { id: 'header', path: 'data.header' },
           { id: 'user', path: 'data.header.avatar' },
-        ]
+        ],
       })
 
       actions.handle(msg, '/posts')
@@ -287,9 +287,11 @@ describe('Stream Actions', () => {
         header: {
           avatar: { __id: 'user' },
         },
-        posts: [{
-          header: { __id: 'header' },
-        }],
+        posts: [
+          {
+            header: { __id: 'header' },
+          },
+        ],
       })
     })
 

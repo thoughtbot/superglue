@@ -85,7 +85,7 @@ export function saveAndProcessPage(
 
       dispatch(
         saveFragment({
-          fragmentKey: id,
+          fragmentId: id,
           data: node,
         })
       )
@@ -95,7 +95,7 @@ export function saveAndProcessPage(
       if (typeof nextPage.fragmentContext === 'string') {
         dispatch(
           handleFragmentGraft({
-            fragmentKey: nextPage.fragmentContext,
+            fragmentId: nextPage.fragmentContext,
             response: nextPage,
           })
         )

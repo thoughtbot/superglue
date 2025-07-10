@@ -839,7 +839,7 @@ describe('useContentV4', () => {
       // Update the tracked fragment
       act(() => {
         store.dispatch(saveFragment({
-          fragmentKey: 'user_deps',
+          fragmentId: 'user_deps',
           fragment: { name: 'Updated Name' }
         }))
       })
@@ -883,7 +883,7 @@ describe('useContentV4', () => {
       // Update a non-tracked fragment
       act(() => {
         store.dispatch(saveFragment({
-          fragmentKey: 'post_sel',
+          fragmentId: 'post_sel',
           fragment: { title: 'Updated Post' }
         }))
       })
@@ -980,7 +980,7 @@ describe('useContentV4', () => {
 
       act(() => {
         store.dispatch(saveFragment({
-          fragmentKey: 'user_multi',
+          fragmentId: 'user_multi',
           fragment: { name: 'Updated Multi User' }
         }))
       })
@@ -990,7 +990,7 @@ describe('useContentV4', () => {
 
       act(() => {
         store.dispatch(saveFragment({
-          fragmentKey: 'post_multi',
+          fragmentId: 'post_multi',
           fragment: { title: 'Updated Multi Post' }
         }))
       })
@@ -1401,7 +1401,7 @@ describe('useContentV4', () => {
       // Change user name
       act(() => {
         store.dispatch(saveFragment({
-          fragmentKey: 'effect_user',
+          fragmentId: 'effect_user',
           fragment: { name: 'Updated Effect User' }
         }))
       })
@@ -1770,7 +1770,7 @@ describe('useContentV4', () => {
       // Update fragment - should only affect FragmentComponent
       act(() => {
         store.dispatch(saveFragment({
-          fragmentKey: 'tracked_fragment',
+          fragmentId: 'tracked_fragment',
           data: { value: 'Updated Fragment Value' }
         }))
       })

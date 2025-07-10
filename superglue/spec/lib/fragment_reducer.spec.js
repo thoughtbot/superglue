@@ -13,7 +13,7 @@ describe('reducers', () => {
         const prevState = {}
         const action = saveFragment({
           data: { title: 'Welcome Message' },
-          fragmentKey: 'greeting',
+          fragmentId: 'greeting',
         })
         
         const nextState = fragmentReducer(prevState, action)
@@ -29,7 +29,7 @@ describe('reducers', () => {
         }
         const action = saveFragment({
           data: { title: 'Getting Started' },
-          fragmentKey: 'tutorial',
+          fragmentId: 'tutorial',
         })
         
         const nextState = fragmentReducer(prevState, action)
@@ -48,7 +48,7 @@ describe('reducers', () => {
           greeting: { title: 'Welcome' },
         }
         const action = saveFragment({
-          fragmentKey: 'posts',
+          fragmentId: 'posts',
           data: [{ title: 'Updated Post' }],
         })
 
@@ -63,7 +63,7 @@ describe('reducers', () => {
       it('creates a new fragment if target does not exist', () => {
         const prevState = {}
         const action = saveFragment({
-          fragmentKey: 'footer',
+          fragmentId: 'footer',
           data: { title: 'Brand New Content' },
         })
 
@@ -83,7 +83,7 @@ describe('reducers', () => {
 
         const action = appendToFragment({
           data: { title: 'Second Post' },
-          fragmentKey: 'posts',
+          fragmentId: 'posts',
         })
 
         const nextState = fragmentReducer(prevState, action)
@@ -100,7 +100,7 @@ describe('reducers', () => {
 
         const action = appendToFragment({
           data: { title: 'Another Message' },
-          fragmentKey: 'greeting',
+          fragmentId: 'greeting',
         })
 
         const nextState = fragmentReducer(prevState, action)
@@ -117,7 +117,7 @@ describe('reducers', () => {
 
         const action = appendToFragment({
           data: { title: 'New Post' },
-          fragmentKey: 'nonexistent',
+          fragmentId: 'nonexistent',
         })
 
         const nextState = fragmentReducer(prevState, action)
@@ -134,7 +134,7 @@ describe('reducers', () => {
 
         const action = prependToFragment({
           data: { title: 'New First Post' },
-          fragmentKey: 'posts',
+          fragmentId: 'posts',
         })
 
         const nextState = fragmentReducer(prevState, action)
@@ -152,7 +152,7 @@ describe('reducers', () => {
 
         const action = prependToFragment({
           data: { title: 'Another Message' },
-          fragmentKey: 'greeting',
+          fragmentId: 'greeting',
         })
 
         const nextState = fragmentReducer(prevState, action)
@@ -169,7 +169,7 @@ describe('reducers', () => {
 
         const action = prependToFragment({
           data: { title: 'New Post' },
-          fragmentKey: 'nonexistent',
+          fragmentId: 'nonexistent',
         })
 
         const nextState = fragmentReducer(prevState, action)
@@ -190,7 +190,7 @@ describe('reducers', () => {
         }
 
         const action = handleFragmentGraft({
-          fragmentKey: 'userProfile',
+          fragmentId: 'userProfile',
           response: {
             data: 'Light Theme Preferences',
             path: 'settings.title',
@@ -215,7 +215,7 @@ describe('reducers', () => {
         }
 
         const action = handleFragmentGraft({
-          fragmentKey: 'nonexistent',
+          fragmentId: 'nonexistent',
           response: {
             data: 'Updated Title',
             path: 'title',

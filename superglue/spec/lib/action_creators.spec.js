@@ -70,7 +70,7 @@ const successfulStreamResponseBody = () => {
           comment: {rating: 'great!'}
         }
       },
-      fragmentKeys: ['top'],
+      fragmentIds: ['top'],
       action: 'save',
       options: {}
     }],

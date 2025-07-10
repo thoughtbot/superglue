@@ -4,7 +4,7 @@ import { render, act, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib'
-import { useContentV4, unproxy } from '../../lib/hooks/useContentV4'
+import { useContent, unproxy } from '../../lib/hooks/useContent'
 import { saveAndProcessPage } from '../../lib'
 import { setActivePage, saveFragment } from '../../lib/actions'
 
@@ -17,9 +17,9 @@ const buildStore = (preloadedState) => {
   })
 }
 
-describe('useContentV4', () => {
+describe('useContent', () => {
   const TestComponent = ({ onRender, onMount, children }) => {
-    const page = useContentV4()
+    const page = useContent()
 
     useEffect(() => {
       onMount?.(page)
@@ -176,7 +176,7 @@ describe('useContentV4', () => {
       let capturedPage
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         capturedPage = page
         return <div>{page.title}</div>
       }
@@ -887,7 +887,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         const userName = page.user.name
         const postTitle = page.post.title
         return (
@@ -923,7 +923,7 @@ describe('useContentV4', () => {
       let latestPage
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         latestPage = page
         return <div data-testid="user-name">{page.user.name}</div>
       }
@@ -969,7 +969,7 @@ describe('useContentV4', () => {
       let renderCount = 0
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         renderCount++
         return <div>{page.user.name}</div>
       }
@@ -1011,7 +1011,7 @@ describe('useContentV4', () => {
       let renderCount = 0
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         renderCount++
         return <div>{page.title}</div>
       }
@@ -1057,13 +1057,13 @@ describe('useContentV4', () => {
       let comp2Renders = 0
 
       const Component1 = () => {
-        const page = useContentV4()
+        const page = useContent()
         comp1Renders++
         return <div>{page.user.name}</div>
       }
 
       const Component2 = () => {
-        const page = useContentV4()
+        const page = useContent()
         comp2Renders++
         return <div>{page.post.title}</div>
       }
@@ -1291,12 +1291,12 @@ describe('useContentV4', () => {
       let page1, page2
 
       const Component1 = () => {
-        page1 = useContentV4()
+        page1 = useContent()
         return <div>{page1.sharedUser.name}</div>
       }
 
       const Component2 = () => {
-        page2 = useContentV4()
+        page2 = useContent()
         return <div>{page2.sharedUser.name}</div>
       }
 
@@ -1389,12 +1389,12 @@ describe('useContentV4', () => {
       let page1, page2
 
       const Component1 = () => {
-        page1 = useContentV4()
+        page1 = useContent()
         return <div>{page1.title}</div>
       }
 
       const Component2 = () => {
-        page2 = useContentV4()
+        page2 = useContent()
         return <div>{page2.title}</div>
       }
 
@@ -1429,7 +1429,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         return <div>{page.title}</div>
       }
 
@@ -1468,7 +1468,7 @@ describe('useContentV4', () => {
       })
 
       const Parent = () => {
-        const page = useContentV4()
+        const page = useContent()
         return <MemoComponent userName={page.user.name} />
       }
 
@@ -1509,7 +1509,7 @@ describe('useContentV4', () => {
       let latestUserName = null
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
 
         useEffect(() => {
           effectCallCount++
@@ -1556,7 +1556,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         return <div data-testid="title">{page.title}</div>
       }
 
@@ -1606,7 +1606,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         return <div>{page.title}</div>
       }
 
@@ -1619,7 +1619,7 @@ describe('useContentV4', () => {
 
       expect(() => {
         const ComponentWithMissingRef = () => {
-          const page = useContentV4()
+          const page = useContent()
           page.missingRef.name // This should throw
           return <div>Should not render</div>
         }
@@ -1649,7 +1649,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         return (
           <div>
             {page.title} - {page.count}
@@ -1677,7 +1677,7 @@ describe('useContentV4', () => {
       console.error = vi.fn()
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         return <div>Should throw before render</div>
       }
 
@@ -1710,7 +1710,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
         return (
           <div>
             <span data-testid="invalid1">{typeof page.invalidRef1.__id}</span>
@@ -1752,7 +1752,7 @@ describe('useContentV4', () => {
       let capturedUser
 
       const Component = () => {
-        const user = useContentV4({ __id: 'scoped_user' })
+        const user = useContent({ __id: 'scoped_user' })
         capturedUser = user
         return <div>{user.name}</div>
       }
@@ -1788,7 +1788,7 @@ describe('useContentV4', () => {
       let capturedPost
 
       const Component = () => {
-        const post = useContentV4({ __id: 'scoped_post' })
+        const post = useContent({ __id: 'scoped_post' })
         capturedPost = post
         return <div>{post.title}</div>
       }
@@ -1819,7 +1819,7 @@ describe('useContentV4', () => {
       let capturedList
 
       const Component = () => {
-        const list = useContentV4({ __id: 'scoped_list' })
+        const list = useContent({ __id: 'scoped_list' })
         capturedList = list
         return <div>{list.items.length}</div>
       }
@@ -1846,7 +1846,7 @@ describe('useContentV4', () => {
       console.error = vi.fn()
 
       const Component = () => {
-        const fragment = useContentV4({ __id: 'missing_scoped_fragment' })
+        const fragment = useContent({ __id: 'missing_scoped_fragment' })
         return <div>{fragment.name}</div>
       }
 
@@ -1882,13 +1882,13 @@ describe('useContentV4', () => {
       let pageRenderCount = 0
 
       const FragmentComponent = () => {
-        const fragment = useContentV4({ __id: 'tracked_fragment' })
+        const fragment = useContent({ __id: 'tracked_fragment' })
         fragmentRenderCount++
         return <div>{fragment.value}</div>
       }
 
       const PageComponent = () => {
-        const page = useContentV4()
+        const page = useContent()
         pageRenderCount++
         return <div>{page.title}</div>
       }
@@ -1941,14 +1941,14 @@ describe('useContentV4', () => {
       let parentPage, childUser
 
       const Parent = () => {
-        const page = useContentV4()
+        const page = useContent()
         parentPage = page
         const userRef = unproxy(page).selectedUser
         return <Child userRef={userRef} />
       }
 
       const Child = ({ userRef }) => {
-        const user = useContentV4(userRef)
+        const user = useContent(userRef)
         childUser = user
         return <div>{user.name}</div>
       }
@@ -1986,7 +1986,7 @@ describe('useContentV4', () => {
       let capturedComment
 
       const Component = () => {
-        const comment = useContentV4({ __id: 'nested_comment' })
+        const comment = useContent({ __id: 'nested_comment' })
         capturedComment = comment
         return <div>{comment.text}</div>
       }
@@ -2023,7 +2023,7 @@ describe('useContentV4', () => {
       let capturedCollection
 
       const Component = () => {
-        const collection = useContentV4({ __id: 'scoped_collection' })
+        const collection = useContent({ __id: 'scoped_collection' })
         capturedCollection = collection
         return <div>{collection.items.length}</div>
       }
@@ -2064,7 +2064,7 @@ describe('useContentV4', () => {
       let capturedFragment
 
       const Component = () => {
-        const fragment = useContentV4({ __id: 'readonly_fragment' })
+        const fragment = useContent({ __id: 'readonly_fragment' })
         capturedFragment = fragment
         return <div>{fragment.value}</div>
       }
@@ -2100,7 +2100,7 @@ describe('useContentV4', () => {
       let capturedFragment
 
       const Component = () => {
-        const fragment = useContentV4({ __id: 'unproxy_fragment' })
+        const fragment = useContent({ __id: 'unproxy_fragment' })
         capturedFragment = fragment
         return <div>{fragment.data}</div>
       }
@@ -2136,7 +2136,7 @@ describe('useContentV4', () => {
       let capturedParent
 
       const Component = () => {
-        const parent = useContentV4({ __id: 'parent_fragment' })
+        const parent = useContent({ __id: 'parent_fragment' })
         capturedParent = parent
         return <div>{parent.name}</div>
       }
@@ -2171,8 +2171,8 @@ describe('useContentV4', () => {
       let pageUser, fragmentUser
 
       const Component = () => {
-        const page = useContentV4()
-        const user = useContentV4({ __id: 'shared_fragment' })
+        const page = useContent()
+        const user = useContent({ __id: 'shared_fragment' })
 
         pageUser = page.user
         fragmentUser = user
@@ -2222,7 +2222,7 @@ describe('useContentV4', () => {
       })
 
       const GrandParent = () => {
-        const page = useContentV4()
+        const page = useContent()
         return (
           <div data-testid="grandparent">
             <span>{page.title}</span>
@@ -2232,7 +2232,7 @@ describe('useContentV4', () => {
       }
 
       const Parent = ({ profileRef }) => {
-        const profile = useContentV4(profileRef)
+        const profile = useContent(profileRef)
         return (
           <div data-testid="parent">
             <span>{profile.name}</span>
@@ -2281,7 +2281,7 @@ describe('useContentV4', () => {
       )
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
 
         return (
           <div>
@@ -2363,7 +2363,7 @@ describe('useContentV4', () => {
       )
 
       const Component = () => {
-        const collection = useContentV4({ __id: 'jsx_collection' })
+        const collection = useContent({ __id: 'jsx_collection' })
 
         return (
           <div>
@@ -2423,7 +2423,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
 
         return (
           <div>
@@ -2487,7 +2487,7 @@ describe('useContentV4', () => {
       })
 
       const Component = () => {
-        const data = useContentV4({ __id: 'direct_scoped' })
+        const data = useContent({ __id: 'direct_scoped' })
 
         return (
           <div>
@@ -2545,7 +2545,7 @@ describe('useContentV4', () => {
       console.error = vi.fn()
 
       const Component = () => {
-        const page = useContentV4()
+        const page = useContent()
 
         return (
           <div>

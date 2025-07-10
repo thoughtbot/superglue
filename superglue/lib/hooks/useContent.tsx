@@ -14,11 +14,11 @@ type ProxiedContent<T> = T & {
     : T[K]
 }
 
-export function useContentV4<T = JSONMappable>(): ProxiedContent<T>
-export function useContentV4<T = JSONMappable>(fragmentRef: {
+export function useContent<T = JSONMappable>(): ProxiedContent<T>
+export function useContent<T = JSONMappable>(fragmentRef: {
   __id: string
 }): ProxiedContent<T>
-export function useContentV4<T = JSONMappable>(fragmentRef?: {
+export function useContent<T = JSONMappable>(fragmentRef?: {
   __id: string
 }): ProxiedContent<T> {
   const superglueState = useSuperglue()

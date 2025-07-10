@@ -56,7 +56,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   const currentPageKey = useSelector<RootState, string>(
     (state) => state.superglue.currentPageKey
   )
-  const store = useStore()
+  const store = useStore<RootState>()
 
   useEffect(() => {
     return history.listen(onHistoryChange)

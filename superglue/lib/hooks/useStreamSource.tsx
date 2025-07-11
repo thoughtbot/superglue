@@ -22,13 +22,13 @@ export type StreamMessage =
       action: 'handleStreamMessage'
       data: JSONMappable
       fragmentIds: string[]
-      method: 'append' | 'prepend' | 'save'
+      handler: 'append' | 'prepend' | 'save'
       options: Record<string, string>
       fragments: FragmentRef[]
     }
   | {
       action: 'handleStreamMessage'
-      method: 'refresh'
+      handler: 'refresh'
       requestId: string
       options: Record<string, string>
     }
@@ -82,14 +82,14 @@ export class StreamActions {
 
     if (message.action === 'handleStreamMessage') {
       if (
-        message.method === 'refresh' &&
+        message.handler === 'refresh' &&
         currentPageKey === nextPageKey &&
         !lastRequestIds.has(message.requestId)
       ) {
         this.refresh(currentPageKey)
       }
 
-      if (message.method !== 'refresh') {
+      if (message.handler !== 'refresh') {
         this.store.dispatch(handleStreamMessage(rawMessage))
       }
     }

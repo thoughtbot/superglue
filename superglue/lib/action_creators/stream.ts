@@ -120,7 +120,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
 
     let nextMessage = message
 
-    if (message.method !== 'refresh') {
+    if (message.handler !== 'refresh') {
       message.fragments.reverse().forEach((fragment) => {
         const { id, path } = fragment
         const node = getIn(nextMessage as JSONMappable, path) as JSONMappable
@@ -136,7 +136,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
     }
 
     if (nextMessage.action === 'handleStreamMessage') {
-      if (nextMessage.method === 'append') {
+      if (nextMessage.handler === 'append') {
         dispatch(
           streamAppend(
             nextMessage.fragmentIds,
@@ -146,7 +146,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
         )
       }
 
-      if (nextMessage.method === 'prepend') {
+      if (nextMessage.handler === 'prepend') {
         dispatch(
           streamPrepend(
             nextMessage.fragmentIds,
@@ -156,7 +156,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
         )
       }
 
-      if (nextMessage.method === 'save') {
+      if (nextMessage.handler === 'save') {
         dispatch(streamSave(nextMessage.fragmentIds[0], nextMessage.data))
       }
     }
@@ -183,19 +183,19 @@ export const handleStreamResponse = (
     })
 
     nextResponse.data.forEach((message) => {
-      if (message.method === 'append') {
+      if (message.handler === 'append') {
         dispatch(
           streamAppend(message.fragmentIds, message.data, message.options)
         )
       }
 
-      if (message.method === 'prepend') {
+      if (message.handler === 'prepend') {
         dispatch(
           streamPrepend(message.fragmentIds, message.data, message.options)
         )
       }
 
-      if (message.method === 'save') {
+      if (message.handler === 'save') {
         dispatch(streamSave(message.fragmentIds[0], message.data))
       }
     })

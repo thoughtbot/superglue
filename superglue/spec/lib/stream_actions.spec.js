@@ -146,7 +146,7 @@ describe('Stream Actions', () => {
 
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'append',
+        handler: 'append',
         fragmentIds: ['foo'],
         data: { id: 1 },
         options: {},
@@ -172,7 +172,7 @@ describe('Stream Actions', () => {
 
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'prepend',
+        handler: 'prepend',
         fragmentIds: ['bar'],
         data: { id: 2 },
         options: {},
@@ -196,7 +196,7 @@ describe('Stream Actions', () => {
 
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'save',
+        handler: 'save',
         fragmentIds: ['baz'],
         data: { id: 3 },
         options: {},
@@ -221,7 +221,7 @@ describe('Stream Actions', () => {
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'refresh',
+        handler: 'refresh',
         requestId: 'test-request-id',
         options: {},
       })
@@ -240,7 +240,7 @@ describe('Stream Actions', () => {
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'refresh',
+        handler: 'refresh',
         requestId: 'test-request-id',
         options: {},
       })
@@ -260,7 +260,7 @@ describe('Stream Actions', () => {
 
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'append',
+        handler: 'append',
         fragmentIds: ['posts'],
         data: {
           header: {
@@ -305,7 +305,7 @@ describe('Stream Actions', () => {
       const stub = vi.spyOn(actions, 'refresh').mockImplementation(() => {})
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        method: 'refresh',
+        handler: 'refresh',
         requestId: 'test-request-id',
         options: {},
       })

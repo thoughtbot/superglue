@@ -25,6 +25,7 @@ export function useContent<T = JSONMappable>(fragmentRef?: {
   const currentPageKey = superglueState.currentPageKey
 
   const dependencies = useRef<Set<string>>(new Set())
+  const fragmentsHookRef = useRef<RootState['fragments']>({})
   const proxyCache = useRef<WeakMap<object, unknown>>(new WeakMap())
 
   const fragmentId = fragmentRef?.__id
@@ -51,6 +52,9 @@ export function useContent<T = JSONMappable>(fragmentRef?: {
     }
   )
 
+  // Update the ref BEFORE the useMemo so proxy creation sees current fragments
+  fragmentsHookRef.current = fragments
+
   const proxy = useMemo(() => {
     if (fragmentId && !sourceData) {
       throw new Error(`Fragment with id "${fragmentId}" not found`)
@@ -58,7 +62,7 @@ export function useContent<T = JSONMappable>(fragmentRef?: {
 
     return createProxy(
       sourceData,
-      fragments,
+      fragmentsHookRef,
       dependencies.current,
       proxyCache.current
     )

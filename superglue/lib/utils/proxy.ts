@@ -1,9 +1,10 @@
 import { JSONMappable, AllFragments, Unproxied } from '../types'
+import { RefObject } from 'react'
 
 type AccessKeyType = string | symbol | number
 
-// Global mapping from proxy back to original value for unproxy() functionality
-const proxyToOriginalMap = new WeakMap<object, unknown>()
+// Symbol for accessing original data from proxy
+const ORIGINAL_TARGET = Symbol('@@originalTarget')
 
 const ARRAY_GETTER_METHODS = new Set<AccessKeyType>([
   Symbol.iterator,
@@ -68,7 +69,7 @@ function isFragmentReference(value: unknown): value is { __id: string } {
 
 function createArrayProxy(
   arrayData: unknown[],
-  fragments: AllFragments,
+  fragments: RefObject<AllFragments>,
   dependencies: Set<string>,
   proxyCache: WeakMap<object, unknown>
 ): unknown[] {
@@ -78,6 +79,11 @@ function createArrayProxy(
 
   const proxy = new Proxy(arrayData, {
     get(target, prop) {
+      // Return original target for unproxy functionality
+      if (prop === ORIGINAL_TARGET) {
+        return target
+      }
+
       // Handle array methods
       if (isArrayGetter(prop)) {
         const method = target[prop]
@@ -85,19 +91,7 @@ function createArrayProxy(
           return function (...args: unknown[]) {
             // Apply the method directly to the proxy
             // The proxy's numeric index handler will resolve fragments as needed
-            const result = Reflect.apply(method, proxy, args)
-
-            // For methods that return arrays, we need to proxy them too
-            if (Array.isArray(result)) {
-              return createArrayProxy(
-                result,
-                fragments,
-                dependencies,
-                proxyCache
-              )
-            }
-
-            return result
+            return Reflect.apply(method, proxy, args)
           }
         }
         return method
@@ -118,7 +112,7 @@ function createArrayProxy(
         if (isFragmentReference(item)) {
           // Track dependency and resolve fragment
           dependencies.add(item.__id)
-          const fragmentData = fragments[item.__id]
+          const fragmentData = fragments.current[item.__id]
 
           if (!fragmentData) {
             throw new Error(`Fragment with id "${item.__id}" not found`)
@@ -148,6 +142,13 @@ function createArrayProxy(
       return Reflect.get(target, prop)
     },
 
+    has(target, prop) {
+      if (prop === ORIGINAL_TARGET) {
+        return true
+      }
+      return Reflect.has(target, prop)
+    },
+
     set() {
       throw new Error(
         'Cannot mutate proxy array. Use Redux actions to update state.'
@@ -167,8 +168,6 @@ function createArrayProxy(
     },
   })
 
-  proxyToOriginalMap.set(proxy, arrayData)
-
   if (proxyCache) {
     proxyCache.set(arrayData, proxy)
   }
@@ -178,7 +177,7 @@ function createArrayProxy(
 
 function createObjectProxy(
   objectData: object,
-  fragments: AllFragments,
+  fragments: RefObject<AllFragments>,
   dependencies: Set<string>,
   proxyCache: WeakMap<object, unknown>
 ): unknown {
@@ -188,11 +187,16 @@ function createObjectProxy(
 
   const proxy = new Proxy(objectData as Record<string | symbol, unknown>, {
     get(target: Record<string | symbol, unknown>, prop: string | symbol) {
+      // Return original target for unproxy functionality
+      if (prop === ORIGINAL_TARGET) {
+        return target
+      }
+
       const value = target[prop]
 
       if (isFragmentReference(value)) {
         dependencies.add(value.__id)
-        const fragmentData = fragments[value.__id]
+        const fragmentData = fragments.current[value.__id]
 
         if (!fragmentData) {
           throw new Error(`Fragment with id "${value.__id}" not found`)
@@ -215,6 +219,13 @@ function createObjectProxy(
       return value
     },
 
+    has(target, prop) {
+      if (prop === ORIGINAL_TARGET) {
+        return true
+      }
+      return Reflect.has(target, prop)
+    },
+
     set() {
       throw new Error(
         'Cannot mutate proxy object. Use Redux actions to update state.'
@@ -234,9 +245,6 @@ function createObjectProxy(
     },
   })
 
-  // Store proxy -> original mapping for unproxy functionality
-  proxyToOriginalMap.set(proxy, objectData)
-
   if (proxyCache) {
     proxyCache.set(objectData, proxy)
   }
@@ -246,7 +254,7 @@ function createObjectProxy(
 
 export function createProxy<T extends JSONMappable>(
   content: T,
-  fragments: AllFragments,
+  fragments: RefObject<AllFragments>,
   dependencies: Set<string>,
   proxyCache: WeakMap<object, unknown>
 ): T {
@@ -267,10 +275,8 @@ export function createProxy<T extends JSONMappable>(
 }
 
 export function unproxy<T>(proxy: T): Unproxied<T> {
-  if (proxy && typeof proxy === 'object') {
-    return (
-      (proxyToOriginalMap.get(proxy) as Unproxied<T>) || (proxy as Unproxied<T>)
-    )
+  if (proxy && typeof proxy === 'object' && ORIGINAL_TARGET in proxy) {
+    return proxy[ORIGINAL_TARGET] as Unproxied<T>
   }
   return proxy as Unproxied<T>
 }

@@ -901,7 +901,7 @@ describe('useContent', () => {
       expect(container.textContent).toBe('Tracked User - Tracked Post')
     })
 
-    it('dependency tracking works but requires manual re-render', () => {
+    it('dependency tracking works with automatic re-render', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/deps',
@@ -936,13 +936,13 @@ describe('useContent', () => {
         store.dispatch(
           saveFragment({
             fragmentId: 'user_deps',
-            fragment: { name: 'Updated Name' },
+            data: { name: 'Updated Name' },
           })
         )
       })
 
-      // Current implementation doesn't auto-rerender on fragment changes
-      expect(latestPage.user.name).toBe('Initial Name')
+      // Fragment changes should trigger re-renders and update the proxy data
+      expect(latestPage.user.name).toBe('Updated Name')
     })
 
     it('does not re-render when non-tracked fragments change', () => {
@@ -982,7 +982,7 @@ describe('useContent', () => {
         store.dispatch(
           saveFragment({
             fragmentId: 'post_sel',
-            fragment: { title: 'Updated Post' },
+            data: { title: 'Updated Post' },
           })
         )
       })
@@ -1083,7 +1083,7 @@ describe('useContent', () => {
         store.dispatch(
           saveFragment({
             fragmentId: 'user_multi',
-            fragment: { name: 'Updated Multi User' },
+            data: { name: 'Updated Multi User' },
           })
         )
       })
@@ -1095,7 +1095,7 @@ describe('useContent', () => {
         store.dispatch(
           saveFragment({
             fragmentId: 'post_multi',
-            fragment: { title: 'Updated Multi Post' },
+            data: { title: 'Updated Multi Post' },
           })
         )
       })
@@ -1486,7 +1486,7 @@ describe('useContent', () => {
       expect(memoRenderCount).toBe(1)
     })
 
-    it('works with useEffect and manual re-render', () => {
+    it('works with useEffect and automatic re-render', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/effect',
@@ -1528,14 +1528,14 @@ describe('useContent', () => {
         store.dispatch(
           saveFragment({
             fragmentId: 'effect_user',
-            fragment: { name: 'Updated Effect User' },
+            data: { name: 'Updated Effect User' },
           })
         )
       })
 
-      // Current implementation: effect won't re-run automatically
-      expect(effectCallCount).toBe(1)
-      expect(latestUserName).toBe('Effect User')
+      // Fragment changes should trigger re-renders and re-run effects
+      expect(effectCallCount).toBe(2)
+      expect(latestUserName).toBe('Updated Effect User')
     })
 
     it('handles concurrent mode correctly', async () => {

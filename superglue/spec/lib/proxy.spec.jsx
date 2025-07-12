@@ -5,6 +5,7 @@ describe('proxy utilities', () => {
   let dependencies
   let proxyCache
   let fragments
+  let fragmentsRef
 
   beforeEach(() => {
     dependencies = new Set()
@@ -68,28 +69,33 @@ describe('proxy utilities', () => {
         ],
       },
     }
+    fragmentsRef = { current: fragments }
   })
 
   describe('createProxy - primitives and basic objects', () => {
     it('returns primitives unchanged', () => {
-      expect(createProxy('hello', fragments, dependencies, proxyCache)).toBe(
+      expect(createProxy('hello', fragmentsRef, dependencies, proxyCache)).toBe(
         'hello'
       )
-      expect(createProxy(42, fragments, dependencies, proxyCache)).toBe(42)
-      expect(createProxy(true, fragments, dependencies, proxyCache)).toBe(true)
-      expect(createProxy(false, fragments, dependencies, proxyCache)).toBe(
+      expect(createProxy(42, fragmentsRef, dependencies, proxyCache)).toBe(42)
+      expect(createProxy(true, fragmentsRef, dependencies, proxyCache)).toBe(
+        true
+      )
+      expect(createProxy(false, fragmentsRef, dependencies, proxyCache)).toBe(
         false
       )
-      expect(createProxy(null, fragments, dependencies, proxyCache)).toBe(null)
-      expect(createProxy(undefined, fragments, dependencies, proxyCache)).toBe(
-        undefined
+      expect(createProxy(null, fragmentsRef, dependencies, proxyCache)).toBe(
+        null
       )
+      expect(
+        createProxy(undefined, fragmentsRef, dependencies, proxyCache)
+      ).toBe(undefined)
       expect(dependencies.size).toBe(0)
     })
 
     it('proxies simple objects without fragments', () => {
       const data = { title: 'Page Title', count: 42, active: true }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.title).toBe('Page Title')
       expect(proxy.count).toBe(42)
@@ -107,7 +113,7 @@ describe('proxy utilities', () => {
           },
         },
       }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.user.name).toBe('Jane')
       expect(proxy.user.settings.theme).toBe('light')
@@ -119,7 +125,7 @@ describe('proxy utilities', () => {
   describe('createProxy - arrays', () => {
     it('proxies simple arrays', () => {
       const data = ['apple', 'banana', 'cherry']
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy[0]).toBe('apple')
       expect(proxy[1]).toBe('banana')
@@ -133,7 +139,7 @@ describe('proxy utilities', () => {
         { name: 'Item 1', value: 10 },
         { name: 'Item 2', value: 20 },
       ]
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy[0].name).toBe('Item 1')
       expect(proxy[0].value).toBe(10)
@@ -152,7 +158,7 @@ describe('proxy utilities', () => {
         null,
         true,
       ]
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy[0]).toBe('string')
       expect(proxy[1]).toBe(42)
@@ -168,7 +174,7 @@ describe('proxy utilities', () => {
   describe('fragment resolution', () => {
     it('resolves simple fragment references', () => {
       const data = { user: { __id: 'user_123' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.user.name).toBe('John Doe')
       expect(proxy.user.email).toBe('john@example.com')
@@ -178,7 +184,7 @@ describe('proxy utilities', () => {
 
     it('resolves nested properties in fragments', () => {
       const data = { user: { __id: 'user_123' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.user.profile.avatar).toBe('avatar.jpg')
       expect(proxy.user.profile.bio).toBe('Software engineer')
@@ -189,7 +195,7 @@ describe('proxy utilities', () => {
 
     it('resolves fragment arrays', () => {
       const data = { user: { __id: 'user_123' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.user.posts[0].title).toBe('First Post')
       expect(proxy.user.posts[0].views).toBe(100)
@@ -202,7 +208,7 @@ describe('proxy utilities', () => {
       const data = {
         items: [{ __id: 'user_123' }, { __id: 'post_456' }],
       }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.items[0].name).toBe('John Doe')
       expect(proxy.items[1].title).toBe('Hello World')
@@ -213,7 +219,7 @@ describe('proxy utilities', () => {
 
     it('resolves chained fragment references', () => {
       const data = { post: { __id: 'post_456' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // post_456 has author: { __id: 'user_123' }
       expect(proxy.post.title).toBe('Hello World')
@@ -226,7 +232,7 @@ describe('proxy utilities', () => {
 
     it('resolves complex nested fragment chains', () => {
       const data = { post: { __id: 'post_456' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // Access: post.comments[0].author (comment_789 -> user_123)
       expect(proxy.post.comments[0].text).toBe('Nice work!')
@@ -243,7 +249,7 @@ describe('proxy utilities', () => {
 
     it('handles mixed fragment and non-fragment arrays', () => {
       const data = { post: { __id: 'post_456' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // post_456.comments has both fragment ref and regular object
       expect(proxy.post.comments[0].text).toBe('Nice work!') // Fragment
@@ -257,7 +263,7 @@ describe('proxy utilities', () => {
 
     it('throws error for missing fragments', () => {
       const data = { user: { __id: 'missing_user' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => proxy.user).toThrow(
         'Fragment with id "missing_user" not found'
@@ -268,7 +274,7 @@ describe('proxy utilities', () => {
   describe('array methods', () => {
     it('supports array getter methods with primitives', () => {
       const data = ['apple', 'banana', 'cherry', 'date']
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.map((item) => item.toUpperCase())).toEqual([
         'APPLE',
@@ -302,7 +308,7 @@ describe('proxy utilities', () => {
         { name: 'Bob', age: 25 },
         { name: 'Charlie', age: 35 },
       ]
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       const names = proxy.map((person) => person.name)
       expect(names).toEqual(['Alice', 'Bob', 'Charlie'])
@@ -323,7 +329,7 @@ describe('proxy utilities', () => {
       const data = {
         posts: [{ __id: 'post_456' }, { title: 'Regular Post', views: 75 }],
       }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       const titles = proxy.posts.map((post) => post.title)
       expect(titles).toEqual(['Hello World', 'Regular Post'])
@@ -345,7 +351,7 @@ describe('proxy utilities', () => {
       const data = {
         category: { __id: 'category_101' },
       }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // category_101.posts contains fragment references
       const posts = proxy.category.posts.filter((post) => post.views > 100)
@@ -359,7 +365,7 @@ describe('proxy utilities', () => {
 
     it('supports iterator methods', () => {
       const data = ['a', 'b', 'c']
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       const result = []
       for (const item of proxy) {
@@ -380,7 +386,7 @@ describe('proxy utilities', () => {
   describe('mutation prevention', () => {
     it('prevents object property mutations', () => {
       const data = { title: 'Page Title', count: 42 }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => (proxy.title = 'New Title')).toThrow(
         'Cannot mutate proxy object. Use Redux actions to update state.'
@@ -397,7 +403,7 @@ describe('proxy utilities', () => {
 
     it('prevents array direct mutations', () => {
       const data = ['item1', 'item2']
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => (proxy[0] = 'new item')).toThrow(
         'Cannot mutate proxy array. Use Redux actions to update state.'
@@ -414,7 +420,7 @@ describe('proxy utilities', () => {
 
     it('prevents array method mutations', () => {
       const data = ['item1', 'item2', 'item3']
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => proxy.push('new item')).toThrow(
         'Cannot mutate proxy array. Use Redux actions to update state.'
@@ -454,7 +460,7 @@ describe('proxy utilities', () => {
           settings: { theme: 'dark' },
         },
       }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => (proxy.user.name = 'Jane')).toThrow(
         'Cannot mutate proxy object'
@@ -469,7 +475,7 @@ describe('proxy utilities', () => {
 
     it('prevents mutations on resolved fragments', () => {
       const data = { user: { __id: 'user_123' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => (proxy.user.name = 'Jane')).toThrow(
         'Cannot mutate proxy object'
@@ -487,8 +493,8 @@ describe('proxy utilities', () => {
     it('returns same proxy instance for same object', () => {
       const data = { title: 'Page Title' }
 
-      const proxy1 = createProxy(data, fragments, dependencies, proxyCache)
-      const proxy2 = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy1 = createProxy(data, fragmentsRef, dependencies, proxyCache)
+      const proxy2 = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy1).toBe(proxy2)
     })
@@ -499,7 +505,7 @@ describe('proxy utilities', () => {
         meta: { user: { name: 'John' } }, // Same nested object
       }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // If they reference the same object, proxies should be the same
       if (data.user === data.meta.user) {
@@ -514,7 +520,7 @@ describe('proxy utilities', () => {
         list2: sharedArray,
       }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.list1).toBe(proxy.list2)
     })
@@ -523,8 +529,8 @@ describe('proxy utilities', () => {
       const customCache = new WeakMap()
       const data = { title: 'Test' }
 
-      const proxy1 = createProxy(data, fragments, dependencies, customCache)
-      const proxy2 = createProxy(data, fragments, dependencies, customCache)
+      const proxy1 = createProxy(data, fragmentsRef, dependencies, customCache)
+      const proxy2 = createProxy(data, fragmentsRef, dependencies, customCache)
 
       expect(proxy1).toBe(proxy2)
       expect(customCache.has(data)).toBe(true)
@@ -536,12 +542,13 @@ describe('proxy utilities', () => {
       const originalData = { title: 'Page Title', count: 42 }
       const proxy = createProxy(
         originalData,
-        fragments,
+        fragmentsRef,
         dependencies,
         proxyCache
       )
 
       const unproxied = unproxy(proxy)
+
       expect(unproxied).toBe(originalData)
       expect(unproxied.title).toBe('Page Title')
       expect(unproxied.count).toBe(42)
@@ -551,7 +558,7 @@ describe('proxy utilities', () => {
       const originalArray = ['item1', 'item2', 'item3']
       const proxy = createProxy(
         originalArray,
-        fragments,
+        fragmentsRef,
         dependencies,
         proxyCache
       )
@@ -568,7 +575,7 @@ describe('proxy utilities', () => {
       }
       const proxy = createProxy(
         originalData,
-        fragments,
+        fragmentsRef,
         dependencies,
         proxyCache
       )
@@ -593,7 +600,7 @@ describe('proxy utilities', () => {
 
     it('works with fragment data', () => {
       const data = { user: { __id: 'user_123' } }
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // Access the fragment to create its proxy
       const userProxy = proxy.user
@@ -615,8 +622,8 @@ describe('proxy utilities', () => {
       const cache1 = new WeakMap()
       const cache2 = new WeakMap()
 
-      const proxy1 = createProxy(data1, fragments, deps1, cache1)
-      const proxy2 = createProxy(data2, fragments, deps2, cache2)
+      const proxy1 = createProxy(data1, fragmentsRef, deps1, cache1)
+      const proxy2 = createProxy(data2, fragmentsRef, deps2, cache2)
 
       // Access different fragments
       proxy1.user.name // Should track user_123 in deps1
@@ -634,7 +641,7 @@ describe('proxy utilities', () => {
       const deps = new Set()
       const cache = new WeakMap()
 
-      const proxy = createProxy(data, fragments, deps, cache)
+      const proxy = createProxy(data, fragmentsRef, deps, cache)
 
       // Access chained fragments: post -> author -> profile
       const authorBio = proxy.post.author.profile.bio
@@ -676,7 +683,7 @@ describe('proxy utilities', () => {
 
       const proxy = createProxy(
         complexData,
-        fragments,
+        fragmentsRef,
         dependencies,
         proxyCache
       )
@@ -711,9 +718,10 @@ describe('proxy utilities', () => {
       }
 
       const data = { user: { __id: 'user_a' } }
+      const circularFragmentsRef = { current: circularFragments }
       const proxy = createProxy(
         data,
-        circularFragments,
+        circularFragmentsRef,
         dependencies,
         proxyCache
       )
@@ -738,7 +746,7 @@ describe('proxy utilities', () => {
         ],
       }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.feed[0].name).toBe('John Doe')
       expect(proxy.feed[1].title).toBe('Hello World')
@@ -764,7 +772,7 @@ describe('proxy utilities', () => {
         },
       }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.emptyObj).toEqual({})
       expect(proxy.emptyArray).toEqual([])
@@ -783,7 +791,7 @@ describe('proxy utilities', () => {
         },
       }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.nullValue).toBe(null)
       expect(proxy.undefinedValue).toBe(undefined)
@@ -798,7 +806,7 @@ describe('proxy utilities', () => {
         invalidRef3: { __id: true },
       }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       // These should be treated as regular objects, not fragment references
       expect(proxy.invalidRef1.__id).toBe(null)
@@ -814,7 +822,7 @@ describe('proxy utilities', () => {
       }))
       const data = { items: largeArray }
 
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy.items.length).toBe(1000)
       expect(proxy.items[0].value).toBe('item0')
@@ -829,7 +837,7 @@ describe('proxy utilities', () => {
 
     it('preserves array bounds checking', () => {
       const data = ['a', 'b', 'c']
-      const proxy = createProxy(data, fragments, dependencies, proxyCache)
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(proxy[0]).toBe('a')
       expect(proxy[2]).toBe('c')

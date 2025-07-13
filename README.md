@@ -99,7 +99,7 @@ For more on what you can do, check out our documentation.
 Server-Side Rendering is supported via [Humid](https://github.com/thoughtbot/humid).
 See the [documentation for server-side rendering][ssr docs].
 
-  [ssr docs]: ./recipes/server-side-rendering.md
+  [ssr docs]: ./docs/recipes/ssr.md
 
 ## Documentation
 

@@ -14,13 +14,28 @@ type ProxiedContent<T> = T & {
     : T[K]
 }
 
+type FragmentRef = { __id: string } | string
+
+interface UseContentOptions {
+  optional?: boolean
+}
+
 export function useContent<T = JSONMappable>(): ProxiedContent<T>
-export function useContent<T = JSONMappable>(fragmentRef: {
-  __id: string
-}): ProxiedContent<T>
-export function useContent<T = JSONMappable>(fragmentRef?: {
-  __id: string
-}): ProxiedContent<T> {
+export function useContent<T = JSONMappable>(
+  fragmentRef: FragmentRef
+): ProxiedContent<T>
+export function useContent<T = JSONMappable>(
+  fragmentRef: FragmentRef,
+  options: { optional: false }
+): ProxiedContent<T>
+export function useContent<T = JSONMappable>(
+  fragmentRef: FragmentRef,
+  options: { optional: true }
+): ProxiedContent<T> | undefined
+export function useContent<T = JSONMappable>(
+  fragmentRef?: FragmentRef,
+  options?: UseContentOptions
+): ProxiedContent<T> | undefined {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
 
@@ -28,7 +43,8 @@ export function useContent<T = JSONMappable>(fragmentRef?: {
   const fragmentsHookRef = useRef<RootState['fragments']>({})
   const proxyCache = useRef<WeakMap<object, unknown>>(new WeakMap())
 
-  const fragmentId = fragmentRef?.__id
+  const fragmentId =
+    typeof fragmentRef === 'string' ? fragmentRef : fragmentRef?.__id
   const sourceData = useSelector((state: RootState) => {
     if (fragmentId) {
       return state.fragments[fragmentId]
@@ -55,9 +71,15 @@ export function useContent<T = JSONMappable>(fragmentRef?: {
   // Update the ref BEFORE the useMemo so proxy creation sees current fragments
   fragmentsHookRef.current = fragments
 
+  const raiseOnMissing = !(options?.optional ?? false)
+
   const proxy = useMemo(() => {
     if (fragmentId && !sourceData) {
-      throw new Error(`Fragment with id "${fragmentId}" not found`)
+      if (raiseOnMissing) {
+        throw new Error(`Fragment with id "${fragmentId}" not found`)
+      } else {
+        return undefined
+      }
     }
 
     return createProxy(
@@ -65,10 +87,10 @@ export function useContent<T = JSONMappable>(fragmentRef?: {
       fragmentsHookRef,
       dependencies.current,
       proxyCache.current
-    )
-  }, [sourceData])
+    ) as ProxiedContent<T>
+  }, [sourceData, options?.optional])
 
-  return proxy as ProxiedContent<T>
+  return proxy
 }
 
 export function unproxy<T>(proxy: T): Unproxied<T> {

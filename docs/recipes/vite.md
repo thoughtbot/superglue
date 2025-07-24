@@ -7,7 +7,7 @@ To get started, go ahead and follow the instructions to install
 [vite_rails](https://github.com/ElMassimo/vite_ruby?tab=readme-ov-file#installation-)
 
 
-Next move your `app/javascript/entrypoints/application.jsx` file to
+Next move your `app/javascript/application.jsx` file to
 `app/javascript/entrypoints/application.jsx` and update the references.
 
 !!! info

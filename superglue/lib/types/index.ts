@@ -235,6 +235,7 @@ export type StreamResponse = {
   csrfToken?: string
   action: 'handleStreamResponse'
   renderedAt: number
+  slices: JSONObject
 }
 
 /**

@@ -5,6 +5,7 @@ import {
   GraftResponse,
   SaveResponse,
   JSONMappable,
+  PageResponse,
 } from './types'
 import { urlToPageKey } from './utils'
 
@@ -167,6 +168,20 @@ export const saveFragment = createAction(
       payload: {
         fragmentId,
         data,
+      },
+    }
+  }
+)
+
+export const receiveResponse = createAction(
+  '@@superglue/RECEIVE_RESPONSE',
+  ({ pageKey, response }: { pageKey: string; response: PageResponse }) => {
+    pageKey = urlToPageKey(pageKey)
+
+    return {
+      payload: {
+        pageKey,
+        response,
       },
     }
   }

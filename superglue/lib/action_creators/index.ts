@@ -14,8 +14,10 @@ import {
   Defer,
   JSONMappable,
   PageResponse,
+  Page,
 } from '../types'
 import { handleStreamResponse } from './stream'
+import { createProxy } from '../utils/proxy'
 export * from './requests'
 
 function fetchDeferments(
@@ -62,6 +64,23 @@ function fetchDeferments(
   }
 }
 
+function addPlaceholdersToDeferredNodes(
+  existingPage: Page,
+  page: PageResponse
+): PageResponse {
+  const { defers = [] } = existingPage
+
+  const prevDefers = defers.map(({ path }) => {
+    const node = getIn(existingPage, path)
+    const copy = JSON.stringify(node)
+    return [path, JSON.parse(copy)]
+  })
+
+  return prevDefers.reduce((memo, [path, node]) => {
+    return setIn(page, path, node)
+  }, page)
+}
+
 /**
  * Save and process a rendered view from PropsTemplate. This is the primitive
  * function that `visit` and `remote` calls when it receives a page.
@@ -73,10 +92,23 @@ export function saveAndProcessPage(
   pageKey: string,
   page: PageResponse
 ): SaveAndProcessPageThunk {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     pageKey = urlToPageKey(pageKey)
-
     let nextPage = page
+
+    const state = getState()
+    if (page.action === 'savePage' && state.pages[pageKey]) {
+      const existingPage = createProxy(
+        state.pages[pageKey],
+        { current: state.fragments },
+        new Set(),
+        new WeakMap()
+      )
+
+      nextPage = JSON.parse(
+        JSON.stringify(addPlaceholdersToDeferredNodes(existingPage, nextPage))
+      ) as PageResponse
+    }
 
     page.fragments.reverse().forEach((fragment) => {
       const { id, path } = fragment

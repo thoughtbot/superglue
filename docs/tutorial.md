@@ -1,512 +1,1069 @@
 # Tutorial
 
-## Hello World
+## Building a Collaborative Shopping List
 
-For this tutorial, you will be building a "Hello World" page. It's one page, but we'll
-add complexity as we progress to highlight the power of Superglue.
+For this tutorial, you'll build a shared shopping list that multiple people can collaborate on in real-time. We'll start simple and progressively add complexity to showcase Superglue's key features.
 
-Let's build a new rails project:
+Let's build a new Rails project:
 
-```
-rails new tutorial -j esbuild --skip-hotwire
+```bash
+rails new shopping_list -j esbuild --skip-hotwire
 ```
 
 !!! tip
     We're using esbuild here, but you can also use [vite](recipes/vite.md)
 
-then follow the [installation](./installation.md) instructions to setup
-Superglue.
+Then follow the [installation](./installation.md) instructions to setup Superglue.
+
+## Hello World
 
 ### Start with the usual
-Let's begin by adding a route and a controller to an app.
 
-=== "`routes.rb`"
-    in `app/config/routes.rb`
+Let's begin by creating our models, then adding routes and controllers.
 
-    ```ruby
-    resource :greet, only: :show
+=== "Generate models"
+    ```bash
+    rails generate model Item name:string completed:boolean
+    rails db:migrate
     ```
 
-=== "`greets_controller.rb`"
-    in `app/controllers/greets_controller.rb`
+=== "`routes.rb`"
+    in `config/routes.rb`
+
+    ```ruby
+    Rails.application.routes.draw do
+      root 'shopping_lists#show'
+      resource :shopping_list, only: [:show]
+      resources :items, only: [:show]
+    end
+    ```
+
+=== "`shopping_lists_controller.rb`"
+    in `app/controllers/shopping_lists_controller.rb`
 
     !!! tip Enable jsx rendering defaults
         `use_jsx_rendering_defaults` enables Rails to look for `.jsx` files and
-        pairs with `.props` files. For example:
+        pairs with `.props` files.
 
-        ```
-        app/views
-          application/
-            superglue.html.erb
-          about/
-            index.jsx
-          users/
-            index.jsx
-            index.json.props
+        ```ruby
+        class ApplicationController < ActionController::Base
+          before_action :use_jsx_rendering_defaults
+        end
         ```
 
     ```ruby
-    class GreetsController < ApplicationController
-      before_action :use_jsx_rendering_defaults
-
+    class ShoppingListsController < ApplicationController
       def show
+        @items = Item.all
+        
+        # Create some sample data if empty
+        if @items.empty?
+          Item.create!([  
+            { name: "Milk", completed: false },
+            { name: "Bread", completed: true },
+            { name: "Eggs", completed: false }
+          ])
+          @items = Item.all
+        end
+      end
+    end
+    ```
+
+=== "`items_controller.rb`"
+    in `app/controllers/items_controller.rb`
+
+    ```ruby
+    class ItemsController < ApplicationController
+      def show
+        @item = Item.find(params[:id])
       end
     end
     ```
 
 ### Add the views
 
-Next, let's add the following views.
+Next, let's add the views for our shopping list.
 
-- `app/views/greets/show.json.props`
-- `app/views/greets/show.jsx`
-
-The Superglue installation generator also adds an `application/superglue.html.erb`, which
-will be used as the default HTML template for every controller action.
-
-Click the tabs below to see the contents:
-
-=== "1. `show.json.props`"
-    If you've used Jbuidler, this should look familiar. Here, we're using
-    [props_template], a Jbuilder inspired templating DSL built for Superglue.
-
-    [props_template]: https://github.com/thoughtbot/props_template
-
-    !!! info
-        Shape the page to how you would visually organize your components. Superglue
-        encourages you to shape `json` responses to include both data AND presentation.
+=== "`show.json.props`"
+    in `app/views/shopping_lists/show.json.props`
 
     ```ruby
-    json.body do
-      json.greet "Hello world"
+    json.header do
+      json.title "Family Shopping List"
     end
 
-    json.footer "Made with hearts"
+    json.items @items do |item|
+      json.id item.id
+      json.name item.name  
+      json.completed item.completed
+      json.detailPath item_path(item)
+    end
     ```
 
-=== "2. `show.jsx`"
-    This is the page component that will receive the result of `show.json.props`.
+=== "`show.jsx`"
+    in `app/views/shopping_lists/show.jsx`
 
-    ```js
+    ```jsx
     import React from 'react'
-    import { useContent } from '@thoughtbot/superglue';
+    import { useContent } from '@thoughtbot/superglue'
 
-    export default function GreetsShow() {
-      const {
-        body,
-        footer
-      } = useContent()
-
-      const {greet} = body
+    export default function ShoppingListsShow() {
+      const { header, items } = useContent()
 
       return (
-        <>
-          <h1>{greet}</h1>
-          <span>{footer}</span>
-        </>
+        <div>
+          <h1>{header.title}</h1>
+          
+          <ul>
+            {items.map(item => (
+              <li key={item.id}>
+                <input 
+                  type="checkbox" 
+                  checked={item.completed}
+                  readOnly 
+                />
+                {item.name}
+                <a href={item.detailPath}>Details</a>
+              </li>
+            ))}
+          </ul>
+        </div>
       )
     }
     ```
 
-=== "3. `application/superglue.html.erb`"
-
+=== "`items/show.json.props`"
+    in `app/views/items/show.json.props`
 
     ```ruby
-    <script type="text/javascript">
-      window.SUPERGLUE_INITIAL_PAGE_STATE=<%= render_props %>;<%# erblint:disable ErbSafety %>
-    </script>
+    json.itemDetails do
+      json.name @item.name
+      json.completed @item.completed
+      json.addedAt @item.created_at.strftime("%B %d, %Y at %I:%M %p")
+    end
 
-    <div id="app"></div>
+    json.backPath root_path
     ```
 
-    This file renders `show.json.props` and injects it globally as the initial
-    state to be picked up by Superglue on the browser.
+=== "`items/show.jsx`"
+    in `app/views/items/show.jsx`
 
+    ```jsx
+    import React from 'react'
+    import { useContent } from '@thoughtbot/superglue'
+
+    export default function ItemsShow() {
+      const { itemDetails, backPath } = useContent()
+
+      return (
+        <div>
+          <h1>{itemDetails.name}</h1>
+          <p>Status: {itemDetails.completed ? 'Completed' : 'Pending'}</p>
+          <p>Added: {itemDetails.addedAt}</p>
+          <a href={backPath}>← Back to list</a>
+        </div>
+      )
+    }
+    ```
 
 ### Connect the dots
 
-The JSON [payload] that gets injected contains a `componentIdentifier`.  We're
-going to use the `componentIdentifier` to tie `show.json.props` to `show.jsx` so
-Superglue knows which component to render with which response by modifying
-`app/javascript/page_to_page_mapping.js`.
-
-  [payload]: page-response.md
+Update your page mapping to include both components:
 
 !!! info
-    If you do not know what the `componentIdentifier` of a page is, you can
-    always go to the `json` version of the page on your browser to see what
-    gets rendered. In our case: http://localhost:3000/greet.json
-
     **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](recipes/vite.md) for more information.
+    the [recipe](./vite.md) for more information.
 
-=== "1. Example `greet.json`"
-    The layout for `show.json.props` is located at `app/views/layouts/application.json.props`. It
-    conforms to Superglue's [payload] response and uses the `active_template_virtual_path` as the
-    `componentIdentifier`.
+```js
+// app/javascript/page_to_page_mapping.js
+import ShoppingListsShow from '../views/shopping_lists/show'
+import ItemsShow from '../views/items/show'
 
-    ```json
-    {
-      data: {
-        body: {
-          greet: "Hello world"
-        }
-        footer: "Made with hearts"
-      },
-      componentIdentifier: "greet/show",
-      ...
-    }
-    ```
+export const pageIdentifierToPageComponent = {
+  'shopping_lists/show': ShoppingListsShow,
+  'items/show': ItemsShow,
+}
+```
 
-=== "2. `page_to_page_mapping.js`"
-    ```js
-    import GreetsShow from '../views/greets/show'
+### See it in action
 
-    export const pageIdentifierToPageComponent = {
-      'greets/show': GreetsShow,
-    };
-
-    ```
-
-
-### Finish
-
-Run `bin/dev` and go to http://localhost:3000/greet.
-
-
-## Productivity
-
-That was quite an amount of steps to get to a Hello World. For simple
-functionality it's not immediately obvious where Superglue fits, but for medium
-complexity and beyond, Superglue shines where it can be clunky for tools like
-Turbo, Hotwire and friends.
-
-Let's add some complexity to the previous sample.
-
-!!! Sidequest
-    But first, A quick dive into [props_template] and how digging works. Click
-    on the tabs to see what happens when `@path` changes for the example below.
-
-
-    ```ruby
-    json.data(dig: @path) do
-      json.body do
-        json.chart do
-          sleep 10
-          json.header "Sales"
-        end
-
-        json.user do
-          json.name "John"
-        end
-      end
-
-      json.footer do
-        json.year "2003"
-      end
-    end
-
-    json.componentIdentifier "someId"
-    ```
-
-    === "`data`"
-
-        When `@path = ['data']`. There's a 10-second sleep, and the output will be:
-
-        ```json
-        {
-          data: {
-            body: {
-              chart: {
-                header: "Sales"
-              },
-              user: {
-                name: "John"
-              }
-            },
-            footer: {
-              year: "2003"
-            }
-          },
-          componentIdentifier: "someId"
-        }
-
-        ```
-
-    === "`data.body`"
-
-        When `@path = ['data', 'body']`. There's a 10-second sleep, and the output will be:
-
-        ```json
-        {
-          data: {
-            chart: {
-              header: "Sales"
-            },
-            user: {
-              name: "John"
-            }
-          },
-          componentIdentifier: "someId"
-        }
-
-        ```
-
-    === "`data.body.user`"
-
-        When `@path = ['data', 'body', 'user']`, there is no wait, and the `json` will be:
-
-        ```json
-        {
-          data: {
-            name: "john"
-          },
-          componentIdentifier: "someId"
-        }
-
-        ```
-
-    === "`data.footer`"
-
-        When `@path = ['data', 'year']`, there is no wait, and the `json` will be:
-
-        ```json
-        {
-          data: {
-            year: "2003"
-          },
-          componentIdentifier: "someId"
-        }
-
-        ```
-
-### Continuing where we last left off
-
-Let's add a 5-second sleep to `show.json.props` so every user is waiting for 5
-seconds for every page load.
-
-
-**`show.json.props`**
+Let's add some sample data and visit our app:
 
 ```ruby
-json.body do
-  sleep 5
-  json.greet "Hello world"
-end
-
-json.footer "Made with hearts"
+# db/seeds.rb
+Item.create!([
+  { name: "Milk", completed: false },
+  { name: "Bread", completed: true },
+  { name: "Eggs", completed: false },
+  { name: "Apples", completed: false },
+  { name: "Cheese", completed: true }
+])
 ```
 
-How should we improve the user experience?
+```bash
+rails db:seed
+bin/dev
+```
 
-### Load the content later (Manual deferment)
+Visit http://localhost:3000 - you'll see your shopping list with clickable item details!
 
-What if we add a link on the page that would load the greeting async? Sounds
-like a good start, lets do that.
+### Add create
 
-First, we'll use `defer: :manual` to tell props_template to skip over the
-block.
+Now let's add a form to create new items. Superglue provides `form_props` to
+transform Rails form helpers into React-compatible props:
 
 === "`show.json.props`"
+    Update `app/views/shopping_lists/show.json.props`
 
-    ```ruby hl_lines="1"
-    json.body(defer: :manual) do
-      sleep 5
-      json.greet "Hello world"
-    end
+    ```diff
+      json.header do
+        json.title "Family Shopping List"
+      end
 
-    json.footer "Made with hearts"
-    ```
+      json.items @items do |item|
+        json.id item.id
+        json.name item.name  
+        json.completed item.completed
+        json.detailPath item_path(item)
+      end
 
-=== "output"
-
-    Adding `defer: :manual` will replace the contents with an empty object.
-
-    ```json
-    {
-      data: {
-        body: {},
-        footer: "Made with hearts"
-      },
-      componentIdentifier: "greet/show",
-      ...
-    }
+    + json.newItemForm do
+    +   form_props(model: Item.new, url: items_path) do |f|
+    +     f.text_field :name, placeholder: "Add item..."
+    +     f.submit "Add"
+    +   end
+    + end
     ```
 
 === "`show.jsx`"
+    Update `app/views/shopping_lists/show.jsx`
 
-    We'll also have to handle the case when there is no greeting.
+    !!! note
+        The [installation](./installation.md) will also add vanilla form input components from [candy_wrapper](https://github.com/thoughtbot/candy_wrapper/tree/main/wrappers/ts/vanilla)
 
-    !!! info
-        We'll improve on this approach. The `defer` option can specify a fallback.
+    ```diff
+      import React from 'react'
+      import { useContent } from '@thoughtbot/superglue'
+    + import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
 
-    ```js
-    import React from 'react'
-    import { useContent } from '@thoughtbot/superglue'
+      export default function ShoppingListsShow() {
+    -   const { header, items } = useContent()
+    +   const { header, items, newItemForm } = useContent()
+    +   const { form, extras, inputs } = newItemForm
 
-    export default function GreetsShow() {
-      const {
-        body,
-        footer,
-      } = useContent()
-      const {greet} = body
+        return (
+          <div>
+            <h1>{header.title}</h1>
+            
+            <ul>
+              {items.map(item => (
+                <li key={item.id}>
+                  <input 
+                    type="checkbox" 
+                    checked={item.completed}
+                    readOnly 
+                  />
+                  {item.name}
+                  <a href={item.detailPath}>Details</a>
+                </li>
+              ))}
+            </ul>
 
-      return (
-        <>
-          <h1>{greet || "Waiting for greet"}</h1>
-          <span>{footer}</span>
-        </>
-      )
-    }
+    +       <Form {...form} extras={extras}>
+    +         <TextField {...inputs.name} />
+    +         <SubmitButton {...inputs.submit} />
+    +       </Form>
+          </div>
+        )
+      }
+    ```
+=== "`routes.rb`"
+    in `config/routes.rb`
+
+    ```diff
+    Rails.application.routes.draw do
+      root 'shopping_lists#show'
+      resource :shopping_list, only: [:show]
+    - resources :items, only: [:show]
+    + resources :items, only: [:show, :create]
+    end
     ```
 
-### Add a link
+=== "`items_controller.rb`"
+    Update `app/controllers/items_controller.rb` to handle form submissions
 
-Now when the user lands on the page, we're no longer waiting 5 seconds. Lets
-add a link that will dig for the missing content to replace "Waiting for greet".
+    ```diff
+    class ItemsController < ApplicationController
+      def show
+        @item = Item.find(params[:id])
+      end
+    
+    + def create
+    +   @item = Item.new(item_params.merge(completed: false))
+    +   
+    +   if @item.save
+    +     redirect_to root_path, notice: 'Item added successfully!'
+    +   else
+    +     redirect_to root_path, alert: 'Failed to add item'
+    +   end
+    + end
+    +
+    + private
+    +
+    + def item_params
+    +   params.require(:item).permit(:name)
+    + end
+    end
+    ```
+
+### Add update
+
+Now let's add a form to toggle `completed` on existing items. 
 
 === "`show.json.props`"
-    Add a URL for the `href` link with the `props_at` param. This is used on the
-    `application.json.props` layout that instructs `props_template` to dig.
+    Update `app/views/shopping_lists/show.json.props`
 
-    ```ruby
-    json.body(defer: :manual) do
-      sleep 5
-      json.greet "Hello world"
-    end
+    ```diff
+      json.header do
+        json.title "Family Shopping List"
+      end
 
-    json.loadGreetPath greet_path(props_at: "data.body")
+      json.items @items do |item|
+        json.id item.id
+        json.name item.name  
+        json.completed item.completed
+        json.detailPath item_path(item)
+    +   json.toggleForm do
+    +     form_props(model: item) do |f|
+    +       f.submit "Toggle"
+    +     end
+    +   end
+      end
 
-    json.footer "Made with hearts"
+      json.newItemForm do
+        form_props(model: Item.new, url: items_path) do |f|
+          f.text_field :name, placeholder: "Add item..."
+          f.submit "Add"
+        end
+      end
     ```
 
 === "`show.jsx`"
-    Superglue embraces Unobtrusive Javascript. Add a `data-sg-remote` to any link,
-    and Superglue will take care of making the fetch call.
+    Update `app/views/shopping_lists/show.jsx`
 
 
-    !!! Tip
-        Clicking on a link won't show a progress indicator. In practice, the first
-        thing you want to do with a new Superglue project is add a [progress bar].
+    ```diff
+      import React from 'react'
+      import { useContent } from '@thoughtbot/superglue'
+      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
 
+      export default function ShoppingListsShow() {
+        const { header, items, newItemForm } = useContent()
+        const { form, extras, inputs } = newItemForm
 
-    ```js
-    import React from 'react'
-    import { useContent } from '@thoughtbot/superglue'
+        return (
+          <div>
+            <h1>{header.title}</h1>
+            
+            <ul>
+              {items.map(item => (
+                <li key={item.id}>
+    -             <input 
+    -               type="checkbox" 
+    -               checked={item.completed}
+    -               readOnly 
+    -             />
+    +             {item.completed ? "✅"  : "❌"}
+    +             <Form {...item.toggleForm.form} extras={item.toggleForm.extras}>
+    +               <SubmitButton {...item.toggleForm.inputs.submit} />
+    +             </Form>
+                  {item.name}
+                  <a href={item.detailPath}>Details</a>
+                </li>
+              ))}
+            </ul>
 
-    export default function GreetsShow() {
-      const {
-        body,
-        footer,
-        loadGreetPath
-      } = useContent()
+            <Form {...form} extras={extras}>
+              <TextField {...inputs.name} />
+              <SubmitButton {...inputs.submit} />
+            </Form>
+          </div>
+        )
+      }
+    ```
+=== "`routes.rb`"
+    in `config/routes.rb`
 
-      const {greet} = body
-
-      return (
-        <>
-          <h1>{greet || "Waiting for greet"}</h1>
-          <a href={loadGreetPath} data-sg-remote>Greet!</a>
-          <span>{footer}</span>
-        </>
-      )
-    }
+    ```diff
+    Rails.application.routes.draw do
+      root 'shopping_lists#show'
+      resource :shopping_list, only: [:show]
+    - resources :items, only: [:show, :create]
+    + resources :items, only: [:show, :create, :update]
+    end
     ```
 
-### Finish
+=== "`items_controller.rb`"
+    Update `app/controllers/items_controller.rb` to handle toggle submissions
 
-And that's it. Now you have a button that will load content in an async fashion,
-but how does it all work? Let's take a look at `loadGreetPath`
+    ```diff
+    class ItemsController < ApplicationController
+      def show
+        @item = Item.find(params[:id])
+      end
+    
+      def create
+        @item = Item.new(item_params.merge(completed: false))
+        
+        if @item.save
+          redirect_to root_path, notice: 'Item added successfully!'
+        else
+          redirect_to root_path, alert: 'Failed to add item'
+        end
+      end
+    
+    + def update
+    +   @item = Item.find(params[:id])
+    +   @item.update!(completed: !@item.completed)
+    +   redirect_to root_path
+    + end
+     
+      private
+     
+      def item_params
+        params.require(:item).permit(:name)
+      end
+    end
+    ```
 
-```
-/greet?props_at=data.greet
-```
+**Rails Forms, React Style**: `form_props` transforms familiar Rails form helpers into React props. You get Rails conventions (validations, CSRF tokens, URL helpers) with React components.
 
-The shape of `show.json.props` is exactly the same as what is stored in the
-redux store on `pages["/greet"]`. With a single keypath on `props_at` we
-grabbed the content at `data.greet` from `show.json.props` AND stored it on
-`data.greet` on `pages["/greet"]`.
+## UJS Power
 
-Now that's productive!
+The forms work, but navigation feels like traditional page reloads. Let's add some Superglue UJS magic to make interactions seamless.
+
+Let's make the forms and navigation work with UJS:
+
+=== "`show.jsx`"
+    Update `app/views/shopping_lists/show.jsx`
+
+    !!! Note
+        Setting a HTTP method like `put` on a `<a>` tag is not supported with
+        Unobtrusive Javascript. This is by design. Instead, create a form that
+        looks like a link. This is inspired by
+        [link_to](https://apidock.com/rails/ActionView/Helpers/UrlHelper/link_to).
+
+    ```diff
+      import React from 'react'
+      import { useContent } from '@thoughtbot/superglue'
+      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+
+      export default function ShoppingListsShow() {
+        const { header, items, newItemForm } = useContent()
+        const { form, extras, inputs } = newItemForm
+
+        return (
+          <div>
+            <h1>{header.title}</h1>
+            
+            <ul>
+              {items.map(item => (
+                <li key={item.id}>
+                  {item.completed ? "✅"  : "❌"}
+    -             <Form {...item.toggleForm.form} extras={item.toggleForm.extras}>
+    +             <Form {...item.toggleForm.form} extras={item.toggleForm.extras} data-sg-remote>
+                    <SubmitButton {...item.toggleForm.inputs.submit} />
+                  </Form>
+                  {item.name}
+    -             <a href={item.detailPath}>Details</a>
+    +             <a href={item.detailPath} data-sg-visit>Details</a>
+                </li>
+              ))}
+            </ul>
+
+    -       <Form {...form} extras={extras}>
+    +       <Form {...form} extras={extras} data-sg-remote>
+              <TextField {...inputs.name} />
+              <SubmitButton {...inputs.submit} />
+            </Form>
+          </div>
+        )
+      }
+    ```
+
+=== "`items/show.jsx`"
+    Update `app/views/items/show.jsx`
+
+    ```diff
+      import React from 'react'
+      import { useContent } from '@thoughtbot/superglue'
+
+      export default function ItemsShow() {
+        const { itemDetails, backPath } = useContent()
+
+        return (
+          <div>
+            <h1>{itemDetails.name}</h1>
+            <p>Status: {itemDetails.completed ? 'Completed' : 'Pending'}</p>
+            <p>Added: {itemDetails.addedAt}</p>
+    -       <a href={backPath}>← Back to list</a>
+    +       <a href={backPath} data-sg-visit>← Back to list</a>
+          </div>
+        )
+      }
+    ```
+
+Now you have:
+
+- **`data-sg-remote`**: AJAX requests that stay on the same page
+- **`data-sg-visit`**: SPA-like navigation between pages
+- **All using Rails routes and controllers** - no client-side routing needed!
+
+## Performance
+
+In practice, not all applications are as performant as this one. Lets simulate
+a slow running operation:
+
+=== "`show.json.props`"
+    Update `app/views/shopping_lists/show.json.props`
+
+    ```diff
+      json.header do
+        json.title "Family Shopping List"
+      end
+
+      json.items @items do |item|
+        json.id item.id
+        json.name item.name  
+        json.completed item.completed
+        json.detailPath item_path(item)
+        json.toggleForm do
+          form_props(model: item) do |f|
+            f.submit "Toggle"
+          end
+        end
+      end
+
+    + json.totalCost do
+    +   # Simulate expensive API call to get current prices
+    +   sleep 3
+    +   json.amount "$23.45"
+    +   json.message "Estimated total based on current prices"
+    + end
+
+      json.newItemForm do
+        form_props(model: Item.new, url: items_path) do |f|
+          f.text_field :name, placeholder: "Add item..."
+          f.submit "Add"
+        end
+      end
+    ```
+
+=== "`show.jsx`"
+    Update `app/views/shopping_lists/show.jsx` to display the cost
+
+    ```diff 
+      import React from 'react'
+      import { useContent } from '@thoughtbot/superglue'
+      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+
+      export default function ShoppingListsShow() {
+    -   const { header, items, newItemForm } = useContent()
+    +   const { header, items, newItemForm, totalCost } = useContent()
+        const { form, extras, inputs } = newItemForm
+
+        return (
+          <div>
+            <h1>{header.title}</h1>
+            
+    +       <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
+    +         <h3>Total Cost: {totalCost.amount}</h3>
+    +         <small>{totalCost.message}</small>
+    +       </div>
+            
+            <ul>
+              {items.map(item => (
+                <li key={item.id}>
+                  {item.completed ? "✅"  : "❌"}
+                  <Form {...item.toggleForm.form} extras={item.toggleForm.extras} data-sg-remote>
+                    <SubmitButton {...item.toggleForm.inputs.submit} />
+                  </Form>
+                  {item.name}
+                  <a href={item.detailPath} data-sg-visit>Details</a>
+                </li>
+              ))}
+            </ul>
+
+            <Form {...form} extras={extras} data-sg-remote>
+              <TextField {...inputs.name} />
+              <SubmitButton {...inputs.submit} />
+            </Form>
+          </div>
+        )
+      }
+    ```
+
+Now your page takes 3 seconds to load! This is exactly the problem [defer](./deferments.md) solves.
+
+## `defer: auto`
+
+Let's fix the performance issue with `defer: :auto`, which allows us to [skip
+blocks](./deferments.md#defer-auto) and automatically fetch it later. 
+
+=== "`show.json.props`"
+    ```diff
+      json.header do
+        json.title "Family Shopping List"
+      end
+
+      json.items @items do |item|
+        json.id item.id
+        json.name item.name  
+        json.completed item.completed
+        json.detailPath item_path(item)
+        json.toggleForm do
+          form_props(model: item) do |f|
+            f.submit "Toggle"
+          end
+        end
+      end
+
+    - json.totalCost do
+    + json.totalCost(defer: [:auto, placeholder: { amount: "Calculating...", message: "Getting current prices" }]) do
+        # Expensive API call
+        sleep 3
+        json.amount "$23.45"
+        json.message "Estimated total based on current prices"
+      end
+
+      json.newItemForm do
+        form_props(model: Item.new, url: items_path) do |f|
+          f.text_field :name, placeholder: "Add item..."
+          f.submit "Add"
+        end
+      end
+    ```
+
+Now the page loads instantly with "Calculating..." and the real cost appears automatically after 3 seconds!
 
 !!! tip
-    This `show.jsx` alternative does the same thing, but we're using the `remote`
-    function directly.
+    [There is also](./deferments.md#defer-manual) a `defer: :manual`. Its for cases where we want to be explicit when the deferred content loads. This is useful for modals and tabs.
 
-    ```js
-    import React, { useContext } from 'react'
-    import { useContent, Navigationcontext } from '@thoughtbot/superglue'
+**What happens behind the scenes:**
 
-    export default function GreetsShow() {
-      const {
-        body,
-        footer,
-        loadGreetPath
-      } = useContent()
-      const {greet} = body
+1. Initial response contains placeholder data
+2. Superglue automatically makes a second request for the deferred content
+3. When the calculation completes, the UI updates automatically
 
-      const { remote } = useContext(NavigationContext)
-      const handleClick = (e) => {
-        e.preventDefault()
-        remote(loadGreetPath)
-      }
+This is what the requests in step 2 looks like:
 
-      return (
-        <>
-          <h1>{greet || "Waiting for greet"}</h1>
-          <a href={loadGreetPath} onClick={handleClick}>Greet!</a>
-          <span>{footer}</span>
-        </>
-      )
-    }
+```
+GET /shopping_list?props_at=data.totalCost
+```
+
+## Digging with `props_at`
+
+The second step above is called [digging](./digging.md). You can use the same
+`props_at` pattern with [Unobtrusive Javascript](./ujs.md) via `data-sg-remote` or
+with [requests](./requests.md).
+
+Here's how reloading a part of the screen would look like:
+
+=== "Manual refresh button"
+    ```jsx
+    <button>
+      <a href="/shopping_list?props_at=data.totalCost" data-sg-remote>
+        Refresh Cost
+      </a>
+    </button>
     ```
 
+=== "Update just the items"
+    ```jsx
+    <a href="/shopping_list?props_at=data.items" data-sg-remote>
+      Refresh List
+    </a>
+    ```
 
+**The power of props_at**: In both cases, were selectively choosing a block of
+state to fetch from your `props`. This helps us update any part of your page
+without full reloads.
 
-## Improvements
-In practice, there's a far simpler solution: `defer: :auto`, which would do all of the
-above without a button.
+## Real-Time Streaming
 
-=== "`show.json.props`"
-    The only change needed would be to use the `:auto` option with a placeholder.
-    The response would tell Superglue to:
+Now let's make this truly collaborative. Instead of redirecting after form submissions, let's use Super Turbo Streams to update all connected users.
 
-    1. Save the page (with the placeholder)
-    1. Look for any deferred nodes
-    2. Automatically create a remote request for the missing node
+But first, we need [fragments](./fragments.md) - these give your Rails partials semantic identity so streaming responses can target specific areas for updates.
 
-    ```ruby hl_lines="1"
-    json.body(defer: [:auto, placeholder: { greet: "Waiting for Greet"}]) do
-      sleep 5
-      json.greet "Hello world"
+=== "Update templates with fragments"
+    Update `app/views/shopping_lists/show.json.props` to add fragment IDs:
+
+    ```diff
+    json.header do
+      json.title "Family Shopping List"
     end
 
-    json.footer "Made with hearts"
+    + # Set up streaming subscription
+    + json.streamFromShopping stream_from_props("shopping")
+    +
+    + json.items(partial: ["item_list", fragment: "shopping_list"]) do
+    - json.items @items do |item|
+    -   json.id item.id
+    -   json.name item.name  
+    -   json.completed item.completed
+    -   json.detailPath item_path(item)
+    -   json.toggleForm do
+    -     form_props(model: item) do |f|
+    -       f.submit "Toggle"
+    -     end
+    -   end
+      end
+
+      # ... rest remains the same
     ```
 
+    Create `app/views/shopping_lists/_item_list.json.props`:
+
+    ```ruby
+    json.array!(
+      @items, 
+      partial: ['item', fragment: ->(item){"item_#{item.id}"}]
+      ) do |item|
+    end
+    ```
+    
+    Create `app/views/shopping_lists/_item.json.props`:
+
+    ```ruby
+    json.id item.id
+    json.name item.name  
+    json.completed item.completed
+    json.detailPath item_path(item)
+    json.toggleForm do
+      form_props(model: item) do |f|
+        f.submit "Toggle"
+      end
+    end
+    ```
+
+=== "`items_controller.rb`"
+    Update `app/controllers/items_controller.rb` for streaming responses
+
+    ```diff
+      class ItemsController < ApplicationController
+        def show
+          @item = Item.find(params[:id])
+        end
+
+        def create
+          @item = Item.new(item_params.merge(completed: false))
+
+          if @item.save
+    -       redirect_to root_path, notice: 'Item added successfully!'
+    +       respond_to do |format|
+    +         flash[:notice] = "Item added succesfully"
+    +         format.html { redirect_to root_path }
+    +         format.json { render layout: "stream" }
+    +       end
+          else
+            redirect_to root_path, alert: 'Failed to add item'
+          end
+        end
+
+        def update
+          @item = Item.find(params[:id])
+          @item.update!(completed: !@item.completed)
+    -     redirect_to root_path
+    +     respond_to do |format|
+    +       format.html { redirect_to root_path }
+    +       format.json { render layout: "stream" }
+    +     end
+        end
+
+        private
+
+        def item_params
+          params.require(:item).permit(:name)
+        end
+      end
+    ```
+
+=== "`create.json.props`"
+    Create `app/views/items/create.json.props`
+
+    ```ruby
+    # This will broadcast to all connected clients
+    broadcast_append_props(
+      model: @item, 
+      save_target: "item_#{@item.id}",
+      target: "shopping_list",
+      stream: "shopping",
+      partial: "shopping_lists/item"
+    )
+    ```
+
+=== "`update.json.props`"
+    Create `app/views/items/update.json.props`
+
+    ```ruby
+    # This will update the item for all connected clients
+    broadcast_save_props(
+      model: @item, 
+      target: "item_#{@item.id}",
+      stream: "shopping",
+      partial: "shopping_lists/item",
+    )
+    ```
+
+Let's connect the streaming to our component:
+
 === "`show.jsx`"
+    Update `app/views/shopping_lists/show.jsx` to subscribe to streaming updates
 
-    No changes to the original `show.jsx` component. We don't even have to create
-    a conditional, the initial page response will contain a placeholder.
+    ```diff
+      import React from 'react'
+    - import { useContent } from '@thoughtbot/superglue'
+    + import { useContent, useStreamSource } from '@thoughtbot/superglue'
+      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
 
-    ```js
+      export default function ShoppingListsShow() {
+    -   const { header, items, newItemForm, totalCost } = useContent()
+    +   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
+        const { form, extras, inputs } = newItemForm
+        
+    +   // Subscribe to real-time updates
+    +   const { connected } = useStreamSource(streamFromShopping)
+
+        return (
+          <div>
+            <h1>{header.title}</h1>
+            
+            <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
+              <h3>Total Cost: {totalCost.amount}</h3>
+              <small>{totalCost.message}</small>
+    +         <div style={{float: 'right', fontSize: '12px'}}>
+    +           {connected ? '🟢 Live Updates' : '🔴 Connecting...'}
+    +         </div>
+            </div>
+            
+            <ul>
+              {items.map(item => (
+                <li key={item.id}>
+                  {item.completed ? "✅"  : "❌"}
+                  <Form {...item.toggleForm.form} extras={item.toggleForm.extras} data-sg-remote>
+                    <SubmitButton {...item.toggleForm.inputs.submit} />
+                  </Form>
+                  {item.name}
+                  <a href={item.detailPath} data-sg-visit>Details</a>
+                </li>
+              ))}
+            </ul>
+
+            <Form {...form} extras={extras} data-sg-remote>
+              <TextField {...inputs.name} />
+              <SubmitButton {...inputs.submit} />
+            </Form>
+          </div>
+        )
+      }
+    ```
+
+Now when one user adds an item or toggles completion, **all connected users see the update instantly**!
+
+## Performance with Fragment References
+
+When working with React, it's ideal to minimize re-renders - if one part of the page changes, let's not re-render everything. It's a common issue with props drilling, and at first glance `useContent` looks to be affected. But Superglue has you covered.
+
+**Fragment references** solve this by letting child components subscribe only to their specific fragments. This means only the components that actually need to update will re-render.
+
+Let's optimize our app:
+
+=== "`show.jsx`"
+    Update `app/views/shopping_lists/show.jsx` to use fragment references
+
+    ```diff
+      import React from 'react'
+    - import { useContent, useStreamSource } from '@thoughtbot/superglue'
+    + import { useContent, useStreamSource, unproxy } from '@thoughtbot/superglue'
+    + import ItemsList from '@javascript/components/ItemsList'
+      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+
+      export default function ShoppingListsShow() {
+    -   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
+    +   const content = useContent()
+    +   const { header, newItemForm, totalCost, streamFromShopping } = content
+        const { form, extras, inputs } = newItemForm
+        
+        // Subscribe to real-time updates
+        const { connected } = useStreamSource(streamFromShopping)
+    +   
+    +   // Get the raw content and pass fragment reference for items 
+    +   // to prevent parent re-renders
+    +   const itemsRef = unproxy(content).items
+
+        return (
+          <div>
+            <h1>{header.title}</h1>
+            
+            <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
+              <h3>Total Cost: {totalCost.amount}</h3>
+              <small>{totalCost.message}</small>
+              <div style={{float: 'right', fontSize: '12px'}}>
+                {connected ? '🟢 Live Updates' : '🔴 Connecting...'}
+              </div>
+            </div>
+            
+    -       <ul>
+    -         {items.map(item => (
+    -           <li key={item.id}>
+    -             {item.completed ? "✅"  : "❌"}
+    -             <Form {...item.toggleForm.form} extras={item.toggleForm.extras} data-sg-remote>
+    -               <SubmitButton {...item.toggleForm.inputs.submit} />
+    -             </Form>
+    -             {item.name}
+    -             <a href={item.detailPath} data-sg-visit>Details</a>
+    -           </li>
+    -         ))}
+    -       </ul>
+    +       <ItemsList itemsRef={itemsRef} />
+
+            <Form {...form} extras={extras} data-sg-remote>
+              <TextField {...inputs.name} />
+              <SubmitButton {...inputs.submit} />
+            </Form>
+          </div>
+        )
+      }
+    ```
+
+=== "Component files"
+    Create `app/javascript/components/ItemsList.jsx`
+
+    !!! note
+        Using `useContent(itemRef)` returns a proxy that keeps track of every fragment used [by the proxy](./fragments.md#normalization). Here, if the item changes at all, then the component will rerender without triggering the parent.
+
+    ```jsx
     import React from 'react'
-    import { useContent } from '@thoughtbot/superglue'
+    import { useContent, unproxy } from '@thoughtbot/superglue'
+    import { Form, SubmitButton } from '@javascript/components/forms/vanilla'
 
-    export default function GreetsShow() {
+    const Item = ({ itemRef }) => {
       const {
-        body,
-        footer
-      } = useContent()
-      const {greet} = body
+        id,
+        name,
+        completed,
+        detailPath,
+        toggleForm,
+      } = useContent(itemRef)
+      
+      return (
+        <li>
+          {completed ? "✅"  : "❌"}
+          <Form {...toggleForm.form} extras={toggleForm.extras} data-sg-remote>
+            <SubmitButton {...toggleForm.inputs.submit} />
+          </Form>
+          {name}
+          <a href={detailPath} data-sg-visit>Details</a>
+        </li>
+      )
+    }
+
+    export default function ItemsList({ itemsRef }) {
+      const items = useContent(itemsRef)
 
       return (
-        <>
-          <h1>{greet}</h1>
-          <span>{footer}</span>
-        </>
+        <ul>
+          {unproxy(items).map(itemRef => (
+            <Item key={itemRef.__id} itemRef={itemRef} />
+          ))}
+        </ul>
       )
     }
     ```
 
-[progress bar]: recipes/progress-bar.md
+## Client-Side Updates
+
+For the final touch, let's add optimistic updates using `useSetFragment`:
+
+!!! Note
+    In this example we'll use `remote`, the [async request helper](./requests.md#remote) that
+    powers Superglue's `data-sg-remote`. Unlike the UJS counterpart, this method allows us to set the HTTP method `PATCH`.
+
+=== "Optimistic toggle"
+    Update `app/javascript/components/ItemsList.jsx`
+
+    ```diff
+    - import React from 'react'
+    + import React, { useContext } from 'react'
+    - import { useContent, unproxy } from '@thoughtbot/superglue'
+    + import { useContent, useSetFragment, unproxy, useNavigationContext } from '@thoughtbot/superglue'
+
+      const Item = ({ itemRef }) => {
+        const {
+          id,
+          name,
+          completed,
+          detailPath,
+          toggleForm,
+        } = useContent(itemRef)
+    +   const set = useSetFragment()
+    +   const { remote } = useContext(NavigationContext)
+    +
+    +   const handleToggle = (currentState) => {
+    +     // Optimistic update - immediate UI feedback on specific item fragment
+    +     set(`item_${id}`, (draft) => {
+    +       draft.completed = !currentState
+    +     })
+    +
+    +     // Sync with server (this would trigger streaming to other users)
+    +     remote(`/items/${id}`, { method: 'PATCH' })
+    +       .catch(() => {
+    +         // Revert on error
+    +         set(`item_${id}`, (draft) => {
+    +           draft.completed = currentState
+    +         })
+    +       })
+    +   }
+        
+        return (
+          <li>
+            {completed ? "✅"  : "❌"}
+    -       <Form {...toggleForm.form} extras={toggleForm.extras} data-sg-remote>
+    -         <SubmitButton {...toggleForm.inputs.submit} />
+    -       </Form>
+    +       <button onClick={() => handleToggle(completed)}>
+    +         Toggle
+    +       </button>
+            {name}
+            <a href={detailPath} data-sg-visit>Details</a>
+          </li>
+        )
+      }
+
+      export default function ItemsList({ itemsRef }) {
+        const items = useContent(itemsRef)
+
+        return (
+          <ul>
+            {unproxy(items).map(itemRef => (
+              <Item key={itemRef.__id} itemRef={itemRef} />
+            ))}
+          </ul>
+        )
+      }
+    ```
+
+## What You've Built
+
+Congratulations! You've built a collaborative shopping list that demonstrates all of Superglue's key features:
+
+- **Rails-familiar patterns** - Routes, controllers, and views
+- **UJS power** - `data-sg-remote` and `data-sg-visit` for seamless interactions  
+- **Progressive loading** - `defer: :auto` for instant page loads
+- **Surgical updates** - `props_at` for updating specific page sections
+- **Real-time collaboration** - Super Turbo Streams for multi-user updates
+- **Fragment architecture** - Cross-cutting concerns with semantic identity
+- **Optimized performance** - Fragment references and surgical re-rendering
+- **Optimistic updates** - Immediate client-side feedback with server sync
+
+Welcome to Superglue.

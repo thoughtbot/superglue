@@ -98,7 +98,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
             hash: location.hash,
           },
           {
-            pageKey: nextPageKey,
             superglue: true,
             posY: window.pageYOffset,
             posX: window.pageXOffset,
@@ -108,7 +107,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
 
     if (state && 'superglue' in state) {
-      const { pageKey } = state
+      const pageKey = urlToPageKey(location.pathname + location.search)
       const prevPageKey = store.getState().superglue.currentPageKey
       const containsKey = !!pages[pageKey]
 
@@ -176,7 +175,6 @@ const NavigationProvider = forwardRef(function NavigationProvider(
       const historyArgs = [
         path,
         {
-          pageKey: nextPageKey,
           superglue: true,
           posY: 0,
           posX: 0,

@@ -264,7 +264,6 @@ describe('Nav', () => {
       const history = createBrowserHistory({})
       history.push('/home', {
         superglue: true,
-        pageKey: '/home',
         posX: 0,
         posY: 0,
       })
@@ -302,7 +301,6 @@ describe('Nav', () => {
 
       expect(history.location.hash).toEqual('')
       expect(history.location.state).toEqual({
-        pageKey: '/home',
         posX: 0,
         posY: 0,
         superglue: true,
@@ -312,7 +310,6 @@ describe('Nav', () => {
 
       expect(history.location.hash).toEqual('#top')
       expect(history.location.state).toEqual({
-        pageKey: '/home',
         posX: 0,
         posY: 0,
         superglue: true,

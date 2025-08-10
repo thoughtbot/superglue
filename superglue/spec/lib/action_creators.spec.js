@@ -171,6 +171,152 @@ describe('action creators', () => {
       })
     })
 
+    it('uses existing deferred nodes as placeholders when there is already a page in the store', () => {
+      const initialState = () => {
+        return {
+          pages: {
+            '/foo': {
+              data: {
+                foo: {
+                  bar: {
+                    greetings: 'hello world',
+                  },
+                },
+              },
+              defers: [
+                { url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' },
+              ],
+              fragments: []
+            }
+          },
+          superglue: {
+            currentPageKey: '/bar',
+            csrfToken: 'token',
+          },
+        }
+      }
+
+      const store = buildStore(initialState())
+
+      const receivedPage = {
+        data: {
+          foo: {
+            baz: { name: 'john' },
+            bar: {},
+          },
+        },
+        defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
+        fragments: [],
+        action: 'savePage'
+      }
+
+      const expectedActions = [
+        {
+          type: '@@superglue/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/foo',
+            page: {
+              data: {
+                foo: {
+                  baz: { name: 'john' },
+                  bar: {
+                    greetings: 'hello world',
+                  },
+                },
+              },
+              defers: [{ url: '/foo?props_at=data.foo.bar', path: 'data.foo.bar' }],
+              fragments: [],
+              action: 'savePage'
+            }
+          },
+        },
+      ]
+
+      return store.dispatch(saveAndProcessPage('/foo', receivedPage)).then(() => {
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
+      })
+    })
+
+    it.only('uses existing fragment nodes as placeholders for deferred fragments', () => {
+      const initialState = () => {
+        return {
+          pages: {
+            '/bar': {
+              data: {
+                foo: {
+                  __id: 'info',
+                },
+              },
+              defers: [
+                { url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' },
+              ],
+              fragments: [
+                { type: 'info', path: 'data.foo.bar' },
+              ],
+            },
+          },
+          fragments: {
+            'info': {
+              bar: {
+                greetings: 'existing greeting',
+              }
+            }
+          }
+        }
+      }
+      
+      const store = buildStore(initialState())
+
+      const receivedPage = {
+        data: {
+          foo: {
+            bar: {
+              greetings: "This is a placeholder"
+            },
+          },
+          baz: 'received',
+        },
+        defers: [{ url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' }],
+        fragments: [{ id: 'info', path: 'data.foo.bar' }],
+        action: 'savePage'
+      }
+
+     const expectedActions = [
+        {
+          payload: {
+            data: {
+              greetings: "existing greeting"
+            },
+            fragmentId: "info"
+          },
+          type: "@@superglue/SAVE_FRAGMENT"
+        },
+        {
+          type: '@@superglue/SAVE_RESPONSE',
+          payload: {
+            pageKey: '/bar',
+            page: {
+              data: {
+                foo: {
+                  bar: {
+                    __id: 'info',
+                  },
+                },
+                baz: 'received',
+              },
+              defers: [{ url: '/bar?props_at=data.foo.bar', path: 'data.foo.bar' }],
+              fragments: [{ id: 'info', path: 'data.foo.bar' }],
+              action: 'savePage',
+            },
+          },
+        },
+      ]
+
+      return store.dispatch(saveAndProcessPage('/bar', receivedPage)).then(() => {
+        expect(allSuperglueActions(store)).toEqual(expectedActions)
+      })
+    })
+
     it('handles deferments on the page and fires HANDLE_GRAFT', () => {
       const store = buildStore({
         ...initialState(),

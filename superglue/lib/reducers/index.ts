@@ -1,4 +1,4 @@
-import { setIn, getIn, urlToPageKey, parsePageKey } from '../utils'
+import { setIn, urlToPageKey, parsePageKey } from '../utils'
 import type { Action } from '@reduxjs/toolkit'
 import {
   saveResponse,
@@ -25,20 +25,6 @@ import {
   AllFragments,
 } from '../types'
 
-function addPlaceholdersToDeferredNodes(existingPage: Page, page: Page): Page {
-  const { defers = [] } = existingPage
-
-  const prevDefers = defers.map(({ path }) => {
-    const node = getIn(existingPage, path)
-    const copy = JSON.stringify(node)
-    return [path, JSON.parse(copy)]
-  })
-
-  return prevDefers.reduce((memo, [path, node]) => {
-    return setIn(page, path, node)
-  }, page)
-}
-
 function constrainPagesSize(state: AllPages) {
   const { maxPages } = config
   const allPageKeys = Object.keys(state)
@@ -60,15 +46,9 @@ function handleSaveResponse(
 ): AllPages {
   state = { ...state }
 
-  let nextPage: Page = {
+  const nextPage: Page = {
     ...page,
     savedAt: Date.now(),
-  }
-
-  const existingPage = state[pageKey]
-
-  if (existingPage) {
-    nextPage = addPlaceholdersToDeferredNodes(existingPage, nextPage)
   }
   constrainPagesSize(state)
   state[pageKey] = nextPage

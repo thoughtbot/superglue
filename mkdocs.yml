@@ -99,18 +99,29 @@ nav:
     - Demo: demo.md
     - Configuration: configuration.md
 
-    - Navigation:
+    - Building:
+      - Shaping state: shaping.md
+      - Rails Forms / React UI kits: forms.md
+      - Shared data: shared-data.md
+      - Fragments: fragments.md
+
+    - Updating:
+      - Super Turbo Streams: super-turbo-streams.md
+      - Client-Side updates: client-updates.md
+      - Digging: digging.md
+      - Deferments: deferments.md
+      - Redux: redux.md
+    
+    - Navigating:
       - The return of Rails UJS: ujs.md
       - Advanced requests: requests.md
       - navigateTo: navigation-context.md
 
-    - Partial updates:
-      - Digging: digging.md
-      - Cross-cutting concerns: cross-cutting-concerns.md
-      - Deferments: deferments.md
+    - Performance : performance.md
+    - Security: securing.md
 
     - Concepts:
-      - Page response: page-response.md
+      - Page: page-response.md
       - Store shape: redux-state-shape.md
 
   - Recipes:
@@ -131,3 +142,6 @@ nav:
     - Types: reference/types.md
     - Requests: reference/types.requests.md
     - Actions: reference/types.actions.md
+  
+  - props_template:
+    - Overview: props-template.md

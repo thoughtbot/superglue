@@ -13,6 +13,7 @@ import {
   beforeRemote,
   copyPage,
   superglueError,
+  receiveResponse,
 } from '../actions'
 import { saveAndProcessPage } from './index'
 import {
@@ -130,6 +131,8 @@ the same page. Or if you're sure you want to proceed, use force: true.
           }
         }
 
+        dispatch(receiveResponse({ pageKey, response: json }))
+
         const page = beforeSave(pages[pageKey], json)
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
       })
@@ -228,6 +231,8 @@ to the same page.
             revisit
           ),
         }
+
+        dispatch(receiveResponse({ pageKey, response: json }))
 
         const page = beforeSave(pages[pageKey], json)
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => visitMeta)

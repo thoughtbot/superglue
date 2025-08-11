@@ -2,7 +2,7 @@ import React, { useRef, useMemo } from 'react'
 import { config } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { historyChange, setCSRFToken } from './actions'
+import { historyChange, setCSRFToken, receiveResponse } from './actions'
 import { Provider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
@@ -66,6 +66,9 @@ export const prepareStore = (
     historyChange({
       pageKey: initialPageKey,
     })
+  )
+  store.dispatch(
+    receiveResponse({ pageKey: initialPageKey, response: initialPage })
   )
   store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
   store.dispatch(setCSRFToken({ csrfToken }))

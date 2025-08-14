@@ -40,7 +40,22 @@ export * from './hooks'
 import useStreamSource from './hooks/useStreamSource'
 export { useStreamSource }
 
-const cable = createConsumer()
+function getConfig(name: string) {
+  if (typeof document !== 'undefined') {
+    const element = document.head.querySelector(
+      `meta[name='action-cable-${name}']`
+    )
+    if (element) {
+      return element.getAttribute('content') || '/cable'
+    } else {
+      return '/cable'
+    }
+  } else {
+    return '/cable'
+  }
+}
+
+const cable = createConsumer(getConfig('url'))
 
 const hasWindow = typeof window !== 'undefined'
 

@@ -1,6 +1,6 @@
 {
   "name": "@thoughtbot/superglue",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
     "build": "tsup",

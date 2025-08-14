@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
 import { JSONMappable, RootState, Unproxied } from '../types'
 import { useSuperglue } from './index'
@@ -40,8 +40,7 @@ export function useContent<T = JSONMappable>(
   const currentPageKey = superglueState.currentPageKey
 
   const dependencies = useRef<Set<string>>(new Set())
-  const fragmentsHookRef = useRef<RootState['fragments']>({})
-  const proxyCache = useRef<WeakMap<object, unknown>>(new WeakMap())
+  // const fragmentsHookRef = useRef<RootState['fragments']>({})
 
   const fragmentId =
     typeof fragmentRef === 'string' ? fragmentRef : fragmentRef?.__id
@@ -53,7 +52,7 @@ export function useContent<T = JSONMappable>(
     }
   })
 
-  const fragments = useSelector(
+  const trackedFragments = useSelector(
     (state: RootState) => state.fragments,
     (oldFragments, newFragments) => {
       if (oldFragments === newFragments) {
@@ -69,11 +68,14 @@ export function useContent<T = JSONMappable>(
   )
 
   // Update the ref BEFORE the useMemo so proxy creation sees current fragments
-  fragmentsHookRef.current = fragments
+  // fragmentsHookRef.current = fragments
 
   const raiseOnMissing = !(options?.optional ?? false)
+  const store = useStore<RootState>()
 
   const proxy = useMemo(() => {
+    const proxyCache = new WeakMap()
+
     if (fragmentId && !sourceData) {
       if (raiseOnMissing) {
         throw new Error(`Fragment with id "${fragmentId}" not found`)
@@ -84,11 +86,11 @@ export function useContent<T = JSONMappable>(
 
     return createProxy(
       sourceData,
-      fragmentsHookRef,
+      { current: store.getState().fragments },
       dependencies.current,
-      proxyCache.current
+      proxyCache
     ) as ProxiedContent<T>
-  }, [sourceData, options?.optional])
+  }, [sourceData, trackedFragments, options?.optional])
 
   return proxy
 }

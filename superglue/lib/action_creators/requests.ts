@@ -29,6 +29,7 @@ import {
   VisitMeta,
   BeforeSave,
 } from '../types'
+import { createProxy } from '../utils/proxy'
 
 function handleFetchErr(
   err: Error,
@@ -36,6 +37,7 @@ function handleFetchErr(
   dispatch: Dispatch
 ): never {
   dispatch(superglueError({ message: err.message }))
+  console.error(err)
   throw err
 }
 
@@ -95,7 +97,7 @@ export const remote: RemoteCreator = (
     return fetch(...fetchArgs)
       .then(parseResponse)
       .then(({ rsp, json }) => {
-        const { superglue, pages = {} } = getState()
+        const { superglue, pages = {}, fragments } = getState()
 
         let pageKey
         if (targetPageKey === undefined) {
@@ -133,7 +135,17 @@ the same page. Or if you're sure you want to proceed, use force: true.
 
         dispatch(receiveResponse({ pageKey, response: json }))
 
-        const page = beforeSave(pages[pageKey], json)
+        const existingPage = createProxy(
+          pages[pageKey],
+          { current: fragments },
+          new Set(),
+          new WeakMap()
+        )
+
+        const page = JSON.parse(
+          JSON.stringify(beforeSave(existingPage, json))
+        ) as PageResponse
+
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
@@ -187,7 +199,7 @@ export const visit: VisitCreator = (
     return fetch(...fetchArgs)
       .then(parseResponse)
       .then(({ rsp, json }) => {
-        const { superglue, pages = {} } = getState()
+        const { superglue, pages = {}, fragments } = getState()
         const isGet = fetchArgs[1].method === 'GET'
         const pageKey = calculatePageKey(rsp, isGet, currentPageKey)
 
@@ -234,7 +246,17 @@ to the same page.
 
         dispatch(receiveResponse({ pageKey, response: json }))
 
-        const page = beforeSave(pages[pageKey], json)
+        const existingPage = createProxy(
+          pages[pageKey],
+          { current: fragments },
+          new Set(),
+          new WeakMap()
+        )
+
+        const page = JSON.parse(
+          JSON.stringify(beforeSave(existingPage, json))
+        ) as PageResponse
+
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => visitMeta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))

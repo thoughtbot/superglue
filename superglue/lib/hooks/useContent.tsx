@@ -16,25 +16,12 @@ type ProxiedContent<T> = T & {
 
 type FragmentRef = { __id: string } | string
 
-interface UseContentOptions {
-  optional?: boolean
-}
-
 export function useContent<T = JSONMappable>(): ProxiedContent<T>
 export function useContent<T = JSONMappable>(
   fragmentRef: FragmentRef
 ): ProxiedContent<T>
 export function useContent<T = JSONMappable>(
-  fragmentRef: FragmentRef,
-  options: { optional: false }
-): ProxiedContent<T>
-export function useContent<T = JSONMappable>(
-  fragmentRef: FragmentRef,
-  options: { optional: true }
-): ProxiedContent<T> | undefined
-export function useContent<T = JSONMappable>(
-  fragmentRef?: FragmentRef,
-  options?: UseContentOptions
+  fragmentRef?: FragmentRef
 ): ProxiedContent<T> | undefined {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
@@ -70,18 +57,13 @@ export function useContent<T = JSONMappable>(
   // Update the ref BEFORE the useMemo so proxy creation sees current fragments
   // fragmentsHookRef.current = fragments
 
-  const raiseOnMissing = !(options?.optional ?? false)
   const store = useStore<RootState>()
 
   const proxy = useMemo(() => {
     const proxyCache = new WeakMap()
 
     if (fragmentId && !sourceData) {
-      if (raiseOnMissing) {
-        throw new Error(`Fragment with id "${fragmentId}" not found`)
-      } else {
-        return undefined
-      }
+      return undefined
     }
 
     return createProxy(
@@ -90,7 +72,7 @@ export function useContent<T = JSONMappable>(
       dependencies.current,
       proxyCache
     ) as ProxiedContent<T>
-  }, [sourceData, trackedFragments, options?.optional])
+  }, [sourceData, trackedFragments])
 
   return proxy
 }

@@ -1,12 +1,14 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import { JSONMappable, RootState, Unproxied } from '../types'
+import { JSONMappable, RootState, Unproxied, Fragment } from '../types'
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
 type ProxiedContent<T> = T & {
-  readonly [K in keyof T]: T[K] extends { __id: string }
-    ? unknown // Fragment references resolve to actual fragment data
+  readonly [K in keyof T]: T[K] extends Fragment<infer U, true>
+    ? U // Required fragment - always present
+    : T[K] extends Fragment<infer U, false | undefined>
+    ? U | undefined // Optional fragment - might be undefined
     : T[K] extends (infer U)[]
     ? ProxiedContent<U>[]
     : T[K] extends object

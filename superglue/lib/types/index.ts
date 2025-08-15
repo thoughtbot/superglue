@@ -113,11 +113,15 @@ export type JSONValue = JSONPrimitive | JSONMappable
  * @example
  * type PageData = {
  *   title: string;
- *   author: Fragment<{ name: string; email: string }>;
- *   posts: Fragment<{ title: string; content: string }>[];
+ *   author: Fragment<{ name: string; email: string }>; // Optional fragment (T | undefined)
+ *   posts: Fragment<{ title: string; content: string }, true>[]; // Required fragment (T)
  * }
  */
-export type Fragment<T> = { __id: string } & { __fragmentType?: T }
+export type Fragment<T, Required extends boolean = false> = {
+  __id: string
+  __fragmentType?: T
+  __required?: Required
+}
 
 /**
  * Utility type for unproxy that converts Fragment types to fragment references.

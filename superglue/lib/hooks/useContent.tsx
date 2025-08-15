@@ -6,9 +6,9 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
 type ProxiedContent<T> = T & {
   readonly [K in keyof T]: T[K] extends Fragment<infer U, true>
-    ? U // Required fragment - always present
+    ? ProxiedContent<U> // Required fragment - recursively proxy resolved data
     : T[K] extends Fragment<infer U, false | undefined>
-    ? U | undefined // Optional fragment - might be undefined
+    ? ProxiedContent<U> | undefined // Optional fragment - recursively proxy resolved data
     : T[K] extends (infer U)[]
     ? ProxiedContent<U>[]
     : T[K] extends object

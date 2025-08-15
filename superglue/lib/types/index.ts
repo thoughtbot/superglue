@@ -117,10 +117,10 @@ export type JSONValue = JSONPrimitive | JSONMappable
  *   posts: Fragment<{ title: string; content: string }, true>[]; // Required fragment (T)
  * }
  */
-export type Fragment<T, Required extends boolean = false> = {
+export type Fragment<T, Required = false> = {
   __id: string
   __fragmentType?: T
-  __required?: Required
+  __required?: Required extends boolean ? Required : false
 }
 
 /**

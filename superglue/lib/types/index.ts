@@ -114,13 +114,13 @@ export type JSONValue = JSONPrimitive | JSONMappable
  * type PageData = {
  *   title: string;
  *   author: Fragment<{ name: string; email: string }>; // Optional fragment (T | undefined)
- *   posts: Fragment<{ title: string; content: string }, true>[]; // Required fragment (T)
+ *   posts: Fragment<{ title: string; content: string }, true>[]; // Present fragment (T)
  * }
  */
-export type Fragment<T, Required = false> = {
+export type Fragment<T, Present = false> = {
   __id: string
   __fragmentType?: T
-  __required?: Required extends boolean ? Required : false
+  __required?: Present extends boolean ? Present : false
 }
 
 /**

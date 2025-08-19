@@ -5,8 +5,7 @@ __Rails partials are powerful__
 They're not just about DRY'ing your views - they're also about semantic
 identification. When you extract a `_header.html.erb`, you're declaring "this
 thing is a header" with its own identity and boundary. Its valuable information
-that is often lost when rendered with a view. Preserving that on the client side
-would be invaluable.
+that is often lost when rendered with a view.
 
 Enter fragments:
 

@@ -2,12 +2,17 @@
 
 ## vs. Turbostreams
 
-TurboStreams is an amazing tool from the Hotwire world. Its often associated with streaming HTML updates: replacing an element, updating an element, appending/prepending an element to another element. If we step back and consider what we're sending over the wire, its less about HTML and more about content. 
+TurboStreams is an amazing tool from the Hotwire world. Its often associated
+with streaming HTML updates: replacing an element, updating an element,
+appending/prepending an element to another element. If we step back and consider
+what we're sending over the wire, its less about HTML and more about content. 
 
-When you do `broadcast_append_to :messages, @message`, you're not thinking "send some HTML." You're thinking "add this message to the messages
-collection." The semantic operation is moreso about content and identity, than markup.
+When you do `broadcast_append_to :messages, @message`, you're not thinking "send
+some HTML." You're thinking "add this message to the messages collection." The
+semantic operation is moreso about content and identity, than markup.
 
-The same goes for Super TurboStreams, but we're using JSON instead of HTML as the delivery mechanism.
+The same goes for Super Turbo Streams, but we're using JSON instead of HTML as
+the delivery mechanism.
 
 ## Setting Up Streaming
 
@@ -15,7 +20,7 @@ Before you can broadcast updates, clients need to subscribe to streams. This req
 
 ### Server-Side: `stream_from_props`
 
-Use `stream_from_props` in your JSON templates to generate subscription data:
+Use `stream_from_props` in your JSON templates to generate subscription data. Its the equivalent to [turbo_stream_from](https://rubydoc.info/github/hotwired/turbo-rails/main/Turbo%2FStreamsHelper:turbo_stream_from)
 
 ```ruby
 # app/views/messages/index.json.props
@@ -34,9 +39,9 @@ end
 ```
 
 **What `stream_from_props` does:**
+
 - Generates secure ActionCable subscription data
 - Returns `{ channel: "Superglue::StreamsChannel", signed_stream_name: "encrypted_data" }`
-- Handles authentication and authorization automatically
 
 **Advanced usage:**
 
@@ -82,9 +87,10 @@ export default function MessagesIndex() {
 ```
 
 **What `useStreamSource` does:**
+
 - Establishes ActionCable WebSocket connection
 - Subscribes to the specific stream using the subscription data
-- Automatically handles incoming stream messages
+- Handles incoming stream messages
 - Provides connection status for UI feedback
 
 **Connection status:**

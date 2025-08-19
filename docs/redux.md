@@ -1,72 +1,133 @@
 ## Redux
 
-If you have a usecase that requires complex updates to frontend state. You
-can use your own state management. If you're using Redux, Superglue does have
-a few conviences for you.
+If you have a usecase that requires complex updates to frontend state, you can
+bring your own state management, or use redux-toolkit slices. Superglue
+includes a few useful redux actions that you can use with redux slices if you
+decide to create custom slices.
+
+### `flash.js`
+
+Your first custom slice will be a `flash` slice. Superglue's installation
+generator adds this to your project to integrate with Rail's flash.
+
+To start off, the slice is shaped exactly like the Rails flash.
+
+```js
+{
+  alert: "Something went wrong",
+  Success: "You've logged in!"
+}
+```
+
+and works with the [BEFORE_VISIT](#before_visit) and [RECEIVE_RESPONSE](#receive_response) actions
+to 
+
+- [Clear the flash] before each [visit](./requests.md#visit) or [`data-sg-visit`](./ujs.md#data-sg-visit) visit.
+- [Merge any new flashes] recieved from any [page response].
+
+[Clear the flash]: https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L30
+[Merge any new flashes]: https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L33
+
+__You are enocouraged to modify this slice however you'd like__. For example, if
+you prefer a different shape, just modify how the slice is received in your
+layout, `application.json.props`
+
+```ruby
+json.slices do
+  myFlash = flash.to_h.map { |key, value| {type: key.to_s, value: value} }
+  json.flash myFlash
+end
+```
+
+The `slices` key in `application.json.props` is a boundary for you to render
+state. Its commonly used to set the intial state of your slice, and update
+the slice when receiving a new page.
+
+#### Usage
+
+To use in your page components, simply use a selector.
+
+```jsx
+import { useSelector } from 'react-redux'
+
+const flash = useSelector((state) => state.flash)
+```
+
+then use the flash as you would normally in a controller
+
+```ruby
+def create
+  flash[:success] = "Post was saved!"
+end
+```
 
 ### initialState
 
 You can render your slice's initial state in the [slices] `key` of the [page
-response]. This has been configured for you in the
-`application.json.props` layout.  It'll be merged with the `initialState` passed
-to your `buildStore` function in your
-[application.js](./configuration.md#applicationjs)
+response]. This has been configured for you in the `application.json.props`
+layout.  It'll be merged with the `initialState` passed to your `buildStore`
+function in your [application.js](./configuration.md#applicationjs)
 
-### Helpful actions to listen to
+### Updating your slice state
+If you receive new state for your slice from a subsequent [page response], you
+can use `RECEIVE_RESPONSE` to update your slice. Its the same mechanism your
+`flash.js` slice uses to update the internal state whenever a [page response] is
+received. 
 
-#### Fragments
-Whenever a fragment is received or updated, a `UPDATE_FRAGMENTS` action is
-dispatched with the value. You can return that value as your state to
-keep your slice updated as the user navigates.
-
-!!! warning
-  If you use this technique, keep your fragments simple, and try not to nest
-  fragments inside of a fragment as Superglue will denormalize them.
-
-For example:
-
-```javascript
-import { createSlice } from '@reduxjs/toolkit'
-import { updateFragment } from '@thoughtbot/superglue'
-
-export const cartSlice = createSlice({
-  name: 'cart',
-  extraReducers: (builder) => {
-    builder.addCase(updateFragments, (state, action) => {
-      const { value, name } = action.payload;
-
-      if (name === "cart") {
-        return value
-      } else {
-        return state;
-      }
-    })
-  }
-})
-```
-
-Then somewhere in a component you can [useSelector]:
+##### RECEIVE_RESPONSE
 
 ```
-  import { useSelector } from 'react-redux'
-
-  ...
-
-  const cart = useSelector((state) => state.cart)
+{
+  type: "@@superglue/RECEIVE_RESPONSE",
+  payload: {
+    pageKey: "/posts",
+    response: {...the page response},
+  },
+}
 ```
 
+#### Other actions
+There are also other actions that gets dispatched during lifecycle events that
+you can make use of.
 
-And as this is just a normal Redux [slice], you can also add custom [reducers]
-to the mix for client-side updates.
+To higlight a few:
 
-[useSelector]: https://redux-toolkit.js.org/tutorials/quick-start#use-redux-state-and-actions-in-react-components
-[slice]: https://redux-toolkit.js.org/api/createSlice
-[reducers]: https://redux-toolkit.js.org/api/createSlice#reducers
+##### BEFORE_FETCH
 
+`BEFORE_FETCH` - Action created before a before a fetch is called.
 
-### Save page
+```
+{
+  type: "@@superglue/BEFORE_FETCH",
+  payload: [..array args that are passed to fetch]
+}
+```
 
-`SAVE_RESPONSE` is called whenever a [page response] is received.
+##### BEFORE_VISIT
+`BEFORE_VISIT` - Same as above, but called only for a `visit` action. Your
+`flash` slice has been setup to use this to clear the flash before navigating.
+
+```
+{
+  type: "@@superglue/BEFORE_VISIT",
+  payload: [..array args that are passed to fetch]
+}
+```
+
+##### BEFORE_REMOTE
+
+`BEFORE_REMOTE` - Same as above, but called only a `remote` action.
+
+```
+{
+  type: "@@superglue/BEFORE_REMOTE",
+  payload: [..array args that are passed to fetch]
+}
+```
+
+##### SAVE_RESPONSE
+
+`SAVE_RESPONSE` is called before a response is saved as a page.
 
 ```
 {
@@ -78,44 +139,6 @@ to the mix for client-side updates.
 }
 ```
 
-If you expect your intial state to change, you can look in the payload for the most recent data
-in the [slices] key.
-
-## Other actions
-
-Superglue comes with other actions that gets dispatched during lifecycle events
-that you can make use of. The `flashSlice` that was generated with the
-installation is a good example of this.
-
-To higlight a few:
-
-
-`BEFORE_FETCH` - Action created before a before a fetch is called.
-
-```
-{
-  type: "@@superglue/BEFORE_FETCH",
-  payload: [..array args that are passed to fetch]
-}
-```
-
-`BEFORE_VISIT` - Same as above, but called only for a `visit` action.
-
-```
-{
-  type: "@@superglue/BEFORE_VISIT",
-  payload: [..array args that are passed to fetch]
-}
-```
-
-`BEFORE_REMOTE` - Same as above, but called only a `remote` action.
-
-```
-{
-  type: "@@superglue/BEFORE_REMOTE",
-  payload: [..array args that are passed to fetch]
-}
-```
 
 
 [page response]: ./page-response.md

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { produce, Draft } from 'immer'
+import { produce } from 'immer'
 import { saveFragment } from '../actions'
 import { RootState, Fragment, FragmentRef } from '../types'
 
@@ -13,21 +13,55 @@ type FragmentData<T> = T extends Fragment<unknown>
   ? { [K in keyof T]: FragmentData<T[K]> }
   : T
 
+/**
+ * Hook for mutating fragments using Immer drafts.
+ *
+ * @example
+ * ```tsx
+ * const set = useSetFragment()
+ *
+ * // Update via fragment reference
+ * set(userRef, draft => {
+ *   draft.name = "Updated Name"
+ *   draft.email = "new@email.com"
+ * })
+ *
+ * // Update via fragment ID directly
+ * set('user_123', draft => {
+ *   draft.profile.bio = "Updated bio"
+ * })
+ * ```
+ *
+ */
 export function useSetFragment() {
   const dispatch = useDispatch()
   const fragments = useSelector((state: RootState) => state.fragments)
 
+  /**
+   * Updates a fragment using a {@link FragmentRef} object.
+   *
+   * @param fragmentRef - Fragment reference object containing __id
+   * @param updater - Immer draft function for mutating fragment data
+   */
   function setter<T extends Fragment<unknown>>(
     fragmentRef: T,
-    updater: (draft: Draft<FragmentData<Unpack<T>>>) => void
+    updater: (draft: FragmentData<Unpack<T>>) => void
   ): void
+
+  /**
+   * Updates a fragment using a fragment ID string.
+   *
+   * @param fragmentId - The fragment ID string
+   * @param updater - Immer draft function for mutating fragment data
+   */
   function setter<T = unknown>(
     fragmentId: string,
-    updater: (draft: Draft<T>) => void
+    updater: (draft: T) => void
   ): void
+
   function setter(
     fragmentRefOrId: Fragment<unknown> | string,
-    updater: (draft: Draft<unknown>) => void
+    updater: (draft: unknown) => void
   ): void {
     const fragmentId =
       typeof fragmentRefOrId === 'string'

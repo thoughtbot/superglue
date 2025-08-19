@@ -2,23 +2,40 @@ You've installed Superglue and now you're ready to configure your app.
 
 ## `application_visit.js`
 
-!!! tip
-    If you want a [progress bar], this is the first thing you'll want to
-    configure after installation.
+Modify the `application_visit.js` file to intercept and enhance Superglue's core
+navigation functions. It contains a single exported factory that builds the
+[remote] and [visit] functions that will be used by Superglue, your application,
+and the UJS attributes [data-sg-visit] and [data-sg-remote].
 
-This file contains the factory that builds the [remote] and [visit]
-function that will be passed to your page components and used by the
-[data-sg-visit] and [data-sg-remote] UJS attributes.
+The pattern looks like this:
 
-This file is meant for you to customize. For example, you'll likely
-want to add a [progress bar], control how visits work, or flash
-when the internet is down.
+```js
+export const buildVisitAndRemote = (ref, store) => {
+  // Your custom logic here
+  return { visit: appVisit, remote: appRemote }
+}
+```
+
+To get you started, the generator creates an application_visit.js file with your
+first custom UJS attribute: data-sg-replace, which allows a link click or form
+submission to replace history instead of the usual push.
+
+```js
+  const navigationAction = !!dataset?.sgReplace
+    ? "replace"
+    : meta.navigationAction
+```
+
+This is where you'll add [progress bars], error handling, custom UJS attributes,
+analytics tracking, or any navigation behavior your app needs. Since every
+navigation goes through these functions, you have complete control over the
+developer experience.
 
 [remote]: requests.md#remote
 [visit]: requests.md#visit
 [data-sg-remote]: ujs.md#data-sg-remote
 [data-sg-visit]: ujs.md#data-sg-visit
-[progress bar]: recipes/progress-bar.md
+[progress bars]: recipes/progress-bar.md
 
 
 ## `page_to_page_mapping.js`
@@ -62,37 +79,15 @@ inspiration.
 
 ## `flash.js`
 
-The installation generator will add a `flash.js` slice to `app/javascript/slices`
-and will work with the Rails `flash`. You can modify this however you like, out of the box:
+The installation generator will add a `flash.js` slice to
+`app/javascript/slices` and will work with the Rails `flash`. This file is an
+example of a custom [slice](./redux.md#flashjs).
 
-  - When using `data-sg-visit`, all data in the flash slice will be cleared before the request.
-  - When using `data-sg-visit` or `data-sg-remote`, the recieved flash
-    will be merged with the current flash. You can change this behavior
-    by modifying the flash slice.
+<div class="grid cards" markdown>
+  -  [:octicons-arrow-right-24: Read more](./redux.md)
+      about custom slices and `flash.js`.
+</div>
 
-
-!!! hint
-    If you're curious how this works, in your layout, `application.json.props`,
-    the flash is serialized using `flash.to_h`
-
-
-To use in your page components, simply use a selector.
-
-```jsx
-import { useSelector } from 'react-redux'
-
-...
-
-const flash = useSelector((state) => state.flash)
-```
-
-then use the flash as you would normally in a controller
-
-```ruby
-def create
-  flash[:success] = "Post was saved!"
-end
-```
 
 [buildStore]: reference/index.md#buildstore
 [visitAndRemote]: requests.md

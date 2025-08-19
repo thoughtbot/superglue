@@ -106,20 +106,48 @@ export type JSONKeyable = JSONObject[] | JSONObject
 export type JSONValue = JSONPrimitive | JSONMappable
 
 /**
- * A Fragment type that marks a property as containing a fragment reference.
- * This is used to provide type information about which parts of the data structure
- * are fragment references that will be resolved by the proxy system.
+ * A Fragment is a rendered Rails partial with an identity. The use
+ * of this type is optional, but it makes usage with {@link unproxy} and
+ * {@link useSetFragment} type friendly.
  *
- * @example
- * type PageData = {
- *   title: string;
- *   author: Fragment<{ name: string; email: string }>; // Optional fragment (T | undefined)
- *   posts: Fragment<{ title: string; content: string }, true>[]; // Present fragment (T)
+ * In general, Fragments enable normalized state management where Rails partials become
+ * referenceable entities on the client. The server renders partials as
+ * fragments with unique IDs, then Superglue normalizes them into a separate
+ * fragments store while replacing the original data with fragment references.
+ *
+ * @example Server Response (normalized)
+ * ```json
+ * {
+ *   "data": { "cart": { "__id": "userCart" } },
+ *   "fragments": [{ "type": "userCart", "path": ["cart"] }]
  * }
+ * ```
+ *
+ * @example Client State (denormalized)
+ * ```js
+ * {
+ *   pages: { "/page": { data: { cart: { __id: "userCart" } } } },
+ *   fragments: { "userCart": { items: [...], totalCost: 69.97 } }
+ * }
+ * ```
+ *
+ * @example Usage
+ * ```tsx
+ * type PageData = {
+ *   cart: Fragment<{ items: Item[]; totalCost: number }, true>;
+ *   user?: Fragment<{ name: string; email: string }>; // Optional fragment
+ * }
+ *
+ * const content = useContent<PageData>()
+ * const cart = content.cart // Resolves fragment reference to actual data
+ * ```
  */
 export type Fragment<T, Present = false> = {
+  /** The fragment ID **/
   __id: string
+  /** Phantom type, please ignore **/
   __fragmentType?: T
+  /** Phantom type, please ignore **/
   __required?: Present extends boolean ? Present : false
 }
 
@@ -135,7 +163,7 @@ export type Unproxied<T> = T extends Fragment<unknown>
   ? { [K in keyof T]: Unproxied<T[K]> } // Process object properties
   : T // Primitives pass through unchanged
 
-// todo: change rsp to response
+// todo: rename rsp to response
 
 export interface ParsedResponse {
   rsp: Response
@@ -172,10 +200,8 @@ export type Defer = {
 }
 
 /**
- * The SaveResponse is a protocol, a shape that is responsible for full page
- * visits in Superglue. Its meant to be implemented by the server and if you are
- * using superglue_rails, the generators would have generated a props_template
- * layout and view that would shape the visit responses for you.
+ * The SaveResponse response is responsible for persisting a full page
+ * visit in Superglue.
  */
 export type SaveResponse<T = JSONMappable> = {
   data: T
@@ -199,11 +225,8 @@ export type Page<T = JSONMappable> = SaveResponse<T> & {
 }
 
 /**
- * The GraftResponse is a protocol, a shape that is responsible for partial
- * updates using props_template's digging functionality in Superglue. Its meant
- * to be implemented by the server and if you are using superglue_rails, the
- * generators would have generated a props_template layout and view that would
- * shape the graft responses for you.
+ * The GraftResponse is responsible for partial updates using props_template's
+ * digging functionality in Superglue.
  *
  * @property path Used by superglue to replace the data at that location.
  * @property equals to `graft` to indicate a {@link GraftResponse}
@@ -219,13 +242,12 @@ export type GraftResponse<T = JSONMappable> = {
   slices: JSONObject
   action: 'graft'
   renderedAt: number
-  restoreStrategy: RestoreStrategy
 
   path: Keypath
   fragmentContext?: string
 }
 
-export type StreamMutateMessage = {
+export type StreamMessage = {
   data: JSONMappable
   fragmentIds: string[]
   handler: 'append' | 'prepend' | 'save'
@@ -233,7 +255,7 @@ export type StreamMutateMessage = {
 }
 
 export type StreamResponse = {
-  data: StreamMutateMessage[]
+  data: StreamMessage[]
   fragments: FragmentPath[]
   assets: string[]
   csrfToken?: string
@@ -243,14 +265,14 @@ export type StreamResponse = {
 }
 
 /**
- * A PageResponse can be either a {@link GraftResponse} or a {@link SaveResponse}.
- * Its meant to be implemented by the server and if you are using
- * superglue_rails, the generators will handle both cases.
+ * A PageResponse can be either a {@link GraftResponse}, {@link SaveResponse}.
+ * or a {@link StreamResponse} Its meant to be implemented by the server and if
+ * you are using superglue_rails, the generators will handle all cases.
  */
 export type PageResponse = GraftResponse | SaveResponse | StreamResponse
 
 /**
- * A FragmentPath identifies a fragment inside of a PageReponse. Its used internally by Superglue to
+ * A FragmentPath identifies a fragment inside of a PageResponse. Its used internally by Superglue to
  * denormalize a page response into fragments, if any.
  *
  * @prop type A user supplied string identifying a fragment. This is usually created using

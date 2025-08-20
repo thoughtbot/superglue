@@ -1,4 +1,12 @@
-import { Meta, VisitMeta, PageKey, PageResponse, SaveResponse } from '.'
+import {
+  Meta,
+  VisitMeta,
+  PageKey,
+  SaveResponse,
+  GraftResponse,
+  Page,
+  JSONMappable,
+} from '.'
 
 export interface Visit {
   /**
@@ -96,7 +104,7 @@ export interface RemoteProps extends BaseProps {
   force?: boolean
 }
 
-export interface BeforeSave {
+export interface BeforeSave<T = JSONMappable> {
   /**
    * A callback that will be fire in between recieving a payload and saving a
    * payload. Use this callback to modify the payload before it gets saved. Its
@@ -117,7 +125,10 @@ export interface BeforeSave {
    *```
    */
 
-  <T extends PageResponse>(prevPage: SaveResponse, receivedPage: T): T
+  <U extends SaveResponse<T> | GraftResponse<T>>(
+    prevPage: Page<T>,
+    receivedPage: U
+  ): U
 }
 
 export interface ApplicationRemote {

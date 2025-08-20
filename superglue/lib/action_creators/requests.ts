@@ -142,9 +142,13 @@ the same page. Or if you're sure you want to proceed, use force: true.
           new WeakMap()
         )
 
-        const page = JSON.parse(
-          JSON.stringify(beforeSave(existingPage, json))
-        ) as PageResponse
+        let page = json
+
+        if (json.action === 'savePage' || json.action === 'graft') {
+          page = JSON.parse(
+            JSON.stringify(beforeSave(existingPage, json))
+          ) as PageResponse
+        }
 
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => meta)
       })
@@ -253,9 +257,13 @@ to the same page.
           new WeakMap()
         )
 
-        const page = JSON.parse(
-          JSON.stringify(beforeSave(existingPage, json))
-        ) as PageResponse
+        let page = json
+
+        if (json.action === 'savePage' || json.action === 'graft') {
+          page = JSON.parse(
+            JSON.stringify(beforeSave(existingPage, json))
+          ) as PageResponse
+        }
 
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => visitMeta)
       })

@@ -4,7 +4,7 @@ import {
   Subscription,
 } from '@rails/actioncable'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
-import { ApplicationRemote, FragmentRef } from '../types'
+import { ApplicationRemote, FragmentPath } from '../types'
 import { useSuperglue } from '.'
 import { debounce, DebouncedFunc } from 'lodash'
 import { lastRequestIds } from '../utils'
@@ -24,7 +24,7 @@ export type StreamMessage =
       fragmentIds: string[]
       handler: 'append' | 'prepend' | 'save'
       options: Record<string, string>
-      fragments: FragmentRef[]
+      fragments: FragmentPath[]
     }
   | {
       action: 'handleStreamMessage'

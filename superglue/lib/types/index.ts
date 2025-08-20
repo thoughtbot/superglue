@@ -182,7 +182,7 @@ export type SaveResponse<T = JSONMappable> = {
   componentIdentifier: ComponentIdentifier
   assets: string[]
   csrfToken?: string
-  fragments: FragmentRef[]
+  fragments: FragmentPath[]
   defers: Defer[]
   slices: JSONObject
   action: 'savePage'
@@ -214,7 +214,7 @@ export type GraftResponse<T = JSONMappable> = {
   componentIdentifier: ComponentIdentifier
   assets: string[]
   csrfToken?: string
-  fragments: FragmentRef[]
+  fragments: FragmentPath[]
   defers: Defer[]
   slices: JSONObject
   action: 'graft'
@@ -234,7 +234,7 @@ export type StreamMutateMessage = {
 
 export type StreamResponse = {
   data: StreamMutateMessage[]
-  fragments: FragmentRef[]
+  fragments: FragmentPath[]
   assets: string[]
   csrfToken?: string
   action: 'handleStreamResponse'
@@ -257,7 +257,7 @@ export type PageResponse = GraftResponse | SaveResponse | StreamResponse
  * @interface
  */
 
-export type FragmentRef = {
+export type FragmentPath = {
   id: string
   path: Keypath
 }

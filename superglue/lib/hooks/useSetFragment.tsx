@@ -1,18 +1,38 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { produce } from 'immer'
+import { produce, Draft } from 'immer'
 import { saveFragment } from '../actions'
-import { RootState } from '../types'
+import { RootState, Fragment, FragmentRef } from '../types'
+
+type Unpack<T> = T extends Fragment<infer U> ? U : never
+
+type FragmentData<T> = T extends Fragment<unknown>
+  ? FragmentRef
+  : T extends (infer Item)[]
+  ? FragmentData<Item>[]
+  : T extends object
+  ? { [K in keyof T]: FragmentData<T[K]> }
+  : T
 
 export function useSetFragment() {
   const dispatch = useDispatch()
   const fragments = useSelector((state: RootState) => state.fragments)
 
-  return function setter(
-    fragmentRef: { __id: string } | string,
-    updater: (draft: unknown) => void
+  function setter<T extends Fragment<unknown>>(
+    fragmentRef: T,
+    updater: (draft: Draft<FragmentData<Unpack<T>>>) => void
+  ): void
+  function setter<T = unknown>(
+    fragmentId: string,
+    updater: (draft: Draft<T>) => void
+  ): void
+  function setter(
+    fragmentRefOrId: Fragment<unknown> | string,
+    updater: (draft: Draft<unknown>) => void
   ): void {
     const fragmentId =
-      typeof fragmentRef === 'string' ? fragmentRef : fragmentRef.__id
+      typeof fragmentRefOrId === 'string'
+        ? fragmentRefOrId
+        : fragmentRefOrId.__id
 
     const currentFragment = fragments[fragmentId]
 
@@ -29,4 +49,6 @@ export function useSetFragment() {
       })
     )
   }
+
+  return setter
 }

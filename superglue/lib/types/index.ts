@@ -128,7 +128,7 @@ export type Fragment<T, Present = false> = {
  * This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.
  */
 export type Unproxied<T> = T extends Fragment<unknown>
-  ? { __id: string } // Fragment becomes a reference
+  ? FragmentRef // Fragment becomes a reference
   : T extends (infer U)[]
   ? Unproxied<U>[] // Process array elements
   : T extends object
@@ -250,7 +250,9 @@ export type StreamResponse = {
 export type PageResponse = GraftResponse | SaveResponse | StreamResponse
 
 /**
- * A FragmentRef identifies a cross cutting concern, like a shared header or footer.
+ * A FragmentPath identifies a fragment inside of a PageReponse. Its used internally by Superglue to
+ * denormalize a page response into fragments, if any.
+ *
  * @prop type A user supplied string identifying a fragment. This is usually created using
  * [props_template](https://github.com/thoughtbot/props_template?tab=readme-ov-file#jsonfragments)
  * @prop path A Keypath specifying the location of the fragment
@@ -260,6 +262,18 @@ export type PageResponse = GraftResponse | SaveResponse | StreamResponse
 export type FragmentPath = {
   id: string
   path: Keypath
+}
+
+/**
+ * A FragmentRef is a reference to a Fragment.
+ *
+ * @prop __id A user supplied string identifying the fragment. This is usually created using
+ * [props_template](https://github.com/thoughtbot/props_template?tab=readme-ov-file#jsonfragments)
+ * @interface
+ */
+
+export type FragmentRef = {
+  __id: string
 }
 
 /**

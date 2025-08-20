@@ -1,6 +1,12 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import { JSONMappable, RootState, Unproxied, Fragment } from '../types'
+import {
+  JSONMappable,
+  RootState,
+  Unproxied,
+  Fragment,
+  FragmentRef,
+} from '../types'
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
@@ -16,14 +22,14 @@ type ProxiedContent<T> = T & {
     : T[K]
 }
 
-type FragmentRef = { __id: string } | string
+type FragmentRefOrId = FragmentRef | string
 
 export function useContent<T = JSONMappable>(): ProxiedContent<T>
 export function useContent<T = JSONMappable>(
-  fragmentRef: FragmentRef
+  fragmentRef: FragmentRefOrId
 ): ProxiedContent<T>
 export function useContent<T = JSONMappable>(
-  fragmentRef?: FragmentRef
+  fragmentRef?: FragmentRefOrId
 ): ProxiedContent<T> | undefined {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey

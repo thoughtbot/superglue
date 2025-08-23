@@ -155,13 +155,13 @@ export type Fragment<T, Present = false> = {
  * Utility type for unproxy that converts Fragment types to fragment references.
  * This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.
  */
-export type Unproxied<T> = T extends Fragment<unknown>
-  ? FragmentRef // Fragment becomes a reference
+export type Unproxy<T> = T extends Fragment<unknown>
+  ? FragmentRef
   : T extends (infer U)[]
-  ? Unproxied<U>[] // Process array elements
+  ? Unproxy<U>[]
   : T extends object
-  ? { [K in keyof T]: Unproxied<T[K]> } // Process object properties
-  : T // Primitives pass through unchanged
+  ? { [K in keyof T]: Unproxy<T[K]> }
+  : T
 
 // todo: rename rsp to response
 

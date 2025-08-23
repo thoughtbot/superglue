@@ -1,4 +1,4 @@
-import { JSONMappable, AllFragments, Unproxied } from '../types'
+import { JSONMappable, AllFragments, Unproxy } from '../types'
 import { RefObject } from 'react'
 
 type AccessKeyType = string | symbol | number
@@ -274,9 +274,9 @@ export function createProxy<T extends JSONMappable>(
   return createObjectProxy(content, fragments, dependencies, proxyCache) as T
 }
 
-export function unproxy<T>(proxy: T): Unproxied<T> {
+export function unproxy<T>(proxy: T): Unproxy<T> {
   if (proxy && typeof proxy === 'object' && ORIGINAL_TARGET in proxy) {
-    return proxy[ORIGINAL_TARGET] as Unproxied<T>
+    return proxy[ORIGINAL_TARGET] as Unproxy<T>
   }
-  return proxy as Unproxied<T>
+  return proxy as Unproxy<T>
 }

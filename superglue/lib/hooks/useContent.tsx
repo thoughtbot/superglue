@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react'
 import {
   JSONMappable,
   RootState,
-  Unproxied,
+  Unproxy,
   Fragment,
   FragmentRef,
 } from '../types'
@@ -162,6 +162,6 @@ export function useContent<T = JSONMappable>(
  * Extracts the underlying state from an {@link useContent} proxy
  *
  */
-export function unproxy<T>(proxy: T): Unproxied<T> {
+export function unproxy<T>(proxy: T): Unproxy<T> {
   return unproxyUtil(proxy)
 }

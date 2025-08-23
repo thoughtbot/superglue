@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { produce } from 'immer'
 import { saveFragment } from '../actions'
 import { RootState, Fragment } from '../types'
-import { Unproxied } from '../types'
+import { Unproxy } from '../types'
 
 type Unpack<T> = T extends Fragment<infer U> ? U : never
 /**
@@ -37,7 +37,7 @@ export function useSetFragment() {
    */
   function setter<T extends Fragment<unknown>>(
     fragmentRef: T,
-    updater: (draft: Unproxied<Unpack<T>>) => void
+    updater: (draft: Unproxy<Unpack<T>>) => void
   ): void
 
   /**

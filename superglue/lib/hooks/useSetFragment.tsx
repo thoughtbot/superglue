@@ -1,18 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { produce } from 'immer'
 import { saveFragment } from '../actions'
-import { RootState, Fragment, FragmentRef } from '../types'
+import { RootState, Fragment } from '../types'
+import { Unproxied } from '../types'
 
 type Unpack<T> = T extends Fragment<infer U> ? U : never
-
-type FragmentData<T> = T extends Fragment<unknown>
-  ? FragmentRef
-  : T extends (infer Item)[]
-  ? FragmentData<Item>[]
-  : T extends object
-  ? { [K in keyof T]: FragmentData<T[K]> }
-  : T
-
 /**
  * Hook for mutating fragments using Immer drafts.
  *
@@ -45,7 +37,7 @@ export function useSetFragment() {
    */
   function setter<T extends Fragment<unknown>>(
     fragmentRef: T,
-    updater: (draft: FragmentData<Unpack<T>>) => void
+    updater: (draft: Unproxied<Unpack<T>>) => void
   ): void
 
   /**

@@ -5,7 +5,7 @@
 form_props is a Rails form builder that outputs HTML props instead of tags. Now
 you can enjoy the power and convenience of Rails helpers in React!
 
-By separting attributes from tags, form_props can offer greater flexbility than normal
+By separating attributes from tags, form_props can offer greater flexibility than normal
 Rails form builders; allowing designers to stay longer in HTML land and more easily
 customize their form structure without needing to know Rails.
 
@@ -119,7 +119,7 @@ or not
 ## Custom Components
 
 With `form_props` you can combine the comprehensiveness of Rails forms with
-your prefered React components:
+your preferred React components:
 
 For example:
 
@@ -225,9 +225,9 @@ inherits from `ActionView::Helpers::FormBuilder`.
 Many of the helpers accept the same arguments and you can continue to rely on
 [Rails Guides for form helpers] for guidance, but as the goal of `form_props`
 is to focus on attributes instead of tags there are a few general differences
-across all helpers that would beneficial to know:
+across all helpers that would be beneficial to know:
 
-1. The form helper `f.label` do not exist. Helpers like the below that `yield`s
+1. The form helper `f.label` does not exist. Helpers like the below that `yield`
 for label structure
 
 ```
@@ -243,9 +243,9 @@ to [escape] JSON and HTML entities.
 3. `defaultValue` will not appear as a key if no `value` was set.
 3. `data-disable-with` is removed on submit buttons.
 4. `data-remote` is removed from form props.
-5. For helpers selectively render hidden inputs, we passed the attribute to
-5. `f.select` helpers does not render `selected` on `options`, instead it follows
-react caveats and renders on the input's `value`. For example:
+5. For helpers that selectively render hidden inputs, we pass the attribute to
+6. `f.select` helpers do not render `selected` on `options`, instead they follow
+React caveats and render on the input's `value`. For example:
 
 ```js
 {
@@ -357,7 +357,7 @@ end
 ```
 
 ## Checkbox helper
-[check_box] has the same arguments its Rails counterpart.
+[check_box] has the same arguments as its Rails counterpart.
 
 The original Rails `check_box` helper renders an unchecked value in a
 hidden input. While `form_props` doesn't generate the tags, the
@@ -389,7 +389,7 @@ end
 ```
 
 ## Radio helper
-[radio_button] has the same arguments as its Rails counterpart. The radio button is unique
+[radio_button] has the same arguments as its Rails counterpart.
 
 When used like so:
 
@@ -427,8 +427,8 @@ and `inputs.adminFalse` would output
 ```
 
 ## Select helpers
-[select], [weekday_select], [time_zone_select] mostly has the same arguments
-as its Rails counterpart. They key difference is that choices for select cannot be a string:
+[select], [weekday_select], [time_zone_select] mostly have the same arguments
+as their Rails counterparts. The key difference is that choices for select cannot be a string:
 
 ```ruby
 # BAD!!!
@@ -540,9 +540,9 @@ end
 
 
 ## Group collection select
-[group_collection_select] has the same arguments its Rails counterpart.
+[group_collection_select] has the same arguments as its Rails counterpart.
 
-Like `select`, you'll need combine this with a custom `Select` component. An
+Like `select`, you'll need to combine this with a custom `Select` component. An
 example [Select component] is available.
 
 When used like so:
@@ -593,7 +593,7 @@ end
 
 ## Collection select
 [collection_select], [collection_radio_buttons], and [collection_check_boxes]
-has the same arguments its Rails counterpart, but their output differs slightly.
+have the same arguments as their Rails counterparts, but their output differs slightly.
 
 
 [collection_select] follows the same output as `f.select`. When used like so:
@@ -671,8 +671,8 @@ end
 [CollectionCheckBoxes]: ./components/CollectionCheckBoxes.js
 [CollectionRadioButtons]: ./components/CollectionRadioButtons.js
 [Select Component]: ./components/Select.js
-[select]: https://api.rubyonrails.org/v7.0.4.2/classes/ActionView/Helpers/FormBuilder.html#method-i-select
 [CheckBox]: ./components/CheckBox.js
+[select]: https://api.rubyonrails.org/v7.0.4.2/classes/ActionView/Helpers/FormBuilder.html#method-i-select
 [PropsTemplate]: https://github.com/thoughtbot/props_template
 [text_field]: https://api.rubyonrails.org/v7.0.4.2/classes/ActionView/Helpers/FormHelper.html#method-i-text_field
 [tel_field]: https://api.rubyonrails.org/v7.0.4.2/classes/ActionView/Helpers/FormHelper.html#method-i-tel_field

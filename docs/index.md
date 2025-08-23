@@ -1,14 +1,26 @@
 # Overview
 
-__Superglue is The Rails Way of building rich React applications.__ Refreshingly
-familiar. No APIs. No client-side routing. Batteries included:
+__Superglue is The Rails Way of building React applications.__ Refreshingly
+familiar. No APIs. No client-side routing. Batteries included.
 
 <div class="grid cards" markdown>
 
 -   __Super Turbo Streams__
 
-    Turbo Streams [reimagined](./super-turbo-streams.md) for Superglue and React. Use `broadcast_append_to`,
+    Turbo Streams [ported](./super-turbo-streams.md) for Superglue and React. Use `broadcast_append_to`
     and more to easily update your UI.
+
+-   __Unobtrusive Javascript (UJS)__
+
+    [Bringing back](ujs.md) a classic to make developing SPA features easy and familiar
+
+-   __Fragments__
+
+    Giving Rails partials [identity and super powers](./fragments.md) on the frontend.
+
+-   __Deferment__
+
+    Easily [defer](./deferments.md) any part of your page. Great for modals, tabs, and more!
 
 
 -   `props_template`
@@ -25,21 +37,9 @@ familiar. No APIs. No client-side routing. Batteries included:
     [Lightweight wrapper components](./candy-wrapper.md) around popular React UI libraries made to work with
     FormProps.
 
--   __Unobtrusive Javascript (UJS)__
-
-    [Bringing back](ujs.md) a classic to make developing SPA features easy and familiar
-
--   __Fragments__
-
-    Giving Rails partials [identity and super powers](./fragments.md) on the frontend.
-
 -   `humid`
 
     [Server Side Rendering](./humid.md) using MiniRacer and V8 isolates.
-
--   __Deferment__
-
-    Easily [defer](./deferments.md) any part of your page. Great for modals, tabs, and more!
 
 </div>
 

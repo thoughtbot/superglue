@@ -1,10 +1,10 @@
 # Shaping State
 
-When building `.props` for your pages, its useful to know that __Superglue
+When building `.props` for your pages, it's useful to know that __Superglue
 believes the server generally drives UI state__. If you worked with `erb`
 files then you'll feel right at home. 
 
-Lets take a familiar approach to shaping state:
+Let's take a familiar approach to shaping state:
 
 ```erb
 <header>

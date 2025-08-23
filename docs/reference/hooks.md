@@ -1,10 +1,12 @@
 ## Functions
 
-<a id="usesuperglue" name="usesuperglue"></a>
+<a id="usesuperglue"></a>
 
 ### useSuperglue()
 
 > **useSuperglue**(): [`SuperglueState`](types.md#supergluestate)
+
+Defined in: [hooks/index.ts:10](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/index.ts#L10)
 
 A lightweight hook that grabs the superglue state from the store.
 
@@ -12,30 +14,34 @@ A lightweight hook that grabs the superglue state from the store.
 
 [`SuperglueState`](types.md#supergluestate)
 
-#### Defined in
+## References
 
-[lib/hooks/index.ts:7](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/hooks/index.ts#L7)
+<a id="usecontent"></a>
+
+### useContent
+
+Re-exports [useContent](hooks.useContent.md#usecontent)
 
 ***
 
-<a id="usecontent" name="usecontent"></a>
+<a id="unproxy"></a>
 
-### useContent()
+### unproxy
 
-> **useContent**\<`T`\>(): `T`
+Re-exports [unproxy](hooks.useContent.md#unproxy)
 
-A lightweight hook that grabs the current page's content from the store.
+***
 
-#### Type Parameters
+<a id="usesetfragment"></a>
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` | [`JSONMappable`](types.md#jsonmappable) |
+### useSetFragment
 
-#### Returns
+Re-exports [useSetFragment](index.md#usesetfragment)
 
-`T`
+***
 
-#### Defined in
+<a id="usestreamsource"></a>
 
-[lib/hooks/index.ts:14](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/hooks/index.ts#L14)
+### useStreamSource
+
+Re-exports [useStreamSource](index.md#usestreamsource)

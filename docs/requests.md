@@ -46,7 +46,7 @@ sequenceDiagram
 
 !!! hint
     Its possible to modify the visit payload before it saves
-    to the store. See the [beforeSave](reference/types.requests.md#visitprops) callback.
+    to the store. See the [beforeSave](./client-updates.md#the-beforesave-callback) callback.
 
 <div class="grid cards" markdown>
   -  [:octicons-arrow-right-24: See complete reference](reference/types.requests.md#visit)
@@ -62,7 +62,7 @@ as you want.
 
 !!! hint
     Its possible to modify the remote payload before it saves
-    to the store. See the [beforeSave](reference/types.requests.md#remoteprops) callback.
+    to the store. See the [beforeSave](./client-updates.md#the-beforesave-callback) callback.
 
 At glance it looks like this:
 
@@ -125,3 +125,56 @@ sequenceDiagram
     bars, you can add them there.
 
 
+## The `beforeSave` callback
+
+Both `visit` and `remote` can be passed a `beforeSave` callback. This is your 
+opportunity to modify the incoming payload before it persists. Its ideal for
+features like [infinite-scroll](./recipes/infinite-scroll.md) where you need to
+concatenate a list of results into an existing list:
+
+```jsx
+const beforeSave = (prevPage, nextPage) => {
+  nextPage.data.messages = [
+    prevPage.data.messages,
+    ... nextPage.data.messages
+  ]
+
+  return nextPage
+}
+
+remote("/posts", {beforeSave})
+```
+
+!!! warning
+    If you are concatenating arrays in a `beforeSave` callback and using nesting [Fragments](./fragments.md) like so:
+
+    `index.json.props`
+    ```ruby
+      json.posts(partial: ["post_list", fragment: "posts_list"]) do
+      end
+    ```
+
+    `_post_list.json.props`
+    ```ruby
+      json.array!(partial: ["post", fragment: ->(post){"post-#{post.id}" }]) do
+      end
+    ```
+
+    `_post.json.props`
+    ```ruby
+      json.title post.id
+      json.body post.body
+    ```
+
+    be sure to use the [key](./props-template.md#working-with-arrays) to help Superglue
+    identify fragments in the concatenated array.
+
+    `_post_list.json.props`
+    
+    ```diff
+    - json.array!(partial: ["post", fragment: ->(post){"post-#{post.id}" }]) do
+    + json.array!(partial: ["post", fragment: ->(post){"post-#{post.id}" }, key: :id]) do
+      end
+    ```
+
+    This will ensure that Superglue [denormalizes](./fragments.md#denormalization) the fragments properly.

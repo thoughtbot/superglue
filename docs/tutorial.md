@@ -172,7 +172,7 @@ Update your page mapping to include both components:
 
 !!! info
     **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](./vite.md) for more information.
+    the [recipe](./recipes/vite.md) for more information.
 
 ```js
 // app/javascript/page_to_page_mapping.js
@@ -521,7 +521,7 @@ Now you have:
 
 ## Performance
 
-In practice, not all applications are as performant as this one. Lets simulate
+In practice, not all applications are as performant as this one. Let's simulate
 a slow running operation:
 
 === "`show.json.props`"

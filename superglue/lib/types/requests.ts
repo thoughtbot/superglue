@@ -53,11 +53,11 @@ export interface VisitProps extends Omit<BaseProps, 'signal'> {
 
 export interface Remote {
   /**
-   * Remote is is wrapper around fetch. Its used to make a request and mutate the
+   * Remote is a wrapper around fetch. It's used to make a request and mutate the
    * store. Remote does not navigate, and it does not change the browser history.
    * There can be multiple Remote requests running concurrently.
    *
-   * This function is to be wrapped by a deverloper as a {@link ApplicationRemote}
+   * This function is to be wrapped by a developer as a {@link ApplicationRemote}
    * and returned to superglue.  This is usually generated as
    * `application_visit.js` where you can make minimum edits to affect its
    * global usage.
@@ -106,7 +106,7 @@ export interface RemoteProps extends BaseProps {
 
 export interface BeforeSave<T = JSONMappable> {
   /**
-   * A callback that will be fire in between recieving a payload and saving a
+   * A callback that fires in between recieving a payload and saving a
    * payload. Use this callback to modify the payload before it gets saved. Its
    * useful for appending, prepending, shuffeling, etc. recieved data to
    * existing data.

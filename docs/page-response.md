@@ -7,7 +7,7 @@ Superglue JSON responses come in 4 varieties.
 - `StreamResponse` Used for [streaming responses](./super-turbo-streams.md#stream-responses)
 - `StreamMessage` The message format used for [Super Turbo Streams](./super-turbo-streams.md)
 
-[superglue_rails] and its generators would build these response for you. The following is for reference:
+[superglue_rails] and its generators would build these responses for you. The following is for reference:
 
 ## The `SaveResponse`
 
@@ -55,7 +55,7 @@ You can control which `componentIdentifier` will render which component in the
 </div>
 
 ### `defers`
-The parts of your page that have been marked for [deferemnt](./deferments.md).
+The parts of your page that have been marked for [deferment](./deferments.md).
 
 ### `assets`
 An `array` of asset fingerprint `string`s. Used by Superglue to detect the need to
@@ -89,7 +89,7 @@ Set to `savePage` for `SaveResponse`
 An UNIX timestamp representing the time the response was rendered.
 
 ### `fragments`
-An `array` of [fragments](./cross-cutting-concerns.md#advanced-functionality). In
+An `array` of paths identifying the location of all fragments in `data`. In
 `application.json.props` this is set to `json.fragments!`.
 
 ### `restoreStrategy`
@@ -108,8 +108,8 @@ buttons.
 ### `slices`
 An object merged with the `initialState` when implementing `buildStore` inside
 of `application.js`. You can use this as the initial state for redux slices.
-Take advantage of the `SAVE_RESPONSE` to continually update your slice everytime
-superglue recieves a new page request.
+Take advantage of the `SAVE_RESPONSE` to continually update your slice every time
+superglue receives a new page request.
 
 [props_template]: https://github.com/thoughtbot/props_template
 
@@ -117,7 +117,7 @@ superglue recieves a new page request.
 
 A response for when [digging](./digging.md) is used, i.e, `props_at` is part of the request parameter. The response is made of the following attributes:
 
-[componentIdentifier](#componentidentifier), [assests](#assets),
+[componentIdentifier](#componentidentifier), [assets](#assets),
 [csrfToken](#csrftoken), [fragments](#fragments), [defers](#defers),
 [slices](#slices), [renderedAt](#renderedat)
 
@@ -131,7 +131,7 @@ If a `fragment` is encountered while digging, we reset the path to an empty
 array and populate the `fragmentContext` before continuing.
 
 ### `fragmentContext`
-Ultimately, the last id of the fragment that we enountered while digging for
+Ultimately, the last id of the fragment that we encountered while digging for
 content. This is because [fragments](./fragments.md) are denormalized.
 
 ### `action`
@@ -141,9 +141,9 @@ content. This is because [fragments](./fragments.md) are denormalized.
 Use for [Super Turbo Stream](./super-turbo-streams.md#stream-responses) responses to update [fragments](./fragments.md). The response is made of the following attributes:
 
 !!! note
-   [Deferment](./deferments.md) are disabled for StreamResponse and StreamMessage
+   [Deferments](./deferments.md) are disabled for StreamResponse and StreamMessage
 
-[assests](#assets), [csrfToken](#csrftoken), [fragments](#fragments),
+[assets](#assets), [csrfToken](#csrftoken), [fragments](#fragments),
 [slices](#slices), [renderedAt](#renderedat)
 
 

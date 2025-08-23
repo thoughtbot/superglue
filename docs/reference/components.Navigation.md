@@ -1,43 +1,19 @@
-## Functions
+## Variables
 
-<a id="navigationcontext" name="navigationcontext"></a>
+<a id="navigationcontext"></a>
 
-### NavigationContext()
+### NavigationContext
 
-> **NavigationContext**(`props`: `ProviderProps`\<[`NavigationContextProps`](types.md#navigationcontextprops)\>): `ReactNode`
+> `const` **NavigationContext**: `Context`\<[`NavigationContextProps`](types.md#navigationcontextprops)\>
 
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | `ProviderProps`\<[`NavigationContextProps`](types.md#navigationcontextprops)\> |
-
-#### Returns
-
-`ReactNode`
-
-#### Defined in
-
-[lib/components/Navigation.tsx:23](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/components/Navigation.tsx#L23)
+Defined in: [components/Navigation.tsx:23](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/components/Navigation.tsx#L23)
 
 ***
 
-<a id="navigationprovider" name="navigationprovider"></a>
+<a id="navigationprovider"></a>
 
-### NavigationProvider()
+### NavigationProvider
 
-> **NavigationProvider**(`props`: [`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<\{`navigateTo`: `null` \| [`NavigateTo`](types.md#navigateto-1); \}\>): `ReactNode`
+> `const` **NavigationProvider**: `ForwardRefExoticComponent`\<[`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<\{ `navigateTo`: `null` \| [`NavigateTo`](types.md#navigateto); \}\>\>
 
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `props` | [`NavigationProviderProps`](types.md#navigationproviderprops) & `RefAttributes`\<\{`navigateTo`: `null` \| [`NavigateTo`](types.md#navigateto-1); \}\> |
-
-#### Returns
-
-`ReactNode`
-
-#### Defined in
-
-[lib/components/Navigation.tsx:47](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/components/Navigation.tsx#L47)
+Defined in: [components/Navigation.tsx:47](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/components/Navigation.tsx#L47)

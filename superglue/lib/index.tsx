@@ -37,8 +37,7 @@ export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
 export { urlToPageKey }
 export * from './hooks'
-import useStreamSource from './hooks/useStreamSource'
-export { useStreamSource }
+export { unproxy } from './hooks/useContent'
 
 function getConfig(name: string) {
   if (typeof document !== 'undefined') {

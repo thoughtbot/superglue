@@ -10,7 +10,11 @@ import {
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
-type ProxiedContent<T> = T & {
+/**
+ * A proxy type that enables reactive access to nested content with automatic fragment resolution
+ * @public
+ */
+export type ProxiedContent<T> = T & {
   readonly [K in keyof T]: T[K] extends Fragment<infer U, true>
     ? ProxiedContent<U>
     : T[K] extends Fragment<infer U, false | undefined>
@@ -22,7 +26,11 @@ type ProxiedContent<T> = T & {
     : T[K]
 }
 
-type FragmentRefOrId = FragmentRef | string
+/**
+ * Union type for fragment references, accepting either FragmentRef objects or string IDs
+ * @public
+ */
+export type FragmentRefOrId = FragmentRef | string
 
 /**
  * Returns a proxy for accessing your page's content e.g, `index.json.props`,

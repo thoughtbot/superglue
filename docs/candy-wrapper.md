@@ -10,8 +10,8 @@ and name are likely to change drastically before a major version release.
 
 ## Component status
 
-Each component are meant to be copied from this repo to your own project and customized to your liking. There are no
-CLI tools to help. just copy and paste from github.
+Each component is meant to be copied from this repo to your own project and customized to your liking. There are no
+CLI tools to help. Just copy and paste from GitHub.
 
 | `form_props` helper                     | Component              | [Vanilla]          | [Mantine]            | ?                    |
 | :-------------------------------------- | :--------------------- | :----------------- | :------------------- | :------------------- |

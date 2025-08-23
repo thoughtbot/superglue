@@ -132,7 +132,6 @@ nav:
     - Progress Bars: recipes/progress-bar.md
     - Turbo Nav: recipes/turbo.md
     - Vite: recipes/vite.md
-    - Shopping cart: recipes/shopping-cart.md
 
   - Reference:
     - Rails Utilities: rails-utils.md
@@ -145,3 +144,6 @@ nav:
   
   - props_template:
     - Overview: props-template.md
+  
+  - form_props:
+    - Overview: form-props.md

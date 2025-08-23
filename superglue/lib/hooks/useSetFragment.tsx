@@ -4,7 +4,11 @@ import { saveFragment } from '../actions'
 import { RootState, Fragment } from '../types'
 import { Unproxy } from '../types'
 
-type Unpack<T> = T extends Fragment<infer U> ? U : never
+/**
+ * Utility type to extract the data type from a Fragment wrapper
+ * @public
+ */
+export type Unpack<T> = T extends Fragment<infer U> ? U : never
 /**
  * Hook for mutating fragments using Immer drafts.
  *

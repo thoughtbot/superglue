@@ -1,7 +1,7 @@
 import React from 'react'
 import { Server as MockServer } from 'mock-socket'
 import { renderHook, act } from '@testing-library/react'
-import useStreamSource, { CableContext } from '../../lib/hooks/useStreamSource'
+import { useStreamSource, CableContext } from '../../lib/hooks/useStreamSource'
 import { describe, it, assert, expect, vi } from 'vitest'
 import * as ActionCable from '@rails/actioncable'
 import { Provider } from 'react-redux'

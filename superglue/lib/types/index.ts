@@ -107,8 +107,8 @@ export type JSONValue = JSONPrimitive | JSONMappable
 
 /**
  * A Fragment is a rendered Rails partial with an identity. The use
- * of this type is optional, but it makes usage with {@link unproxy} and
- * {@link useSetFragment} type friendly.
+ * of this type is optional, but it makes usage with unproxy and
+ * useSetFragment type friendly.
  *
  * In general, Fragments enable normalized state management where Rails partials become
  * referenceable entities on the client. The server renders partials as
@@ -372,7 +372,7 @@ export interface VisitMeta extends Meta {
 
 /**
  * VisitCreator is a Redux action creator that returns a thunk. Use this to build
- * the {@link Visit} function. Typically its already generated in `application_visit.js`
+ * the {@link Visit} function. Typically it's already generated in `application_visit.js`
  */
 export type VisitCreator = (
   input: string | PageKey,
@@ -381,7 +381,7 @@ export type VisitCreator = (
 
 /**
  * RemoteCreator is a Redux action creator that returns a thunk. Use this to build
- * the {@link Remote} function. Typically its already generated in `application_visit.js`
+ * the {@link Remote} function. Typically it's already generated in `application_visit.js`
  */
 export type RemoteCreator = (
   input: string | PageKey,

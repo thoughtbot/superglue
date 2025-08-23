@@ -209,8 +209,8 @@ export default PostIndex = () => {
 
 ## Optimize!
 
-Lets skip `data.header` when navigating and dig for `data.posts`. For the
-user, only the posts lists change, but the header stays the same.
+Let's skip `data.header` when navigating and dig for `data.posts`. For the
+user, only the posts list changes, but the header stays the same.
 
 !!! info
     In effect, this achieves the same functionality as [Turbo Frames], but
@@ -223,7 +223,7 @@ user, only the posts lists change, but the header stays the same.
 Recall how [digging] for content works. We'll add a `props_at` that digs for
 the `json.posts` while skipping other content on that page.
 
-  [digging]: ../tutorial.md#digging-for-content
+  [digging]: ../tutorial.md#digging-with-props_at
 
 ```diff
 # app/views/posts/index.json.props

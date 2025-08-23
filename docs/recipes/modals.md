@@ -256,7 +256,7 @@ Lets fix that!
 Recall how [digging] for content works. We'll add a `props_at` that digs for
 the modal on `/posts/new` while skipping other content on that page.
 
-  [digging]: ../tutorial.md#digging-for-content
+  [digging]: ../tutorial.md#digging-with-props_at
 
 ```diff
 # app/views/posts/index.json

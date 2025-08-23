@@ -72,7 +72,7 @@ set(cartRef, (cartDraft) => {
 ```
 
 This flexibility is especially useful when working with [fragment
-references](./performing.md#preventing-over-rendering-with-fragment-refs) passed
+references](./performance.md#preventing-over-rendering-with-fragment-refs) passed
 between components:
 
 ```jsx
@@ -105,16 +105,13 @@ set('userCart', (cartDraft) => {
 
 ```
 
-Behind the scenes, Superglue take the updated draft and uses that for the
+Behind the scenes, Superglue takes the updated draft and uses that for the
 fragment's next state.
-
-## The `beforeAction` Hook
-Need to append/merge/shuffle your results??? finish me...
 
 ## Nested Fragment Updates
 
-Fragments are composible and can contain references to other fragments. If you
-need to update a nested fragment. You can update them using nested `set` calls.
+Fragments are composable and can contain references to other fragments. If you
+need to update a nested fragment, you can update them using nested `set` calls.
 
 ```jsx
 function PostList() {
@@ -190,6 +187,6 @@ function LikeButton({ postId }) {
 
 The combination of `useSetFragment`, [Fragments, and
 useSetContent](./fragments.md), would be able to handle most of your state
-management needs. For even more advanced usecases, we have
-[conviences](./redux.md.md) for you if you decided to use Redux as
+management needs. For even more advanced use cases, we have
+[conveniences](./redux.md) for you if you decide to use Redux as
 your state management solution.

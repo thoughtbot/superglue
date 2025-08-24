@@ -72,7 +72,10 @@ direct the user to `/posts/new`. As seen previously, both `/posts` and
     import { useContent } from '@thoughtbot/superglue'
 
     export default PostIndex = () => {
-      const { newPostPath, ...rest } = useContent()
+      const { 
+        newPostPath, 
+        ...rest 
+      } = useContent()
 
       return (
         ...
@@ -113,11 +116,12 @@ Lets add a modal.
     ```diff
     + import Modal from './Modal'
 
-    export default PostIndex = ({
-      newPostPath,
-      createPostModal
-      ...rest
-    }) => {
+    export default PostIndex = () => {
+      const { 
+        newPostPath, 
+    +    createPostModal, 
+        ...rest 
+      } = useContent()
 
       return (
         ...

@@ -261,13 +261,11 @@ describe('proxy utilities', () => {
       expect(dependencies.size).toBe(2)
     })
 
-    it('throws error for missing fragments', () => {
+    it('returns undefined for missing fragments', () => {
       const data = { user: { __id: 'missing_user' } }
       const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
-      expect(() => proxy.user).toThrow(
-        'Fragment with id "missing_user" not found'
-      )
+      expect(proxy.user).toBe(undefined)
     })
   })
 

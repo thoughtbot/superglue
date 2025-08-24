@@ -115,7 +115,7 @@ function createArrayProxy(
           const fragmentData = fragments.current[item.__id]
 
           if (!fragmentData) {
-            throw new Error(`Fragment with id "${item.__id}" not found`)
+            return undefined
           }
 
           return createProxy(fragmentData, fragments, dependencies, proxyCache)
@@ -199,7 +199,7 @@ function createObjectProxy(
         const fragmentData = fragments.current[value.__id]
 
         if (!fragmentData) {
-          throw new Error(`Fragment with id "${value.__id}" not found`)
+          return undefined
         }
 
         return createProxy(fragmentData, fragments, dependencies, proxyCache)

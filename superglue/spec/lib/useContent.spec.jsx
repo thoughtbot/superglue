@@ -1625,7 +1625,7 @@ describe('useContent', () => {
         }
 
         renderWithProvider(<ComponentWithMissingRef />, store)
-      }).toThrow('Fragment with id "does_not_exist" not found')
+      }).toThrow("Cannot read properties of undefined (reading 'name')")
 
       console.error = originalError
     })

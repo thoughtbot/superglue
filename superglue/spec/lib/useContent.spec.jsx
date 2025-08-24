@@ -1587,7 +1587,7 @@ describe('useContent', () => {
   })
 
   describe('error handling and edge cases', () => {
-    it('handles missing fragments gracefully', () => {
+    it('missing fragments are undefined and throw', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/missing',
@@ -1630,7 +1630,7 @@ describe('useContent', () => {
       console.error = originalError
     })
 
-    it('throws error for missing fragment by default (required)', () => {
+    it('returns undefined and throws error for missing fragments', () => {
       const store = buildStore({
         superglue: {
           currentPageKey: '/unused',
@@ -1648,84 +1648,7 @@ describe('useContent', () => {
         }
 
         renderWithProvider(<Component />, store)
-      }).toThrow('Fragment with id "missing_fragment" not found')
-    })
-
-    it('throws error for missing fragment when optional is explicitly false', () => {
-      const store = buildStore({
-        superglue: {
-          currentPageKey: '/unused',
-          search: {},
-          assets: [],
-        },
-        pages: {},
-        fragments: {},
-      })
-
-      expect(() => {
-        const Component = () => {
-          const user = useContent(
-            { __id: 'missing_fragment' },
-            { optional: false }
-          )
-          return <div>{user.name}</div>
-        }
-
-        renderWithProvider(<Component />, store)
-      }).toThrow('Fragment with id "missing_fragment" not found')
-    })
-
-    it('returns undefined for missing fragment when optional is true', () => {
-      const store = buildStore({
-        superglue: {
-          currentPageKey: '/unused',
-          search: {},
-          assets: [],
-        },
-        pages: {},
-        fragments: {},
-      })
-
-      let capturedUser
-
-      const Component = () => {
-        const user = useContent(
-          { __id: 'missing_fragment' },
-          { optional: true }
-        )
-        capturedUser = user
-        return <div>{user ? user.name : 'no user'}</div>
-      }
-
-      const { container } = renderWithProvider(<Component />, store)
-
-      expect(container.textContent).toBe('no user')
-      expect(capturedUser).toBeUndefined()
-    })
-
-    it('works with string refs and optional true', () => {
-      const store = buildStore({
-        superglue: {
-          currentPageKey: '/unused',
-          search: {},
-          assets: [],
-        },
-        pages: {},
-        fragments: {},
-      })
-
-      let capturedUser
-
-      const Component = () => {
-        const user = useContent('missing_fragment', { optional: true })
-        capturedUser = user
-        return <div>{user ? user.name : 'no user found'}</div>
-      }
-
-      const { container } = renderWithProvider(<Component />, store)
-
-      expect(container.textContent).toBe('no user found')
-      expect(capturedUser).toBeUndefined()
+      }).toThrow("Cannot read properties of undefined (reading 'name')")
     })
 
     it('handles empty fragment store', () => {
@@ -1983,7 +1906,7 @@ describe('useContent', () => {
 
       expect(() => {
         renderWithProvider(<Component />, store)
-      }).toThrow('Fragment with id "missing_scoped_fragment" not found')
+      }).toThrow("Cannot read properties of undefined (reading 'name')")
 
       console.error = originalError
     })

@@ -389,15 +389,15 @@ describe('proxy utilities', () => {
       const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => (proxy.title = 'New Title')).toThrow(
-        'Cannot mutate proxy object. Use Redux actions to update state.'
+        'Cannot mutate proxy object. Use useSetFragment to update state.'
       )
       expect(() => delete proxy.count).toThrow(
-        'Cannot delete properties on proxy object. Use Redux actions to update state.'
+        'Cannot delete properties on proxy object. Use useSetFragment to update state.'
       )
       expect(() =>
         Object.defineProperty(proxy, 'newProp', { value: 'test' })
       ).toThrow(
-        'Cannot define properties on proxy object. Use Redux actions to update state.'
+        'Cannot define properties on proxy object. Use useSetFragment to update state.'
       )
     })
 
@@ -406,15 +406,15 @@ describe('proxy utilities', () => {
       const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => (proxy[0] = 'new item')).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => delete proxy[0]).toThrow(
-        'Cannot delete properties on proxy array. Use Redux actions to update state.'
+        'Cannot delete properties on proxy array. Use useSetFragment to update state.'
       )
       expect(() =>
         Object.defineProperty(proxy, '2', { value: 'test' })
       ).toThrow(
-        'Cannot define properties on proxy array. Use Redux actions to update state.'
+        'Cannot define properties on proxy array. Use useSetFragment to update state.'
       )
     })
 
@@ -423,33 +423,33 @@ describe('proxy utilities', () => {
       const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
 
       expect(() => proxy.push('new item')).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.pop()).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.unshift('first')).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.shift()).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.splice(0, 1)).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.sort()).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
 
       // Test newly added mutating methods
       expect(() => proxy.reverse()).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.fill('x')).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
       expect(() => proxy.copyWithin(0, 1)).toThrow(
-        'Cannot mutate proxy array. Use Redux actions to update state.'
+        'Cannot mutate proxy array. Use useSetFragment to update state.'
       )
     })
 

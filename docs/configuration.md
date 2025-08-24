@@ -80,8 +80,9 @@ inspiration.
 ## `flash.js`
 
 The installation generator will add a `flash.js` slice to
-`app/javascript/slices` and will work with the Rails `flash`. This file is an
-example of a custom [slice](./redux.md#flashjs).
+`app/javascript/slices` and will work with the Rails `flash`. You can customize
+it to pass any temporary props that would last as along as `flash.now` or
+`flash`. The file is an example of a custom [slice](./redux.md#flashjs).
 
 <div class="grid cards" markdown>
   -  [:octicons-arrow-right-24: Read more](./redux.md)

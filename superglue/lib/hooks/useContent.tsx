@@ -10,13 +10,11 @@ import {
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
-/**
- * A proxy type that enables reactive access to nested content with automatic fragment resolution
- * @public
- */
-
 export type FragmentProxy = { __fragment: true }
 
+/**
+ * A proxy type that enables reactive access to nested content with automatic fragment resolution
+ */
 export type ProxiedContent<T> = T extends Fragment<infer U, true>
   ? ProxiedContent<U> & FragmentProxy
   : T extends Fragment<infer U, false | undefined>

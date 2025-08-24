@@ -1,5 +1,3 @@
-## Redux
-
 If you have a usecase that requires complex updates to frontend state, you can
 bring your own state management, or use redux-toolkit slices. Superglue
 includes a few useful redux actions that you can use with redux slices if you
@@ -15,9 +13,10 @@ To start off, the slice is shaped exactly like the Rails flash.
 ```js
 {
   alert: "Something went wrong",
-  Success: "You've logged in!"
+  success: "You've logged in!"
 }
 ```
+
 
 and works with the [BEFORE_VISIT](#before_visit) and [RECEIVE_RESPONSE](#receive_response) actions
 to 
@@ -28,29 +27,36 @@ to
 [Clear the flash]: https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L30
 [Merge any new flashes]: https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L33
 
-__You are enocouraged to modify this slice however you'd like__. For example, if
-you prefer a different shape, just modify how the slice is received in your
-layout, `application.json.props`
 
-```ruby
-json.slices do
-  myFlash = flash.to_h.map { |key, value| {type: key.to_s, value: value} }
-  json.flash myFlash
-end
-```
+!!! tip "You are encouraged to modify `flash.js`"
+    While the above is a key string pair, in practice, the `flash.js` is 
+    customized for any temporary props that would last as long as  `flash.now`
+    or `flash`. Its useful for [form errors](./forms.md#form-errors),
+    notifications, toasts, etc.
 
-The `slices` key in `application.json.props` is a boundary for you to render
-state. Its commonly used to set the intial state of your slice, and update
-the slice when receiving a new page.
+    For example, if you prefer a different shape, modify how the slice is
+    received in your layout, `application.json.props`
+
+    ```ruby
+    json.slices do
+      myFlash = flash.to_h.map { |key, value| {type: key.to_s, value: value} }
+      json.flash myFlash
+    end
+    ```
+
+    The `slices` key in `application.json.props` is a boundary for you to render
+    state. Its commonly used to set the intial state of your slice, and update
+    the slice when receiving a new page.
 
 #### Usage
 
-To use in your page components, simply use a selector.
+The flash can be accessed using a selector
 
 ```jsx
 import { useSelector } from 'react-redux'
 
 const flash = useSelector((state) => state.flash)
+console.log(flash.success)
 ```
 
 then use the flash as you would normally in a controller

@@ -3,12 +3,17 @@ import { produce } from 'immer'
 import { saveFragment } from '../actions'
 import { RootState, Fragment } from '../types'
 import { Unproxy } from '../types'
+import { FragmentProxy } from './useContent'
 
 /**
  * Utility type to extract the data type from a Fragment wrapper
  * @public
  */
-export type Unpack<T> = T extends Fragment<infer U> ? U : never
+export type Unpack<T> = T extends Fragment<infer U, unknown>
+  ? U
+  : T extends FragmentProxy
+  ? T
+  : never
 /**
  * Hook for mutating fragments using Immer drafts.
  *
@@ -39,7 +44,7 @@ export function useSetFragment() {
    * @param fragmentRef - Fragment reference object containing __id
    * @param updater - Immer draft function for mutating fragment data
    */
-  function setter<T extends Fragment<unknown>>(
+  function setter<T extends Fragment<unknown, unknown>>(
     fragmentRef: T,
     updater: (draft: Unproxy<Unpack<T>>) => void
   ): void
@@ -56,7 +61,7 @@ export function useSetFragment() {
   ): void
 
   function setter(
-    fragmentRefOrId: Fragment<unknown> | string,
+    fragmentRefOrId: Fragment<unknown, unknown> | string,
     updater: (draft: unknown) => void
   ): void {
     const fragmentId =

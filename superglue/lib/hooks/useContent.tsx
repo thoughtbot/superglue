@@ -14,17 +14,18 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * A proxy type that enables reactive access to nested content with automatic fragment resolution
  * @public
  */
-export type ProxiedContent<T> = T & {
-  readonly [K in keyof T]: T[K] extends Fragment<infer U, true>
-    ? ProxiedContent<U>
-    : T[K] extends Fragment<infer U, false | undefined>
-    ? ProxiedContent<U> | undefined // Optional fragment - recursively proxy resolved data
-    : T[K] extends (infer U)[]
-    ? ProxiedContent<U>[]
-    : T[K] extends object
-    ? ProxiedContent<T[K]>
-    : T[K]
-}
+
+export type FragmentProxy = { __fragment: true }
+
+export type ProxiedContent<T> = T extends Fragment<infer U, true>
+  ? ProxiedContent<U> & FragmentProxy
+  : T extends Fragment<infer U, false | undefined>
+  ? (ProxiedContent<U> & FragmentProxy) | undefined
+  : T extends (infer U)[]
+  ? readonly ProxiedContent<U>[]
+  : T extends object
+  ? { readonly [K in keyof T]: ProxiedContent<T[K]> }
+  : T
 
 /**
  * Union type for fragment references, accepting either FragmentRef objects or string IDs

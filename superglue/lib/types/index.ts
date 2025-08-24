@@ -11,6 +11,7 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
+import { FragmentProxy } from '../hooks/useContent'
 
 export * from './requests'
 /**
@@ -155,7 +156,9 @@ export type Fragment<T, Present = false> = {
  * Utility type for unproxy that converts Fragment types to fragment references.
  * This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.
  */
-export type Unproxy<T> = T extends Fragment<unknown>
+export type Unproxy<T> = T extends FragmentProxy
+  ? FragmentRef
+  : T extends Fragment<unknown, unknown>
   ? FragmentRef
   : T extends (infer U)[]
   ? Unproxy<U>[]

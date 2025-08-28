@@ -20,9 +20,9 @@ export type ProxiedContent<T> = T extends Fragment<infer U, true>
   : T extends Fragment<infer U, false | undefined>
   ? (ProxiedContent<U> & FragmentProxy) | undefined
   : T extends (infer U)[]
-  ? readonly ProxiedContent<U>[]
+  ? ProxiedContent<U>[]
   : T extends object
-  ? { readonly [K in keyof T]: ProxiedContent<T[K]> }
+  ? { [K in keyof T]: ProxiedContent<T[K]> }
   : T
 
 /**

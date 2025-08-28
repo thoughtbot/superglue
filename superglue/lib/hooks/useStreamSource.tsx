@@ -201,7 +201,7 @@ export function useStreamSource(channel: StreamSourceProps): {
 
       return () => {}
     }
-  }, [cable, channel, currentPageKey])
+  }, [cable, JSON.stringify(channel), currentPageKey])
 
   return {
     connected,

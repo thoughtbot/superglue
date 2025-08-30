@@ -127,27 +127,39 @@ sequenceDiagram
 
 ## The `beforeSave` callback
 
+!!! alert
+    `beforeSave` looks deceptively simple, but is an advanced Supeglue feature. It requires
+
+    1. Knowing how [Fragments and FragmentRefs](./fragments.md) work, the first
+    parameter passed to `beforeSave` is a proxy that lazily normalizes
+    fragments.
+    2. How to get the [unproxied](./performance.md#stable-references-with-unproxy) state.
+    3. Knowing the shape of [savePage or graft](./page-response.md) responses.
+    4. Knowing how [denormaliztion](./fragments.md#denormalization) works 
+
 Both `visit` and `remote` can be passed a `beforeSave` callback. This is your 
-opportunity to modify the incoming payload before it persists. Its ideal for
-features like [infinite-scroll](./recipes/infinite-scroll.md) where you need to
+opportunity to modify the incoming [savePage or graft](./page-response.md#sav)
+payload before it persists. Its ideal for features like
+[infinite-scroll](./recipes/infinite-scroll.md) where you need to
 concatenate a list of results into an existing list:
 
 ```jsx
-const beforeSave = (prevPage, nextPage) => {
-  nextPage.data.messages = [
-    prevPage.data.messages,
-    ... nextPage.data.messages
+const beforeSave = (prevPageProxy, receivedResponse) => {
+  receivedResponse.data.messages = [
+    prevPageProxy.data.messages,
+    ... receivedResponse.data.messages
   ]
 
-  return nextPage
+  return receivedResponse 
 }
 
 remote("/posts", {beforeSave})
 ```
 
 !!! warning
-    If you are concatenating arrays in a `beforeSave` callback and using nesting [Fragments](./fragments.md) like so:
-
+    If you are concatenating arrays in a `beforeSave` callback and using nesting
+    [Fragments](./fragments.md) like so:
+    
     `index.json.props`
     ```ruby
       json.posts(partial: ["post_list", fragment: "posts_list"]) do

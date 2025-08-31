@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-  You're not viewing the latest version.
-  <a href="{{ '../' ~ base_url }}"> 
-    <strong>Click here to go to latest.</strong>
-  </a>
+{% block announce %}
+{#- Add your announcement content here, including arbitrary HTML -#}
+<div class="announcement-bar">
+  <p>This is an important announcement!</p>
+</div>
+{% endblock %}

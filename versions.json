@@ -1,5 +1,10 @@
 [
   {
+    "version": "2.0.alpha",
+    "title": "2.0.alpha",
+    "aliases": []
+  },
+  {
     "version": "1.0",
     "title": "1.0",
     "aliases": [

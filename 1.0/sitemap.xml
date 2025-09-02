@@ -5,15 +5,11 @@
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/candy-wrapper/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/client-updates/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
          <loc>https://thoughtbot.github.io/superglue/1.0/configuration/</loc>
+         <lastmod>2025-09-02</lastmod>
+    </url>
+    <url>
+         <loc>https://thoughtbot.github.io/superglue/1.0/cross-cutting-concerns/</loc>
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
@@ -29,22 +25,6 @@
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/form-props/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/forms/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/fragments/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/humid/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
          <loc>https://thoughtbot.github.io/superglue/1.0/installation/</loc>
          <lastmod>2025-09-02</lastmod>
     </url>
@@ -57,14 +37,6 @@
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/performance/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/props-template/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
          <loc>https://thoughtbot.github.io/superglue/1.0/rails-utils/</loc>
          <lastmod>2025-09-02</lastmod>
     </url>
@@ -73,27 +45,7 @@
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/redux/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
          <loc>https://thoughtbot.github.io/superglue/1.0/requests/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/securing/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/shaping/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/shared-data/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/super-turbo-streams/</loc>
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
@@ -114,6 +66,10 @@
     </url>
     <url>
          <loc>https://thoughtbot.github.io/superglue/1.0/recipes/progress-bar/</loc>
+         <lastmod>2025-09-02</lastmod>
+    </url>
+    <url>
+         <loc>https://thoughtbot.github.io/superglue/1.0/recipes/shopping-cart/</loc>
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>
@@ -142,10 +98,6 @@
     </url>
     <url>
          <loc>https://thoughtbot.github.io/superglue/1.0/reference/hooks/</loc>
-         <lastmod>2025-09-02</lastmod>
-    </url>
-    <url>
-         <loc>https://thoughtbot.github.io/superglue/1.0/reference/hooks.useContent/</loc>
          <lastmod>2025-09-02</lastmod>
     </url>
     <url>

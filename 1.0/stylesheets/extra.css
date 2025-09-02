@@ -13,4 +13,10 @@
 
 .md-banner {
   background-color: #201313;
+
+  a {
+    color: #ffe7a3;
+    font-weight: 700;
+    text-decoration: underline;
+  }
 }

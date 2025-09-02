@@ -142,8 +142,8 @@ nav:
     - Requests: reference/types.requests.md
     - Actions: reference/types.actions.md
   
-  - props_template:
+  - <span class="outside-project">props_template</span>:
     - Overview: props-template.md
   
-  - form_props:
+  - <span class="outside-project">form_props</span>:
     - Overview: form-props.md

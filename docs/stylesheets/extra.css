@@ -10,3 +10,11 @@
 .md-header__button.md-logo img{
   height: 2.3rem;
 }
+
+.outside-project {
+  font-family: monospace;
+  background-color: var(--md-code-bg-color);
+  font-size: .85em;
+  color: var(--md-code-fg-color);;
+  padding: 2px;
+}

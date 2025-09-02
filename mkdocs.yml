@@ -23,10 +23,12 @@ theme:
     - navigation.sections
     - navigation.tabs
 
-
 extra_css:
   - stylesheets/extra.css
+
 extra:
+  version:
+    provider: mike
   social:
     - icon: fontawesome/brands/mastodon
       link: https://thoughtbot.social/public/local

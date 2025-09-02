@@ -12,6 +12,7 @@ copyright: Copyright &copy; 2024 thoughtbot
 
 theme:
   name: material
+  custom_dir: docs/overrides
   logo: images/s-color.svg
   features:
     - header.autohide
@@ -27,6 +28,8 @@ theme:
 extra_css:
   - stylesheets/extra.css
 extra:
+  version:
+    provider: mike
   social:
     - icon: fontawesome/brands/mastodon
       link: https://thoughtbot.social/public/local

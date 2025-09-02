@@ -166,7 +166,7 @@ end
 broadcast_save_props(model: @post) # Updates all connected clients instantly
 ```
 
-Give rendered partials identity with Fragments, and optimistically update them
+Give rendered partials identity with [Fragments](./fragments.md), and optimistically update them
 client side.
 
 ```ruby

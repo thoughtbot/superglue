@@ -12,13 +12,13 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0/demo/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0/securing/">
       
       
-        <link rel="prev" href="../tutorial/">
+        <link rel="prev" href="../performance/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../page-response/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Demo - Superglue</title>
+        <title>Security - Superglue</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-application" class="md-skip">
+        <a href="#authentication" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo
+              Security
             
           </span>
         </div>
@@ -449,19 +449,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../demo/" class="md-nav__link">
         
   
   
@@ -472,7 +463,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -966,10 +956,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../securing/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -980,6 +990,90 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging out
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigational-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Navigational formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#csrf-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      CSRF Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CSRF Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-and-visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      remote and visit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1677,8 +1771,80 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging out
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigational-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Navigational formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#csrf-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      CSRF Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CSRF Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-and-visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      remote and visit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1697,14 +1863,61 @@
   
 
 
-<h1 id="demo-application">Demo Application<a class="headerlink" href="#demo-application" title="Permanent link">&para;</a></h1>
-<p>We have a non-trivial <a href="https://github.com/thoughtbot/select-your-own-seat-superglue">demo</a> application built using Superglue and the original
-<a href="https://github.com/seanpdoyle/select-your-own-seat">Rails and StimulusJS</a> version built by <a href="https://github.com/seanpdoyle">Sean Doyle</a> The intent is to help you
-compare and contrast both approaches and showcase how enjoyable and
-Rails-like Superglue/React/Redux can be.</p>
-<p><img alt="Demo App" src="../images/demo.jpg" /></p>
-<p>We recommend going over the meticulously verbose commit history on <a href="https://github.com/seanpdoyle/select-your-own-seat/commits/main">Sean's
-version</a> and comparing that with the <a href="https://github.com/thoughtbot/select-your-own-seat-superglue/commits/superglue">Superglue version</a>.</p>
+  <h1>Security</h1>
+
+<p>Superglue stores your content in memory. If you were to navigate using a normal
+HTML link or form that does a full page reload the state would be destroyed.</p>
+<div class="admonition tip the history state">
+<p class="admonition-title">Tip</p>
+<p>Superglue does store the following in History.state for convience:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>export interface HistoryState {
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  /** Is always `true` so superglue can differentiate pages that have superglue enabled or not */
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  superglue: true
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  /** The scroll position X of the page*/
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  posX: number
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  /** The scroll position Y of the page*/
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  posY: number
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>}
+</span></code></pre></div>
+</div>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>You can use any Rails authentication system; <a href="https://github.com/heartcombo/devise">Devise</a>, <a href="https://github.com/lazaronixon/authentication-zero">Authentication Zero</a>, etc. Superglue leverages standard Rails patterns - routes, controllers, and views - making it friendly with the Rails ecosystem.</p>
+<h3 id="logging-out">Logging out<a class="headerlink" href="#logging-out" title="Permanent link">&para;</a></h3>
+<p>When implementing a logout button use a normal HTML link or form that does a full page reload. This will clear out Superglue's state in memory.</p>
+<p>✅ Do
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  &lt;a href=&quot;/users/logout&quot;&gt; Logout &lt;/a&gt;
+</span></code></pre></div></p>
+<p>❌ Don't</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>  &lt;a data-sg-visit href=&quot;/users/logout&quot;&gt; Logout &lt;/a&gt;
+</span></code></pre></div>
+<h3 id="navigational-formats">Navigational formats<a class="headerlink" href="#navigational-formats" title="Permanent link">&para;</a></h3>
+<p>When working with Devise, be sure to enable <code>json</code> as a navigational format</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># config/initializers/devise.rb</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">config</span><span class="o">.</span><span class="n">navigational_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:html</span><span class="p">,</span><span class="w"> </span><span class="ss">:json</span><span class="o">]</span>
+</span></code></pre></div>
+<h2 id="csrf-protection">CSRF Protection<a class="headerlink" href="#csrf-protection" title="Permanent link">&para;</a></h2>
+<h3 id="forms">Forms<a class="headerlink" href="#forms" title="Permanent link">&para;</a></h3>
+<p>Superglue comes with <a href="../forms/">form_props</a> to build forms. Like its Rails counterpart,
+<code>form_with</code>, <code>form_props</code> generates a CSRF token per form.</p>
+<p>For example, the below would create two forms with unique CSRF tokens each:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>json.updateFormA do
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  form_props(model: @post) do |f|
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    f.submit
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  end
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>end
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>json.updateFormB do
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  form_props(model: @post) do |f|
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    f.submit
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  end
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>end
+</span></code></pre></div>
+<h3 id="remote-and-visit"><code>remote</code> and <code>visit</code><a class="headerlink" href="#remote-and-visit" title="Permanent link">&para;</a></h3>
+<p>Both <a href="../requests/">functions</a> will use a CSRF token generated at the page
+level when used with a non-GET request. This CSRF token can be accessed from the
+state returned from the <a href="../reference/hooks/#usesuperglue">useSuperglue</a> hook
+and gets updated on each <a href="../page-response/">page response</a> received. You can also make use of this
+state for your own custom <code>fetch</code> calls.</p>
 
 
 
@@ -1740,7 +1953,7 @@ version</a> and comparing that with the <a href="https://github.com/thoughtbot/s
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../tutorial/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tutorial">
+          <a href="../performance/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Performance">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1750,20 +1963,20 @@ version</a> and comparing that with the <a href="https://github.com/thoughtbot/s
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tutorial
+                Performance
               </div>
             </div>
           </a>
         
         
           
-          <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
+          <a href="../page-response/" class="md-footer__link md-footer__link--next" aria-label="Next: Page">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuration
+                Page
               </div>
             </div>
             <div class="md-footer__button md-icon">

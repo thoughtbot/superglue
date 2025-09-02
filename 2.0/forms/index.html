@@ -12,13 +12,13 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0/demo/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0/forms/">
       
       
-        <link rel="prev" href="../tutorial/">
+        <link rel="prev" href="../shaping/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../shared-data/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Demo - Superglue</title>
+        <title>Rails Forms / React UI kits - Superglue</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-application" class="md-skip">
+        <a href="#forms" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo
+              Rails Forms / React UI kits
             
           </span>
         </div>
@@ -449,19 +449,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../demo/" class="md-nav__link">
         
   
   
@@ -472,7 +463,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -505,6 +495,8 @@
                 
   
   
+    
+  
   
   
     
@@ -520,11 +512,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" checked>
         
           
           <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="">
@@ -540,7 +532,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_6">
             <span class="md-nav__icon md-icon"></span>
             Building
@@ -574,10 +566,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../forms/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Rails Forms / React UI kits
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -588,6 +602,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#from-form_with-to-form_props" class="md-nav__link">
+    <span class="md-ellipsis">
+      From form_with to form_props
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#react-ui-kits" class="md-nav__link">
+    <span class="md-ellipsis">
+      React UI kits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Form Errors
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1680,6 +1741,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#from-form_with-to-form_props" class="md-nav__link">
+    <span class="md-ellipsis">
+      From form_with to form_props
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#react-ui-kits" class="md-nav__link">
+    <span class="md-ellipsis">
+      React UI kits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Form Errors
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1697,14 +1793,92 @@
   
 
 
-<h1 id="demo-application">Demo Application<a class="headerlink" href="#demo-application" title="Permanent link">&para;</a></h1>
-<p>We have a non-trivial <a href="https://github.com/thoughtbot/select-your-own-seat-superglue">demo</a> application built using Superglue and the original
-<a href="https://github.com/seanpdoyle/select-your-own-seat">Rails and StimulusJS</a> version built by <a href="https://github.com/seanpdoyle">Sean Doyle</a> The intent is to help you
-compare and contrast both approaches and showcase how enjoyable and
-Rails-like Superglue/React/Redux can be.</p>
-<p><img alt="Demo App" src="../images/demo.jpg" /></p>
-<p>We recommend going over the meticulously verbose commit history on <a href="https://github.com/seanpdoyle/select-your-own-seat/commits/main">Sean's
-version</a> and comparing that with the <a href="https://github.com/thoughtbot/select-your-own-seat-superglue/commits/superglue">Superglue version</a>.</p>
+<h1 id="forms">Forms<a class="headerlink" href="#forms" title="Permanent link">&para;</a></h1>
+<p>Rails form helpers are by far one of the most valuable tools in a developer's
+arsenal. Working with React doesn't mean we have to abandon this tooling. </p>
+<h2 id="from-form_with-to-form_props">From <code>form_with</code> to <code>form_props</code><a class="headerlink" href="#from-form_with-to-form_props" title="Permanent link">&para;</a></h2>
+<p>Superglue comes with <code>form_props</code>, a fork of <code>form_with</code> made for
+<code>props_template</code> and <code>jbuilder</code> to output props instead of HTML. </p>
+<p>Before:</p>
+<div class="language-erb highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">&lt;h1&gt;</span><span class="cp">&lt;%=</span><span class="w"> </span><span class="vi">@post</span><span class="o">.</span><span class="n">title</span><span class="w"> </span><span class="cp">%&gt;</span><span class="x">&lt;/h1&gt;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="cp">&lt;%=</span><span class="w"> </span><span class="n">form_with</span><span class="w"> </span><span class="ss">model</span><span class="p">:</span><span class="w"> </span><span class="vi">@post</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">f</span><span class="o">|</span><span class="w"> </span><span class="cp">%&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">  </span><span class="cp">&lt;%=</span><span class="w"> </span><span class="n">f</span><span class="o">.</span><span class="n">text_field</span><span class="w"> </span><span class="ss">:title</span><span class="w"> </span><span class="cp">%&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="x">  </span><span class="cp">&lt;%=</span><span class="w"> </span><span class="n">f</span><span class="o">.</span><span class="n">text_area</span><span class="w"> </span><span class="ss">:body</span><span class="w"> </span><span class="cp">%&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">  </span><span class="cp">&lt;%=</span><span class="w"> </span><span class="n">f</span><span class="o">.</span><span class="n">submit</span><span class="w"> </span><span class="cp">%&gt;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cp">&lt;%</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="cp">%&gt;</span>
+</span></code></pre></div>
+<p>After:</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">json</span><span class="o">.</span><span class="n">title</span><span class="w"> </span><span class="vi">@post</span><span class="o">.</span><span class="n">title</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">json</span><span class="o">.</span><span class="n">postForm</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="n">form_props</span><span class="w"> </span><span class="ss">model</span><span class="p">:</span><span class="w"> </span><span class="vi">@post</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">f</span><span class="o">|</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="n">f</span><span class="o">.</span><span class="n">text_field</span><span class="w"> </span><span class="ss">:title</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="n">f</span><span class="o">.</span><span class="n">text_area</span><span class="w"> </span><span class="ss">:body</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="n">f</span><span class="o">.</span><span class="n">submit</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="k">end</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">end</span>
+</span></code></pre></div>
+<p>and splat it into your React components</p>
+<div class="language-jsx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Form</span><span class="p">,</span><span class="w"> </span><span class="nx">TextField</span><span class="p">,</span><span class="w"> </span><span class="nx">SubmitButton</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./maintine_wrappers&#39;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="nx">form</span><span class="p">,</span><span class="w"> </span><span class="nx">extras</span><span class="p">,</span><span class="w"> </span><span class="nx">inputs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newPostForm</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">&lt;</span><span class="nt">Form</span><span class="w"> </span><span class="p">{</span><span class="na">...form</span><span class="p">}</span><span class="w"> </span><span class="na">extras</span><span class="o">=</span><span class="p">{</span><span class="nx">extras</span><span class="p">}&gt;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">TextField</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.title</span><span class="p">}</span><span class="w"> </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Post title&quot;</span><span class="w"> </span><span class="p">/&gt;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">TextField</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.body</span><span class="p">}</span><span class="w"> </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Post body&quot;</span><span class="w"> </span><span class="p">/&gt;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">SubmitButton</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.submit</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">&lt;/</span><span class="nt">Form</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<h2 id="react-ui-kits">React UI kits<a class="headerlink" href="#react-ui-kits" title="Permanent link">&para;</a></h2>
+<p><code>form_props</code> outputs props. This means it can work with ANY React UI kit as long
+as we're able to shape the props to the component's interface. This can be
+accomplished using custom wrapper components, or use ours.</p>
+<p><code>candy_wrapper</code> is set of <a href="../candy-wrapper/">copyable prebuilt wrappers</a>
+around popular React UI libraries. Just copy and go:</p>
+<div class="language-jsx highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Form</span><span class="p">,</span><span class="w"> </span><span class="nx">TextField</span><span class="p">,</span><span class="w"> </span><span class="nx">SubmitButton</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./copied_components_for_mantine&#39;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="nx">form</span><span class="p">,</span><span class="w"> </span><span class="nx">extras</span><span class="p">,</span><span class="w"> </span><span class="nx">inputs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newPostForm</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">&lt;</span><span class="nt">Form</span><span class="w"> </span><span class="p">{</span><span class="na">...form</span><span class="p">}</span><span class="w"> </span><span class="na">extras</span><span class="o">=</span><span class="p">{</span><span class="nx">extras</span><span class="p">}&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">TextField</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.title</span><span class="p">}</span><span class="w"> </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Post title&quot;</span><span class="w"> </span><span class="p">/&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">SubmitButton</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.submit</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">&lt;/</span><span class="nt">Form</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<p>Component tests are included for you to copy as well.</p>
+<h2 id="form-errors">Form Errors<a class="headerlink" href="#form-errors" title="Permanent link">&para;</a></h2>
+<p>Form errors can be implemented in a variety of ways. To start off, you'll find
+support for inline errors in all of <code>candy_wrapper</code> components</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>const validationErrors = {
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  post_title: &quot;can&#39;t be blank&quot;
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>}
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>&lt;Form {...form} extras={extras} validationErrors={validationErrors}&gt;
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  &lt;TextField {...inputs.title} label=&quot;Post title&quot; errorKey=&quot;post_title&quot;/&gt;
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  &lt;SubmitButton {...inputs.submit} /&gt;
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>&lt;/Form&gt;
+</span></code></pre></div>
+<p>However, <code>form_props</code> does not handle form errors out-of-the-box. Instead, the
+recommended way to handle errors is through Rail's <code>flash</code>. For example:</p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>class PostsController &lt; ApplicationController
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w"> </span> def create
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w"> </span>   @post = Post.new(post_params)
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w"> </span>   if @post.save
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w"> </span>     redirect_to :index
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w"> </span>   else
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="gi">+      flash.now[:postFormErrors] = @post.errors.as_json</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w"> </span>     render :new
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w"> </span>   end
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w"> </span> end
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>end
+</span></code></pre></div>
+<div class="language-jsx highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">validationErrors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSelector</span><span class="p">((</span><span class="nx">state</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">state</span><span class="p">.</span><span class="nx">flash</span><span class="p">[</span><span class="o">:</span><span class="nx">postFormErrors</span><span class="p">])</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">&lt;</span><span class="nt">Form</span><span class="w"> </span><span class="p">{</span><span class="na">...form</span><span class="p">}</span><span class="w"> </span><span class="na">extras</span><span class="o">=</span><span class="p">{</span><span class="nx">extras</span><span class="p">}</span><span class="w"> </span><span class="na">validationErrors</span><span class="o">=</span><span class="p">{</span><span class="nx">validationErrors</span><span class="p">}&gt;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">TextField</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.title</span><span class="p">}</span><span class="w"> </span><span class="na">label</span><span class="o">=</span><span class="s">&quot;Post title&quot;</span><span class="w"> </span><span class="na">errorKey</span><span class="o">=</span><span class="s">&quot;post_title&quot;</span><span class="p">/&gt;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">SubmitButton</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.submit</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">&lt;/</span><span class="nt">Form</span><span class="p">&gt;</span>
+</span></code></pre></div>
 
 
 
@@ -1740,7 +1914,7 @@ version</a> and comparing that with the <a href="https://github.com/thoughtbot/s
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../tutorial/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tutorial">
+          <a href="../shaping/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Shaping state">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1750,20 +1924,20 @@ version</a> and comparing that with the <a href="https://github.com/thoughtbot/s
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tutorial
+                Shaping state
               </div>
             </div>
           </a>
         
         
           
-          <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
+          <a href="../shared-data/" class="md-footer__link md-footer__link--next" aria-label="Next: Shared data">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuration
+                Shared data
               </div>
             </div>
             <div class="md-footer__button md-icon">

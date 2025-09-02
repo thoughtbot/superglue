@@ -12,13 +12,13 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0/demo/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0/redux/">
       
       
-        <link rel="prev" href="../tutorial/">
+        <link rel="prev" href="../deferments/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../ujs/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Demo - Superglue</title>
+        <title>Redux - Superglue</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-application" class="md-skip">
+        <a href="#flashjs" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo
+              Redux
             
           </span>
         </div>
@@ -449,19 +449,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../demo/" class="md-nav__link">
         
   
   
@@ -472,7 +463,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -651,6 +641,8 @@
                 
   
   
+    
+  
   
   
     
@@ -666,11 +658,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" checked>
         
           
           <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="">
@@ -686,7 +678,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_7">
             <span class="md-nav__icon md-icon"></span>
             Updating
@@ -789,10 +781,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../redux/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Redux
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -803,6 +815,132 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flashjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      flash.js
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="flash.js">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initialstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      initialState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-your-slice-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating your slice state
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Updating your slice state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#receive_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      RECEIVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_FETCH
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_VISIT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_REMOTE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1677,8 +1815,122 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flashjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      flash.js
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="flash.js">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initialstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      initialState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-your-slice-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating your slice state
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Updating your slice state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#receive_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      RECEIVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_FETCH
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_VISIT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_REMOTE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1697,14 +1949,111 @@
   
 
 
-<h1 id="demo-application">Demo Application<a class="headerlink" href="#demo-application" title="Permanent link">&para;</a></h1>
-<p>We have a non-trivial <a href="https://github.com/thoughtbot/select-your-own-seat-superglue">demo</a> application built using Superglue and the original
-<a href="https://github.com/seanpdoyle/select-your-own-seat">Rails and StimulusJS</a> version built by <a href="https://github.com/seanpdoyle">Sean Doyle</a> The intent is to help you
-compare and contrast both approaches and showcase how enjoyable and
-Rails-like Superglue/React/Redux can be.</p>
-<p><img alt="Demo App" src="../images/demo.jpg" /></p>
-<p>We recommend going over the meticulously verbose commit history on <a href="https://github.com/seanpdoyle/select-your-own-seat/commits/main">Sean's
-version</a> and comparing that with the <a href="https://github.com/thoughtbot/select-your-own-seat-superglue/commits/superglue">Superglue version</a>.</p>
+  <h1>Redux</h1>
+
+<p>If you have a usecase that requires complex updates to frontend state, you can
+bring your own state management, or use redux-toolkit slices. Superglue
+includes a few useful redux actions that you can use with redux slices if you
+decide to create custom slices.</p>
+<h3 id="flashjs"><code>flash.js</code><a class="headerlink" href="#flashjs" title="Permanent link">&para;</a></h3>
+<p>Your first custom slice will be a <code>flash</code> slice. Superglue's installation
+generator adds this to your project to integrate with Rail's flash.</p>
+<p>To start off, the slice is shaped exactly like the Rails flash.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nx">alert</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Something went wrong&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You&#39;ve logged in!&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>and works with the <a href="#before_visit">BEFORE_VISIT</a> and <a href="#receive_response">RECEIVE_RESPONSE</a> actions
+to </p>
+<ul>
+<li><a href="https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L30">Clear the flash</a> before each <a href="../requests/#visit">visit</a> or <a href="../ujs/#data-sg-visit"><code>data-sg-visit</code></a> visit.</li>
+<li><a href="https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L33">Merge any new flashes</a> recieved from any <a href="../page-response/">page response</a>.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">You are encouraged to modify <code>flash.js</code></p>
+<p>While the above is a key string pair, in practice, the <code>flash.js</code> is 
+customized for any temporary props that would last as long as  <code>flash.now</code>
+or <code>flash</code>. Its useful for <a href="../forms/#form-errors">form errors</a>,
+notifications, toasts, etc.</p>
+<p>For example, if you prefer a different shape, modify how the slice is
+received in your layout, <code>application.json.props</code></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">json</span><span class="o">.</span><span class="n">slices</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="n">myFlash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flash</span><span class="o">.</span><span class="n">to_h</span><span class="o">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="n">key</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span><span class="w"> </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">flash</span><span class="w"> </span><span class="n">myFlash</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">end</span>
+</span></code></pre></div>
+<p>The <code>slices</code> key in <code>application.json.props</code> is a boundary for you to render
+state. Its commonly used to set the intial state of your slice, and update
+the slice when receiving a new page.</p>
+</div>
+<h4 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h4>
+<p>The flash can be accessed using a selector</p>
+<div class="language-jsx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useSelector</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react-redux&#39;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">flash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSelector</span><span class="p">((</span><span class="nx">state</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">state</span><span class="p">.</span><span class="nx">flash</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">flash</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span>
+</span></code></pre></div>
+<p>then use the flash as you would normally in a controller</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">flash</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Post was saved!&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">end</span>
+</span></code></pre></div>
+<h3 id="initialstate">initialState<a class="headerlink" href="#initialstate" title="Permanent link">&para;</a></h3>
+<p>You can render your slice's initial state in the <a href="../page-response/#slices">slices</a> <code>key</code> of the <a href="../page-response/">page
+response</a>. This has been configured for you in the <code>application.json.props</code>
+layout.  It'll be merged with the <code>initialState</code> passed to your <code>buildStore</code>
+function in your <a href="../configuration/#applicationjs">application.js</a></p>
+<h3 id="updating-your-slice-state">Updating your slice state<a class="headerlink" href="#updating-your-slice-state" title="Permanent link">&para;</a></h3>
+<p>If you receive new state for your slice from a subsequent <a href="../page-response/">page response</a>, you
+can use <code>RECEIVE_RESPONSE</code> to update your slice. Its the same mechanism your
+<code>flash.js</code> slice uses to update the internal state whenever a <a href="../page-response/">page response</a> is
+received. </p>
+<h5 id="receive_response">RECEIVE_RESPONSE<a class="headerlink" href="#receive_response" title="Permanent link">&para;</a></h5>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  type: &quot;@@superglue/RECEIVE_RESPONSE&quot;,
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  payload: {
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    pageKey: &quot;/posts&quot;,
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    response: {...the page response},
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  },
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>}
+</span></code></pre></div>
+<h4 id="other-actions">Other actions<a class="headerlink" href="#other-actions" title="Permanent link">&para;</a></h4>
+<p>There are also other actions that gets dispatched during lifecycle events that
+you can make use of.</p>
+<p>To higlight a few:</p>
+<h5 id="before_fetch">BEFORE_FETCH<a class="headerlink" href="#before_fetch" title="Permanent link">&para;</a></h5>
+<p><code>BEFORE_FETCH</code> - Action created before a before a fetch is called.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  type: &quot;@@superglue/BEFORE_FETCH&quot;,
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  payload: [..array args that are passed to fetch]
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>}
+</span></code></pre></div>
+<h5 id="before_visit">BEFORE_VISIT<a class="headerlink" href="#before_visit" title="Permanent link">&para;</a></h5>
+<p><code>BEFORE_VISIT</code> - Same as above, but called only for a <code>visit</code> action. Your
+<code>flash</code> slice has been setup to use this to clear the flash before navigating.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  type: &quot;@@superglue/BEFORE_VISIT&quot;,
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  payload: [..array args that are passed to fetch]
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>}
+</span></code></pre></div>
+<h5 id="before_remote">BEFORE_REMOTE<a class="headerlink" href="#before_remote" title="Permanent link">&para;</a></h5>
+<p><code>BEFORE_REMOTE</code> - Same as above, but called only a <code>remote</code> action.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  type: &quot;@@superglue/BEFORE_REMOTE&quot;,
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  payload: [..array args that are passed to fetch]
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>}
+</span></code></pre></div>
+<h5 id="save_response">SAVE_RESPONSE<a class="headerlink" href="#save_response" title="Permanent link">&para;</a></h5>
+<p><code>SAVE_RESPONSE</code> is called before a response is saved as a page.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  type: &quot;@@superglue/SAVE_RESPONSE&quot;,
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  payload: {
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    pageKey: &quot;/posts&quot;,
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    page: {...the page response},
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  },
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>}
+</span></code></pre></div>
 
 
 
@@ -1740,7 +2089,7 @@ version</a> and comparing that with the <a href="https://github.com/thoughtbot/s
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../tutorial/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tutorial">
+          <a href="../deferments/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deferments">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1750,20 +2099,20 @@ version</a> and comparing that with the <a href="https://github.com/thoughtbot/s
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tutorial
+                Deferments
               </div>
             </div>
           </a>
         
         
           
-          <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
+          <a href="../ujs/" class="md-footer__link md-footer__link--next" aria-label="Next: The return of Rails UJS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuration
+                The return of Rails UJS
               </div>
             </div>
             <div class="md-footer__button md-icon">

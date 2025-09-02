@@ -12,23 +12,25 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/1.0/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/1.0/redux/">
       
       
+        <link rel="prev" href="../deferments/">
       
-        <link rel="next" href="installation/">
+      
+        <link rel="next" href="../ujs/">
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.18">
     
     
       
-        <title>Overview - Superglue</title>
+        <title>Redux - Superglue</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
       
 
@@ -47,9 +49,9 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -68,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#flashjs" class="md-skip">
           Skip to content
         </a>
       
@@ -86,9 +88,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Superglue" class="md-header__button md-logo" aria-label="Superglue" data-md-component="logo">
+    <a href=".." title="Superglue" class="md-header__button md-logo" aria-label="Superglue" data-md-component="logo">
       
-  <img src="images/s-color.svg" alt="logo">
+  <img src="../images/s-color.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -105,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Redux
             
           </span>
         </div>
@@ -194,7 +196,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="." class="md-tabs__link">
+        <a href=".." class="md-tabs__link">
           
   
   
@@ -214,7 +216,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="recipes/modals/" class="md-tabs__link">
+        <a href="../recipes/modals/" class="md-tabs__link">
           
   
   
@@ -234,7 +236,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="rails-utils/" class="md-tabs__link">
+        <a href="../rails-utils/" class="md-tabs__link">
           
   
   
@@ -254,7 +256,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="props-template/" class="md-tabs__link">
+        <a href="../props-template/" class="md-tabs__link">
           
   
   
@@ -274,7 +276,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="form-props/" class="md-tabs__link">
+        <a href="../form-props/" class="md-tabs__link">
           
   
   
@@ -308,9 +310,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Superglue" class="md-nav__button md-logo" aria-label="Superglue" data-md-component="logo">
+    <a href=".." title="Superglue" class="md-nav__button md-logo" aria-label="Superglue" data-md-component="logo">
       
-  <img src="images/s-color.svg" alt="logo">
+  <img src="../images/s-color.svg" alt="logo">
 
     </a>
     Superglue
@@ -382,32 +384,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -418,53 +398,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#who-is-it-for" class="md-nav__link">
-    <span class="md-ellipsis">
-      Who is it for?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refreshingly-familiar" class="md-nav__link">
-    <span class="md-ellipsis">
-      Refreshingly familiar
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#respecting-rails-favorites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Respecting Rails favorites
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -477,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -500,7 +433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/" class="md-nav__link">
+      <a href="../tutorial/" class="md-nav__link">
         
   
   
@@ -523,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="demo/" class="md-nav__link">
+      <a href="../demo/" class="md-nav__link">
         
   
   
@@ -546,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -615,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="shaping/" class="md-nav__link">
+      <a href="../shaping/" class="md-nav__link">
         
   
   
@@ -638,7 +571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="forms/" class="md-nav__link">
+      <a href="../forms/" class="md-nav__link">
         
   
   
@@ -661,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="shared-data/" class="md-nav__link">
+      <a href="../shared-data/" class="md-nav__link">
         
   
   
@@ -684,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="fragments/" class="md-nav__link">
+      <a href="../fragments/" class="md-nav__link">
         
   
   
@@ -712,6 +645,8 @@
                 
   
   
+    
+  
   
   
     
@@ -727,11 +662,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" checked>
         
           
           <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="">
@@ -747,7 +682,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_7">
             <span class="md-nav__icon md-icon"></span>
             Updating
@@ -761,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="super-turbo-streams/" class="md-nav__link">
+      <a href="../super-turbo-streams/" class="md-nav__link">
         
   
   
@@ -784,7 +719,7 @@
   
   
     <li class="md-nav__item">
-      <a href="client-updates/" class="md-nav__link">
+      <a href="../client-updates/" class="md-nav__link">
         
   
   
@@ -807,7 +742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="digging/" class="md-nav__link">
+      <a href="../digging/" class="md-nav__link">
         
   
   
@@ -830,7 +765,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deferments/" class="md-nav__link">
+      <a href="../deferments/" class="md-nav__link">
         
   
   
@@ -850,10 +785,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="redux/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Redux
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -864,6 +819,132 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flashjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      flash.js
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="flash.js">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initialstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      initialState
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-your-slice-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating your slice state
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Updating your slice state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#receive_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      RECEIVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_FETCH
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_VISIT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_REMOTE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -930,7 +1011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ujs/" class="md-nav__link">
+      <a href="../ujs/" class="md-nav__link">
         
   
   
@@ -953,7 +1034,7 @@
   
   
     <li class="md-nav__item">
-      <a href="requests/" class="md-nav__link">
+      <a href="../requests/" class="md-nav__link">
         
   
   
@@ -976,7 +1057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="navigation-context/" class="md-nav__link">
+      <a href="../navigation-context/" class="md-nav__link">
         
   
   
@@ -1007,7 +1088,7 @@
   
   
     <li class="md-nav__item">
-      <a href="performance/" class="md-nav__link">
+      <a href="../performance/" class="md-nav__link">
         
   
   
@@ -1030,7 +1111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="securing/" class="md-nav__link">
+      <a href="../securing/" class="md-nav__link">
         
   
   
@@ -1099,7 +1180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="page-response/" class="md-nav__link">
+      <a href="../page-response/" class="md-nav__link">
         
   
   
@@ -1122,7 +1203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="redux-state-shape/" class="md-nav__link">
+      <a href="../redux-state-shape/" class="md-nav__link">
         
   
   
@@ -1203,7 +1284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/modals/" class="md-nav__link">
+      <a href="../recipes/modals/" class="md-nav__link">
         
   
   
@@ -1226,7 +1307,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/ssr/" class="md-nav__link">
+      <a href="../recipes/ssr/" class="md-nav__link">
         
   
   
@@ -1249,7 +1330,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/spa-pagination/" class="md-nav__link">
+      <a href="../recipes/spa-pagination/" class="md-nav__link">
         
   
   
@@ -1272,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/infinite-scroll/" class="md-nav__link">
+      <a href="../recipes/infinite-scroll/" class="md-nav__link">
         
   
   
@@ -1295,7 +1376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/progress-bar/" class="md-nav__link">
+      <a href="../recipes/progress-bar/" class="md-nav__link">
         
   
   
@@ -1318,7 +1399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/turbo/" class="md-nav__link">
+      <a href="../recipes/turbo/" class="md-nav__link">
         
   
   
@@ -1341,7 +1422,7 @@
   
   
     <li class="md-nav__item">
-      <a href="recipes/vite/" class="md-nav__link">
+      <a href="../recipes/vite/" class="md-nav__link">
         
   
   
@@ -1414,7 +1495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="rails-utils/" class="md-nav__link">
+      <a href="../rails-utils/" class="md-nav__link">
         
   
   
@@ -1437,7 +1518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/hooks/" class="md-nav__link">
+      <a href="../reference/hooks/" class="md-nav__link">
         
   
   
@@ -1460,7 +1541,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/components.Navigation/" class="md-nav__link">
+      <a href="../reference/components.Navigation/" class="md-nav__link">
         
   
   
@@ -1483,7 +1564,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
@@ -1506,7 +1587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/types/" class="md-nav__link">
+      <a href="../reference/types/" class="md-nav__link">
         
   
   
@@ -1529,7 +1610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/types.requests/" class="md-nav__link">
+      <a href="../reference/types.requests/" class="md-nav__link">
         
   
   
@@ -1552,7 +1633,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/types.actions/" class="md-nav__link">
+      <a href="../reference/types.actions/" class="md-nav__link">
         
   
   
@@ -1625,7 +1706,7 @@
   
   
     <li class="md-nav__item">
-      <a href="props-template/" class="md-nav__link">
+      <a href="../props-template/" class="md-nav__link">
         
   
   
@@ -1698,7 +1779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="form-props/" class="md-nav__link">
+      <a href="../form-props/" class="md-nav__link">
         
   
   
@@ -1738,8 +1819,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1748,29 +1827,110 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#who-is-it-for" class="md-nav__link">
+  <a href="#flashjs" class="md-nav__link">
     <span class="md-ellipsis">
-      Who is it for?
+      flash.js
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="flash.js">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initialstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      initialState
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#refreshingly-familiar" class="md-nav__link">
+  <a href="#updating-your-slice-state" class="md-nav__link">
     <span class="md-ellipsis">
-      Refreshingly familiar
+      Updating your slice state
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Updating your slice state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#receive_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      RECEIVE_RESPONSE
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#respecting-rails-favorites" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#other-actions" class="md-nav__link">
     <span class="md-ellipsis">
-      Respecting Rails favorites
+      Other actions
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Other actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before_fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_FETCH
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_VISIT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before_remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      BEFORE_REMOTE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      SAVE_RESPONSE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1793,156 +1953,110 @@
   
 
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p><strong>Superglue is The Rails Way of building React applications.</strong> Refreshingly
-familiar. No APIs. No client-side routing. Batteries included.</p>
-<div class="grid cards">
+  <h1>Redux</h1>
+
+<p>If you have a usecase that requires complex updates to frontend state, you can
+bring your own state management, or use redux-toolkit slices. Superglue
+includes a few useful redux actions that you can use with redux slices if you
+decide to create custom slices.</p>
+<h3 id="flashjs"><code>flash.js</code><a class="headerlink" href="#flashjs" title="Permanent link">&para;</a></h3>
+<p>Your first custom slice will be a <code>flash</code> slice. Superglue's installation
+generator adds this to your project to integrate with Rail's flash.</p>
+<p>To start off, the slice is shaped exactly like the Rails flash.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nx">alert</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Something went wrong&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">success</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You&#39;ve logged in!&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>and works with the <a href="#before_visit">BEFORE_VISIT</a> and <a href="#receive_response">RECEIVE_RESPONSE</a> actions
+to </p>
 <ul>
-<li>
-<p><strong>Super Turbo Streams</strong></p>
-<p>Turbo Streams <a href="super-turbo-streams/">ported</a> for Superglue and React. Use <code>broadcast_append_to</code>
-and more to easily update your UI.</p>
-</li>
-<li>
-<p><strong>Unobtrusive Javascript (UJS)</strong></p>
-<p><a href="ujs/">Bringing back</a> a classic to make developing SPA features easy and familiar</p>
-</li>
-<li>
-<p><strong>Fragments</strong></p>
-<p>Giving Rails partials <a href="fragments/">identity and super powers</a> on the frontend.</p>
-</li>
-<li>
-<p><strong>Deferment</strong></p>
-<p>Easily <a href="deferments/">defer</a> any part of your page. Great for modals, tabs, and more!</p>
-</li>
-<li>
-<p><code>props_template</code></p>
-<p><a href="props-template/">A very fast JSON builder</a> inspired by Jbuilder to <a href="shaping/">shape</a> backend
-state. The secret sauce that give UJS superpowers.</p>
-</li>
-<li>
-<p><code>form_props</code></p>
-<p>A <code>form_with</code> <a href="form-props/">FormBuilder</a> that lets you use Rails forms with React.</p>
-</li>
-<li>
-<p><code>candy_wrapper</code></p>
-<p><a href="candy-wrapper/">Lightweight wrapper components</a> around popular React UI libraries made to work with
-FormProps.</p>
-</li>
-<li>
-<p><code>humid</code></p>
-<p><a href="humid/">Server Side Rendering</a> using MiniRacer and V8 isolates.</p>
-</li>
+<li><a href="https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L30">Clear the flash</a> before each <a href="../requests/#visit">visit</a> or <a href="../ujs/#data-sg-visit"><code>data-sg-visit</code></a> visit.</li>
+<li><a href="https://github.com/thoughtbot/superglue_rails/blob/6737b7536f120368235db695f1cf0634a5c3ea4d/lib/generators/superglue/install/templates/js/flash.js#L33">Merge any new flashes</a> recieved from any <a href="../page-response/">page response</a>.</li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">You are encouraged to modify <code>flash.js</code></p>
+<p>While the above is a key string pair, in practice, the <code>flash.js</code> is 
+customized for any temporary props that would last as long as  <code>flash.now</code>
+or <code>flash</code>. Its useful for <a href="../forms/#form-errors">form errors</a>,
+notifications, toasts, etc.</p>
+<p>For example, if you prefer a different shape, modify how the slice is
+received in your layout, <code>application.json.props</code></p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">json</span><span class="o">.</span><span class="n">slices</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="n">myFlash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flash</span><span class="o">.</span><span class="n">to_h</span><span class="o">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="n">key</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span><span class="w"> </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">flash</span><span class="w"> </span><span class="n">myFlash</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">end</span>
+</span></code></pre></div>
+<p>The <code>slices</code> key in <code>application.json.props</code> is a boundary for you to render
+state. Its commonly used to set the intial state of your slice, and update
+the slice when receiving a new page.</p>
 </div>
-<h2 id="who-is-it-for">Who is it for?<a class="headerlink" href="#who-is-it-for" title="Permanent link">&para;</a></h2>
-<p>Superglue is built from the ground up for <strong>Rails developers</strong> who want to use the 
-concepts they already know to: turbo streams, controllers, server-side
-routing, views, form helpers, and more — to create seamless, interactive React
-applications.</p>
-<p><strong>It's for large teams</strong> seeking a way out of JavaScript complexity without losing the
-investment in React components.</p>
-<p><strong>Its for nimble teams</strong> wanting to move fast with the speed of Rails development 
-and React's vast ecosystem of prebuilt UI libraries.</p>
-<h2 id="refreshingly-familiar">Refreshingly familiar<a class="headerlink" href="#refreshingly-familiar" title="Permanent link">&para;</a></h2>
-<p>Here's how basic functionality looks like:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="refreshingly-familiar-routes" name="__tabbed_1" type="radio" /><input id="refreshingly-familiar-controller" name="__tabbed_1" type="radio" /><input id="refreshingly-familiar-views" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="refreshingly-familiar-routes"><code>routes</code></label><label for="refreshingly-familiar-controller"><code>controller</code></label><label for="refreshingly-familiar-views"><code>views</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">resource</span><span class="w"> </span><span class="ss">:posts</span>
+<h4 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h4>
+<p>The flash can be accessed using a selector</p>
+<div class="language-jsx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useSelector</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react-redux&#39;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">flash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSelector</span><span class="p">((</span><span class="nx">state</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">state</span><span class="p">.</span><span class="nx">flash</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">flash</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>in <code>app/config/routes.rb</code></p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PostsController</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">ApplicationController</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">show</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="vi">@post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Post</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">update</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="vi">@post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Post</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="vi">@post</span><span class="o">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Updated&quot;</span><span class="w"> </span><span class="c1">#no save</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="n">redirect_back</span><span class="w"> </span><span class="ss">fallback_location</span><span class="p">:</span><span class="w"> </span><span class="n">root_path</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">end</span>
+<p>then use the flash as you would normally in a controller</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">flash</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Post was saved!&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">end</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># views/posts/show.json.props</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">json</span><span class="o">.</span><span class="n">spotlight</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">body</span><span class="w"> </span><span class="vi">@post</span><span class="o">.</span><span class="n">body</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">end</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">json</span><span class="o">.</span><span class="n">updateBodyForm</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="n">form_props</span><span class="p">(</span><span class="ss">model</span><span class="p">:</span><span class="w"> </span><span class="vi">@post</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">f</span><span class="o">|</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="n">f</span><span class="o">.</span><span class="n">submit</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">end</span>
+<h3 id="initialstate">initialState<a class="headerlink" href="#initialstate" title="Permanent link">&para;</a></h3>
+<p>You can render your slice's initial state in the <a href="../page-response/#slices">slices</a> <code>key</code> of the <a href="../page-response/">page
+response</a>. This has been configured for you in the <code>application.json.props</code>
+layout.  It'll be merged with the <code>initialState</code> passed to your <code>buildStore</code>
+function in your <a href="../configuration/#applicationjs">application.js</a></p>
+<h3 id="updating-your-slice-state">Updating your slice state<a class="headerlink" href="#updating-your-slice-state" title="Permanent link">&para;</a></h3>
+<p>If you receive new state for your slice from a subsequent <a href="../page-response/">page response</a>, you
+can use <code>RECEIVE_RESPONSE</code> to update your slice. Its the same mechanism your
+<code>flash.js</code> slice uses to update the internal state whenever a <a href="../page-response/">page response</a> is
+received. </p>
+<h5 id="receive_response">RECEIVE_RESPONSE<a class="headerlink" href="#receive_response" title="Permanent link">&para;</a></h5>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  type: &quot;@@superglue/RECEIVE_RESPONSE&quot;,
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  payload: {
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    pageKey: &quot;/posts&quot;,
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    response: {...the page response},
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  },
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>}
 </span></code></pre></div>
-<div class="language-jsx highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// views/posts/show.jsx</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useContent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">import</span><span class="w"> </span><span class="nx">Spotlight</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@components/Spotlight&#39;</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Form</span><span class="p">,</span><span class="w"> </span><span class="nx">SubmitButton</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@components/forms/vanilla&#39;</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">PostsShow</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="nx">updateBodyForm</span><span class="p">,</span><span class="w"> </span><span class="nx">spotlight</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">()</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="nx">form</span><span class="p">,</span><span class="w"> </span><span class="nx">extras</span><span class="p">,</span><span class="w"> </span><span class="nx">inputs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">updateBodyForm</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">&lt;&gt;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="p">&lt;</span><span class="nt">Spotlight</span><span class="w"> </span><span class="p">{</span><span class="na">...spotlight</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="p">&lt;</span><span class="nt">Form</span><span class="w"> </span><span class="p">{</span><span class="na">...form</span><span class="p">}</span><span class="w"> </span><span class="na">extras</span><span class="o">=</span><span class="p">{</span><span class="nx">extras</span><span class="p">}&gt;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">SubmitButton</span><span class="w"> </span><span class="p">{</span><span class="na">...inputs.submit</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">Form</span><span class="p">&gt;</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="p">&lt;/&gt;</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="p">);</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">}</span>
+<h4 id="other-actions">Other actions<a class="headerlink" href="#other-actions" title="Permanent link">&para;</a></h4>
+<p>There are also other actions that gets dispatched during lifecycle events that
+you can make use of.</p>
+<p>To higlight a few:</p>
+<h5 id="before_fetch">BEFORE_FETCH<a class="headerlink" href="#before_fetch" title="Permanent link">&para;</a></h5>
+<p><code>BEFORE_FETCH</code> - Action created before a before a fetch is called.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  type: &quot;@@superglue/BEFORE_FETCH&quot;,
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  payload: [..array args that are passed to fetch]
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>}
 </span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="respecting-rails-favorites">Respecting Rails favorites<a class="headerlink" href="#respecting-rails-favorites" title="Permanent link">&para;</a></h2>
-<p>Beyond the basics, Rails is already effective at building world class apps.
-Instead of ignoring the toolset, Superglue adapts it for React.</p>
-<p>Navigate like Turbo:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&lt;a href=&quot;/posts&quot; data-sg-visit&gt;Next page&lt;/a&gt;
+<h5 id="before_visit">BEFORE_VISIT<a class="headerlink" href="#before_visit" title="Permanent link">&para;</a></h5>
+<p><code>BEFORE_VISIT</code> - Same as above, but called only for a <code>visit</code> action. Your
+<code>flash</code> slice has been setup to use this to clear the flash before navigating.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  type: &quot;@@superglue/BEFORE_VISIT&quot;,
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  payload: [..array args that are passed to fetch]
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>}
 </span></code></pre></div>
-<p>Bring back the power of Unobtrusive JavaScript with surgical updates:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&lt;a href=&quot;/posts/1?props_at=data.postContent&quot; data-sg-remote&gt; Reload post &lt;/a&gt;
+<h5 id="before_remote">BEFORE_REMOTE<a class="headerlink" href="#before_remote" title="Permanent link">&para;</a></h5>
+<p><code>BEFORE_REMOTE</code> - Same as above, but called only a <code>remote</code> action.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>{
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  type: &quot;@@superglue/BEFORE_REMOTE&quot;,
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  payload: [..array args that are passed to fetch]
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>}
 </span></code></pre></div>
-<p>Build forms The Rails Way with <code>form_props</code>, a fork of <code>form_with</code> with the same API.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>  form_props(model: @post) do |f|
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    f.submit
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  end
-</span></code></pre></div>
-<p>Respond with Super Turbo Streams</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PostsController</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">ApplicationController</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">update</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="vi">@post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Post</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="vi">@post</span><span class="o">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Updated&quot;</span><span class="w"> </span><span class="c1">#no save</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">respond_to</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="nb">format</span><span class="o">|</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">      </span><span class="nb">format</span><span class="o">.</span><span class="n">html</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">redirect_back</span><span class="w"> </span><span class="ss">fallback_location</span><span class="p">:</span><span class="w"> </span><span class="n">root_path</span><span class="p">}</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="nb">format</span><span class="o">.</span><span class="n">json</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">render</span><span class="w"> </span><span class="ss">layout</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stream&quot;</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="k">end</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">end</span>
-</span></code></pre></div>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># posts/update.json.props</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">broadcast_save_props</span><span class="p">(</span><span class="ss">model</span><span class="p">:</span><span class="w"> </span><span class="vi">@post</span><span class="p">)</span><span class="w"> </span><span class="c1"># Updates all connected clients instantly</span>
-</span></code></pre></div>
-<p>Give rendered partials identity with <a href="fragments/">Fragments</a>, and optimistically update them
-client side.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">json</span><span class="o">.</span><span class="n">cart</span><span class="p">(</span><span class="ss">partial</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;cart&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">fragment</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;userCart&quot;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">end</span>
-</span></code></pre></div>
-<div class="language-jsx highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSetFragment</span><span class="p">()</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;userCart&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">cartDraft</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nx">cartDraft</span><span class="p">.</span><span class="nx">lineItems</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">qty</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">1</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">})</span>
+<h5 id="save_response">SAVE_RESPONSE<a class="headerlink" href="#save_response" title="Permanent link">&para;</a></h5>
+<p><code>SAVE_RESPONSE</code> is called before a response is saved as a page.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  type: &quot;@@superglue/SAVE_RESPONSE&quot;,
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  payload: {
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    pageKey: &quot;/posts&quot;,
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    page: {...the page response},
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  },
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>}
 </span></code></pre></div>
 
 
@@ -1978,15 +2092,31 @@ client side.</p>
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
+          
+          <a href="../deferments/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deferments">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deferments
+              </div>
+            </div>
+          </a>
+        
         
           
-          <a href="installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation">
+          <a href="../ujs/" class="md-footer__link md-footer__link--next" aria-label="Next: The return of Rails UJS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Installation
+                The return of Rails UJS
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2088,10 +2218,10 @@ client side.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["header.autohide", "navigation.footer", "navigation.tabs", "navigation.path", "toc.follow", "navigation.top", "navigation.sections", "navigation.tabs"], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.footer", "navigation.tabs", "navigation.path", "toc.follow", "navigation.top", "navigation.sections", "navigation.tabs"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.92b07e13.min.js"></script>
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
       
     
   </body>

@@ -12,13 +12,13 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/1.0/ujs/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/1.0/fragments/">
       
       
-        <link rel="prev" href="../redux/">
+        <link rel="prev" href="../shared-data/">
       
       
-        <link rel="next" href="../requests/">
+        <link rel="next" href="../super-turbo-streams/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>The return of Rails UJS - Superglue</title>
+        <title>Fragments - Superglue</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#the-return-of-rails-ujs" class="md-skip">
+        <a href="#fragments" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              The return of Rails UJS
+              Fragments
             
           </span>
         </div>
@@ -499,6 +499,8 @@
                 
   
   
+    
+  
   
   
     
@@ -514,11 +516,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" checked>
         
           
           <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="">
@@ -534,7 +536,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_6">
             <span class="md-nav__icon md-icon"></span>
             Building
@@ -614,10 +616,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../fragments/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Fragments
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -628,6 +652,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#denormalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Denormalization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Normalization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mutations
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -814,8 +885,6 @@
                 
   
   
-    
-  
   
   
     
@@ -831,11 +900,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" >
         
           
           <label class="md-nav__link" for="__nav_1_8" id="__nav_1_8_label" tabindex="">
@@ -851,7 +920,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_8">
             <span class="md-nav__icon md-icon"></span>
             Navigating
@@ -862,32 +931,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    The return of Rails UJS
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ujs/" class="md-nav__link">
         
   
   
@@ -898,83 +945,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#navigating-with-ujs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Navigating with UJS
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Navigating with UJS">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#data-sg-visit" class="md-nav__link">
-    <span class="md-ellipsis">
-      data-sg-visit
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-sg-remote" class="md-nav__link">
-    <span class="md-ellipsis">
-      data-sg-remote
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#expanding-ujs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Expanding UJS
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Expanding UJS">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#data-sg-replace" class="md-nav__link">
-    <span class="md-ellipsis">
-      data-sg-replace
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1782,59 +1752,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#navigating-with-ujs" class="md-nav__link">
+  <a href="#denormalization" class="md-nav__link">
     <span class="md-ellipsis">
-      Navigating with UJS
+      Denormalization
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Navigating with UJS">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#data-sg-visit" class="md-nav__link">
-    <span class="md-ellipsis">
-      data-sg-visit
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-sg-remote" class="md-nav__link">
-    <span class="md-ellipsis">
-      data-sg-remote
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#expanding-ujs" class="md-nav__link">
+  <a href="#normalization" class="md-nav__link">
     <span class="md-ellipsis">
-      Expanding UJS
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Expanding UJS">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#data-sg-replace" class="md-nav__link">
-    <span class="md-ellipsis">
-      data-sg-replace
+      Normalization
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#mutations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mutations
+    </span>
+  </a>
   
 </li>
       
@@ -1857,75 +1797,140 @@
   
 
 
-<h1 id="the-return-of-rails-ujs">The return of Rails UJS<a class="headerlink" href="#the-return-of-rails-ujs" title="Permanent link">&para;</a></h1>
-<p>Unobtrusive Javascript is an easy way to added single page app like features to
-HTML links and form tags. Its taken a backseat since the introduction of Hotwire,
-but Superglue puts UJS back in the forefront and packs it with functionality
-that makes building SPA-like functionality easy and consistent.</p>
-<p>Want to reload a shopping cart?</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;a href=&quot;/props_at=data.sideBar.shoppingCart&quot; data-sg-remote&gt;Reload the cart&lt;/a&gt;
+<h1 id="fragments">Fragments<a class="headerlink" href="#fragments" title="Permanent link">&para;</a></h1>
+<p><strong>Rails partials are powerful</strong></p>
+<p>They're not just about DRY'ing your views - they're also about semantic
+identification. When you extract a <code>_header.html.erb</code>, you're declaring "this
+thing is a header" with its own identity and boundary. It's valuable information
+that is often lost when rendered with a view.</p>
+<p>Enter fragments:</p>
+<p><strong>A fragment is a rendered partial with referential identity</strong> on the client side.
+Its a powerful feature that lets you update client state using an id.</p>
+<p>For example:</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">json</span><span class="o">.</span><span class="n">title</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">json</span><span class="o">.</span><span class="n">cart</span><span class="p">(</span><span class="ss">partial</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;user/cart&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">fragment</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;userCart&quot;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">end</span>
 </span></code></pre></div>
-<p>Or maybe load a modal efficiently when the next page has one?</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&lt;a href=&quot;/posts/new?props_at=data.modal&quot;&gt;Create Post&lt;/a&gt;
+<div class="language-jsx highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">()</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSetFragment</span><span class="p">()</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;userCart&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">cartDraft</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">cartDraft</span><span class="p">.</span><span class="nx">totalCost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">})</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">&lt;</span><span class="nt">Cart</span><span class="w"> </span><span class="p">{</span><span class="na">...content.cart</span><span class="p">}/&gt;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">&lt;</span><span class="nt">CartSummaryHeader</span><span class="w"> </span><span class="p">{</span><span class="na">...content.cart</span><span class="p">}/&gt;</span>
 </span></code></pre></div>
-<p>With Superglue, there is just one concept. No need for the complexity of
-Stimulus controllers, Turbo Streams, or Turbo Frames.</p>
-<h2 id="navigating-with-ujs">Navigating with UJS<a class="headerlink" href="#navigating-with-ujs" title="Permanent link">&para;</a></h2>
-<p>Superglue operates like a multipage application. In other to transition to the
-next page without reloading you'll need to use UJS attributes <code>data-sg-remote</code>
-or <code>data-sg-visit</code>.</p>
-<h3 id="data-sg-visit"><code>data-sg-visit</code><a class="headerlink" href="#data-sg-visit" title="Permanent link">&para;</a></h3>
-<p>Use <code>data-sg-visit</code> when you want to navigate to the next page and update the
-address bar without reloading.</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">&lt;</span><span class="nx">a</span><span class="w"> </span><span class="nx">href</span><span class="o">=</span><span class="s1">&#39;/posts/new&#39;</span><span class="w"> </span><span class="nx">data</span><span class="o">-</span><span class="nx">sg</span><span class="o">-</span><span class="nx">visit</span><span class="w"> </span><span class="o">/&gt;</span>
-</span></code></pre></div>
-<p>In the above example, when the link is clicked, Superglue will intercept the click,
-make a request for <code>/posts/new.json</code>, swap your page component, and pass the payload.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You are not able to specify the HTTP method used in a UJS link.</p>
-<p>This is intentional. If you want to create a link that can support <code>POST</code>,
-<code>PUT</code>, <code>DELETE</code> methods, create a form component that looks like a link and
-use props generated from <a href="https://github.com/thoughtbot/form_props">form_props</a></p>
+<div class="admonition success">
+<p class="admonition-title">Turbo Streams</p>
+<p>Because fragments are just Rails partial, it enables a familiar and powerful
+feature of Superglue: <a href="../super-turbo-streams/">Super Turbo Streams</a>.</p>
 </div>
-<p>You can also use <code>data-sg-visit</code> on forms:</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="o">&lt;</span><span class="nx">form</span><span class="w"> </span><span class="nx">action</span><span class="o">=</span><span class="s1">&#39;/some_url&#39;</span><span class="w"> </span><span class="nx">data</span><span class="o">-</span><span class="nx">sg</span><span class="o">-</span><span class="nx">visit</span><span class="w"> </span><span class="o">/&gt;</span>
+<h2 id="denormalization">Denormalization<a class="headerlink" href="#denormalization" title="Permanent link">&para;</a></h2>
+<p>A page response that uses fragments first returns a normalized state. A response
+from the previous example would look like:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">&quot;cart&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Widget&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">19.99</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Gadget&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">29.99</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">&quot;availableCoupons&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">          </span><span class="p">{</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;free shipping&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">}</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="p">]</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="nt">&quot;totalCost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">69.97</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="nt">&quot;itemCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nt">&quot;fragments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;userCart&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;cart&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="data-sg-remote"><code>data-sg-remote</code><a class="headerlink" href="#data-sg-remote" title="Permanent link">&para;</a></h3>
-<p>Use <code>data-sg-remote</code> when you want to update parts of the <strong>current page</strong> without
-reloading the screen.</p>
-<div class="admonition tip">
-<p class="admonition-title">Differences from <code>remote</code></p>
-<p>The only difference between <code>data-sg-remote</code> and <code>remote</code>, is that
-<code>data-sg-remote</code> passes the current page as the target <code>pageKey</code> of
-<code>remote</code>.</p>
-<p><code>remote</code>, normally would work like a background <code>visit</code> that doesn't change
-the url and will use the URL of the response to save the payload.</p>
-<p>But most of the time, if you're using <code>data-sg-remote</code> on a page, you want
-to dig for <code>props</code> and attach that somewhere in the current page. For
-convienence, we've modified the call so that we set the <code>pageKey</code> for you.</p>
+<p>On the client side, Superglue will denormalize when saving to the <a href="../redux-state-shape/#fragments">Redux state</a>:</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nx">pages</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">      </span><span class="s2">&quot;/current-page&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">          </span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">          </span><span class="s2">&quot;cart&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;__id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;userCart&quot;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// Fragment reference</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nx">fragments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="s2">&quot;userCart&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Widget&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">19.99</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;quantity&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Gadget&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">29.99</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;quantity&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="s2">&quot;availableCoupons&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">          </span><span class="p">{</span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;free shipping&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">}</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="p">]</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">        </span><span class="s2">&quot;totalCost&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">69.97</span><span class="p">,</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="s2">&quot;itemCount&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span><span class="p">}</span>
+</span></code></pre></div>
+<p>Like partials, fragments are also composible:</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nx">pages</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">      </span><span class="s2">&quot;/current-page&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">          </span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">          </span><span class="s2">&quot;cart&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;__id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;userCart&quot;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// Fragment reference</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nx">fragments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="s2">&quot;userCart&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">        </span><span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Widget&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">19.99</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;quantity&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">          </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Gadget&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">29.99</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;quantity&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">        </span><span class="s2">&quot;availableCoupons&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">__id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;userCoupons&quot;</span><span class="p">}</span><span class="w"> </span><span class="c1">// Fragment reference</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">        </span><span class="s2">&quot;totalCost&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">69.97</span><span class="p">,</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">        </span><span class="s2">&quot;itemCount&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">      </span><span class="s2">&quot;userCoupons&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">        </span><span class="p">{</span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;free shipping&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">}</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="normalization">Normalization<a class="headerlink" href="#normalization" title="Permanent link">&para;</a></h2>
+<p>When reading content, Superglue's <code>useContent</code> hook will return a proxy that lazily normalizes the data.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">()</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">content</span><span class="p">.</span><span class="nx">title</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Num</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">items</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">cart</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">content</span><span class="p">.</span><span class="nx">cart</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Behind the scenes, the <code>useContent</code> hook will track every fragment accessed through the proxy. If any of those fragments gets updated, the React component will rerender. This can be <a href="../performance/#frontend">selectively tuned for performance</a>.</p>
 </div>
-<p>Combine this with props_template's [digging] to selectively load content.</p>
-<div class="language-jsx highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">&lt;</span><span class="nt">a</span><span class="w"> </span><span class="na">href</span><span class="o">=</span><span class="s">&#39;/posts?page_num=2&amp;props_at=data.body.postsList&#39;</span><span class="w"> </span><span class="na">data</span><span class="err">-</span><span class="na">sg</span><span class="err">-</span><span class="na">remote</span><span class="p">/&gt;</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">Next</span><span class="w"> </span><span class="nx">Page</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+<h2 id="mutations">Mutations<a class="headerlink" href="#mutations" title="Permanent link">&para;</a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Proxies created by <code>useContent</code> can't be mutated directly. This is by design, use <code>useSetFragment</code> for <a href="../client-updates/#usesetfragment-hook">mutations</a>.</p>
+</div>
+<p>Having an identity makes optimistic updates easy. Superglue offers a <code>useSetFragment</code> <a href="../client-updates/#usesetfragment-hook">hook</a> that helps with mutations. Here's a more complex example.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSetFragment</span><span class="p">()</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;userCart&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">cartDraft</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="c1">// carDraft.availableCoupons is a fragment ref in the shape of {__id: &#39;availableCoupons&#39;}</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="c1">// you can use the fragment ref instead of a string</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nx">set</span><span class="p">(</span><span class="nx">cartDraft</span><span class="p">.</span><span class="nx">availableCoupons</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">couponsDraft</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nx">couponsDraft</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;super free shipping&quot;</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">})</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">})</span>
 </span></code></pre></div>
-<p>You can also use <code>data-sg-remote</code> on forms.</p>
-<div class="language-jsx highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">&lt;</span><span class="nt">form</span><span class="w"> </span><span class="na">action</span><span class="o">=</span><span class="s">&quot;/posts&quot;</span><span class="w"> </span><span class="na">method</span><span class="o">=</span><span class="s">&quot;GET&quot;</span><span class="w"> </span><span class="na">data</span><span class="err">-</span><span class="na">sg</span><span class="err">-</span><span class="na">remote</span><span class="p">&gt;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="p">&lt;</span><span class="nt">input</span><span class="w"> </span><span class="na">type</span><span class="o">=</span><span class="s">&quot;search&quot;</span><span class="w"> </span><span class="na">....</span><span class="w"> </span><span class="p">/&gt;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">....</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-</span></code></pre></div>
-<h2 id="expanding-ujs">Expanding UJS<a class="headerlink" href="#expanding-ujs" title="Permanent link">&para;</a></h2>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset">dataset</a> of the element enabled with <code>data-sg-visit</code> or <code>data-sg-remote</code> is
-passed to your <a href="../configuration/">application_visit.js</a>. You can add your own options to control the
-behavior of the UJS helpers. For example, if you want to selectively show a
-<a href="../recipes/progress-bar/">progress bar</a> on some links.</p>
-<h3 id="data-sg-replace"><code>data-sg-replace</code><a class="headerlink" href="#data-sg-replace" title="Permanent link">&para;</a></h3>
-<p>Included in <a href="../configuration/">application_visit.js</a> as an expanded option is <code>data-sg-replace</code>.
-It pairs with <code>data-sg-visit</code> to replace history instead of pushing when a
-user clicks on a form or a link. This can be useful when working with data
-tables with a large number of click-to-filter options that push history.</p>
+<p>In the example, you recieve an immer draft of the fragment and you can mutate it however you want.</p>
 
 
 
@@ -1961,7 +1966,7 @@ tables with a large number of click-to-filter options that push history.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../redux/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Redux">
+          <a href="../shared-data/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Shared data">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1971,20 +1976,20 @@ tables with a large number of click-to-filter options that push history.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Redux
+                Shared data
               </div>
             </div>
           </a>
         
         
           
-          <a href="../requests/" class="md-footer__link md-footer__link--next" aria-label="Next: Advanced requests">
+          <a href="../super-turbo-streams/" class="md-footer__link md-footer__link--next" aria-label="Next: Super Turbo Streams">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Advanced requests
+                Super Turbo Streams
               </div>
             </div>
             <div class="md-footer__button md-icon">

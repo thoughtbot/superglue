@@ -10,7 +10,7 @@ Add the following to your Gemfile
 
 ```ruby
 # Gemfile
-gem 'superglue'
+gem "superglue", "2.0.0.alpha.8"
 ```
 
 Run bundle and the installation generator:

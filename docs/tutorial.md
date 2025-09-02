@@ -2,7 +2,9 @@
 
 ## Building a Collaborative Shopping List
 
-For this tutorial, you'll build a shared shopping list that multiple people can collaborate on in real-time. We'll start simple and progressively add complexity to showcase Superglue's key features.
+For this tutorial, you'll build a shared shopping list that multiple people can
+collaborate on in real-time. We'll start simple and progressively add complexity
+to showcase Superglue's key features. **You can find the finished tutorial [here](https://github.com/thoughtbot/shopping_list)**
 
 Let's build a new Rails project:
 
@@ -41,7 +43,7 @@ Let's begin by creating our models, then adding routes and controllers.
 === "`shopping_lists_controller.rb`"
     in `app/controllers/shopping_lists_controller.rb`
 
-    !!! tip Enable jsx rendering defaults
+    !!! warning "Don't forget! Enable jsx rendering defaults"
         `use_jsx_rendering_defaults` enables Rails to look for `.jsx` files and
         pairs with `.props` files.
 
@@ -55,16 +57,6 @@ Let's begin by creating our models, then adding routes and controllers.
     class ShoppingListsController < ApplicationController
       def show
         @items = Item.all
-        
-        # Create some sample data if empty
-        if @items.empty?
-          Item.create!([  
-            { name: "Milk", completed: false },
-            { name: "Bread", completed: true },
-            { name: "Eggs", completed: false }
-          ])
-          @items = Item.all
-        end
       end
     end
     ```
@@ -92,11 +84,13 @@ Next, let's add the views for our shopping list.
       json.title "Family Shopping List"
     end
 
-    json.items @items do |item|
-      json.id item.id
-      json.name item.name  
-      json.completed item.completed
-      json.detailPath item_path(item)
+    json.items do
+      json.array! @items do |item|
+        json.id item.id
+        json.name item.name  
+        json.completed item.completed
+        json.detailPath item_path(item)
+      end
     end
     ```
 
@@ -220,12 +214,14 @@ transform Rails form helpers into React-compatible props:
         json.title "Family Shopping List"
       end
 
-      json.items @items do |item|
+    json.items do
+      json.array! @items do |item|
         json.id item.id
         json.name item.name  
         json.completed item.completed
         json.detailPath item_path(item)
       end
+    end
 
     + json.newItemForm do
     +   form_props(model: Item.new, url: items_path) do |f|
@@ -244,7 +240,7 @@ transform Rails form helpers into React-compatible props:
     ```diff
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
-    + import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+    + import { Form, TextField, SubmitButton } from '@javascript/components'
 
       export default function ShoppingListsShow() {
     -   const { header, items } = useContent()
@@ -316,6 +312,52 @@ transform Rails form helpers into React-compatible props:
     end
     ```
 
+### Add flash
+The `create` action redirects with a notice. Lets make sure these show up in our react app.
+
+!!! tip
+    The [flash](./redux.md#flashjs) is an example of a custom slice. It is for you to customize.
+
+```diff
+  import React from 'react'
+  import { useContent } from '@thoughtbot/superglue'
+  import { Form, TextField, SubmitButton } from '@javascript/components'
++ import { useAppSelector } from '@javascript/store'
+
+  export default function ShoppingListsShow() {
+    const { header, items, newItemForm } = useContent()
+    const { form, extras, inputs } = newItemForm
++   const flash = useAppSelector((state) => state.flash)
+
+    return (
+      <div>
+        <h1>{header.title}</h1>
++       {flash.notice && <p>{flash.notice}</p>}
++       {flash.alert && <p>{flash.alert}</p>}
+        
+        <ul>
+          {items.map(item => (
+            <li key={item.id}>
+              <input 
+                type="checkbox" 
+                checked={item.completed}
+                readOnly 
+              />
+              {item.name}
+              <a href={item.detailPath}>Details</a>
+            </li>
+          ))}
+        </ul>
+
+        <Form {...form} extras={extras}>
+          <TextField {...inputs.name} />
+          <SubmitButton {...inputs.submit} />
+        </Form>
+      </div>
+    )
+  }
+```
+
 ### Add update
 
 Now let's add a form to toggle `completed` on existing items. 
@@ -328,16 +370,18 @@ Now let's add a form to toggle `completed` on existing items.
         json.title "Family Shopping List"
       end
 
-      json.items @items do |item|
-        json.id item.id
-        json.name item.name  
-        json.completed item.completed
-        json.detailPath item_path(item)
-    +   json.toggleForm do
-    +     form_props(model: item) do |f|
-    +       f.submit "Toggle"
+      json.items do
+        json.array! @items do |item|
+          json.id item.id
+          json.name item.name  
+          json.completed item.completed
+          json.detailPath item_path(item)
+    +     json.toggleForm do
+    +       form_props(model: item) do |f|
+    +         f.submit "Toggle"
+    +       end
     +     end
-    +   end
+        end
       end
 
       json.newItemForm do
@@ -351,19 +395,22 @@ Now let's add a form to toggle `completed` on existing items.
 === "`show.jsx`"
     Update `app/views/shopping_lists/show.jsx`
 
-
     ```diff
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
-      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+      import { Form, TextField, SubmitButton } from '@javascript/components'
+      import { useAppSelector } from '@javascript/store'
 
       export default function ShoppingListsShow() {
         const { header, items, newItemForm } = useContent()
         const { form, extras, inputs } = newItemForm
+        const flash = useAppSelector((state) => state.flash)
 
         return (
           <div>
             <h1>{header.title}</h1>
+            {flash.notice && <p>{flash.notice}</p>} 
+            {flash.alert && <p>{flash.alert}</p>} 
             
             <ul>
               {items.map(item => (
@@ -436,13 +483,11 @@ Now let's add a form to toggle `completed` on existing items.
     end
     ```
 
-**Rails Forms, React Style**: `form_props` transforms familiar Rails form helpers into React props. You get Rails conventions (validations, CSRF tokens, URL helpers) with React components.
-
 ## UJS Power
-
-The forms work, but navigation feels like traditional page reloads. Let's add some Superglue UJS magic to make interactions seamless.
-
-Let's make the forms and navigation work with UJS:
+  
+What we've built so far is a multi-page application backed by classic Rails
+conventions with a touch of React. Lets progressively add SPA navigation to
+forms and links by bringing back a Rails favorite: [Unobtrusive Javascript](ujs.md)
 
 === "`show.jsx`"
     Update `app/views/shopping_lists/show.jsx`
@@ -456,16 +501,20 @@ Let's make the forms and navigation work with UJS:
     ```diff
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
-      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+      import { Form, TextField, SubmitButton } from '@javascript/components'
+      import { useAppSelector } from '@javascript/store'
 
       export default function ShoppingListsShow() {
         const { header, items, newItemForm } = useContent()
         const { form, extras, inputs } = newItemForm
+        const flash = useAppSelector((state) => state.flash)
 
         return (
           <div>
             <h1>{header.title}</h1>
-            
+            {flash.notice && <p>{flash.notice}</p>} 
+            {flash.alert && <p>{flash.alert}</p>}  
+
             <ul>
               {items.map(item => (
                 <li key={item.id}>
@@ -532,14 +581,16 @@ a slow running operation:
         json.title "Family Shopping List"
       end
 
-      json.items @items do |item|
-        json.id item.id
-        json.name item.name  
-        json.completed item.completed
-        json.detailPath item_path(item)
-        json.toggleForm do
-          form_props(model: item) do |f|
-            f.submit "Toggle"
+      json.items do
+        json.array! @items do |item|
+          json.id item.id
+          json.name item.name  
+          json.completed item.completed
+          json.detailPath item_path(item)
+          json.toggleForm do
+            form_props(model: item) do |f|
+              f.submit "Toggle"
+            end
           end
         end
       end
@@ -565,22 +616,26 @@ a slow running operation:
     ```diff 
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
-      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+      import { Form, TextField, SubmitButton } from '@javascript/components'
+      import { useAppSelector } from '@javascript/store'
 
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm } = useContent()
     +   const { header, items, newItemForm, totalCost } = useContent()
         const { form, extras, inputs } = newItemForm
+        const flash = useAppSelector((state) => state.flash)
 
         return (
           <div>
             <h1>{header.title}</h1>
-            
+            {flash.notice && <p>{flash.notice}</p>} 
+            {flash.alert && <p>{flash.alert}</p>} 
+
     +       <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
     +         <h3>Total Cost: {totalCost.amount}</h3>
     +         <small>{totalCost.message}</small>
     +       </div>
-            
+    +       
             <ul>
               {items.map(item => (
                 <li key={item.id}>
@@ -611,26 +666,30 @@ Let's fix the performance issue with `defer: :auto`, which allows us to [skip
 blocks](./deferments.md#defer-auto) and automatically fetch it later. 
 
 === "`show.json.props`"
+    Update `app/views/shopping_lists/show.json.props`
+
     ```diff
       json.header do
         json.title "Family Shopping List"
       end
 
-      json.items @items do |item|
-        json.id item.id
-        json.name item.name  
-        json.completed item.completed
-        json.detailPath item_path(item)
-        json.toggleForm do
-          form_props(model: item) do |f|
-            f.submit "Toggle"
+      json.items do
+        json.array! @items do |item|
+          json.id item.id
+          json.name item.name  
+          json.completed item.completed
+          json.detailPath item_path(item)
+          json.toggleForm do
+            form_props(model: item) do |f|
+              f.submit "Toggle"
+            end
           end
         end
       end
 
     - json.totalCost do
     + json.totalCost(defer: [:auto, placeholder: { amount: "Calculating...", message: "Getting current prices" }]) do
-        # Expensive API call
+        # Simulate expensive API call to get current prices
         sleep 3
         json.amount "$23.45"
         json.message "Estimated total based on current prices"
@@ -644,7 +703,24 @@ blocks](./deferments.md#defer-auto) and automatically fetch it later.
       end
     ```
 
-Now the page loads instantly with "Calculating..." and the real cost appears automatically after 3 seconds!
+Now reload the page, and watch it instantly load with "Calculating...". Wait another 3 seconds and watch real cost appears automatically!
+
+!!! tip
+    You can defer any deeply nested child node and nest deferments. For example:
+
+    ```ruby
+    json.metrics do 
+      json.visits(defer: :auto) do
+        json.total(defer: :auto) do
+        end
+        json.average(defer: :auto) do
+        end
+      end
+    end
+    ```
+    
+    Read more about this in [deferments](./deferments.md)
+
 
 !!! tip
     [There is also](./deferments.md#defer-manual) a `defer: :manual`. Its for cases where we want to be explicit when the deferred content loads. This is useful for modals and tabs.
@@ -663,9 +739,9 @@ GET /shopping_list?props_at=data.totalCost
 
 ## Digging with `props_at`
 
-The second step above is called [digging](./digging.md). You can use the same
-`props_at` pattern with [Unobtrusive Javascript](./ujs.md) via `data-sg-remote` or
-with [requests](./requests.md).
+The second step behind the scenes is called [digging](./digging.md). You can
+use the same `props_at` pattern with [Unobtrusive Javascript](./ujs.md) via
+`data-sg-remote` or with [requests](./requests.md).
 
 Here's how reloading a part of the screen would look like:
 
@@ -685,36 +761,41 @@ Here's how reloading a part of the screen would look like:
     </a>
     ```
 
-**The power of props_at**: In both cases, were selectively choosing a block of
+**The power of props_at**: In both cases, we are selectively choosing a block of
 state to fetch from your `props`. This helps us update any part of your page
 without full reloads.
 
-## Real-Time Streaming
+## Super Turbo Stream: Streaming Responses
 
-Now let's make this truly collaborative. Instead of redirecting after form submissions, let's use Super Turbo Streams to update all connected users.
+We've been redirecting the user back after an item is created. This reloads the entire page, it would be nice to just render the `_item.json.props` partial append to the list.
 
-But first, we need [fragments](./fragments.md) - these give your Rails partials semantic identity so streaming responses can target specific areas for updates.
+Now we can! We've taken the power of Turbo Streams and ported it to Superglue as Super Turbo Stream. Before we get to real time streaming,
+lets start with Super Turbo Streaming responses to surgically update
+our list.
 
 === "Update templates with fragments"
     Update `app/views/shopping_lists/show.json.props` to add fragment IDs:
+
+    !!! tip
+        This step declares a fragment with an id of `shopping_list` that we
+        can refer to in the frontend
 
     ```diff
     json.header do
       json.title "Family Shopping List"
     end
 
-    + # Set up streaming subscription
-    + json.streamFromShopping stream_from_props("shopping")
-    +
     + json.items(partial: ["item_list", fragment: "shopping_list"]) do
-    - json.items @items do |item|
-    -   json.id item.id
-    -   json.name item.name  
-    -   json.completed item.completed
-    -   json.detailPath item_path(item)
-    -   json.toggleForm do
-    -     form_props(model: item) do |f|
-    -       f.submit "Toggle"
+    - json.items do
+    -   json.array! @items do |item|
+    -     json.id item.id
+    -     json.name item.name  
+    -     json.completed item.completed
+    -     json.detailPath item_path(item)
+    -     json.toggleForm do
+    -       form_props(model: item) do |f|
+    -         f.submit "Toggle"
+    -       end
     -     end
     -   end
       end
@@ -723,6 +804,10 @@ But first, we need [fragments](./fragments.md) - these give your Rails partials 
     ```
 
     Create `app/views/shopping_lists/_item_list.json.props`:
+    
+    !!! tip
+        This step declares `n` fragments, 1 for each item in `@items` with
+        an id that looks like `item_1`, `item_2`, etc.
 
     ```ruby
     json.array!(
@@ -733,6 +818,9 @@ But first, we need [fragments](./fragments.md) - these give your Rails partials 
     ```
     
     Create `app/views/shopping_lists/_item.json.props`:
+    
+    !!! tip
+        This step creates the content of the item fragments.
 
     ```ruby
     json.id item.id
@@ -746,7 +834,13 @@ But first, we need [fragments](./fragments.md) - these give your Rails partials 
     end
     ```
 
+   
 === "`items_controller.rb`"
+    !!! tip
+        Using fragments [denormalizes](./fragments.md#denormalization) the
+        state, which gets lazily re-normalized with [useContent](./fragments.md#normalization). Before we update the
+        controller, go ahead and reload the page. Everything should still work. 
+
     Update `app/controllers/items_controller.rb` for streaming responses
 
     ```diff
@@ -791,45 +885,70 @@ But first, we need [fragments](./fragments.md) - these give your Rails partials 
 === "`create.json.props`"
     Create `app/views/items/create.json.props`
 
+    !!! tip
+        The below will create a streaming response that will save the content as
+        fragment `item_1` and append a reference to it to fragment `shopping_list`
+
     ```ruby
-    # This will broadcast to all connected clients
     broadcast_append_props(
       model: @item, 
       save_target: "item_#{@item.id}",
       target: "shopping_list",
-      stream: "shopping",
       partial: "shopping_lists/item"
     )
     ```
 
 === "`update.json.props`"
     Create `app/views/items/update.json.props`
+    
+    !!! tip
+        The below will create a streaming response that will save the content as
+        fragment `item_1` and override any existing fragment with that id.
 
     ```ruby
     # This will update the item for all connected clients
     broadcast_save_props(
       model: @item, 
       target: "item_#{@item.id}",
-      stream: "shopping",
       partial: "shopping_lists/item",
     )
     ```
 
-Let's connect the streaming to our component:
+## Super Turbo Stream: Subscriptions
+
+Now let's make this truly collaborative. Let's use Super Turbo Streams to update all connected users.
+
+=== "Update templates with fragments"
+    Update `app/views/shopping_lists/show.json.props` to create ActionCable subscription props:
+
+    ```diff
+      json.header do
+        json.title "Family Shopping List"
+      end
+
+    + # Set up streaming subscription
+    + json.streamFromShopping stream_from_props("shopping")
+     
+      json.items(partial: ["item_list", fragment: "shopping_list"]) do
+      end
+
+      # ... rest remains the same
+    ```
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to subscribe to streaming updates
+    Update `app/views/shopping_lists/show.jsx` to subscribe using those props.
 
     ```diff
       import React from 'react'
     - import { useContent } from '@thoughtbot/superglue'
     + import { useContent, useStreamSource } from '@thoughtbot/superglue'
-      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
-
+      import { Form, TextField, SubmitButton } from '@javascript/components'
+      import { useAppSelector } from '@javascript/store'
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm, totalCost } = useContent()
     +   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
         const { form, extras, inputs } = newItemForm
+        const flash = useAppSelector((state) => state.flash)
         
     +   // Subscribe to real-time updates
     +   const { connected } = useStreamSource(streamFromShopping)
@@ -837,7 +956,9 @@ Let's connect the streaming to our component:
         return (
           <div>
             <h1>{header.title}</h1>
-            
+            {flash.notice && <p>{flash.notice}</p>} 
+            {flash.alert && <p>{flash.alert}</p>}  
+
             <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
               <h3>Total Cost: {totalCost.amount}</h3>
               <small>{totalCost.message}</small>
@@ -868,7 +989,71 @@ Let's connect the streaming to our component:
       }
     ```
 
-Now when one user adds an item or toggles completion, **all connected users see the update instantly**!
+=== "`item.rb`"
+    Add the `Broadcastable` module to the model.
+
+    ```diff
+    class Item < ApplicationRecord
+    +  include Superglue::Broadcastable
+    end
+    ```
+
+=== "`items_controller.rb`"
+    And broadcast it from the controller.
+
+    ```diff
+    class ItemsController < ApplicationController
+      def show
+        @item = Item.find(params[:id])
+      end
+
+      def create
+        @item = Item.new(item_params.merge(completed: false))
+        
+        if @item.save
+    +      @item.broadcast_append_later_to(
+    +        "shopping",
+    +        save_target: "item_#{@item.id}",
+    +        target: "shopping_list",
+    +        partial: "shopping_lists/item"
+    +      )
+
+          respond_to do |format|
+            flash[:notice] = "Item added succesfully"
+            format.html { redirect_to root_path }
+            format.json { render layout: "stream" }
+          end
+        else
+          respond_to do |format|
+            format.html { redirect_to root_path }
+            format.json { render layout: "stream" }
+          end
+        end
+      end
+
+      def update
+        @item = Item.find(params[:id])
+        @item.update!(completed: !@item.completed)
+    +    @item.broadcast_save_later_to(
+    +      "shopping",
+    +      target: "item_#{@item.id}",
+    +      partial: "shopping_lists/item"
+    +    )
+        respond_to do |format|
+          format.html { redirect_to root_path }
+          format.json { render layout: "stream" }
+        end
+      end
+
+      private
+
+      def item_params
+        params.require(:item).permit(:name)
+      end
+    end
+    ```
+
+Open two tabs to the app to simlate two users. Now when one user adds an item or toggles completion, **all connected users see the update instantly**!
 
 ## Performance with Fragment References
 
@@ -886,13 +1071,15 @@ Let's optimize our app:
     - import { useContent, useStreamSource } from '@thoughtbot/superglue'
     + import { useContent, useStreamSource, unproxy } from '@thoughtbot/superglue'
     + import ItemsList from '@javascript/components/ItemsList'
-      import { Form, TextField, SubmitButton } from '@javascript/components/forms/vanilla'
+      import { Form, TextField, SubmitButton } from '@javascript/components'
+      import { useAppSelector } from '@javascript/store'
 
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
     +   const content = useContent()
     +   const { header, newItemForm, totalCost, streamFromShopping } = content
         const { form, extras, inputs } = newItemForm
+        const flash = useAppSelector((state) => state.flash)
         
         // Subscribe to real-time updates
         const { connected } = useStreamSource(streamFromShopping)
@@ -904,6 +1091,8 @@ Let's optimize our app:
         return (
           <div>
             <h1>{header.title}</h1>
+            {flash.notice && <p>{flash.notice}</p>} 
+            {flash.alert && <p>{flash.alert}</p>} 
             
             <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
               <h3>Total Cost: {totalCost.amount}</h3>
@@ -945,11 +1134,10 @@ Let's optimize our app:
     ```jsx
     import React from 'react'
     import { useContent, unproxy } from '@thoughtbot/superglue'
-    import { Form, SubmitButton } from '@javascript/components/forms/vanilla'
+    import { Form, SubmitButton } from '@javascript/components'
 
     const Item = ({ itemRef }) => {
       const {
-        id,
         name,
         completed,
         detailPath,
@@ -996,7 +1184,7 @@ For the final touch, let's add optimistic updates using `useSetFragment`:
     - import React from 'react'
     + import React, { useContext } from 'react'
     - import { useContent, unproxy } from '@thoughtbot/superglue'
-    + import { useContent, useSetFragment, unproxy, useNavigationContext } from '@thoughtbot/superglue'
+    + import { useContent, useSetFragment, unproxy, NavigationContext } from '@thoughtbot/superglue'
 
       const Item = ({ itemRef }) => {
         const {
@@ -1053,17 +1241,8 @@ For the final touch, let's add optimistic updates using `useSetFragment`:
       }
     ```
 
-## What You've Built
+## Finish
 
-Congratulations! You've built a collaborative shopping list that demonstrates all of Superglue's key features:
-
-- **Rails-familiar patterns** - Routes, controllers, and views
-- **UJS power** - `data-sg-remote` and `data-sg-visit` for seamless interactions  
-- **Progressive loading** - `defer: :auto` for instant page loads
-- **Surgical updates** - `props_at` for updating specific page sections
-- **Real-time collaboration** - Super Turbo Streams for multi-user updates
-- **Fragment architecture** - Cross-cutting concerns with semantic identity
-- **Optimized performance** - Fragment references and surgical re-rendering
-- **Optimistic updates** - Immediate client-side feedback with server sync
-
-Welcome to Superglue.
+Congratulations! You've built a collaborative shopping list that demonstrates
+Superglue's key features. Explore the rest of the documentation to discover
+what else is possible.

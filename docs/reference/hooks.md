@@ -6,7 +6,7 @@
 
 > **useSuperglue**(): [`SuperglueState`](types.md#supergluestate)
 
-Defined in: [hooks/index.ts:10](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/index.ts#L10)
+Defined in: [hooks/index.ts:10](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/index.ts#L10)
 
 A lightweight hook that grabs the superglue state from the store.
 

@@ -4,14 +4,14 @@
 
 ### ParsedResponse
 
-Defined in: [types/index.ts:168](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L168)
+Defined in: [types/index.ts:171](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L171)
 
 #### Properties
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="rsp"></a> `rsp` | `Response` | [types/index.ts:169](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L169) |
-| <a id="json"></a> `json` | [`PageResponse`](#pageresponse) | [types/index.ts:170](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L170) |
+| <a id="rsp"></a> `rsp` | `Response` | [types/index.ts:172](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L172) |
+| <a id="json"></a> `json` | [`PageResponse`](#pageresponse) | [types/index.ts:173](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L173) |
 
 ***
 
@@ -19,7 +19,7 @@ Defined in: [types/index.ts:168](https://github.com/thoughtbot/superglue/blob/46
 
 ### Defer
 
-Defined in: [types/index.ts:194](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L194)
+Defined in: [types/index.ts:197](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L197)
 
 Defer is a node in the page response thats been intentionally filled
 with empty or placeholder data for the purposes of fetching it later.
@@ -31,11 +31,11 @@ know would be slower to load.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="url"></a> `url` | `string` | A url with props_at keypath in the query parameter to indicate how to dig for the data, and where to place the data. | [types/index.ts:195](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L195) |
-| <a id="type"></a> `type` | `"auto"` \| `"manual"` | When set to `auto` Superglue will automatically make the request using the `url`. When set to `manual`, Superglue does nothing, and you would need to manually use `remote` with the `url` to fetch the missing data. | [types/index.ts:196](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L196) |
-| <a id="path"></a> `path` | `string` | A keypath indicates how to dig for the data and where to place the data. | [types/index.ts:197](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L197) |
-| <a id="successaction"></a> `successAction` | `string` | a user defined action for Superglue to dispatch when auto deferement is successful | [types/index.ts:198](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L198) |
-| <a id="failaction"></a> `failAction` | `string` | a user defined action for Superglue to dispatch when auto deferement failed | [types/index.ts:199](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L199) |
+| <a id="url"></a> `url` | `string` | A url with props_at keypath in the query parameter to indicate how to dig for the data, and where to place the data. | [types/index.ts:198](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L198) |
+| <a id="type"></a> `type` | `"auto"` \| `"manual"` | When set to `auto` Superglue will automatically make the request using the `url`. When set to `manual`, Superglue does nothing, and you would need to manually use `remote` with the `url` to fetch the missing data. | [types/index.ts:199](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L199) |
+| <a id="path"></a> `path` | `string` | A keypath indicates how to dig for the data and where to place the data. | [types/index.ts:200](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L200) |
+| <a id="successaction"></a> `successAction` | `string` | a user defined action for Superglue to dispatch when auto deferement is successful | [types/index.ts:201](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L201) |
+| <a id="failaction"></a> `failAction` | `string` | a user defined action for Superglue to dispatch when auto deferement failed | [types/index.ts:202](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L202) |
 
 ***
 
@@ -43,7 +43,7 @@ know would be slower to load.
 
 ### GraftResponse\<T\>
 
-Defined in: [types/index.ts:235](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L235)
+Defined in: [types/index.ts:238](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L238)
 
 The GraftResponse is responsible for partial updates using props_template's
 digging functionality in Superglue.
@@ -58,17 +58,17 @@ digging functionality in Superglue.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="data-1"></a> `data` | `T` | - | [types/index.ts:236](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L236) |
-| <a id="componentidentifier-2"></a> `componentIdentifier` | `string` | - | [types/index.ts:237](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L237) |
-| <a id="assets-1"></a> `assets` | `string`[] | - | [types/index.ts:238](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L238) |
-| <a id="csrftoken-1"></a> `csrfToken?` | `string` | - | [types/index.ts:239](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L239) |
-| <a id="fragments-1"></a> `fragments` | [`FragmentPath`](#fragmentpath)[] | - | [types/index.ts:240](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L240) |
-| <a id="defers-1"></a> `defers` | [`Defer`](#defer)[] | - | [types/index.ts:241](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L241) |
-| <a id="slices-1"></a> `slices` | [`JSONObject`](#jsonobject) | - | [types/index.ts:242](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L242) |
-| <a id="action-1"></a> `action` | `"graft"` | - | [types/index.ts:243](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L243) |
-| <a id="renderedat-1"></a> `renderedAt` | `number` | - | [types/index.ts:244](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L244) |
-| <a id="path-1"></a> `path` | `string` | Used by superglue to replace the data at that location. | [types/index.ts:246](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L246) |
-| <a id="fragmentcontext"></a> `fragmentContext?` | `string` | - | [types/index.ts:247](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L247) |
+| <a id="data-1"></a> `data` | `T` | - | [types/index.ts:239](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L239) |
+| <a id="componentidentifier-2"></a> `componentIdentifier` | `string` | - | [types/index.ts:240](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L240) |
+| <a id="assets-1"></a> `assets` | `string`[] | - | [types/index.ts:241](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L241) |
+| <a id="csrftoken-1"></a> `csrfToken?` | `string` | - | [types/index.ts:242](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L242) |
+| <a id="fragments-1"></a> `fragments` | [`FragmentPath`](#fragmentpath)[] | - | [types/index.ts:243](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L243) |
+| <a id="defers-1"></a> `defers` | [`Defer`](#defer)[] | - | [types/index.ts:244](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L244) |
+| <a id="slices-1"></a> `slices` | [`JSONObject`](#jsonobject) | - | [types/index.ts:245](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L245) |
+| <a id="action-1"></a> `action` | `"graft"` | - | [types/index.ts:246](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L246) |
+| <a id="renderedat-1"></a> `renderedAt` | `number` | - | [types/index.ts:247](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L247) |
+| <a id="path-1"></a> `path` | `string` | Used by superglue to replace the data at that location. | [types/index.ts:249](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L249) |
+| <a id="fragmentcontext"></a> `fragmentContext?` | `string` | - | [types/index.ts:250](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L250) |
 
 ***
 
@@ -76,7 +76,7 @@ digging functionality in Superglue.
 
 ### FragmentPath
 
-Defined in: [types/index.ts:284](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L284)
+Defined in: [types/index.ts:287](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L287)
 
 A FragmentPath identifies a fragment inside of a PageResponse. Its used internally by Superglue to
 denormalize a page response into fragments, if any.
@@ -85,8 +85,8 @@ denormalize a page response into fragments, if any.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `string` | - | [types/index.ts:285](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L285) |
-| <a id="path-2"></a> `path` | `string` | A Keypath specifying the location of the fragment | [types/index.ts:286](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L286) |
+| <a id="id"></a> `id` | `string` | - | [types/index.ts:288](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L288) |
+| <a id="path-2"></a> `path` | `string` | A Keypath specifying the location of the fragment | [types/index.ts:289](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L289) |
 
 ***
 
@@ -94,7 +94,7 @@ denormalize a page response into fragments, if any.
 
 ### FragmentRef
 
-Defined in: [types/index.ts:297](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L297)
+Defined in: [types/index.ts:300](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L300)
 
 A FragmentRef is a reference to a Fragment.
 
@@ -102,7 +102,7 @@ A FragmentRef is a reference to a Fragment.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="__id-1"></a> `__id` | `string` | A user supplied string identifying the fragment. This is usually created using [props_template](https://github.com/thoughtbot/props_template?tab=readme-ov-file#jsonfragments) | [types/index.ts:298](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L298) |
+| <a id="__id-1"></a> `__id` | `string` | A user supplied string identifying the fragment. This is usually created using [props_template](https://github.com/thoughtbot/props_template?tab=readme-ov-file#jsonfragments) | [types/index.ts:301](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L301) |
 
 ***
 
@@ -110,7 +110,7 @@ A FragmentRef is a reference to a Fragment.
 
 ### SuperglueState
 
-Defined in: [types/index.ts:317](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L317)
+Defined in: [types/index.ts:320](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L320)
 
 A read only state that contains meta information about
 the current page.
@@ -119,10 +119,10 @@ the current page.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="currentpagekey"></a> `currentPageKey` | `string` | The [PageKey](#pagekey) (url pathname + search) of the current page. This can be pass to [Remote](types.requests.md#remote). | [types/index.ts:319](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L319) |
-| <a id="search"></a> `search` | `Record`\<`string`, `string` \| `undefined`\> | The query string object of the current url. | [types/index.ts:321](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L321) |
-| <a id="csrftoken-3"></a> `csrfToken?` | `string` | The Rails csrfToken that you can use for forms. | [types/index.ts:323](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L323) |
-| <a id="assets-3"></a> `assets` | `string`[] | The tracked asset digests. | [types/index.ts:325](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L325) |
+| <a id="currentpagekey"></a> `currentPageKey` | `string` | The [PageKey](#pagekey) (url pathname + search) of the current page. This can be pass to [Remote](types.requests.md#remote). | [types/index.ts:322](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L322) |
+| <a id="search"></a> `search` | `Record`\<`string`, `string` \| `undefined`\> | The query string object of the current url. | [types/index.ts:324](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L324) |
+| <a id="csrftoken-3"></a> `csrfToken?` | `string` | The Rails csrfToken that you can use for forms. | [types/index.ts:326](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L326) |
+| <a id="assets-3"></a> `assets` | `string`[] | The tracked asset digests. | [types/index.ts:328](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L328) |
 
 ***
 
@@ -130,7 +130,7 @@ the current page.
 
 ### RootState\<T\>
 
-Defined in: [types/index.ts:332](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L332)
+Defined in: [types/index.ts:335](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L335)
 
 The root state for a Superglue application. It occupies
 2 keys in your app.
@@ -149,9 +149,9 @@ The root state for a Superglue application. It occupies
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="superglue"></a> `superglue` | [`SuperglueState`](#supergluestate) | Contains readonly metadata about the current page | [types/index.ts:334](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L334) |
-| <a id="pages"></a> `pages` | [`AllPages`](#allpages)\<`T`\> | Every [PageResponse](#pageresponse) that superglue recieves is stored here. | [types/index.ts:336](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L336) |
-| <a id="fragments-3"></a> `fragments` | [`AllFragments`](#allfragments) | - | [types/index.ts:337](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L337) |
+| <a id="superglue"></a> `superglue` | [`SuperglueState`](#supergluestate) | Contains readonly metadata about the current page | [types/index.ts:337](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L337) |
+| <a id="pages"></a> `pages` | [`AllPages`](#allpages)\<`T`\> | Every [PageResponse](#pageresponse) that superglue recieves is stored here. | [types/index.ts:339](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L339) |
+| <a id="fragments-3"></a> `fragments` | [`AllFragments`](#allfragments) | - | [types/index.ts:340](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L340) |
 
 ***
 
@@ -159,7 +159,7 @@ The root state for a Superglue application. It occupies
 
 ### Meta
 
-Defined in: [types/index.ts:346](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L346)
+Defined in: [types/index.ts:349](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L349)
 
 Meta is passed to the Promise when visit or remote
 resolves and contains additional information for
@@ -173,13 +173,13 @@ navigation.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="pagekey-1"></a> `pageKey` | `string` | The URL of the response converted to a pageKey. Superglue uses this to persist the [SaveResponse](#saveresponse) to store, when that happens. | [types/index.ts:351](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L351) |
-| <a id="page-1"></a> `page` | [`PageResponse`](#pageresponse) | The [SaveResponse](#saveresponse) of the page | [types/index.ts:353](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L353) |
-| <a id="redirected"></a> `redirected` | `boolean` | Indicates if response was redirected | [types/index.ts:355](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L355) |
-| <a id="rsp-1"></a> `rsp` | `Response` | The original response object | [types/index.ts:357](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L357) |
-| <a id="fetchargs-1"></a> `fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) | The original args passed to fetch. | [types/index.ts:359](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L359) |
-| <a id="componentidentifier-3"></a> `componentIdentifier?` | `string` | The [ComponentIdentifier](#componentidentifier) extracted from the response. | [types/index.ts:361](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L361) |
-| <a id="needsrefresh"></a> `needsRefresh` | `boolean` | `true` when assets locally are detected to be out of date | [types/index.ts:363](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L363) |
+| <a id="pagekey-1"></a> `pageKey` | `string` | The URL of the response converted to a pageKey. Superglue uses this to persist the [SaveResponse](#saveresponse) to store, when that happens. | [types/index.ts:354](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L354) |
+| <a id="page-1"></a> `page` | [`PageResponse`](#pageresponse) | The [SaveResponse](#saveresponse) of the page | [types/index.ts:356](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L356) |
+| <a id="redirected"></a> `redirected` | `boolean` | Indicates if response was redirected | [types/index.ts:358](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L358) |
+| <a id="rsp-1"></a> `rsp` | `Response` | The original response object | [types/index.ts:360](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L360) |
+| <a id="fetchargs-1"></a> `fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) | The original args passed to fetch. | [types/index.ts:362](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L362) |
+| <a id="componentidentifier-3"></a> `componentIdentifier?` | `string` | The [ComponentIdentifier](#componentidentifier) extracted from the response. | [types/index.ts:364](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L364) |
+| <a id="needsrefresh"></a> `needsRefresh` | `boolean` | `true` when assets locally are detected to be out of date | [types/index.ts:366](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L366) |
 
 ***
 
@@ -187,7 +187,7 @@ navigation.
 
 ### VisitMeta
 
-Defined in: [types/index.ts:366](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L366)
+Defined in: [types/index.ts:369](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L369)
 
 Meta is passed to the Promise when visit or remote
 resolves and contains additional information for
@@ -201,14 +201,14 @@ navigation.
 
 | Property | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="pagekey-2"></a> `pageKey` | `string` | The URL of the response converted to a pageKey. Superglue uses this to persist the [SaveResponse](#saveresponse) to store, when that happens. | [`Meta`](#meta).[`pageKey`](#pagekey-1) | [types/index.ts:351](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L351) |
-| <a id="page-2"></a> `page` | [`PageResponse`](#pageresponse) | The [SaveResponse](#saveresponse) of the page | [`Meta`](#meta).[`page`](#page-1) | [types/index.ts:353](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L353) |
-| <a id="redirected-1"></a> `redirected` | `boolean` | Indicates if response was redirected | [`Meta`](#meta).[`redirected`](#redirected) | [types/index.ts:355](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L355) |
-| <a id="rsp-2"></a> `rsp` | `Response` | The original response object | [`Meta`](#meta).[`rsp`](#rsp-1) | [types/index.ts:357](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L357) |
-| <a id="fetchargs-2"></a> `fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) | The original args passed to fetch. | [`Meta`](#meta).[`fetchArgs`](#fetchargs-1) | [types/index.ts:359](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L359) |
-| <a id="componentidentifier-4"></a> `componentIdentifier?` | `string` | The [ComponentIdentifier](#componentidentifier) extracted from the response. | [`Meta`](#meta).[`componentIdentifier`](#componentidentifier-3) | [types/index.ts:361](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L361) |
-| <a id="needsrefresh-1"></a> `needsRefresh` | `boolean` | `true` when assets locally are detected to be out of date | [`Meta`](#meta).[`needsRefresh`](#needsrefresh) | [types/index.ts:363](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L363) |
-| <a id="navigationaction-1"></a> `navigationAction` | [`NavigationAction`](#navigationaction) | The [NavigationAction](#navigationaction). This can be used for navigation. | - | [types/index.ts:368](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L368) |
+| <a id="pagekey-2"></a> `pageKey` | `string` | The URL of the response converted to a pageKey. Superglue uses this to persist the [SaveResponse](#saveresponse) to store, when that happens. | [`Meta`](#meta).[`pageKey`](#pagekey-1) | [types/index.ts:354](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L354) |
+| <a id="page-2"></a> `page` | [`PageResponse`](#pageresponse) | The [SaveResponse](#saveresponse) of the page | [`Meta`](#meta).[`page`](#page-1) | [types/index.ts:356](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L356) |
+| <a id="redirected-1"></a> `redirected` | `boolean` | Indicates if response was redirected | [`Meta`](#meta).[`redirected`](#redirected) | [types/index.ts:358](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L358) |
+| <a id="rsp-2"></a> `rsp` | `Response` | The original response object | [`Meta`](#meta).[`rsp`](#rsp-1) | [types/index.ts:360](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L360) |
+| <a id="fetchargs-2"></a> `fetchArgs` | [`FetchArgs`](types.actions.md#fetchargs) | The original args passed to fetch. | [`Meta`](#meta).[`fetchArgs`](#fetchargs-1) | [types/index.ts:362](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L362) |
+| <a id="componentidentifier-4"></a> `componentIdentifier?` | `string` | The [ComponentIdentifier](#componentidentifier) extracted from the response. | [`Meta`](#meta).[`componentIdentifier`](#componentidentifier-3) | [types/index.ts:364](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L364) |
+| <a id="needsrefresh-1"></a> `needsRefresh` | `boolean` | `true` when assets locally are detected to be out of date | [`Meta`](#meta).[`needsRefresh`](#needsrefresh) | [types/index.ts:366](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L366) |
+| <a id="navigationaction-1"></a> `navigationAction` | [`NavigationAction`](#navigationaction) | The [NavigationAction](#navigationaction). This can be used for navigation. | - | [types/index.ts:371](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L371) |
 
 ***
 
@@ -216,14 +216,14 @@ navigation.
 
 ### Handlers
 
-Defined in: [types/index.ts:411](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L411)
+Defined in: [types/index.ts:414](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L414)
 
 #### Properties
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="onclick"></a> `onClick` | (`event`: `MouseEvent`\<`HTMLDivElement`, `MouseEvent`\>) => `void` | [types/index.ts:412](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L412) |
-| <a id="onsubmit"></a> `onSubmit` | (`event`: `FormEvent`\<`HTMLDivElement`\>) => `void` | [types/index.ts:413](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L413) |
+| <a id="onclick"></a> `onClick` | (`event`: `MouseEvent`\<`HTMLDivElement`, `MouseEvent`\>) => `void` | [types/index.ts:415](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L415) |
+| <a id="onsubmit"></a> `onSubmit` | (`event`: `FormEvent`\<`HTMLDivElement`\>) => `void` | [types/index.ts:416](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L416) |
 
 ***
 
@@ -231,7 +231,7 @@ Defined in: [types/index.ts:411](https://github.com/thoughtbot/superglue/blob/46
 
 ### HistoryState
 
-Defined in: [types/index.ts:433](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L433)
+Defined in: [types/index.ts:436](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L436)
 
 The state that is saved to history.state. Superglue stores
 information about the current page so that it can restore
@@ -241,10 +241,10 @@ the page state when navigating back
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="superglue-1"></a> `superglue` | `true` | Is always `true` so superglue can differentiate pages that have superglue enabled or not | [types/index.ts:435](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L435) |
-| <a id="pagekey-3"></a> `pageKey` | `string` | The page key in [SuperglueState](#supergluestate) to restore from | [types/index.ts:437](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L437) |
-| <a id="posx"></a> `posX` | `number` | The scroll position X of the page | [types/index.ts:439](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L439) |
-| <a id="posy"></a> `posY` | `number` | The scroll position Y of the page | [types/index.ts:441](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L441) |
+| <a id="superglue-1"></a> `superglue` | `true` | Is always `true` so superglue can differentiate pages that have superglue enabled or not | [types/index.ts:438](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L438) |
+| <a id="pagekey-3"></a> `pageKey` | `string` | The page key in [SuperglueState](#supergluestate) to restore from | [types/index.ts:440](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L440) |
+| <a id="posx"></a> `posX` | `number` | The scroll position X of the page | [types/index.ts:442](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L442) |
+| <a id="posy"></a> `posY` | `number` | The scroll position Y of the page | [types/index.ts:444](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L444) |
 
 ***
 
@@ -252,7 +252,7 @@ the page state when navigating back
 
 ### BasicRequestInit
 
-Defined in: [types/index.ts:467](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L467)
+Defined in: [types/index.ts:470](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L470)
 
 A variation of RequestInit except the headers must be a regular object
 
@@ -264,7 +264,7 @@ A variation of RequestInit except the headers must be a regular object
 
 | Property | Type | Description | Overrides | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="headers"></a> `headers?` | \{\[`key`: `string`\]: `string`; \} | A Headers object, an object literal, or an array of two-item arrays to set request's headers. | `RequestInit.headers` | [types/index.ts:468](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L468) |
+| <a id="headers"></a> `headers?` | \{\[`key`: `string`\]: `string`; \} | A Headers object, an object literal, or an array of two-item arrays to set request's headers. | `RequestInit.headers` | [types/index.ts:471](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L471) |
 
 ***
 
@@ -272,7 +272,7 @@ A variation of RequestInit except the headers must be a regular object
 
 ### NavigationContextProps
 
-Defined in: [types/index.ts:516](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L516)
+Defined in: [types/index.ts:519](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L519)
 
 Superglue comes with a Navigation component that provides a context with
 access to [Visit](types.requests.md#visit), [Remote](types.requests.md#remote) and other useful tooling.
@@ -283,11 +283,11 @@ You can also use this to build your own `<Link>` component.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="navigateto-1"></a> `navigateTo` | [`NavigateTo`](#navigateto) | - | [types/index.ts:517](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L517) |
-| <a id="visit"></a> `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [types/index.ts:518](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L518) |
-| <a id="remote"></a> `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [types/index.ts:519](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L519) |
-| <a id="pagekey-4"></a> `pageKey` | `string` | The pagekey that's being used to render the current page component. Useful when used in combination with [Remote](types.requests.md#remote) to create requests that target the current page. | [types/index.ts:520](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L520) |
-| <a id="search-1"></a> `search` | `Record`\<`string`, `undefined` \| `string`\> | The current pageKey (current url) query params as an object. | [types/index.ts:521](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L521) |
+| <a id="navigateto-1"></a> `navigateTo` | [`NavigateTo`](#navigateto) | - | [types/index.ts:520](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L520) |
+| <a id="visit"></a> `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [types/index.ts:521](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L521) |
+| <a id="remote"></a> `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [types/index.ts:522](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L522) |
+| <a id="pagekey-4"></a> `pageKey` | `string` | The pagekey that's being used to render the current page component. Useful when used in combination with [Remote](types.requests.md#remote) to create requests that target the current page. | [types/index.ts:523](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L523) |
+| <a id="search-1"></a> `search` | `Record`\<`string`, `undefined` \| `string`\> | The current pageKey (current url) query params as an object. | [types/index.ts:524](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L524) |
 
 ***
 
@@ -295,7 +295,7 @@ You can also use this to build your own `<Link>` component.
 
 ### NavigationProviderProps
 
-Defined in: [types/index.ts:533](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L533)
+Defined in: [types/index.ts:536](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L536)
 
 This is the navigation component that gets used by [ApplicationProps](#applicationprops). The component
 takes a mapping of page components and swaps them when navigating and passes
@@ -305,11 +305,11 @@ takes a mapping of page components and swaps them when navigating and passes
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="history"></a> `history` | `History` | - | [types/index.ts:534](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L534) |
-| <a id="visit-1"></a> `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [types/index.ts:535](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L535) |
-| <a id="remote-1"></a> `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [types/index.ts:536](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L536) |
-| <a id="mapping"></a> `mapping` | `Record`\<[`ComponentIdentifier`](#componentidentifier), `React.ComponentType`\> | - | [types/index.ts:537](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L537) |
-| <a id="initialpagekey"></a> `initialPageKey` | `string` | The [PageKey](#pagekey) that's to be used when first rendering. Used to determine the initial page component to show. | [types/index.ts:538](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L538) |
+| <a id="history"></a> `history` | `History` | - | [types/index.ts:537](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L537) |
+| <a id="visit-1"></a> `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [types/index.ts:538](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L538) |
+| <a id="remote-1"></a> `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [types/index.ts:539](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L539) |
+| <a id="mapping"></a> `mapping` | `Record`\<[`ComponentIdentifier`](#componentidentifier), `React.ComponentType`\> | - | [types/index.ts:540](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L540) |
+| <a id="initialpagekey"></a> `initialPageKey` | `string` | The [PageKey](#pagekey) that's to be used when first rendering. Used to determine the initial page component to show. | [types/index.ts:541](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L541) |
 
 ***
 
@@ -317,7 +317,7 @@ takes a mapping of page components and swaps them when navigating and passes
 
 ### BuildStore()
 
-Defined in: [types/index.ts:549](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L549)
+Defined in: [types/index.ts:552](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L552)
 
 Provide this callback to [ApplicationProps](#applicationprops) returning a Redux store for
 Superglue to use. This would be setup and generated for you in `store.js`. We
@@ -325,7 +325,7 @@ recommend using using Redux toolkit's `configureStore` to build the store.
 
 > **BuildStore**(`initialState`: [`RootState`](#rootstate), `reducer`: \{ `superglue`: (`state`: [`SuperglueState`](#supergluestate), `action`: `Action`) => [`SuperglueState`](#supergluestate); `pages`: (`state`: [`AllPages`](#allpages), `action`: `Action`) => [`AllPages`](#allpages); `fragments`: (`state`: [`AllFragments`](#allfragments), `action`: `Action`) => [`AllFragments`](#allfragments); \}): [`SuperglueStore`](#supergluestore)
 
-Defined in: [types/index.ts:550](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L550)
+Defined in: [types/index.ts:553](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L553)
 
 Provide this callback to [ApplicationProps](#applicationprops) returning a Redux store for
 Superglue to use. This would be setup and generated for you in `store.js`. We
@@ -351,7 +351,7 @@ recommend using using Redux toolkit's `configureStore` to build the store.
 
 ### BuildVisitAndRemote()
 
-Defined in: [types/index.ts:565](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L565)
+Defined in: [types/index.ts:568](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L568)
 
 Provide this callback to [ApplicationProps](#applicationprops) returning a visit and remote
 function. These functions will be used by Superglue to power its UJS
@@ -361,7 +361,7 @@ bar.
 
 > **BuildVisitAndRemote**(`navigatorRef`: `RefObject`\<`null` \| \{ `navigateTo`: [`NavigateTo`](#navigateto); \}\>, `store`: [`SuperglueStore`](#supergluestore)): \{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); \}
 
-Defined in: [types/index.ts:566](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L566)
+Defined in: [types/index.ts:569](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L569)
 
 #### Parameters
 
@@ -376,8 +376,8 @@ Defined in: [types/index.ts:566](https://github.com/thoughtbot/superglue/blob/46
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | [types/index.ts:570](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L570) |
-| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | [types/index.ts:571](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L571) |
+| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | [types/index.ts:573](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L573) |
+| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | [types/index.ts:574](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L574) |
 
 ***
 
@@ -385,19 +385,19 @@ Defined in: [types/index.ts:566](https://github.com/thoughtbot/superglue/blob/46
 
 ### SetupProps
 
-Defined in: [types/index.ts:575](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L575)
+Defined in: [types/index.ts:578](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L578)
 
 #### Properties
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="initialpage"></a> `initialPage` | [`SaveResponse`](#saveresponse) | The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb | [types/index.ts:580](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L580) |
-| <a id="baseurl"></a> `baseUrl` | `string` | The base url prefixed to all calls made by `visit` and `remote`. | [types/index.ts:585](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L585) |
-| <a id="path-3"></a> `path` | `string` | The path of the current page. It should equal to the `location.pathname` + `location.search` + `location.hash` | [types/index.ts:590](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L590) |
-| <a id="store"></a> `store` | [`SuperglueStore`](#supergluestore) | The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash. | [types/index.ts:595](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L595) |
-| <a id="buildvisitandremote-2"></a> `buildVisitAndRemote` | [`BuildVisitAndRemote`](#buildvisitandremote) | A factory function that will return a `visit` and `remote` function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar. | [types/index.ts:602](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L602) |
-| <a id="history-1"></a> `history?` | `History` | An optional history object https://github.com/remix-run/history. If none is provided Superglue will create one for you. | [types/index.ts:607](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L607) |
-| <a id="navigatorref"></a> `navigatorRef` | `RefObject`\<`null` \| \{ `navigateTo`: [`NavigateTo`](#navigateto); \}\> | A ref object created from the Application component that will be passed to buildVisitAndRemote | [types/index.ts:611](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L611) |
+| <a id="initialpage"></a> `initialPage` | [`SaveResponse`](#saveresponse) | The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb | [types/index.ts:583](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L583) |
+| <a id="baseurl"></a> `baseUrl` | `string` | The base url prefixed to all calls made by `visit` and `remote`. | [types/index.ts:588](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L588) |
+| <a id="path-3"></a> `path` | `string` | The path of the current page. It should equal to the `location.pathname` + `location.search` + `location.hash` | [types/index.ts:593](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L593) |
+| <a id="store"></a> `store` | [`SuperglueStore`](#supergluestore) | The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash. | [types/index.ts:598](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L598) |
+| <a id="buildvisitandremote-2"></a> `buildVisitAndRemote` | [`BuildVisitAndRemote`](#buildvisitandremote) | A factory function that will return a `visit` and `remote` function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar. | [types/index.ts:605](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L605) |
+| <a id="history-1"></a> `history?` | `History` | An optional history object https://github.com/remix-run/history. If none is provided Superglue will create one for you. | [types/index.ts:610](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L610) |
+| <a id="navigatorref"></a> `navigatorRef` | `RefObject`\<`null` \| \{ `navigateTo`: [`NavigateTo`](#navigateto); \}\> | A ref object created from the Application component that will be passed to buildVisitAndRemote | [types/index.ts:614](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L614) |
 
 ***
 
@@ -405,7 +405,7 @@ Defined in: [types/index.ts:575](https://github.com/thoughtbot/superglue/blob/46
 
 ### ApplicationProps
 
-Defined in: [types/index.ts:619](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L619)
+Defined in: [types/index.ts:622](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L622)
 
 Props for the `Application` component
 
@@ -417,13 +417,13 @@ Props for the `Application` component
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="initialpage-1"></a> `initialPage` | [`SaveResponse`](#saveresponse) | The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb | [types/index.ts:625](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L625) |
-| <a id="baseurl-1"></a> `baseUrl` | `string` | The base url prefixed to all calls made by `visit` and `remote`. | [types/index.ts:630](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L630) |
-| <a id="path-4"></a> `path` | `string` | The path of the current page. It should equal to the `location.pathname` + `location.search` + `location.hash` | [types/index.ts:635](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L635) |
-| <a id="buildvisitandremote-3"></a> `buildVisitAndRemote` | [`BuildVisitAndRemote`](#buildvisitandremote) | A factory function that will return a `visit` and `remote` function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar. | [types/index.ts:642](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L642) |
-| <a id="mapping-1"></a> `mapping` | `Record`\<`string`, `React.ComponentType`\> | A mapping between your page props and page component. This is setup for you in page_to_page_mapping. | [types/index.ts:647](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L647) |
-| <a id="history-2"></a> `history?` | `History` | An optional history object https://github.com/remix-run/history. If none is provided Superglue will create one for you. | [types/index.ts:652](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L652) |
-| <a id="store-1"></a> `store` | [`SuperglueStore`](#supergluestore) | The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash. | [types/index.ts:657](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L657) |
+| <a id="initialpage-1"></a> `initialPage` | [`SaveResponse`](#saveresponse) | The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb | [types/index.ts:628](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L628) |
+| <a id="baseurl-1"></a> `baseUrl` | `string` | The base url prefixed to all calls made by `visit` and `remote`. | [types/index.ts:633](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L633) |
+| <a id="path-4"></a> `path` | `string` | The path of the current page. It should equal to the `location.pathname` + `location.search` + `location.hash` | [types/index.ts:638](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L638) |
+| <a id="buildvisitandremote-3"></a> `buildVisitAndRemote` | [`BuildVisitAndRemote`](#buildvisitandremote) | A factory function that will return a `visit` and `remote` function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar. | [types/index.ts:645](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L645) |
+| <a id="mapping-1"></a> `mapping` | `Record`\<`string`, `React.ComponentType`\> | A mapping between your page props and page component. This is setup for you in page_to_page_mapping. | [types/index.ts:650](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L650) |
+| <a id="history-2"></a> `history?` | `History` | An optional history object https://github.com/remix-run/history. If none is provided Superglue will create one for you. | [types/index.ts:655](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L655) |
+| <a id="store-1"></a> `store` | [`SuperglueStore`](#supergluestore) | The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash. | [types/index.ts:660](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L660) |
 
 ## Type Aliases
 
@@ -433,7 +433,7 @@ Props for the `Application` component
 
 > **PageKey** = `string`
 
-Defined in: [types/index.ts:22](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L22)
+Defined in: [types/index.ts:23](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L23)
 
 A PageKey is a combination of a parsed URL's pathname + query string. No hash.
 
@@ -453,7 +453,7 @@ A PageKey is a combination of a parsed URL's pathname + query string. No hash.
 
 > **RestoreStrategy** = `"fromCacheOnly"` \| `"revisitOnly"` \| `"fromCacheAndRevisitInBackground"`
 
-Defined in: [types/index.ts:38](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L38)
+Defined in: [types/index.ts:39](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L39)
 
 Defines the behavior when navigating to a page that is already stored on the
 client. For example, when navigating back.
@@ -476,7 +476,7 @@ to push into history. If the response was redirected, the [NavigationAction](#na
 
 > **NavigationAction** = `"push"` \| `"replace"` \| `"none"`
 
-Defined in: [types/index.ts:47](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L47)
+Defined in: [types/index.ts:48](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L48)
 
 A NavigationAction is used to tell Superglue to history.push, history.replace
 or do nothing.
@@ -489,7 +489,7 @@ or do nothing.
 
 > **ComponentIdentifier** = `string`
 
-Defined in: [types/index.ts:53](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L53)
+Defined in: [types/index.ts:54](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L54)
 
 An identifier that Superglue will uses to determine which page component to render
 with your page response.
@@ -502,7 +502,7 @@ with your page response.
 
 > **Keypath** = `string`
 
-Defined in: [types/index.ts:77](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L77)
+Defined in: [types/index.ts:78](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L78)
 
 A keypath is a string representing the location of a piece of data. Superglue uses
 the keypath to dig for or update data.
@@ -532,7 +532,7 @@ data.body.posts.post_id=foobar.title
 
 > **JSONPrimitive** = `string` \| `number` \| `boolean` \| `null` \| `undefined`
 
-Defined in: [types/index.ts:84](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L84)
+Defined in: [types/index.ts:85](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L85)
 
 A JSON Primitive value
 
@@ -544,7 +544,7 @@ A JSON Primitive value
 
 > **JSONObject** = \{\[`key`: `string`\]: [`JSONValue`](#jsonvalue); \}
 
-Defined in: [types/index.ts:89](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L89)
+Defined in: [types/index.ts:90](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L90)
 
 A JSON Object
 
@@ -560,7 +560,7 @@ A JSON Object
 
 > **JSONMappable** = [`JSONValue`](#jsonvalue)[] \| [`JSONObject`](#jsonobject)
 
-Defined in: [types/index.ts:96](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L96)
+Defined in: [types/index.ts:97](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L97)
 
 A JSON Object or an array of values
 
@@ -572,7 +572,7 @@ A JSON Object or an array of values
 
 > **JSONKeyable** = [`JSONObject`](#jsonobject)[] \| [`JSONObject`](#jsonobject)
 
-Defined in: [types/index.ts:101](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L101)
+Defined in: [types/index.ts:102](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L102)
 
 A array of JSON key value objects or a JSON Object
 
@@ -584,7 +584,7 @@ A array of JSON key value objects or a JSON Object
 
 > **JSONValue** = [`JSONPrimitive`](#jsonprimitive) \| [`JSONMappable`](#jsonmappable)
 
-Defined in: [types/index.ts:106](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L106)
+Defined in: [types/index.ts:107](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L107)
 
 A primitive or a mappable object
 
@@ -596,7 +596,7 @@ A primitive or a mappable object
 
 > **Fragment**\<`T`, `Present`\> = \{ `__id`: `string`; `__fragmentType?`: `T`; `__required?`: `Present` *extends* `boolean` ? `Present` : `false`; \}
 
-Defined in: [types/index.ts:145](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L145)
+Defined in: [types/index.ts:146](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L146)
 
 A Fragment is a rendered Rails partial with an identity. The use
 of this type is optional, but it makes usage with unproxy and
@@ -648,7 +648,7 @@ const cart = content.cart // Resolves fragment reference to actual data
 
 > **\_\_id**: `string`
 
-Defined in: [types/index.ts:147](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L147)
+Defined in: [types/index.ts:148](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L148)
 
 The fragment ID *
 
@@ -658,7 +658,7 @@ The fragment ID *
 
 > `optional` **\_\_fragmentType**: `T`
 
-Defined in: [types/index.ts:149](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L149)
+Defined in: [types/index.ts:150](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L150)
 
 Phantom type, please ignore *
 
@@ -668,7 +668,7 @@ Phantom type, please ignore *
 
 > `optional` **\_\_required**: `Present` *extends* `boolean` ? `Present` : `false`
 
-Defined in: [types/index.ts:151](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L151)
+Defined in: [types/index.ts:152](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L152)
 
 Phantom type, please ignore *
 
@@ -678,9 +678,9 @@ Phantom type, please ignore *
 
 ### Unproxy\<T\>
 
-> **Unproxy**\<`T`\> = `T` *extends* [`Fragment`](#fragment)\<`unknown`\> ? [`FragmentRef`](#fragmentref) : `T` *extends* infer U[] ? [`Unproxy`](#unproxy)\<`U`\>[] : `T` *extends* `object` ? `{ [K in keyof T]: Unproxy<T[K]> }` : `T`
+> **Unproxy**\<`T`\> = `T` *extends* [`FragmentProxy`](hooks.useContent.md#fragmentproxy) ? [`FragmentRef`](#fragmentref) : `T` *extends* [`Fragment`](#fragment)\<`unknown`, `unknown`\> ? [`FragmentRef`](#fragmentref) : `T` *extends* infer U[] ? [`Unproxy`](#unproxy)\<`U`\>[] : `T` *extends* `object` ? `{ [K in keyof T]: Unproxy<T[K]> }` : `T`
 
-Defined in: [types/index.ts:158](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L158)
+Defined in: [types/index.ts:159](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L159)
 
 Utility type for unproxy that converts Fragment types to fragment references.
 This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.
@@ -699,7 +699,7 @@ This recursively processes objects and arrays to convert Fragment<T> to { __id: 
 
 > **SaveResponse**\<`T`\> = \{ `data`: `T`; `componentIdentifier`: [`ComponentIdentifier`](#componentidentifier); `assets`: `string`[]; `csrfToken?`: `string`; `fragments`: [`FragmentPath`](#fragmentpath)[]; `defers`: [`Defer`](#defer)[]; `slices`: [`JSONObject`](#jsonobject); `action`: `"savePage"`; `renderedAt`: `number`; `restoreStrategy`: [`RestoreStrategy`](#restorestrategy); \}
 
-Defined in: [types/index.ts:206](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L206)
+Defined in: [types/index.ts:209](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L209)
 
 The SaveResponse response is responsible for persisting a full page
 visit in Superglue.
@@ -718,7 +718,7 @@ visit in Superglue.
 
 > **data**: `T`
 
-Defined in: [types/index.ts:207](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L207)
+Defined in: [types/index.ts:210](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L210)
 
 <a id="componentidentifier-1"></a>
 
@@ -726,7 +726,7 @@ Defined in: [types/index.ts:207](https://github.com/thoughtbot/superglue/blob/46
 
 > **componentIdentifier**: [`ComponentIdentifier`](#componentidentifier)
 
-Defined in: [types/index.ts:208](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L208)
+Defined in: [types/index.ts:211](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L211)
 
 <a id="assets"></a>
 
@@ -734,7 +734,7 @@ Defined in: [types/index.ts:208](https://github.com/thoughtbot/superglue/blob/46
 
 > **assets**: `string`[]
 
-Defined in: [types/index.ts:209](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L209)
+Defined in: [types/index.ts:212](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L212)
 
 <a id="csrftoken"></a>
 
@@ -742,7 +742,7 @@ Defined in: [types/index.ts:209](https://github.com/thoughtbot/superglue/blob/46
 
 > `optional` **csrfToken**: `string`
 
-Defined in: [types/index.ts:210](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L210)
+Defined in: [types/index.ts:213](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L213)
 
 <a id="fragments"></a>
 
@@ -750,7 +750,7 @@ Defined in: [types/index.ts:210](https://github.com/thoughtbot/superglue/blob/46
 
 > **fragments**: [`FragmentPath`](#fragmentpath)[]
 
-Defined in: [types/index.ts:211](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L211)
+Defined in: [types/index.ts:214](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L214)
 
 <a id="defers"></a>
 
@@ -758,7 +758,7 @@ Defined in: [types/index.ts:211](https://github.com/thoughtbot/superglue/blob/46
 
 > **defers**: [`Defer`](#defer)[]
 
-Defined in: [types/index.ts:212](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L212)
+Defined in: [types/index.ts:215](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L215)
 
 <a id="slices"></a>
 
@@ -766,7 +766,7 @@ Defined in: [types/index.ts:212](https://github.com/thoughtbot/superglue/blob/46
 
 > **slices**: [`JSONObject`](#jsonobject)
 
-Defined in: [types/index.ts:213](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L213)
+Defined in: [types/index.ts:216](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L216)
 
 <a id="action"></a>
 
@@ -774,7 +774,7 @@ Defined in: [types/index.ts:213](https://github.com/thoughtbot/superglue/blob/46
 
 > **action**: `"savePage"`
 
-Defined in: [types/index.ts:214](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L214)
+Defined in: [types/index.ts:217](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L217)
 
 <a id="renderedat"></a>
 
@@ -782,7 +782,7 @@ Defined in: [types/index.ts:214](https://github.com/thoughtbot/superglue/blob/46
 
 > **renderedAt**: `number`
 
-Defined in: [types/index.ts:216](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L216)
+Defined in: [types/index.ts:219](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L219)
 
 <a id="restorestrategy-1"></a>
 
@@ -790,7 +790,7 @@ Defined in: [types/index.ts:216](https://github.com/thoughtbot/superglue/blob/46
 
 > **restoreStrategy**: [`RestoreStrategy`](#restorestrategy)
 
-Defined in: [types/index.ts:217](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L217)
+Defined in: [types/index.ts:220](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L220)
 
 ***
 
@@ -800,7 +800,7 @@ Defined in: [types/index.ts:217](https://github.com/thoughtbot/superglue/blob/46
 
 > **Page**\<`T`\> = [`SaveResponse`](#saveresponse)\<`T`\> & \{ `savedAt`: `number`; \}
 
-Defined in: [types/index.ts:223](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L223)
+Defined in: [types/index.ts:226](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L226)
 
 A Page is a SaveResponse that's been saved to the store
 
@@ -808,7 +808,7 @@ A Page is a SaveResponse that's been saved to the store
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `savedAt` | `number` | [types/index.ts:224](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L224) |
+| `savedAt` | `number` | [types/index.ts:227](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L227) |
 
 #### Type Parameters
 
@@ -824,7 +824,7 @@ A Page is a SaveResponse that's been saved to the store
 
 > **StreamMessage** = \{ `data`: [`JSONMappable`](#jsonmappable); `fragmentIds`: `string`[]; `handler`: `"append"` \| `"prepend"` \| `"save"`; `options`: `Record`\<`string`, `string`\>; \}
 
-Defined in: [types/index.ts:250](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L250)
+Defined in: [types/index.ts:253](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L253)
 
 #### Properties
 
@@ -834,7 +834,7 @@ Defined in: [types/index.ts:250](https://github.com/thoughtbot/superglue/blob/46
 
 > **data**: [`JSONMappable`](#jsonmappable)
 
-Defined in: [types/index.ts:251](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L251)
+Defined in: [types/index.ts:254](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L254)
 
 <a id="fragmentids"></a>
 
@@ -842,7 +842,7 @@ Defined in: [types/index.ts:251](https://github.com/thoughtbot/superglue/blob/46
 
 > **fragmentIds**: `string`[]
 
-Defined in: [types/index.ts:252](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L252)
+Defined in: [types/index.ts:255](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L255)
 
 <a id="handler"></a>
 
@@ -850,7 +850,7 @@ Defined in: [types/index.ts:252](https://github.com/thoughtbot/superglue/blob/46
 
 > **handler**: `"append"` \| `"prepend"` \| `"save"`
 
-Defined in: [types/index.ts:253](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L253)
+Defined in: [types/index.ts:256](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L256)
 
 <a id="options"></a>
 
@@ -858,7 +858,7 @@ Defined in: [types/index.ts:253](https://github.com/thoughtbot/superglue/blob/46
 
 > **options**: `Record`\<`string`, `string`\>
 
-Defined in: [types/index.ts:254](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L254)
+Defined in: [types/index.ts:257](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L257)
 
 ***
 
@@ -868,7 +868,7 @@ Defined in: [types/index.ts:254](https://github.com/thoughtbot/superglue/blob/46
 
 > **StreamResponse** = \{ `data`: [`StreamMessage`](#streammessage)[]; `fragments`: [`FragmentPath`](#fragmentpath)[]; `assets`: `string`[]; `csrfToken?`: `string`; `action`: `"handleStreamResponse"`; `renderedAt`: `number`; `slices`: [`JSONObject`](#jsonobject); \}
 
-Defined in: [types/index.ts:257](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L257)
+Defined in: [types/index.ts:260](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L260)
 
 #### Properties
 
@@ -878,7 +878,7 @@ Defined in: [types/index.ts:257](https://github.com/thoughtbot/superglue/blob/46
 
 > **data**: [`StreamMessage`](#streammessage)[]
 
-Defined in: [types/index.ts:258](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L258)
+Defined in: [types/index.ts:261](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L261)
 
 <a id="fragments-2"></a>
 
@@ -886,7 +886,7 @@ Defined in: [types/index.ts:258](https://github.com/thoughtbot/superglue/blob/46
 
 > **fragments**: [`FragmentPath`](#fragmentpath)[]
 
-Defined in: [types/index.ts:259](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L259)
+Defined in: [types/index.ts:262](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L262)
 
 <a id="assets-2"></a>
 
@@ -894,7 +894,7 @@ Defined in: [types/index.ts:259](https://github.com/thoughtbot/superglue/blob/46
 
 > **assets**: `string`[]
 
-Defined in: [types/index.ts:260](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L260)
+Defined in: [types/index.ts:263](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L263)
 
 <a id="csrftoken-2"></a>
 
@@ -902,7 +902,7 @@ Defined in: [types/index.ts:260](https://github.com/thoughtbot/superglue/blob/46
 
 > `optional` **csrfToken**: `string`
 
-Defined in: [types/index.ts:261](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L261)
+Defined in: [types/index.ts:264](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L264)
 
 <a id="action-2"></a>
 
@@ -910,7 +910,7 @@ Defined in: [types/index.ts:261](https://github.com/thoughtbot/superglue/blob/46
 
 > **action**: `"handleStreamResponse"`
 
-Defined in: [types/index.ts:262](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L262)
+Defined in: [types/index.ts:265](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L265)
 
 <a id="renderedat-2"></a>
 
@@ -918,7 +918,7 @@ Defined in: [types/index.ts:262](https://github.com/thoughtbot/superglue/blob/46
 
 > **renderedAt**: `number`
 
-Defined in: [types/index.ts:263](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L263)
+Defined in: [types/index.ts:266](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L266)
 
 <a id="slices-2"></a>
 
@@ -926,7 +926,7 @@ Defined in: [types/index.ts:263](https://github.com/thoughtbot/superglue/blob/46
 
 > **slices**: [`JSONObject`](#jsonobject)
 
-Defined in: [types/index.ts:264](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L264)
+Defined in: [types/index.ts:267](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L267)
 
 ***
 
@@ -936,7 +936,7 @@ Defined in: [types/index.ts:264](https://github.com/thoughtbot/superglue/blob/46
 
 > **PageResponse** = [`GraftResponse`](#graftresponse) \| [`SaveResponse`](#saveresponse) \| [`StreamResponse`](#streamresponse)
 
-Defined in: [types/index.ts:272](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L272)
+Defined in: [types/index.ts:275](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L275)
 
 A PageResponse can be either a [GraftResponse](#graftresponse), [SaveResponse](#saveresponse).
 or a [StreamResponse](#streamresponse) Its meant to be implemented by the server and if
@@ -950,7 +950,7 @@ you are using superglue_rails, the generators will handle all cases.
 
 > **AllPages**\<`T`\> = `Record`\<[`PageKey`](#pagekey), [`Page`](#page)\<`T`\>\>
 
-Defined in: [types/index.ts:305](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L305)
+Defined in: [types/index.ts:308](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L308)
 
 The store where all page responses are stored indexed by PageKey. You are encouraged
 to mutate the Pages in this store.
@@ -969,7 +969,7 @@ to mutate the Pages in this store.
 
 > **AllFragments** = `Record`\<`string`, [`JSONMappable`](#jsonmappable)\>
 
-Defined in: [types/index.ts:311](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L311)
+Defined in: [types/index.ts:314](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L314)
 
 The store where all page responses are stored indexed by PageKey. You are encouraged
 to mutate the Pages in this store.
@@ -982,7 +982,7 @@ to mutate the Pages in this store.
 
 > **VisitCreator** = (`input`: `string` \| [`PageKey`](#pagekey), `options`: [`VisitProps`](types.requests.md#visitprops)) => [`VisitMetaThunk`](#visitmetathunk)
 
-Defined in: [types/index.ts:377](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L377)
+Defined in: [types/index.ts:380](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L380)
 
 VisitCreator is a Redux action creator that returns a thunk. Use this to build
 the [Visit](types.requests.md#visit) function. Typically it's already generated in `application_visit.js`
@@ -1006,7 +1006,7 @@ the [Visit](types.requests.md#visit) function. Typically it's already generated 
 
 > **RemoteCreator** = (`input`: `string` \| [`PageKey`](#pagekey), `options`: [`RemoteProps`](types.requests.md#remoteprops)) => [`MetaThunk`](#metathunk)
 
-Defined in: [types/index.ts:386](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L386)
+Defined in: [types/index.ts:389](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L389)
 
 RemoteCreator is a Redux action creator that returns a thunk. Use this to build
 the [Remote](types.requests.md#remote) function. Typically it's already generated in `application_visit.js`
@@ -1030,7 +1030,7 @@ the [Remote](types.requests.md#remote) function. Typically it's already generate
 
 > **Dispatch** = `ThunkDispatch`\<[`RootState`](#rootstate), `undefined`, `Action`\>
 
-Defined in: [types/index.ts:391](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L391)
+Defined in: [types/index.ts:394](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L394)
 
 ***
 
@@ -1040,7 +1040,7 @@ Defined in: [types/index.ts:391](https://github.com/thoughtbot/superglue/blob/46
 
 > **SuperglueStore** = `EnhancedStore`\<[`RootState`](#rootstate), `Action`, `Tuple`\<\[`StoreEnhancer`\<\{ `dispatch`: [`Dispatch`](#dispatch); \}\>, `StoreEnhancer`\]\>\>
 
-Defined in: [types/index.ts:398](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L398)
+Defined in: [types/index.ts:401](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L401)
 
 A Store created with Redux Toolkit's `configureStore` setup with reducers
 from Superglue. If you are using superglue_rails this would have been
@@ -1059,7 +1059,7 @@ generated for you in `store.js` and setup correctly in application.js
   store,
 }`: \{ `ujsAttributePrefix`: `string`; `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); `store`: [`SuperglueStore`](#supergluestore); \}) => [`Handlers`](#handlers)
 
-Defined in: [types/index.ts:416](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L416)
+Defined in: [types/index.ts:419](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L419)
 
 #### Parameters
 
@@ -1083,7 +1083,7 @@ Defined in: [types/index.ts:416](https://github.com/thoughtbot/superglue/blob/46
 
 > **SaveAndProcessPageThunk** = `ThunkAction`\<`Promise`\<`void`\>, [`RootState`](#rootstate), `undefined`, `Action`\>
 
-Defined in: [types/index.ts:444](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L444)
+Defined in: [types/index.ts:447](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L447)
 
 ***
 
@@ -1093,7 +1093,7 @@ Defined in: [types/index.ts:444](https://github.com/thoughtbot/superglue/blob/46
 
 > **MetaThunk** = `ThunkAction`\<`Promise`\<[`Meta`](#meta)\>, [`RootState`](#rootstate), `undefined`, `Action`\>
 
-Defined in: [types/index.ts:451](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L451)
+Defined in: [types/index.ts:454](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L454)
 
 ***
 
@@ -1103,7 +1103,7 @@ Defined in: [types/index.ts:451](https://github.com/thoughtbot/superglue/blob/46
 
 > **VisitMetaThunk** = `ThunkAction`\<`Promise`\<[`VisitMeta`](#visitmeta)\>, [`RootState`](#rootstate), `undefined`, `Action`\>
 
-Defined in: [types/index.ts:452](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L452)
+Defined in: [types/index.ts:455](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L455)
 
 ***
 
@@ -1113,7 +1113,7 @@ Defined in: [types/index.ts:452](https://github.com/thoughtbot/superglue/blob/46
 
 > **DefermentThunk** = `ThunkAction`\<`Promise`\<`void`[]\>, [`RootState`](#rootstate), `undefined`, `Action`\>
 
-Defined in: [types/index.ts:459](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L459)
+Defined in: [types/index.ts:462](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L462)
 
 ***
 
@@ -1123,7 +1123,7 @@ Defined in: [types/index.ts:459](https://github.com/thoughtbot/superglue/blob/46
 
 > **NavigateTo** = (`path`: [`Keypath`](#keypath), `options`: \{ `action`: [`NavigationAction`](#navigationaction); \}) => `boolean`
 
-Defined in: [types/index.ts:497](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L497)
+Defined in: [types/index.ts:500](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L500)
 
 Passed to every page component and also available as part of a NavigationContext:
 

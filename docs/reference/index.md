@@ -6,7 +6,7 @@
 
 > `const` **GRAFTING\_ERROR**: `"@@superglue/GRAFTING_ERROR"` = `'@@superglue/GRAFTING_ERROR'`
 
-Defined in: [actions.ts:12](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L12)
+Defined in: [actions.ts:12](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L12)
 
 ***
 
@@ -16,7 +16,7 @@ Defined in: [actions.ts:12](https://github.com/thoughtbot/superglue/blob/46e766e
 
 > `const` **GRAFTING\_SUCCESS**: `"@@superglue/GRAFTING_SUCCESS"` = `'@@superglue/GRAFTING_SUCCESS'`
 
-Defined in: [actions.ts:13](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L13)
+Defined in: [actions.ts:13](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L13)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [actions.ts:13](https://github.com/thoughtbot/superglue/blob/46e766e
 
 > `const` **saveResponse**: `ActionCreatorWithPreparedPayload`\<\[\{ `pageKey`: `string`; `page`: [`SaveResponse`](types.md#saveresponse); \}\], \{ `pageKey`: `string`; `page`: [`SaveResponse`](types.md#saveresponse); \}, `"@@superglue/SAVE_RESPONSE"`, `never`, `never`\>
 
-Defined in: [actions.ts:15](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L15)
+Defined in: [actions.ts:15](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L15)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [actions.ts:15](https://github.com/thoughtbot/superglue/blob/46e766e
 
 > `const` **copyPage**: `ActionCreatorWithPayload`\<\{ `from`: `string`; `to`: `string`; \}, `string`\>
 
-Defined in: [actions.ts:61](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L61)
+Defined in: [actions.ts:61](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L61)
 
 A redux action you can dispatch to copy a page from one pageKey to another. Its
 a very useful way to create optimistic updates with a URL change. For example:
@@ -59,7 +59,7 @@ navigateTo(targetKey)
 
 > `const` **removePage**: `ActionCreatorWithPayload`\<\{ `pageKey`: `string`; \}, `string`\>
 
-Defined in: [actions.ts:74](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L74)
+Defined in: [actions.ts:74](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L74)
 
 A redux action you can dispatch to remove a page from your store.
 
@@ -77,7 +77,7 @@ dispatch(removePage({ pageKey: '/delete_me_please"}))
 
 > `const` **beforeFetch**: `ActionCreatorWithPayload`\<\{ `fetchArgs`: [`FetchArgs`](types.actions.md#fetchargs); \}, `string`\>
 
-Defined in: [actions.ts:92](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L92)
+Defined in: [actions.ts:92](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L92)
 
 A redux action called before a `fetch` takes place. It will fire in `remote`
 and `visit`. You can hook into this event in your redux slices like this:
@@ -100,7 +100,7 @@ export const exampleSlice = createSlice({
 
 > `const` **beforeVisit**: `ActionCreatorWithPayload`\<\{ `currentPageKey`: `string`; `fetchArgs`: [`FetchArgs`](types.actions.md#fetchargs); \}, `string`\>
 
-Defined in: [actions.ts:110](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L110)
+Defined in: [actions.ts:110](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L110)
 
 A redux action called before a `visit` takes place. You can hook into this event
 in your redux slices like this:
@@ -123,7 +123,7 @@ export const exampleSlice = createSlice({
 
 > `const` **beforeRemote**: `ActionCreatorWithPayload`\<\{ `currentPageKey`: `string`; `fetchArgs`: [`FetchArgs`](types.actions.md#fetchargs); \}, `string`\>
 
-Defined in: [actions.ts:129](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L129)
+Defined in: [actions.ts:129](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L129)
 
 A redux action called before `remote` takes place. You can hook into this event
 in your redux slices like this:
@@ -146,7 +146,7 @@ export const exampleSlice = createSlice({
 
 > `const` **receiveResponse**: `ActionCreatorWithPreparedPayload`\<\[\{ `pageKey`: `string`; `response`: [`PageResponse`](types.md#pageresponse); \}\], \{ `pageKey`: `string`; `response`: [`PageResponse`](types.md#pageresponse); \}, `"@@superglue/RECEIVE_RESPONSE"`, `never`, `never`\>
 
-Defined in: [actions.ts:176](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/actions.ts#L176)
+Defined in: [actions.ts:176](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/actions.ts#L176)
 
 ***
 
@@ -156,15 +156,15 @@ Defined in: [actions.ts:176](https://github.com/thoughtbot/superglue/blob/46e766
 
 > `const` **rootReducer**: \{ `superglue`: (`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`) => [`SuperglueState`](types.md#supergluestate); `pages`: (`state`: [`AllPages`](types.md#allpages), `action`: `Action`) => [`AllPages`](types.md#allpages); `fragments`: (`state`: [`AllFragments`](types.md#allfragments), `action`: `Action`) => [`AllFragments`](types.md#allfragments); \}
 
-Defined in: [reducers/index.ts:290](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/reducers/index.ts#L290)
+Defined in: [reducers/index.ts:290](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/reducers/index.ts#L290)
 
 #### Type declaration
 
 | Name | Type | Default value | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="superglue"></a> `superglue()` | (`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`) => [`SuperglueState`](types.md#supergluestate) | `superglueReducer` | [reducers/index.ts:291](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/reducers/index.ts#L291) |
-| <a id="pages"></a> `pages()` | (`state`: [`AllPages`](types.md#allpages), `action`: `Action`) => [`AllPages`](types.md#allpages) | `pageReducer` | [reducers/index.ts:292](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/reducers/index.ts#L292) |
-| <a id="fragments"></a> `fragments()` | (`state`: [`AllFragments`](types.md#allfragments), `action`: `Action`) => [`AllFragments`](types.md#allfragments) | `fragmentReducer` | [reducers/index.ts:293](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/reducers/index.ts#L293) |
+| <a id="superglue"></a> `superglue()` | (`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`) => [`SuperglueState`](types.md#supergluestate) | `superglueReducer` | [reducers/index.ts:291](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/reducers/index.ts#L291) |
+| <a id="pages"></a> `pages()` | (`state`: [`AllPages`](types.md#allpages), `action`: `Action`) => [`AllPages`](types.md#allpages) | `pageReducer` | [reducers/index.ts:292](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/reducers/index.ts#L292) |
+| <a id="fragments"></a> `fragments()` | (`state`: [`AllFragments`](types.md#allfragments), `action`: `Action`) => [`AllFragments`](types.md#allfragments) | `fragmentReducer` | [reducers/index.ts:293](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/reducers/index.ts#L293) |
 
 ## Functions
 
@@ -174,7 +174,7 @@ Defined in: [reducers/index.ts:290](https://github.com/thoughtbot/superglue/blob
 
 > **saveAndProcessPage**(`pageKey`: `string`, `page`: [`PageResponse`](types.md#pageresponse)): [`SaveAndProcessPageThunk`](types.md#saveandprocesspagethunk)
 
-Defined in: [action\_creators/index.ts:91](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/action_creators/index.ts#L91)
+Defined in: [action\_creators/index.ts:91](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/action_creators/index.ts#L91)
 
 Save and process a rendered view from PropsTemplate. This is the primitive
 function that `visit` and `remote` calls when it receives a page.
@@ -201,7 +201,7 @@ websocket, you can use this function to save the payload.
 
 > **useSetFragment**(): \{\<`T`\>(`fragmentRef`: `T`, `updater`: (`draft`: [`Unproxy`](types.md#unproxy)\<`Unpack`\<`T`\>\>) => `void`): `void`; \<`T`\>(`fragmentId`: `string`, `updater`: (`draft`: `T`) => `void`): `void`; \}
 
-Defined in: [hooks/useSetFragment.tsx:32](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useSetFragment.tsx#L32)
+Defined in: [hooks/useSetFragment.tsx:37](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useSetFragment.tsx#L37)
 
 Hook for mutating fragments using Immer drafts.
 
@@ -215,7 +215,7 @@ Updates a fragment using a [FragmentRef](types.md#fragmentref) object.
 
 | Type Parameter |
 | ------ |
-| `T` *extends* [`Fragment`](types.md#fragment)\<`unknown`\> |
+| `T` *extends* [`Fragment`](types.md#fragment)\<`unknown`, `unknown`\> |
 
 ##### Parameters
 
@@ -274,7 +274,7 @@ set('user_123', draft => {
 
 > **useStreamSource**(`channel`: `StreamSourceProps`): \{ `connected`: `boolean`; `subscription`: `null` \| `Subscription`\<`Consumer`\>; \}
 
-Defined in: [hooks/useStreamSource.tsx:172](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useStreamSource.tsx#L172)
+Defined in: [hooks/useStreamSource.tsx:172](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useStreamSource.tsx#L172)
 
 Creates a subscription to an ActionCable channel for real-time streaming
 updates.
@@ -300,8 +300,8 @@ Object containing connection status and subscription instance
 
 | Name | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| `connected` | `boolean` | Whether the ActionCable subscription is currently connected | [hooks/useStreamSource.tsx:174](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useStreamSource.tsx#L174) |
-| `subscription` | `null` \| `Subscription`\<`Consumer`\> | The active ActionCable subscription instance, null if not connected | [hooks/useStreamSource.tsx:176](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useStreamSource.tsx#L176) |
+| `connected` | `boolean` | Whether the ActionCable subscription is currently connected | [hooks/useStreamSource.tsx:174](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useStreamSource.tsx#L174) |
+| `subscription` | `null` \| `Subscription`\<`Consumer`\> | The active ActionCable subscription instance, null if not connected | [hooks/useStreamSource.tsx:176](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useStreamSource.tsx#L176) |
 
 #### Examples
 
@@ -349,7 +349,7 @@ return (
 
 > **prepareStore**(`store`: [`SuperglueStore`](types.md#supergluestore), `initialPage`: [`SaveResponse`](types.md#saveresponse), `path`: `string`): `void`
 
-Defined in: [index.tsx:71](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L71)
+Defined in: [index.tsx:71](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L71)
 
 #### Parameters
 
@@ -371,7 +371,7 @@ Defined in: [index.tsx:71](https://github.com/thoughtbot/superglue/blob/46e766e2
 
 > **setup**(`__namedParameters`: [`SetupProps`](types.md#setupprops)): \{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); `nextHistory`: `History`; `initialPageKey`: `string`; `ujs`: [`Handlers`](types.md#handlers); `streamActions`: `StreamActions`; \}
 
-Defined in: [index.tsx:95](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L95)
+Defined in: [index.tsx:95](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L95)
 
 This is the setup function that the Application calls. Use this function if
 you like to build your own Application component.
@@ -388,12 +388,12 @@ you like to build your own Application component.
 
 | Name | Type | Default value | Defined in |
 | ------ | ------ | ------ | ------ |
-| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [index.tsx:123](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L123) |
-| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [index.tsx:124](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L124) |
-| `nextHistory` | `History` | - | [index.tsx:125](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L125) |
-| `initialPageKey` | `string` | - | [index.tsx:126](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L126) |
-| `ujs` | [`Handlers`](types.md#handlers) | `handlers` | [index.tsx:127](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L127) |
-| `streamActions` | `StreamActions` | - | [index.tsx:128](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L128) |
+| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [index.tsx:123](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L123) |
+| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [index.tsx:124](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L124) |
+| `nextHistory` | `History` | - | [index.tsx:125](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L125) |
+| `initialPageKey` | `string` | - | [index.tsx:126](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L126) |
+| `ujs` | [`Handlers`](types.md#handlers) | `handlers` | [index.tsx:127](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L127) |
+| `streamActions` | `StreamActions` | - | [index.tsx:128](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L128) |
 
 ***
 
@@ -403,7 +403,7 @@ you like to build your own Application component.
 
 > **Application**(`__namedParameters`: [`ApplicationProps`](types.md#applicationprops)): `Element`
 
-Defined in: [index.tsx:139](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/index.tsx#L139)
+Defined in: [index.tsx:139](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L139)
 
 The entry point to your superglue application. It sets up the redux Provider,
 redux state and the Navigation component.
@@ -429,7 +429,7 @@ use the exported methods used by this component (`start` and `ujsHandler`).
 
 > **pageReducer**(`state`: [`AllPages`](types.md#allpages), `action`: `Action`): [`AllPages`](types.md#allpages)
 
-Defined in: [reducers/index.ts:159](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/reducers/index.ts#L159)
+Defined in: [reducers/index.ts:159](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/reducers/index.ts#L159)
 
 #### Parameters
 
@@ -450,7 +450,7 @@ Defined in: [reducers/index.ts:159](https://github.com/thoughtbot/superglue/blob
 
 > **superglueReducer**(`state`: [`SuperglueState`](types.md#supergluestate), `action`: `Action`): [`SuperglueState`](types.md#supergluestate)
 
-Defined in: [reducers/index.ts:192](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/reducers/index.ts#L192)
+Defined in: [reducers/index.ts:192](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/reducers/index.ts#L192)
 
 #### Parameters
 
@@ -471,7 +471,7 @@ Defined in: [reducers/index.ts:192](https://github.com/thoughtbot/superglue/blob
 
 > **getIn**(`node`: [`JSONMappable`](types.md#jsonmappable), `path`: `string`): [`JSONValue`](types.md#jsonvalue)
 
-Defined in: [utils/immutability.ts:22](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/utils/immutability.ts#L22)
+Defined in: [utils/immutability.ts:22](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/utils/immutability.ts#L22)
 
 Retrieves data from a JSON object using a [Keypath](types.md#keypath)
 
@@ -494,7 +494,7 @@ Retrieves data from a JSON object using a [Keypath](types.md#keypath)
 
 > **urlToPageKey**(`url`: `string`): `string`
 
-Defined in: [utils/url.ts:49](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/utils/url.ts#L49)
+Defined in: [utils/url.ts:49](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/utils/url.ts#L49)
 
 Converts a url to a PageKey.
 

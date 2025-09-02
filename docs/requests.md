@@ -46,7 +46,7 @@ sequenceDiagram
 
 !!! hint
     Its possible to modify the visit payload before it saves
-    to the store. See the [beforeSave](./client-updates.md#the-beforesave-callback) callback.
+    to the store. See the [beforeSave](#the-beforesave-callback) callback.
 
 <div class="grid cards" markdown>
   -  [:octicons-arrow-right-24: See complete reference](reference/types.requests.md#visit)
@@ -62,7 +62,7 @@ as you want.
 
 !!! hint
     Its possible to modify the remote payload before it saves
-    to the store. See the [beforeSave](./client-updates.md#the-beforesave-callback) callback.
+    to the store. See the [beforeSave](#the-beforesave-callback) callback.
 
 At glance it looks like this:
 
@@ -127,8 +127,9 @@ sequenceDiagram
 
 ## The `beforeSave` callback
 
-!!! alert
-    `beforeSave` looks deceptively simple, but is an advanced Supeglue feature. It requires
+!!! note
+    `beforeSave` is an advanced Supeglue feature. Before proceeding please familiarize
+    yourself with:
 
     1. Knowing how [Fragments and FragmentRefs](./fragments.md) work, the first
     parameter passed to `beforeSave` is a proxy that lazily normalizes
@@ -138,7 +139,7 @@ sequenceDiagram
     4. Knowing how [denormaliztion](./fragments.md#denormalization) works 
 
 Both `visit` and `remote` can be passed a `beforeSave` callback. This is your 
-opportunity to modify the incoming [savePage or graft](./page-response.md#sav)
+opportunity to modify the incoming [savePage or graft](./page-response.md)
 payload before it persists. Its ideal for features like
 [infinite-scroll](./recipes/infinite-scroll.md) where you need to
 concatenate a list of results into an existing list:

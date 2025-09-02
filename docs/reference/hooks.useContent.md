@@ -1,12 +1,32 @@
 ## Type Aliases
 
+<a id="fragmentproxy"></a>
+
+### FragmentProxy
+
+> **FragmentProxy** = \{ `__fragment`: `true`; \}
+
+Defined in: [hooks/useContent.tsx:13](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L13)
+
+#### Properties
+
+<a id="__fragment"></a>
+
+##### \_\_fragment
+
+> **\_\_fragment**: `true`
+
+Defined in: [hooks/useContent.tsx:13](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L13)
+
+***
+
 <a id="proxiedcontent"></a>
 
 ### ProxiedContent\<T\>
 
-> **ProxiedContent**\<`T`\> = `T` & \{ readonly \[K in keyof T\]: T\[K\] extends Fragment\<infer U, true\> ? ProxiedContent\<U\> : T\[K\] extends Fragment\<infer U, false \| undefined\> ? ProxiedContent\<U\> \| undefined : T\[K\] extends (infer U)\[\] ? ProxiedContent\<U\>\[\] : T\[K\] extends object ? ProxiedContent\<T\[K\]\> : T\[K\] \}
+> **ProxiedContent**\<`T`\> = `T` *extends* [`Fragment`](types.md#fragment)\<infer U, `true`\> ? [`ProxiedContent`](#proxiedcontent)\<`U`\> & [`FragmentProxy`](#fragmentproxy) : `T` *extends* [`Fragment`](types.md#fragment)\<infer U, `false` \| `undefined`\> ? [`ProxiedContent`](#proxiedcontent)\<`U`\> & [`FragmentProxy`](#fragmentproxy) \| `undefined` : `T` *extends* infer U[] ? [`ProxiedContent`](#proxiedcontent)\<`U`\>[] : `T` *extends* `object` ? `{ [K in keyof T]: ProxiedContent<T[K]> }` : `T`
 
-Defined in: [hooks/useContent.tsx:17](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L17)
+Defined in: [hooks/useContent.tsx:18](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L18)
 
 A proxy type that enables reactive access to nested content with automatic fragment resolution
 
@@ -24,7 +44,7 @@ A proxy type that enables reactive access to nested content with automatic fragm
 
 > **FragmentRefOrId** = [`FragmentRef`](types.md#fragmentref) \| `string`
 
-Defined in: [hooks/useContent.tsx:33](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L33)
+Defined in: [hooks/useContent.tsx:32](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L32)
 
 Union type for fragment references, accepting either FragmentRef objects or string IDs
 
@@ -38,7 +58,7 @@ Union type for fragment references, accepting either FragmentRef objects or stri
 
 > **useContent**\<`T`\>(): [`ProxiedContent`](#proxiedcontent)\<`T`\>
 
-Defined in: [hooks/useContent.tsx:79](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L79)
+Defined in: [hooks/useContent.tsx:78](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L78)
 
 Returns a proxy for accessing your page's content e.g, `index.json.props`,
 `show.json.props`, etc.
@@ -97,7 +117,7 @@ const cart = useContent('userCart')
 
 > **useContent**\<`T`\>(`fragmentRef`: [`FragmentRefOrId`](#fragmentreforid)): [`ProxiedContent`](#proxiedcontent)\<`T`\>
 
-Defined in: [hooks/useContent.tsx:109](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L109)
+Defined in: [hooks/useContent.tsx:108](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L108)
 
 Passing in a fragment to useContent allows us to scope the tracking of
 fragments to that hook usage. Its useful in performance scenarios where you
@@ -147,7 +167,7 @@ SlidingCart will update only if the fragment referenced by `cartRef` updates.
 
 > **unproxy**\<`T`\>(`proxy`: `T`): [`Unproxy`](types.md#unproxy)\<`T`\>
 
-Defined in: [hooks/useContent.tsx:173](https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L173)
+Defined in: [hooks/useContent.tsx:172](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L172)
 
 Extracts the underlying state from an [useContent](#usecontent) proxy
 

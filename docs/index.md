@@ -1,6 +1,6 @@
 # Overview
 
-__Superglue is The Rails Way of building React applications.__ Refreshingly
+__Superglue is The Rails Way of building React Rails applications.__ Refreshingly
 familiar. No APIs. No client-side routing. Batteries included.
 
 <div class="grid cards" markdown>
@@ -166,7 +166,7 @@ end
 broadcast_save_props(model: @post) # Updates all connected clients instantly
 ```
 
-Give rendered partials identity with Fragments, and optimistically update them
+Give rendered partials identity with [Fragments](./fragments.md), and optimistically update them
 client side.
 
 ```ruby

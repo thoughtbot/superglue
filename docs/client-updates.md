@@ -16,7 +16,8 @@ The `useSetFragment` hook returns a setter function that lets you update any
 fragment by its ID:
 
 ```jsx
-import { useSetFragment } from '@thoughtbot/superglue'
+import React from 'react'
+import { useContent, useSetFragment } from '@thoughtbot/superglue'
 
 function ShoppingCart() {
   const content = useContent()
@@ -76,6 +77,9 @@ references](./performance.md#preventing-over-rendering-with-fragment-refs) passe
 between components:
 
 ```jsx
+import React from 'react'
+import { useSetFragment } from '@thoughtbot/superglue'
+
 function PostCard({ postRef }) {
   const set = useSetFragment()
 
@@ -114,6 +118,9 @@ Fragments are composable and can contain references to other fragments. If you
 need to update a nested fragment, you can update them using nested `set` calls.
 
 ```jsx
+import React from 'react'
+import { useContent, useSetFragment} from '@thoughtbot/superglue'
+
 function PostList() {
   const content = useContent()
   const set = useSetFragment()
@@ -149,10 +156,13 @@ function PostList() {
 For optimistic updates, combine client-side updates with server requests:
 
 ```jsx
+import React, { useContext } from 'react'
+import { useContent, useSetFragment, NavigationContext } from '@thoughtbot/superglue'
+
 function LikeButton({ postId }) {
   const content = useContent()
   const set = useSetFragment()
-  const { remote } = useNavigationContext()
+  const { remote } = useContext(NavigationContext)
 
   const toggleLike = async () => {
     // Optimistic update

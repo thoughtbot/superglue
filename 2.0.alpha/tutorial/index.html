@@ -2935,7 +2935,7 @@ fragment <code>item_1</code> and override any existing fragment with that id.</p
 </div>
 <h2 id="super-turbo-stream-subscriptions">Super Turbo Stream: Subscriptions<a class="headerlink" href="#super-turbo-stream-subscriptions" title="Permanent link">&para;</a></h2>
 <p>Now let's make this truly collaborative. Let's use Super Turbo Streams to update all connected users.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="10:3"><input checked="checked" id="super-turbo-stream-subscriptions-update-templates-with-fragments" name="__tabbed_10" type="radio" /><input id="super-turbo-stream-subscriptions-showjsx" name="__tabbed_10" type="radio" /><input id="super-turbo-stream-subscriptions-itemrb" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="super-turbo-stream-subscriptions-update-templates-with-fragments">Update templates with fragments</label><label for="super-turbo-stream-subscriptions-showjsx"><code>show.jsx</code></label><label for="super-turbo-stream-subscriptions-itemrb"><code>item.rb</code></label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:4"><input checked="checked" id="super-turbo-stream-subscriptions-update-templates-with-fragments" name="__tabbed_10" type="radio" /><input id="super-turbo-stream-subscriptions-showjsx" name="__tabbed_10" type="radio" /><input id="super-turbo-stream-subscriptions-itemrb" name="__tabbed_10" type="radio" /><input id="super-turbo-stream-subscriptions-items_controllerrb" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="super-turbo-stream-subscriptions-update-templates-with-fragments">Update templates with fragments</label><label for="super-turbo-stream-subscriptions-showjsx"><code>show.jsx</code></label><label for="super-turbo-stream-subscriptions-itemrb"><code>item.rb</code></label><label for="super-turbo-stream-subscriptions-items_controllerrb"><code>items_controller.rb</code></label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Update <code>app/views/shopping_lists/show.json.props</code> to create ActionCable subscription props:</p>
@@ -3004,76 +3004,74 @@ fragment <code>item_1</code> and override any existing fragment with that id.</p
 </span><span id="__span-38-48"><a id="__codelineno-38-48" name="__codelineno-38-48" href="#__codelineno-38-48"></a><span class="w"> </span> }
 </span></code></pre></div>
 </div>
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <p>Add the <code>Broadcastable</code> module to the model.</p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="w"> </span>class Item &lt; ApplicationRecord
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>class Item &lt; ApplicationRecord
 </span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="gi">+  include Superglue::Broadcastable</span>
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="w"> </span>end
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>end
 </span></code></pre></div>
-<div class="tabbed-set tabbed-alternate" data-tabs="11:1"><input checked="checked" id="super-turbo-stream-subscriptions-items_controllerrb" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="super-turbo-stream-subscriptions-items_controllerrb"><code>items_controller.rb</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
 </div>
-</div>
+<div class="tabbed-block">
 <p>And broadcast it from the controller.</p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="w"> </span> class ItemsController &lt; ApplicationController
-</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w"> </span>   def show
-</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w"> </span>     @item = Item.find(params[:id])
-</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="w"> </span>   end
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>class ItemsController &lt; ApplicationController
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w"> </span> def show
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w"> </span>   @item = Item.find(params[:id])
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="w"> </span> end
 </span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>
-</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a><span class="w"> </span>   def create
-</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="w"> </span>     @item = Item.new(item_params.merge(completed: false))
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a><span class="w"> </span> def create
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="w"> </span>   @item = Item.new(item_params.merge(completed: false))
 </span><span id="__span-40-8"><a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>
-</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="w"> </span>     if @item.save
-</span><span id="__span-40-10"><a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="w"> </span>+      @item.broadcast_append_later_to(
-</span><span id="__span-40-11"><a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a><span class="w"> </span>+        &quot;shopping&quot;,
-</span><span id="__span-40-12"><a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a><span class="w"> </span>+        save_target: &quot;item_#{@item.id}&quot;,
-</span><span id="__span-40-13"><a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a><span class="w"> </span>+        target: &quot;shopping_list&quot;,
-</span><span id="__span-40-14"><a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a><span class="w"> </span>+        partial: &quot;shopping_lists/item&quot;
-</span><span id="__span-40-15"><a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a><span class="w"> </span>+      )
+</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="w"> </span>   if @item.save
+</span><span id="__span-40-10"><a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="gi">+      @item.broadcast_append_later_to(</span>
+</span><span id="__span-40-11"><a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a><span class="gi">+        &quot;shopping&quot;,</span>
+</span><span id="__span-40-12"><a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a><span class="gi">+        save_target: &quot;item_#{@item.id}&quot;,</span>
+</span><span id="__span-40-13"><a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a><span class="gi">+        target: &quot;shopping_list&quot;,</span>
+</span><span id="__span-40-14"><a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a><span class="gi">+        partial: &quot;shopping_lists/item&quot;</span>
+</span><span id="__span-40-15"><a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a><span class="gi">+      )</span>
 </span><span id="__span-40-16"><a id="__codelineno-40-16" name="__codelineno-40-16" href="#__codelineno-40-16"></a>
-</span><span id="__span-40-17"><a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a><span class="w"> </span>       respond_to do |format|
-</span><span id="__span-40-18"><a id="__codelineno-40-18" name="__codelineno-40-18" href="#__codelineno-40-18"></a><span class="w"> </span>         flash[:notice] = &quot;Item added succesfully&quot;
-</span><span id="__span-40-19"><a id="__codelineno-40-19" name="__codelineno-40-19" href="#__codelineno-40-19"></a><span class="w"> </span>         format.html { redirect_to root_path }
-</span><span id="__span-40-20"><a id="__codelineno-40-20" name="__codelineno-40-20" href="#__codelineno-40-20"></a><span class="w"> </span>         format.json { render layout: &quot;stream&quot; }
-</span><span id="__span-40-21"><a id="__codelineno-40-21" name="__codelineno-40-21" href="#__codelineno-40-21"></a><span class="w"> </span>       end
-</span><span id="__span-40-22"><a id="__codelineno-40-22" name="__codelineno-40-22" href="#__codelineno-40-22"></a><span class="w"> </span>     else
-</span><span id="__span-40-23"><a id="__codelineno-40-23" name="__codelineno-40-23" href="#__codelineno-40-23"></a><span class="w"> </span>       respond_to do |format|
-</span><span id="__span-40-24"><a id="__codelineno-40-24" name="__codelineno-40-24" href="#__codelineno-40-24"></a><span class="w"> </span>         format.html { redirect_to root_path }
-</span><span id="__span-40-25"><a id="__codelineno-40-25" name="__codelineno-40-25" href="#__codelineno-40-25"></a><span class="w"> </span>         format.json { render layout: &quot;stream&quot; }
-</span><span id="__span-40-26"><a id="__codelineno-40-26" name="__codelineno-40-26" href="#__codelineno-40-26"></a><span class="w"> </span>       end
-</span><span id="__span-40-27"><a id="__codelineno-40-27" name="__codelineno-40-27" href="#__codelineno-40-27"></a><span class="w"> </span>     end
-</span><span id="__span-40-28"><a id="__codelineno-40-28" name="__codelineno-40-28" href="#__codelineno-40-28"></a><span class="w"> </span>   end
+</span><span id="__span-40-17"><a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a><span class="w"> </span>     respond_to do |format|
+</span><span id="__span-40-18"><a id="__codelineno-40-18" name="__codelineno-40-18" href="#__codelineno-40-18"></a><span class="w"> </span>       flash[:notice] = &quot;Item added succesfully&quot;
+</span><span id="__span-40-19"><a id="__codelineno-40-19" name="__codelineno-40-19" href="#__codelineno-40-19"></a><span class="w"> </span>       format.html { redirect_to root_path }
+</span><span id="__span-40-20"><a id="__codelineno-40-20" name="__codelineno-40-20" href="#__codelineno-40-20"></a><span class="w"> </span>       format.json { render layout: &quot;stream&quot; }
+</span><span id="__span-40-21"><a id="__codelineno-40-21" name="__codelineno-40-21" href="#__codelineno-40-21"></a><span class="w"> </span>     end
+</span><span id="__span-40-22"><a id="__codelineno-40-22" name="__codelineno-40-22" href="#__codelineno-40-22"></a><span class="w"> </span>   else
+</span><span id="__span-40-23"><a id="__codelineno-40-23" name="__codelineno-40-23" href="#__codelineno-40-23"></a><span class="w"> </span>     respond_to do |format|
+</span><span id="__span-40-24"><a id="__codelineno-40-24" name="__codelineno-40-24" href="#__codelineno-40-24"></a><span class="w"> </span>       format.html { redirect_to root_path }
+</span><span id="__span-40-25"><a id="__codelineno-40-25" name="__codelineno-40-25" href="#__codelineno-40-25"></a><span class="w"> </span>       format.json { render layout: &quot;stream&quot; }
+</span><span id="__span-40-26"><a id="__codelineno-40-26" name="__codelineno-40-26" href="#__codelineno-40-26"></a><span class="w"> </span>     end
+</span><span id="__span-40-27"><a id="__codelineno-40-27" name="__codelineno-40-27" href="#__codelineno-40-27"></a><span class="w"> </span>   end
+</span><span id="__span-40-28"><a id="__codelineno-40-28" name="__codelineno-40-28" href="#__codelineno-40-28"></a><span class="w"> </span> end
 </span><span id="__span-40-29"><a id="__codelineno-40-29" name="__codelineno-40-29" href="#__codelineno-40-29"></a>
-</span><span id="__span-40-30"><a id="__codelineno-40-30" name="__codelineno-40-30" href="#__codelineno-40-30"></a><span class="w"> </span>   def update
-</span><span id="__span-40-31"><a id="__codelineno-40-31" name="__codelineno-40-31" href="#__codelineno-40-31"></a><span class="w"> </span>     @item = Item.find(params[:id])
-</span><span id="__span-40-32"><a id="__codelineno-40-32" name="__codelineno-40-32" href="#__codelineno-40-32"></a><span class="w"> </span>     @item.update!(completed: !@item.completed)
-</span><span id="__span-40-33"><a id="__codelineno-40-33" name="__codelineno-40-33" href="#__codelineno-40-33"></a><span class="w"> </span>+    @item.broadcast_save_later_to(
-</span><span id="__span-40-34"><a id="__codelineno-40-34" name="__codelineno-40-34" href="#__codelineno-40-34"></a><span class="w"> </span>+      &quot;shopping&quot;,
-</span><span id="__span-40-35"><a id="__codelineno-40-35" name="__codelineno-40-35" href="#__codelineno-40-35"></a><span class="w"> </span>+      target: &quot;item_#{@item.id}&quot;,
-</span><span id="__span-40-36"><a id="__codelineno-40-36" name="__codelineno-40-36" href="#__codelineno-40-36"></a><span class="w"> </span>+      partial: &quot;shopping_lists/item&quot;
-</span><span id="__span-40-37"><a id="__codelineno-40-37" name="__codelineno-40-37" href="#__codelineno-40-37"></a><span class="w"> </span>+    )
-</span><span id="__span-40-38"><a id="__codelineno-40-38" name="__codelineno-40-38" href="#__codelineno-40-38"></a><span class="w"> </span>     respond_to do |format|
-</span><span id="__span-40-39"><a id="__codelineno-40-39" name="__codelineno-40-39" href="#__codelineno-40-39"></a><span class="w"> </span>       format.html { redirect_to root_path }
-</span><span id="__span-40-40"><a id="__codelineno-40-40" name="__codelineno-40-40" href="#__codelineno-40-40"></a><span class="w"> </span>       format.json { render layout: &quot;stream&quot; }
-</span><span id="__span-40-41"><a id="__codelineno-40-41" name="__codelineno-40-41" href="#__codelineno-40-41"></a><span class="w"> </span>     end
-</span><span id="__span-40-42"><a id="__codelineno-40-42" name="__codelineno-40-42" href="#__codelineno-40-42"></a><span class="w"> </span>   end
+</span><span id="__span-40-30"><a id="__codelineno-40-30" name="__codelineno-40-30" href="#__codelineno-40-30"></a><span class="w"> </span> def update
+</span><span id="__span-40-31"><a id="__codelineno-40-31" name="__codelineno-40-31" href="#__codelineno-40-31"></a><span class="w"> </span>   @item = Item.find(params[:id])
+</span><span id="__span-40-32"><a id="__codelineno-40-32" name="__codelineno-40-32" href="#__codelineno-40-32"></a><span class="w"> </span>   @item.update!(completed: !@item.completed)
+</span><span id="__span-40-33"><a id="__codelineno-40-33" name="__codelineno-40-33" href="#__codelineno-40-33"></a><span class="gi">+    @item.broadcast_save_later_to(</span>
+</span><span id="__span-40-34"><a id="__codelineno-40-34" name="__codelineno-40-34" href="#__codelineno-40-34"></a><span class="gi">+      &quot;shopping&quot;,</span>
+</span><span id="__span-40-35"><a id="__codelineno-40-35" name="__codelineno-40-35" href="#__codelineno-40-35"></a><span class="gi">+      target: &quot;item_#{@item.id}&quot;,</span>
+</span><span id="__span-40-36"><a id="__codelineno-40-36" name="__codelineno-40-36" href="#__codelineno-40-36"></a><span class="gi">+      partial: &quot;shopping_lists/item&quot;</span>
+</span><span id="__span-40-37"><a id="__codelineno-40-37" name="__codelineno-40-37" href="#__codelineno-40-37"></a><span class="gi">+    )</span>
+</span><span id="__span-40-38"><a id="__codelineno-40-38" name="__codelineno-40-38" href="#__codelineno-40-38"></a><span class="w"> </span>   respond_to do |format|
+</span><span id="__span-40-39"><a id="__codelineno-40-39" name="__codelineno-40-39" href="#__codelineno-40-39"></a><span class="w"> </span>     format.html { redirect_to root_path }
+</span><span id="__span-40-40"><a id="__codelineno-40-40" name="__codelineno-40-40" href="#__codelineno-40-40"></a><span class="w"> </span>     format.json { render layout: &quot;stream&quot; }
+</span><span id="__span-40-41"><a id="__codelineno-40-41" name="__codelineno-40-41" href="#__codelineno-40-41"></a><span class="w"> </span>   end
+</span><span id="__span-40-42"><a id="__codelineno-40-42" name="__codelineno-40-42" href="#__codelineno-40-42"></a><span class="w"> </span> end
 </span><span id="__span-40-43"><a id="__codelineno-40-43" name="__codelineno-40-43" href="#__codelineno-40-43"></a>
-</span><span id="__span-40-44"><a id="__codelineno-40-44" name="__codelineno-40-44" href="#__codelineno-40-44"></a><span class="w"> </span>   private
+</span><span id="__span-40-44"><a id="__codelineno-40-44" name="__codelineno-40-44" href="#__codelineno-40-44"></a><span class="w"> </span> private
 </span><span id="__span-40-45"><a id="__codelineno-40-45" name="__codelineno-40-45" href="#__codelineno-40-45"></a>
-</span><span id="__span-40-46"><a id="__codelineno-40-46" name="__codelineno-40-46" href="#__codelineno-40-46"></a><span class="w"> </span>   def item_params
-</span><span id="__span-40-47"><a id="__codelineno-40-47" name="__codelineno-40-47" href="#__codelineno-40-47"></a><span class="w"> </span>     params.require(:item).permit(:name)
-</span><span id="__span-40-48"><a id="__codelineno-40-48" name="__codelineno-40-48" href="#__codelineno-40-48"></a><span class="w"> </span>   end
-</span><span id="__span-40-49"><a id="__codelineno-40-49" name="__codelineno-40-49" href="#__codelineno-40-49"></a><span class="w"> </span> end
+</span><span id="__span-40-46"><a id="__codelineno-40-46" name="__codelineno-40-46" href="#__codelineno-40-46"></a><span class="w"> </span> def item_params
+</span><span id="__span-40-47"><a id="__codelineno-40-47" name="__codelineno-40-47" href="#__codelineno-40-47"></a><span class="w"> </span>   params.require(:item).permit(:name)
+</span><span id="__span-40-48"><a id="__codelineno-40-48" name="__codelineno-40-48" href="#__codelineno-40-48"></a><span class="w"> </span> end
+</span><span id="__span-40-49"><a id="__codelineno-40-49" name="__codelineno-40-49" href="#__codelineno-40-49"></a>end
 </span></code></pre></div>
+</div>
+</div>
+</div>
 <p>Open two tabs to the app to simlate two users. Now when one user adds an item or toggles completion, <strong>all connected users see the update instantly</strong>!</p>
 <h2 id="performance-with-fragment-references">Performance with Fragment References<a class="headerlink" href="#performance-with-fragment-references" title="Permanent link">&para;</a></h2>
 <p>When working with React, it's ideal to minimize re-renders - if one part of the page changes, let's not re-render everything. It's a common issue with props drilling, and at first glance <code>useContent</code> looks to be affected. But Superglue has you covered.</p>
 <p><strong>Fragment references</strong> solve this by letting child components subscribe only to their specific fragments. This means only the components that actually need to update will re-render.</p>
 <p>Let's optimize our app:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="performance-with-fragment-references-showjsx" name="__tabbed_12" type="radio" /><input id="performance-with-fragment-references-component-files" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="performance-with-fragment-references-showjsx"><code>show.jsx</code></label><label for="performance-with-fragment-references-component-files">Component files</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="performance-with-fragment-references-showjsx" name="__tabbed_11" type="radio" /><input id="performance-with-fragment-references-component-files" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="performance-with-fragment-references-showjsx"><code>show.jsx</code></label><label for="performance-with-fragment-references-component-files">Component files</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Update <code>app/views/shopping_lists/show.jsx</code> to use fragment references</p>
@@ -3187,7 +3185,7 @@ fragment <code>item_1</code> and override any existing fragment with that id.</p
 <p>In this example we'll use <code>remote</code>, the <a href="../requests/#remote">async request helper</a> that
 powers Superglue's <code>data-sg-remote</code>. Unlike the UJS counterpart, this method allows us to set the HTTP method <code>PATCH</code>.</p>
 </div>
-<div class="tabbed-set tabbed-alternate" data-tabs="13:1"><input checked="checked" id="client-side-updates-optimistic-toggle" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="client-side-updates-optimistic-toggle">Optimistic toggle</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:1"><input checked="checked" id="client-side-updates-optimistic-toggle" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="client-side-updates-optimistic-toggle">Optimistic toggle</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Update <code>app/javascript/components/ItemsList.jsx</code></p>

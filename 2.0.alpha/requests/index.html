@@ -1832,7 +1832,7 @@ component for the next one.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Its possible to modify the visit payload before it saves
-to the store. See the <a href="../client-updates/#the-beforesave-callback">beforeSave</a> callback.</p>
+to the store. See the <a href="#the-beforesave-callback">beforeSave</a> callback.</p>
 </div>
 <div class="grid cards">
 <ul>
@@ -1848,7 +1848,7 @@ as you want.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Its possible to modify the remote payload before it saves
-to the store. See the <a href="../client-updates/#the-beforesave-callback">beforeSave</a> callback.</p>
+to the store. See the <a href="#the-beforesave-callback">beforeSave</a> callback.</p>
 </div>
 <p>At glance it looks like this:</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -1907,9 +1907,10 @@ for details.</p>
 bars, you can add them there.</p>
 </div>
 <h2 id="the-beforesave-callback">The <code>beforeSave</code> callback<a class="headerlink" href="#the-beforesave-callback" title="Permanent link">&para;</a></h2>
-<div class="admonition alert">
-<p class="admonition-title">Alert</p>
-<p><code>beforeSave</code> looks deceptively simple, but is an advanced Supeglue feature. It requires</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>beforeSave</code> is an advanced Supeglue feature. Before proceeding please familiarize
+yourself with:</p>
 <ol>
 <li>Knowing how <a href="../fragments/">Fragments and FragmentRefs</a> work, the first
 parameter passed to <code>beforeSave</code> is a proxy that lazily normalizes
@@ -1920,7 +1921,7 @@ fragments.</li>
 </ol>
 </div>
 <p>Both <code>visit</code> and <code>remote</code> can be passed a <code>beforeSave</code> callback. This is your 
-opportunity to modify the incoming <a href="../page-response/#sav">savePage or graft</a>
+opportunity to modify the incoming <a href="../page-response/">savePage or graft</a>
 payload before it persists. Its ideal for features like
 <a href="../recipes/infinite-scroll/">infinite-scroll</a> where you need to
 concatenate a list of results into an existing list:</p>

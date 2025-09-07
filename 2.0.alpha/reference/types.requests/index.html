@@ -2256,11 +2256,11 @@
 <h2 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h2>
 <p><a id="visit"></a></p>
 <h3 id="visit">Visit()<a class="headerlink" href="#visit" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L11">types/requests.ts:11</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L11">types/requests.ts:11</a></p>
 <blockquote>
 <p><strong>Visit</strong>(<code>input</code>: <code>string</code>, <code>options</code>: <a href="#visitprops"><code>VisitProps</code></a>): <code>Promise</code>\&lt;<a href="../types/#meta"><code>Meta</code></a>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L30">types/requests.ts:30</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L30">types/requests.ts:30</a></p>
 <p>Use visit to make single page transitions from one page. The function is a
 wrapper around fetch and made to mimic a link click or a form submision. When
 used, a <code>json</code> request will be made for the next page, then Superglue saves
@@ -2301,7 +2301,7 @@ it for UJS navigation. This is usually generated for you in
 <hr />
 <p><a id="visitprops"></a></p>
 <h3 id="visitprops">VisitProps<a class="headerlink" href="#visitprops" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L38">types/requests.ts:38</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L38">types/requests.ts:38</a></p>
 <p>Options for Visit</p>
 <h4 id="extends">Extends<a class="headerlink" href="#extends" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2324,53 +2324,53 @@ it for UJS navigation. This is usually generated for you in
 <td><code>string</code></td>
 <td>Defaults to the currentPageKey. When present, Superglue will use the page state located at that pageKey and optimistally navigates to it as the next page's state while the requests resolves.</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L44">types/requests.ts:44</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L44">types/requests.ts:44</a></td>
 </tr>
 <tr>
 <td><a id="revisit"></a> <code>revisit?</code></td>
 <td><code>boolean</code></td>
 <td>When <code>true</code> and the request method is a GET, changes the <code>suggestionAction</code> of the Meta object to <code>none</code> so that Superglue does nothing to window.history. When the GET response was redirected, changes <code>navigationAction</code> to <code>replace</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L51">types/requests.ts:51</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L51">types/requests.ts:51</a></td>
 </tr>
 <tr>
 <td><a id="method"></a> <code>method?</code></td>
 <td><code>string</code></td>
 <td>The HTTP method</td>
 <td><a href="#remoteprops"><code>RemoteProps</code></a>.<a href="#method-1"><code>method</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L76">types/requests.ts:76</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L76">types/requests.ts:76</a></td>
 </tr>
 <tr>
 <td><a id="body"></a> <code>body?</code></td>
 <td><code>BodyInit</code></td>
 <td>The HTTP body</td>
 <td><a href="#remoteprops"><code>RemoteProps</code></a>.<a href="#body-1"><code>body</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L78">types/requests.ts:78</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L78">types/requests.ts:78</a></td>
 </tr>
 <tr>
 <td><a id="headers"></a> <code>headers?</code></td>
 <td>{[<code>key</code>: <code>string</code>]: <code>string</code>; }</td>
 <td>The HTTP headers</td>
 <td><code>Omit.headers</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L80">types/requests.ts:80</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L80">types/requests.ts:80</a></td>
 </tr>
 <tr>
 <td><a id="beforesave"></a> <code>beforeSave?</code></td>
 <td><a href="#beforesave-2"><code>BeforeSave</code></a>\&lt;<a href="../types/#jsonmappable"><code>JSONMappable</code></a>&gt;</td>
 <td>-</td>
 <td><a href="#remoteprops"><code>RemoteProps</code></a>.<a href="#beforesave-1"><code>beforeSave</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L83">types/requests.ts:83</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L83">types/requests.ts:83</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="remote"></a></p>
 <h3 id="remote">Remote()<a class="headerlink" href="#remote" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L54">types/requests.ts:54</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L54">types/requests.ts:54</a></p>
 <blockquote>
 <p><strong>Remote</strong>(<code>input</code>: <code>string</code>, <code>options</code>: <a href="#remoteprops"><code>RemoteProps</code></a>): <code>Promise</code>\&lt;<a href="../types/#meta"><code>Meta</code></a>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L68">types/requests.ts:68</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L68">types/requests.ts:68</a></p>
 <p>Remote is a wrapper around fetch. It's used to make a request and mutate the
 store. Remote does not navigate, and it does not change the browser history.
 There can be multiple Remote requests running concurrently.</p>
@@ -2405,7 +2405,7 @@ global usage.</p>
 <hr />
 <p><a id="remoteprops"></a></p>
 <h3 id="remoteprops">RemoteProps<a class="headerlink" href="#remoteprops" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L89">types/requests.ts:89</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L89">types/requests.ts:89</a></p>
 <p>Options for Visit</p>
 <h4 id="extends_1">Extends<a class="headerlink" href="#extends_1" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2428,49 +2428,49 @@ global usage.</p>
 <td><code>string</code></td>
 <td>The HTTP method</td>
 <td><code>BaseProps.method</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L76">types/requests.ts:76</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L76">types/requests.ts:76</a></td>
 </tr>
 <tr>
 <td><a id="body-1"></a> <code>body?</code></td>
 <td><code>BodyInit</code></td>
 <td>The HTTP body</td>
 <td><code>BaseProps.body</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L78">types/requests.ts:78</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L78">types/requests.ts:78</a></td>
 </tr>
 <tr>
 <td><a id="headers-1"></a> <code>headers?</code></td>
 <td>{[<code>key</code>: <code>string</code>]: <code>string</code>; }</td>
 <td>The HTTP headers</td>
 <td><code>BaseProps.headers</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L80">types/requests.ts:80</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L80">types/requests.ts:80</a></td>
 </tr>
 <tr>
 <td><a id="beforesave-1"></a> <code>beforeSave?</code></td>
 <td><a href="#beforesave-2"><code>BeforeSave</code></a>\&lt;<a href="../types/#jsonmappable"><code>JSONMappable</code></a>&gt;</td>
 <td>-</td>
 <td><code>BaseProps.beforeSave</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L83">types/requests.ts:83</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L83">types/requests.ts:83</a></td>
 </tr>
 <tr>
 <td><a id="pagekey"></a> <code>pageKey?</code></td>
 <td><code>string</code></td>
 <td>Specifies where to store the remote payload, if not provided <a href="#remote">Remote</a> will derive a key from the response's url.</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L94">types/requests.ts:94</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L94">types/requests.ts:94</a></td>
 </tr>
 <tr>
 <td><a id="force"></a> <code>force?</code></td>
 <td><code>boolean</code></td>
 <td>By default, remote <a href="#remote">Remote</a> disallows grafting a page response using props_at if the target pageKey provided has a different componentIdentifier. Setting <code>force: true</code> will ignore this limitation. This can be useful if you are absolutely sure that the page your grafting onto has a compatible shape with the response received with using props_at. A good example of this is a shared global header.</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L104">types/requests.ts:104</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L104">types/requests.ts:104</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="beforesave-2"></a></p>
 <h3 id="beforesavet">BeforeSave()\&lt;T&gt;<a class="headerlink" href="#beforesavet" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L107">types/requests.ts:107</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L107">types/requests.ts:107</a></p>
 <h4 id="type-parameters">Type Parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2489,7 +2489,7 @@ global usage.</p>
 <blockquote>
 <p><strong>BeforeSave</strong>\&lt;<code>U</code>&gt;(<code>prevPage</code>: <a href="../types/#page"><code>Page</code></a>\&lt;<code>T</code>&gt;, <code>receivedPage</code>: <code>U</code>): <code>U</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L128">types/requests.ts:128</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L128">types/requests.ts:128</a></p>
 <p>A callback that fires in between recieving a payload and saving a
 payload. Use this callback to modify the payload before it gets saved. Its
 useful for appending, prepending, shuffeling, etc. recieved data to
@@ -2542,11 +2542,11 @@ existing data.</p>
 <hr />
 <p><a id="applicationremote"></a></p>
 <h3 id="applicationremote">ApplicationRemote()<a class="headerlink" href="#applicationremote" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L134">types/requests.ts:134</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L134">types/requests.ts:134</a></p>
 <blockquote>
 <p><strong>ApplicationRemote</strong>(<code>input</code>: <code>string</code>, <code>options?</code>: <a href="#remoteprops"><code>RemoteProps</code></a> &amp; { <code>dataset?</code>: {[<code>name</code>: <code>string</code>]: <code>undefined</code> | <code>string</code>; }; }): <code>Promise</code>\&lt;<a href="../types/#meta"><code>Meta</code></a>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L146">types/requests.ts:146</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L146">types/requests.ts:146</a></p>
 <p>ApplicationRemote is the developer provided wrapper around <a href="#remote">Remote</a>.</p>
 <p>It contains custom functionality, but is bound by the interface that
 Superglue uses to make a <code>remote</code> call. See <a href="#remote">Remote</a> for more details.</p>
@@ -2578,11 +2578,11 @@ enabled on.</p>
 <hr />
 <p><a id="applicationvisit"></a></p>
 <h3 id="applicationvisit">ApplicationVisit()<a class="headerlink" href="#applicationvisit" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L156">types/requests.ts:156</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L156">types/requests.ts:156</a></p>
 <blockquote>
 <p><strong>ApplicationVisit</strong>(<code>input</code>: <code>string</code>, <code>options?</code>: <a href="#visitprops"><code>VisitProps</code></a> &amp; { <code>dataset?</code>: {[<code>name</code>: <code>string</code>]: <code>undefined</code> | <code>string</code>; }; }): <code>Promise</code>\&lt;<code>undefined</code> | <code>void</code> | <a href="../types/#visitmeta"><code>VisitMeta</code></a>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/requests.ts#L168">types/requests.ts:168</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/requests.ts#L168">types/requests.ts:168</a></p>
 <p>ApplicationVisit is the developer provided wrapper around <a href="#remote">Remote</a>.</p>
 <p>It contains custom functionality, but is bound by the interface that
 Superglue uses to make a <code>visit</code> call. See <a href="#remote">Remote</a> for more details.</p>

@@ -4590,7 +4590,7 @@
 <h2 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h2>
 <p><a id="parsedresponse"></a></p>
 <h3 id="parsedresponse">ParsedResponse<a class="headerlink" href="#parsedresponse" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L168">types/index.ts:168</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L171">types/index.ts:171</a></p>
 <h4 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -4604,19 +4604,19 @@
 <tr>
 <td><a id="rsp"></a> <code>rsp</code></td>
 <td><code>Response</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L169">types/index.ts:169</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L172">types/index.ts:172</a></td>
 </tr>
 <tr>
 <td><a id="json"></a> <code>json</code></td>
 <td><a href="#pageresponse"><code>PageResponse</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L170">types/index.ts:170</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L173">types/index.ts:173</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="defer"></a></p>
 <h3 id="defer">Defer<a class="headerlink" href="#defer" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L194">types/index.ts:194</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L197">types/index.ts:197</a></p>
 <p>Defer is a node in the page response thats been intentionally filled
 with empty or placeholder data for the purposes of fetching it later.</p>
 <p>You would typically use it with props_template for parts of a page that you
@@ -4636,38 +4636,38 @@ know would be slower to load.</p>
 <td><a id="url"></a> <code>url</code></td>
 <td><code>string</code></td>
 <td>A url with props_at keypath in the query parameter to indicate how to dig for the data, and where to place the data.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L195">types/index.ts:195</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L198">types/index.ts:198</a></td>
 </tr>
 <tr>
 <td><a id="type"></a> <code>type</code></td>
 <td><code>"auto"</code> | <code>"manual"</code></td>
 <td>When set to <code>auto</code> Superglue will automatically make the request using the <code>url</code>. When set to <code>manual</code>, Superglue does nothing, and you would need to manually use <code>remote</code> with the <code>url</code> to fetch the missing data.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L196">types/index.ts:196</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L199">types/index.ts:199</a></td>
 </tr>
 <tr>
 <td><a id="path"></a> <code>path</code></td>
 <td><code>string</code></td>
 <td>A keypath indicates how to dig for the data and where to place the data.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L197">types/index.ts:197</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L200">types/index.ts:200</a></td>
 </tr>
 <tr>
 <td><a id="successaction"></a> <code>successAction</code></td>
 <td><code>string</code></td>
 <td>a user defined action for Superglue to dispatch when auto deferement is successful</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L198">types/index.ts:198</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L201">types/index.ts:201</a></td>
 </tr>
 <tr>
 <td><a id="failaction"></a> <code>failAction</code></td>
 <td><code>string</code></td>
 <td>a user defined action for Superglue to dispatch when auto deferement failed</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L199">types/index.ts:199</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L202">types/index.ts:202</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="graftresponse"></a></p>
 <h3 id="graftresponset">GraftResponse\&lt;T&gt;<a class="headerlink" href="#graftresponset" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L235">types/index.ts:235</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L238">types/index.ts:238</a></p>
 <p>The GraftResponse is responsible for partial updates using props_template's
 digging functionality in Superglue.</p>
 <h4 id="type-parameters">Type Parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
@@ -4700,74 +4700,74 @@ digging functionality in Superglue.</p>
 <td><a id="data-1"></a> <code>data</code></td>
 <td><code>T</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L236">types/index.ts:236</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L239">types/index.ts:239</a></td>
 </tr>
 <tr>
 <td><a id="componentidentifier-2"></a> <code>componentIdentifier</code></td>
 <td><code>string</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L237">types/index.ts:237</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L240">types/index.ts:240</a></td>
 </tr>
 <tr>
 <td><a id="assets-1"></a> <code>assets</code></td>
 <td><code>string</code>[]</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L238">types/index.ts:238</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L241">types/index.ts:241</a></td>
 </tr>
 <tr>
 <td><a id="csrftoken-1"></a> <code>csrfToken?</code></td>
 <td><code>string</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L239">types/index.ts:239</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L242">types/index.ts:242</a></td>
 </tr>
 <tr>
 <td><a id="fragments-1"></a> <code>fragments</code></td>
 <td><a href="#fragmentpath"><code>FragmentPath</code></a>[]</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L240">types/index.ts:240</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L243">types/index.ts:243</a></td>
 </tr>
 <tr>
 <td><a id="defers-1"></a> <code>defers</code></td>
 <td><a href="#defer"><code>Defer</code></a>[]</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L241">types/index.ts:241</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L244">types/index.ts:244</a></td>
 </tr>
 <tr>
 <td><a id="slices-1"></a> <code>slices</code></td>
 <td><a href="#jsonobject"><code>JSONObject</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L242">types/index.ts:242</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L245">types/index.ts:245</a></td>
 </tr>
 <tr>
 <td><a id="action-1"></a> <code>action</code></td>
 <td><code>"graft"</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L243">types/index.ts:243</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L246">types/index.ts:246</a></td>
 </tr>
 <tr>
 <td><a id="renderedat-1"></a> <code>renderedAt</code></td>
 <td><code>number</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L244">types/index.ts:244</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L247">types/index.ts:247</a></td>
 </tr>
 <tr>
 <td><a id="path-1"></a> <code>path</code></td>
 <td><code>string</code></td>
 <td>Used by superglue to replace the data at that location.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L246">types/index.ts:246</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L249">types/index.ts:249</a></td>
 </tr>
 <tr>
 <td><a id="fragmentcontext"></a> <code>fragmentContext?</code></td>
 <td><code>string</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L247">types/index.ts:247</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L250">types/index.ts:250</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="fragmentpath"></a></p>
 <h3 id="fragmentpath">FragmentPath<a class="headerlink" href="#fragmentpath" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L284">types/index.ts:284</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L287">types/index.ts:287</a></p>
 <p>A FragmentPath identifies a fragment inside of a PageResponse. Its used internally by Superglue to
 denormalize a page response into fragments, if any.</p>
 <h4 id="properties_3">Properties<a class="headerlink" href="#properties_3" title="Permanent link">&para;</a></h4>
@@ -4785,20 +4785,20 @@ denormalize a page response into fragments, if any.</p>
 <td><a id="id"></a> <code>id</code></td>
 <td><code>string</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L285">types/index.ts:285</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L288">types/index.ts:288</a></td>
 </tr>
 <tr>
 <td><a id="path-2"></a> <code>path</code></td>
 <td><code>string</code></td>
 <td>A Keypath specifying the location of the fragment</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L286">types/index.ts:286</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L289">types/index.ts:289</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="fragmentref"></a></p>
 <h3 id="fragmentref">FragmentRef<a class="headerlink" href="#fragmentref" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L297">types/index.ts:297</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L300">types/index.ts:300</a></p>
 <p>A FragmentRef is a reference to a Fragment.</p>
 <h4 id="properties_4">Properties<a class="headerlink" href="#properties_4" title="Permanent link">&para;</a></h4>
 <table>
@@ -4815,14 +4815,14 @@ denormalize a page response into fragments, if any.</p>
 <td><a id="__id-1"></a> <code>__id</code></td>
 <td><code>string</code></td>
 <td>A user supplied string identifying the fragment. This is usually created using <a href="https://github.com/thoughtbot/props_template?tab=readme-ov-file#jsonfragments">props_template</a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L298">types/index.ts:298</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L301">types/index.ts:301</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="supergluestate"></a></p>
 <h3 id="supergluestate">SuperglueState<a class="headerlink" href="#supergluestate" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L317">types/index.ts:317</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L320">types/index.ts:320</a></p>
 <p>A read only state that contains meta information about
 the current page.</p>
 <h4 id="properties_5">Properties<a class="headerlink" href="#properties_5" title="Permanent link">&para;</a></h4>
@@ -4840,32 +4840,32 @@ the current page.</p>
 <td><a id="currentpagekey"></a> <code>currentPageKey</code></td>
 <td><code>string</code></td>
 <td>The <a href="#pagekey">PageKey</a> (url pathname + search) of the current page. This can be pass to <a href="../types.requests/#remote">Remote</a>.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L319">types/index.ts:319</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L322">types/index.ts:322</a></td>
 </tr>
 <tr>
 <td><a id="search"></a> <code>search</code></td>
 <td><code>Record</code>\&lt;<code>string</code>, <code>string</code> | <code>undefined</code>&gt;</td>
 <td>The query string object of the current url.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L321">types/index.ts:321</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L324">types/index.ts:324</a></td>
 </tr>
 <tr>
 <td><a id="csrftoken-3"></a> <code>csrfToken?</code></td>
 <td><code>string</code></td>
 <td>The Rails csrfToken that you can use for forms.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L323">types/index.ts:323</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L326">types/index.ts:326</a></td>
 </tr>
 <tr>
 <td><a id="assets-3"></a> <code>assets</code></td>
 <td><code>string</code>[]</td>
 <td>The tracked asset digests.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L325">types/index.ts:325</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L328">types/index.ts:328</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="rootstate"></a></p>
 <h3 id="rootstatet">RootState\&lt;T&gt;<a class="headerlink" href="#rootstatet" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L332">types/index.ts:332</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L335">types/index.ts:335</a></p>
 <p>The root state for a Superglue application. It occupies
 2 keys in your app.</p>
 <h4 id="type-parameters_1">Type Parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">&para;</a></h4>
@@ -4900,26 +4900,26 @@ the current page.</p>
 <td><a id="superglue"></a> <code>superglue</code></td>
 <td><a href="#supergluestate"><code>SuperglueState</code></a></td>
 <td>Contains readonly metadata about the current page</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L334">types/index.ts:334</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L337">types/index.ts:337</a></td>
 </tr>
 <tr>
 <td><a id="pages"></a> <code>pages</code></td>
 <td><a href="#allpages"><code>AllPages</code></a>\&lt;<code>T</code>&gt;</td>
 <td>Every <a href="#pageresponse">PageResponse</a> that superglue recieves is stored here.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L336">types/index.ts:336</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L339">types/index.ts:339</a></td>
 </tr>
 <tr>
 <td><a id="fragments-3"></a> <code>fragments</code></td>
 <td><a href="#allfragments"><code>AllFragments</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L337">types/index.ts:337</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L340">types/index.ts:340</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="meta"></a></p>
 <h3 id="meta">Meta<a class="headerlink" href="#meta" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L346">types/index.ts:346</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L349">types/index.ts:349</a></p>
 <p>Meta is passed to the Promise when visit or remote
 resolves and contains additional information for
 navigation.</p>
@@ -4942,50 +4942,50 @@ navigation.</p>
 <td><a id="pagekey-1"></a> <code>pageKey</code></td>
 <td><code>string</code></td>
 <td>The URL of the response converted to a pageKey. Superglue uses this to persist the <a href="#saveresponse">SaveResponse</a> to store, when that happens.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L351">types/index.ts:351</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L354">types/index.ts:354</a></td>
 </tr>
 <tr>
 <td><a id="page-1"></a> <code>page</code></td>
 <td><a href="#pageresponse"><code>PageResponse</code></a></td>
 <td>The <a href="#saveresponse">SaveResponse</a> of the page</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L353">types/index.ts:353</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L356">types/index.ts:356</a></td>
 </tr>
 <tr>
 <td><a id="redirected"></a> <code>redirected</code></td>
 <td><code>boolean</code></td>
 <td>Indicates if response was redirected</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L355">types/index.ts:355</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L358">types/index.ts:358</a></td>
 </tr>
 <tr>
 <td><a id="rsp-1"></a> <code>rsp</code></td>
 <td><code>Response</code></td>
 <td>The original response object</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L357">types/index.ts:357</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L360">types/index.ts:360</a></td>
 </tr>
 <tr>
 <td><a id="fetchargs-1"></a> <code>fetchArgs</code></td>
 <td><a href="../types.actions/#fetchargs"><code>FetchArgs</code></a></td>
 <td>The original args passed to fetch.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L359">types/index.ts:359</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L362">types/index.ts:362</a></td>
 </tr>
 <tr>
 <td><a id="componentidentifier-3"></a> <code>componentIdentifier?</code></td>
 <td><code>string</code></td>
 <td>The <a href="#componentidentifier">ComponentIdentifier</a> extracted from the response.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L361">types/index.ts:361</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L364">types/index.ts:364</a></td>
 </tr>
 <tr>
 <td><a id="needsrefresh"></a> <code>needsRefresh</code></td>
 <td><code>boolean</code></td>
 <td><code>true</code> when assets locally are detected to be out of date</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L363">types/index.ts:363</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L366">types/index.ts:366</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="visitmeta"></a></p>
 <h3 id="visitmeta">VisitMeta<a class="headerlink" href="#visitmeta" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L366">types/index.ts:366</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L369">types/index.ts:369</a></p>
 <p>Meta is passed to the Promise when visit or remote
 resolves and contains additional information for
 navigation.</p>
@@ -5010,63 +5010,63 @@ navigation.</p>
 <td><code>string</code></td>
 <td>The URL of the response converted to a pageKey. Superglue uses this to persist the <a href="#saveresponse">SaveResponse</a> to store, when that happens.</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#pagekey-1"><code>pageKey</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L351">types/index.ts:351</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L354">types/index.ts:354</a></td>
 </tr>
 <tr>
 <td><a id="page-2"></a> <code>page</code></td>
 <td><a href="#pageresponse"><code>PageResponse</code></a></td>
 <td>The <a href="#saveresponse">SaveResponse</a> of the page</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#page-1"><code>page</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L353">types/index.ts:353</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L356">types/index.ts:356</a></td>
 </tr>
 <tr>
 <td><a id="redirected-1"></a> <code>redirected</code></td>
 <td><code>boolean</code></td>
 <td>Indicates if response was redirected</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#redirected"><code>redirected</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L355">types/index.ts:355</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L358">types/index.ts:358</a></td>
 </tr>
 <tr>
 <td><a id="rsp-2"></a> <code>rsp</code></td>
 <td><code>Response</code></td>
 <td>The original response object</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#rsp-1"><code>rsp</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L357">types/index.ts:357</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L360">types/index.ts:360</a></td>
 </tr>
 <tr>
 <td><a id="fetchargs-2"></a> <code>fetchArgs</code></td>
 <td><a href="../types.actions/#fetchargs"><code>FetchArgs</code></a></td>
 <td>The original args passed to fetch.</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#fetchargs-1"><code>fetchArgs</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L359">types/index.ts:359</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L362">types/index.ts:362</a></td>
 </tr>
 <tr>
 <td><a id="componentidentifier-4"></a> <code>componentIdentifier?</code></td>
 <td><code>string</code></td>
 <td>The <a href="#componentidentifier">ComponentIdentifier</a> extracted from the response.</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#componentidentifier-3"><code>componentIdentifier</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L361">types/index.ts:361</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L364">types/index.ts:364</a></td>
 </tr>
 <tr>
 <td><a id="needsrefresh-1"></a> <code>needsRefresh</code></td>
 <td><code>boolean</code></td>
 <td><code>true</code> when assets locally are detected to be out of date</td>
 <td><a href="#meta"><code>Meta</code></a>.<a href="#needsrefresh"><code>needsRefresh</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L363">types/index.ts:363</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L366">types/index.ts:366</a></td>
 </tr>
 <tr>
 <td><a id="navigationaction-1"></a> <code>navigationAction</code></td>
 <td><a href="#navigationaction"><code>NavigationAction</code></a></td>
 <td>The <a href="#navigationaction">NavigationAction</a>. This can be used for navigation.</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L368">types/index.ts:368</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L371">types/index.ts:371</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="handlers"></a></p>
 <h3 id="handlers">Handlers<a class="headerlink" href="#handlers" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L411">types/index.ts:411</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L414">types/index.ts:414</a></p>
 <h4 id="properties_9">Properties<a class="headerlink" href="#properties_9" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -5080,19 +5080,19 @@ navigation.</p>
 <tr>
 <td><a id="onclick"></a> <code>onClick</code></td>
 <td>(<code>event</code>: <code>MouseEvent</code>\&lt;<code>HTMLDivElement</code>, <code>MouseEvent</code>&gt;) =&gt; <code>void</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L412">types/index.ts:412</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L415">types/index.ts:415</a></td>
 </tr>
 <tr>
 <td><a id="onsubmit"></a> <code>onSubmit</code></td>
 <td>(<code>event</code>: <code>FormEvent</code>\&lt;<code>HTMLDivElement</code>&gt;) =&gt; <code>void</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L413">types/index.ts:413</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L416">types/index.ts:416</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="historystate"></a></p>
 <h3 id="historystate">HistoryState<a class="headerlink" href="#historystate" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L433">types/index.ts:433</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L436">types/index.ts:436</a></p>
 <p>The state that is saved to history.state. Superglue stores
 information about the current page so that it can restore
 the page state when navigating back</p>
@@ -5111,32 +5111,32 @@ the page state when navigating back</p>
 <td><a id="superglue-1"></a> <code>superglue</code></td>
 <td><code>true</code></td>
 <td>Is always <code>true</code> so superglue can differentiate pages that have superglue enabled or not</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L435">types/index.ts:435</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L438">types/index.ts:438</a></td>
 </tr>
 <tr>
 <td><a id="pagekey-3"></a> <code>pageKey</code></td>
 <td><code>string</code></td>
 <td>The page key in <a href="#supergluestate">SuperglueState</a> to restore from</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L437">types/index.ts:437</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L440">types/index.ts:440</a></td>
 </tr>
 <tr>
 <td><a id="posx"></a> <code>posX</code></td>
 <td><code>number</code></td>
 <td>The scroll position X of the page</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L439">types/index.ts:439</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L442">types/index.ts:442</a></td>
 </tr>
 <tr>
 <td><a id="posy"></a> <code>posY</code></td>
 <td><code>number</code></td>
 <td>The scroll position Y of the page</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L441">types/index.ts:441</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L444">types/index.ts:444</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="basicrequestinit"></a></p>
 <h3 id="basicrequestinit">BasicRequestInit<a class="headerlink" href="#basicrequestinit" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L467">types/index.ts:467</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L470">types/index.ts:470</a></p>
 <p>A variation of RequestInit except the headers must be a regular object</p>
 <h4 id="extends_1">Extends<a class="headerlink" href="#extends_1" title="Permanent link">&para;</a></h4>
 <ul>
@@ -5159,14 +5159,14 @@ the page state when navigating back</p>
 <td>{[<code>key</code>: <code>string</code>]: <code>string</code>; }</td>
 <td>A Headers object, an object literal, or an array of two-item arrays to set request's headers.</td>
 <td><code>RequestInit.headers</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L468">types/index.ts:468</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L471">types/index.ts:471</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="navigationcontextprops"></a></p>
 <h3 id="navigationcontextprops">NavigationContextProps<a class="headerlink" href="#navigationcontextprops" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L516">types/index.ts:516</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L519">types/index.ts:519</a></p>
 <p>Superglue comes with a Navigation component that provides a context with
 access to <a href="../types.requests/#visit">Visit</a>, <a href="../types.requests/#remote">Remote</a> and other useful tooling.</p>
 <p>You can also use this to build your own <code>&lt;Link&gt;</code> component.</p>
@@ -5185,38 +5185,38 @@ access to <a href="../types.requests/#visit">Visit</a>, <a href="../types.reques
 <td><a id="navigateto-1"></a> <code>navigateTo</code></td>
 <td><a href="#navigateto"><code>NavigateTo</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L517">types/index.ts:517</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L520">types/index.ts:520</a></td>
 </tr>
 <tr>
 <td><a id="visit"></a> <code>visit</code></td>
 <td><a href="../types.requests/#applicationvisit"><code>ApplicationVisit</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L518">types/index.ts:518</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L521">types/index.ts:521</a></td>
 </tr>
 <tr>
 <td><a id="remote"></a> <code>remote</code></td>
 <td><a href="../types.requests/#applicationremote"><code>ApplicationRemote</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L519">types/index.ts:519</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L522">types/index.ts:522</a></td>
 </tr>
 <tr>
 <td><a id="pagekey-4"></a> <code>pageKey</code></td>
 <td><code>string</code></td>
 <td>The pagekey that's being used to render the current page component. Useful when used in combination with <a href="../types.requests/#remote">Remote</a> to create requests that target the current page.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L520">types/index.ts:520</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L523">types/index.ts:523</a></td>
 </tr>
 <tr>
 <td><a id="search-1"></a> <code>search</code></td>
 <td><code>Record</code>\&lt;<code>string</code>, <code>undefined</code> | <code>string</code>&gt;</td>
 <td>The current pageKey (current url) query params as an object.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L521">types/index.ts:521</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L524">types/index.ts:524</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="navigationproviderprops"></a></p>
 <h3 id="navigationproviderprops">NavigationProviderProps<a class="headerlink" href="#navigationproviderprops" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L533">types/index.ts:533</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L536">types/index.ts:536</a></p>
 <p>This is the navigation component that gets used by <a href="#applicationprops">ApplicationProps</a>. The component
 takes a mapping of page components and swaps them when navigating and passes
 <a href="#navigateto">NavigateTo</a> to all page components.</p>
@@ -5235,45 +5235,45 @@ takes a mapping of page components and swaps them when navigating and passes
 <td><a id="history"></a> <code>history</code></td>
 <td><code>History</code></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L534">types/index.ts:534</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L537">types/index.ts:537</a></td>
 </tr>
 <tr>
 <td><a id="visit-1"></a> <code>visit</code></td>
 <td><a href="../types.requests/#applicationvisit"><code>ApplicationVisit</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L535">types/index.ts:535</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L538">types/index.ts:538</a></td>
 </tr>
 <tr>
 <td><a id="remote-1"></a> <code>remote</code></td>
 <td><a href="../types.requests/#applicationremote"><code>ApplicationRemote</code></a></td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L536">types/index.ts:536</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L539">types/index.ts:539</a></td>
 </tr>
 <tr>
 <td><a id="mapping"></a> <code>mapping</code></td>
 <td><code>Record</code>\&lt;<a href="#componentidentifier"><code>ComponentIdentifier</code></a>, <code>React.ComponentType</code>&gt;</td>
 <td>-</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L537">types/index.ts:537</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L540">types/index.ts:540</a></td>
 </tr>
 <tr>
 <td><a id="initialpagekey"></a> <code>initialPageKey</code></td>
 <td><code>string</code></td>
 <td>The <a href="#pagekey">PageKey</a> that's to be used when first rendering. Used to determine the initial page component to show.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L538">types/index.ts:538</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L541">types/index.ts:541</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="buildstore"></a></p>
 <h3 id="buildstore">BuildStore()<a class="headerlink" href="#buildstore" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L549">types/index.ts:549</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L552">types/index.ts:552</a></p>
 <p>Provide this callback to <a href="#applicationprops">ApplicationProps</a> returning a Redux store for
 Superglue to use. This would be setup and generated for you in <code>store.js</code>. We
 recommend using using Redux toolkit's <code>configureStore</code> to build the store.</p>
 <blockquote>
 <p><strong>BuildStore</strong>(<code>initialState</code>: <a href="#rootstate"><code>RootState</code></a>, <code>reducer</code>: { <code>superglue</code>: (<code>state</code>: <a href="#supergluestate"><code>SuperglueState</code></a>, <code>action</code>: <code>Action</code>) =&gt; <a href="#supergluestate"><code>SuperglueState</code></a>; <code>pages</code>: (<code>state</code>: <a href="#allpages"><code>AllPages</code></a>, <code>action</code>: <code>Action</code>) =&gt; <a href="#allpages"><code>AllPages</code></a>; <code>fragments</code>: (<code>state</code>: <a href="#allfragments"><code>AllFragments</code></a>, <code>action</code>: <code>Action</code>) =&gt; <a href="#allfragments"><code>AllFragments</code></a>; }): <a href="#supergluestore"><code>SuperglueStore</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L550">types/index.ts:550</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L553">types/index.ts:553</a></p>
 <p>Provide this callback to <a href="#applicationprops">ApplicationProps</a> returning a Redux store for
 Superglue to use. This would be setup and generated for you in <code>store.js</code>. We
 recommend using using Redux toolkit's <code>configureStore</code> to build the store.</p>
@@ -5319,7 +5319,7 @@ recommend using using Redux toolkit's <code>configureStore</code> to build the s
 <hr />
 <p><a id="buildvisitandremote"></a></p>
 <h3 id="buildvisitandremote">BuildVisitAndRemote()<a class="headerlink" href="#buildvisitandremote" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L565">types/index.ts:565</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L568">types/index.ts:568</a></p>
 <p>Provide this callback to <a href="#applicationprops">ApplicationProps</a> returning a visit and remote
 function. These functions will be used by Superglue to power its UJS
 attributes and passed to your page components and <a href="#navigationcontextprops">NavigationContextProps</a>.
@@ -5328,7 +5328,7 @@ bar.</p>
 <blockquote>
 <p><strong>BuildVisitAndRemote</strong>(<code>navigatorRef</code>: <code>RefObject</code>\&lt;<code>null</code> | { <code>navigateTo</code>: <a href="#navigateto"><code>NavigateTo</code></a>; }&gt;, <code>store</code>: <a href="#supergluestore"><code>SuperglueStore</code></a>): { <code>visit</code>: <a href="../types.requests/#applicationvisit"><code>ApplicationVisit</code></a>; <code>remote</code>: <a href="../types.requests/#applicationremote"><code>ApplicationRemote</code></a>; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L566">types/index.ts:566</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L569">types/index.ts:569</a></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -5365,19 +5365,19 @@ bar.</p>
 <tr>
 <td><code>visit</code></td>
 <td><a href="../types.requests/#applicationvisit"><code>ApplicationVisit</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L570">types/index.ts:570</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L573">types/index.ts:573</a></td>
 </tr>
 <tr>
 <td><code>remote</code></td>
 <td><a href="../types.requests/#applicationremote"><code>ApplicationRemote</code></a></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L571">types/index.ts:571</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L574">types/index.ts:574</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="setupprops"></a></p>
 <h3 id="setupprops">SetupProps<a class="headerlink" href="#setupprops" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L575">types/index.ts:575</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L578">types/index.ts:578</a></p>
 <h4 id="properties_14">Properties<a class="headerlink" href="#properties_14" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -5393,50 +5393,50 @@ bar.</p>
 <td><a id="initialpage"></a> <code>initialPage</code></td>
 <td><a href="#saveresponse"><code>SaveResponse</code></a></td>
 <td>The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L580">types/index.ts:580</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L583">types/index.ts:583</a></td>
 </tr>
 <tr>
 <td><a id="baseurl"></a> <code>baseUrl</code></td>
 <td><code>string</code></td>
 <td>The base url prefixed to all calls made by <code>visit</code> and <code>remote</code>.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L585">types/index.ts:585</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L588">types/index.ts:588</a></td>
 </tr>
 <tr>
 <td><a id="path-3"></a> <code>path</code></td>
 <td><code>string</code></td>
 <td>The path of the current page. It should equal to the <code>location.pathname</code> + <code>location.search</code> + <code>location.hash</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L590">types/index.ts:590</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L593">types/index.ts:593</a></td>
 </tr>
 <tr>
 <td><a id="store"></a> <code>store</code></td>
 <td><a href="#supergluestore"><code>SuperglueStore</code></a></td>
 <td>The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L595">types/index.ts:595</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L598">types/index.ts:598</a></td>
 </tr>
 <tr>
 <td><a id="buildvisitandremote-2"></a> <code>buildVisitAndRemote</code></td>
 <td><a href="#buildvisitandremote"><code>BuildVisitAndRemote</code></a></td>
 <td>A factory function that will return a <code>visit</code> and <code>remote</code> function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L602">types/index.ts:602</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L605">types/index.ts:605</a></td>
 </tr>
 <tr>
 <td><a id="history-1"></a> <code>history?</code></td>
 <td><code>History</code></td>
 <td>An optional history object <a href="https://github.com/remix-run/history">https://github.com/remix-run/history</a>. If none is provided Superglue will create one for you.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L607">types/index.ts:607</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L610">types/index.ts:610</a></td>
 </tr>
 <tr>
 <td><a id="navigatorref"></a> <code>navigatorRef</code></td>
 <td><code>RefObject</code>\&lt;<code>null</code> | { <code>navigateTo</code>: <a href="#navigateto"><code>NavigateTo</code></a>; }&gt;</td>
 <td>A ref object created from the Application component that will be passed to buildVisitAndRemote</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L611">types/index.ts:611</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L614">types/index.ts:614</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><a id="applicationprops"></a></p>
 <h3 id="applicationprops">ApplicationProps<a class="headerlink" href="#applicationprops" title="Permanent link">&para;</a></h3>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L619">types/index.ts:619</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L622">types/index.ts:622</a></p>
 <p>Props for the <code>Application</code> component</p>
 <h4 id="extends_2">Extends<a class="headerlink" href="#extends_2" title="Permanent link">&para;</a></h4>
 <ul>
@@ -5457,43 +5457,43 @@ bar.</p>
 <td><a id="initialpage-1"></a> <code>initialPage</code></td>
 <td><a href="#saveresponse"><code>SaveResponse</code></a></td>
 <td>The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L625">types/index.ts:625</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L628">types/index.ts:628</a></td>
 </tr>
 <tr>
 <td><a id="baseurl-1"></a> <code>baseUrl</code></td>
 <td><code>string</code></td>
 <td>The base url prefixed to all calls made by <code>visit</code> and <code>remote</code>.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L630">types/index.ts:630</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L633">types/index.ts:633</a></td>
 </tr>
 <tr>
 <td><a id="path-4"></a> <code>path</code></td>
 <td><code>string</code></td>
 <td>The path of the current page. It should equal to the <code>location.pathname</code> + <code>location.search</code> + <code>location.hash</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L635">types/index.ts:635</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L638">types/index.ts:638</a></td>
 </tr>
 <tr>
 <td><a id="buildvisitandremote-3"></a> <code>buildVisitAndRemote</code></td>
 <td><a href="#buildvisitandremote"><code>BuildVisitAndRemote</code></a></td>
 <td>A factory function that will return a <code>visit</code> and <code>remote</code> function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L642">types/index.ts:642</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L645">types/index.ts:645</a></td>
 </tr>
 <tr>
 <td><a id="mapping-1"></a> <code>mapping</code></td>
 <td><code>Record</code>\&lt;<code>string</code>, <code>React.ComponentType</code>&gt;</td>
 <td>A mapping between your page props and page component. This is setup for you in page_to_page_mapping.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L647">types/index.ts:647</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L650">types/index.ts:650</a></td>
 </tr>
 <tr>
 <td><a id="history-2"></a> <code>history?</code></td>
 <td><code>History</code></td>
 <td>An optional history object <a href="https://github.com/remix-run/history">https://github.com/remix-run/history</a>. If none is provided Superglue will create one for you.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L652">types/index.ts:652</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L655">types/index.ts:655</a></td>
 </tr>
 <tr>
 <td><a id="store-1"></a> <code>store</code></td>
 <td><a href="#supergluestore"><code>SuperglueStore</code></a></td>
 <td>The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash.</td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L657">types/index.ts:657</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L660">types/index.ts:660</a></td>
 </tr>
 </tbody>
 </table>
@@ -5503,7 +5503,7 @@ bar.</p>
 <blockquote>
 <p><strong>PageKey</strong> = <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L22">types/index.ts:22</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L23">types/index.ts:23</a></p>
 <p>A PageKey is a combination of a parsed URL's pathname + query string. No hash.</p>
 <p>*</p>
 <h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
@@ -5515,7 +5515,7 @@ bar.</p>
 <blockquote>
 <p><strong>RestoreStrategy</strong> = <code>"fromCacheOnly"</code> | <code>"revisitOnly"</code> | <code>"fromCacheAndRevisitInBackground"</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L38">types/index.ts:38</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L39">types/index.ts:39</a></p>
 <p>Defines the behavior when navigating to a page that is already stored on the
 client. For example, when navigating back.</p>
 <p>When the page already exists in the store:
@@ -5533,7 +5533,7 @@ to push into history. If the response was redirected, the <a href="#navigationac
 <blockquote>
 <p><strong>NavigationAction</strong> = <code>"push"</code> | <code>"replace"</code> | <code>"none"</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L47">types/index.ts:47</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L48">types/index.ts:48</a></p>
 <p>A NavigationAction is used to tell Superglue to history.push, history.replace
 or do nothing.</p>
 <hr />
@@ -5542,7 +5542,7 @@ or do nothing.</p>
 <blockquote>
 <p><strong>ComponentIdentifier</strong> = <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L53">types/index.ts:53</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L54">types/index.ts:54</a></p>
 <p>An identifier that Superglue will uses to determine which page component to render
 with your page response.</p>
 <hr />
@@ -5551,7 +5551,7 @@ with your page response.</p>
 <blockquote>
 <p><strong>Keypath</strong> = <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L77">types/index.ts:77</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L78">types/index.ts:78</a></p>
 <p>A keypath is a string representing the location of a piece of data. Superglue uses
 the keypath to dig for or update data.</p>
 <h4 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h4>
@@ -5570,7 +5570,7 @@ the keypath to dig for or update data.</p>
 <blockquote>
 <p><strong>JSONPrimitive</strong> = <code>string</code> | <code>number</code> | <code>boolean</code> | <code>null</code> | <code>undefined</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L84">types/index.ts:84</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L85">types/index.ts:85</a></p>
 <p>A JSON Primitive value</p>
 <hr />
 <p><a id="jsonobject"></a></p>
@@ -5578,7 +5578,7 @@ the keypath to dig for or update data.</p>
 <blockquote>
 <p><strong>JSONObject</strong> = {[<code>key</code>: <code>string</code>]: <a href="#jsonvalue"><code>JSONValue</code></a>; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L89">types/index.ts:89</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L90">types/index.ts:90</a></p>
 <p>A JSON Object</p>
 <h4 id="index-signature">Index Signature<a class="headerlink" href="#index-signature" title="Permanent link">&para;</a></h4>
 <p>[<code>key</code>: <code>string</code>]: <a href="#jsonvalue"><code>JSONValue</code></a></p>
@@ -5588,7 +5588,7 @@ the keypath to dig for or update data.</p>
 <blockquote>
 <p><strong>JSONMappable</strong> = <a href="#jsonvalue"><code>JSONValue</code></a>[] | <a href="#jsonobject"><code>JSONObject</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L96">types/index.ts:96</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L97">types/index.ts:97</a></p>
 <p>A JSON Object or an array of values</p>
 <hr />
 <p><a id="jsonkeyable"></a></p>
@@ -5596,7 +5596,7 @@ the keypath to dig for or update data.</p>
 <blockquote>
 <p><strong>JSONKeyable</strong> = <a href="#jsonobject"><code>JSONObject</code></a>[] | <a href="#jsonobject"><code>JSONObject</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L101">types/index.ts:101</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L102">types/index.ts:102</a></p>
 <p>A array of JSON key value objects or a JSON Object</p>
 <hr />
 <p><a id="jsonvalue"></a></p>
@@ -5604,7 +5604,7 @@ the keypath to dig for or update data.</p>
 <blockquote>
 <p><strong>JSONValue</strong> = <a href="#jsonprimitive"><code>JSONPrimitive</code></a> | <a href="#jsonmappable"><code>JSONMappable</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L106">types/index.ts:106</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L107">types/index.ts:107</a></p>
 <p>A primitive or a mappable object</p>
 <hr />
 <p><a id="fragment"></a></p>
@@ -5612,7 +5612,7 @@ the keypath to dig for or update data.</p>
 <blockquote>
 <p><strong>Fragment</strong>\&lt;<code>T</code>, <code>Present</code>&gt; = { <code>__id</code>: <code>string</code>; <code>__fragmentType?</code>: <code>T</code>; <code>__required?</code>: <code>Present</code> <em>extends</em> <code>boolean</code> ? <code>Present</code> : <code>false</code>; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L145">types/index.ts:145</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L146">types/index.ts:146</a></p>
 <p>A Fragment is a rendered Rails partial with an identity. The use
 of this type is optional, but it makes usage with unproxy and
 useSetFragment type friendly.</p>
@@ -5664,29 +5664,29 @@ fragments store while replacing the original data with fragment references.</p>
 <blockquote>
 <p><strong>__id</strong>: <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L147">types/index.ts:147</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L148">types/index.ts:148</a></p>
 <p>The fragment ID *</p>
 <p><a id="__fragmenttype"></a></p>
 <h5 id="__fragmenttype">__fragmentType?<a class="headerlink" href="#__fragmenttype" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><code>optional</code> <strong>__fragmentType</strong>: <code>T</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L149">types/index.ts:149</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L150">types/index.ts:150</a></p>
 <p>Phantom type, please ignore *</p>
 <p><a id="__required"></a></p>
 <h5 id="__required">__required?<a class="headerlink" href="#__required" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><code>optional</code> <strong>__required</strong>: <code>Present</code> <em>extends</em> <code>boolean</code> ? <code>Present</code> : <code>false</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L151">types/index.ts:151</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L152">types/index.ts:152</a></p>
 <p>Phantom type, please ignore *</p>
 <hr />
 <p><a id="unproxy"></a></p>
 <h3 id="unproxyt">Unproxy\&lt;T&gt;<a class="headerlink" href="#unproxyt" title="Permanent link">&para;</a></h3>
 <blockquote>
-<p><strong>Unproxy</strong>\&lt;<code>T</code>&gt; = <code>T</code> <em>extends</em> <a href="#fragment"><code>Fragment</code></a>\&lt;<code>unknown</code>&gt; ? <a href="#fragmentref"><code>FragmentRef</code></a> : <code>T</code> <em>extends</em> infer U[] ? <a href="#unproxy"><code>Unproxy</code></a>\&lt;<code>U</code>&gt;[] : <code>T</code> <em>extends</em> <code>object</code> ? <code>{ [K in keyof T]: Unproxy&lt;T[K]&gt; }</code> : <code>T</code></p>
+<p><strong>Unproxy</strong>\&lt;<code>T</code>&gt; = <code>T</code> <em>extends</em> <a href="../hooks.useContent/#fragmentproxy"><code>FragmentProxy</code></a> ? <a href="#fragmentref"><code>FragmentRef</code></a> : <code>T</code> <em>extends</em> <a href="#fragment"><code>Fragment</code></a>\&lt;<code>unknown</code>, <code>unknown</code>&gt; ? <a href="#fragmentref"><code>FragmentRef</code></a> : <code>T</code> <em>extends</em> infer U[] ? <a href="#unproxy"><code>Unproxy</code></a>\&lt;<code>U</code>&gt;[] : <code>T</code> <em>extends</em> <code>object</code> ? <code>{ [K in keyof T]: Unproxy&lt;T[K]&gt; }</code> : <code>T</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L158">types/index.ts:158</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L159">types/index.ts:159</a></p>
 <p>Utility type for unproxy that converts Fragment types to fragment references.
 This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.</p>
 <h4 id="type-parameters_3">Type Parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">&para;</a></h4>
@@ -5708,7 +5708,7 @@ This recursively processes objects and arrays to convert Fragment<T> to { __id: 
 <blockquote>
 <p><strong>SaveResponse</strong>\&lt;<code>T</code>&gt; = { <code>data</code>: <code>T</code>; <code>componentIdentifier</code>: <a href="#componentidentifier"><code>ComponentIdentifier</code></a>; <code>assets</code>: <code>string</code>[]; <code>csrfToken?</code>: <code>string</code>; <code>fragments</code>: <a href="#fragmentpath"><code>FragmentPath</code></a>[]; <code>defers</code>: <a href="#defer"><code>Defer</code></a>[]; <code>slices</code>: <a href="#jsonobject"><code>JSONObject</code></a>; <code>action</code>: <code>"savePage"</code>; <code>renderedAt</code>: <code>number</code>; <code>restoreStrategy</code>: <a href="#restorestrategy"><code>RestoreStrategy</code></a>; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L206">types/index.ts:206</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L209">types/index.ts:209</a></p>
 <p>The SaveResponse response is responsible for persisting a full page
 visit in Superglue.</p>
 <h4 id="type-parameters_4">Type Parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">&para;</a></h4>
@@ -5732,68 +5732,68 @@ visit in Superglue.</p>
 <blockquote>
 <p><strong>data</strong>: <code>T</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L207">types/index.ts:207</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L210">types/index.ts:210</a></p>
 <p><a id="componentidentifier-1"></a></p>
 <h5 id="componentidentifier_1">componentIdentifier<a class="headerlink" href="#componentidentifier_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>componentIdentifier</strong>: <a href="#componentidentifier"><code>ComponentIdentifier</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L208">types/index.ts:208</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L211">types/index.ts:211</a></p>
 <p><a id="assets"></a></p>
 <h5 id="assets">assets<a class="headerlink" href="#assets" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>assets</strong>: <code>string</code>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L209">types/index.ts:209</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L212">types/index.ts:212</a></p>
 <p><a id="csrftoken"></a></p>
 <h5 id="csrftoken">csrfToken?<a class="headerlink" href="#csrftoken" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><code>optional</code> <strong>csrfToken</strong>: <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L210">types/index.ts:210</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L213">types/index.ts:213</a></p>
 <p><a id="fragments"></a></p>
 <h5 id="fragments">fragments<a class="headerlink" href="#fragments" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>fragments</strong>: <a href="#fragmentpath"><code>FragmentPath</code></a>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L211">types/index.ts:211</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L214">types/index.ts:214</a></p>
 <p><a id="defers"></a></p>
 <h5 id="defers">defers<a class="headerlink" href="#defers" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>defers</strong>: <a href="#defer"><code>Defer</code></a>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L212">types/index.ts:212</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L215">types/index.ts:215</a></p>
 <p><a id="slices"></a></p>
 <h5 id="slices">slices<a class="headerlink" href="#slices" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>slices</strong>: <a href="#jsonobject"><code>JSONObject</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L213">types/index.ts:213</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L216">types/index.ts:216</a></p>
 <p><a id="action"></a></p>
 <h5 id="action">action<a class="headerlink" href="#action" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>action</strong>: <code>"savePage"</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L214">types/index.ts:214</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L217">types/index.ts:217</a></p>
 <p><a id="renderedat"></a></p>
 <h5 id="renderedat">renderedAt<a class="headerlink" href="#renderedat" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>renderedAt</strong>: <code>number</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L216">types/index.ts:216</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L219">types/index.ts:219</a></p>
 <p><a id="restorestrategy-1"></a></p>
 <h5 id="restorestrategy_1">restoreStrategy<a class="headerlink" href="#restorestrategy_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>restoreStrategy</strong>: <a href="#restorestrategy"><code>RestoreStrategy</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L217">types/index.ts:217</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L220">types/index.ts:220</a></p>
 <hr />
 <p><a id="page"></a></p>
 <h3 id="paget">Page\&lt;T&gt;<a class="headerlink" href="#paget" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>Page</strong>\&lt;<code>T</code>&gt; = <a href="#saveresponse"><code>SaveResponse</code></a>\&lt;<code>T</code>&gt; &amp; { <code>savedAt</code>: <code>number</code>; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L223">types/index.ts:223</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L226">types/index.ts:226</a></p>
 <p>A Page is a SaveResponse that's been saved to the store</p>
 <h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">&para;</a></h4>
 <table>
@@ -5808,7 +5808,7 @@ visit in Superglue.</p>
 <tr>
 <td><code>savedAt</code></td>
 <td><code>number</code></td>
-<td><a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L224">types/index.ts:224</a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L227">types/index.ts:227</a></td>
 </tr>
 </tbody>
 </table>
@@ -5833,89 +5833,89 @@ visit in Superglue.</p>
 <blockquote>
 <p><strong>StreamMessage</strong> = { <code>data</code>: <a href="#jsonmappable"><code>JSONMappable</code></a>; <code>fragmentIds</code>: <code>string</code>[]; <code>handler</code>: <code>"append"</code> | <code>"prepend"</code> | <code>"save"</code>; <code>options</code>: <code>Record</code>\&lt;<code>string</code>, <code>string</code>&gt;; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L250">types/index.ts:250</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L253">types/index.ts:253</a></p>
 <h4 id="properties_18">Properties<a class="headerlink" href="#properties_18" title="Permanent link">&para;</a></h4>
 <p><a id="data-2"></a></p>
 <h5 id="data_1">data<a class="headerlink" href="#data_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>data</strong>: <a href="#jsonmappable"><code>JSONMappable</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L251">types/index.ts:251</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L254">types/index.ts:254</a></p>
 <p><a id="fragmentids"></a></p>
 <h5 id="fragmentids">fragmentIds<a class="headerlink" href="#fragmentids" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>fragmentIds</strong>: <code>string</code>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L252">types/index.ts:252</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L255">types/index.ts:255</a></p>
 <p><a id="handler"></a></p>
 <h5 id="handler">handler<a class="headerlink" href="#handler" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>handler</strong>: <code>"append"</code> | <code>"prepend"</code> | <code>"save"</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L253">types/index.ts:253</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L256">types/index.ts:256</a></p>
 <p><a id="options"></a></p>
 <h5 id="options">options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>options</strong>: <code>Record</code>\&lt;<code>string</code>, <code>string</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L254">types/index.ts:254</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L257">types/index.ts:257</a></p>
 <hr />
 <p><a id="streamresponse"></a></p>
 <h3 id="streamresponse">StreamResponse<a class="headerlink" href="#streamresponse" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>StreamResponse</strong> = { <code>data</code>: <a href="#streammessage"><code>StreamMessage</code></a>[]; <code>fragments</code>: <a href="#fragmentpath"><code>FragmentPath</code></a>[]; <code>assets</code>: <code>string</code>[]; <code>csrfToken?</code>: <code>string</code>; <code>action</code>: <code>"handleStreamResponse"</code>; <code>renderedAt</code>: <code>number</code>; <code>slices</code>: <a href="#jsonobject"><code>JSONObject</code></a>; }</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L257">types/index.ts:257</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L260">types/index.ts:260</a></p>
 <h4 id="properties_19">Properties<a class="headerlink" href="#properties_19" title="Permanent link">&para;</a></h4>
 <p><a id="data-3"></a></p>
 <h5 id="data_2">data<a class="headerlink" href="#data_2" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>data</strong>: <a href="#streammessage"><code>StreamMessage</code></a>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L258">types/index.ts:258</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L261">types/index.ts:261</a></p>
 <p><a id="fragments-2"></a></p>
 <h5 id="fragments_1">fragments<a class="headerlink" href="#fragments_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>fragments</strong>: <a href="#fragmentpath"><code>FragmentPath</code></a>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L259">types/index.ts:259</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L262">types/index.ts:262</a></p>
 <p><a id="assets-2"></a></p>
 <h5 id="assets_1">assets<a class="headerlink" href="#assets_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>assets</strong>: <code>string</code>[]</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L260">types/index.ts:260</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L263">types/index.ts:263</a></p>
 <p><a id="csrftoken-2"></a></p>
 <h5 id="csrftoken_1">csrfToken?<a class="headerlink" href="#csrftoken_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><code>optional</code> <strong>csrfToken</strong>: <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L261">types/index.ts:261</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L264">types/index.ts:264</a></p>
 <p><a id="action-2"></a></p>
 <h5 id="action_1">action<a class="headerlink" href="#action_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>action</strong>: <code>"handleStreamResponse"</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L262">types/index.ts:262</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L265">types/index.ts:265</a></p>
 <p><a id="renderedat-2"></a></p>
 <h5 id="renderedat_1">renderedAt<a class="headerlink" href="#renderedat_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>renderedAt</strong>: <code>number</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L263">types/index.ts:263</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L266">types/index.ts:266</a></p>
 <p><a id="slices-2"></a></p>
 <h5 id="slices_1">slices<a class="headerlink" href="#slices_1" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p><strong>slices</strong>: <a href="#jsonobject"><code>JSONObject</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L264">types/index.ts:264</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L267">types/index.ts:267</a></p>
 <hr />
 <p><a id="pageresponse"></a></p>
 <h3 id="pageresponse">PageResponse<a class="headerlink" href="#pageresponse" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>PageResponse</strong> = <a href="#graftresponse"><code>GraftResponse</code></a> | <a href="#saveresponse"><code>SaveResponse</code></a> | <a href="#streamresponse"><code>StreamResponse</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L272">types/index.ts:272</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L275">types/index.ts:275</a></p>
 <p>A PageResponse can be either a <a href="#graftresponse">GraftResponse</a>, <a href="#saveresponse">SaveResponse</a>.
 or a <a href="#streamresponse">StreamResponse</a> Its meant to be implemented by the server and if
 you are using superglue_rails, the generators will handle all cases.</p>
@@ -5925,7 +5925,7 @@ you are using superglue_rails, the generators will handle all cases.</p>
 <blockquote>
 <p><strong>AllPages</strong>\&lt;<code>T</code>&gt; = <code>Record</code>\&lt;<a href="#pagekey"><code>PageKey</code></a>, <a href="#page"><code>Page</code></a>\&lt;<code>T</code>&gt;&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L305">types/index.ts:305</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L308">types/index.ts:308</a></p>
 <p>The store where all page responses are stored indexed by PageKey. You are encouraged
 to mutate the Pages in this store.</p>
 <h4 id="type-parameters_6">Type Parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">&para;</a></h4>
@@ -5949,7 +5949,7 @@ to mutate the Pages in this store.</p>
 <blockquote>
 <p><strong>AllFragments</strong> = <code>Record</code>\&lt;<code>string</code>, <a href="#jsonmappable"><code>JSONMappable</code></a>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L311">types/index.ts:311</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L314">types/index.ts:314</a></p>
 <p>The store where all page responses are stored indexed by PageKey. You are encouraged
 to mutate the Pages in this store.</p>
 <hr />
@@ -5958,7 +5958,7 @@ to mutate the Pages in this store.</p>
 <blockquote>
 <p><strong>VisitCreator</strong> = (<code>input</code>: <code>string</code> | <a href="#pagekey"><code>PageKey</code></a>, <code>options</code>: <a href="../types.requests/#visitprops"><code>VisitProps</code></a>) =&gt; <a href="#visitmetathunk"><code>VisitMetaThunk</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L377">types/index.ts:377</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L380">types/index.ts:380</a></p>
 <p>VisitCreator is a Redux action creator that returns a thunk. Use this to build
 the <a href="../types.requests/#visit">Visit</a> function. Typically it's already generated in <code>application_visit.js</code></p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h4>
@@ -5988,7 +5988,7 @@ the <a href="../types.requests/#visit">Visit</a> function. Typically it's alread
 <blockquote>
 <p><strong>RemoteCreator</strong> = (<code>input</code>: <code>string</code> | <a href="#pagekey"><code>PageKey</code></a>, <code>options</code>: <a href="../types.requests/#remoteprops"><code>RemoteProps</code></a>) =&gt; <a href="#metathunk"><code>MetaThunk</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L386">types/index.ts:386</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L389">types/index.ts:389</a></p>
 <p>RemoteCreator is a Redux action creator that returns a thunk. Use this to build
 the <a href="../types.requests/#remote">Remote</a> function. Typically it's already generated in <code>application_visit.js</code></p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
@@ -6018,14 +6018,14 @@ the <a href="../types.requests/#remote">Remote</a> function. Typically it's alre
 <blockquote>
 <p><strong>Dispatch</strong> = <code>ThunkDispatch</code>\&lt;<a href="#rootstate"><code>RootState</code></a>, <code>undefined</code>, <code>Action</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L391">types/index.ts:391</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L394">types/index.ts:394</a></p>
 <hr />
 <p><a id="supergluestore"></a></p>
 <h3 id="supergluestore">SuperglueStore<a class="headerlink" href="#supergluestore" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>SuperglueStore</strong> = <code>EnhancedStore</code>\&lt;<a href="#rootstate"><code>RootState</code></a>, <code>Action</code>, <code>Tuple</code>\&lt;[<code>StoreEnhancer</code>\&lt;{ <code>dispatch</code>: <a href="#dispatch"><code>Dispatch</code></a>; }&gt;, <code>StoreEnhancer</code>]&gt;&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L398">types/index.ts:398</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L401">types/index.ts:401</a></p>
 <p>A Store created with Redux Toolkit's <code>configureStore</code> setup with reducers
 from Superglue. If you are using superglue_rails this would have been
 generated for you in <code>store.js</code> and setup correctly in application.js</p>
@@ -6040,7 +6040,7 @@ generated for you in <code>store.js</code> and setup correctly in application.js
   store,
 }</code>: { <code>ujsAttributePrefix</code>: <code>string</code>; <code>visit</code>: <a href="../types.requests/#applicationvisit"><code>ApplicationVisit</code></a>; <code>remote</code>: <a href="../types.requests/#applicationremote"><code>ApplicationRemote</code></a>; <code>store</code>: <a href="#supergluestore"><code>SuperglueStore</code></a>; }) =&gt; <a href="#handlers"><code>Handlers</code></a></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L416">types/index.ts:416</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L419">types/index.ts:419</a></p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -6080,35 +6080,35 @@ generated for you in <code>store.js</code> and setup correctly in application.js
 <blockquote>
 <p><strong>SaveAndProcessPageThunk</strong> = <code>ThunkAction</code>\&lt;<code>Promise</code>\&lt;<code>void</code>&gt;, <a href="#rootstate"><code>RootState</code></a>, <code>undefined</code>, <code>Action</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L444">types/index.ts:444</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L447">types/index.ts:447</a></p>
 <hr />
 <p><a id="metathunk"></a></p>
 <h3 id="metathunk">MetaThunk<a class="headerlink" href="#metathunk" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>MetaThunk</strong> = <code>ThunkAction</code>\&lt;<code>Promise</code>\&lt;<a href="#meta"><code>Meta</code></a>&gt;, <a href="#rootstate"><code>RootState</code></a>, <code>undefined</code>, <code>Action</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L451">types/index.ts:451</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L454">types/index.ts:454</a></p>
 <hr />
 <p><a id="visitmetathunk"></a></p>
 <h3 id="visitmetathunk">VisitMetaThunk<a class="headerlink" href="#visitmetathunk" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>VisitMetaThunk</strong> = <code>ThunkAction</code>\&lt;<code>Promise</code>\&lt;<a href="#visitmeta"><code>VisitMeta</code></a>&gt;, <a href="#rootstate"><code>RootState</code></a>, <code>undefined</code>, <code>Action</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L452">types/index.ts:452</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L455">types/index.ts:455</a></p>
 <hr />
 <p><a id="defermentthunk"></a></p>
 <h3 id="defermentthunk">DefermentThunk<a class="headerlink" href="#defermentthunk" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>DefermentThunk</strong> = <code>ThunkAction</code>\&lt;<code>Promise</code>\&lt;<code>void</code>[]&gt;, <a href="#rootstate"><code>RootState</code></a>, <code>undefined</code>, <code>Action</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L459">types/index.ts:459</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L462">types/index.ts:462</a></p>
 <hr />
 <p><a id="navigateto"></a></p>
 <h3 id="navigateto">NavigateTo()<a class="headerlink" href="#navigateto" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>NavigateTo</strong> = (<code>path</code>: <a href="#keypath"><code>Keypath</code></a>, <code>options</code>: { <code>action</code>: <a href="#navigationaction"><code>NavigationAction</code></a>; }) =&gt; <code>boolean</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/types/index.ts#L497">types/index.ts:497</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L500">types/index.ts:500</a></p>
 <p>Passed to every page component and also available as part of a NavigationContext:</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NavigationContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span><span class="p">;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>

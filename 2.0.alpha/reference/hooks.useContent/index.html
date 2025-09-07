@@ -1666,6 +1666,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#fragmentproxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      FragmentProxy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FragmentProxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#__fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      __fragment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#proxiedcontentt" class="md-nav__link">
     <span class="md-ellipsis">
       ProxiedContent\&lt;T>
@@ -1881,12 +1920,26 @@
   <h1>hooks.useContent</h1>
 
 <h2 id="type-aliases">Type Aliases<a class="headerlink" href="#type-aliases" title="Permanent link">&para;</a></h2>
+<p><a id="fragmentproxy"></a></p>
+<h3 id="fragmentproxy">FragmentProxy<a class="headerlink" href="#fragmentproxy" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>FragmentProxy</strong> = { <code>__fragment</code>: <code>true</code>; }</p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L13">hooks/useContent.tsx:13</a></p>
+<h4 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h4>
+<p><a id="__fragment"></a></p>
+<h5 id="__fragment">__fragment<a class="headerlink" href="#__fragment" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><strong>__fragment</strong>: <code>true</code></p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L13">hooks/useContent.tsx:13</a></p>
+<hr />
 <p><a id="proxiedcontent"></a></p>
 <h3 id="proxiedcontentt">ProxiedContent\&lt;T&gt;<a class="headerlink" href="#proxiedcontentt" title="Permanent link">&para;</a></h3>
 <blockquote>
-<p><strong>ProxiedContent</strong>\&lt;<code>T</code>&gt; = <code>T</code> &amp; { readonly [K in keyof T]: T[K] extends Fragment\&lt;infer U, true&gt; ? ProxiedContent\&lt;U&gt; : T[K] extends Fragment\&lt;infer U, false | undefined&gt; ? ProxiedContent\&lt;U&gt; | undefined : T[K] extends (infer U)[] ? ProxiedContent\&lt;U&gt;[] : T[K] extends object ? ProxiedContent\&lt;T[K]&gt; : T[K] }</p>
+<p><strong>ProxiedContent</strong>\&lt;<code>T</code>&gt; = <code>T</code> <em>extends</em> <a href="../types/#fragment"><code>Fragment</code></a>\&lt;infer U, <code>true</code>&gt; ? <a href="#proxiedcontent"><code>ProxiedContent</code></a>\&lt;<code>U</code>&gt; &amp; <a href="#fragmentproxy"><code>FragmentProxy</code></a> : <code>T</code> <em>extends</em> <a href="../types/#fragment"><code>Fragment</code></a>\&lt;infer U, <code>false</code> | <code>undefined</code>&gt; ? <a href="#proxiedcontent"><code>ProxiedContent</code></a>\&lt;<code>U</code>&gt; &amp; <a href="#fragmentproxy"><code>FragmentProxy</code></a> | <code>undefined</code> : <code>T</code> <em>extends</em> infer U[] ? <a href="#proxiedcontent"><code>ProxiedContent</code></a>\&lt;<code>U</code>&gt;[] : <code>T</code> <em>extends</em> <code>object</code> ? <code>{ [K in keyof T]: ProxiedContent&lt;T[K]&gt; }</code> : <code>T</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L17">hooks/useContent.tsx:17</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L18">hooks/useContent.tsx:18</a></p>
 <p>A proxy type that enables reactive access to nested content with automatic fragment resolution</p>
 <h4 id="type-parameters">Type Parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
@@ -1907,7 +1960,7 @@
 <blockquote>
 <p><strong>FragmentRefOrId</strong> = <a href="../types/#fragmentref"><code>FragmentRef</code></a> | <code>string</code></p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L33">hooks/useContent.tsx:33</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L32">hooks/useContent.tsx:32</a></p>
 <p>Union type for fragment references, accepting either FragmentRef objects or string IDs</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <p><a id="usecontent"></a></p>
@@ -1916,7 +1969,7 @@
 <blockquote>
 <p><strong>useContent</strong>\&lt;<code>T</code>&gt;(): <a href="#proxiedcontent"><code>ProxiedContent</code></a>\&lt;<code>T</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L79">hooks/useContent.tsx:79</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L78">hooks/useContent.tsx:78</a></p>
 <p>Returns a proxy for accessing your page's content e.g, <code>index.json.props</code>,
 <code>show.json.props</code>, etc.</p>
 <p>For advanced scenarios where you are using Fragments.</p>
@@ -1971,7 +2024,7 @@ re-renders only when accessed fragments change.</p>
 <blockquote>
 <p><strong>useContent</strong>\&lt;<code>T</code>&gt;(<code>fragmentRef</code>: <a href="#fragmentreforid"><code>FragmentRefOrId</code></a>): <a href="#proxiedcontent"><code>ProxiedContent</code></a>\&lt;<code>T</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L109">hooks/useContent.tsx:109</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L108">hooks/useContent.tsx:108</a></p>
 <p>Passing in a fragment to useContent allows us to scope the tracking of
 fragments to that hook usage. Its useful in performance scenarios where you
 want a child component to update, but not the parent.</p>
@@ -2029,7 +2082,7 @@ want a child component to update, but not the parent.</p>
 <blockquote>
 <p><strong>unproxy</strong>\&lt;<code>T</code>&gt;(<code>proxy</code>: <code>T</code>): <a href="../types/#unproxy"><code>Unproxy</code></a>\&lt;<code>T</code>&gt;</p>
 </blockquote>
-<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/46e766e2cea01dff2e2730d3b74a6719c2b2fe9f/superglue/lib/hooks/useContent.tsx#L173">hooks/useContent.tsx:173</a></p>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L172">hooks/useContent.tsx:172</a></p>
 <p>Extracts the underlying state from an <a href="#usecontent">useContent</a> proxy</p>
 <h4 id="type-parameters_3">Type Parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">&para;</a></h4>
 <table>

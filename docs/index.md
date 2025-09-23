@@ -122,7 +122,7 @@ export default function FooBar() {
 
 ### It’s Turbolinks
 
-Superglue drew inspiration fromthe original Turbolinks, but instead of sending
+Superglue drew inspiration from the original Turbolinks, but instead of sending
 your `foobar.html.erb` over the wire and swapping the `<body>`, it sends
 `foobar.json.props` over the wire to your React and Redux app and swaps the
 page component.

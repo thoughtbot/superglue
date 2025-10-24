@@ -185,7 +185,7 @@ your team.
 
     Integration helpers, and generators for installation and scaffolding.
 
-    [:octicons-arrow-right-24: superglue_rails](https://github.com/thoughtbot/superglue/tree/main/superglue_rails)
+    [:octicons-arrow-right-24: superglue_rails](https://github.com/thoughtbot/superglue_rails)
 
 -   __PropsTemplate__
 

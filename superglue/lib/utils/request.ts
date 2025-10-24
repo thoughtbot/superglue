@@ -21,6 +21,7 @@ function downloadingFile(xhr: Response): boolean {
 
 class SuperglueResponseError extends Error {
   response: Response
+  json: unknown
 
   constructor(message: string) {
     super(message)
@@ -29,18 +30,19 @@ class SuperglueResponseError extends Error {
 }
 
 export function validateResponse(args: ParsedResponse): ParsedResponse {
-  const { rsp } = args
+  const { rsp, json } = args
   if (isValidResponse(rsp)) {
     return args
   } else {
     const error = new SuperglueResponseError('Invalid Superglue Response')
     error.response = rsp
+    error.json = json
     throw error
   }
 }
 
 export function handleServerErrors(args: ParsedResponse): ParsedResponse {
-  const { rsp } = args
+  const { rsp, json } = args
   if (!rsp.ok && rsp.status !== 422) {
     if (rsp.status === 406) {
       console.error(
@@ -54,6 +56,7 @@ export function handleServerErrors(args: ParsedResponse): ParsedResponse {
     }
     const error = new SuperglueResponseError(rsp.statusText)
     error.response = rsp
+    error.json = json
     throw error
   }
   return args

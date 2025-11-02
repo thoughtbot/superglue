@@ -1192,7 +1192,7 @@ For the final touch, let's add optimistic updates using `useSetFragment`:
           name,
           completed,
           detailPath,
-          toggleForm,
+    -     toggleForm,
         } = useContent(itemRef)
     +   const set = useSetFragment()
     +   const { remote } = useContext(NavigationContext)

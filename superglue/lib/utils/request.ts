@@ -134,6 +134,7 @@ export function argsForFetch(
 
 export function extractJSON(rsp: Response): PromiseLike<ParsedResponse> {
   return rsp
+    .clone()
     .json()
     .then((json) => {
       return { rsp, json }

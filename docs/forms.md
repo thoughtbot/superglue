@@ -104,7 +104,9 @@ end
 ```
 
 ```jsx
-const validationErrors = useSelector((state) => state.flash[:postFormErrors])
+import { useAppSelector } from '@javascript/store'
+
+const validationErrors = useAppSelector((state) => state.flash.postFormErrors)
 
 <Form {...form} extras={extras} validationErrors={validationErrors}>
   <TextField {...inputs.title} label="Post title" errorKey="post_title"/>

@@ -1,9 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { produce } from 'immer'
+import { Immer } from 'immer'
 import { saveFragment } from '../actions'
 import { RootState, Fragment } from '../types'
 import { Unproxy } from '../types'
 import { FragmentProxy } from './useContent'
+
+const immer = new Immer()
+immer.setAutoFreeze(false)
 
 /**
  * Utility type to extract the data type from a Fragment wrapper
@@ -75,7 +78,7 @@ export function useSetFragment() {
       throw new Error(`Fragment with id "${fragmentId}" not found`)
     }
 
-    const updatedFragment = produce(currentFragment, updater)
+    const updatedFragment = immer.produce(currentFragment, updater)
 
     dispatch(
       saveFragment({

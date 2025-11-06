@@ -51,13 +51,14 @@ describe('useSetFragment', () => {
         })
       })
 
-      // Verify the fragment was updated in the store
       const updatedState = store.getState()
       expect(updatedState.fragments['user_123']).toEqual({
         id: 123,
         name: 'Jane',
         email: 'john@example.com',
       })
+
+      expect(Object.isFrozen(updatedState.fragments['user_123'])).toBe(false)
     })
 
     it('should update existing fragment with string reference', () => {
@@ -83,19 +84,19 @@ describe('useSetFragment', () => {
       const set = result.current
 
       act(() => {
-        // Using string directly instead of object
         set('user_123', (draft) => {
           draft.name = 'Jane'
         })
       })
 
-      // Verify the fragment was updated in the store
       const updatedState = store.getState()
       expect(updatedState.fragments['user_123']).toEqual({
         id: 123,
         name: 'Jane',
         email: 'john@example.com',
       })
+
+      expect(Object.isFrozen(updatedState.fragments['user_123'])).toBe(false)
     })
 
     it('should handle nested object updates', () => {
@@ -184,7 +185,6 @@ describe('useSetFragment', () => {
       const set = result.current
 
       act(() => {
-        // Using string directly
         set('posts_collection', (draft) => {
           draft.push({ title: 'Post 3' })
         })
@@ -229,7 +229,6 @@ describe('useSetFragment', () => {
         set({ __id: 'user_123' }, (userDraft) => {
           userDraft.name = 'Jane'
 
-          // Nested set call
           set(userDraft.profile, (profileDraft) => {
             profileDraft.avatar = '/new.jpg'
           })

@@ -133,7 +133,12 @@ the same page. Or if you're sure you want to proceed, use force: true.
           }
         }
 
-        dispatch(receiveResponse({ pageKey, response: json }))
+        dispatch(
+          receiveResponse({
+            pageKey,
+            response: JSON.parse(JSON.stringify(json)),
+          })
+        )
 
         const existingPage = createProxy(
           pages[pageKey],
@@ -248,7 +253,12 @@ to the same page.
           ),
         }
 
-        dispatch(receiveResponse({ pageKey, response: json }))
+        dispatch(
+          receiveResponse({
+            pageKey,
+            response: JSON.parse(JSON.stringify(json)),
+          })
+        )
 
         const existingPage = createProxy(
           pages[pageKey],

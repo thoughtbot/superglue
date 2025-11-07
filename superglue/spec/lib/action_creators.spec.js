@@ -241,7 +241,7 @@ describe('action creators', () => {
         })
     })
 
-    it.only('uses existing fragment nodes as placeholders for deferred fragments', () => {
+    it('uses existing fragment nodes as placeholders for deferred fragments', () => {
       const initialState = () => {
         return {
           pages: {
@@ -355,6 +355,10 @@ describe('action creators', () => {
         },
         {
           type: '@@superglue/BEFORE_FETCH',
+          payload: expect.any(Object),
+        },
+        {
+          type: '@@superglue/RECEIVE_RESPONSE',
           payload: expect.any(Object),
         },
         {
@@ -473,6 +477,10 @@ describe('action creators', () => {
         },
         {
           type: '@@superglue/BEFORE_FETCH',
+          payload: expect.any(Object),
+        },
+        {
+          type: '@@superglue/RECEIVE_RESPONSE',
           payload: expect.any(Object),
         },
         {
@@ -789,6 +797,10 @@ describe('action creators', () => {
           },
         },
         {
+          type: '@@superglue/RECEIVE_RESPONSE',
+          payload: expect.any(Object),
+        },
+        {
           type: '@@superglue/SAVE_RESPONSE',
           payload: {
             pageKey: '/foo',
@@ -841,6 +853,7 @@ describe('action creators', () => {
         data: {
           posts: ['post 2'],
         },
+        action: 'savePage',
         fragments: [],
         csrfToken: 'token',
         assets: [],
@@ -876,10 +889,15 @@ describe('action creators', () => {
           },
         },
         {
+          type: '@@superglue/RECEIVE_RESPONSE',
+          payload: expect.any(Object),
+        },
+        {
           type: '@@superglue/SAVE_RESPONSE',
           payload: {
             pageKey: '/foo',
             page: {
+              action: 'savePage',
               data: { posts: ['post 1', 'post 2'] },
               csrfToken: 'token',
               assets: [],
@@ -1551,15 +1569,23 @@ describe('action creators', () => {
             payload: { from: '/current', to: '/details' },
           },
           {
+            type: '@@superglue/RECEIVE_RESPONSE',
+            payload: expect.any(Object),
+          },
+          {
             type: '@@superglue/HANDLE_GRAFT',
             payload: expect.any(Object),
           },
         ]
 
-        store.dispatch(visit('/details?props_at=data.address')).then((meta) => {
-          expect(allSuperglueActions(store)).toEqual(expectedActions)
-          done()
-        })
+        store
+          .dispatch(visit('/details?props_at=data.address'))
+          .then((meta) => {
+            expect(allSuperglueActions(store)).toEqual(expectedActions)
+          })
+          .finally(() => {
+            done()
+          })
       }))
 
     it('uses an explicit placeholder when attempting to graft', () =>
@@ -1603,6 +1629,10 @@ describe('action creators', () => {
             payload: { from: '/current', to: '/details' },
           },
           {
+            type: '@@superglue/RECEIVE_RESPONSE',
+            payload: expect.any(Object),
+          },
+          {
             type: '@@superglue/HANDLE_GRAFT',
             payload: expect.any(Object),
           },
@@ -1616,6 +1646,8 @@ describe('action creators', () => {
           )
           .then((meta) => {
             expect(allSuperglueActions(store)).toEqual(expectedActions)
+          })
+          .finally(() => {
             done()
           })
       }))

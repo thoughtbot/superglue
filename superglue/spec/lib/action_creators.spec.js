@@ -758,6 +758,33 @@ describe('action creators', () => {
         })
       })
     })
+
+    it('does not mutate the original fragments', () => {
+      const fragments = [
+        { id: 'first', path: 'data.first' },
+        { id: 'second', path: 'data.second' },
+        { id: 'third', path: 'data.third' },
+      ]
+
+      const page = {
+        data: {
+          first: { value: 'one' },
+          second: { value: 'two' },
+          third: { value: 'three' },
+        },
+        csrfToken: 'token',
+        assets: [],
+        defers: [],
+        fragments,
+      }
+
+      const store = buildStore(initialState())
+      const originalOrder = [...fragments]
+
+      return store.dispatch(saveAndProcessPage('/foo', page)).then(() => {
+        expect(fragments).toEqual(originalOrder)
+      })
+    })
   })
 
   describe('remote', () => {

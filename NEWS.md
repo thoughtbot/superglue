@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.3
+Change to allow a response `json()` to be read again a `application_visit`'s 
+catch.
+
 ## 1.0.2
 Remove url-parse which was deduping params and replaced it with Browser's own
 URLSearchParams. Users using SSR via Humid should add a shim to export a

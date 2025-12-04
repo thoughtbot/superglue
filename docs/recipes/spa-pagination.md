@@ -103,7 +103,7 @@ methods return `nil` if there are no subsequent pages.
 
     def index
       @posts = Post.all
-    +   .page(params[:page_num])
+    +   .page(params[:page])
     +   .per(10)
     +   .order(created_at: :desc)
     end

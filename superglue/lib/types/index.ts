@@ -143,14 +143,10 @@ export type JSONValue = JSONPrimitive | JSONMappable
  * const cart = content.cart // Resolves fragment reference to actual data
  * ```
  */
-export type Fragment<T, Present = false> = {
-  /** The fragment ID **/
-  __id: string
-  /** Phantom type, please ignore **/
-  __fragmentType?: T
-  /** Phantom type, please ignore **/
-  __required?: Present extends boolean ? Present : false
-}
+
+export type Fragment<T, Present = false> = Present extends true
+  ? T & { __id: string }
+  : (T & { __id: string }) | undefined
 
 /**
  * Utility type for unproxy that converts Fragment types to fragment references.

@@ -71,7 +71,8 @@ function createArrayProxy(
   arrayData: unknown[],
   fragments: RefObject<AllFragments>,
   dependencies: Set<string>,
-  proxyCache: WeakMap<object, unknown>
+  proxyCache: WeakMap<object, unknown>,
+  fragmentId?: string
 ): unknown[] {
   if (proxyCache && proxyCache.has(arrayData)) {
     return proxyCache.get(arrayData) as unknown[]
@@ -79,6 +80,11 @@ function createArrayProxy(
 
   const proxy = new Proxy(arrayData, {
     get(target, prop) {
+      // Return fragment ID if this proxy represents a fragment
+      if (prop === '__id' && fragmentId) {
+        return fragmentId
+      }
+
       // Return original target for unproxy functionality
       if (prop === ORIGINAL_TARGET) {
         return target
@@ -118,7 +124,7 @@ function createArrayProxy(
             return undefined
           }
 
-          return createProxy(fragmentData, fragments, dependencies, proxyCache)
+          return createProxy(fragmentData, fragments, dependencies, proxyCache, item.__id)
         }
 
         if (typeof item === 'object' && item !== null) {
@@ -179,7 +185,8 @@ function createObjectProxy(
   objectData: object,
   fragments: RefObject<AllFragments>,
   dependencies: Set<string>,
-  proxyCache: WeakMap<object, unknown>
+  proxyCache: WeakMap<object, unknown>,
+  fragmentId?: string
 ): unknown {
   if (proxyCache && proxyCache.has(objectData)) {
     return proxyCache.get(objectData)
@@ -187,6 +194,11 @@ function createObjectProxy(
 
   const proxy = new Proxy(objectData as Record<string | symbol, unknown>, {
     get(target: Record<string | symbol, unknown>, prop: string | symbol) {
+      // Return fragment ID if this proxy represents a fragment
+      if (prop === '__id' && fragmentId) {
+        return fragmentId
+      }
+
       // Return original target for unproxy functionality
       if (prop === ORIGINAL_TARGET) {
         return target
@@ -202,7 +214,7 @@ function createObjectProxy(
           return undefined
         }
 
-        return createProxy(fragmentData, fragments, dependencies, proxyCache)
+        return createProxy(fragmentData, fragments, dependencies, proxyCache, value.__id)
       }
       if (typeof value === 'object' && value !== null) {
         if ('$$typeof' in value) {
@@ -256,7 +268,8 @@ export function createProxy<T extends JSONMappable>(
   content: T,
   fragments: RefObject<AllFragments>,
   dependencies: Set<string>,
-  proxyCache: WeakMap<object, unknown>
+  proxyCache: WeakMap<object, unknown>,
+  fragmentId?: string
 ): T {
   if (!content || typeof content !== 'object') {
     return content
@@ -268,10 +281,10 @@ export function createProxy<T extends JSONMappable>(
   }
 
   if (Array.isArray(content)) {
-    return createArrayProxy(content, fragments, dependencies, proxyCache) as T
+    return createArrayProxy(content, fragments, dependencies, proxyCache, fragmentId) as T
   }
 
-  return createObjectProxy(content, fragments, dependencies, proxyCache) as T
+  return createObjectProxy(content, fragments, dependencies, proxyCache, fragmentId) as T
 }
 
 export function unproxy<T>(proxy: T): Unproxy<T> {

@@ -3,7 +3,7 @@
   "version": "2.0.0-alpha.9",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/copy-wrappers.js",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "lint": "run-p lint:eslint lint:types lint:prettier",
@@ -23,20 +23,27 @@
     "url": "git+https://github.com/thoughtbot/superglue.git"
   },
   "author": "Johny Ho",
-  "main": "dist/cjs/superglue.cjs",
-  "module": "dist/superglue.mjs",
+  "main": "dist/index.js",
   "types": "dist/superglue.d.mts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/superglue.d.mts",
-      "import": "./dist/superglue.mjs",
-      "default": "./dist/cjs/superglue.cjs"
+      "production": {
+        "import": "./dist/superglue.mjs",
+        "require": "./dist/cjs/superglue.cjs"
+      },
+      "import": "./dist/superglue.development.mjs",
+      "require": "./dist/index.js"
     },
     "./action_creators": {
       "types": "./dist/action_creators.d.mts",
-      "import": "./dist/action_creators.mjs",
-      "default": "./dist/cjs/action_creators.cjs"
+      "production": {
+        "import": "./dist/action_creators.mjs",
+        "require": "./dist/cjs/action_creators.cjs"
+      },
+      "import": "./dist/action_creators.development.mjs",
+      "require": "./dist/action_creators.js"
     }
   },
   "license": "MIT",

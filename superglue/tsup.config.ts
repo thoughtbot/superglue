@@ -44,7 +44,6 @@ export default defineConfig((options) => {
       action_creators: 'lib/action_creators/index.ts',
     },
     sourcemap: true,
-    esbuildPlugins: [deepkitPlugin],
     ...options,
   }
 
@@ -52,15 +51,35 @@ export default defineConfig((options) => {
     {
       ...commonOptions,
       format: ['esm'],
-      outExtension: () => ({ js: '.mjs' }), // Add dts: '.d.ts' when egoist/tsup#1053 lands
+      outExtension: () => ({ js: '.development.mjs' }),
+      dts: false,
+      esbuildPlugins: [deepkitPlugin],
+    },
+
+    {
+      ...commonOptions,
+      format: ['esm'],
+      outExtension: () => ({ js: '.mjs' }),
       dts: true,
       clean: true,
+      // No deepkitPlugin - strips Deepkit transformation
     },
+
+    {
+      ...commonOptions,
+      format: 'cjs',
+      outDir: './dist/cjs/',
+      outExtension: () => ({ js: '.development.cjs' }),
+      dts: false,
+      esbuildPlugins: [deepkitPlugin],
+    },
+
     {
       ...commonOptions,
       format: 'cjs',
       outDir: './dist/cjs/',
       outExtension: () => ({ js: '.cjs' }),
+      dts: false,
     },
   ]
 })

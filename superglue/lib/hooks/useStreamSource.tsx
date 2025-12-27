@@ -6,7 +6,8 @@ import {
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import { ApplicationRemote, FragmentPath } from '../types'
 import { useSuperglue } from '.'
-import { debounce, DebouncedFunc } from 'lodash'
+import debounce from 'lodash.debounce'
+import type { DebouncedFunc } from 'lodash'
 import { lastRequestIds } from '../utils'
 import {
   streamPrepend,

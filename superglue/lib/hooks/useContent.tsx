@@ -1,5 +1,6 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
+import { ReceiveType, resolveReceiveType, validate } from '@deepkit/type'
 import {
   JSONMappable,
   RootState,
@@ -109,7 +110,8 @@ export function useContent<T = JSONMappable>(
   fragmentRef: FragmentRefOrId
 ): ProxiedContent<T>
 export function useContent<T = JSONMappable>(
-  fragmentRef?: FragmentRefOrId
+  fragmentRef?: FragmentRefOrId,
+  __type?: ReceiveType<T>
 ): ProxiedContent<T> | undefined {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
@@ -154,12 +156,32 @@ export function useContent<T = JSONMappable>(
       return undefined
     }
 
-    return createProxy(
+    const result = createProxy(
       sourceData,
       { current: store.getState().fragments },
       dependencies.current,
       proxyCache
     ) as ProxiedContent<T>
+
+    if (process.env.NODE_ENV === 'development' && __type) {
+      const resolvedType = resolveReceiveType(__type)
+      const errors = validate(result, resolvedType)
+
+      if (errors.length > 0) {
+        const formattedErrors = errors.map((e) => ({
+          path: e.path,
+          message: e.message,
+          code: String(e.code),
+        }))
+
+        console.error(
+          `[Superglue] Content validation failed for ${fragmentId || 'page'}:`,
+          formattedErrors
+        )
+      }
+    }
+
+    return result
   }, [sourceData, trackedFragments])
 
   return proxy

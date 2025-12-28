@@ -28,6 +28,9 @@ rails g superglue:install
     rails g superglue:install --typescript
     ```
 
+
+    See the [working with types](./runtime-types.md) guide for more information.
+
 The above will generate the following files:
 
 ```terminal

@@ -142,6 +142,19 @@ export type JSONValue = JSONPrimitive | JSONMappable
  * const content = useContent<PageData>()
  * const cart = content.cart // Resolves fragment reference to actual data
  * ```
+ *
+ * @example Usage
+ * ```tsx
+ * // You can also nest fragments within other fragments
+ * interface Post {
+ *  title: string
+ *  author: Fragment<Author, true>
+ *  comments: Array<Fragment<Comment, true>>
+ * }
+ *
+ * const page = useContent<{ post: Fragment<Post, true> }>()
+ * ```
+ *
  * @typeParam T The shape of the fragment's data.
  * @typeParam Present Indicates whether the fragment is guaranteed to be
  * present. It's possible that a fragment was deleted from the store due to

@@ -111,15 +111,15 @@ export type JSONValue = JSONPrimitive | JSONMappable
  * of this type is optional, but it makes usage with unproxy and
  * useSetFragment type friendly.
  *
- * In general, Fragments enable normalized state management where Rails partials become
- * referenceable entities on the client. The server renders partials as
+ * In general, Fragments enable normalized state management where Rails partials
+ * become referenceable entities on the client. The server renders partials as
  * fragments with unique IDs, then Superglue normalizes them into a separate
  * fragments store while replacing the original data with fragment references.
  *
  * @example Server Response (normalized)
  * ```json
  * {
- *   "data": { "cart": { "__id": "userCart" } },
+ *   "data": { "cart": { items: [...], totalCost: 69.97 } },
  *   "fragments": [{ "type": "userCart", "path": ["cart"] }]
  * }
  * ```
@@ -142,6 +142,11 @@ export type JSONValue = JSONPrimitive | JSONMappable
  * const content = useContent<PageData>()
  * const cart = content.cart // Resolves fragment reference to actual data
  * ```
+ * @typeParam T The shape of the fragment's data.
+ * @typeParam Present Indicates whether the fragment is guaranteed to be
+ * present. It's possible that a fragment was deleted from the store due to
+ * client side mutations. If you are sure that the fragment will ALWAYS be
+ * present, set this to `true`, otherwise its `false` by default.
  */
 
 export type Fragment<T, Present = false> = Present extends true

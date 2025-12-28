@@ -142,7 +142,7 @@ export function useContent<T = JSONMappable>(
       proxyCache
     ) as T
 
-    if (process.env.NODE_ENV === 'development' && __type) {
+    if (process.env.NODE_ENV !== 'production' && __type) {
       const proxyForValidation = createProxy(
         sourceData,
         { current: store.getState().fragments },

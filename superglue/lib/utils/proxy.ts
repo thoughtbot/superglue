@@ -124,7 +124,13 @@ function createArrayProxy(
             return undefined
           }
 
-          return createProxy(fragmentData, fragments, dependencies, proxyCache, item.__id)
+          return createProxy(
+            fragmentData,
+            fragments,
+            dependencies,
+            proxyCache,
+            item.__id
+          )
         }
 
         if (typeof item === 'object' && item !== null) {
@@ -214,7 +220,13 @@ function createObjectProxy(
           return undefined
         }
 
-        return createProxy(fragmentData, fragments, dependencies, proxyCache, value.__id)
+        return createProxy(
+          fragmentData,
+          fragments,
+          dependencies,
+          proxyCache,
+          value.__id
+        )
       }
       if (typeof value === 'object' && value !== null) {
         if ('$$typeof' in value) {
@@ -281,10 +293,22 @@ export function createProxy<T extends JSONMappable>(
   }
 
   if (Array.isArray(content)) {
-    return createArrayProxy(content, fragments, dependencies, proxyCache, fragmentId) as T
+    return createArrayProxy(
+      content,
+      fragments,
+      dependencies,
+      proxyCache,
+      fragmentId
+    ) as T
   }
 
-  return createObjectProxy(content, fragments, dependencies, proxyCache, fragmentId) as T
+  return createObjectProxy(
+    content,
+    fragments,
+    dependencies,
+    proxyCache,
+    fragmentId
+  ) as T
 }
 
 export function unproxy<T>(proxy: T): Unproxy<T> {

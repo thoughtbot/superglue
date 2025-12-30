@@ -106,6 +106,7 @@ nav:
       - Rails Forms / React UI kits: forms.md
       - Shared data: shared-data.md
       - Fragments: fragments.md
+      - Working with types: runtime-types.md
 
     - Updating:
       - Super Turbo Streams: super-turbo-streams.md

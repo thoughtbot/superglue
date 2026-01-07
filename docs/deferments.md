@@ -26,7 +26,7 @@ This option make it easy to defer content in a single setting.
       end
     ```
 
-And that's it! 
+And that's it!
 
 ### Behind the scenes
 
@@ -69,7 +69,7 @@ then immutably grafts that payload into the `/dashboard` page at the path
 }
 ```
 
-Your page component finally recieves the new props and rerenders. For more
+Your page component finally receives the new props and rerenders. For more
 control, you may provide a `success_action` or `fail_action`, and Superglue
 will dispatch these actions when the promise resolves successfully or fails.
 

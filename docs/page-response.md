@@ -23,7 +23,7 @@ used Superglue's generators, this would be all set for you in
 ```
 
 ### `data`
-Your page's content. This can be accessed using the 
+Your page's content. This can be accessed using the
 
 ### `componentIdentifier`
 A `string` to instruct Superglue which component to render. The generated
@@ -84,7 +84,7 @@ buttons.
 An object merged with the `initialState` when implementing `buildStore` inside
 of `application.js`. You can use this as the initial state for redux slices.
 Take advantage of the `SAVE_RESPONSE` to continually update your slice everytime
-superglue recieves a new page request.
+superglue receives a new page request.
 
 [props_template]: https://github.com/thoughtbot/props_template
 

@@ -15,7 +15,7 @@ Superglue is built from the ground up for
   and more — to create seamless, interactive React applications **without** the
   hassle of APIs and client side routing.
 
-- **Teams fighting complexity**: Its not easy pivoting from complexity.
+- **Teams fighting complexity**: I'ts not easy pivoting from complexity.
   Superglue empowers teams to take small steps back without giving up the
   effort invested in React components.
 

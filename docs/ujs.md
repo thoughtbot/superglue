@@ -1,6 +1,6 @@
 # The return of Rails UJS
 
-Unobtrusive Javascript is an easy way to added single page app like features to
+Unobtrusive Javascript is an easy way to add single page app like features to
 HTML links and form tags. Its taken a backseat since the introduction of Hotwire,
 but Superglue puts UJS back in the forefront and packs it with functionality
 that makes building SPA-like functionality easy and consistent.

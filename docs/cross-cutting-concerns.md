@@ -14,8 +14,7 @@ json.data(dig: path) do
 end
 ```
 
-In the above, every page that gets rendered will have `temperature` as part of
-the [page response]. 
+In the above, every page that gets rendered will have `temperature` as part of the [page response].
 
 ## Partials
 

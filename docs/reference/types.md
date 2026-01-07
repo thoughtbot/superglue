@@ -186,7 +186,7 @@ The root state for a Superglue application. It occupies
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
 | <a id="superglue" name="superglue"></a> `superglue` | [`SuperglueState`](types.md#supergluestate) | Contains readonly metadata about the current page | [lib/types/index.ts:232](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/types/index.ts#L232) |
-| <a id="pages" name="pages"></a> `pages` | [`AllPages`](types.md#allpagest)\<`T`\> | Every [PageResponse](types.md#pageresponse) that superglue recieves is stored here. | [lib/types/index.ts:234](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/types/index.ts#L234) |
+| <a id="pages" name="pages"></a> `pages` | [`AllPages`](types.md#allpagest)\<`T`\> | Every [PageResponse](types.md#pageresponse) that superglue receives is stored here. | [lib/types/index.ts:234](https://github.com/thoughtbot/superglue/blob/082475a624bd2c23522d97710a5b2ed335eb293c/superglue/lib/types/index.ts#L234) |
 
 ***
 

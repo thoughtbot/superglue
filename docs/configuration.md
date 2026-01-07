@@ -66,7 +66,7 @@ The installation generator will add a `flash.js` slice to `app/javascript/slices
 and will work with the Rails `flash`. You can modify this however you like, out of the box:
 
   - When using `data-sg-visit`, all data in the flash slice will be cleared before the request.
-  - When using `data-sg-visit` or `data-sg-remote`, the recieved flash
+  - When using `data-sg-visit` or `data-sg-remote`, the received flash
     will be merged with the current flash. You can change this behavior
     by modifying the flash slice.
 

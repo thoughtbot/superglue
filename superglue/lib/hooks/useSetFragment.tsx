@@ -64,7 +64,7 @@ export function useSetFragment() {
   ): void
 
   function setter(
-    fragmentRefOrId: Fragment<unknown, unknown> | string,
+    fragmentRefOrId: Fragment<unknown, true> | string,
     updater: (draft: unknown) => void
   ): void {
     const fragmentId =

@@ -3,7 +3,7 @@
   "version": "2.0.0-alpha.10",
   "description": "Use a vanilla Rails with React and Redux",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/copy-wrappers.js",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "lint": "run-p lint:eslint lint:types lint:prettier",
@@ -23,20 +23,27 @@
     "url": "git+https://github.com/thoughtbot/superglue.git"
   },
   "author": "Johny Ho",
-  "main": "dist/cjs/superglue.cjs",
-  "module": "dist/superglue.mjs",
+  "main": "dist/index.js",
   "types": "dist/superglue.d.mts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/superglue.d.mts",
-      "import": "./dist/superglue.mjs",
-      "default": "./dist/cjs/superglue.cjs"
+      "production": {
+        "import": "./dist/superglue.mjs",
+        "require": "./dist/cjs/superglue.cjs"
+      },
+      "import": "./dist/superglue.development.mjs",
+      "require": "./dist/index.js"
     },
     "./action_creators": {
       "types": "./dist/action_creators.d.mts",
-      "import": "./dist/action_creators.mjs",
-      "default": "./dist/cjs/action_creators.cjs"
+      "production": {
+        "import": "./dist/action_creators.mjs",
+        "require": "./dist/cjs/action_creators.cjs"
+      },
+      "import": "./dist/action_creators.development.mjs",
+      "require": "./dist/action_creators.js"
     }
   },
   "license": "MIT",
@@ -45,6 +52,7 @@
   },
   "homepage": "https://github.com/thoughtbot/superglue#readme",
   "devDependencies": {
+    "@deepkit/type-compiler": "^1.0.19",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
@@ -70,20 +78,27 @@
     "react-redux": "^9.1.2",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
+    "rollup": "4.52.5",
     "tsup": "^8.1.0",
     "typedoc": "^0.28.10",
     "typedoc-plugin-markdown": "^4.8.1",
     "typedoc-plugin-missing-exports": "~4.1.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.2",
-    "rollup": "4.52.5"
+    "vitest": "^2.0.2"
   },
   "peerDependencies": {
     "@reduxjs/toolkit": "^2.2.8",
     "react": "^18 || ^19",
-    "react-redux": "^9 || ^8"
+    "react-redux": "^9 || ^8",
+    "@deepkit/type-compiler": "^1.0.19"
+  },
+  "peerDependenciesMeta": {
+    "@deepkit/type-compiler": {
+      "optional": true
+    }
   },
   "dependencies": {
+    "@deepkit/type": "^1.0.19",
     "@rails/actioncable": "^8.0.200",
     "@types/lodash.debounce": "^4.0.9",
     "@types/rails__actioncable": "^6.1.11",

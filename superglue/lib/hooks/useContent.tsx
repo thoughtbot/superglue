@@ -1,29 +1,11 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import {
-  JSONMappable,
-  RootState,
-  Unproxy,
-  Fragment,
-  FragmentRef,
-} from '../types'
+import { ReceiveType, resolveReceiveType, validate } from '@deepkit/type'
+import { JSONMappable, RootState, Unproxy, FragmentRef } from '../types'
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
 export type FragmentProxy = { __fragment: true }
-
-/**
- * A proxy type that enables reactive access to nested content with automatic fragment resolution
- */
-export type ProxiedContent<T> = T extends Fragment<infer U, true>
-  ? ProxiedContent<U> & FragmentProxy
-  : T extends Fragment<infer U, false | undefined>
-  ? (ProxiedContent<U> & FragmentProxy) | undefined
-  : T extends (infer U)[]
-  ? ProxiedContent<U>[]
-  : T extends object
-  ? { [K in keyof T]: ProxiedContent<T[K]> }
-  : T
 
 /**
  * Union type for fragment references, accepting either FragmentRef objects or string IDs
@@ -75,7 +57,7 @@ export type FragmentRefOrId = FragmentRef | string
  * const cart = useContent('userCart')
  * ```
  */
-export function useContent<T = JSONMappable>(): ProxiedContent<T>
+export function useContent<T = JSONMappable>(): T
 
 /**
  * Passing in a fragment to useContent allows us to scope the tracking of
@@ -105,12 +87,11 @@ export function useContent<T = JSONMappable>(): ProxiedContent<T>
  *
  * @param fragmentRef Optional fragment reference for scoped access
  */
+export function useContent<T = JSONMappable>(fragmentRef: FragmentRefOrId): T
 export function useContent<T = JSONMappable>(
-  fragmentRef: FragmentRefOrId
-): ProxiedContent<T>
-export function useContent<T = JSONMappable>(
-  fragmentRef?: FragmentRefOrId
-): ProxiedContent<T> | undefined {
+  fragmentRef?: FragmentRefOrId,
+  __type?: ReceiveType<T>
+): T | undefined {
   const superglueState = useSuperglue()
   const currentPageKey = superglueState.currentPageKey
 
@@ -154,12 +135,39 @@ export function useContent<T = JSONMappable>(
       return undefined
     }
 
-    return createProxy(
+    const proxy = createProxy(
       sourceData,
       { current: store.getState().fragments },
       dependencies.current,
       proxyCache
-    ) as ProxiedContent<T>
+    ) as T
+
+    if (process.env.NODE_ENV !== 'production' && __type) {
+      const proxyForValidation = createProxy(
+        sourceData,
+        { current: store.getState().fragments },
+        new Set(),
+        new WeakMap()
+      ) as T
+
+      const resolvedType = resolveReceiveType(__type)
+      const errors = validate(proxyForValidation, resolvedType)
+
+      if (errors.length > 0) {
+        const formattedErrors = errors.map((e) => ({
+          path: e.path,
+          message: e.message,
+          code: String(e.code),
+        }))
+
+        console.error(
+          `[Superglue] Content validation failed for ${fragmentId || 'page'}:`,
+          formattedErrors
+        )
+      }
+    }
+
+    return proxy
   }, [sourceData, trackedFragments])
 
   return proxy

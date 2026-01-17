@@ -267,6 +267,36 @@ describe('proxy utilities', () => {
 
       expect(proxy.user).toBe(undefined)
     })
+
+    it('exposes __id on fragment proxies', () => {
+      const data = { user: { __id: 'user_123' } }
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
+
+      expect(proxy.user.__id).toBe('user_123')
+      expect(proxy.user.name).toBe('John Doe')
+    })
+
+    it('exposes __id on nested fragment proxies', () => {
+      const data = { post: { __id: 'post_456' } }
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
+
+      // post_456 has author: { __id: 'user_123' }
+      expect(proxy.post.__id).toBe('post_456')
+      expect(proxy.post.author.__id).toBe('user_123')
+      expect(proxy.post.author.name).toBe('John Doe')
+    })
+
+    it('exposes __id on fragment proxies in arrays', () => {
+      const data = {
+        items: [{ __id: 'user_123' }, { __id: 'post_456' }],
+      }
+      const proxy = createProxy(data, fragmentsRef, dependencies, proxyCache)
+
+      expect(proxy.items[0].__id).toBe('user_123')
+      expect(proxy.items[0].name).toBe('John Doe')
+      expect(proxy.items[1].__id).toBe('post_456')
+      expect(proxy.items[1].title).toBe('Hello World')
+    })
   })
 
   describe('array methods', () => {

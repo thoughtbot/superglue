@@ -129,6 +129,14 @@ export const setup = ({
   }
 }
 
+if (process.env.NODE_ENV !== 'production') {
+  console.info(
+    '%cSuperglue Development Mode: ' +
+      'Remember to build for production before deploying.',
+    'font-weight:bold'
+  )
+}
+
 /**
  * The entry point to your superglue application. It sets up the redux Provider,
  * redux state and the Navigation component.

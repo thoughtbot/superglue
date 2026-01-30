@@ -52,6 +52,8 @@
   },
   "homepage": "https://github.com/thoughtbot/superglue#readme",
   "devDependencies": {
+    "@deepkit/core": "^1.0.19",
+    "@deepkit/type": "^1.0.19",
     "@deepkit/type-compiler": "^1.0.19",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
@@ -88,18 +90,25 @@
     "vitest": "^2.0.2"
   },
   "peerDependencies": {
+    "@deepkit/core": "^1.0.19",
+    "@deepkit/type": "^1.0.19",
     "@deepkit/type-compiler": "^1.0.19",
     "@reduxjs/toolkit": "^2.2.8",
     "react": "^18 || ^19",
     "react-redux": "^9 || ^8"
   },
   "peerDependenciesMeta": {
+    "@deepkit/core": {
+      "optional": true
+    },
+    "@deepkit/type": {
+      "optional": true
+    },
     "@deepkit/type-compiler": {
       "optional": true
     }
   },
   "dependencies": {
-    "@deepkit/type": "^1.0.19",
     "@rails/actioncable": "^8.0.200",
     "@types/lodash.debounce": "^4.0.9",
     "@types/rails__actioncable": "^6.1.11",

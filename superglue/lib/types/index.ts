@@ -14,6 +14,15 @@ import { rootReducer } from '../reducers'
 import { FragmentProxy } from '../hooks/useContent'
 
 export * from './requests'
+
+/**
+ * Type marker for Deepkit runtime validation. This allows Deepkit
+ * to be an optional peer dependency since Deepkit only checks for
+ * the name of the type is ReceiveType.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type ReceiveType<T> = unknown
+
 /**
  * A PageKey is a combination of a parsed URL's pathname + query string. No hash.
  *

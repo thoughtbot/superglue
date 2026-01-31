@@ -1,7 +1,12 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import { ReceiveType, resolveReceiveType, validate } from '@deepkit/type'
-import { JSONMappable, RootState, Unproxy, FragmentRef } from '../types'
+import {
+  JSONMappable,
+  RootState,
+  Unproxy,
+  FragmentRef,
+  ReceiveType,
+} from '../types'
 import { useSuperglue } from './index'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
@@ -150,21 +155,30 @@ export function useContent<T = JSONMappable>(
         new WeakMap()
       ) as T
 
-      const resolvedType = resolveReceiveType(__type)
-      const errors = validate(proxyForValidation, resolvedType)
+      import('@deepkit/type')
+        .then(({ resolveReceiveType, validate }) => {
+          // @ts-expect-error - ReceiveType<T> is transformed by Deepkit compiler
+          const resolvedType = resolveReceiveType(__type)
+          const errors = validate(proxyForValidation, resolvedType)
 
-      if (errors.length > 0) {
-        const formattedErrors = errors.map((e) => ({
-          path: e.path,
-          message: e.message,
-          code: String(e.code),
-        }))
+          if (errors.length > 0) {
+            const formattedErrors = errors.map((e) => ({
+              path: e.path,
+              message: e.message,
+              code: String(e.code),
+            }))
 
-        console.error(
-          `[Superglue] Content validation failed for ${fragmentId || 'page'}:`,
-          formattedErrors
-        )
-      }
+            console.error(
+              `[Superglue] Content validation failed for ${
+                fragmentId || 'page'
+              }:`,
+              formattedErrors
+            )
+          }
+        })
+        .catch(() => {
+          // Deepkit not installed - silently skip validation
+        })
     }
 
     return proxy

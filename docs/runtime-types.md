@@ -2,7 +2,7 @@
 
 In Superglue, there's no need to annotate your types in ruby just to regenerate
 them in typescript. Instead you write **typescript first** and let runtime type
-validation give you the developer feedback to build your `.props`.
+validation give you the developer feedback to build your `props`.
 
 To get started, run the installation generator with the typescript flag.
 
@@ -10,75 +10,11 @@ To get started, run the installation generator with the typescript flag.
 rails g superglue:install --typescript
 ```
 
-And make use of the following esbuild plugin, deepkit plugins are also available for vite and bun:
+The installation generator will add
 
-```diff
-import * as esbuild from 'esbuild'
-import svgr from 'esbuild-plugin-svgr'
-+ import { DeepkitLoader } from '@deepkit/type-compiler'
-import { readFileSync } from 'fs'
-import ts from 'typescript'
-import path from 'node:path'
-
-const isWatch = process.argv.includes('--watch')
-
-// Deepkit transformation plugin for tsup/esbuild
-const deepkitLoader = new DeepkitLoader()
-
-+ const deepkitPlugin = {
-+   name: 'deepkit',
-+   setup(build) {
-+     const loaderMap = {
-+       '.ts': 'ts',
-+       '.tsx': 'tsx',
-+       '.js': 'js',
-+       '.jsx': 'jsx',
-+     }
-+     build.onLoad({ filter: /\.(tsx?|jsx?)$/ }, async (args) => {
-+       if (args.path.includes('node_modules')) {
-+         return null
-+       }
-+ 
-+       const source = readFileSync(args.path, 'utf8')
-+ 
-+       const deepkitTransformed = deepkitLoader.transform(source, args.path)
-+ 
-+       const ext = path.extname(args.path)
-+       const loader = loaderMap[ext] || 'js'
-+ 
-+       return {
-+         contents: deepkitTransformed,
-+         loader,
-+       }
-+     })
-+   },
-+ }
-
-const buildOptions = {
-  entryPoints: [
-    'app/javascript/application_superglue.tsx',
-    'app/javascript/admin/application.js',
-    'app/javascript/application.js',
-  ],
-  bundle: true,
-  sourcemap: true,
-  format: 'esm',
-  outdir: 'app/assets/builds',
-  publicPath: '/assets',
-+   plugins:  process.env.NODE_ENV === 'production' ? [svgr()] : [deepkitPlugin, svgr()] ,
-  metafile: true,
-+  conditions: process.env.NODE_ENV === 'production' ? ['production'] : [],
-}
-
-if (isWatch) {
-  const ctx = await esbuild.context(buildOptions)
-  await ctx.watch()
-  console.log('Watching for changes...')
-} else {
-  const result = await esbuild.build(buildOptions)
-  console.log(await esbuild.analyzeMetafile(result.metafile))
-}
-```
+1. a [esbuild plugin](https://github.com/thoughtbot/superglue_rails/blob/af7edd35d3ed211822663ac21a5c9910abcc6d88/lib/generators/superglue/install/templates/esbuild/plugin.js) that enables deepkit to work with Superglue
+2. a [build.mjs](https://github.com/thoughtbot/superglue_rails/blob/af7edd35d3ed211822663ac21a5c9910abcc6d88/lib/generators/superglue/install/templates/ts/build.mjs), a esbuild node script that builds your application.
+3. And setup deepkit to work with esbuild. If you are using [vite](./recipes/vite.md) or bun with superglue, please use [deepkit/vite](https://deepkit.io/en/documentation/package/vite) or [deepkit/bun](https://deepkit.io/en/documentation/package/bun) plugins.
 
 ## How It Works
 
@@ -91,7 +27,7 @@ Superglue uses [Deepkit](https://deepkit.io/) for runtime type validation during
 ## Writing your types
 
 `useContent` is the generic hook used to access the props [you
-build](../docs/shaping.md). To make use of runtime types, simply pass a type
+build](shaping.md). To make use of runtime types, simply pass a type
 describing your page's props as you normally would: 
 
 For example: 

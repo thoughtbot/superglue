@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { getIn, setIn, dangerouslyEachIn, KeyPathError } from '../../../lib/utils/immutability'
+import {
+  getIn,
+  setIn,
+  dangerouslyEachIn,
+  KeyPathError,
+} from '../../../lib/utils/immutability'
 
 describe('getIn', () => {
   it('fetches the node at keypath', () => {

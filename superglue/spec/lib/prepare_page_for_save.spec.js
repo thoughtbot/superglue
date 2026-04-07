@@ -100,7 +100,12 @@ describe('preparePageForSave', () => {
       return receivedPage
     }
 
-    const result = preparePageForSave(json, currentPage, currentFragments, beforeSave)
+    const result = preparePageForSave(
+      json,
+      currentPage,
+      currentFragments,
+      beforeSave
+    )
 
     expect(result).toEqual({
       data: {
@@ -146,7 +151,12 @@ describe('preparePageForSave', () => {
       return receivedPage
     }
 
-    const result = preparePageForSave(json, currentPage, currentFragments, beforeSave)
+    const result = preparePageForSave(
+      json,
+      currentPage,
+      currentFragments,
+      beforeSave
+    )
 
     expect(result).toEqual({
       data: {
@@ -163,9 +173,7 @@ describe('preparePageForSave', () => {
   it('returns a plain object with no frozen properties', () => {
     const json = {
       data: {
-        posts: [
-          { title: 'post 1', header: { text: 'hello' } },
-        ],
+        posts: [{ title: 'post 1', header: { text: 'hello' } }],
       },
       action: 'savePage',
       fragments: [{ id: 'header_1', path: 'data.posts.0.header' }],
@@ -177,9 +185,7 @@ describe('preparePageForSave', () => {
 
     expect(result).toEqual({
       data: {
-        posts: [
-          { title: 'post 1', header: { text: 'hello' } },
-        ],
+        posts: [{ title: 'post 1', header: { text: 'hello' } }],
       },
       action: 'savePage',
       fragments: [{ id: 'header_1', path: 'data.posts.0.header' }],

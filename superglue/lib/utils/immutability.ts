@@ -185,7 +185,11 @@ function setIn<T extends JSONMappable>(
 function dangerouslyEachIn(
   node: JSONMappable,
   path: Keypath,
-  visitor: (child: JSONValue, key: string | null, nextKey: string | null) => void
+  visitor: (
+    child: JSONValue,
+    key: string | null,
+    nextKey: string | null
+  ) => void
 ): void {
   const keyPath = normalizeKeyPath(path)
   let current: JSONValue = node

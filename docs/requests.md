@@ -128,15 +128,14 @@ sequenceDiagram
 ## The `beforeSave` callback
 
 !!! note
-    `beforeSave` is an advanced Supeglue feature. Before proceeding please familiarize
+    `beforeSave` is an advanced Superglue feature. Before proceeding please familiarize
     yourself with:
 
     1. Knowing how [Fragments and FragmentRefs](./fragments.md) work, the first
     parameter passed to `beforeSave` is a proxy that lazily normalizes
     fragments.
-    2. How to get the [unproxied](./performance.md#stable-references-with-unproxy) state.
-    3. Knowing the shape of [savePage or graft](./page-response.md) responses.
-    4. Knowing how [denormaliztion](./fragments.md#denormalization) works 
+    2. Knowing the shape of [savePage or graft](./page-response.md) responses.
+    3. Knowing how [denormaliztion](./fragments.md#denormalization) works 
 
 Both `visit` and `remote` can be passed a `beforeSave` callback. This is your 
 opportunity to modify the incoming [savePage or graft](./page-response.md)
@@ -179,9 +178,11 @@ remote("/posts", {beforeSave})
       json.body post.body
     ```
 
-    be sure to use the [key](./props-template.md#working-with-arrays) to help Superglue
-    identify fragments in the concatenated array.
-
+    be sure to use the [key](./props-template.md#working-with-arrays) to help
+    Superglue identify fragments in the concatenated array. Otherwise, any
+    index based fragment array's in `receivedResponse` will be frozen to prevent
+    mutations.
+    
     `_post_list.json.props`
     
     ```diff

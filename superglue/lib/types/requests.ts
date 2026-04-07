@@ -111,11 +111,15 @@ export interface BeforeSave<T = JSONMappable> {
    * useful for appending, prepending, shuffeling, etc. recieved data to
    * existing data.
    *
+   * `prevPage` is `undefined` when there is no existing page in the store
+   * (e.g. on a first visit).
+   *
    * ```
    * const beforeSave = (prevPage, nextPage) => {
+   *   const prevMessages = prevPage?.data?.messages ?? []
    *   nextPage.data.messages = [
-   *     prevPage.data.messages,
-   *     ... nextPage.data.messages
+   *     ...prevMessages,
+   *     ...nextPage.data.messages
    *   ]
    *
    *   return nextPage
@@ -126,8 +130,8 @@ export interface BeforeSave<T = JSONMappable> {
    */
 
   <U extends SaveResponse<T> | GraftResponse<T>>(
-    prevPage: Page<T>,
-    receivedPage: U
+    prevPage: Page<T> | undefined,
+    nextPage: U
   ): U
 }
 

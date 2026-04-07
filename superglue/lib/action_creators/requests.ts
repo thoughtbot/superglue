@@ -138,7 +138,7 @@ export class MismatchedComponentError extends Error {
   }
 }
 
-const defaultBeforeSave: BeforeSave = (prevPage, receivedPage) => receivedPage
+const defaultBeforeSave: BeforeSave = (prevPage, nextPage) => nextPage
 
 export const remote: RemoteCreator = (
   path,
@@ -227,7 +227,7 @@ export const visit: VisitCreator = (
   path,
   {
     placeholderKey,
-    beforeSave = (prevPage: Page, receivedPage: PageResponse) => receivedPage,
+    beforeSave = defaultBeforeSave,
     revisit = false,
     ...rest
   } = {}

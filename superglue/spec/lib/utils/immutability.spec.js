@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getIn, setIn, KeyPathError } from '../../../lib/utils/immutability'
+import { getIn, setIn, dangerouslyEachIn, KeyPathError } from '../../../lib/utils/immutability'
 
 describe('getIn', () => {
   it('fetches the node at keypath', () => {
@@ -111,5 +111,85 @@ describe('setIn', () => {
 
     expect(page.a[1]).toBe(clone.a[1])
     expect(clone).toEqual({ a: ['foo', { b: 5 }] })
+  })
+})
+
+describe('dangerouslyEachIn', () => {
+  it('visits root with null key, then each node with its keypath segment and nextKey', () => {
+    const page = { a: { b: { c: 5 } } }
+    const visited = []
+
+    dangerouslyEachIn(page, 'a.b', (child, key, nextKey) => {
+      visited.push({ child, key, nextKey })
+    })
+
+    expect(visited).toEqual([
+      { child: page, key: null, nextKey: 'a' },
+      { child: page.a, key: 'a', nextKey: 'b' },
+      { child: page.a.b, key: 'b', nextKey: null },
+    ])
+  })
+
+  it('works with array index keypaths', () => {
+    const page = { a: [{ b: 1 }, { b: 2 }] }
+    const visited = []
+
+    dangerouslyEachIn(page, 'a.1', (child, key, nextKey) => {
+      visited.push({ child, key, nextKey })
+    })
+
+    expect(visited).toEqual([
+      { child: page, key: null, nextKey: 'a' },
+      { child: page.a, key: 'a', nextKey: '1' },
+      { child: page.a[1], key: '1', nextKey: null },
+    ])
+  })
+
+  it('works with array attribute lookup', () => {
+    const page = { a: { b: [{ foo_id: 1 }, { foo_id: 2 }, { foo_id: 3 }] } }
+    const visited = []
+
+    dangerouslyEachIn(page, 'a.b.foo_id=2', (child, key, nextKey) => {
+      visited.push({ child, key, nextKey })
+    })
+
+    expect(visited).toEqual([
+      { child: page, key: null, nextKey: 'a' },
+      { child: page.a, key: 'a', nextKey: 'b' },
+      { child: page.a.b, key: 'b', nextKey: 'foo_id=2' },
+      { child: page.a.b[1], key: 'foo_id=2', nextKey: null },
+    ])
+  })
+
+  it('throws KeyPathError on non-traversable intermediate nodes', () => {
+    const page = { a: { b: 2 } }
+    expect(() => {
+      dangerouslyEachIn(page, 'a.b.c', () => {})
+    }).toThrow(new KeyPathError('Expected to traverse an Array or Obj, got 2'))
+  })
+
+  it('can be used to freeze nodes', () => {
+    const page = { a: { b: { c: 5 } } }
+
+    dangerouslyEachIn(page, 'a.b', (child) => {
+      if (typeof child === 'object' && child !== null) {
+        Object.freeze(child)
+      }
+    })
+
+    expect(Object.isFrozen(page)).toBe(true)
+    expect(Object.isFrozen(page.a)).toBe(true)
+    expect(Object.isFrozen(page.a.b)).toBe(true)
+  })
+
+  it('only visits root when path is empty', () => {
+    const page = { a: 1 }
+    const visited = []
+
+    dangerouslyEachIn(page, '', (child, key, nextKey) => {
+      visited.push({ child, key, nextKey })
+    })
+
+    expect(visited).toEqual([{ child: page, key: null, nextKey: null }])
   })
 })

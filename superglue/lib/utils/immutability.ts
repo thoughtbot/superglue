@@ -173,4 +173,43 @@ function setIn<T extends JSONMappable>(
   return results[0]
 }
 
-export { getIn, setIn, KeyPathError }
+/**
+ * Walks a {@link Keypath} through a JSON object, calling a visitor at each
+ * node along the path. The visitor receives the raw reference and may mutate
+ * it (e.g. Object.freeze).
+ *
+ * @param node
+ * @param path
+ * @param visitor Called with (child, key, nextKey). key is null for the root node. nextKey is null for the last node.
+ */
+function dangerouslyEachIn(
+  node: JSONMappable,
+  path: Keypath,
+  visitor: (child: JSONValue, key: string | null, nextKey: string | null) => void
+): void {
+  const keyPath = normalizeKeyPath(path)
+  let current: JSONValue = node
+
+  visitor(current, null, keyPath[0] ?? null)
+
+  for (let i = 0; i < keyPath.length; i++) {
+    const key = keyPath[i]
+
+    if (typeof current === 'object' && current !== null) {
+      if (!Array.isArray(current) && canLookAhead.test(key)) {
+        throw new KeyPathError(
+          `Expected to find an Array when using the key: ${key}`
+        )
+      }
+
+      current = atKey(current, key)
+      visitor(current, key, keyPath[i + 1] ?? null)
+    } else {
+      throw new KeyPathError(
+        `Expected to traverse an Array or Obj, got ${JSON.stringify(current)}`
+      )
+    }
+  }
+}
+
+export { getIn, setIn, dangerouslyEachIn, KeyPathError }

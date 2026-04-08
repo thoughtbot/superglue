@@ -1,10 +1,10 @@
+import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import {
   ChannelNameWithParams,
   Consumer,
+  FragmentPath,
   Subscription,
-} from '@rails/actioncable'
-import { useState, useEffect, useRef, createContext, useContext } from 'react'
-import { FragmentPath } from '../types'
+} from '../types'
 import {
   streamPrepend,
   streamAppend,

@@ -12,8 +12,10 @@ import {
 import { History } from 'history'
 import { rootReducer } from '../reducers'
 import { FragmentProxy } from '../hooks/useContent'
+import { Consumer } from './cable'
 
 export * from './requests'
+export * from './cable'
 
 /**
  * Type marker for Deepkit runtime validation. This allows Deepkit
@@ -681,4 +683,12 @@ export interface ApplicationProps
    * it would contain slices for superglue, pages, and the flash.
    */
   store: SuperglueStore
+  /**
+   * An optional ActionCable-compatible Consumer used by `useStreamSource`
+   * for real-time streaming. Construct this in your application code with
+   * `createConsumer` from `@rails/actioncable` or `createCable` from
+   * `@anycable/web` and pass it in. If omitted, `useStreamSource` is a
+   * no-op.
+   */
+  cable?: Consumer
 }

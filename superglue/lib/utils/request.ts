@@ -1,5 +1,5 @@
 import { formatForXHR } from './url'
-import { config } from '../config'
+import { getConfig } from '../config'
 import { BasicRequestInit, ParsedResponse, RootState } from '../types'
 import { LimitedSet } from './limited_set'
 import { v4 as uuidv4 } from 'uuid'
@@ -98,7 +98,7 @@ export function argsForFetch(
     nextHeaders['x-csrf-token'] = currentState.csrfToken
   }
 
-  const fetchPath = new URL(formatForXHR(pathQuery), config.baseUrl)
+  const fetchPath = new URL(formatForXHR(pathQuery), getConfig().baseUrl)
 
   const credentials = 'same-origin'
 
@@ -116,7 +116,7 @@ export function argsForFetch(
   }
 
   if (currentState.currentPageKey) {
-    const referrer = new URL(currentState.currentPageKey, config.baseUrl)
+    const referrer = new URL(currentState.currentPageKey, getConfig().baseUrl)
 
     options.referrer = referrer.toString()
   }

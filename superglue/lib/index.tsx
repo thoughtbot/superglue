@@ -1,12 +1,11 @@
 import React, { useRef, useMemo } from 'react'
-import { config } from './config'
+import { setConfig } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { historyChange, setCSRFToken, receiveResponse } from './actions'
 import { Provider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
-import { createConsumer } from '@rails/actioncable'
 
 import { createBrowserHistory, createMemoryHistory } from 'history'
 
@@ -38,23 +37,6 @@ export { getIn } from './utils/immutability'
 export { urlToPageKey }
 export * from './hooks'
 export { unproxy } from './hooks/useContent'
-
-function getConfig(name: string) {
-  if (typeof document !== 'undefined') {
-    const element = document.head.querySelector(
-      `meta[name='action-cable-${name}']`
-    )
-    if (element) {
-      return element.getAttribute('content') || '/cable'
-    } else {
-      return '/cable'
-    }
-  } else {
-    return '/cable'
-  }
-}
-
-const cable = createConsumer(getConfig('url'))
 
 const hasWindow = typeof window !== 'undefined'
 
@@ -101,7 +83,7 @@ export const setup = ({
   history,
   navigatorRef,
 }: SetupProps) => {
-  config.baseUrl = baseUrl
+  setConfig({ baseUrl })
 
   const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
 
@@ -152,6 +134,7 @@ function Application({
   buildVisitAndRemote,
   history,
   mapping,
+  cable,
   ...rest
 }: ApplicationProps) {
   const navigatorRef = useRef<{ navigateTo: NavigateTo } | null>(null)
@@ -174,7 +157,7 @@ function Application({
   return (
     <div onClick={ujs.onClick} onSubmit={ujs.onSubmit} {...rest}>
       <Provider store={store}>
-        <CableContext.Provider value={{ streamActions, cable }}>
+        <CableContext.Provider value={{ streamActions, cable: cable ?? null }}>
           <NavigationProvider
             ref={navigatorRef}
             visit={visit}

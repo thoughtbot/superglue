@@ -679,11 +679,6 @@ export interface ApplicationProps
    */
   history?: History
   /**
-   * The exported store from store.js. If you used the generators
-   * it would contain slices for superglue, pages, and the flash.
-   */
-  store: SuperglueStore
-  /**
    * An optional ActionCable-compatible Consumer used by `useStreamSource`
    * for real-time streaming. Construct this in your application code with
    * `createConsumer` from `@rails/actioncable` or `createCable` from

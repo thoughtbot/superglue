@@ -1,14 +1,10 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { Application, rootReducer, useContent } from '../../lib/index'
+import { Application, store, useContent } from '../../lib/index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
-import { Provider } from 'react-redux'
 import React, { useContext, useEffect } from 'react'
 import { createMemoryHistory } from 'history'
 import { visit, remote } from '../../lib/action_creators'
-// import { mount } from 'enzyme'
-import { thunk } from 'redux-thunk'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { NavigationContext } from '../../lib/index'
@@ -45,16 +41,6 @@ const buildVisitAndRemote = (navRef, store) => {
   }
 }
 
-const buildStore = (initialState, reducer) => {
-  const store = createStore(
-    combineReducers(reducer),
-    initialState,
-    compose(applyMiddleware(thunk))
-  )
-
-  return store
-}
-
 describe('start', () => {
   it('sets the stage', () => {
     const history = createMemoryHistory({
@@ -71,9 +57,6 @@ describe('start', () => {
       fragments: [],
       csrfToken: 'token',
     }
-
-    const store = buildStore({}, rootReducer)
-
     render(
       <Application
         initialPage={initialPage}
@@ -81,7 +64,6 @@ describe('start', () => {
         path={'/home?some=123#title'}
         mapping={{ home: Home, about: About }}
         history={history}
-        store={store}
         buildVisitAndRemote={buildVisitAndRemote}
       />
     )
@@ -134,9 +116,6 @@ describe('navigation', () => {
         fragments: [],
         csrfToken: 'token',
       }
-
-      const store = buildStore({}, rootReducer)
-
       render(
         <Application
           initialPage={initialPage}
@@ -144,7 +123,6 @@ describe('navigation', () => {
           path={'/home'}
           history={history}
           mapping={{ home: Home, about: About }}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
@@ -205,9 +183,6 @@ describe('navigation', () => {
           </div>
         )
       }
-
-      const store = buildStore({}, rootReducer)
-
       render(
         <Application
           initialPage={initialPage}
@@ -215,7 +190,6 @@ describe('navigation', () => {
           path={'/home'}
           history={history}
           mapping={{ home: Home, about: About }}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
@@ -298,7 +272,6 @@ describe('navigation', () => {
             )
           }
 
-          const store = buildStore({}, rootReducer)
           render(
             <Application
               initialPage={initialPage}
@@ -306,7 +279,6 @@ describe('navigation', () => {
               path={'/home'}
               mapping={{ home: Home }}
               history={history}
-              store={store}
               buildVisitAndRemote={buildVisitAndRemote}
             />
           )
@@ -349,7 +321,6 @@ describe('navigation', () => {
         )
       }
 
-      const store = buildStore({}, rootReducer)
       render(
         <Application
           initialPage={initialPage}
@@ -357,7 +328,6 @@ describe('navigation', () => {
           path={'/home'}
           mapping={{ home: Home, about: About }}
           history={history}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
@@ -409,8 +379,6 @@ describe('navigation', () => {
           </div>
         )
       }
-      const store = buildStore({}, rootReducer)
-
       render(
         <Application
           initialPage={initialPage}
@@ -418,7 +386,6 @@ describe('navigation', () => {
           path={'/home'}
           mapping={{ home: Home }}
           history={history}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
@@ -453,9 +420,6 @@ describe('navigation', () => {
         csrfToken: 'token',
         restoreStrategy: 'fromCacheOnly',
       }
-
-      const store = buildStore({}, rootReducer)
-
       render(
         <Application
           initialPage={initialPage}
@@ -463,7 +427,6 @@ describe('navigation', () => {
           path={'/home'}
           mapping={{ home: Home, about: About }}
           history={history}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
@@ -506,8 +469,6 @@ describe('navigation', () => {
           pageKey: '/home',
         })
         history.push('/home') // Gets replaced on Superglue.start
-        const store = buildStore({}, rootReducer)
-
         history.listen(({ action, location }) => {
           const { pathname, hash } = location
           if (hash === '#title') {
@@ -549,7 +510,6 @@ describe('navigation', () => {
             path={'/home'}
             mapping={{ home: Home }}
             history={history}
-            store={store}
             buildVisitAndRemote={buildVisitAndRemote}
           />
         )
@@ -576,7 +536,6 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      const store = buildStore({}, rootReducer)
       render(
         <Application
           initialPage={initialPage}
@@ -584,7 +543,6 @@ describe('navigation', () => {
           path={'/home'}
           mapping={{ home: Home, about: About }}
           history={history}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )
@@ -636,9 +594,6 @@ describe('navigation', () => {
           </div>
         )
       }
-
-      const store = buildStore({}, rootReducer)
-
       render(
         <Application
           initialPage={initialPage}
@@ -646,7 +601,6 @@ describe('navigation', () => {
           path={'/about'}
           mapping={{ home: Home }}
           history={history}
-          store={store}
           buildVisitAndRemote={buildVisitAndRemote}
         />
       )

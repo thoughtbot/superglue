@@ -1,8 +1,18 @@
 import React, { useRef, useMemo } from 'react'
+import { configureStore } from '@reduxjs/toolkit'
 import { setConfig } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { historyChange, setCSRFToken, receiveResponse } from './actions'
+import {
+  historyChange,
+  setCSRFToken,
+  receiveResponse,
+  beforeFetch,
+  beforeVisit,
+  beforeRemote,
+  resetStore,
+} from './actions'
+import { rootReducer } from './reducers'
 import { Provider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
@@ -20,6 +30,7 @@ export {
   removePage,
   saveResponse,
   receiveResponse,
+  resetStore,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
 } from './actions'
@@ -49,6 +60,26 @@ const createHistory = () => {
     return createMemoryHistory({})
   }
 }
+
+/**
+ * The Superglue redux store. Created once at module load and reused for the
+ * lifetime of the process. Each Application mount dispatches `resetStore` so
+ * tests, SSR requests, and re-mounts all start from a clean slate.
+ */
+export const store: SuperglueStore = configureStore({
+  devTools: process.env.NODE_ENV !== 'production',
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          beforeFetch.type,
+          beforeVisit.type,
+          beforeRemote.type,
+        ],
+      },
+    }),
+})
 
 export const prepareStore = (
   store: SuperglueStore,
@@ -83,6 +114,7 @@ export const setup = ({
   history,
   navigatorRef,
 }: SetupProps) => {
+  store.dispatch(resetStore())
   setConfig({ baseUrl })
 
   const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
@@ -130,7 +162,6 @@ function Application({
   initialPage,
   baseUrl,
   path,
-  store,
   buildVisitAndRemote,
   history,
   mapping,

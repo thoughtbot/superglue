@@ -12,6 +12,13 @@ import { urlToPageKey } from './utils'
 export const GRAFTING_ERROR = '@@superglue/GRAFTING_ERROR'
 export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
 
+/**
+ * A redux action that resets the entire Superglue store back to its initial
+ * state. Dispatched internally on every Application mount so each mount
+ * (browser, SSR request, test render) starts from a clean slate.
+ */
+export const resetStore = createAction('@@superglue/RESET')
+
 export const saveResponse = createAction(
   '@@superglue/SAVE_RESPONSE',
   ({ pageKey, page }: { pageKey: string; page: SaveResponse }) => {

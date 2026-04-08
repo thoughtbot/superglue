@@ -97,9 +97,7 @@
     "@deepkit/type": "^1.0.19",
     "@deepkit/type-compiler": "^1.0.19",
     "@rails/actioncable": "^7 || ^8",
-    "@reduxjs/toolkit": "^2.2.8",
-    "react": "^18 || ^19",
-    "react-redux": "^9 || ^8"
+    "react": "^18 || ^19"
   },
   "peerDependenciesMeta": {
     "@anycable/web": {
@@ -119,7 +117,9 @@
     }
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.8",
     "@types/lodash.debounce": "^4.0.9",
+    "react-redux": "^9.1.2",
     "history": "^5.3.0",
     "immer": "^10.0.3",
     "lodash.debounce": "^4.0.8",

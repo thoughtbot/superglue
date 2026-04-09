@@ -19,8 +19,12 @@ import { CableContext, StreamActions } from './hooks/useStreamSource'
 
 import { createBrowserHistory, createMemoryHistory } from 'history'
 
-import { NavigationProvider } from './components/Navigation'
-export { NavigationProvider, NavigationContext } from './components/Navigation'
+import { NavigationProvider, NavigationOutlet } from './components/Navigation'
+export {
+  NavigationProvider,
+  NavigationOutlet,
+  NavigationContext,
+} from './components/Navigation'
 export { saveAndProcessPage } from './action_creators'
 export {
   beforeFetch,
@@ -72,11 +76,7 @@ export const store: SuperglueStore = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [
-          beforeFetch.type,
-          beforeVisit.type,
-          beforeRemote.type,
-        ],
+        ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],
       },
     }),
 })
@@ -170,18 +170,17 @@ function Application({
 }: ApplicationProps) {
   const navigatorRef = useRef<{ navigateTo: NavigateTo } | null>(null)
 
-  const { visit, remote, nextHistory, initialPageKey, ujs, streamActions } =
-    useMemo(() => {
-      return setup({
-        initialPage,
-        baseUrl,
-        path,
-        store,
-        buildVisitAndRemote,
-        history,
-        navigatorRef,
-      })
-    }, [])
+  const { visit, remote, nextHistory, ujs, streamActions } = useMemo(() => {
+    return setup({
+      initialPage,
+      baseUrl,
+      path,
+      store,
+      buildVisitAndRemote,
+      history,
+      navigatorRef,
+    })
+  }, [])
 
   // The Nav component is pretty bare and can be inherited from for custom
   // behavior or replaced with your own.
@@ -193,10 +192,10 @@ function Application({
             ref={navigatorRef}
             visit={visit}
             remote={remote}
-            mapping={mapping}
             history={nextHistory}
-            initialPageKey={initialPageKey}
-          />
+          >
+            <NavigationOutlet mapping={mapping} />
+          </NavigationProvider>
         </CableContext.Provider>
       </Provider>
     </div>

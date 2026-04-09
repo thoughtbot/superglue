@@ -2,10 +2,13 @@ import { describe, it, expect, vi } from 'vitest'
 import React, { useContext, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { createBrowserHistory, createMemoryHistory } from 'history'
-import { NavigationProvider } from '../../lib/components/Navigation'
+import {
+  NavigationProvider,
+  NavigationOutlet,
+  NavigationContext,
+} from '../../lib/components/Navigation'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { NavigationContext } from '../../lib/components/Navigation'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib'
 import { setActivePage } from '../../lib/actions'
@@ -78,12 +81,9 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <NavigationProvider
-            store={store}
-            mapping={{ home: Home, about: About }}
-            initialPageKey={'/home'}
-            history={history}
-          />
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: Home, about: About }} />
+          </NavigationProvider>
         </Provider>
       )
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
@@ -115,11 +115,9 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <NavigationProvider
-            store={store}
-            mapping={{ home: Home, about: About }}
-            history={history}
-          />
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: Home, about: About }} />
+          </NavigationProvider>
         </Provider>
       )
 
@@ -160,11 +158,9 @@ describe('Nav', () => {
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       render(
         <Provider store={store}>
-          <NavigationProvider
-            store={store}
-            mapping={{ home: Home, about: About }}
-            history={history}
-          />
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: Home, about: About }} />
+          </NavigationProvider>
         </Provider>
       )
       const user = userEvent.setup()
@@ -246,11 +242,9 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <NavigationProvider
-            store={store}
-            mapping={{ home: Home, about: About }}
-            history={history}
-          />
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: Home, about: About }} />
+          </NavigationProvider>
         </Provider>
       )
 
@@ -291,11 +285,9 @@ describe('Nav', () => {
 
       render(
         <Provider store={store}>
-          <NavigationProvider
-            store={store}
-            mapping={{ home: Home, about: About }}
-            history={history}
-          />
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: Home, about: About }} />
+          </NavigationProvider>
         </Provider>
       )
 
@@ -340,11 +332,11 @@ describe('Nav', () => {
       render(
         <Provider store={store}>
           <NavigationProvider
-            store={store}
             ref={(node) => (instance = node)}
-            mapping={{ home: Home, about: About }}
             history={history}
-          />
+          >
+            <NavigationOutlet mapping={{ home: Home, about: About }} />
+          </NavigationProvider>
         </Provider>
       )
 
@@ -401,13 +393,9 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <NavigationProvider
-              store={store}
-              visit={fakeVisit}
-              mapping={{ home: Home, about: About }}
-              initialPageKey={'/home'}
-              history={history}
-            />
+            <NavigationProvider visit={fakeVisit} history={history}>
+              <NavigationOutlet mapping={{ home: Home, about: About }} />
+            </NavigationProvider>
           </Provider>
         )
 
@@ -475,13 +463,11 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <NavigationProvider
-              store={store}
-              visit={fakeVisit}
-              mapping={{ home: Home, about: About, login: Login }}
-              initialPageKey={'/home'}
-              history={history}
-            />
+            <NavigationProvider visit={fakeVisit} history={history}>
+              <NavigationOutlet
+                mapping={{ home: Home, about: About, login: Login }}
+              />
+            </NavigationProvider>
           </Provider>
         )
 
@@ -539,12 +525,9 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <NavigationProvider
-              store={store}
-              visit={fakeVisit}
-              mapping={{ home: Home, about: About }}
-              history={history}
-            />
+            <NavigationProvider visit={fakeVisit} history={history}>
+              <NavigationOutlet mapping={{ home: Home, about: About }} />
+            </NavigationProvider>
           </Provider>
         )
 
@@ -595,13 +578,9 @@ describe('Nav', () => {
 
         render(
           <Provider store={store}>
-            <NavigationProvider
-              store={store}
-              visit={fakeVisit}
-              mapping={{ home: Home, about: About }}
-              initialPageKey={'/home'}
-              history={history}
-            />
+            <NavigationProvider visit={fakeVisit} history={history}>
+              <NavigationOutlet mapping={{ home: Home, about: About }} />
+            </NavigationProvider>
           </Provider>
         )
 

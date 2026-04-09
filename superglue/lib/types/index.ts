@@ -550,20 +550,26 @@ export type NavigationContextProps = {
 }
 
 /**
- * This is the navigation component that gets used by {@link ApplicationProps}. The component
- * takes a mapping of page components and swaps them when navigating and passes
- * {@link NavigateTo} to all page components.
- *
- * @prop initialPageKey The {@link PageKey} that's to be used when first rendering. Used to
- * determine the initial page component to show.
+ * Props for the Superglue navigation provider. Installs the history listener,
+ * scroll restoration, and provides {@link NavigationContextProps} to its
+ * descendants. Wraps `children` so a layout (or any other tree) can sit
+ * between the provider and the rendered page.
  * @interface
  */
 export type NavigationProviderProps = {
   history: History
   visit: ApplicationVisit
   remote: ApplicationRemote
+  children?: React.ReactNode
+}
+
+/**
+ * Props for the Superglue navigation outlet. Reads the current page from the
+ * Superglue store and renders the matching component from `mapping`.
+ * @interface
+ */
+export type NavigationOutletProps = {
   mapping: Record<ComponentIdentifier, React.ComponentType>
-  initialPageKey: PageKey
 }
 
 /**

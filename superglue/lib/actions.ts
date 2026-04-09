@@ -14,7 +14,7 @@ export const GRAFTING_SUCCESS = '@@superglue/GRAFTING_SUCCESS'
 
 /**
  * A redux action that resets the entire Superglue store back to its initial
- * state. Dispatched internally on every Application mount so each mount
+ * state. Dispatched internally on every `createApp` call so each bootstrap
  * (browser, SSR request, test render) starts from a clean slate.
  */
 export const resetStore = createAction('@@superglue/RESET')

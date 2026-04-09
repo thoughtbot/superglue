@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { Application, store, useContent } from '../../lib/index'
+import { createApp, store, useContent } from '../../lib/index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import React, { useContext, useEffect } from 'react'
@@ -57,15 +57,18 @@ describe('start', () => {
       fragments: [],
       csrfToken: 'token',
     }
+    const { Provider, Outlet } = createApp({
+      initialPage,
+      baseUrl: 'http://example.com/base',
+      path: '/home?some=123#title',
+      mapping: { home: Home, about: About },
+      history,
+      buildVisitAndRemote,
+    })
     render(
-      <Application
-        initialPage={initialPage}
-        baseUrl={'http://example.com/base'}
-        path={'/home?some=123#title'}
-        mapping={{ home: Home, about: About }}
-        history={history}
-        buildVisitAndRemote={buildVisitAndRemote}
-      />
+      <Provider>
+        <Outlet />
+      </Provider>
     )
 
     expect(store.getState()).toEqual({
@@ -116,15 +119,18 @@ describe('navigation', () => {
         fragments: [],
         csrfToken: 'token',
       }
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        history,
+        mapping: { home: Home, about: About },
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          history={history}
-          mapping={{ home: Home, about: About }}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
@@ -183,15 +189,18 @@ describe('navigation', () => {
           </div>
         )
       }
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        history,
+        mapping: { home: Home, about: About },
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          history={history}
-          mapping={{ home: Home, about: About }}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
@@ -272,15 +281,18 @@ describe('navigation', () => {
             )
           }
 
+          const { Provider, Outlet } = createApp({
+            initialPage,
+            baseUrl: 'http://example.com',
+            path: '/home',
+            mapping: { home: Home },
+            history,
+            buildVisitAndRemote,
+          })
           render(
-            <Application
-              initialPage={initialPage}
-              baseUrl={'http://example.com'}
-              path={'/home'}
-              mapping={{ home: Home }}
-              history={history}
-              buildVisitAndRemote={buildVisitAndRemote}
-            />
+            <Provider>
+              <Outlet />
+            </Provider>
           )
 
           expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
@@ -321,15 +333,18 @@ describe('navigation', () => {
         )
       }
 
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home, about: About },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home, about: About }}
-          history={history}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       expect(screen.getByRole('heading')).not.toHaveTextContent('Visit Success')
@@ -379,15 +394,18 @@ describe('navigation', () => {
           </div>
         )
       }
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home }}
-          history={history}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       const user = userEvent.setup()
@@ -420,15 +438,18 @@ describe('navigation', () => {
         csrfToken: 'token',
         restoreStrategy: 'fromCacheOnly',
       }
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home, about: About },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home, about: About }}
-          history={history}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
@@ -503,15 +524,18 @@ describe('navigation', () => {
           )
         }
 
+        const { Provider, Outlet } = createApp({
+          initialPage,
+          baseUrl: 'http://example.com',
+          path: '/home',
+          mapping: { home: Home },
+          history,
+          buildVisitAndRemote,
+        })
         render(
-          <Application
-            initialPage={initialPage}
-            baseUrl={'http://example.com'}
-            path={'/home'}
-            mapping={{ home: Home }}
-            history={history}
-            buildVisitAndRemote={buildVisitAndRemote}
-          />
+          <Provider>
+            <Outlet />
+          </Provider>
         )
       }))
 
@@ -536,15 +560,18 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home, about: About },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home, about: About }}
-          history={history}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       const pageState = {
@@ -594,15 +621,18 @@ describe('navigation', () => {
           </div>
         )
       }
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/about',
+        mapping: { home: Home },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/about'}
-          mapping={{ home: Home }}
-          history={history}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       const mockResponse = rsp.graftSuccessWithNewZip({

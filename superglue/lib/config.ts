@@ -1,13 +1,7 @@
-/**
- * Runtime configuration for Superglue. Set during {@link setup} via
- * {@link setConfig} and read elsewhere via {@link getConfig}.
- *
- * @public
- */
 export interface Config {
   /** Base URL prefixed to all `visit` and `remote` calls. */
   baseUrl: string
-  /** Maximum number of pages to retain in the pages slice. */
+  /** Maximum number of pages to retain. */
   maxPages: number
 }
 

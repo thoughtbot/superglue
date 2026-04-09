@@ -3,7 +3,7 @@
  * that Superglue uses for streaming. Both `@rails/actioncable` and
  * `@anycable/web` satisfy these shapes, so applications can pick whichever
  * client library they prefer and inject the consumer through
- * {@link ApplicationProps.cable}. Superglue itself never imports from either
+ * {@link CreateAppArgs.cable}. Superglue itself never imports from either
  * package, which keeps both as optional peer dependencies.
  */
 
@@ -53,7 +53,7 @@ export interface Subscriptions {
 /**
  * The minimal Consumer surface Superglue depends on. Pass an instance of
  * this (e.g. `createConsumer('/cable')` from `@rails/actioncable` or
- * `createCable()` from `@anycable/web`) to `<Application cable={...} />`.
+ * `createCable()` from `@anycable/web`) as `cable` to {@link createApp}.
  * @public
  */
 export interface Consumer {

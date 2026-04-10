@@ -1,6 +1,6 @@
 import {
-  Meta,
-  VisitMeta,
+  Result,
+  VisitResult,
   PageKey,
   SaveResponse,
   GraftResponse,
@@ -27,7 +27,7 @@ export interface Visit {
    * @param input The first argument to Fetch
    * @param options
    */
-  (input: string | PageKey, options: VisitProps): Promise<Meta>
+  (input: string | PageKey, options: VisitProps): Promise<VisitResult>
 }
 
 // todo: placeholders with redirected requests
@@ -44,7 +44,7 @@ export interface VisitProps extends Omit<BaseProps, 'signal'> {
   placeholderKey?: PageKey
   /**
    * When `true` and the request method is a GET, changes the
-   * `suggestionAction` of the Meta object to `none` so that Superglue does
+   * `suggestionAction` of the Result object to `none` so that Superglue does
    * nothing to window.history.
    * When the GET response was redirected, changes `navigationAction` to `replace`
    */
@@ -65,7 +65,7 @@ export interface Remote {
    * @param input The first argument to Fetch
    * @param options The fetch RequestInit with additional options
    */
-  (input: string | PageKey, options: RemoteProps): Promise<Meta>
+  (input: string | PageKey, options: RemoteProps): Promise<Result>
 }
 
 /**
@@ -146,6 +146,10 @@ export interface ApplicationRemote {
    * be passed a dataset as an option. This is because Superglue UJS uses
    * ApplicationRemote and will pass the dataset of the HTML element where UJS is
    * enabled on.
+   *
+   * Returns a `Promise<Result>` — terminal branches (HTTP error redirects,
+   * unexpected exceptions) should return a never-settling promise rather
+   * than `undefined` so the chain reflects "the browser is unloading."
    */
   (
     input: string | PageKey,
@@ -154,7 +158,7 @@ export interface ApplicationRemote {
         [name: string]: string | undefined
       }
     }
-  ): Promise<Meta>
+  ): Promise<Result>
 }
 
 export interface ApplicationVisit {
@@ -168,6 +172,11 @@ export interface ApplicationVisit {
    * be passed a dataset as an option. This is because Superglue UJS uses
    * ApplicationVisit and will pass the dataset of the HTML element where UJS is
    * enabled on.
+   *
+   * Returns a `Promise<VisitResult>` — terminal branches (HTTP error
+   * redirects, unexpected exceptions) should return a never-settling
+   * promise rather than `undefined` so the chain reflects "the browser is
+   * unloading."
    */
   (
     input: string | PageKey,
@@ -176,5 +185,5 @@ export interface ApplicationVisit {
         [name: string]: string | undefined
       }
     }
-  ): Promise<VisitMeta | undefined | void>
+  ): Promise<VisitResult>
 }

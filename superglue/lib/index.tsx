@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setConfig } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
+import { webVisit, webRemote } from './action_creators/web'
 import {
   historyChange,
   setCSRFToken,
@@ -26,6 +27,8 @@ export {
   NavigationContext,
 } from './components/Navigation'
 export { saveAndProcessPage } from './action_creators'
+export { webVisit, webRemote } from './action_creators/web'
+export { SuperglueResponseError } from './utils/request'
 export {
   beforeFetch,
   beforeVisit,
@@ -131,7 +134,21 @@ export function createApp({
     current: null,
   }
 
-  const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
+  const navigateTo: NavigateTo = (pageKey, options) => {
+    if (!navigatorRef.current) {
+      console.warn(
+        '[superglue] navigateTo called before <Provider /> mounted; no-op'
+      )
+      return false
+    }
+    return navigatorRef.current.navigateTo(pageKey, options)
+  }
+
+  const { visit, remote } = buildVisitAndRemote({
+    navigateTo,
+    visit: (path, options) => webVisit(store, path, options),
+    remote: (path, options) => webRemote(store, path, options),
+  })
 
   const resolvedHistory = history || createHistory()
   resolvedHistory.replace(...argsForHistory(path))
@@ -157,9 +174,7 @@ export function createApp({
   function Provider({ children }: ProviderProps) {
     return (
       <ReduxProvider store={store}>
-        <CableContext.Provider
-          value={{ streamActions, cable: cable ?? null }}
-        >
+        <CableContext.Provider value={{ streamActions, cable: cable ?? null }}>
           <NavigationProvider
             ref={navigatorRef}
             visit={visit}

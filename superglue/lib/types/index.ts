@@ -367,11 +367,12 @@ export interface RootState<T = JSONMappable> {
 }
 
 /**
- * Meta is passed to the Promise when visit or remote
- * resolves and contains additional information for
- * navigation.
+ * The success branch of a `remote` call. Resolved by the `remote` thunk
+ * and {@link webRemote}; the `hasError: false` literal acts as the
+ * discriminant for narrowing against {@link ErrorResult}.
  */
-export interface Meta {
+export interface Result {
+  hasError: false
   /**
    * The URL of the response converted to a pageKey. Superglue uses this to
    * persist the {@link SaveResponse} to store, when that happens.
@@ -391,9 +392,24 @@ export interface Meta {
   needsRefresh: boolean
 }
 
-export interface VisitMeta extends Meta {
+/**
+ * The success branch of a `visit` call. Extends {@link Result} with the
+ * computed {@link NavigationAction} for browser-history orchestration.
+ */
+export interface VisitResult extends Result {
   /** The {@link NavigationAction}. This can be used for navigation.*/
   navigationAction: NavigationAction
+}
+
+/**
+ * The error branch returned by `visit` and `remote` when the server
+ * responds with a non-2xx status. Non-HTTP failures (network, parse,
+ * abort, programming bugs) propagate as a rejected promise instead.
+ */
+export interface ErrorResult {
+  hasError: true
+  /** The failed HTTP response. */
+  response: Response
 }
 
 // I can do Visit['props'] or better yet Visit['options']
@@ -404,7 +420,7 @@ export interface VisitMeta extends Meta {
  */
 export type VisitCreator = (
   input: string | PageKey,
-  options: VisitProps
+  options?: VisitProps
 ) => VisitMetaThunk
 
 /**
@@ -413,7 +429,7 @@ export type VisitCreator = (
  */
 export type RemoteCreator = (
   input: string | PageKey,
-  options: RemoteProps
+  options?: RemoteProps
 ) => MetaThunk
 
 export type Dispatch = ThunkDispatch<RootState, undefined, Action>
@@ -476,9 +492,14 @@ export type SaveAndProcessPageThunk = ThunkAction<
   Action
 >
 
-export type MetaThunk = ThunkAction<Promise<Meta>, RootState, undefined, Action>
+export type MetaThunk = ThunkAction<
+  Promise<Result | ErrorResult>,
+  RootState,
+  undefined,
+  Action
+>
 export type VisitMetaThunk = ThunkAction<
-  Promise<VisitMeta>,
+  Promise<VisitResult | ErrorResult>,
   RootState,
   undefined,
   Action
@@ -585,25 +606,39 @@ export interface BuildStore {
 }
 
 /**
- * Provide this callback to {@link ApplicationProps} returning a visit and remote
- * function. These functions will be used by Superglue to power its UJS
- * attributes and passed to your page components and {@link NavigationContextProps}.
- * You may customize this functionality to your liking, e.g, adding a progress
- * bar.
+ * Provide this callback to {@link CreateAppArgs}. Receives a context object
+ * containing `visit` and `remote` callables.  Customize this function to add
+ * progress bars, error reporting (Sentry), or app-specific error-page
+ * redirects.
  *
- * @param navigatorRef
- * @param store
+ * Be sure to returns a wrapped `{ visit, remote }` pair that Superglue and UJS
+ * use for navigation.
  *
- * @returns
+ * @returns A wrapped {@link ApplicationVisit} / {@link ApplicationRemote} pair.
  */
 export interface BuildVisitAndRemote {
-  (
-    navigatorRef: React.RefObject<{ navigateTo: NavigateTo } | null>,
-    store: SuperglueStore
-  ): {
+  (context: BuildVisitAndRemoteContext): {
     visit: ApplicationVisit
     remote: ApplicationRemote
   }
+}
+
+/**
+ * The context passed to {@link BuildVisitAndRemote}
+ *
+ * The visit and remote functions in this context will resolve to a VisitResult
+ * or ErrorResult.
+ */
+export interface BuildVisitAndRemoteContext {
+  /** Navigates after a successful visit. Bound to the createApp instance. */
+  navigateTo: NavigateTo
+  /** Pre-bound visit. Returns a discriminated result. */
+  visit: (
+    path: string,
+    options?: VisitProps
+  ) => Promise<VisitResult | ErrorResult>
+  /** Pre-bound remote. Returns a discriminated result. */
+  remote: (path: string, options?: RemoteProps) => Promise<Result | ErrorResult>
 }
 
 /**
@@ -671,4 +706,3 @@ export interface CreateAppResult {
   Outlet: React.ComponentType
   ujs: Handlers
 }
-

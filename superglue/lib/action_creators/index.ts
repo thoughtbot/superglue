@@ -19,6 +19,7 @@ import {
 import { handleStreamResponse } from './stream'
 import { createProxy } from '../utils/proxy'
 export * from './requests'
+export { webVisit, webRemote } from './web'
 
 function fetchDeferments(
   pageKey: string,

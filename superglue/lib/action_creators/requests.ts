@@ -22,12 +22,13 @@ import {
   PageResponse,
   Page,
   SuperglueState,
-  Meta,
+  Result,
+  ErrorResult,
   Dispatch,
   RemoteCreator,
   VisitCreator,
   NavigationAction,
-  VisitMeta,
+  VisitResult,
   BeforeSave,
   AllFragments,
   GraftResponse,
@@ -35,6 +36,7 @@ import {
   JSONMappable,
 } from '../types'
 import { createProxy } from '../utils/proxy'
+import { SuperglueResponseError } from '../utils/request'
 
 export function preparePageForSave<T extends JSONMappable = JSONMappable>(
   nextPage: GraftResponse<T> | SaveResponse<T>,
@@ -95,12 +97,21 @@ export function preparePageForSave<T extends JSONMappable = JSONMappable>(
   ) as typeof nextPage
 }
 
+/**
+ * Handles a thunk rejection using a discriminated `ErrorResult`
+ * (when it was an HTTP failure carried by `SuperglueResponseError`) or
+ * rethrow for the caller's `.catch` (network, parse, abort, programming
+ * bugs). Either way, the `superglueError` action is dispatched.
+ */
 function handleFetchErr(
   err: Error,
-  fetchArgs: FetchArgs,
+  _fetchArgs: FetchArgs,
   dispatch: Dispatch
-): never {
+): ErrorResult {
   dispatch(superglueError({ message: err.message }))
+  if (err instanceof SuperglueResponseError) {
+    return { hasError: true, response: err.response }
+  }
   console.error(err)
   throw err
 }
@@ -111,11 +122,12 @@ function buildMeta(
   state: SuperglueState,
   rsp: Response,
   fetchArgs: FetchArgs
-): Meta {
+): Result {
   const { assets: prevAssets } = state
   const { assets: nextAssets } = page
 
-  const meta: Meta = {
+  const meta: Result = {
+    hasError: false,
     pageKey,
     page,
     redirected: rsp.redirected,
@@ -295,7 +307,7 @@ to the same page.
             dispatch(copyPage({ from: placeholderKey, to: pageKey }))
           }
         }
-        const visitMeta: VisitMeta = {
+        const visitMeta: VisitResult = {
           ...meta,
           navigationAction: calculateNavAction(
             meta,
@@ -337,7 +349,7 @@ to the same page.
 }
 
 function calculateNavAction(
-  meta: Meta,
+  meta: Result,
   rsp: Response,
   json: PageResponse,
   isGet: boolean,

@@ -23,7 +23,7 @@ function downloadingFile(xhr: Response): boolean {
   return !!(disposition && disposition.match(/^attachment/) !== null)
 }
 
-class SuperglueResponseError extends Error {
+export class SuperglueResponseError extends Error {
   response: Response
 
   constructor(message: string) {

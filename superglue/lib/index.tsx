@@ -37,6 +37,7 @@ export {
   removePage,
   saveResponse,
   receiveResponse,
+  updateContent,
   resetStore,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,

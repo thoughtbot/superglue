@@ -13,7 +13,7 @@ import {
   appendToFragment,
   prependToFragment,
 } from '../actions'
-import { config } from '../config'
+import { getConfig } from '../config'
 import {
   AllPages,
   Page,
@@ -26,7 +26,7 @@ import {
 } from '../types'
 
 function constrainPagesSize(state: AllPages) {
-  const { maxPages } = config
+  const { maxPages } = getConfig()
   const allPageKeys = Object.keys(state)
   const cacheTimesRecentFirst = allPageKeys
     .map((key) => state[key].savedAt)

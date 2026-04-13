@@ -14,6 +14,7 @@ import {
   NavigateTo,
   NavigationContextProps,
   NavigationProviderProps,
+  NavigationOutletProps,
   AllPages,
   SuperglueState,
 } from '../types'
@@ -45,11 +46,10 @@ const notFound = (identifier: string | undefined): never => {
 }
 
 const NavigationProvider = forwardRef(function NavigationProvider(
-  { history, visit, remote, mapping }: NavigationProviderProps,
+  { history, visit, remote, children }: NavigationProviderProps,
   ref: ForwardedRef<{ navigateTo: NavigateTo | null }>
 ) {
   const dispatch = useDispatch()
-  const pages = useSelector<RootState, AllPages>((state) => state.pages)
   const superglue = useSelector<RootState, SuperglueState>(
     (state) => state.superglue
   )
@@ -86,6 +86,8 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     if (action !== 'POP') {
       return
     }
+
+    const pages = store.getState().pages
 
     if (!state && location.hash !== '') {
       const nextPageKey = urlToPageKey(location.pathname + location.search)
@@ -222,20 +224,29 @@ const NavigationProvider = forwardRef(function NavigationProvider(
   }
 
   const { search } = superglue
+
+  return (
+    <NavigationContext.Provider
+      value={{ pageKey: currentPageKey, search, navigateTo, visit, remote }}
+    >
+      {children}
+    </NavigationContext.Provider>
+  )
+})
+
+function NavigationOutlet({ mapping }: NavigationOutletProps) {
+  const pages = useSelector<RootState, AllPages>((state) => state.pages)
+  const currentPageKey = useSelector<RootState, string>(
+    (state) => state.superglue.currentPageKey
+  )
   const { componentIdentifier } = pages[currentPageKey]
   const Component = mapping[componentIdentifier]
 
-  if (Component) {
-    return (
-      <NavigationContext.Provider
-        value={{ pageKey: currentPageKey, search, navigateTo, visit, remote }}
-      >
-        <Component />
-      </NavigationContext.Provider>
-    )
-  } else {
+  if (!Component) {
     notFound(componentIdentifier)
   }
-})
 
-export { NavigationContext, NavigationProvider }
+  return <Component />
+}
+
+export { NavigationContext, NavigationProvider, NavigationOutlet }

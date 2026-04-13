@@ -1,14 +1,10 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { Application, rootReducer, useContent } from '../../lib/index'
+import { createApp, store, useContent } from '../../lib/index'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
-import { Provider } from 'react-redux'
 import React, { useContext, useEffect } from 'react'
 import { createMemoryHistory } from 'history'
 import { visit, remote } from '../../lib/action_creators'
-// import { mount } from 'enzyme'
-import { thunk } from 'redux-thunk'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { NavigationContext } from '../../lib/index'
@@ -45,16 +41,6 @@ const buildVisitAndRemote = (navRef, store) => {
   }
 }
 
-const buildStore = (initialState, reducer) => {
-  const store = createStore(
-    combineReducers(reducer),
-    initialState,
-    compose(applyMiddleware(thunk))
-  )
-
-  return store
-}
-
 describe('start', () => {
   it('sets the stage', () => {
     const history = createMemoryHistory({
@@ -71,19 +57,18 @@ describe('start', () => {
       fragments: [],
       csrfToken: 'token',
     }
-
-    const store = buildStore({}, rootReducer)
-
+    const { Provider, Outlet } = createApp({
+      initialPage,
+      baseUrl: 'http://example.com/base',
+      path: '/home?some=123#title',
+      mapping: { home: Home, about: About },
+      history,
+      buildVisitAndRemote,
+    })
     render(
-      <Application
-        initialPage={initialPage}
-        baseUrl={'http://example.com/base'}
-        path={'/home?some=123#title'}
-        mapping={{ home: Home, about: About }}
-        history={history}
-        store={store}
-        buildVisitAndRemote={buildVisitAndRemote}
-      />
+      <Provider>
+        <Outlet />
+      </Provider>
     )
 
     expect(store.getState()).toEqual({
@@ -134,19 +119,18 @@ describe('navigation', () => {
         fragments: [],
         csrfToken: 'token',
       }
-
-      const store = buildStore({}, rootReducer)
-
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        history,
+        mapping: { home: Home, about: About },
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          history={history}
-          mapping={{ home: Home, about: About }}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
       expect(screen.getByRole('heading')).not.toHaveTextContent('About Page')
@@ -205,19 +189,18 @@ describe('navigation', () => {
           </div>
         )
       }
-
-      const store = buildStore({}, rootReducer)
-
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        history,
+        mapping: { home: Home, about: About },
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          history={history}
-          mapping={{ home: Home, about: About }}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
@@ -298,17 +281,18 @@ describe('navigation', () => {
             )
           }
 
-          const store = buildStore({}, rootReducer)
+          const { Provider, Outlet } = createApp({
+            initialPage,
+            baseUrl: 'http://example.com',
+            path: '/home',
+            mapping: { home: Home },
+            history,
+            buildVisitAndRemote,
+          })
           render(
-            <Application
-              initialPage={initialPage}
-              baseUrl={'http://example.com'}
-              path={'/home'}
-              mapping={{ home: Home }}
-              history={history}
-              store={store}
-              buildVisitAndRemote={buildVisitAndRemote}
-            />
+            <Provider>
+              <Outlet />
+            </Provider>
           )
 
           expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
@@ -349,17 +333,18 @@ describe('navigation', () => {
         )
       }
 
-      const store = buildStore({}, rootReducer)
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home, about: About },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home, about: About }}
-          history={history}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       expect(screen.getByRole('heading')).not.toHaveTextContent('Visit Success')
@@ -409,18 +394,18 @@ describe('navigation', () => {
           </div>
         )
       }
-      const store = buildStore({}, rootReducer)
-
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home }}
-          history={history}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       const user = userEvent.setup()
@@ -453,19 +438,18 @@ describe('navigation', () => {
         csrfToken: 'token',
         restoreStrategy: 'fromCacheOnly',
       }
-
-      const store = buildStore({}, rootReducer)
-
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home, about: About },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home, about: About }}
-          history={history}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       expect(screen.getByRole('heading')).toHaveTextContent('Home Page')
@@ -506,8 +490,6 @@ describe('navigation', () => {
           pageKey: '/home',
         })
         history.push('/home') // Gets replaced on Superglue.start
-        const store = buildStore({}, rootReducer)
-
         history.listen(({ action, location }) => {
           const { pathname, hash } = location
           if (hash === '#title') {
@@ -542,16 +524,18 @@ describe('navigation', () => {
           )
         }
 
+        const { Provider, Outlet } = createApp({
+          initialPage,
+          baseUrl: 'http://example.com',
+          path: '/home',
+          mapping: { home: Home },
+          history,
+          buildVisitAndRemote,
+        })
         render(
-          <Application
-            initialPage={initialPage}
-            baseUrl={'http://example.com'}
-            path={'/home'}
-            mapping={{ home: Home }}
-            history={history}
-            store={store}
-            buildVisitAndRemote={buildVisitAndRemote}
-          />
+          <Provider>
+            <Outlet />
+          </Provider>
         )
       }))
 
@@ -576,17 +560,18 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
-      const store = buildStore({}, rootReducer)
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/home',
+        mapping: { home: Home, about: About },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/home'}
-          mapping={{ home: Home, about: About }}
-          history={history}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       const pageState = {
@@ -636,19 +621,18 @@ describe('navigation', () => {
           </div>
         )
       }
-
-      const store = buildStore({}, rootReducer)
-
+      const { Provider, Outlet } = createApp({
+        initialPage,
+        baseUrl: 'http://example.com',
+        path: '/about',
+        mapping: { home: Home },
+        history,
+        buildVisitAndRemote,
+      })
       render(
-        <Application
-          initialPage={initialPage}
-          baseUrl={'http://example.com'}
-          path={'/about'}
-          mapping={{ home: Home }}
-          history={history}
-          store={store}
-          buildVisitAndRemote={buildVisitAndRemote}
-        />
+        <Provider>
+          <Outlet />
+        </Provider>
       )
 
       const mockResponse = rsp.graftSuccessWithNewZip({

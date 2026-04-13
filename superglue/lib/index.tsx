@@ -1,16 +1,30 @@
-import React, { useRef, useMemo } from 'react'
+import React, { RefObject } from 'react'
+import { configureStore } from '@reduxjs/toolkit'
 import { setConfig } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
-import { historyChange, setCSRFToken, receiveResponse } from './actions'
-import { Provider } from 'react-redux'
+import {
+  historyChange,
+  setCSRFToken,
+  receiveResponse,
+  beforeFetch,
+  beforeVisit,
+  beforeRemote,
+  resetStore,
+} from './actions'
+import { rootReducer } from './reducers'
+import { Provider as ReduxProvider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
 
-import { createBrowserHistory, createMemoryHistory } from 'history'
+import { History, createBrowserHistory, createMemoryHistory } from 'history'
 
-import { NavigationProvider } from './components/Navigation'
-export { NavigationProvider, NavigationContext } from './components/Navigation'
+import { NavigationProvider, NavigationOutlet } from './components/Navigation'
+export {
+  NavigationProvider,
+  NavigationOutlet,
+  NavigationContext,
+} from './components/Navigation'
 export { saveAndProcessPage } from './action_creators'
 export {
   beforeFetch,
@@ -20,17 +34,18 @@ export {
   removePage,
   saveResponse,
   receiveResponse,
+  resetStore,
   GRAFTING_ERROR,
   GRAFTING_SUCCESS,
 } from './actions'
 export * from './types'
 
 import {
-  SaveResponse,
-  ApplicationProps,
   NavigateTo,
   SuperglueStore,
-  SetupProps,
+  CreateAppArgs,
+  CreateAppResult,
+  ProviderProps,
 } from './types'
 export { superglueReducer, pageReducer, rootReducer } from './reducers'
 export { getIn } from './utils/immutability'
@@ -40,7 +55,7 @@ export { unproxy } from './hooks/useContent'
 
 const hasWindow = typeof window !== 'undefined'
 
-const createHistory = () => {
+const createHistory = (): History => {
   if (hasWindow) {
     // This is used for client side rendering
     return createBrowserHistory({})
@@ -50,66 +65,21 @@ const createHistory = () => {
   }
 }
 
-export const prepareStore = (
-  store: SuperglueStore,
-  initialPage: SaveResponse,
-  path: string
-) => {
-  const initialPageKey = urlToPageKey(path)
-  const { csrfToken } = initialPage
-
-  store.dispatch(
-    historyChange({
-      pageKey: initialPageKey,
-    })
-  )
-  store.dispatch(
-    receiveResponse({ pageKey: initialPageKey, response: initialPage })
-  )
-  store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
-  store.dispatch(setCSRFToken({ csrfToken }))
-}
-
 /**
- * This is the setup function that the Application calls. Use this function if
- * you like to build your own Application component.
+ * The Superglue redux store. Created once at module load and reused for the
+ * lifetime of the process. Each `createApp` call dispatches `resetStore` so
+ * tests, SSR requests, and re-mounts all start from a clean slate.
  */
-export const setup = ({
-  initialPage,
-  baseUrl,
-  path,
-  store,
-  buildVisitAndRemote,
-  history,
-  navigatorRef,
-}: SetupProps) => {
-  setConfig({ baseUrl })
-
-  const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
-
-  const initialPageKey = urlToPageKey(path)
-  const nextHistory = history || createHistory()
-  nextHistory.replace(...argsForHistory(path))
-  prepareStore(store, initialPage, path)
-
-  const handlers = ujsHandlers({
-    visit,
-    remote,
-    ujsAttributePrefix: 'data-sg',
-    store,
-  })
-
-  const streamActions = new StreamActions({ store })
-
-  return {
-    visit,
-    remote,
-    nextHistory,
-    initialPageKey,
-    ujs: handlers,
-    streamActions,
-  }
-}
+export const store: SuperglueStore = configureStore({
+  devTools: process.env.NODE_ENV !== 'production',
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],
+      },
+    }),
+})
 
 if (process.env.NODE_ENV !== 'production') {
   console.info(
@@ -120,56 +90,92 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 /**
- * The entry point to your superglue application. It sets up the redux Provider,
- * redux state and the Navigation component.
+ * Bootstrap a Superglue application. Performs all of the per-request setup
+ * (resetting the store, building visit/remote, installing history, seeding
+ * the initial page) and returns a `{ Provider, Outlet }` pair the caller can
+ * arrange in their own React tree.
  *
- * This is a simple component, you can override this by copying the source code and
- * use the exported methods used by this component (`start` and `ujsHandler`).
+ * ```jsx
+ * const { Provider, Outlet, ujs } = createApp({
+ *   initialPage: window.SUPERGLUE_INITIAL_PAGE_STATE,
+ *   baseUrl: location.origin,
+ *   path: location.pathname + location.search + location.hash,
+ *   mapping: pageIdentifierToPageComponent,
+ *   buildVisitAndRemote,
+ * })
+ *
+ * createRoot(el).render(
+ *   <div onClick={ujs.onClick} onSubmit={ujs.onSubmit}>
+ *     <Provider>
+ *       <AppLayout>
+ *         <Outlet />
+ *       </AppLayout>
+ *     </Provider>
+ *   </div>
+ * )
+ * ```
  */
-function Application({
+export function createApp({
   initialPage,
   baseUrl,
   path,
-  store,
+  mapping,
   buildVisitAndRemote,
   history,
-  mapping,
   cable,
-  ...rest
-}: ApplicationProps) {
-  const navigatorRef = useRef<{ navigateTo: NavigateTo } | null>(null)
+}: CreateAppArgs): CreateAppResult {
+  store.dispatch(resetStore())
+  setConfig({ baseUrl })
 
-  const { visit, remote, nextHistory, initialPageKey, ujs, streamActions } =
-    useMemo(() => {
-      return setup({
-        initialPage,
-        baseUrl,
-        path,
-        store,
-        buildVisitAndRemote,
-        history,
-        navigatorRef,
-      })
-    }, [])
+  const navigatorRef: RefObject<{ navigateTo: NavigateTo } | null> = {
+    current: null,
+  }
 
-  // The Nav component is pretty bare and can be inherited from for custom
-  // behavior or replaced with your own.
-  return (
-    <div onClick={ujs.onClick} onSubmit={ujs.onSubmit} {...rest}>
-      <Provider store={store}>
-        <CableContext.Provider value={{ streamActions, cable: cable ?? null }}>
+  const { visit, remote } = buildVisitAndRemote(navigatorRef, store)
+
+  const resolvedHistory = history || createHistory()
+  resolvedHistory.replace(...argsForHistory(path))
+
+  const initialPageKey = urlToPageKey(path)
+  const { csrfToken } = initialPage
+  store.dispatch(historyChange({ pageKey: initialPageKey }))
+  store.dispatch(
+    receiveResponse({ pageKey: initialPageKey, response: initialPage })
+  )
+  store.dispatch(saveAndProcessPage(initialPageKey, initialPage))
+  store.dispatch(setCSRFToken({ csrfToken }))
+
+  const ujs = ujsHandlers({
+    visit,
+    remote,
+    ujsAttributePrefix: 'data-sg',
+    store,
+  })
+
+  const streamActions = new StreamActions({ store })
+
+  function Provider({ children }: ProviderProps) {
+    return (
+      <ReduxProvider store={store}>
+        <CableContext.Provider
+          value={{ streamActions, cable: cable ?? null }}
+        >
           <NavigationProvider
             ref={navigatorRef}
             visit={visit}
             remote={remote}
-            mapping={mapping}
-            history={nextHistory}
-            initialPageKey={initialPageKey}
-          />
+            history={resolvedHistory}
+          >
+            {children}
+          </NavigationProvider>
         </CableContext.Provider>
-      </Provider>
-    </div>
-  )
-}
+      </ReduxProvider>
+    )
+  }
 
-export { Application }
+  function Outlet() {
+    return <NavigationOutlet mapping={mapping} />
+  }
+
+  return { Provider, Outlet, ujs }
+}

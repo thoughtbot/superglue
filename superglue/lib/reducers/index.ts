@@ -12,6 +12,7 @@ import {
   saveFragment,
   appendToFragment,
   prependToFragment,
+  resetStore,
 } from '../actions'
 import { getConfig } from '../config'
 import {
@@ -157,6 +158,10 @@ function handleGraftResponse(
 }
 
 export function pageReducer(state: AllPages = {}, action: Action): AllPages {
+  if (action.type === resetStore.type) {
+    return {}
+  }
+
   if (removePage.match(action)) {
     const { pageKey } = action.payload
     const nextState = { ...state }
@@ -189,14 +194,20 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
   return state
 }
 
+const initialSuperglueState: SuperglueState = {
+  currentPageKey: '',
+  search: {},
+  assets: [],
+}
+
 export function superglueReducer(
-  state: SuperglueState = {
-    currentPageKey: '',
-    search: {},
-    assets: [],
-  },
+  state: SuperglueState = initialSuperglueState,
   action: Action
 ): SuperglueState {
+  if (action.type === resetStore.type) {
+    return initialSuperglueState
+  }
+
   if (setCSRFToken.match(action)) {
     const { csrfToken } = action.payload
     return { ...state, csrfToken: csrfToken }
@@ -239,6 +250,10 @@ export function fragmentReducer(
   state: AllFragments = {},
   action: Action
 ): AllFragments {
+  if (action.type === resetStore.type) {
+    return {}
+  }
+
   if (handleFragmentGraft.match(action)) {
     const { fragmentId, response } = action.payload
     return handleFragmentGraftResponse(state, fragmentId, response)

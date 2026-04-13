@@ -550,20 +550,26 @@ export type NavigationContextProps = {
 }
 
 /**
- * This is the navigation component that gets used by {@link ApplicationProps}. The component
- * takes a mapping of page components and swaps them when navigating and passes
- * {@link NavigateTo} to all page components.
- *
- * @prop initialPageKey The {@link PageKey} that's to be used when first rendering. Used to
- * determine the initial page component to show.
+ * Props for the Superglue navigation provider. Installs the history listener,
+ * scroll restoration, and provides {@link NavigationContextProps} to its
+ * descendants. Wraps `children` so a layout (or any other tree) can sit
+ * between the provider and the rendered page.
  * @interface
  */
 export type NavigationProviderProps = {
   history: History
   visit: ApplicationVisit
   remote: ApplicationRemote
+  children?: React.ReactNode
+}
+
+/**
+ * Props for the Superglue navigation outlet. Reads the current page from the
+ * Superglue store and renders the matching component from `mapping`.
+ * @interface
+ */
+export type NavigationOutletProps = {
   mapping: Record<ComponentIdentifier, React.ComponentType>
-  initialPageKey: PageKey
 }
 
 /**
@@ -600,60 +606,19 @@ export interface BuildVisitAndRemote {
   }
 }
 
-export interface SetupProps {
-  /**
-   * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-   * template, e.g., application/superglue.html.erb
-   */
-  initialPage: SaveResponse
-  /**
-   * The base url prefixed to all calls made by `visit` and
-   * `remote`.
-   */
-  baseUrl: string
-  /**
-   * The path of the current page. It should equal to the `location.pathname` +
-   * `location.search` + `location.hash`
-   */
-  path: string
-  /**
-   * The exported store from store.js. If you used the generators
-   * it would contain slices for superglue, pages, and the flash.
-   */
-  store: SuperglueStore
-  /**
-   * A factory function that will return a `visit` and `remote`
-   * function. All of Superglue and UJS will use these functions. You should
-   * customize the function, for example, to add a progress bar.
-   *
-   */
-  buildVisitAndRemote: BuildVisitAndRemote
-  /**
-   * An optional history object https://github.com/remix-run/history. If none
-   * is provided Superglue will create one for you.
-   */
-  history?: History
-  /**
-   * A ref object created from the Application component that will be passed to buildVisitAndRemote
-   */
-  navigatorRef: React.RefObject<{
-    navigateTo: NavigateTo
-  } | null>
-}
-
 /**
- * Props for the `Application` component
+ * Arguments for {@link createApp}. Combines per-request bootstrap state
+ * (`initialPage`, `baseUrl`, `path`) with app-wide config (`mapping`,
+ * `history`, `cable`, `buildVisitAndRemote`).
  */
-export interface ApplicationProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+export interface CreateAppArgs {
   /**
    * The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
    * template, e.g., application/superglue.html.erb
    */
   initialPage: SaveResponse
   /**
-   * The base url prefixed to all calls made by `visit` and
-   * `remote`.
+   * The base url prefixed to all calls made by `visit` and `remote`.
    */
   baseUrl: string
   /**
@@ -662,27 +627,22 @@ export interface ApplicationProps
    */
   path: string
   /**
-   * A factory function that will return a `visit` and `remote`
-   * function. All of Superglue and UJS will use these functions. You should
-   * customize the function, for example, to add a progress bar.
-   *
-   */
-  buildVisitAndRemote: BuildVisitAndRemote
-  /**
-   * A mapping between your page props and page component. This is setup
-   * for you in page_to_page_mapping.
+   * A mapping between page identifiers and the React components that
+   * render them. The {@link Outlet} returned from {@link createApp} reads
+   * this mapping when rendering the current page.
    */
   mapping: Record<string, React.ComponentType>
   /**
-   * An optional history object https://github.com/remix-run/history. If none
-   * is provided Superglue will create one for you.
+   * A factory function that returns a `visit` and `remote` function. All
+   * of Superglue and UJS will use these functions. You should customize
+   * the function, for example, to add a progress bar.
+   */
+  buildVisitAndRemote: BuildVisitAndRemote
+  /**
+   * An optional history object https://github.com/remix-run/history. If
+   * none is provided Superglue will create one for you.
    */
   history?: History
-  /**
-   * The exported store from store.js. If you used the generators
-   * it would contain slices for superglue, pages, and the flash.
-   */
-  store: SuperglueStore
   /**
    * An optional ActionCable-compatible Consumer used by `useStreamSource`
    * for real-time streaming. Construct this in your application code with
@@ -692,3 +652,23 @@ export interface ApplicationProps
    */
   cable?: Consumer
 }
+
+/**
+ * Props for the {@link Provider} component returned from {@link createApp}.
+ */
+export type ProviderProps = {
+  children?: React.ReactNode
+}
+
+/**
+ * The result of calling {@link createApp}: a `Provider` component that owns
+ * the Superglue React tree, an `Outlet` component that renders the current
+ * page from the configured `mapping`, and a `ujs` object containing UJS
+ * click/submit handlers the caller can attach wherever they choose.
+ */
+export interface CreateAppResult {
+  Provider: React.ComponentType<ProviderProps>
+  Outlet: React.ComponentType
+  ujs: Handlers
+}
+

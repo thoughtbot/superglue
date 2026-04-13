@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Immer } from 'immer'
-import { saveFragment } from '../actions'
+import { updateFragment } from '../actions'
 import { RootState, Fragment } from '../types'
 import { Unproxy } from '../types'
 import { FragmentProxy } from './useContent'
@@ -81,7 +81,7 @@ export function useSetFragment() {
     const updatedFragment = immer.produce(currentFragment, updater)
 
     dispatch(
-      saveFragment({
+      updateFragment({
         fragmentId: fragmentId,
         data: updatedFragment,
       })

@@ -170,6 +170,27 @@ export const handleFragmentGraft = createAction(
 
 export const saveFragment = createAction(
   '@@superglue/SAVE_FRAGMENT',
+  ({
+    fragmentId,
+    data,
+    pageKey,
+  }: {
+    fragmentId: string
+    data: JSONMappable
+    pageKey: string
+  }) => {
+    return {
+      payload: {
+        fragmentId,
+        data,
+        pageKey,
+      },
+    }
+  }
+)
+
+export const updateFragment = createAction(
+  '@@superglue/UPDATE_FRAGMENT',
   ({ fragmentId, data }: { fragmentId: string; data: JSONMappable }) => {
     return {
       payload: {

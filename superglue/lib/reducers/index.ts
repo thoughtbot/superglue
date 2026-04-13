@@ -10,6 +10,7 @@ import {
   removePage,
   handleFragmentGraft,
   saveFragment,
+  updateFragment,
   appendToFragment,
   prependToFragment,
   updateContent,
@@ -259,6 +260,15 @@ export function fragmentReducer(
   }
 
   if (saveFragment.match(action)) {
+    const { fragmentId, data } = action.payload
+
+    return {
+      ...state,
+      [fragmentId]: data,
+    }
+  }
+
+  if (updateFragment.match(action)) {
     const { fragmentId, data } = action.payload
 
     return {

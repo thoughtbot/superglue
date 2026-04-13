@@ -15,7 +15,6 @@ import {
   updateContent,
   resetStore,
 } from '../actions'
-import { getConfig } from '../config'
 import {
   AllPages,
   Page,
@@ -26,20 +25,6 @@ import {
   JSONMappable,
   AllFragments,
 } from '../types'
-
-function constrainPagesSize(state: AllPages) {
-  const { maxPages } = getConfig()
-  const allPageKeys = Object.keys(state)
-  const cacheTimesRecentFirst = allPageKeys
-    .map((key) => state[key].savedAt)
-    .sort((a, b) => b - a)
-
-  for (const key of Array.from(allPageKeys)) {
-    if (state[key].savedAt <= cacheTimesRecentFirst[maxPages - 1]) {
-      delete state[key]
-    }
-  }
-}
 
 function handleSaveResponse(
   state: AllPages,
@@ -52,7 +37,6 @@ function handleSaveResponse(
     ...page,
     savedAt: Date.now(),
   }
-  constrainPagesSize(state)
   state[pageKey] = nextPage
 
   return state

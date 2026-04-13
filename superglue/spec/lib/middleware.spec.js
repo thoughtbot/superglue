@@ -90,7 +90,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/a',
-          page: { data: { ref: { __id: 'fragment_a' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'fragment_a' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -102,7 +106,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/b',
-          page: { data: { ref: { __id: 'fragment_b' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'fragment_b' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -117,7 +125,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/c',
-          page: { data: { ref: { __id: 'fragment_c' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'fragment_c' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -137,25 +149,41 @@ describe('pageEvictionMiddleware', () => {
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',
-        payload: { fragmentId: 'fragment_shared', data: { shared: 1 }, pageKey: '/a' },
+        payload: {
+          fragmentId: 'fragment_shared',
+          data: { shared: 1 },
+          pageKey: '/a',
+        },
       })
       store.dispatch({
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/a',
-          page: { data: { ref: { __id: 'fragment_shared' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'fragment_shared' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',
-        payload: { fragmentId: 'fragment_shared', data: { shared: 1 }, pageKey: '/b' },
+        payload: {
+          fragmentId: 'fragment_shared',
+          data: { shared: 1 },
+          pageKey: '/b',
+        },
       })
       store.dispatch({
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/b',
-          page: { data: { ref: { __id: 'fragment_shared' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'fragment_shared' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -167,7 +195,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/c',
-          page: { data: { ref: { __id: 'fragment_c' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'fragment_c' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -190,7 +222,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/page',
-          page: { data: { ref: { __id: 'frag_1' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'frag_1' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -219,7 +255,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/original',
-          page: { data: { ref: { __id: 'frag_1' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'frag_1' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -258,7 +298,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/page',
-          page: { data: { ref: { __id: 'frag_1' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'frag_1' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 
@@ -274,7 +318,11 @@ describe('pageEvictionMiddleware', () => {
         type: '@@superglue/SAVE_RESPONSE',
         payload: {
           pageKey: '/new',
-          page: { data: { ref: { __id: 'frag_2' } }, csrfToken: 't', assets: [] },
+          page: {
+            data: { ref: { __id: 'frag_2' } },
+            csrfToken: 't',
+            assets: [],
+          },
         },
       })
 

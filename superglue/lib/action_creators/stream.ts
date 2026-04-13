@@ -1,11 +1,7 @@
 import { ThunkAction } from 'redux-thunk'
 import { Action } from '@reduxjs/toolkit'
 import { setIn, getIn } from '../utils'
-import {
-  appendToFragment,
-  prependToFragment,
-  updateFragment,
-} from '../actions'
+import { appendToFragment, prependToFragment, updateFragment } from '../actions'
 import { JSONMappable, RootState, StreamResponse } from '../types'
 import { StreamMessage } from '../hooks/useStreamSource'
 

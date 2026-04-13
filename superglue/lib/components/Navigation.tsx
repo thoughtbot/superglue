@@ -7,11 +7,12 @@ import React, {
   ForwardedRef,
 } from 'react'
 import { urlToPageKey } from '../utils'
-import { removePage, setActivePage } from '../actions'
+import { removePage, setActivePage, copyPage } from '../actions'
 import {
   HistoryState,
   RootState,
   NavigateTo,
+  CopyTo,
   NavigationContextProps,
   NavigationProviderProps,
   NavigationOutletProps,
@@ -155,6 +156,16 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     }
   }
 
+  const copyTo: CopyTo = (path) => {
+    const nextPageKey = urlToPageKey(path)
+
+    if (nextPageKey === currentPageKey) {
+      return
+    }
+
+    store.dispatch(copyPage({ from: currentPageKey, to: path }))
+  }
+
   const navigateTo: NavigateTo = (
     path,
     { action } = {
@@ -227,7 +238,14 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
   return (
     <NavigationContext.Provider
-      value={{ pageKey: currentPageKey, search, navigateTo, visit, remote }}
+      value={{
+        pageKey: currentPageKey,
+        search,
+        navigateTo,
+        copyTo,
+        visit,
+        remote,
+      }}
     >
       {children}
     </NavigationContext.Provider>

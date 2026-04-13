@@ -562,8 +562,11 @@ export type NavigateTo = (
  * @prop search The current pageKey (current url) query params as an object.
  * @interface
  */
+export type CopyTo = (path: Keypath) => void
+
 export type NavigationContextProps = {
   navigateTo: NavigateTo
+  copyTo: CopyTo
   visit: ApplicationVisit
   remote: ApplicationRemote
   pageKey: SuperglueState['currentPageKey']

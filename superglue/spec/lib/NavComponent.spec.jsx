@@ -308,6 +308,126 @@ describe('Nav', () => {
       })
     })
 
+    it('copyTo dispatches copyPage with correct from/to', async () => {
+      const history = createMemoryHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            data: { greeting: 'hello' },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      const HomeWithCopy = () => {
+        const { copyTo } = useContext(NavigationContext)
+        const copy = () => {
+          copyTo('/copied')
+        }
+
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={copy}>copy</button>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: HomeWithCopy }} />
+          </NavigationProvider>
+        </Provider>
+      )
+
+      const user = userEvent.setup()
+      await user.click(screen.getByText('copy'))
+
+      const actions = allSuperglueActions(store)
+      const copyAction = actions.find((a) => a.type === '@@superglue/COPY_PAGE')
+
+      expect(copyAction).toEqual({
+        type: '@@superglue/COPY_PAGE',
+        payload: { from: '/home', to: '/copied' },
+      })
+
+      expect(store.getState().pages['/home'].data).toEqual({
+        greeting: 'hello',
+      })
+      expect(store.getState().pages['/copied'].data).toEqual({
+        greeting: 'hello',
+      })
+    })
+
+    it('copyTo is a no-op when copying onto the current page', async () => {
+      const history = createMemoryHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            data: {},
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      const HomeWithSelfCopy = () => {
+        const { copyTo } = useContext(NavigationContext)
+        const copy = () => {
+          copyTo('/home')
+        }
+
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={copy}>copy</button>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: HomeWithSelfCopy }} />
+          </NavigationProvider>
+        </Provider>
+      )
+
+      const user = userEvent.setup()
+      await user.click(screen.getByText('copy'))
+
+      const actions = allSuperglueActions(store)
+      expect(
+        actions.find((a) => a.type === '@@superglue/COPY_PAGE')
+      ).toBeUndefined()
+    })
+
     it('returns false when action is none', () => {
       const history = createMemoryHistory({})
       const store = buildStore({

@@ -323,6 +323,55 @@ describe('action creators', () => {
         })
     })
 
+    it('skips fragments whose path is already collapsed to an __id stub', () => {
+      const initialState = () => {
+        return {
+          pages: {
+            '/foo': {
+              data: {},
+              fragments: [],
+            },
+          },
+          fragments: {
+            sidebar_1: {
+              title: 'existing sidebar',
+              header: { text: 'existing header' },
+            },
+          },
+          superglue: {
+            currentPageKey: '/foo',
+            csrfToken: 'token',
+          },
+        }
+      }
+
+      const store = buildStore(initialState())
+
+      // Simulates the output of preparePageForSave after beforeSave copied
+      // a fragment ref from prevPage: data.sidebar is already {__id: 'sidebar_1'}
+      // but the fragments array still lists both parent and nested fragments.
+      const receivedPage = {
+        data: {
+          sidebar: { __id: 'sidebar_1' },
+        },
+        fragments: [
+          { id: 'sidebar_1', path: 'data.sidebar' },
+          { id: 'header_1', path: 'data.sidebar.header' },
+        ],
+        action: 'savePage',
+      }
+
+      return store
+        .dispatch(saveAndProcessPage('/foo', receivedPage))
+        .then(() => {
+          const saveFragmentActions = allSuperglueActions(store).filter(
+            (a) => a.type === '@@superglue/SAVE_FRAGMENT'
+          )
+
+          expect(saveFragmentActions).toEqual([])
+        })
+    })
+
     it('handles deferments on the page and fires HANDLE_GRAFT', () => {
       const store = buildStore({
         ...initialState(),

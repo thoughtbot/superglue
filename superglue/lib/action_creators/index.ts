@@ -115,15 +115,18 @@ export function saveAndProcessPage(
       .reverse()
       .forEach((fragment) => {
         const { id, path } = fragment
-        const node = getIn(nextPage, path) as JSONMappable
-        nextPage = setIn(nextPage, path, { __id: id })
+        const node = getIn(nextPage, path) as JSONMappable | undefined
 
-        dispatch(
-          saveFragment({
-            fragmentId: id,
-            data: node,
-          })
-        )
+        if (node && !(typeof node === 'object' && '__id' in node)) {
+          nextPage = setIn(nextPage, path, { __id: id })
+
+          dispatch(
+            saveFragment({
+              fragmentId: id,
+              data: node,
+            })
+          )
+        }
       })
 
     if (nextPage.action === 'graft') {

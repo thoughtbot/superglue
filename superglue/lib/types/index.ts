@@ -545,8 +545,9 @@ export interface BasicRequestInit extends RequestInit {
  */
 export type NavigateTo = (
   path: Keypath,
-  options: {
-    action: NavigationAction
+  options?: {
+    action?: NavigationAction
+    updateContent?: (draft: JSONMappable) => void
   }
 ) => boolean
 

@@ -7,7 +7,11 @@ import React, {
   ForwardedRef,
 } from 'react'
 import { urlToPageKey } from '../utils'
-import { removePage, setActivePage, copyPage } from '../actions'
+import { removePage, setActivePage, copyPage, updateContent } from '../actions'
+import { Immer } from 'immer'
+
+const immer = new Immer()
+immer.setAutoFreeze(false)
 import {
   HistoryState,
   RootState,
@@ -168,7 +172,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
   const navigateTo: NavigateTo = (
     path,
-    { action } = {
+    { action, updateContent: updater } = {
       action: 'push',
     }
   ) => {
@@ -183,6 +187,12 @@ const NavigationProvider = forwardRef(function NavigationProvider(
     )
 
     if (hasPage) {
+      if (updater) {
+        const currentData = store.getState().pages[nextPageKey].data
+        const updatedData = immer.produce(currentData, updater)
+        dispatch(updateContent({ pageKey: nextPageKey, data: updatedData }))
+      }
+
       const location = history.location
       const state = location.state as HistoryState
       const historyArgs = [

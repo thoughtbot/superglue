@@ -3,7 +3,7 @@ export const visitSuccess = () => {
     body: JSON.stringify({
       data: { heading: 'Visit Success Some heading 2' },
       csrfToken: 'token',
-      assets: ['application-123.js', 'application-123.js'],
+      assets: ['123.js', '123.css'],
       componentIdentifier: 'about',
       fragments: [],
     }),
@@ -21,7 +21,7 @@ export const graftSuccessWithNewZip = (body) => {
       action: 'graft',
       path: 'data.address',
       csrfToken: 'token',
-      assets: ['application-new123.js', 'application-new123.js'],
+      assets: ['123.js', '123.css'],
       fragments: [],
       ...body,
     }),

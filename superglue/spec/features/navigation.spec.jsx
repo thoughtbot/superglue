@@ -4,7 +4,6 @@ import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import React, { useContext, useEffect } from 'react'
 import { createMemoryHistory } from 'history'
-import { visit, remote } from '../../lib/action_creators'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { NavigationContext } from '../../lib/index'
@@ -34,10 +33,14 @@ const About = () => {
   return <h1>About Page, {heading}</h1>
 }
 
-const buildVisitAndRemote = (navRef, store) => {
+// The feature tests want to drive navigation manually from inside the test
+// page components, so this stub is a plain passthrough — it does NOT
+// auto-navigate on success. The auto-navigate behavior of a real
+// `application_visit.ts` is exercised in `spec/lib/web.spec.js` instead.
+const buildVisitAndRemote = ({ navigateTo: _navigateTo, visit, remote }) => {
   return {
-    visit: (...args) => store.dispatch(visit(...args)),
-    remote: (...args) => store.dispatch(remote(...args)),
+    visit: (path, options) => visit(path, options),
+    remote: (path, options) => remote(path, options),
   }
 }
 
@@ -142,7 +145,7 @@ describe('navigation', () => {
       const pageState = {
         data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
-        assets: ['application-123.js', 'application-123.js'],
+        assets: ['123.js', '123.css'],
         componentIdentifier: 'about',
         fragments: [],
         savedAt: expect.any(Number),
@@ -213,7 +216,7 @@ describe('navigation', () => {
       const pageState = {
         data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
-        assets: ['application-123.js', 'application-123.js'],
+        assets: ['123.js', '123.css'],
         componentIdentifier: 'about',
         fragments: [],
         savedAt: expect.any(Number),
@@ -577,7 +580,7 @@ describe('navigation', () => {
       const pageState = {
         data: { heading: 'Visit Success Some heading 2' },
         csrfToken: 'token',
-        assets: ['application-123.js', 'application-123.js'],
+        assets: ['123.js', '123.css'],
         componentIdentifier: 'about',
         fragments: [],
         savedAt: expect.any(Number),

@@ -1113,7 +1113,7 @@ describe('action creators', () => {
       })
     })
 
-    it('fires SUPERGLUE_REQUEST_ERROR on a bad server response status', () => {
+    it('resolves with hasError and dispatches SUPERGLUE_ERROR on a bad server response status', () => {
       const store = buildStore(initialState())
       fetchMock.mock('https://example.com/foo?format=json', {
         body: '{}',
@@ -1146,10 +1146,12 @@ describe('action creators', () => {
         },
       ]
 
-      return store.dispatch(remote('/foo')).catch((err) => {
-        expect(err.message).toEqual('Internal Server Error')
-        expect(err.response.status).toEqual(500)
-
+      return store.dispatch(remote('/foo')).then((result) => {
+        expect(result.hasError).toBe(true)
+        if (result.hasError) {
+          expect(result.response.status).toEqual(500)
+          expect(result.response.statusText).toEqual('Internal Server Error')
+        }
         expect(allSuperglueActions(store)).toEqual(
           expect.objectContaining(expectedActions)
         )

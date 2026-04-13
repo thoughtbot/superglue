@@ -206,6 +206,13 @@ export const appendToFragment = createAction(
   }
 )
 
+export const updateContent = createAction(
+  '@@superglue/UPDATE_CONTENT',
+  ({ pageKey, data }: { pageKey: string; data: JSONMappable }) => ({
+    payload: { pageKey, data },
+  })
+)
+
 export const prependToFragment = createAction(
   '@@superglue/PREPEND_TO_FRAGMENT',
   ({ data, fragmentId }: { data: JSONMappable; fragmentId: string }) => {

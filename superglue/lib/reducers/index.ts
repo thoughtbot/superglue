@@ -12,6 +12,7 @@ import {
   saveFragment,
   appendToFragment,
   prependToFragment,
+  updateContent,
   resetStore,
 } from '../actions'
 import { getConfig } from '../config'
@@ -189,6 +190,20 @@ export function pageReducer(state: AllPages = {}, action: Action): AllPages {
     const { pageKey, page } = action.payload
     const nextState = handleSaveResponse(state, pageKey, page)
     return nextState
+  }
+
+  if (updateContent.match(action)) {
+    const { pageKey, data } = action.payload
+    const currentPage = state[pageKey]
+    if (!currentPage) return state
+
+    return {
+      ...state,
+      [pageKey]: {
+        ...currentPage,
+        data,
+      },
+    }
   }
 
   return state

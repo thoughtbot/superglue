@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 import { RootState, SuperglueState } from '../types'
 export { useContent, unproxy } from './useContent'
 export { useSetFragment } from './useSetFragment'
+export { useSetContent } from './useSetContent'
 export { useStreamSource } from './useStreamSource'
 
 /**

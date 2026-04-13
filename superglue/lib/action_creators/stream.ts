@@ -1,7 +1,7 @@
 import { ThunkAction } from 'redux-thunk'
 import { Action } from '@reduxjs/toolkit'
 import { setIn, getIn } from '../utils'
-import { appendToFragment, prependToFragment, saveFragment } from '../actions'
+import { appendToFragment, prependToFragment, updateFragment } from '../actions'
 import { JSONMappable, RootState, StreamResponse } from '../types'
 import { StreamMessage } from '../hooks/useStreamSource'
 
@@ -25,7 +25,7 @@ export const streamPrepend = (
     if (options.saveAs) {
       const { saveAs } = options
       dispatch(
-        saveFragment({
+        updateFragment({
           fragmentId: saveAs,
           data,
         })
@@ -67,7 +67,7 @@ export const streamAppend = (
     if (options.saveAs) {
       const { saveAs } = options
       dispatch(
-        saveFragment({
+        updateFragment({
           fragmentId: saveAs,
           data,
         })
@@ -106,7 +106,7 @@ export const streamSave = (
 ): StreamThunk => {
   return (dispatch) => {
     dispatch(
-      saveFragment({
+      updateFragment({
         fragmentId: fragment,
         data,
       })
@@ -126,7 +126,7 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
       nextMessage = setIn(nextMessage, path, { __id: id })
 
       dispatch(
-        saveFragment({
+        updateFragment({
           fragmentId: id,
           data: node,
         })
@@ -173,7 +173,7 @@ export const handleStreamResponse = (
       nextResponse = setIn(nextResponse, path, { __id: id })
 
       dispatch(
-        saveFragment({
+        updateFragment({
           fragmentId: id,
           data: node,
         })

@@ -290,6 +290,7 @@ describe('action creators', () => {
               greetings: 'existing greeting',
             },
             fragmentId: 'info',
+            pageKey: '/bar',
           },
           type: '@@superglue/SAVE_FRAGMENT',
         },

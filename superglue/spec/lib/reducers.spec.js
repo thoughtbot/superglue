@@ -383,37 +383,6 @@ describe('reducers', () => {
         )
       })
 
-      it('saves a maximum of 20 pages', () => {
-        const prevState = {}
-
-        for (var i = 0; i < 20; i++) {
-          prevState[`/foo${i}`] = {
-            data: {},
-            csrfToken: 'token',
-            assets: ['application-123.js'],
-            pageKey: '/foo',
-            fragments: [],
-            savedAt: i,
-          }
-        }
-
-        const nextState = pageReducer(prevState, {
-          type: '@@superglue/SAVE_RESPONSE',
-          payload: {
-            pageKey: '/foo21',
-            page: {
-              data: {},
-              csrfToken: 'token',
-              assets: ['application-123.js'],
-            },
-          },
-        })
-
-        expect(Object.keys(nextState).length).toEqual(20)
-        expect(nextState.hasOwnProperty('/foo21')).toEqual(true)
-        expect(nextState.hasOwnProperty('/foo0')).toEqual(false)
-      })
-
       it('does nothing when there are no prev fragments to use as placeholder', () => {
         const prevState = {
           '/bar': {

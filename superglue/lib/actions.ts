@@ -170,6 +170,27 @@ export const handleFragmentGraft = createAction(
 
 export const saveFragment = createAction(
   '@@superglue/SAVE_FRAGMENT',
+  ({
+    fragmentId,
+    data,
+    pageKey,
+  }: {
+    fragmentId: string
+    data: JSONMappable
+    pageKey: string
+  }) => {
+    return {
+      payload: {
+        fragmentId,
+        data,
+        pageKey,
+      },
+    }
+  }
+)
+
+export const updateFragment = createAction(
+  '@@superglue/UPDATE_FRAGMENT',
   ({ fragmentId, data }: { fragmentId: string; data: JSONMappable }) => {
     return {
       payload: {
@@ -211,6 +232,10 @@ export const updateContent = createAction(
   ({ pageKey, data }: { pageKey: string; data: JSONMappable }) => ({
     payload: { pageKey, data },
   })
+)
+
+export const removeFragments = createAction<{ fragmentIds: string[] }>(
+  '@@superglue/REMOVE_FRAGMENTS'
 )
 
 export const prependToFragment = createAction(

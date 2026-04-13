@@ -10,12 +10,13 @@ import {
   removePage,
   handleFragmentGraft,
   saveFragment,
+  updateFragment,
+  removeFragments,
   appendToFragment,
   prependToFragment,
   updateContent,
   resetStore,
 } from '../actions'
-import { getConfig } from '../config'
 import {
   AllPages,
   Page,
@@ -26,20 +27,6 @@ import {
   JSONMappable,
   AllFragments,
 } from '../types'
-
-function constrainPagesSize(state: AllPages) {
-  const { maxPages } = getConfig()
-  const allPageKeys = Object.keys(state)
-  const cacheTimesRecentFirst = allPageKeys
-    .map((key) => state[key].savedAt)
-    .sort((a, b) => b - a)
-
-  for (const key of Array.from(allPageKeys)) {
-    if (state[key].savedAt <= cacheTimesRecentFirst[maxPages - 1]) {
-      delete state[key]
-    }
-  }
-}
 
 function handleSaveResponse(
   state: AllPages,
@@ -52,7 +39,6 @@ function handleSaveResponse(
     ...page,
     savedAt: Date.now(),
   }
-  constrainPagesSize(state)
   state[pageKey] = nextPage
 
   return state
@@ -269,12 +255,30 @@ export function fragmentReducer(
     return {}
   }
 
+  if (removeFragments.match(action)) {
+    const { fragmentIds } = action.payload
+    const next = { ...state }
+    for (const id of fragmentIds) {
+      delete next[id]
+    }
+    return next
+  }
+
   if (handleFragmentGraft.match(action)) {
     const { fragmentId, response } = action.payload
     return handleFragmentGraftResponse(state, fragmentId, response)
   }
 
   if (saveFragment.match(action)) {
+    const { fragmentId, data } = action.payload
+
+    return {
+      ...state,
+      [fragmentId]: data,
+    }
+  }
+
+  if (updateFragment.match(action)) {
     const { fragmentId, data } = action.payload
 
     return {

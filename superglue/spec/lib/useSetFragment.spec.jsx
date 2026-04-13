@@ -425,7 +425,7 @@ describe('useSetFragment', () => {
       })
 
       expect(dispatchSpy).toHaveBeenCalledWith({
-        type: '@@superglue/SAVE_FRAGMENT',
+        type: '@@superglue/UPDATE_FRAGMENT',
         payload: {
           fragmentId: 'user_123',
           data: {

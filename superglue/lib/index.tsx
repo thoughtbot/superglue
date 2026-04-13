@@ -14,6 +14,7 @@ import {
   resetStore,
 } from './actions'
 import { rootReducer } from './reducers'
+import { pageEvictionMiddleware } from './middleware'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
@@ -82,7 +83,7 @@ export const store: SuperglueStore = configureStore({
       serializableCheck: {
         ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],
       },
-    }),
+    }).concat(pageEvictionMiddleware),
 })
 
 if (process.env.NODE_ENV !== 'production') {

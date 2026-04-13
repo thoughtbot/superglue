@@ -234,6 +234,10 @@ export const updateContent = createAction(
   })
 )
 
+export const removeFragments = createAction<{ fragmentIds: string[] }>(
+  '@@superglue/REMOVE_FRAGMENTS'
+)
+
 export const prependToFragment = createAction(
   '@@superglue/PREPEND_TO_FRAGMENT',
   ({ data, fragmentId }: { data: JSONMappable; fragmentId: string }) => {

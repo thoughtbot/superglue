@@ -11,6 +11,7 @@ import {
   handleFragmentGraft,
   saveFragment,
   updateFragment,
+  removeFragments,
   appendToFragment,
   prependToFragment,
   updateContent,
@@ -252,6 +253,15 @@ export function fragmentReducer(
 ): AllFragments {
   if (action.type === resetStore.type) {
     return {}
+  }
+
+  if (removeFragments.match(action)) {
+    const { fragmentIds } = action.payload
+    const next = { ...state }
+    for (const id of fragmentIds) {
+      delete next[id]
+    }
+    return next
   }
 
   if (handleFragmentGraft.match(action)) {

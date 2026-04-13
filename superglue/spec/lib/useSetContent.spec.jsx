@@ -3,7 +3,7 @@ import { useSetContent } from '../../lib/hooks/useSetContent'
 import { describe, it, expect } from 'vitest'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 
 const buildStore = (preloadedState) => {
   return configureStore({

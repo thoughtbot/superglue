@@ -10,7 +10,7 @@ import {
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 import { setActivePage } from '../../lib/actions'
 
 const buildStore = (preloadedState) => {

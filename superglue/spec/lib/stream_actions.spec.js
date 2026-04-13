@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 
 import { StreamActions } from '../../lib/hooks/useStreamSource'
 import { describe, expect, it, vi } from 'vitest'

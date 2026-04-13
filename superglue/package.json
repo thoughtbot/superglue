@@ -35,15 +35,6 @@
       },
       "import": "./dist/superglue.development.mjs",
       "require": "./dist/index.js"
-    },
-    "./action_creators": {
-      "types": "./dist/action_creators.d.mts",
-      "production": {
-        "import": "./dist/action_creators.mjs",
-        "require": "./dist/cjs/action_creators.cjs"
-      },
-      "import": "./dist/action_creators.development.mjs",
-      "require": "./dist/action_creators.js"
     }
   },
   "license": "MIT",

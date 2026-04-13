@@ -3,7 +3,7 @@ import { useSetFragment } from '../../lib/hooks/useSetFragment'
 import { describe, it, expect } from 'vitest'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 
 // Helper to build store with actual reducer
 const buildStore = (preloadedState) => {

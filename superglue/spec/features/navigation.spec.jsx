@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { createApp, store, useContent } from '../../lib/index'
+import { createApp, useContent } from '../../lib/index'
+import { store } from '../../lib/store'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import React, { useContext, useEffect } from 'react'

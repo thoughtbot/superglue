@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 import fetchMock from 'fetch-mock'
 import { describe, expect, afterEach, it } from 'vitest'
 import { saveAndProcessPage } from '../../lib/action_creators'

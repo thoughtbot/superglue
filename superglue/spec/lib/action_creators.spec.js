@@ -13,7 +13,7 @@ import { handleGraft, saveResponse } from '../../lib/actions'
 import * as helpers from '../../lib/utils/helpers'
 import * as rsp from '../../spec/fixtures'
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 import { MismatchedComponentError } from '../../lib/action_creators'
 
 const buildStore = (preloadedState) => {

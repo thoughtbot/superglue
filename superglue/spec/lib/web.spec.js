@@ -1,7 +1,7 @@
 import { describe, expect, afterEach, it, vi } from 'vitest'
 import fetchMock from 'fetch-mock'
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib'
+import { rootReducer } from '../../lib/reducers'
 import { webVisit, webRemote } from '../../lib/action_creators/web'
 
 const buildStore = (preloadedState) =>

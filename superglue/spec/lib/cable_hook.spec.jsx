@@ -148,10 +148,7 @@ describe('hooks', () => {
 
       await new Promise((r) => setTimeout(r, 5))
 
-      expect(spy).toHaveBeenCalledWith(
-        message,
-        preloadedState.superglue.currentPageKey
-      )
+      expect(spy).toHaveBeenCalledWith(message)
 
       act(() => {
         consumer.disconnect()

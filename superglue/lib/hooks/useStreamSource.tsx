@@ -4,11 +4,7 @@ import {
   Subscription,
 } from '@rails/actioncable'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
-import { ApplicationRemote, FragmentPath } from '../types'
-import { useSuperglue } from '.'
-import debounce from 'lodash.debounce'
-import type { DebouncedFunc } from 'lodash'
-import { lastRequestIds } from '../utils'
+import { FragmentPath } from '../types'
 import {
   streamPrepend,
   streamAppend,
@@ -22,46 +18,27 @@ import {
  */
 export type StreamSourceProps = string | ChannelNameWithParams
 
-export type StreamMessage =
-  | {
-      action: 'handleStreamMessage'
-      data: JSONMappable
-      fragmentIds: string[]
-      handler: 'append' | 'prepend' | 'save'
-      options: Record<string, string>
-      fragments: FragmentPath[]
-    }
-  | {
-      action: 'handleStreamMessage'
-      handler: 'refresh'
-      requestId: string
-      options: Record<string, string>
-    }
+export type StreamMessage = {
+  action: 'handleStreamMessage'
+  data: JSONMappable
+  fragmentIds: string[]
+  handler: 'append' | 'prepend' | 'save'
+  options: Record<string, string>
+  fragments: FragmentPath[]
+}
 
 import { SuperglueStore, JSONMappable } from '../types'
 
 /**
- * Actions for handling stream operations like append, prepend, save and refresh
+ * Actions for handling stream operations like append, prepend, and save
  * @public
  */
 export class StreamActions {
   public attributePrefix: string
-  public remote: DebouncedFunc<ApplicationRemote>
   private store: SuperglueStore
 
-  constructor({
-    remote,
-    store,
-  }: {
-    remote: ApplicationRemote
-    store: SuperglueStore
-  }) {
+  constructor({ store }: { store: SuperglueStore }) {
     this.store = store
-    this.remote = debounce(remote, 300)
-  }
-
-  refresh(pageKey: string) {
-    this.remote(pageKey)
   }
 
   prepend(
@@ -84,23 +61,11 @@ export class StreamActions {
     this.store.dispatch(streamAppend(fragments, data, options))
   }
 
-  handle(rawMessage: string, currentPageKey: string) {
+  handle(rawMessage: string) {
     const message = JSON.parse(rawMessage) as StreamMessage
-    const { superglue } = this.store.getState()
-    const nextPageKey = superglue.currentPageKey
 
     if (message.action === 'handleStreamMessage') {
-      if (
-        message.handler === 'refresh' &&
-        currentPageKey === nextPageKey &&
-        !lastRequestIds.has(message.requestId)
-      ) {
-        this.refresh(currentPageKey)
-      }
-
-      if (message.handler !== 'refresh') {
-        this.store.dispatch(handleStreamMessage(rawMessage))
-      }
+      this.store.dispatch(handleStreamMessage(rawMessage))
     }
   }
 }
@@ -178,14 +143,13 @@ export function useStreamSource(channel: StreamSourceProps): {
 } {
   const { cable, streamActions } = useContext(CableContext)
   const [connected, setConnected] = useState(false)
-  const { currentPageKey } = useSuperglue()
   const subscriptionRef = useRef<Subscription | null>(null)
 
   useEffect(() => {
     if (cable) {
       const subscription = cable.subscriptions.create(channel, {
         received: (message) => {
-          streamActions?.handle(message, currentPageKey)
+          streamActions?.handle(message)
         },
         connected: () => {
           setConnected(true)
@@ -202,7 +166,7 @@ export function useStreamSource(channel: StreamSourceProps): {
 
       return () => {}
     }
-  }, [cable, JSON.stringify(channel), currentPageKey])
+  }, [cable, JSON.stringify(channel)])
 
   return {
     connected,

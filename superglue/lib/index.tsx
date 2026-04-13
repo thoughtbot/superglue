@@ -117,7 +117,7 @@ export const setup = ({
     store,
   })
 
-  const streamActions = new StreamActions({ remote, store })
+  const streamActions = new StreamActions({ store })
 
   return {
     visit,

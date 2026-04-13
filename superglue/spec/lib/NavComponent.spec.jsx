@@ -428,6 +428,185 @@ describe('Nav', () => {
       ).toBeUndefined()
     })
 
+    it('navigateTo with updateContent mutates page data before navigating', async () => {
+      const history = createMemoryHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            data: { greeting: 'hello' },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/about': {
+            componentIdentifier: 'about',
+            data: { greeting: 'world' },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      const HomeWithUpdate = () => {
+        const { navigateTo } = useContext(NavigationContext)
+        const nav = () => {
+          navigateTo('/about', {
+            action: 'push',
+            updateContent: (draft) => {
+              draft.greeting = 'updated'
+            },
+          })
+        }
+
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={nav}>navigate</button>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider history={history}>
+            <NavigationOutlet
+              mapping={{ home: HomeWithUpdate, about: About }}
+            />
+          </NavigationProvider>
+        </Provider>
+      )
+
+      const user = userEvent.setup()
+      await user.click(screen.getByText('navigate'))
+
+      expect(store.getState().pages['/about'].data).toEqual({
+        greeting: 'updated',
+      })
+    })
+
+    it('navigateTo with updateContent works with action replace on current page', async () => {
+      const history = createMemoryHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            data: { showModal: false },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      const HomeWithReplace = () => {
+        const { navigateTo } = useContext(NavigationContext)
+        const nav = () => {
+          navigateTo('/home', {
+            action: 'replace',
+            updateContent: (draft) => {
+              draft.showModal = true
+            },
+          })
+        }
+
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={nav}>replace</button>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: HomeWithReplace }} />
+          </NavigationProvider>
+        </Provider>
+      )
+
+      const user = userEvent.setup()
+      await user.click(screen.getByText('replace'))
+
+      expect(store.getState().pages['/home'].data).toEqual({
+        showModal: true,
+      })
+    })
+
+    it('navigateTo without updateContent preserves existing behavior', async () => {
+      const history = createMemoryHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            data: { greeting: 'hello' },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      let result
+      const HomeWithNav = () => {
+        const { navigateTo } = useContext(NavigationContext)
+        const nav = () => {
+          result = navigateTo('/missing', { action: 'push' })
+        }
+
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={nav}>navigate</button>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider history={history}>
+            <NavigationOutlet mapping={{ home: HomeWithNav }} />
+          </NavigationProvider>
+        </Provider>
+      )
+
+      const user = userEvent.setup()
+      await user.click(screen.getByText('navigate'))
+
+      expect(result).toEqual(false)
+    })
+
     it('returns false when action is none', () => {
       const history = createMemoryHistory({})
       const store = buildStore({

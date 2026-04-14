@@ -247,6 +247,51 @@ export function superglueReducer(
   return state
 }
 
+function upsertFragmentArray(
+  state: AllFragments,
+  fragmentId: string,
+  data: JSONMappable,
+  upsert: boolean,
+  position: 'append' | 'prepend'
+): AllFragments {
+  const targetFragment = state[fragmentId]
+
+  if (targetFragment === undefined) {
+    console.warn(
+      `Superglue: could not find fragment "${fragmentId}" to ${position} to.`
+    )
+    return state
+  }
+
+  if (!Array.isArray(targetFragment)) {
+    console.warn(
+      `Superglue: cannot ${position} to fragment "${fragmentId}" because it is not an array.`
+    )
+    return state
+  }
+
+  if (upsert && 'id' in data) {
+    const index = targetFragment.findIndex((val) => {
+      return (
+        val && typeof val === 'object' && 'id' in val && val.id === data.id
+      )
+    })
+
+    if (index > -1) {
+      const next = [...targetFragment]
+      next[index] = data
+      return { ...state, [fragmentId]: next }
+    }
+  }
+
+  const next =
+    position === 'append'
+      ? [...targetFragment, data]
+      : [data, ...targetFragment]
+
+  return { ...state, [fragmentId]: next }
+}
+
 export function fragmentReducer(
   state: AllFragments = {},
   action: Action
@@ -288,34 +333,13 @@ export function fragmentReducer(
   }
 
   if (appendToFragment.match(action)) {
-    const { data, fragmentId } = action.payload
-    let targetFragment = state[fragmentId]
-
-    if (Array.isArray(targetFragment)) {
-      targetFragment = [...targetFragment, data]
-
-      return {
-        ...state,
-        [fragmentId]: targetFragment,
-      }
-    } else {
-      return state
-    }
+    const { data, fragmentId, upsert } = action.payload
+    return upsertFragmentArray(state, fragmentId, data, upsert, 'append')
   }
 
   if (prependToFragment.match(action)) {
-    const { data, fragmentId } = action.payload
-    let targetFragment = state[fragmentId]
-
-    if (Array.isArray(targetFragment)) {
-      targetFragment = [data, ...targetFragment]
-      return {
-        ...state,
-        [fragmentId]: targetFragment,
-      }
-    } else {
-      return state
-    }
+    const { data, fragmentId, upsert } = action.payload
+    return upsertFragmentArray(state, fragmentId, data, upsert, 'prepend')
   }
 
   return state

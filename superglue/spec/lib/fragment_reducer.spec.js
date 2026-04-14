@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { fragmentReducer } from '../../lib/reducers'
 import {
   saveFragment,
@@ -93,7 +94,8 @@ describe('reducers', () => {
         })
       })
 
-      it('does not modify non-array fragments', () => {
+      it('does not modify non-array fragments and warns', () => {
+        vi.spyOn(console, 'warn')
         const prevState = {
           greeting: { title: 'Welcome Message' },
         }
@@ -108,9 +110,13 @@ describe('reducers', () => {
         expect(nextState).toEqual({
           greeting: { title: 'Welcome Message' },
         })
+        expect(console.warn).toHaveBeenCalledWith(
+          'Superglue: cannot append to fragment "greeting" because it is not an array.'
+        )
       })
 
-      it('returns original state if target fragment does not exist', () => {
+      it('returns original state if target fragment does not exist and warns', () => {
+        vi.spyOn(console, 'warn')
         const prevState = {
           posts: [{ title: 'Existing Post' }],
         }
@@ -123,6 +129,95 @@ describe('reducers', () => {
         const nextState = fragmentReducer(prevState, action)
 
         expect(nextState).toBe(prevState)
+        expect(console.warn).toHaveBeenCalledWith(
+          'Superglue: could not find fragment "nonexistent" to append to.'
+        )
+      })
+
+      it('replaces an existing item in place when upsert is true and id matches', () => {
+        const prevState = {
+          posts: [
+            { id: 1, title: 'First' },
+            { id: 2, title: 'Second' },
+          ],
+        }
+
+        const action = appendToFragment({
+          data: { id: 2, title: 'Updated Second' },
+          fragmentId: 'posts',
+          upsert: true,
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 1, title: 'First' },
+            { id: 2, title: 'Updated Second' },
+          ],
+        })
+      })
+
+      it('appends when upsert is true but id does not exist in the array', () => {
+        const prevState = {
+          posts: [{ id: 1, title: 'First' }],
+        }
+
+        const action = appendToFragment({
+          data: { id: 3, title: 'Third' },
+          fragmentId: 'posts',
+          upsert: true,
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 1, title: 'First' },
+            { id: 3, title: 'Third' },
+          ],
+        })
+      })
+
+      it('appends without upsert even if id matches', () => {
+        const prevState = {
+          posts: [{ id: 1, title: 'First' }],
+        }
+
+        const action = appendToFragment({
+          data: { id: 1, title: 'Duplicate' },
+          fragmentId: 'posts',
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 1, title: 'First' },
+            { id: 1, title: 'Duplicate' },
+          ],
+        })
+      })
+
+      it('appends when upsert is true but data has no id', () => {
+        const prevState = {
+          posts: [{ id: 1, title: 'First' }],
+        }
+
+        const action = appendToFragment({
+          data: { title: 'No ID' },
+          fragmentId: 'posts',
+          upsert: true,
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 1, title: 'First' },
+            { title: 'No ID' },
+          ],
+        })
       })
     })
 
@@ -144,7 +239,8 @@ describe('reducers', () => {
         })
       })
 
-      it('does not modify non-array fragments', () => {
+      it('does not modify non-array fragments and warns', () => {
+        vi.spyOn(console, 'warn')
         const prevState = {
           greeting: { title: 'Welcome Message' },
         }
@@ -159,9 +255,13 @@ describe('reducers', () => {
         expect(nextState).toEqual({
           greeting: { title: 'Welcome Message' },
         })
+        expect(console.warn).toHaveBeenCalledWith(
+          'Superglue: cannot prepend to fragment "greeting" because it is not an array.'
+        )
       })
 
-      it('returns original state if target fragment does not exist', () => {
+      it('returns original state if target fragment does not exist and warns', () => {
+        vi.spyOn(console, 'warn')
         const prevState = {
           posts: [{ title: 'Existing Post' }],
         }
@@ -174,6 +274,95 @@ describe('reducers', () => {
         const nextState = fragmentReducer(prevState, action)
 
         expect(nextState).toBe(prevState)
+        expect(console.warn).toHaveBeenCalledWith(
+          'Superglue: could not find fragment "nonexistent" to prepend to.'
+        )
+      })
+
+      it('replaces an existing item in place when upsert is true and id matches', () => {
+        const prevState = {
+          posts: [
+            { id: 1, title: 'First' },
+            { id: 2, title: 'Second' },
+          ],
+        }
+
+        const action = prependToFragment({
+          data: { id: 1, title: 'Updated First' },
+          fragmentId: 'posts',
+          upsert: true,
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 1, title: 'Updated First' },
+            { id: 2, title: 'Second' },
+          ],
+        })
+      })
+
+      it('prepends when upsert is true but id does not exist in the array', () => {
+        const prevState = {
+          posts: [{ id: 1, title: 'First' }],
+        }
+
+        const action = prependToFragment({
+          data: { id: 0, title: 'Zeroth' },
+          fragmentId: 'posts',
+          upsert: true,
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 0, title: 'Zeroth' },
+            { id: 1, title: 'First' },
+          ],
+        })
+      })
+
+      it('prepends without upsert even if id matches', () => {
+        const prevState = {
+          posts: [{ id: 1, title: 'First' }],
+        }
+
+        const action = prependToFragment({
+          data: { id: 1, title: 'Duplicate' },
+          fragmentId: 'posts',
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { id: 1, title: 'Duplicate' },
+            { id: 1, title: 'First' },
+          ],
+        })
+      })
+
+      it('prepends when upsert is true but data has no id', () => {
+        const prevState = {
+          posts: [{ id: 1, title: 'First' }],
+        }
+
+        const action = prependToFragment({
+          data: { title: 'No ID' },
+          fragmentId: 'posts',
+          upsert: true,
+        })
+
+        const nextState = fragmentReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          posts: [
+            { title: 'No ID' },
+            { id: 1, title: 'First' },
+          ],
+        })
       })
     })
 

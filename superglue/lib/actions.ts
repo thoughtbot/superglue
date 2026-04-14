@@ -217,11 +217,20 @@ export const receiveResponse = createAction(
 
 export const appendToFragment = createAction(
   '@@superglue/APPEND_TO_FRAGMENT',
-  ({ data, fragmentId }: { data: JSONMappable; fragmentId: string }) => {
+  ({
+    data,
+    fragmentId,
+    upsert = false,
+  }: {
+    data: JSONMappable
+    fragmentId: string
+    upsert?: boolean
+  }) => {
     return {
       payload: {
         data,
         fragmentId,
+        upsert,
       },
     }
   }
@@ -240,11 +249,20 @@ export const removeFragments = createAction<{ fragmentIds: string[] }>(
 
 export const prependToFragment = createAction(
   '@@superglue/PREPEND_TO_FRAGMENT',
-  ({ data, fragmentId }: { data: JSONMappable; fragmentId: string }) => {
+  ({
+    data,
+    fragmentId,
+    upsert = false,
+  }: {
+    data: JSONMappable
+    fragmentId: string
+    upsert?: boolean
+  }) => {
     return {
       payload: {
         data,
-        fragmentId: fragmentId,
+        fragmentId,
+        upsert,
       },
     }
   }

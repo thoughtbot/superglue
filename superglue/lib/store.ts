@@ -10,7 +10,7 @@ export interface StoreResult {
   extra: ExtraArgument
 }
 
-export function createStore(): StoreResult {
+export function createStore(devTools: boolean = false): StoreResult {
   const extra: ExtraArgument = {
     config: {
       baseUrl: '',
@@ -25,7 +25,7 @@ export function createStore(): StoreResult {
   }
 
   const store = configureStore({
-    devTools: process.env.NODE_ENV !== 'production',
+    devTools,
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

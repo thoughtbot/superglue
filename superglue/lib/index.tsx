@@ -85,9 +85,10 @@ export function createApp({
   buildVisitAndRemote,
   history,
   cable,
+  devTools,
   _storeResult,
 }: CreateAppArgs & { _storeResult?: StoreResult }): CreateAppResult {
-  const { store, extra } = _storeResult || createStore()
+  const { store, extra } = _storeResult || createStore(devTools)
   extra.config.baseUrl = baseUrl
 
   const navigatorRef: RefObject<{ navigateTo: NavigateTo } | null> = {

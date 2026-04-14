@@ -697,6 +697,10 @@ export interface CreateAppArgs {
    * no-op.
    */
   cable?: Consumer
+  /**
+   * Enable Redux DevTools integration. Defaults to `false`.
+   */
+  devTools?: boolean
 }
 
 /**

@@ -1,10 +1,11 @@
 import { formatForXHR } from './url'
-import { getConfig } from '../config'
-import { BasicRequestInit, ParsedResponse, RootState } from '../types'
-import { LimitedSet } from './limited_set'
+import {
+  BasicRequestInit,
+  ParsedResponse,
+  RootState,
+  ExtraArgument,
+} from '../types'
 import { v4 as uuidv4 } from 'uuid'
-
-export const lastRequestIds = new LimitedSet(20)
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)
@@ -72,7 +73,8 @@ export function argsForFetch(
     body = '',
     signal,
     ...rest
-  }: BasicRequestInit = {}
+  }: BasicRequestInit = {},
+  extra: ExtraArgument
 ): [string, BasicRequestInit] {
   method = method.toUpperCase()
   const currentState = getState().superglue
@@ -83,7 +85,7 @@ export function argsForFetch(
   nextHeaders['x-superglue-request'] = 'true'
 
   const requestId = uuidv4()
-  lastRequestIds.add(requestId)
+  extra.lastRequestIds.add(requestId)
   nextHeaders['X-Superglue-Request-Id'] = requestId
 
   if (method != 'GET' && method != 'HEAD') {
@@ -98,7 +100,7 @@ export function argsForFetch(
     nextHeaders['x-csrf-token'] = currentState.csrfToken
   }
 
-  const fetchPath = new URL(formatForXHR(pathQuery), getConfig().baseUrl)
+  const fetchPath = new URL(formatForXHR(pathQuery), extra.config.baseUrl)
 
   const credentials = 'same-origin'
 
@@ -116,7 +118,7 @@ export function argsForFetch(
   }
 
   if (currentState.currentPageKey) {
-    const referrer = new URL(currentState.currentPageKey, getConfig().baseUrl)
+    const referrer = new URL(currentState.currentPageKey, extra.config.baseUrl)
 
     options.referrer = referrer.toString()
   }

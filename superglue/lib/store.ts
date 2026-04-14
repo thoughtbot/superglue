@@ -2,14 +2,34 @@ import { configureStore } from '@reduxjs/toolkit'
 import { beforeFetch, beforeVisit, beforeRemote } from './actions'
 import { rootReducer } from './reducers'
 import { createPageEvictionMiddleware } from './middleware'
-import { SuperglueStore } from './types'
+import { SuperglueStore, ExtraArgument } from './types'
+import { LimitedSet } from './utils/limited_set'
 
-export function createStore(): SuperglueStore {
-  return configureStore({
+export interface StoreResult {
+  store: SuperglueStore
+  extra: ExtraArgument
+}
+
+export function createStore(): StoreResult {
+  const extra: ExtraArgument = {
+    config: {
+      baseUrl: '',
+      maxPages: 20,
+    },
+    lastVisitController: {
+      abort: () => {
+        // noop
+      },
+    },
+    lastRequestIds: new LimitedSet(20),
+  }
+
+  const store = configureStore({
     devTools: process.env.NODE_ENV !== 'production',
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
+        thunk: { extraArgument: extra },
         serializableCheck: {
           ignoredActions: [
             beforeFetch.type,
@@ -17,6 +37,8 @@ export function createStore(): SuperglueStore {
             beforeRemote.type,
           ],
         },
-      }).concat(createPageEvictionMiddleware()),
+      }).concat(createPageEvictionMiddleware(extra)),
   })
+
+  return { store, extra }
 }

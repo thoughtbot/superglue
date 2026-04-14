@@ -7,13 +7,11 @@ import {
   copyPage,
   resetStore,
 } from './actions'
-import { getConfig } from './config'
-import type { RootState } from './types'
+import type { RootState, ExtraArgument } from './types'
 
-export function createPageEvictionMiddleware(): Middleware<
-  NonNullable<unknown>,
-  RootState
-> {
+export function createPageEvictionMiddleware(
+  extra: ExtraArgument
+): Middleware<NonNullable<unknown>, RootState> {
   const pageFragments = new Map<string, Set<string>>()
 
   return (store) => (next) => (action) => {
@@ -41,7 +39,7 @@ export function createPageEvictionMiddleware(): Middleware<
     }
 
     if (saveResponse.match(action)) {
-      const { maxPages } = getConfig()
+      const { maxPages } = extra.config
       const pages = store.getState().pages
       const allPageKeys = Object.keys(pages)
 

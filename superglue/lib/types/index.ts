@@ -13,6 +13,7 @@ import { History } from 'history'
 import { rootReducer } from '../reducers'
 import { FragmentProxy } from '../hooks/useContent'
 import { Consumer } from './cable'
+import { Config } from '../config'
 
 export * from './requests'
 export * from './cable'
@@ -432,7 +433,13 @@ export type RemoteCreator = (
   options?: RemoteProps
 ) => MetaThunk
 
-export type Dispatch = ThunkDispatch<RootState, undefined, Action>
+export interface ExtraArgument {
+  config: Config
+  lastVisitController: { abort: (reason: string) => void }
+  lastRequestIds: Set<unknown>
+}
+
+export type Dispatch = ThunkDispatch<RootState, ExtraArgument, Action>
 
 /**
  * A Store created with Redux Toolkit's `configureStore` setup with reducers
@@ -488,27 +495,27 @@ export interface HistoryState {
 export type SaveAndProcessPageThunk = ThunkAction<
   Promise<void>,
   RootState,
-  undefined,
+  ExtraArgument,
   Action
 >
 
 export type MetaThunk = ThunkAction<
   Promise<Result | ErrorResult>,
   RootState,
-  undefined,
+  ExtraArgument,
   Action
 >
 export type VisitMetaThunk = ThunkAction<
   Promise<VisitResult | ErrorResult>,
   RootState,
-  undefined,
+  ExtraArgument,
   Action
 >
 
 export type DefermentThunk = ThunkAction<
   Promise<void[]>,
   RootState,
-  undefined,
+  ExtraArgument,
   Action
 >
 

@@ -4,10 +4,20 @@ import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
 import { webVisit, webRemote } from '../../lib/action_creators/web'
 
+const defaultExtra = () => ({
+  config: { baseUrl: 'https://example.com', maxPages: 20 },
+  lastVisitController: { abort: () => {} },
+  lastRequestIds: new Set(),
+})
+
 const buildStore = (preloadedState) =>
   configureStore({
     preloadedState,
     reducer: { ...rootReducer },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: { extraArgument: defaultExtra() },
+      }),
   })
 
 const initialState = () => ({

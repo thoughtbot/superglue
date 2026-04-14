@@ -2,14 +2,19 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
 import { createPageEvictionMiddleware } from '../../lib/middleware'
-import { setConfig } from '../../lib/config'
 
-const buildStore = (preloadedState) => {
+const defaultExtra = () => ({
+  config: { baseUrl: '', maxPages: 20 },
+  lastVisitController: { abort: () => {} },
+  lastRequestIds: new Set(),
+})
+
+const buildStore = (preloadedState, extra) => {
   return configureStore({
     preloadedState,
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(createPageEvictionMiddleware()),
+      getDefaultMiddleware().concat(createPageEvictionMiddleware(extra)),
   })
 }
 
@@ -29,7 +34,6 @@ describe('pageEvictionMiddleware', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
-    setConfig({ maxPages: 20 })
   })
 
   describe('page eviction', () => {
@@ -47,11 +51,15 @@ describe('pageEvictionMiddleware', () => {
         }
       }
 
-      const store = buildStore({
-        pages,
-        fragments: {},
-        superglue: defaultSuperglue,
-      })
+      const extra = defaultExtra()
+      const store = buildStore(
+        {
+          pages,
+          fragments: {},
+          superglue: defaultSuperglue,
+        },
+        extra
+      )
 
       store.dispatch({
         type: '@@superglue/SAVE_RESPONSE',
@@ -74,13 +82,17 @@ describe('pageEvictionMiddleware', () => {
 
   describe('fragment cleanup', () => {
     it('removes orphaned fragments when a page is evicted', () => {
-      setConfig({ maxPages: 2 })
+      const extra = defaultExtra()
+      extra.config.maxPages = 2
 
-      const store = buildStore({
-        pages: {},
-        fragments: {},
-        superglue: defaultSuperglue,
-      })
+      const store = buildStore(
+        {
+          pages: {},
+          fragments: {},
+          superglue: defaultSuperglue,
+        },
+        extra
+      )
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',
@@ -139,13 +151,17 @@ describe('pageEvictionMiddleware', () => {
     })
 
     it('keeps fragments shared across pages', () => {
-      setConfig({ maxPages: 2 })
+      const extra = defaultExtra()
+      extra.config.maxPages = 2
 
-      const store = buildStore({
-        pages: {},
-        fragments: {},
-        superglue: defaultSuperglue,
-      })
+      const store = buildStore(
+        {
+          pages: {},
+          fragments: {},
+          superglue: defaultSuperglue,
+        },
+        extra
+      )
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',
@@ -208,11 +224,15 @@ describe('pageEvictionMiddleware', () => {
     })
 
     it('removes fragments on explicit removePage', () => {
-      const store = buildStore({
-        pages: {},
-        fragments: {},
-        superglue: defaultSuperglue,
-      })
+      const extra = defaultExtra()
+      const store = buildStore(
+        {
+          pages: {},
+          fragments: {},
+          superglue: defaultSuperglue,
+        },
+        extra
+      )
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',
@@ -241,11 +261,15 @@ describe('pageEvictionMiddleware', () => {
     })
 
     it('copies fragment associations on copyPage', () => {
-      const store = buildStore({
-        pages: {},
-        fragments: {},
-        superglue: defaultSuperglue,
-      })
+      const extra = defaultExtra()
+      const store = buildStore(
+        {
+          pages: {},
+          fragments: {},
+          superglue: defaultSuperglue,
+        },
+        extra
+      )
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',
@@ -284,11 +308,15 @@ describe('pageEvictionMiddleware', () => {
     })
 
     it('clears pageFragments on resetStore', () => {
-      const store = buildStore({
-        pages: {},
-        fragments: {},
-        superglue: defaultSuperglue,
-      })
+      const extra = defaultExtra()
+      const store = buildStore(
+        {
+          pages: {},
+          fragments: {},
+          superglue: defaultSuperglue,
+        },
+        extra
+      )
 
       store.dispatch({
         type: '@@superglue/SAVE_FRAGMENT',

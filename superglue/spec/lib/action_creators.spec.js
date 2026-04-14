@@ -1,6 +1,6 @@
 import { describe, expect, afterEach, it, vi } from 'vitest'
 import configureMockStore from 'redux-mock-store'
-import { thunk } from 'redux-thunk'
+import { withExtraArgument } from 'redux-thunk'
 import fetchMock from 'fetch-mock'
 import {
   visit,
@@ -16,6 +16,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
 import { MismatchedComponentError } from '../../lib/action_creators'
 
+const defaultExtra = () => ({
+  config: { baseUrl: 'https://example.com', maxPages: 20 },
+  lastVisitController: { abort: () => {} },
+  lastRequestIds: new Set(),
+})
+
 const buildStore = (preloadedState) => {
   let resultsReducer = (state = [], action) => {
     return state.concat([action])
@@ -27,6 +33,10 @@ const buildStore = (preloadedState) => {
       ...rootReducer,
       results: resultsReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: { extraArgument: defaultExtra() },
+      }),
   })
 }
 
@@ -36,7 +46,7 @@ const allSuperglueActions = (store) => {
     .results.filter((action) => !action.type.startsWith('@@redux'))
 }
 
-const middlewares = [thunk]
+const middlewares = [withExtraArgument(defaultExtra())]
 const mockStore = configureMockStore(middlewares)
 const delay = (duration) => {
   return new Promise((res, rej) => setTimeout(res, duration))

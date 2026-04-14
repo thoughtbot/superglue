@@ -6,6 +6,12 @@ import {
 } from '../../../lib/utils/request'
 import Headers from 'fetch-headers'
 
+const defaultExtra = {
+  config: { baseUrl: 'https://example.com', maxPages: 20 },
+  lastVisitController: { abort: () => {} },
+  lastRequestIds: new Set(),
+}
+
 describe('isValidResponse', () => {
   it('returns true if valid', () => {
     const headers = new Headers([
@@ -55,7 +61,7 @@ describe('argsForFetch', () => {
       }
     }
 
-    const args = argsForFetch(getState, '/foo')
+    const args = argsForFetch(getState, '/foo', undefined, defaultExtra)
 
     expect(args).toEqual([
       'https://example.com/foo?format=json',
@@ -82,7 +88,7 @@ describe('argsForFetch', () => {
 
     const { signal } = new AbortController()
 
-    const args = argsForFetch(getState, '/foo', { signal })
+    const args = argsForFetch(getState, '/foo', { signal }, defaultExtra)
 
     expect(args).toEqual([
       'https://example.com/foo?format=json',
@@ -107,7 +113,7 @@ describe('argsForFetch', () => {
       }
     }
 
-    const args = argsForFetch(getState, '/foo', { method: 'PUT' })
+    const args = argsForFetch(getState, '/foo', { method: 'PUT' }, defaultExtra)
 
     expect(args).toEqual([
       'https://example.com/foo?format=json',
@@ -137,7 +143,7 @@ describe('argsForFetch', () => {
       }
     }
 
-    const args = argsForFetch(getState, '/foo')
+    const args = argsForFetch(getState, '/foo', undefined, defaultExtra)
 
     expect(args).toEqual([
       'https://example.com/foo?format=json',
@@ -163,7 +169,12 @@ describe('argsForFetch', () => {
       }
     }
 
-    const args = argsForFetch(getState, '/foo', { body: 'ignored' })
+    const args = argsForFetch(
+      getState,
+      '/foo',
+      { body: 'ignored' },
+      defaultExtra
+    )
 
     expect(args).toEqual([
       'https://example.com/foo?format=json',
@@ -180,10 +191,15 @@ describe('argsForFetch', () => {
       },
     ])
 
-    const args2 = argsForFetch(getState, '/foo', {
-      method: 'HEAD',
-      body: 'ignored',
-    })
+    const args2 = argsForFetch(
+      getState,
+      '/foo',
+      {
+        method: 'HEAD',
+        body: 'ignored',
+      },
+      defaultExtra
+    )
 
     expect(args2).toEqual([
       'https://example.com/foo?format=json',
@@ -211,7 +227,12 @@ describe('argsForFetch', () => {
     const formData = new FormData()
     formData.append('title', 'hello')
 
-    const args = argsForFetch(getState, '/foo', { body: formData })
+    const args = argsForFetch(
+      getState,
+      '/foo',
+      { body: formData },
+      defaultExtra
+    )
 
     expect(args).toEqual([
       'https://example.com/foo?format=json&title=hello',
@@ -228,10 +249,15 @@ describe('argsForFetch', () => {
       },
     ])
 
-    const args2 = argsForFetch(getState, '/foo', {
-      method: 'HEAD',
-      body: formData,
-    })
+    const args2 = argsForFetch(
+      getState,
+      '/foo',
+      {
+        method: 'HEAD',
+        body: formData,
+      },
+      defaultExtra
+    )
 
     expect(args2).toEqual([
       'https://example.com/foo?format=json&title=hello',
@@ -261,9 +287,14 @@ describe('argsForFetch', () => {
     formData.append('option', '1')
     formData.append('option', '2')
 
-    const args = argsForFetch(getState, '/foo?title=news&name=jim&option=100', {
-      body: formData,
-    })
+    const args = argsForFetch(
+      getState,
+      '/foo?title=news&name=jim&option=100',
+      {
+        body: formData,
+      },
+      defaultExtra
+    )
 
     expect(args).toEqual([
       'https://example.com/foo?name=jim&format=json&title=hello&option=1&option=2',

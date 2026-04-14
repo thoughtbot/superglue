@@ -163,8 +163,8 @@ export const remote: RemoteCreator = (
 ) => {
   targetPageKey = targetPageKey && urlToPageKey(targetPageKey)
 
-  return (dispatch, getState) => {
-    const fetchArgs = argsForFetch(getState, path, rest)
+  return (dispatch, getState, extra) => {
+    const fetchArgs = argsForFetch(getState, path, rest, extra)
     const currentPageKey = getState().superglue.currentPageKey
 
     dispatch(beforeRemote({ currentPageKey, fetchArgs }))
@@ -228,13 +228,6 @@ the same page. Or if you're sure you want to proceed, use force: true.
   }
 }
 
-let lastVisitController = {
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  abort: (_reason: string) => {
-    // noop
-  },
-}
-
 export const visit: VisitCreator = (
   path,
   {
@@ -244,7 +237,7 @@ export const visit: VisitCreator = (
     ...rest
   } = {}
 ) => {
-  return (dispatch, getState) => {
+  return (dispatch, getState, extra) => {
     const currentPageKey = getState().superglue.currentPageKey
     placeholderKey =
       (placeholderKey && urlToPageKey(placeholderKey)) || currentPageKey
@@ -259,18 +252,23 @@ export const visit: VisitCreator = (
 
     const controller = new AbortController()
     const { signal } = controller
-    const fetchArgs = argsForFetch(getState, path, {
-      ...rest,
-      signal,
-    })
+    const fetchArgs = argsForFetch(
+      getState,
+      path,
+      {
+        ...rest,
+        signal,
+      },
+      extra
+    )
 
     dispatch(beforeVisit({ currentPageKey, fetchArgs }))
     dispatch(beforeFetch({ fetchArgs }))
 
-    lastVisitController.abort(
+    extra.lastVisitController.abort(
       'Aborting the previous `visit`. There can be one visit at a time. Use `remote` if there is a need for async requests.'
     )
-    lastVisitController = controller
+    extra.lastVisitController = controller
 
     return fetch(...fetchArgs)
       .then(parseResponse)

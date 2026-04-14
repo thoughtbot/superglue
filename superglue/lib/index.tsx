@@ -3,13 +3,8 @@ import { setConfig } from './config'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { webVisit, webRemote } from './action_creators/web'
-import {
-  historyChange,
-  setCSRFToken,
-  receiveResponse,
-  resetStore,
-} from './actions'
-import { store } from './store'
+import { historyChange, setCSRFToken, receiveResponse } from './actions'
+import { createStore } from './store'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { CableContext, StreamActions } from './hooks/useStreamSource'
@@ -28,6 +23,7 @@ export * from './types'
 
 import {
   NavigateTo,
+  SuperglueStore,
   CreateAppArgs,
   CreateAppResult,
   ProviderProps,
@@ -91,8 +87,9 @@ export function createApp({
   buildVisitAndRemote,
   history,
   cable,
-}: CreateAppArgs): CreateAppResult {
-  store.dispatch(resetStore())
+  _store,
+}: CreateAppArgs & { _store?: SuperglueStore }): CreateAppResult {
+  const store = _store || createStore()
   setConfig({ baseUrl })
 
   const navigatorRef: RefObject<{ navigateTo: NavigateTo } | null> = {

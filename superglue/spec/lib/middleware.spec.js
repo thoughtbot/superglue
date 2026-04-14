@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
-import { pageEvictionMiddleware } from '../../lib/middleware'
+import { createPageEvictionMiddleware } from '../../lib/middleware'
 import { setConfig } from '../../lib/config'
 
 const buildStore = (preloadedState) => {
@@ -9,7 +9,7 @@ const buildStore = (preloadedState) => {
     preloadedState,
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(pageEvictionMiddleware),
+      getDefaultMiddleware().concat(createPageEvictionMiddleware()),
   })
 }
 

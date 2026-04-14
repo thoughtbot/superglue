@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { createApp, useContent } from '../../lib/index'
-import { store } from '../../lib/store'
+import { createStore } from '../../lib/store'
 import fetchMock from 'fetch-mock'
 import * as rsp from '../fixtures'
 import React, { useContext, useEffect } from 'react'
@@ -61,6 +61,7 @@ describe('start', () => {
       fragments: [],
       csrfToken: 'token',
     }
+    const store = createStore()
     const { Provider, Outlet } = createApp({
       initialPage,
       baseUrl: 'http://example.com/base',
@@ -68,6 +69,7 @@ describe('start', () => {
       mapping: { home: Home, about: About },
       history,
       buildVisitAndRemote,
+      _store: store,
     })
     render(
       <Provider>
@@ -123,6 +125,7 @@ describe('navigation', () => {
         fragments: [],
         csrfToken: 'token',
       }
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -130,6 +133,7 @@ describe('navigation', () => {
         history,
         mapping: { home: Home, about: About },
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>
@@ -193,6 +197,7 @@ describe('navigation', () => {
           </div>
         )
       }
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -200,6 +205,7 @@ describe('navigation', () => {
         history,
         mapping: { home: Home, about: About },
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>
@@ -243,6 +249,8 @@ describe('navigation', () => {
             initialEntries: ['/home'],
             initialIndex: 0,
           })
+
+          const store = createStore()
 
           history.listen(({ location }) => {
             const { pathname } = location
@@ -292,6 +300,7 @@ describe('navigation', () => {
             mapping: { home: Home },
             history,
             buildVisitAndRemote,
+            _store: store,
           })
           render(
             <Provider>
@@ -337,6 +346,7 @@ describe('navigation', () => {
         )
       }
 
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -344,6 +354,7 @@ describe('navigation', () => {
         mapping: { home: Home, about: About },
         history,
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>
@@ -398,6 +409,7 @@ describe('navigation', () => {
           </div>
         )
       }
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -405,6 +417,7 @@ describe('navigation', () => {
         mapping: { home: Home },
         history,
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>
@@ -442,6 +455,7 @@ describe('navigation', () => {
         csrfToken: 'token',
         restoreStrategy: 'fromCacheOnly',
       }
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -449,6 +463,7 @@ describe('navigation', () => {
         mapping: { home: Home, about: About },
         history,
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>
@@ -494,6 +509,9 @@ describe('navigation', () => {
           pageKey: '/home',
         })
         history.push('/home') // Gets replaced on Superglue.start
+
+        const store = createStore()
+
         history.listen(({ action, location }) => {
           const { pathname, hash } = location
           if (hash === '#title') {
@@ -535,6 +553,7 @@ describe('navigation', () => {
           mapping: { home: Home },
           history,
           buildVisitAndRemote,
+          _store: store,
         })
         render(
           <Provider>
@@ -564,6 +583,7 @@ describe('navigation', () => {
         csrfToken: 'token',
       }
 
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -571,6 +591,7 @@ describe('navigation', () => {
         mapping: { home: Home, about: About },
         history,
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>
@@ -625,6 +646,7 @@ describe('navigation', () => {
           </div>
         )
       }
+      const store = createStore()
       const { Provider, Outlet } = createApp({
         initialPage,
         baseUrl: 'http://example.com',
@@ -632,6 +654,7 @@ describe('navigation', () => {
         mapping: { home: Home },
         history,
         buildVisitAndRemote,
+        _store: store,
       })
       render(
         <Provider>

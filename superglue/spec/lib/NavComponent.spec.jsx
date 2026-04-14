@@ -554,6 +554,76 @@ describe('Nav', () => {
       })
     })
 
+    it('navigateTo with updateContent defaults action to push', async () => {
+      const history = createMemoryHistory({})
+      history.push('/home', {
+        superglue: true,
+        pageKey: '/home',
+        posX: 0,
+        posY: 0,
+      })
+
+      const store = buildStore({
+        pages: {
+          '/home': {
+            componentIdentifier: 'home',
+            data: { greeting: 'hello' },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+          '/about': {
+            componentIdentifier: 'about',
+            data: { greeting: 'world' },
+            fragments: [],
+            restoreStrategy: 'fromCacheOnly',
+          },
+        },
+        superglue: {
+          csrfToken: 'abc',
+          currentPageKey: '/home',
+        },
+      })
+
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+
+      const HomeWithUpdate = () => {
+        const { navigateTo } = useContext(NavigationContext)
+        const nav = () => {
+          navigateTo('/about', {
+            updateContent: (draft) => {
+              draft.greeting = 'updated'
+            },
+          })
+        }
+
+        return (
+          <div>
+            <h1>Home Page</h1>
+            <button onClick={nav}>navigate</button>
+          </div>
+        )
+      }
+
+      render(
+        <Provider store={store}>
+          <NavigationProvider history={history}>
+            <NavigationOutlet
+              mapping={{ home: HomeWithUpdate, about: About }}
+            />
+          </NavigationProvider>
+        </Provider>
+      )
+
+      const user = userEvent.setup()
+      await user.click(screen.getByText('navigate'))
+
+      expect(store.getState().pages['/about'].data).toEqual({
+        greeting: 'updated',
+      })
+      expect(history.location.pathname).toEqual('/about')
+      expect(screen.getByRole('heading')).toHaveTextContent('About Page')
+    })
+
     it('navigateTo without updateContent preserves existing behavior', async () => {
       const history = createMemoryHistory({})
       history.push('/home', {

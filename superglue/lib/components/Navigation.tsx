@@ -172,9 +172,7 @@ const NavigationProvider = forwardRef(function NavigationProvider(
 
   const navigateTo: NavigateTo = (
     path,
-    { action, updateContent: updater } = {
-      action: 'push',
-    }
+    { action = 'push', updateContent: updater } = {}
   ) => {
     if (action === 'none') {
       return false

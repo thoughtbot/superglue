@@ -21,7 +21,6 @@ export function createStore(devTools: boolean = false): StoreResult {
         // noop
       },
     },
-    lastRequestIds: new LimitedSet(20),
   }
 
   const store = configureStore({

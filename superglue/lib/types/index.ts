@@ -439,7 +439,6 @@ export type RemoteCreator = (
 export interface ExtraArgument {
   config: Config
   lastVisitController: { abort: (reason: string) => void }
-  lastRequestIds: Set<unknown>
 }
 
 export type Dispatch = ThunkDispatch<RootState, ExtraArgument, Action>

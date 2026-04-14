@@ -84,10 +84,6 @@ export function argsForFetch(
   nextHeaders['accept'] = 'application/json'
   nextHeaders['x-superglue-request'] = 'true'
 
-  const requestId = uuidv4()
-  extra.lastRequestIds.add(requestId)
-  nextHeaders['X-Superglue-Request-Id'] = requestId
-
   if (method != 'GET' && method != 'HEAD') {
     nextHeaders['content-type'] = 'application/json'
   }

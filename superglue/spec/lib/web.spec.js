@@ -7,7 +7,6 @@ import { webVisit, webRemote } from '../../lib/action_creators/web'
 const defaultExtra = () => ({
   config: { baseUrl: 'https://example.com', maxPages: 20 },
   lastVisitController: { abort: () => {} },
-  lastRequestIds: new Set(),
 })
 
 const buildStore = (preloadedState) =>

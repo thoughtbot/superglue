@@ -9,7 +9,6 @@ import Headers from 'fetch-headers'
 const defaultExtra = {
   config: { baseUrl: 'https://example.com', maxPages: 20 },
   lastVisitController: { abort: () => {} },
-  lastRequestIds: new Set(),
 }
 
 describe('isValidResponse', () => {
@@ -69,7 +68,6 @@ describe('argsForFetch', () => {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
         },
@@ -96,7 +94,6 @@ describe('argsForFetch', () => {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
         },
@@ -122,7 +119,6 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-superglue-request': 'true',
           'content-type': 'application/json',
           'x-http-method-override': 'PUT',
@@ -151,7 +147,6 @@ describe('argsForFetch', () => {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
         },
@@ -182,7 +177,6 @@ describe('argsForFetch', () => {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
         },
@@ -207,7 +201,6 @@ describe('argsForFetch', () => {
         method: 'HEAD',
         headers: {
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
         },
@@ -240,7 +233,6 @@ describe('argsForFetch', () => {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
         },
@@ -266,7 +258,6 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-superglue-request': 'true',
         },
         signal: undefined,
@@ -303,7 +294,6 @@ describe('argsForFetch', () => {
         headers: {
           accept: 'application/json',
           'x-requested-with': 'XMLHttpRequest',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-superglue-request': 'true',
         },
         signal: undefined,

@@ -18,8 +18,7 @@ import { MismatchedComponentError } from '../../lib/action_creators'
 
 const defaultExtra = () => ({
   config: { baseUrl: 'https://example.com', maxPages: 20 },
-  lastVisitController: { abort: () => {} },
-  lastRequestIds: new Set(),
+  lastVisitController: { abort: () => {} }
 })
 
 const buildStore = (preloadedState) => {
@@ -909,7 +908,6 @@ describe('action creators', () => {
 
         expect(requestheaders).toEqual({
           accept: 'application/json',
-          'X-Superglue-Request-Id': expect.any(String),
           'x-requested-with': 'XMLHttpRequest',
           'x-superglue-request': 'true',
           'x-csrf-token': 'token',

@@ -6,7 +6,6 @@ import { createPageEvictionMiddleware } from '../../lib/middleware'
 const defaultExtra = () => ({
   config: { baseUrl: '', maxPages: 20 },
   lastVisitController: { abort: () => {} },
-  lastRequestIds: new Set(),
 })
 
 const buildStore = (preloadedState, extra) => {

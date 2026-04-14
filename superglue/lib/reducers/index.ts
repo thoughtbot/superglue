@@ -16,6 +16,10 @@ import {
   prependToFragment,
   updateContent,
   resetStore,
+  beforeVisit,
+  receiveResponse,
+  clearFlash,
+  flash,
 } from '../actions'
 import {
   AllPages,
@@ -26,6 +30,7 @@ import {
   SuperglueState,
   JSONMappable,
   AllFragments,
+  FlashState,
 } from '../types'
 
 function handleSaveResponse(
@@ -272,9 +277,7 @@ function upsertFragmentArray(
 
   if (upsert && 'id' in data) {
     const index = targetFragment.findIndex((val) => {
-      return (
-        val && typeof val === 'object' && 'id' in val && val.id === data.id
-      )
+      return val && typeof val === 'object' && 'id' in val && val.id === data.id
     })
 
     if (index > -1) {
@@ -345,8 +348,55 @@ export function fragmentReducer(
   return state
 }
 
+export function flashReducer(
+  state: FlashState = {},
+  action: Action
+): FlashState {
+  if (action.type === resetStore.type) {
+    return {}
+  }
+
+  if (beforeVisit.match(action)) {
+    return {}
+  }
+
+  if (clearFlash.match(action)) {
+    const { key } = action.payload
+    if (!key) {
+      return {}
+    }
+
+    const next = { ...state }
+    delete next[key]
+    return next
+  }
+
+  if (flash.match(action)) {
+    return {
+      ...state,
+      ...action.payload.flash,
+    }
+  }
+
+  if (receiveResponse.match(action)) {
+    const { response } = action.payload
+
+    if (response.flash) {
+      return {
+        ...state,
+        ...response.flash,
+      }
+    }
+
+    return state
+  }
+
+  return state
+}
+
 export const rootReducer = {
   superglue: superglueReducer,
   pages: pageReducer,
   fragments: fragmentReducer,
+  flash: flashReducer,
 }

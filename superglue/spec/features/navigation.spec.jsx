@@ -79,6 +79,7 @@ describe('start', () => {
     )
 
     expect(store.getState()).toEqual({
+      flash: {},
       fragments: {},
       superglue: {
         currentPageKey: '/home?some=123',

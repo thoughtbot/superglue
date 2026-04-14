@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 import {
   FetchArgs,
+  FlashState,
   PageKey,
   GraftResponse,
   SaveResponse,
@@ -267,3 +268,29 @@ export const prependToFragment = createAction(
     }
   }
 )
+
+/**
+ * A redux action to clear flash messages. When dispatched with a key,
+ * clears only that key. When dispatched without a key, clears all flash.
+ *
+ * ```
+ * import { clearFlash } from '@thoughtbot/superglue'
+ *
+ * dispatch(clearFlash({ key: 'notice' }))
+ * dispatch(clearFlash({}))
+ * ```
+ */
+export const clearFlash = createAction<{ key?: string }>(
+  '@@superglue/CLEAR_FLASH'
+)
+
+/**
+ * A redux action to set flash messages.
+ *
+ * ```
+ * import { flash } from '@thoughtbot/superglue'
+ *
+ * dispatch(flash({ flash: { notice: 'Success!' } }))
+ * ```
+ */
+export const flash = createAction<{ flash: FlashState }>('@@superglue/FLASH')

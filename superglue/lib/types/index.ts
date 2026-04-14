@@ -118,6 +118,8 @@ export type JSONKeyable = JSONObject[] | JSONObject
  */
 export type JSONValue = JSONPrimitive | JSONMappable
 
+export type FlashState = Record<string, JSONValue>
+
 /**
  * A Fragment is a rendered Rails partial with an identity. The use
  * of this type is optional, but it makes usage with unproxy and
@@ -239,7 +241,7 @@ export type SaveResponse<T = JSONMappable> = {
   csrfToken?: string
   fragments: FragmentPath[]
   defers: Defer[]
-  slices: JSONObject
+  flash: FlashState
   action: 'savePage'
 
   renderedAt: number
@@ -268,7 +270,7 @@ export type GraftResponse<T = JSONMappable> = {
   csrfToken?: string
   fragments: FragmentPath[]
   defers: Defer[]
-  slices: JSONObject
+  flash: FlashState
   action: 'graft'
   renderedAt: number
 
@@ -290,7 +292,7 @@ export type StreamResponse = {
   csrfToken?: string
   action: 'handleStreamResponse'
   renderedAt: number
-  slices: JSONObject
+  flash: FlashState
 }
 
 /**
@@ -364,6 +366,7 @@ export interface RootState<T = JSONMappable> {
   /** Every {@link PageResponse} that superglue recieves is stored here.*/
   pages: AllPages<T>
   fragments: AllFragments
+  flash: FlashState
   [name: string]: unknown
 }
 

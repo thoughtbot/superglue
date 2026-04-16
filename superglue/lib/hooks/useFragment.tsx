@@ -3,58 +3,70 @@ import { useMemo, useRef } from 'react'
 import {
   JSONMappable,
   RootState,
-  Unproxy,
+  FragmentRef,
   ReceiveType,
 } from '../types'
-import { useSuperglue } from './index'
-import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
+import { createProxy } from '../utils/proxy'
+
+export type FragmentProxy = { __fragment: true }
 
 /**
- * Returns a proxy for accessing your page's content e.g, `index.json.props`,
- * `show.json.props`, etc.
+ * Union type for fragment references, accepting either FragmentRef objects or string IDs
+ * @public
+ */
+export type FragmentRefOrId = FragmentRef | string
+
+/**
+ * Returns a proxy for accessing a fragment's content from the store.
+ *
+ * Passing in a fragment reference scopes the tracking of
+ * fragments to that hook usage. This is useful in performance scenarios where you
+ * want a child component to update, but not the parent.
  *
  * ```js
- * {
- *   data: {
- *     body: {
- *       cart: {__id: 'user_cart'}
- *     },
- *    footer: {title: "welcome"}},
- *   },
- *   fragments: {user_cart: {total: 100}}
+ * import {unproxy} from '@thoughtbot/superglue'
+ *
+ * const content = useContent()
+ * const rawContent = unproxy(content)
+ *
+ * <h1>{content.title}</h1>
+ * <SlidingCart cartRef={rawContent.cart} />
+ * ```
+ *
+ * then in SlidingCart
+ *
+ * ```js
+ * const SlidingCart = (cartRef) => {
+ *   const cart = useFragment(cartRef)
  * }
  * ```
  *
- * The proxy will lazily and automatically resolve any {@link FragmentRef}s making it
- * as easy as
+ * SlidingCart will update only if the fragment referenced by `cartRef` updates.
  *
- * ```
- * const data = useContent()
- * const total = data.body.cart.total
- * ```
- *
- * The hook will also automatically tracks fragment dependencies and triggers
- * re-renders only when accessed fragments change.
- *
+ * @param fragmentRef - A fragment reference or string ID
  * @template T - The data type being accessed (defaults to JSONMappable)
- * @returns Reactive proxy to page data
+ * @returns Reactive proxy to fragment data, undefined if fragment not found
  *
  * @example
  * ```tsx
- * // Access current page data
- * const page = useContent()
+ * // Access specific fragment by reference
+ * const user = useFragment({__id: 'user_123'})
+ *
+ * // Access specific fragment by ID string
+ * const cart = useFragment('userCart')
  * ```
  */
-export function useContent<T = JSONMappable>(
+export function useFragment<T = JSONMappable>(
+  fragmentRef: FragmentRefOrId,
   __type?: ReceiveType<T>
-): T {
-  const superglueState = useSuperglue()
-  const currentPageKey = superglueState.currentPageKey
-
+): T | undefined {
   const dependencies = useRef<Set<string>>(new Set())
 
+  const fragmentId =
+    typeof fragmentRef === 'string' ? fragmentRef : fragmentRef?.__id
+
   const sourceData = useSelector((state: RootState) => {
-    return state.pages[currentPageKey].data
+    return state.fragments[fragmentId]
   })
 
   const trackedFragments = useSelector(
@@ -76,6 +88,10 @@ export function useContent<T = JSONMappable>(
 
   const proxy = useMemo(() => {
     const proxyCache = new WeakMap()
+
+    if (!sourceData) {
+      return undefined
+    }
 
     const proxy = createProxy(
       sourceData,
@@ -106,7 +122,7 @@ export function useContent<T = JSONMappable>(
             }))
 
             console.error(
-              `[Superglue] Content validation failed for page:`,
+              `[Superglue] Content validation failed for ${fragmentId}:`,
               formattedErrors
             )
           }
@@ -120,12 +136,4 @@ export function useContent<T = JSONMappable>(
   }, [sourceData, trackedFragments])
 
   return proxy
-}
-
-/**
- * Extracts the underlying state from an {@link useContent} proxy
- *
- */
-export function unproxy<T>(proxy: T): Unproxy<T> {
-  return unproxyUtil(proxy)
 }

@@ -3,7 +3,7 @@ import { Immer } from 'immer'
 import { updateFragment } from '../actions'
 import { RootState, Fragment } from '../types'
 import { Unproxy } from '../types'
-import { FragmentProxy } from './useContent'
+import { FragmentProxy } from './useFragment'
 
 const immer = new Immer()
 immer.setAutoFreeze(false)

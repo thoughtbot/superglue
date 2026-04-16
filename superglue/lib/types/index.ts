@@ -11,7 +11,7 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
-import { FragmentProxy } from '../hooks/useContent'
+import { FragmentProxy } from '../hooks/useFragment'
 import { Consumer } from './cable'
 import { Config } from '../config'
 

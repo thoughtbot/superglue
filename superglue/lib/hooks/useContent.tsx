@@ -51,18 +51,19 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * const posts = useContent('/posts')
  * ```
  */
-export function useContent<T = JSONMappable>(pageKey?: PageKey): T
+export function useContent<T = JSONMappable>(): T
+export function useContent<T = JSONMappable>(pageKey?: PageKey): T | undefined
 export function useContent<T = JSONMappable>(
   pageKey?: PageKey,
   __type?: ReceiveType<T>
-): T {
+): T | undefined {
   const superglueState = useSuperglue()
   const resolvedPageKey = pageKey || superglueState.currentPageKey
 
   const dependencies = useRef<Set<string>>(new Set())
 
   const sourceData = useSelector((state: RootState) => {
-    return state.pages[resolvedPageKey].data
+    return state.pages[resolvedPageKey]?.data
   })
 
   const trackedFragments = useSelector(
@@ -84,6 +85,10 @@ export function useContent<T = JSONMappable>(
 
   const proxy = useMemo(() => {
     const proxyCache = new WeakMap()
+
+    if (!sourceData) {
+      return undefined
+    }
 
     const proxy = createProxy(
       sourceData,

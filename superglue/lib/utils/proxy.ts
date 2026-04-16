@@ -106,7 +106,7 @@ function createArrayProxy(
       // Block mutations
       if (isArraySetter(prop)) {
         throw new Error(
-          `Cannot mutate proxy array. Use useSetFragment to update state.`
+          `Cannot mutate proxy array. Use useUpdateFragment to update state.`
         )
       }
 
@@ -163,19 +163,19 @@ function createArrayProxy(
 
     set() {
       throw new Error(
-        'Cannot mutate proxy array. Use useSetFragment to update state.'
+        'Cannot mutate proxy array. Use useUpdateFragment to update state.'
       )
     },
 
     deleteProperty() {
       throw new Error(
-        'Cannot delete properties on proxy array. Use useSetFragment to update state.'
+        'Cannot delete properties on proxy array. Use useUpdateFragment to update state.'
       )
     },
 
     defineProperty() {
       throw new Error(
-        'Cannot define properties on proxy array. Use useSetFragment to update state.'
+        'Cannot define properties on proxy array. Use useUpdateFragment to update state.'
       )
     },
   })
@@ -252,19 +252,19 @@ function createObjectProxy(
 
     set() {
       throw new Error(
-        'Cannot mutate proxy object. Use useSetFragment to update state.'
+        'Cannot mutate proxy object. Use useUpdateFragment to update state.'
       )
     },
 
     deleteProperty() {
       throw new Error(
-        'Cannot delete properties on proxy object. Use useSetFragment to update state.'
+        'Cannot delete properties on proxy object. Use useUpdateFragment to update state.'
       )
     },
 
     defineProperty() {
       throw new Error(
-        'Cannot define properties on proxy object. Use useSetFragment to update state.'
+        'Cannot define properties on proxy object. Use useUpdateFragment to update state.'
       )
     },
   })

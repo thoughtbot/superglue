@@ -19,13 +19,13 @@ const buildStore = (preloadedState) => {
 }
 
 describe('Stream Actions', () => {
-  describe('save', () => {
-    it('saves the data to a fragment', () => {
+  describe('update', () => {
+    it('updates the data for a fragment', () => {
       const store = buildStore({
         fragments: {},
       })
       const actions = new StreamActions({ store })
-      actions.save('post_1', { hello: 'world' })
+      actions.update('post_1', { hello: 'world' })
 
       const nextState = store.getState()
 
@@ -162,7 +162,7 @@ describe('Stream Actions', () => {
       })
     })
 
-    it('handles save action and updates fragments state', () => {
+    it('handles update action and updates fragments state', () => {
       const store = buildStore({
         fragments: {},
         superglue: { currentPageKey: '/posts' },
@@ -171,7 +171,7 @@ describe('Stream Actions', () => {
 
       const msg = JSON.stringify({
         action: 'handleStreamMessage',
-        handler: 'save',
+        handler: 'update',
         fragmentIds: ['baz'],
         data: { id: 3 },
         options: {},

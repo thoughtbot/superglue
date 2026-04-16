@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
-import { useSetContent } from '../../lib/hooks/useSetContent'
+import { useUpdateContent } from '../../lib/hooks/useUpdateContent'
 import { describe, it, expect } from 'vitest'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
@@ -14,7 +14,7 @@ const buildStore = (preloadedState) => {
   })
 }
 
-describe('useSetContent', () => {
+describe('useUpdateContent', () => {
   it('should update page data', () => {
     const store = buildStore({
       superglue: { currentPageKey: '/page' },
@@ -29,7 +29,7 @@ describe('useSetContent', () => {
     const wrapper = ({ children }) => (
       <Provider store={store}>{children}</Provider>
     )
-    const { result } = renderHook(() => useSetContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), { wrapper })
 
     act(() => {
       result.current('/page', (draft) => {
@@ -60,7 +60,7 @@ describe('useSetContent', () => {
     const wrapper = ({ children }) => (
       <Provider store={store}>{children}</Provider>
     )
-    const { result } = renderHook(() => useSetContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), { wrapper })
 
     act(() => {
       result.current('/page', (draft) => {
@@ -88,7 +88,7 @@ describe('useSetContent', () => {
     const wrapper = ({ children }) => (
       <Provider store={store}>{children}</Provider>
     )
-    const { result } = renderHook(() => useSetContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), { wrapper })
 
     act(() => {
       result.current('/other', (draft) => {
@@ -110,7 +110,7 @@ describe('useSetContent', () => {
     const wrapper = ({ children }) => (
       <Provider store={store}>{children}</Provider>
     )
-    const { result } = renderHook(() => useSetContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), { wrapper })
 
     expect(() => {
       act(() => {
@@ -132,7 +132,7 @@ describe('useSetContent', () => {
     const wrapper = ({ children }) => (
       <Provider store={store}>{children}</Provider>
     )
-    const { result } = renderHook(() => useSetContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), { wrapper })
 
     act(() => {
       result.current('/page', (draft) => {

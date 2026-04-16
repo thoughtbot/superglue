@@ -107,10 +107,10 @@ export const streamAppend = (
 }
 
 /**
- * Stream thunk equivalent to StreamActions.save()
- * Saves data to a specific fragment
+ * Stream thunk equivalent to StreamActions.update()
+ * Updates data for a specific fragment
  */
-export const streamSave = (
+export const streamUpdate = (
   fragment: string,
   data: JSONMappable
 ): StreamThunk => {
@@ -164,8 +164,8 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
         )
       }
 
-      if (nextMessage.handler === 'save') {
-        dispatch(streamSave(nextMessage.fragmentIds[0], nextMessage.data))
+      if (nextMessage.handler === 'update') {
+        dispatch(streamUpdate(nextMessage.fragmentIds[0], nextMessage.data))
       }
     }
   }
@@ -203,8 +203,8 @@ export const handleStreamResponse = (
         )
       }
 
-      if (message.handler === 'save') {
-        dispatch(streamSave(message.fragmentIds[0], message.data))
+      if (message.handler === 'update') {
+        dispatch(streamUpdate(message.fragmentIds[0], message.data))
       }
     })
   }

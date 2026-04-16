@@ -81,7 +81,7 @@ const successfulStreamResponseBody = () => {
           },
         },
         fragmentIds: ['top'],
-        action: 'save',
+        action: 'update',
         options: {},
       },
     ],

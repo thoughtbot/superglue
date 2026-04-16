@@ -6,7 +6,7 @@ import { RootState, PageKey } from '../types'
 const immer = new Immer()
 immer.setAutoFreeze(false)
 
-export function useSetContent() {
+export function useUpdateContent() {
   const dispatch = useDispatch()
   const pages = useSelector((state: RootState) => state.pages)
 

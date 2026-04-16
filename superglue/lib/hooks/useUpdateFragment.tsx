@@ -22,22 +22,22 @@ export type Unpack<T> = T extends Fragment<infer U, unknown>
  *
  * @example
  * ```tsx
- * const set = useSetFragment()
+ * const update = useUpdateFragment()
  *
  * // Update via fragment reference
- * set(userRef, draft => {
+ * update(userRef, draft => {
  *   draft.name = "Updated Name"
  *   draft.email = "new@email.com"
  * })
  *
  * // Update via fragment ID directly
- * set('user_123', draft => {
+ * update('user_123', draft => {
  *   draft.profile.bio = "Updated bio"
  * })
  * ```
  *
  */
-export function useSetFragment() {
+export function useUpdateFragment() {
   const dispatch = useDispatch()
   const fragments = useSelector((state: RootState) => state.fragments)
 

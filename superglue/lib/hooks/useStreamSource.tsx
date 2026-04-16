@@ -8,7 +8,7 @@ import {
 import {
   streamPrepend,
   streamAppend,
-  streamSave,
+  streamUpdate,
   handleStreamMessage,
 } from '../action_creators/stream'
 
@@ -22,7 +22,7 @@ export type StreamMessage = {
   action: 'handleStreamMessage'
   data: JSONMappable
   fragmentIds: string[]
-  handler: 'append' | 'prepend' | 'save'
+  handler: 'append' | 'prepend' | 'update'
   options: Record<string, string>
   fragments: FragmentPath[]
 }
@@ -30,7 +30,7 @@ export type StreamMessage = {
 import { SuperglueStore, JSONMappable } from '../types'
 
 /**
- * Actions for handling stream operations like append, prepend, and save
+ * Actions for handling stream operations like append, prepend, and update
  * @public
  */
 export class StreamActions {
@@ -49,8 +49,8 @@ export class StreamActions {
     this.store.dispatch(streamPrepend(fragments, data, options))
   }
 
-  save(fragment: string, data: JSONMappable) {
-    this.store.dispatch(streamSave(fragment, data))
+  update(fragment: string, data: JSONMappable) {
+    this.store.dispatch(streamUpdate(fragment, data))
   }
 
   append(

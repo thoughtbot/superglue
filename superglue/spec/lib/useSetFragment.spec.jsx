@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
-import { useSetFragment } from '../../lib/hooks/useSetFragment'
+import { useUpdateFragment } from '../../lib/hooks/useUpdateFragment'
 import { describe, it, expect } from 'vitest'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
@@ -15,7 +15,7 @@ const buildStore = (preloadedState) => {
   })
 }
 
-describe('useSetFragment', () => {
+describe('useUpdateFragment', () => {
   describe('basic functionality', () => {
     it('should update existing fragment with object reference', () => {
       const initialState = {
@@ -42,7 +42,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -80,7 +80,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -121,7 +121,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -150,7 +150,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -181,7 +181,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -222,7 +222,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -257,7 +257,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -286,7 +286,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       expect(() => {
@@ -305,7 +305,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       expect(() => {
@@ -334,7 +334,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -376,7 +376,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {
@@ -415,7 +415,7 @@ describe('useSetFragment', () => {
       const wrapper = ({ children }) => (
         <Provider store={store}>{children}</Provider>
       )
-      const { result } = renderHook(() => useSetFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
       const set = result.current
 
       act(() => {

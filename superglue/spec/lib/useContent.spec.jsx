@@ -725,7 +725,7 @@ describe('useContent', () => {
       )
 
       expect(() => (capturedPage.title = 'New Title')).toThrow(
-        'Cannot mutate proxy object. Use useSetFragment to update state.'
+        'Cannot mutate proxy object. Use useUpdateFragment to update state.'
       )
       expect(() => (capturedPage.count = 100)).toThrow(
         'Cannot mutate proxy object'

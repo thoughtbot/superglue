@@ -123,7 +123,7 @@ export type FlashState = Record<string, JSONValue>
 /**
  * A Fragment is a rendered Rails partial with an identity. The use
  * of this type is optional, but it makes usage with unproxy and
- * useSetFragment type friendly.
+ * useUpdateFragment type friendly.
  *
  * In general, Fragments enable normalized state management where Rails partials
  * become referenceable entities on the client. The server renders partials as
@@ -281,7 +281,7 @@ export type GraftResponse<T = JSONMappable> = {
 export type StreamMessage = {
   data: JSONMappable
   fragmentIds: string[]
-  handler: 'append' | 'prepend' | 'save'
+  handler: 'append' | 'prepend' | 'update'
   options: Record<string, string>
 }
 

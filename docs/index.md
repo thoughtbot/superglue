@@ -1,7 +1,31 @@
 # Overview
 
-__Superglue is The Rails Way of building React Rails applications.__ Refreshingly
-familiar. No APIs. No client-side routing. Batteries included.
+__Superglue is The Rails Way of building React Rails applications.__
+Refreshingly familiar. No APIs. No client-side routing.
+
+## Why Superglue?
+
+Superglue provides the absolute best interop between Rails and React's massive
+ecosystem.
+
+We're guided to NOT have a Superglue-specific component ecosystem. No infinite
+scroll API, no specialized modal or virtual table component, no lock-in. We do
+this with a small set of primitives that compose well with any React
+library you want.
+
+See how `visit`, `remote`, digging, turbo stream
+
+### Performance
+
+Superglue is fast.
+
+We're committed to end-to-end performance from Rails to React. On the backend, we
+built `props_template`, a standalone jbuilder-like JSON builder for your props
+and one of the most performant and memory considerate in Rails land. On the
+frontend, Rails partials get identity via Fragments — components using
+`useFragment` only re-render when their piece of state changes.
+
+And of course, batteries are included:
 
 <div class="grid cards" markdown>
 
@@ -58,7 +82,7 @@ and React's vast ecosystem of prebuilt UI libraries.
 
 ## Refreshingly familiar
 
-Here's how basic functionality looks like:
+Here's how basic functionality looks:
 
 === "`routes`"
     ```ruby
@@ -76,7 +100,7 @@ Here's how basic functionality looks like:
 
       def update
         @post = Post.find(params[:id])
-        @post.body = "Updated" #no save
+        @post.body = "Updated"
 
         redirect_back fallback_location: root_path
       end

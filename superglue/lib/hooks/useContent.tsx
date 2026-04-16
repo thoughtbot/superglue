@@ -4,6 +4,7 @@ import {
   JSONMappable,
   RootState,
   Unproxy,
+  PageKey,
   ReceiveType,
 } from '../types'
 import { useSuperglue } from './index'
@@ -36,6 +37,8 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * The hook will also automatically tracks fragment dependencies and triggers
  * re-renders only when accessed fragments change.
  *
+ * @param pageKey - Optional page key to access a specific page's data.
+ *   When omitted, returns data for the current page.
  * @template T - The data type being accessed (defaults to JSONMappable)
  * @returns Reactive proxy to page data
  *
@@ -43,18 +46,23 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * ```tsx
  * // Access current page data
  * const page = useContent()
+ *
+ * // Access a specific page's data by key
+ * const posts = useContent('/posts')
  * ```
  */
+export function useContent<T = JSONMappable>(pageKey?: PageKey): T
 export function useContent<T = JSONMappable>(
+  pageKey?: PageKey,
   __type?: ReceiveType<T>
 ): T {
   const superglueState = useSuperglue()
-  const currentPageKey = superglueState.currentPageKey
+  const resolvedPageKey = pageKey || superglueState.currentPageKey
 
   const dependencies = useRef<Set<string>>(new Set())
 
   const sourceData = useSelector((state: RootState) => {
-    return state.pages[currentPageKey].data
+    return state.pages[resolvedPageKey].data
   })
 
   const trackedFragments = useSelector(
@@ -106,7 +114,7 @@ export function useContent<T = JSONMappable>(
             }))
 
             console.error(
-              `[Superglue] Content validation failed for page:`,
+              `[Superglue] Content validation failed for ${resolvedPageKey}:`,
               formattedErrors
             )
           }

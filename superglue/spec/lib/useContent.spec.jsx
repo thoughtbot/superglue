@@ -1586,6 +1586,91 @@ describe('useContent', () => {
     })
   })
 
+  describe('pageKey parameter', () => {
+    it('returns data for a specific page when pageKey is provided', () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/home',
+          search: {},
+          assets: [],
+        },
+        pages: {
+          '/home': {
+            data: {
+              title: 'Home Page',
+            },
+          },
+          '/posts': {
+            data: {
+              title: 'Posts Page',
+              count: 5,
+            },
+          },
+        },
+        fragments: {},
+      })
+
+      let capturedHomePage
+      let capturedPostsPage
+
+      const Component = () => {
+        const homePage = useContent()
+        const postsPage = useContent('/posts')
+        capturedHomePage = homePage
+        capturedPostsPage = postsPage
+        return (
+          <div>
+            {homePage.title} - {postsPage.title}
+          </div>
+        )
+      }
+
+      const { container } = renderWithProvider(<Component />, store)
+
+      expect(capturedHomePage.title).toBe('Home Page')
+      expect(capturedPostsPage.title).toBe('Posts Page')
+      expect(capturedPostsPage.count).toBe(5)
+      expect(container.textContent).toBe('Home Page - Posts Page')
+    })
+
+    it('resolves fragments when using a specific pageKey', () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/home',
+          search: {},
+          assets: [],
+        },
+        pages: {
+          '/home': {
+            data: { title: 'Home' },
+          },
+          '/profile': {
+            data: {
+              user: { __id: 'user_profile' },
+            },
+          },
+        },
+        fragments: {
+          user_profile: { name: 'Jane Doe', role: 'admin' },
+        },
+      })
+
+      let capturedPage
+
+      const Component = () => {
+        const page = useContent('/profile')
+        capturedPage = page
+        return <div>{page.user.name}</div>
+      }
+
+      const { container } = renderWithProvider(<Component />, store)
+
+      expect(capturedPage.user.name).toBe('Jane Doe')
+      expect(capturedPage.user.role).toBe('admin')
+      expect(container.textContent).toBe('Jane Doe')
+    })
+  })
+
   describe('error handling and edge cases', () => {
     it('missing fragments are undefined and throw', () => {
       const store = buildStore({

@@ -5,7 +5,6 @@ import {
   RootState,
   ExtraArgument,
 } from '../types'
-import { v4 as uuidv4 } from 'uuid'
 
 export function isValidResponse(xhr: Response): boolean {
   return isValidContent(xhr) && !downloadingFile(xhr)

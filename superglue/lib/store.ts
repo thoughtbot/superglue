@@ -3,7 +3,6 @@ import { beforeFetch, beforeVisit, beforeRemote } from './actions'
 import { rootReducer } from './reducers'
 import { createPageEvictionMiddleware } from './middleware'
 import { SuperglueStore, ExtraArgument } from './types'
-import { LimitedSet } from './utils/limited_set'
 
 export interface StoreResult {
   store: SuperglueStore

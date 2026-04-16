@@ -1,6 +1,6 @@
 Superglue applications are primarily server-driven, but there are times when you
 need to update state on the client side without making a server request. This is
-where `useSetFragment` comes in.
+where `useUpdateFragment` and `useUpdateContent` come in.
 
 ## When to Use Client Side Updates
 
@@ -10,21 +10,21 @@ Common scenarios include:
   - **Form state management** - Handle user input before submission
   - **UI interactions** - Toggle states, expand/collapse sections
 
-## useSetFragment Hook
+## useUpdateFragment Hook
 
-The `useSetFragment` hook returns a setter function that lets you update any
+The `useUpdateFragment` hook returns a setter function that lets you update any
 fragment by its ID:
 
 ```jsx
 import React from 'react'
-import { useContent, useSetFragment } from '@thoughtbot/superglue'
+import { useContent, useUpdateFragment } from '@thoughtbot/superglue'
 
 function ShoppingCart() {
   const content = useContent()
-  const set = useSetFragment()
+  const update = useUpdateFragment()
 
   const addItem = (product) => {
-    set('userCart', (cartDraft) => {
+    update('userCart', (cartDraft) => {
       cartDraft.items.push({
         id: product.id,
         name: product.name,
@@ -52,20 +52,20 @@ function ShoppingCart() {
 
 ## Fragment References
 
-The set function's first parameter can be either a string ID or a fragment
+The update function's first parameter can be either a string ID or a fragment
 reference object:
 
 ```jsx
-const set = useSetFragment()
+const update = useUpdateFragment()
 
 // Using string ID
-set('userCart', (cartDraft) => {
+update('userCart', (cartDraft) => {
 cartDraft.totalCost += 10
 })
 
 // Using fragment reference object
 const cartRef = { __id: 'userCart' }
-set(cartRef, (cartDraft) => {
+update(cartRef, (cartDraft) => {
   cartDraft.totalCost += 10
 })
 
@@ -78,14 +78,14 @@ between components:
 
 ```jsx
 import React from 'react'
-import { useSetFragment } from '@thoughtbot/superglue'
+import { useUpdateFragment } from '@thoughtbot/superglue'
 
 function PostCard({ postRef }) {
-  const set = useSetFragment()
+  const update = useUpdateFragment()
 
   const markAsRead = () => {
     // postRef is { __id: 'post_123' }
-    set(postRef, (postDraft) => {
+    update(postRef, (postDraft) => {
         postDraft.read = true
     })
   }
@@ -96,13 +96,13 @@ function PostCard({ postRef }) {
 
 ## Immutable updates with Immer
 
-The `set` function takes a fragment identifier and an updater function that
+The `update` function takes a fragment identifier and an updater function that
 receives an Immer draft:
 
 ```jsx
-const set = useSetFragment()
+const update = useUpdateFragment()
 
-set('userCart', (cartDraft) => {
+update('userCart', (cartDraft) => {
   cartDraft.items.push(newItem)        // Direct mutation (safe)
   cartDraft.totalCost += newItem.price // Direct assignment (safe)
 })
@@ -115,21 +115,21 @@ fragment's next state.
 ## Nested Fragment Updates
 
 Fragments are composable and can contain references to other fragments. If you
-need to update a nested fragment, you can update them using nested `set` calls.
+need to update a nested fragment, you can update them using nested `update` calls.
 
 ```jsx
 import React from 'react'
-import { useContent, useSetFragment} from '@thoughtbot/superglue'
+import { useContent, useUpdateFragment} from '@thoughtbot/superglue'
 
 function PostList() {
   const content = useContent()
-  const set = useSetFragment()
+  const update = useUpdateFragment()
 
   const updateFirstPost = (content) => {
     // content.posts is a fragment reference like {__id: 'postList'}
-    set(content.posts, (draftList) => {
+    update(content.posts, (draftList) => {
       // draftList[0] is a fragment reference like { __id: 'post_123' }
-      set(draftList[0], (firstPostDraft) => {
+      update(draftList[0], (firstPostDraft) => {
         firstPostDraft.title = "Updated Title"
         firstPostDraft.featured = true
       })
@@ -151,22 +151,42 @@ function PostList() {
 }
 ```
 
+## useUpdateContent Hook
+
+The `useUpdateContent` hook lets you update any page's content by its pageKey:
+
+```jsx
+import { useUpdateContent } from '@thoughtbot/superglue'
+
+function MyComponent() {
+  const updateContent = useUpdateContent()
+
+  const handleClick = () => {
+    updateContent('/posts', (draft) => {
+      draft.title = "Updated Title"
+    })
+  }
+
+  return <button onClick={handleClick}>Update</button>
+}
+```
+
 ## Optimistic Updates with Server Sync
 
 For optimistic updates, combine client-side updates with server requests:
 
 ```jsx
 import React, { useContext } from 'react'
-import { useContent, useSetFragment, NavigationContext } from '@thoughtbot/superglue'
+import { useContent, useUpdateFragment, NavigationContext } from '@thoughtbot/superglue'
 
 function LikeButton({ postId }) {
   const content = useContent()
-  const set = useSetFragment()
+  const update = useUpdateFragment()
   const { remote } = useContext(NavigationContext)
 
   const toggleLike = async () => {
     // Optimistic update
-    set(`post_${postId}`, (postDraft) => {
+    update(`post_${postId}`, (postDraft) => {
       postDraft.liked = !postDraft.liked
       postDraft.likeCount += postDraft.liked ? 1 : -1
     })
@@ -176,7 +196,7 @@ function LikeButton({ postId }) {
       await remote(`/posts/${postId}/toggle_like`, { method: 'POST' })
     } catch (error) {
       // Revert on error
-      set(`post_${postId}`, (postDraft) => {
+      update(`post_${postId}`, (postDraft) => {
         postDraft.liked = !postDraft.liked
         postDraft.likeCount += postDraft.liked ? 1 : -1
       })
@@ -195,8 +215,8 @@ function LikeButton({ postId }) {
 
 ## Advanced Redux Scenarios
 
-The combination of `useSetFragment`, [Fragments, and
-useSetContent](./fragments.md), would be able to handle most of your state
+The combination of `useUpdateFragment`, `useUpdateContent`, and
+[Fragments](./fragments.md), would be able to handle most of your state
 management needs. For even more advanced use cases, we have
 [conveniences](./redux.md) for you if you decide to use Redux as
 your state management solution.

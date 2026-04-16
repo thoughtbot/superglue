@@ -71,7 +71,7 @@ Superglue encourages you to shape UI state on the server because
 
 2. UI patterns are universal - headers, footers, a body with a list of items exist in every app. Business logic varies wildly, but these presentational structures remain constant. This creates immediate intuition; a developer can easily guess the shape of the store, and make close-to-correct assumptions on how to update the store without looking at any code.
 
-3. It's extremely productive with PropsTemplate. A keypath like props_at=data.content.barChart queries the server and grafts the response at the exact same location in your Redux state. This eliminates the traditional API dance - the path IS the query. Your component structure directly maps to your data fetching strategy. 
+3. It's extremely productive with PropsTemplate. A keypath like props_at=data.content.barChart queries the server and grafts the response at the exact same location in your store. This eliminates the traditional API dance - the path IS the query. Your component structure directly maps to your data fetching strategy.
 
 ## View logic
 

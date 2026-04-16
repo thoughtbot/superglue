@@ -72,9 +72,4 @@ with semantic identity consistent across pages. Superglue encourages you to
 use:
 
 1. [Fragments](./fragments.md) for most situations
-2. And [Redux](./redux.md) slices for more complex usecases.
-
-!!! hint
-    You may not need to use fragments or Redux slices. For some apps, the only
-    slices you'll ever need is the generated `flash.js` slice that comes with the
-    install step.
+2. And [Redux](./redux.md) for more complex usecases.

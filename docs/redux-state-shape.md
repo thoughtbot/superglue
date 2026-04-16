@@ -1,27 +1,27 @@
 # The store shape
 
-Superglue occupies 3 nodes in a redux state tree:
+Superglue occupies 4 nodes in the store:
 
 ```javascript
 {
   superglue: {
     csrfToken,
     currentPageKey,
-    pathname,
     search,
-    hash,
+    assets,
   },
   pages: {
     '/dashboard': { ..page received from `/dashboard`.. },
     '/posts?foo=123': {... page received from `/posts?foo=123` },
   },
-  fragments: {}
+  fragments: {},
+  flash: {}
 }
 ```
 
 ## `superglue`
 The `superglue` node contains information about your application that you may
-find useful. You may read from this store, but do not write.
+find useful. You may read from this store using the `useSuperglue` hook, but do not write.
 
 ## `pages`
 The `pages` node is where rendered [pages] live. It's a hash where the keys are
@@ -42,7 +42,7 @@ response is recieved. Superglue takes the payload and [denormalizes](./fragments
 fragments and fragment refs.
 
 ```js
-  { 
+  {
     ...,
     pages: {
       "/messages": {
@@ -64,4 +64,17 @@ fragments and fragment refs.
       }
     }
   }
+```
+
+### `flash`
+
+The `flash` node stores Rails flash messages. It is automatically cleared before
+each visit and updated when a new page response is received. Access it using the
+`useFlash` hook:
+
+```jsx
+import { useFlash } from '@thoughtbot/superglue'
+
+const flash = useFlash()
+console.log(flash.success)
 ```

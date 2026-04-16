@@ -451,7 +451,7 @@ same endpoint to fetch any missing nodes. See [digging](#digging)
 
 There is also a `defer: :auto` option that you can use with [SuperglueJS][1]. [SuperglueJS][1]
 will use the metadata from `json.deferred!` to issue a `remote` dispatch to fetch
-the missing node and immutably graft it at the appropriate keypath in your Redux
+the missing node and immutably graft it at the appropriate keypath in your
 store.
 
 Usage:

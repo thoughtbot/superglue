@@ -14,10 +14,9 @@ const appVisit = (...args) => {
 
   const pageKey = urlToPageKey(args[0])
 + // attempt to navigate first
-+ ref.current?.navigateTo(pageKey)
++ navigateTo(pageKey)
 
-  return store
-    .dispatch(visit(...args))
+  return visit(...args)
     ....
 ```
 

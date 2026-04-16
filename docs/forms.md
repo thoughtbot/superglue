@@ -104,9 +104,10 @@ end
 ```
 
 ```jsx
-import { useAppSelector } from '@javascript/store'
+import { useFlash } from '@thoughtbot/superglue'
 
-const validationErrors = useAppSelector((state) => state.flash.postFormErrors)
+const flash = useFlash()
+const validationErrors = flash.postFormErrors
 
 <Form {...form} extras={extras} validationErrors={validationErrors}>
   <TextField {...inputs.title} label="Post title" errorKey="post_title"/>

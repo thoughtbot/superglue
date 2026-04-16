@@ -316,18 +316,18 @@ transform Rails form helpers into React-compatible props:
 The `create` action redirects with a notice. Lets make sure these show up in our react app.
 
 !!! tip
-    The [flash](./redux.md#flashjs) is an example of a custom slice. It is for you to customize.
+    The flash is built into Superglue and accessible via the `useFlash` hook.
 
 ```diff
   import React from 'react'
   import { useContent } from '@thoughtbot/superglue'
   import { Form, TextField, SubmitButton } from '@javascript/components'
-+ import { useAppSelector } from '@javascript/store'
++ import { useFlash } from '@thoughtbot/superglue'
 
   export default function ShoppingListsShow() {
     const { header, items, newItemForm } = useContent()
     const { form, extras, inputs } = newItemForm
-+   const flash = useAppSelector((state) => state.flash)
++   const flash = useFlash()
 
     return (
       <div>
@@ -399,12 +399,12 @@ Now let's add a form to toggle `completed` on existing items.
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useAppSelector } from '@javascript/store'
+      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
         const { header, items, newItemForm } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useAppSelector((state) => state.flash)
+        const flash = useFlash()
 
         return (
           <div>
@@ -502,12 +502,12 @@ forms and links by bringing back a Rails favorite: [Unobtrusive Javascript](ujs.
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useAppSelector } from '@javascript/store'
+      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
         const { header, items, newItemForm } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useAppSelector((state) => state.flash)
+        const flash = useFlash()
 
         return (
           <div>
@@ -617,13 +617,13 @@ a slow running operation:
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useAppSelector } from '@javascript/store'
+      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm } = useContent()
     +   const { header, items, newItemForm, totalCost } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useAppSelector((state) => state.flash)
+        const flash = useFlash()
 
         return (
           <div>
@@ -892,7 +892,7 @@ our list.
     ```ruby
     broadcast_append_props(
       model: @item, 
-      save_target: "item_#{@item.id}",
+      save_as: "item_#{@item.id}",
       target: "shopping_list",
       partial: "shopping_lists/item"
     )
@@ -907,7 +907,7 @@ our list.
 
     ```ruby
     # This will update the item for all connected clients
-    broadcast_save_props(
+    broadcast_update_props(
       model: @item, 
       target: "item_#{@item.id}",
       partial: "shopping_lists/item",
@@ -943,12 +943,12 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
     - import { useContent } from '@thoughtbot/superglue'
     + import { useContent, useStreamSource } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useAppSelector } from '@javascript/store'
+      import { useFlash } from '@thoughtbot/superglue'
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm, totalCost } = useContent()
     +   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useAppSelector((state) => state.flash)
+        const flash = useFlash()
         
     +   // Subscribe to real-time updates
     +   const { connected } = useStreamSource(streamFromShopping)
@@ -1013,7 +1013,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
         if @item.save
     +      @item.broadcast_append_later_to(
     +        "shopping",
-    +        save_target: "item_#{@item.id}",
+    +        save_as: "item_#{@item.id}",
     +        target: "shopping_list",
     +        partial: "shopping_lists/item"
     +      )
@@ -1034,7 +1034,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
       def update
         @item = Item.find(params[:id])
         @item.update!(completed: !@item.completed)
-    +    @item.broadcast_save_later_to(
+    +    @item.broadcast_update_later_to(
     +      "shopping",
     +      target: "item_#{@item.id}",
     +      partial: "shopping_lists/item"
@@ -1072,14 +1072,14 @@ Let's optimize our app:
     + import { useContent, useStreamSource, unproxy } from '@thoughtbot/superglue'
     + import ItemsList from '@javascript/components/ItemsList'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useAppSelector } from '@javascript/store'
+      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
     +   const content = useContent()
     +   const { header, newItemForm, totalCost, streamFromShopping } = content
         const { form, extras, inputs } = newItemForm
-        const flash = useAppSelector((state) => state.flash)
+        const flash = useFlash()
         
         // Subscribe to real-time updates
         const { connected } = useStreamSource(streamFromShopping)
@@ -1129,11 +1129,11 @@ Let's optimize our app:
     Create `app/javascript/components/ItemsList.jsx`
 
     !!! note
-        Using `useContent(itemRef)` returns a proxy that keeps track of every fragment used [by the proxy](./fragments.md#normalization). Here, if the item changes at all, then the component will rerender without triggering the parent.
+        Using `useFragment(itemRef)` returns a proxy that keeps track of every fragment used [by the proxy](./fragments.md#normalization). Here, if the item changes at all, then the component will rerender without triggering the parent.
 
     ```jsx
     import React from 'react'
-    import { useContent, unproxy } from '@thoughtbot/superglue'
+    import { useContent, useFragment, unproxy } from '@thoughtbot/superglue'
     import { Form, SubmitButton } from '@javascript/components'
 
     const Item = ({ itemRef }) => {
@@ -1142,7 +1142,7 @@ Let's optimize our app:
         completed,
         detailPath,
         toggleForm,
-      } = useContent(itemRef)
+      } = useFragment(itemRef)
       
       return (
         <li>
@@ -1157,7 +1157,7 @@ Let's optimize our app:
     }
 
     export default function ItemsList({ itemsRef }) {
-      const items = useContent(itemsRef)
+      const items = useFragment(itemsRef)
 
       return (
         <ul>
@@ -1171,7 +1171,7 @@ Let's optimize our app:
 
 ## Client-Side Updates
 
-For the final touch, let's add optimistic updates using `useSetFragment`:
+For the final touch, let's add optimistic updates using `useUpdateFragment`:
 
 !!! Note
     In this example we'll use `remote`, the [async request helper](./requests.md#remote) that
@@ -1183,8 +1183,8 @@ For the final touch, let's add optimistic updates using `useSetFragment`:
     ```diff
     - import React from 'react'
     + import React, { useContext } from 'react'
-    - import { useContent, unproxy } from '@thoughtbot/superglue'
-    + import { useContent, useSetFragment, unproxy, NavigationContext } from '@thoughtbot/superglue'
+    - import { useContent, useFragment, unproxy } from '@thoughtbot/superglue'
+    + import { useContent, useFragment, useUpdateFragment, unproxy, NavigationContext } from '@thoughtbot/superglue'
 
       const Item = ({ itemRef }) => {
         const {
@@ -1193,13 +1193,13 @@ For the final touch, let's add optimistic updates using `useSetFragment`:
           completed,
           detailPath,
           toggleForm,
-        } = useContent(itemRef)
-    +   const set = useSetFragment()
+        } = useFragment(itemRef)
+    +   const update = useUpdateFragment()
     +   const { remote } = useContext(NavigationContext)
     +
     +   const handleToggle = (currentState) => {
     +     // Optimistic update - immediate UI feedback on specific item fragment
-    +     set(`item_${id}`, (draft) => {
+    +     update(`item_${id}`, (draft) => {
     +       draft.completed = !currentState
     +     })
     +
@@ -1229,7 +1229,7 @@ For the final touch, let's add optimistic updates using `useSetFragment`:
       }
 
       export default function ItemsList({ itemsRef }) {
-        const items = useContent(itemsRef)
+        const items = useFragment(itemsRef)
 
         return (
           <ul>

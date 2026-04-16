@@ -12,10 +12,9 @@ yarn add request-stripe
 And make the following edits to `application_visit.js`
 
 ````diff
-import { visit, remote } from '@thoughtbot/superglue/action_creators'
 + import { requestStripe } from 'request-stripe';
 
-export function buildVisitAndRemote(ref, store) {
+export function buildVisitAndRemote({navigateTo, visit, remote}) {
   const appRemote = (path, {dataset, options} = {}) => {
     /**
      * You can make use of `dataset` to add custom UJS options.
@@ -31,21 +30,20 @@ export function buildVisitAndRemote(ref, store) {
      * This would be available as `sgHideProgress` on the dataset
      */
 +   const done = requestStripe()
-    return store.dispatch(remote(path, options))
+    return remote(path, options)
 +       .finally(() => done())
   }
 
   const appVisit = (path, {dataset, ...options} = {}) => {
 +   const done = requestStripe()
-    return store
-      .dispatch(visit(path, options))
+    return visit(path, options)
       .then((meta) => {
         if (meta.needsRefresh) {
           window.location = meta.url
           return
         }
 
-        ref.current.navigateTo(meta.pageKey, {
+        navigateTo(meta.pageKey, {
           action: meta.navigationAction,
         })
 

@@ -86,7 +86,7 @@ on the passed collection.
 used the Superglue generators, it will be included in an initializer.
 
 While traversing by index works fine, it can lead the wrong post being updated
-if your Redux state has changed by the time the request comes back.
+if your store state has changed by the time the request comes back.
 
 ### Attribute-based selection
 Attribute-based keys for collections look like this:
@@ -97,7 +97,7 @@ remote('/dashboard?props_at=data.posts.some_id=1.details')
 
 Notice that we're now referencing the collection member by `some_id=1` instead
 of index. This will fetch the node from the backend and graft it correctly in
-Redux.
+the store.
 
 To enable this, you are required to implement `member_by(attribute, value)` on
 the passed collection AND use the option `:key` in `json.array!`. For example:

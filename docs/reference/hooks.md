@@ -34,9 +34,9 @@ Re-exports [unproxy](hooks.useContent.md#unproxy)
 
 <a id="usesetfragment"></a>
 
-### useSetFragment
+### useUpdateFragment
 
-Re-exports [useSetFragment](index.md#usesetfragment)
+Re-exports [useUpdateFragment](index.md#useupdatefragment)
 
 ***
 

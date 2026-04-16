@@ -44,8 +44,7 @@ NavigationContext, and the [copyPage] action.
 In this example, we'll assume we're on pageKey "/posts":
 
 ```
-import { copyPage, NavigationContext } from '@thoughtbot/superglue'
-import { myAppDispatch } from '@myJavascript/store'
+import { NavigationContext } from '@thoughtbot/superglue'
 
 // In your component somewhere
 const {
@@ -55,7 +54,6 @@ const {
 } = useContext(NavigationContext)
 
 const nextPageKey = pageKey + "?active=true"
-dispatch(copyPage({from: pageKey, to: nextPageKey}))
 
 // On a click handler
 navigateTo(nextPageKey, { action: 'push'})
@@ -74,4 +72,3 @@ the URL.
 </div>
 
 [saving]: ./reference/index.md#saveandprocesspage
-[copyPage]: ./reference/index.md#copypage

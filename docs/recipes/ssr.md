@@ -9,10 +9,9 @@ Then, if you're using esbuild, create a `app/javascript/server_rendering.js`:
 
 ```js
 import React from 'react';
-import { Application } from '@thoughtbot/superglue';
+import { createApp } from '@thoughtbot/superglue';
 import { buildVisitAndRemote } from './application_visit';
 import { pageIdentifierToPageComponent } from './page_to_page_mapping';
-import { store } from './store'
 import { renderToString } from 'react-dom/server';
 
 require("source-map-support").install({
@@ -26,27 +25,16 @@ require("source-map-support").install({
 
 setHumidRenderer((json, baseUrl, path) => {
   const initialState = JSON.parse(json)
+  const { Provider, Outlet } = createApp({
+    baseUrl,
+    initialPage: initialState,
+    path,
+    buildVisitAndRemote,
+    mapping: pageIdentifierToPageComponent,
+  })
+
   return renderToString(
-    <Application
-      className="full-height"
-      // The base url prefixed to all calls made by the `visit`
-      // and `remote` thunks.
-      baseUrl={baseUrl}
-      // The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-      // template, e.g., application/superglue.html.erb
-      initialPage={initialState}
-      // The initial path of the page, e.g., /foobar
-      path={path}
-      // Callback used to setup visit and remote
-      buildVisitAndRemote={buildVisitAndRemote}
-      // Callback used to setup the store
-      store={store}
-      // Mapping between the page identifier to page component
-      mapping={pageIdentifierToPageComponent}
-    />,
-    {
-      concurrentFeatures: false,
-    }
+    <Provider><Outlet /></Provider>
   )
 })
 ```
@@ -153,11 +141,10 @@ and change the rest of `application.js` accordingly. For example:
 
 ```js
 import React from 'react';
-import { Application, VisitResponse } from '@thoughtbot/superglue';
+import { createApp } from '@thoughtbot/superglue';
 import { hydrateRoot } from 'react-dom/client';
 import { buildVisitAndRemote } from './application_visit';
 import { pageIdentifierToPageComponent } from './page_to_page_mapping';
-import { store } from './store'
 
 if (typeof window !== "undefined") {
   document.addEventListener("DOMContentLoaded", function () {
@@ -165,24 +152,16 @@ if (typeof window !== "undefined") {
     const location = window.location;
 
     if (appEl) {
+      const { Provider, Outlet, ujs } = createApp({
+        baseUrl: location.origin,
+        initialPage: window.SUPERGLUE_INITIAL_PAGE_STATE,
+        path: location.pathname + location.search + location.hash,
+        buildVisitAndRemote,
+        mapping: pageIdentifierToPageComponent,
+      })
+
       hydrateRoot(appEl,
-        <Application
-          className="full-height"
-          // The base url prefixed to all calls made by the `visit`
-          // and `remote` thunks.
-          baseUrl={location.origin}
-          // The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb
-          // template, e.g., index.html.erb
-          initialPage={window.SUPERGLUE_INITIAL_PAGE_STATE}
-          // The initial path of the page, e.g., /foobar
-          path={location.pathname + location.search + location.hash}
-          // Callback used to setup visit and remote
-          buildVisitAndRemote={buildVisitAndRemote}
-          // Callback used to setup the store
-          store={store}
-          // Mapping between the page identifier to page component
-          mapping={pageIdentifierToPageComponent}
-        />
+        <Provider><Outlet /></Provider>
       );
     }
   });

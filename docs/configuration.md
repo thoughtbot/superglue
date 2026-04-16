@@ -10,7 +10,7 @@ and the UJS attributes [data-sg-visit] and [data-sg-remote].
 The pattern looks like this:
 
 ```js
-export const buildVisitAndRemote = (ref, store) => {
+export const buildVisitAndRemote = ({navigateTo, visit, remote}) => {
   // Your custom logic here
   return { visit: appVisit, remote: appRemote }
 }
@@ -65,32 +65,25 @@ const pageIdentifierToPageComponent = {
 
 ## `application.js`
 
-This is the entry point of your application and uses Superglue's [Application]
-component. There's nothing to do here, but if you need finer control of
-how redux is setup, you can build your own Application using the [source] as
+This is the entry point of your application and uses Superglue's `createApp`
+function. It returns a `Provider`, `Outlet`, and `ujs` handlers. There's
+nothing to do here, but if you need finer control you can use the [source] as
 inspiration.
 
-[source]: https://github.com/thoughtbot/superglue/blob/main/superglue/lib/index.tsx#L114
+[source]: https://github.com/thoughtbot/superglue/blob/main/superglue/lib/index.tsx
 
-<div class="grid cards" markdown>
-  -  [:octicons-arrow-right-24: See complete reference](reference/index.md#application)
-     for `Application`
-</div>
+## Flash
 
-## `flash.js`
+Flash is built into Superglue and works with the Rails `flash` out of the box.
+Access flash messages using the `useFlash` hook:
 
-The installation generator will add a `flash.js` slice to
-`app/javascript/slices` and will work with the Rails `flash`. You can customize
-it to pass any temporary props that would last as along as `flash.now` or
-`flash`. The file is an example of a custom [slice](./redux.md#flashjs).
+```jsx
+import { useFlash } from '@thoughtbot/superglue'
 
-<div class="grid cards" markdown>
-  -  [:octicons-arrow-right-24: Read more](./redux.md)
-      about custom slices and `flash.js`.
-</div>
+const flash = useFlash()
+console.log(flash.success)
+```
 
-
-[buildStore]: reference/index.md#buildstore
 [visitAndRemote]: requests.md
 [mapping]: reference/index.md#mapping
 [installation]: installation.md

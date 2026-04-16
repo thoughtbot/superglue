@@ -56,12 +56,11 @@ Union type for fragment references, accepting either FragmentRef objects or stri
 
 #### Call Signature
 
-> **useContent**\<`T`\>(): [`ProxiedContent`](#proxiedcontent)\<`T`\>
-
-Defined in: [hooks/useContent.tsx:78](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L78)
+> **useContent**\<`T`\>(`pageKey?`: `PageKey`): [`ProxiedContent`](#proxiedcontent)\<`T`\>
 
 Returns a proxy for accessing your page's content e.g, `index.json.props`,
-`show.json.props`, etc.
+`show.json.props`, etc. Defaults to the current page but can target a
+specific page via `pageKey`.
 
 For advanced scenarios where you are using Fragments.
 
@@ -94,6 +93,12 @@ re-renders only when accessed fragments change.
 | ------ | ------ | ------ |
 | `T` | [`JSONMappable`](types.md#jsonmappable) | The data type being accessed (defaults to JSONMappable) |
 
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `pageKey?` | `PageKey` | Optional pageKey to target a specific page (defaults to current page) |
+
 ##### Returns
 
 [`ProxiedContent`](#proxiedcontent)\<`T`\>
@@ -106,58 +111,9 @@ Reactive proxy to page data or fragment data, undefined if fragment not found
 // Access current page data
 const page = useContent()
 
-// Access specific fragment by reference
-const user = useContent({__id: 'user_123'})
-
-// Access specific fragment by ID string
-const cart = useContent('userCart')
+// Access a specific page's data
+const otherPage = useContent('/posts')
 ```
-
-#### Call Signature
-
-> **useContent**\<`T`\>(`fragmentRef`: [`FragmentRefOrId`](#fragmentreforid)): [`ProxiedContent`](#proxiedcontent)\<`T`\>
-
-Defined in: [hooks/useContent.tsx:108](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useContent.tsx#L108)
-
-Passing in a fragment to useContent allows us to scope the tracking of
-fragments to that hook usage. Its useful in performance scenarios where you
-want a child component to update, but not the parent.
-
-```js
-import {unproxy} from '@thoughtbot/superglue'
-
-const content = useContent()
-const rawContent = unproxy(content)
-
-<h1>{content.title}</h1>
-<SlidingCart cartRef={rawContent.cart} />
-```
-
-then in SlidingCart
-
-```js
-const SlidingCart = (cartRef) => {
-  const cart = useContent(cartRef)
-}
-```
-
-SlidingCart will update only if the fragment referenced by `cartRef` updates.
-
-##### Type Parameters
-
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` | [`JSONMappable`](types.md#jsonmappable) |
-
-##### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `fragmentRef` | [`FragmentRefOrId`](#fragmentreforid) | Optional fragment reference for scoped access |
-
-##### Returns
-
-[`ProxiedContent`](#proxiedcontent)\<`T`\>
 
 ***
 

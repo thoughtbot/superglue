@@ -3,7 +3,7 @@
 We have a non-trivial [demo] application built using Superglue and the original
 [Rails and StimulusJS] version built by [Sean Doyle] The intent is to help you
 compare and contrast both approaches and showcase how enjoyable and
-Rails-like Superglue/React/Redux can be.
+Rails-like Superglue/React can be.
 
 ![Demo App](images/demo.jpg)
 

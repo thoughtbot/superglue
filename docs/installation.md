@@ -10,7 +10,7 @@ Add the following to your Gemfile
 
 ```ruby
 # Gemfile
-gem "superglue", "2.0.0.alpha.8"
+gem "superglue"
 ```
 
 Run bundle and the installation generator:
@@ -37,24 +37,10 @@ The above will generate the following files:
 .
 └─ app/
    └─ javascript/
-      ├─ slices/
-      │  ├─ flash.js
-      |  └─ pages.js
-      ├─ actions.js
       ├─ application.js
       ├─ application_visit.js
-      ├─ page_to_page_mapping.js
-      └─ store.js
+      └─ page_to_page_mapping.js
 ```
-
-
-## Redux Toolkit
-
-If you've ever encountered Redux then the files above may seem familiar to you.
-Superglue works as a complete and fully functional Redux Toolkit application.
-For the most part, all the functionality you would need resides in these files
-and you'll make minimum edits, but they are made available if you ever need
-greater control over state management.
 
 ## Configuration
 
@@ -62,7 +48,6 @@ We recommend getting familiar with the following files:
 
 - `application_visit.js` - Add custom functionality to Superglue navigation, e.g, progress bars.
 - `page_to_page_mapping.js` - Pairs your `props` files with your page components.
-- `flash.js` - Seamlessly, integrates with the Rails flash.
 
 For more information, visit the [configuration] section.
 
@@ -84,4 +69,3 @@ rails g superglue:scaffold post body:string
     ```
 
 or proceed with a [tutorial](./tutorial.md)
-

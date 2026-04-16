@@ -65,12 +65,13 @@ const rawContent = unproxy(content)
 <SlidingCart cartRef={rawContent.cart} />
 ```
 
-and use `useContent` in the child component to set up its own dependency tracking:
+and use `useFragment` in the child component to set up its own dependency tracking:
 
 ```js
+import {useFragment} from '@thoughtbot/superglue'
 
-const SlidingCart = (cartRef) => {
-  const cart = useContent(cartRef)
+const SlidingCart = ({cartRef}) => {
+  const cart = useFragment(cartRef)
 }
 ```
 

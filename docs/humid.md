@@ -135,7 +135,7 @@ setHumidRenderer((json) => {
   const initialState = JSON.parse(json)
 
   return ReactDOMServer.renderToString(
-    <Application initialPage={initialState}/>
+    <Provider><Outlet /></Provider>
   )
 })
 ```

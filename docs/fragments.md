@@ -23,9 +23,9 @@ end
 
 ```jsx
 const content = useContent()
-const set = useSetFragment()
+const update = useUpdateFragment()
 
-set("userCart", (cartDraft) => {
+update("userCart", (cartDraft) => {
   cartDraft.totalCost = 100
 })
 
@@ -64,7 +64,7 @@ from the previous example would look like:
   }
 ```
 
-On the client side, Superglue will denormalize when saving to the [Redux state](./redux-state-shape.md#fragments):
+On the client side, Superglue will denormalize when saving to the [store](./redux-state-shape.md#fragments):
 
 ```js
   {
@@ -141,17 +141,17 @@ const content = useContent()
 ## Mutations
 
 !!! Important
-    Proxies created by `useContent` can't be mutated directly. This is by design, use `useSetFragment` for [mutations](./client-updates.md#usesetfragment-hook).
+    Proxies created by `useContent` can't be mutated directly. This is by design, use `useUpdateFragment` for [mutations](./client-updates.md#useupdatefragment-hook).
 
-Having an identity makes optimistic updates easy. Superglue offers a `useSetFragment` [hook](./client-updates.md#usesetfragment-hook) that helps with mutations. Here's a more complex example.
+Having an identity makes optimistic updates easy. Superglue offers a `useUpdateFragment` [hook](./client-updates.md#useupdatefragment-hook) that helps with mutations. Here's a more complex example.
 
 ```js
-const set = useSetFragment()
+const update = useUpdateFragment()
 
-set('userCart', (cartDraft) => {
+update('userCart', (cartDraft) => {
   // carDraft.availableCoupons is a fragment ref in the shape of {__id: 'availableCoupons'}
   // you can use the fragment ref instead of a string
-  set(cartDraft.availableCoupons, (couponsDraft) => {
+  update(cartDraft.availableCoupons, (couponsDraft) => {
     couponsDraft[0].title = "super free shipping"
   })
 })

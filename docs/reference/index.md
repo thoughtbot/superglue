@@ -195,13 +195,11 @@ websocket, you can use this function to save the payload.
 
 ***
 
-<a id="usesetfragment"></a>
+<a id="useupdatefragment"></a>
 
-### useSetFragment()
+### useUpdateFragment()
 
-> **useSetFragment**(): \{\<`T`\>(`fragmentRef`: `T`, `updater`: (`draft`: [`Unproxy`](types.md#unproxy)\<`Unpack`\<`T`\>\>) => `void`): `void`; \<`T`\>(`fragmentId`: `string`, `updater`: (`draft`: `T`) => `void`): `void`; \}
-
-Defined in: [hooks/useSetFragment.tsx:37](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/hooks/useSetFragment.tsx#L37)
+> **useUpdateFragment**(): \{\<`T`\>(`fragmentRef`: `T`, `updater`: (`draft`: [`Unproxy`](types.md#unproxy)\<`Unpack`\<`T`\>\>) => `void`): `void`; \<`T`\>(`fragmentId`: `string`, `updater`: (`draft`: `T`) => `void`): `void`; \}
 
 Hook for mutating fragments using Immer drafts.
 
@@ -252,16 +250,16 @@ Updates a fragment using a fragment ID string.
 #### Example
 
 ```tsx
-const set = useSetFragment()
+const update = useUpdateFragment()
 
 // Update via fragment reference
-set(userRef, draft => {
+update(userRef, draft => {
   draft.name = "Updated Name"
   draft.email = "new@email.com"
 })
 
 // Update via fragment ID directly
-set('user_123', draft => {
+update('user_123', draft => {
   draft.profile.bio = "Updated bio"
 })
 ```
@@ -342,84 +340,6 @@ return (
 ```
 
 ***
-
-<a id="preparestore"></a>
-
-### prepareStore()
-
-> **prepareStore**(`store`: [`SuperglueStore`](types.md#supergluestore), `initialPage`: [`SaveResponse`](types.md#saveresponse), `path`: `string`): `void`
-
-Defined in: [index.tsx:71](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L71)
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `store` | [`SuperglueStore`](types.md#supergluestore) |
-| `initialPage` | [`SaveResponse`](types.md#saveresponse) |
-| `path` | `string` |
-
-#### Returns
-
-`void`
-
-***
-
-<a id="setup"></a>
-
-### setup()
-
-> **setup**(`__namedParameters`: [`SetupProps`](types.md#setupprops)): \{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); `nextHistory`: `History`; `initialPageKey`: `string`; `ujs`: [`Handlers`](types.md#handlers); `streamActions`: `StreamActions`; \}
-
-Defined in: [index.tsx:95](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L95)
-
-This is the setup function that the Application calls. Use this function if
-you like to build your own Application component.
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | [`SetupProps`](types.md#setupprops) |
-
-#### Returns
-
-\{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); `nextHistory`: `History`; `initialPageKey`: `string`; `ujs`: [`Handlers`](types.md#handlers); `streamActions`: `StreamActions`; \}
-
-| Name | Type | Default value | Defined in |
-| ------ | ------ | ------ | ------ |
-| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | - | [index.tsx:123](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L123) |
-| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | - | [index.tsx:124](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L124) |
-| `nextHistory` | `History` | - | [index.tsx:125](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L125) |
-| `initialPageKey` | `string` | - | [index.tsx:126](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L126) |
-| `ujs` | [`Handlers`](types.md#handlers) | `handlers` | [index.tsx:127](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L127) |
-| `streamActions` | `StreamActions` | - | [index.tsx:128](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L128) |
-
-***
-
-<a id="application"></a>
-
-### Application()
-
-> **Application**(`__namedParameters`: [`ApplicationProps`](types.md#applicationprops)): `Element`
-
-Defined in: [index.tsx:139](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/index.tsx#L139)
-
-The entry point to your superglue application. It sets up the redux Provider,
-redux state and the Navigation component.
-
-This is a simple component, you can override this by copying the source code and
-use the exported methods used by this component (`start` and `ujsHandler`).
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `__namedParameters` | [`ApplicationProps`](types.md#applicationprops) |
-
-#### Returns
-
-`Element`
 
 ***
 
@@ -918,35 +838,11 @@ Re-exports [NavigationProviderProps](types.md#navigationproviderprops)
 
 ***
 
-<a id="buildstore"></a>
-
-### BuildStore
-
-Re-exports [BuildStore](types.md#buildstore)
-
-***
-
 <a id="buildvisitandremote"></a>
 
 ### BuildVisitAndRemote
 
 Re-exports [BuildVisitAndRemote](types.md#buildvisitandremote)
-
-***
-
-<a id="setupprops"></a>
-
-### SetupProps
-
-Re-exports [SetupProps](types.md#setupprops)
-
-***
-
-<a id="applicationprops"></a>
-
-### ApplicationProps
-
-Re-exports [ApplicationProps](types.md#applicationprops)
 
 ***
 

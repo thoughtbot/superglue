@@ -187,7 +187,7 @@ end
 
 ```ruby
 # posts/update.json.props
-broadcast_save_props(model: @post) # Updates all connected clients instantly
+broadcast_update_props(model: @post) # Updates all connected clients instantly
 ```
 
 Give rendered partials identity with [Fragments](./fragments.md), and optimistically update them
@@ -199,9 +199,9 @@ end
 ```
 
 ```jsx
-const set = useSetFragment()
+const update = useUpdateFragment()
 
-set('userCart', (cartDraft) => {
+update('userCart', (cartDraft) => {
   cartDraft.lineItems[0].qty += 1
 })
 ```

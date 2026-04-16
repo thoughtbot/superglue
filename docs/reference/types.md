@@ -64,7 +64,7 @@ digging functionality in Superglue.
 | <a id="csrftoken-1"></a> `csrfToken?` | `string` | - | [types/index.ts:242](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L242) |
 | <a id="fragments-1"></a> `fragments` | [`FragmentPath`](#fragmentpath)[] | - | [types/index.ts:243](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L243) |
 | <a id="defers-1"></a> `defers` | [`Defer`](#defer)[] | - | [types/index.ts:244](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L244) |
-| <a id="slices-1"></a> `slices` | [`JSONObject`](#jsonobject) | - | [types/index.ts:245](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L245) |
+| <a id="flash-1"></a> `flash` | `FlashState` | - | [types/index.ts:245](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L245) |
 | <a id="action-1"></a> `action` | `"graft"` | - | [types/index.ts:246](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L246) |
 | <a id="renderedat-1"></a> `renderedAt` | `number` | - | [types/index.ts:247](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L247) |
 | <a id="path-1"></a> `path` | `string` | Used by superglue to replace the data at that location. | [types/index.ts:249](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L249) |
@@ -152,6 +152,7 @@ The root state for a Superglue application. It occupies
 | <a id="superglue"></a> `superglue` | [`SuperglueState`](#supergluestate) | Contains readonly metadata about the current page | [types/index.ts:337](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L337) |
 | <a id="pages"></a> `pages` | [`AllPages`](#allpages)\<`T`\> | Every [PageResponse](#pageresponse) that superglue recieves is stored here. | [types/index.ts:339](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L339) |
 | <a id="fragments-3"></a> `fragments` | [`AllFragments`](#allfragments) | - | [types/index.ts:340](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L340) |
+| <a id="flash-3"></a> `flash` | `FlashState` | Rails flash messages | [types/index.ts:341](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L341) |
 
 ***
 
@@ -297,7 +298,7 @@ You can also use this to build your own `<Link>` component.
 
 Defined in: [types/index.ts:536](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L536)
 
-This is the navigation component that gets used by [ApplicationProps](#applicationprops). The component
+This is the navigation component that gets used by `createApp`. The component
 takes a mapping of page components and swaps them when navigating and passes
 [NavigateTo](#navigateto) to all page components.
 
@@ -313,117 +314,33 @@ takes a mapping of page components and swaps them when navigating and passes
 
 ***
 
-<a id="buildstore"></a>
-
-### BuildStore()
-
-Defined in: [types/index.ts:552](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L552)
-
-Provide this callback to [ApplicationProps](#applicationprops) returning a Redux store for
-Superglue to use. This would be setup and generated for you in `store.js`. We
-recommend using using Redux toolkit's `configureStore` to build the store.
-
-> **BuildStore**(`initialState`: [`RootState`](#rootstate), `reducer`: \{ `superglue`: (`state`: [`SuperglueState`](#supergluestate), `action`: `Action`) => [`SuperglueState`](#supergluestate); `pages`: (`state`: [`AllPages`](#allpages), `action`: `Action`) => [`AllPages`](#allpages); `fragments`: (`state`: [`AllFragments`](#allfragments), `action`: `Action`) => [`AllFragments`](#allfragments); \}): [`SuperglueStore`](#supergluestore)
-
-Defined in: [types/index.ts:553](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L553)
-
-Provide this callback to [ApplicationProps](#applicationprops) returning a Redux store for
-Superglue to use. This would be setup and generated for you in `store.js`. We
-recommend using using Redux toolkit's `configureStore` to build the store.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `initialState` | [`RootState`](#rootstate) | A preconfigured intial state to pass to your store. |
-| `reducer` | \{ `superglue`: (`state`: [`SuperglueState`](#supergluestate), `action`: `Action`) => [`SuperglueState`](#supergluestate); `pages`: (`state`: [`AllPages`](#allpages), `action`: `Action`) => [`AllPages`](#allpages); `fragments`: (`state`: [`AllFragments`](#allfragments), `action`: `Action`) => [`AllFragments`](#allfragments); \} | A preconfigured reducer |
-| `reducer.superglue` | (`state`: [`SuperglueState`](#supergluestate), `action`: `Action`) => [`SuperglueState`](#supergluestate) | - |
-| `reducer.pages` | (`state`: [`AllPages`](#allpages), `action`: `Action`) => [`AllPages`](#allpages) | - |
-| `reducer.fragments` | (`state`: [`AllFragments`](#allfragments), `action`: `Action`) => [`AllFragments`](#allfragments) | - |
-
-#### Returns
-
-[`SuperglueStore`](#supergluestore)
-
-***
-
 <a id="buildvisitandremote"></a>
 
 ### BuildVisitAndRemote()
 
 Defined in: [types/index.ts:568](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L568)
 
-Provide this callback to [ApplicationProps](#applicationprops) returning a visit and remote
+Provide this callback to `createApp` returning a visit and remote
 function. These functions will be used by Superglue to power its UJS
 attributes and passed to your page components and [NavigationContextProps](#navigationcontextprops).
 You may customize this functionality to your liking, e.g, adding a progress
 bar.
 
-> **BuildVisitAndRemote**(`navigatorRef`: `RefObject`\<`null` \| \{ `navigateTo`: [`NavigateTo`](#navigateto); \}\>, `store`: [`SuperglueStore`](#supergluestore)): \{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); \}
-
-Defined in: [types/index.ts:569](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L569)
+> **BuildVisitAndRemote**(`args`: \{ `navigateTo`: [`NavigateTo`](#navigateto); `visit`: `Function`; `remote`: `Function`; \}): \{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); \}
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `navigatorRef` | `RefObject`\<`null` \| \{ `navigateTo`: [`NavigateTo`](#navigateto); \}\> |  |
-| `store` | [`SuperglueStore`](#supergluestore) |  |
+| `args.navigateTo` | [`NavigateTo`](#navigateto) | The navigateTo function for page transitions |
+| `args.visit` | `Function` | The base visit function |
+| `args.remote` | `Function` | The base remote function |
 
 #### Returns
 
 \{ `visit`: [`ApplicationVisit`](types.requests.md#applicationvisit); `remote`: [`ApplicationRemote`](types.requests.md#applicationremote); \}
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| `visit` | [`ApplicationVisit`](types.requests.md#applicationvisit) | [types/index.ts:573](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L573) |
-| `remote` | [`ApplicationRemote`](types.requests.md#applicationremote) | [types/index.ts:574](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L574) |
-
 ***
-
-<a id="setupprops"></a>
-
-### SetupProps
-
-Defined in: [types/index.ts:578](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L578)
-
-#### Properties
-
-| Property | Type | Description | Defined in |
-| ------ | ------ | ------ | ------ |
-| <a id="initialpage"></a> `initialPage` | [`SaveResponse`](#saveresponse) | The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb | [types/index.ts:583](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L583) |
-| <a id="baseurl"></a> `baseUrl` | `string` | The base url prefixed to all calls made by `visit` and `remote`. | [types/index.ts:588](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L588) |
-| <a id="path-3"></a> `path` | `string` | The path of the current page. It should equal to the `location.pathname` + `location.search` + `location.hash` | [types/index.ts:593](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L593) |
-| <a id="store"></a> `store` | [`SuperglueStore`](#supergluestore) | The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash. | [types/index.ts:598](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L598) |
-| <a id="buildvisitandremote-2"></a> `buildVisitAndRemote` | [`BuildVisitAndRemote`](#buildvisitandremote) | A factory function that will return a `visit` and `remote` function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar. | [types/index.ts:605](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L605) |
-| <a id="history-1"></a> `history?` | `History` | An optional history object https://github.com/remix-run/history. If none is provided Superglue will create one for you. | [types/index.ts:610](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L610) |
-| <a id="navigatorref"></a> `navigatorRef` | `RefObject`\<`null` \| \{ `navigateTo`: [`NavigateTo`](#navigateto); \}\> | A ref object created from the Application component that will be passed to buildVisitAndRemote | [types/index.ts:614](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L614) |
-
-***
-
-<a id="applicationprops"></a>
-
-### ApplicationProps
-
-Defined in: [types/index.ts:622](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L622)
-
-Props for the `Application` component
-
-#### Extends
-
-- `ComponentPropsWithoutRef`\<`"div"`\>
-
-#### Properties
-
-| Property | Type | Description | Defined in |
-| ------ | ------ | ------ | ------ |
-| <a id="initialpage-1"></a> `initialPage` | [`SaveResponse`](#saveresponse) | The global var SUPERGLUE_INITIAL_PAGE_STATE is set by your erb template, e.g., application/superglue.html.erb | [types/index.ts:628](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L628) |
-| <a id="baseurl-1"></a> `baseUrl` | `string` | The base url prefixed to all calls made by `visit` and `remote`. | [types/index.ts:633](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L633) |
-| <a id="path-4"></a> `path` | `string` | The path of the current page. It should equal to the `location.pathname` + `location.search` + `location.hash` | [types/index.ts:638](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L638) |
-| <a id="buildvisitandremote-3"></a> `buildVisitAndRemote` | [`BuildVisitAndRemote`](#buildvisitandremote) | A factory function that will return a `visit` and `remote` function. All of Superglue and UJS will use these functions. You should customize the function, for example, to add a progress bar. | [types/index.ts:645](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L645) |
-| <a id="mapping-1"></a> `mapping` | `Record`\<`string`, `React.ComponentType`\> | A mapping between your page props and page component. This is setup for you in page_to_page_mapping. | [types/index.ts:650](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L650) |
-| <a id="history-2"></a> `history?` | `History` | An optional history object https://github.com/remix-run/history. If none is provided Superglue will create one for you. | [types/index.ts:655](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L655) |
-| <a id="store-1"></a> `store` | [`SuperglueStore`](#supergluestore) | The exported store from store.js. If you used the generators it would contain slices for superglue, pages, and the flash. | [types/index.ts:660](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L660) |
 
 ## Type Aliases
 
@@ -600,7 +517,7 @@ Defined in: [types/index.ts:146](https://github.com/thoughtbot/superglue/blob/68
 
 A Fragment is a rendered Rails partial with an identity. The use
 of this type is optional, but it makes usage with unproxy and
-useSetFragment type friendly.
+useUpdateFragment type friendly.
 
 In general, Fragments enable normalized state management where Rails partials become
 referenceable entities on the client. The server renders partials as
@@ -697,7 +614,7 @@ This recursively processes objects and arrays to convert Fragment<T> to { __id: 
 
 ### SaveResponse\<T\>
 
-> **SaveResponse**\<`T`\> = \{ `data`: `T`; `componentIdentifier`: [`ComponentIdentifier`](#componentidentifier); `assets`: `string`[]; `csrfToken?`: `string`; `fragments`: [`FragmentPath`](#fragmentpath)[]; `defers`: [`Defer`](#defer)[]; `slices`: [`JSONObject`](#jsonobject); `action`: `"savePage"`; `renderedAt`: `number`; `restoreStrategy`: [`RestoreStrategy`](#restorestrategy); \}
+> **SaveResponse**\<`T`\> = \{ `data`: `T`; `componentIdentifier`: [`ComponentIdentifier`](#componentidentifier); `assets`: `string`[]; `csrfToken?`: `string`; `fragments`: [`FragmentPath`](#fragmentpath)[]; `defers`: [`Defer`](#defer)[]; `flash`: `FlashState`; `action`: `"savePage"`; `renderedAt`: `number`; `restoreStrategy`: [`RestoreStrategy`](#restorestrategy); \}
 
 Defined in: [types/index.ts:209](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L209)
 
@@ -760,11 +677,11 @@ Defined in: [types/index.ts:214](https://github.com/thoughtbot/superglue/blob/68
 
 Defined in: [types/index.ts:215](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L215)
 
-<a id="slices"></a>
+<a id="flash"></a>
 
-##### slices
+##### flash
 
-> **slices**: [`JSONObject`](#jsonobject)
+> **flash**: `FlashState`
 
 Defined in: [types/index.ts:216](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L216)
 
@@ -822,7 +739,7 @@ A Page is a SaveResponse that's been saved to the store
 
 ### StreamMessage
 
-> **StreamMessage** = \{ `data`: [`JSONMappable`](#jsonmappable); `fragmentIds`: `string`[]; `handler`: `"append"` \| `"prepend"` \| `"save"`; `options`: `Record`\<`string`, `string`\>; \}
+> **StreamMessage** = \{ `data`: [`JSONMappable`](#jsonmappable); `fragmentIds`: `string`[]; `handler`: `"append"` \| `"prepend"` \| `"update"`; `options`: `Record`\<`string`, `string`\>; \}
 
 Defined in: [types/index.ts:253](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L253)
 
@@ -848,7 +765,7 @@ Defined in: [types/index.ts:255](https://github.com/thoughtbot/superglue/blob/68
 
 ##### handler
 
-> **handler**: `"append"` \| `"prepend"` \| `"save"`
+> **handler**: `"append"` \| `"prepend"` \| `"update"`
 
 Defined in: [types/index.ts:256](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L256)
 
@@ -866,7 +783,7 @@ Defined in: [types/index.ts:257](https://github.com/thoughtbot/superglue/blob/68
 
 ### StreamResponse
 
-> **StreamResponse** = \{ `data`: [`StreamMessage`](#streammessage)[]; `fragments`: [`FragmentPath`](#fragmentpath)[]; `assets`: `string`[]; `csrfToken?`: `string`; `action`: `"handleStreamResponse"`; `renderedAt`: `number`; `slices`: [`JSONObject`](#jsonobject); \}
+> **StreamResponse** = \{ `data`: [`StreamMessage`](#streammessage)[]; `fragments`: [`FragmentPath`](#fragmentpath)[]; `assets`: `string`[]; `csrfToken?`: `string`; `action`: `"handleStreamResponse"`; `renderedAt`: `number`; `flash`: `FlashState`; \}
 
 Defined in: [types/index.ts:260](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L260)
 
@@ -920,11 +837,11 @@ Defined in: [types/index.ts:265](https://github.com/thoughtbot/superglue/blob/68
 
 Defined in: [types/index.ts:266](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L266)
 
-<a id="slices-2"></a>
+<a id="flash-2"></a>
 
-##### slices
+##### flash
 
-> **slices**: [`JSONObject`](#jsonobject)
+> **flash**: `FlashState`
 
 Defined in: [types/index.ts:267](https://github.com/thoughtbot/superglue/blob/6828bbda8f8692c93cd2c69d86a8a10fbb351d20/superglue/lib/types/index.ts#L267)
 
@@ -1044,7 +961,7 @@ Defined in: [types/index.ts:401](https://github.com/thoughtbot/superglue/blob/68
 
 A Store created with Redux Toolkit's `configureStore` setup with reducers
 from Superglue. If you are using superglue_rails this would have been
-generated for you in `store.js` and setup correctly in application.js
+created internally by Superglue
 
 ***
 

@@ -29,7 +29,7 @@ used Superglue's generators, this would be all set for you in
   renderedAt,
   fragments,
   restoreStrategy,
-  slices
+  flash
 }
 ```
 
@@ -105,11 +105,10 @@ buttons.
   - `fromCacheOnly` will only restore the page from cache
   transitioning
 
-### `slices`
-An object merged with the `initialState` when implementing `buildStore` inside
-of `application.js`. You can use this as the initial state for redux slices.
-Take advantage of the `SAVE_RESPONSE` to continually update your slice every time
-superglue receives a new page request.
+### `flash`
+A key-value object representing Rails flash messages. Superglue automatically
+manages the flash state — clearing it before each visit and merging new flashes
+when a page response is received. Access it using the `useFlash` hook.
 
 [props_template]: https://github.com/thoughtbot/props_template
 
@@ -119,7 +118,7 @@ A response for when [digging](./digging.md) is used, i.e, `props_at` is part of 
 
 [componentIdentifier](#componentidentifier), [assets](#assets),
 [csrfToken](#csrftoken), [fragments](#fragments), [defers](#defers),
-[slices](#slices), [renderedAt](#renderedat)
+[renderedAt](#renderedat)
 
 ### `data`
 The found content node from [digging](./digging.md)
@@ -144,7 +143,7 @@ Use for [Super Turbo Stream](./super-turbo-streams.md#stream-responses) response
    [Deferments](./deferments.md) are disabled for StreamResponse and StreamMessage
 
 [assets](#assets), [csrfToken](#csrftoken), [fragments](#fragments),
-[slices](#slices), [renderedAt](#renderedat)
+[renderedAt](#renderedat)
 
 
 ### `data`
@@ -165,7 +164,7 @@ A list of `fragmentIds` that the `data` targets.
 
 ### `handler`
 
-One of `append`, `prepend`, or `save`
+One of `append`, `prepend`, or `update`
 
 ### `options`
 

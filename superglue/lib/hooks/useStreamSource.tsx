@@ -22,7 +22,7 @@ export type StreamMessage = {
   action: 'handleStreamMessage'
   data: JSONMappable
   fragmentIds: string[]
-  handler: 'append' | 'prepend' | 'update'
+  handler: 'append' | 'prepend' | 'update' | 'noop'
   options: Record<string, string>
   fragments: FragmentPath[]
 }

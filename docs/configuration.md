@@ -1,5 +1,43 @@
 You've installed Superglue and now you're ready to configure your app.
 
+## `application.js`
+
+This is the entry point of your application and uses Superglue's `createApp`
+function. You can add a custom layout here.
+
+```tsx
+<Provider>
+  <MyLayout>
+    <Outlet />
+  </MyLayout>
+</Provider>
+```
+
+## `page_to_page_mapping.js`
+
+!!! info
+    Stop by the [tutorial] to learn how to work with this file.
+
+    **Vite Users** This step can be entirely optional if you're using Vite. See
+    the [recipe](recipes/vite.md) for more information.
+
+This file exports a mapping between a `componentIdentifier` to an imported page
+component. This gets used in your `application.js` so that superglue knows
+which component to render with which identifier.
+
+For example:
+
+```js
+const pageIdentifierToPageComponent = {
+  'posts/edit': PostsEdit,
+  'posts/new': PostsNew,
+  'posts/show': PostsShow,
+  'posts/index': PostsIndex,
+}
+```
+
+[tutorial]: tutorial.md
+
 ## `application_visit.js`
 
 Modify the `application_visit.js` file to intercept and enhance Superglue's core
@@ -36,55 +74,3 @@ developer experience.
 [data-sg-remote]: ujs.md#data-sg-remote
 [data-sg-visit]: ujs.md#data-sg-visit
 [progress bars]: recipes/progress-bar.md
-
-
-## `page_to_page_mapping.js`
-
-!!! info
-    Stop by the [tutorial] to learn how to work with this file.
-
-    **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](recipes/vite.md) for more information.
-
-This file exports a mapping between a `componentIdentifier` to an imported page
-component. This gets used in your `application.js` so that superglue knows
-which component to render with which identifier.
-
-For example:
-
-```js
-const pageIdentifierToPageComponent = {
-  'posts/edit': PostsEdit,
-  'posts/new': PostsNew,
-  'posts/show': PostsShow,
-  'posts/index': PostsIndex,
-}
-```
-
-[tutorial]: tutorial.md
-
-## `application.js`
-
-This is the entry point of your application and uses Superglue's `createApp`
-function. It returns a `Provider`, `Outlet`, and `ujs` handlers. There's
-nothing to do here, but if you need finer control you can use the [source] as
-inspiration.
-
-[source]: https://github.com/thoughtbot/superglue/blob/main/superglue/lib/index.tsx
-
-## Flash
-
-Flash is built into Superglue and works with the Rails `flash` out of the box.
-Access flash messages using the `useFlash` hook:
-
-```jsx
-import { useFlash } from '@thoughtbot/superglue'
-
-const flash = useFlash()
-console.log(flash.success)
-```
-
-[visitAndRemote]: requests.md
-[mapping]: reference/index.md#mapping
-[installation]: installation.md
-

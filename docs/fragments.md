@@ -9,10 +9,11 @@ that is often lost when rendered with a view.
 
 Enter fragments:
 
-__A fragment is a rendered partial with referential identity__ on the client side.
-Its a powerful feature that lets you update client state using an id.
+__A fragment is a rendered partial with frontend referential identity__.
+Its a powerful feature that lets you update client state using an id and have that
+reflected instantly across all pages that use the same fragment.
 
-For example:
+For example, let say you have a shopping cart that shows across all pages:
 
 ```ruby
 json.title "Hello"
@@ -33,10 +34,11 @@ update("userCart", (cartDraft) => {
 <CartSummaryHeader {...content.cart}/>
 ```
 
-!!! success "Turbo Streams"
-    Because fragments are just Rails partial, it enables a familiar and powerful
-    feature of Superglue: [Super Turbo Streams](./super-turbo-streams.md).
-
+!!! success "Hello Turbo Streams!"
+    Because fragments are just Rails partials, we also ported a fan favorite 
+    that allows you to update [append](./super-turbo-streams.md#append), [prepend](./super-turbo-streams.md#append), [update](./super-turbo-streams.md#update) to mutate them. We call it [Super Turbo
+    Streams](./super-turbo-streams.md).
+    
 ## Denormalization
 
 A page response that uses fragments first returns a normalized state. A response
@@ -64,7 +66,7 @@ from the previous example would look like:
   }
 ```
 
-On the client side, Superglue will denormalize when saving to the [store](./redux-state-shape.md#fragments):
+On the client side, Superglue will denormalize the payload to something that looks like this:
 
 ```js
   {
@@ -72,7 +74,7 @@ On the client side, Superglue will denormalize when saving to the [store](./redu
       "/current-page": {
         data: {
           "title": "Hello",
-          "cart": { "__id": "userCart" }  // Fragment reference
+          "cart": { "_id": "userCart" }  // Fragment reference
         }
       }
     },
@@ -92,7 +94,7 @@ On the client side, Superglue will denormalize when saving to the [store](./redu
   }
 ```
 
-Like partials, fragments are also composible:
+Like partials, you can nest fragments:
 
 ```js
   {
@@ -123,7 +125,7 @@ Like partials, fragments are also composible:
 
 ## Normalization
 
-When reading content, Superglue's `useContent` hook will return a proxy that lazily normalizes the data.
+When reading content, Superglue's `useContent`, or `useFragment` hook will return a proxy that lazily normalizes the data.
 
 ```js
 const content = useContent()
@@ -141,7 +143,7 @@ const content = useContent()
 ## Mutations
 
 !!! Important
-    Proxies created by `useContent` can't be mutated directly. This is by design, use `useUpdateFragment` for [mutations](./client-updates.md#useupdatefragment-hook).
+    Proxies created by `useContent` or `useFragment` can't be mutated directly. This is by design, use `useUpdateFragment` for [mutations](./client-updates.md#useupdatefragment-hook).
 
 Having an identity makes optimistic updates easy. Superglue offers a `useUpdateFragment` [hook](./client-updates.md#useupdatefragment-hook) that helps with mutations. Here's a more complex example.
 

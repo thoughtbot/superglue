@@ -13,17 +13,9 @@ scroll API, no specialized modal or virtual table component, no lock-in. We do
 this with a small set of primitives that compose well with any React
 library you want.
 
-See how `visit`, `remote`, digging, turbo stream
-
-### Performance
-
-Superglue is fast.
-
-We're committed to end-to-end performance from Rails to React. On the backend, we
-built `props_template`, a standalone jbuilder-like JSON builder for your props
-and one of the most performant and memory considerate in Rails land. On the
-frontend, Rails partials get identity via Fragments — components using
-`useFragment` only re-render when their piece of state changes.
+!!! tip "Primitives and Patterns"
+    See [Primitives and Patterns](./primitives.md) for how these tools compose
+    to build modals, infinite scroll, optimistic updates, and more.
 
 And of course, batteries are included:
 

@@ -65,11 +65,6 @@ The above results in duplicate JSON nodes across our `pages`:
 ```
 
 For most cases where you don't need client side updates, this may be good
-enough. Its a fine tradeoff for simplicity.
-
-In scenarios where you need client side updates, or you need to keep data
-with semantic identity consistent across pages. Superglue encourages you to
-use:
-
-1. [Fragments](./fragments.md) for most situations
-2. And [Redux](./redux.md) for more complex usecases.
+enough. Its a fine tradeoff for simplicity, but if you need referential identity
+-- you want to update that header and have that reflected across pages, check
+out [Fragments](./fragments.md).

@@ -15,7 +15,7 @@ what the component needs (a header, a list of posts, each with a title and
 body) via `useContent<T>()`. Then you build the props template to fulfill it.
 The UI shape comes first, the business logic follows.
 
-Uou can use any runtime type validation library you like. Superglue includes
+You can use any runtime type validation library you like. Superglue includes
 experimental support for [Deepkit](https://deepkit.io/), which validates your
 server responses against your TypeScript types during development. Write the
 type, load the page, and the errors will guide you.

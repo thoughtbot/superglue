@@ -212,11 +212,3 @@ function LikeButton({ postId }) {
   )
 }
 ```
-
-## Advanced Redux Scenarios
-
-The combination of `useUpdateFragment`, `useUpdateContent`, and
-[Fragments](./fragments.md), would be able to handle most of your state
-management needs. For even more advanced use cases, we have
-[conveniences](./redux.md) for you if you decide to use Redux as
-your state management solution.

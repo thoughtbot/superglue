@@ -80,5 +80,14 @@ export default defineConfig((options) => {
       outExtension: () => ({ js: '.cjs' }),
       dts: false,
     },
+
+    // Unplugin — separate entrypoint
+    {
+      entry: { deepkit: 'lib/deepkit.ts' },
+      format: ['esm', 'cjs'],
+      dts: true,
+      sourcemap: true,
+      external: ['unplugin', '@deepkit/type-compiler', 'typescript'],
+    },
   ]
 })

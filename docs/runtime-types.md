@@ -1,8 +1,26 @@
 # Working with types
 
-In Superglue, there's no need to annotate your types in ruby just to regenerate
-them in typescript. Instead you write **typescript first** and let runtime type
-validation give you the developer feedback to build your `props`.
+End-to-end typing is a common way to ensure correctness across the frontend
+and backend, but it's not the only way. Tools like Typelizer annotate types in
+Ruby and regenerate them in TypeScript, but now you're learning two different
+type languages and wondering how one maps to the other. TypeScript is just so
+much more expressive. It has union types, mapped types, conditional types, and
+generics that Ruby's type systems can't match.
+
+Superglue takes a different approach, a typescript first approach. Instead of
+end-to-end typing, we use
+[contracts](https://martinfowler.com/articles/consumerDrivenContracts.html).
+You write your types in TypeScript and treat them as the UI contract, declaring
+what the component needs (a header, a list of posts, each with a title and
+body) via `useContent<T>()`. Then you build the props template to fulfill it.
+The UI shape comes first, the business logic follows.
+
+Uou can use any runtime type validation library you like. Superglue includes
+experimental support for [Deepkit](https://deepkit.io/), which validates your
+server responses against your TypeScript types during development. Write the
+type, load the page, and the errors will guide you.
+
+## Getting started with Deepkit
 
 To get started, run the installation generator with the typescript flag.
 
@@ -18,7 +36,7 @@ The installation generator will add
 
 ## How It Works
 
-Superglue uses [Deepkit](https://deepkit.io/) for runtime type validation during development:
+Deepkit provides runtime type validation during development:
 
 1. **Build Time**: Deepkit's compiler transforms TypeScript types into runtime validation code
 2. **Development Mode**: `useContent()` validates server responses against your types

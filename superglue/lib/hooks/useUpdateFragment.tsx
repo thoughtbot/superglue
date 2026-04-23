@@ -3,7 +3,6 @@ import { Immer } from 'immer'
 import { updateFragment } from '../actions'
 import { RootState, Fragment } from '../types'
 import { Unproxy } from '../types'
-import { FragmentProxy } from './useFragment'
 
 const immer = new Immer()
 immer.setAutoFreeze(false)
@@ -14,8 +13,6 @@ immer.setAutoFreeze(false)
  */
 export type Unpack<T> = T extends Fragment<infer U, unknown>
   ? U
-  : T extends FragmentProxy
-  ? T
   : never
 /**
  * Hook for mutating fragments using Immer drafts.

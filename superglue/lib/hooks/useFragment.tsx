@@ -3,7 +3,6 @@ import { useMemo, useRef } from 'react'
 import { JSONMappable, RootState, FragmentRef, ReceiveType } from '../types'
 import { createProxy } from '../utils/proxy'
 
-export type FragmentProxy = { __fragment: true }
 
 /**
  * Union type for fragment references, accepting either FragmentRef objects or string IDs

@@ -63,7 +63,11 @@ export function useContent<T = JSONMappable>(
   const dependencies = useRef<Set<string>>(new Set())
 
   const sourceData = useSelector((state: RootState) => {
-    return state.pages[resolvedPageKey]?.data
+    if (pageKey) {
+      return state.pages[resolvedPageKey]?.data
+    } else {
+      return state.pages[resolvedPageKey].data
+    }
   })
 
   const trackedFragments = useSelector(

@@ -1,11 +1,6 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import {
-  JSONMappable,
-  RootState,
-  FragmentRef,
-  ReceiveType,
-} from '../types'
+import { JSONMappable, RootState, FragmentRef, ReceiveType } from '../types'
 import { createProxy } from '../utils/proxy'
 
 export type FragmentProxy = { __fragment: true }

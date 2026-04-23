@@ -453,9 +453,7 @@ describe('useFragment', () => {
     renderWithProvider(<Component />, store)
 
     const unproxiedFragment = unproxy(capturedFragment)
-    expect(unproxiedFragment).toBe(
-      store.getState().fragments.unproxy_fragment
-    )
+    expect(unproxiedFragment).toBe(store.getState().fragments.unproxy_fragment)
     expect(unproxiedFragment.data).toBe('Fragment Data')
   })
 
@@ -731,16 +729,16 @@ describe('useFragment', () => {
     expect(items[0].querySelector('[data-testid="title"]')).toHaveTextContent(
       'Item 1'
     )
-    expect(
-      items[0].querySelector('[data-testid="active"]')
-    ).toHaveTextContent('active')
+    expect(items[0].querySelector('[data-testid="active"]')).toHaveTextContent(
+      'active'
+    )
 
     expect(items[1].querySelector('[data-testid="title"]')).toHaveTextContent(
       'Item 2'
     )
-    expect(
-      items[1].querySelector('[data-testid="active"]')
-    ).toHaveTextContent('inactive')
+    expect(items[1].querySelector('[data-testid="active"]')).toHaveTextContent(
+      'inactive'
+    )
   })
 
   it('handles direct JSX rendering of proxy objects in arrays', () => {
@@ -792,25 +790,25 @@ describe('useFragment', () => {
     expect(items[0].querySelector('[data-testid="title"]')).toHaveTextContent(
       'Direct Dynamic 1'
     )
-    expect(
-      items[0].querySelector('[data-testid="status"]')
-    ).toHaveTextContent('pending')
+    expect(items[0].querySelector('[data-testid="status"]')).toHaveTextContent(
+      'pending'
+    )
 
     // Check second item (regular object)
     expect(items[1].querySelector('[data-testid="title"]')).toHaveTextContent(
       'Direct Static'
     )
-    expect(
-      items[1].querySelector('[data-testid="status"]')
-    ).toHaveTextContent('ready')
+    expect(items[1].querySelector('[data-testid="status"]')).toHaveTextContent(
+      'ready'
+    )
 
     // Check third item (fragment)
     expect(items[2].querySelector('[data-testid="title"]')).toHaveTextContent(
       'Direct Dynamic 2'
     )
-    expect(
-      items[2].querySelector('[data-testid="status"]')
-    ).toHaveTextContent('complete')
+    expect(items[2].querySelector('[data-testid="status"]')).toHaveTextContent(
+      'complete'
+    )
   })
 
   it('handles direct JSX rendering of fragment-scoped proxy objects in arrays', () => {

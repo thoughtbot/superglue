@@ -42,7 +42,10 @@ afterAll(() => {
 
 function hasDeepkitMetadata(code: string): boolean {
   // Deepkit adds .__type and .Ω markers (may appear as unicode char or escape sequence)
-  return code.includes('.__type') && (code.includes('\u03A9') || code.includes('\\u03A9'))
+  return (
+    code.includes('.__type') &&
+    (code.includes('\u03A9') || code.includes('\\u03A9'))
+  )
 }
 
 describe('unplugin integration', () => {

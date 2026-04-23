@@ -1815,5 +1815,4 @@ describe('useContent', () => {
       expect(getByTestId('invalid3')).toHaveTextContent('true')
     })
   })
-
 })

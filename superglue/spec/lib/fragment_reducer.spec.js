@@ -213,10 +213,7 @@ describe('reducers', () => {
         const nextState = fragmentReducer(prevState, action)
 
         expect(nextState).toEqual({
-          posts: [
-            { id: 1, title: 'First' },
-            { title: 'No ID' },
-          ],
+          posts: [{ id: 1, title: 'First' }, { title: 'No ID' }],
         })
       })
     })
@@ -358,10 +355,7 @@ describe('reducers', () => {
         const nextState = fragmentReducer(prevState, action)
 
         expect(nextState).toEqual({
-          posts: [
-            { title: 'No ID' },
-            { id: 1, title: 'First' },
-          ],
+          posts: [{ title: 'No ID' }, { id: 1, title: 'First' }],
         })
       })
     })

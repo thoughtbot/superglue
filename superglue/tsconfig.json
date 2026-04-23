@@ -10,7 +10,8 @@
     "target": "ES2021",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "noEmit": true
+    "noEmit": true,
+    "skipLibCheck": true
   },
   "include": ["./lib/**/*"]
 }

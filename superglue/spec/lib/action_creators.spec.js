@@ -18,7 +18,7 @@ import { MismatchedComponentError } from '../../lib/action_creators'
 
 const defaultExtra = () => ({
   config: { baseUrl: 'https://example.com', maxPages: 20 },
-  lastVisitController: { abort: () => {} }
+  lastVisitController: { abort: () => {} },
 })
 
 const buildStore = (preloadedState) => {

@@ -1487,7 +1487,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/hooks/" class="md-nav__link">
+      <a href="../reference/hooks.md" class="md-nav__link">
         
   
   
@@ -1510,7 +1510,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/components.Navigation/" class="md-nav__link">
+      <a href="../reference/components.Navigation.md" class="md-nav__link">
         
   
   
@@ -1533,7 +1533,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/" class="md-nav__link">
+      <a href="../reference/index.md" class="md-nav__link">
         
   
   
@@ -1556,7 +1556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/types/" class="md-nav__link">
+      <a href="../reference/types.md" class="md-nav__link">
         
   
   
@@ -1579,7 +1579,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/types.requests/" class="md-nav__link">
+      <a href="../reference/types.requests.md" class="md-nav__link">
         
   
   
@@ -1602,7 +1602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/types.actions/" class="md-nav__link">
+      <a href="../reference/types.actions.md" class="md-nav__link">
         
   
   
@@ -1847,12 +1847,12 @@
 <p>If you prefer to navigate using Javascript, or need more functionality than what UJS
 offers, Superglue comes with two functions built around <code>fetch</code>, <code>visit</code> and
 <code>remote</code>. These are wrapped with your own implementation in
-<a href="../configuration/#application_visitjs">application_visit.js</a> and can be accessed via the <a href="../reference/types/#navigationcontextprops">NavigationContext</a>.</p>
+<a href="../configuration/#application_visitjs">application_visit.js</a> and can be accessed via the <a href="reference/types.md#navigationcontextprops">NavigationContext</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Superglue does not come with a <code>&lt;Link&gt;</code> component. Instead we encourage you to
 build one that is unique to your projects needs using the functions provided by
-the <a href="../reference/types/#navigationcontextprops">NavigationContext</a>.</p>
+the <a href="reference/types.md#navigationcontextprops">NavigationContext</a>.</p>
 </div>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NavigationContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span><span class="p">;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -1882,7 +1882,7 @@ to the store. See the <a href="#the-beforesave-callback">beforeSave</a> callback
 </div>
 <div class="grid cards">
 <ul>
-<li><a href="../reference/types.requests/#visit"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> See complete reference</a>
+<li><a href="reference/types.requests.md#visit"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> See complete reference</a>
      for <code>visit</code></li>
 </ul>
 </div>
@@ -1918,7 +1918,7 @@ will not see an update.</p>
 <p class="admonition-title">Warning</p>
 <p>The componentIdentifier from the page response <strong>MUST</strong> match the target page, otherwise
 remote will throw a <code>MismatchedComponentError</code> error. You can override this by using the
-<code>force: true</code> option. See the <a href="../reference/types.requests/#remoteprops">docs</a>
+<code>force: true</code> option. See the <a href="reference/types.requests.md#remoteprops">docs</a>
 for details.</p>
 </div>
 <pre class="mermaid"><code>sequenceDiagram
@@ -1936,7 +1936,7 @@ for details.</p>
   end</code></pre>
 <div class="grid cards">
 <ul>
-<li><a href="../reference/types.requests/#remote"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> See complete reference</a>
+<li><a href="reference/types.requests.md#remote"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> See complete reference</a>
      for <code>remote</code></li>
 </ul>
 </div>

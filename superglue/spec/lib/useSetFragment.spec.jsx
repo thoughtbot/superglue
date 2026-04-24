@@ -61,7 +61,7 @@ describe('useUpdateFragment', () => {
       expect(Object.isFrozen(updatedState.fragments['user_123'])).toBe(false)
     })
 
-    it('should update existing fragment with string reference', () => {
+    it('should update existing fragment with a fragment object', () => {
       const initialState = {
         superglue: {
           currentPageKey: '/page',
@@ -84,9 +84,17 @@ describe('useUpdateFragment', () => {
       const set = result.current
 
       act(() => {
-        set('user_123', (draft) => {
-          draft.name = 'Jane'
-        })
+        set(
+          {
+            __id: 'user_123',
+            id: 123,
+            name: 'John',
+            email: 'john@example.com',
+          },
+          (draft) => {
+            draft.name = 'Jane'
+          }
+        )
       })
 
       const updatedState = store.getState()
@@ -95,8 +103,6 @@ describe('useUpdateFragment', () => {
         name: 'Jane',
         email: 'john@example.com',
       })
-
-      expect(Object.isFrozen(updatedState.fragments['user_123'])).toBe(false)
     })
 
     it('should handle nested object updates', () => {
@@ -155,37 +161,6 @@ describe('useUpdateFragment', () => {
 
       act(() => {
         set({ __id: 'posts_collection' }, (draft) => {
-          draft.push({ title: 'Post 3' })
-        })
-      })
-
-      const updatedState = store.getState()
-      expect(updatedState.fragments['posts_collection']).toHaveLength(3)
-      expect(updatedState.fragments['posts_collection'][2]).toEqual({
-        title: 'Post 3',
-      })
-    })
-
-    it('should handle array updates with string reference', () => {
-      const initialState = {
-        superglue: {
-          currentPageKey: '/page',
-        },
-        pages: {},
-        fragments: {
-          posts_collection: [{ title: 'Post 1' }, { title: 'Post 2' }],
-        },
-      }
-
-      const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
-      const set = result.current
-
-      act(() => {
-        set('posts_collection', (draft) => {
           draft.push({ title: 'Post 3' })
         })
       })
@@ -292,25 +267,6 @@ describe('useUpdateFragment', () => {
       expect(() => {
         act(() => {
           set({ __id: 'non_existent' }, (draft) => {})
-        })
-      }).toThrow('Fragment with id "non_existent" not found')
-    })
-
-    it('should throw error for non-existent fragment with string reference', () => {
-      const store = buildStore({
-        superglue: { currentPageKey: '/page' },
-        pages: {},
-        fragments: {},
-      })
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
-      const set = result.current
-
-      expect(() => {
-        act(() => {
-          set('non_existent', (draft) => {})
         })
       }).toThrow('Fragment with id "non_existent" not found')
     })

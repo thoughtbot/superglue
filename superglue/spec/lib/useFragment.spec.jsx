@@ -77,39 +77,6 @@ describe('useFragment', () => {
     expect(capturedUser.active).toBe(true)
   })
 
-  it('works with string fragment references', () => {
-    const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
-      pages: {},
-      fragments: {
-        string_user: {
-          name: 'String User',
-          email: 'string@example.com',
-          active: true,
-        },
-      },
-    })
-
-    let capturedUser
-
-    const Component = () => {
-      const user = useFragment('string_user')
-      capturedUser = user
-      return <div>{user.name}</div>
-    }
-
-    const { container } = renderWithProvider(<Component />, store)
-
-    expect(container.textContent).toBe('String User')
-    expect(capturedUser.name).toBe('String User')
-    expect(capturedUser.email).toBe('string@example.com')
-    expect(capturedUser.active).toBe(true)
-  })
-
   it('resolves nested fragments in fragment-scoped mode', () => {
     const store = buildStore({
       superglue: {

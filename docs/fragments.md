@@ -26,7 +26,13 @@ end
 const content = useContent()
 const update = useUpdateFragment()
 
-update("userCart", (cartDraft) => {
+update(content.cart, (cartDraft) => {
+  cartDraft.totalCost = 100
+})
+
+// or alternatively
+
+update(toFragmentRef("userCart"), (cartDraft) => {
   cartDraft.totalCost = 100
 })
 
@@ -150,7 +156,7 @@ Having an identity makes optimistic updates easy. Superglue offers a `useUpdateF
 ```js
 const update = useUpdateFragment()
 
-update('userCart', (cartDraft) => {
+update(toFragmentRef('userCart'), (cartDraft) => {
   // carDraft.availableCoupons is a fragment ref in the shape of {__id: 'availableCoupons'}
   // you can use the fragment ref instead of a string
   update(cartDraft.availableCoupons, (couponsDraft) => {

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Immer } from 'immer'
 import { updateFragment } from '../actions'
-import { RootState, Fragment } from '../types'
+import { RootState, Fragment, FragmentRef } from '../types'
 import { Unproxy } from '../types'
 
 const immer = new Immer()
@@ -11,9 +11,8 @@ immer.setAutoFreeze(false)
  * Utility type to extract the data type from a Fragment wrapper
  * @public
  */
-export type Unpack<T> = T extends Fragment<infer U, unknown>
-  ? U
-  : never
+export type Unpack<T> = T extends Fragment<infer U, unknown> ? U : never
+
 /**
  * Hook for mutating fragments using Immer drafts.
  *
@@ -39,35 +38,32 @@ export function useUpdateFragment() {
   const fragments = useSelector((state: RootState) => state.fragments)
 
   /**
-   * Updates a fragment using a {@link FragmentRef} object.
+   * Updates a fragment using a {@link Fragment} object.
    *
-   * @param fragmentRef - Fragment reference object containing __id
+   * @param fragment - Fragment object from proxied content
    * @param updater - Immer draft function for mutating fragment data
    */
-  function setter<T extends Fragment<unknown, unknown>>(
-    fragmentRef: T,
+  function setter<T extends Fragment<unknown, true>>(
+    fragment: T,
     updater: (draft: Unproxy<Unpack<T>>) => void
   ): void
 
   /**
-   * Updates a fragment using a fragment ID string.
+   * Updates a fragment using a {@link FragmentRef} object.
    *
-   * @param fragmentId - The fragment ID string
+   * @param fragmentRef - Fragment reference from unproxied content
    * @param updater - Immer draft function for mutating fragment data
    */
-  function setter<T = unknown>(
-    fragmentId: string,
-    updater: (draft: T) => void
+  function setter<T, P extends boolean>(
+    fragmentRef: FragmentRef<T, P>,
+    updater: (draft: Unproxy<T>) => void
   ): void
 
   function setter(
-    fragmentRefOrId: Fragment<unknown, true> | string,
-    updater: (draft: unknown) => void
+    fragmentRefOrId: Fragment<unknown, true> | FragmentRef<unknown, true>,
+    updater: (draft: any) => void // eslint-disable-line @typescript-eslint/no-explicit-any
   ): void {
-    const fragmentId =
-      typeof fragmentRefOrId === 'string'
-        ? fragmentRefOrId
-        : fragmentRefOrId.__id
+    const fragmentId = fragmentRefOrId.__id
 
     const currentFragment = fragments[fragmentId]
 

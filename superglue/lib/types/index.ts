@@ -184,8 +184,10 @@ export type Fragment<T, Present = false> = Present extends true
  * Utility type for unproxy that converts Fragment types to fragment references.
  * This recursively processes objects and arrays to convert Fragment<T> to { __id: string }.
  */
-export type Unproxy<T> = T extends Fragment<unknown, unknown>
-  ? FragmentRef
+export type Unproxy<T> = T extends Fragment<infer U, infer P>
+  ? P extends boolean
+    ? FragmentRef<U, P>
+    : FragmentRef<U, false>
   : T extends (infer U)[]
   ? Unproxy<U>[]
   : T extends object
@@ -323,8 +325,10 @@ export type FragmentPath = {
  * @interface
  */
 
-export type FragmentRef = {
+export type FragmentRef<T = unknown, Present extends boolean = false> = {
   __id: string
+  __type?: T
+  __present?: Present
 }
 
 /**

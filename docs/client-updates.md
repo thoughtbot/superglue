@@ -24,7 +24,7 @@ function ShoppingCart() {
   const update = useUpdateFragment()
 
   const addItem = (product) => {
-    update('userCart', (cartDraft) => {
+    update(content.cart, (cartDraft) => {
       cartDraft.items.push({
         id: product.id,
         name: product.name,
@@ -102,7 +102,7 @@ receives an Immer draft:
 ```jsx
 const update = useUpdateFragment()
 
-update('userCart', (cartDraft) => {
+update(toFragmentRef('userCart'), (cartDraft) => {
   cartDraft.items.push(newItem)        // Direct mutation (safe)
   cartDraft.totalCost += newItem.price // Direct assignment (safe)
 })
@@ -177,7 +177,7 @@ For optimistic updates, combine client-side updates with server requests:
 
 ```jsx
 import React, { useContext } from 'react'
-import { useContent, useUpdateFragment, NavigationContext } from '@thoughtbot/superglue'
+import { useContent, useUpdateFragment, toFragmentRef, NavigationContext } from '@thoughtbot/superglue'
 
 function LikeButton({ postId }) {
   const content = useContent()
@@ -186,7 +186,7 @@ function LikeButton({ postId }) {
 
   const toggleLike = async () => {
     // Optimistic update
-    update(`post_${postId}`, (postDraft) => {
+    update(toFragmentRef(`post_${postId}`), (postDraft) => {
       postDraft.liked = !postDraft.liked
       postDraft.likeCount += postDraft.liked ? 1 : -1
     })

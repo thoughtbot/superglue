@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { RootState, SuperglueState, FlashState } from '../types'
 export { useContent, unproxy } from './useContent'
-export { useFragment } from './useFragment'
+export { useFragment, toFragmentRef } from './useFragment'
 export { useUpdateFragment } from './useUpdateFragment'
 export { useUpdateContent } from './useUpdateContent'
 export { useStreamSource } from './useStreamSource'

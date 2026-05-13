@@ -1,5 +1,6 @@
 import {
   Result,
+  ErrorResult,
   VisitResult,
   PageKey,
   SaveResponse,
@@ -147,9 +148,10 @@ export interface ApplicationRemote {
    * ApplicationRemote and will pass the dataset of the HTML element where UJS is
    * enabled on.
    *
-   * Returns a `Promise<Result>` — terminal branches (HTTP error redirects,
-   * unexpected exceptions) should return a never-settling promise rather
-   * than `undefined` so the chain reflects "the browser is unloading."
+   * Returns a `Promise<Result | ErrorResult>` — terminal branches (HTTP
+   * error redirects, unexpected exceptions) should return a never-settling
+   * promise rather than `undefined` so the chain reflects "the browser is
+   * unloading."
    */
   (
     input: string | PageKey,
@@ -158,7 +160,7 @@ export interface ApplicationRemote {
         [name: string]: string | undefined
       }
     }
-  ): Promise<Result>
+  ): Promise<Result | ErrorResult>
 }
 
 export interface ApplicationVisit {
@@ -173,10 +175,10 @@ export interface ApplicationVisit {
    * ApplicationVisit and will pass the dataset of the HTML element where UJS is
    * enabled on.
    *
-   * Returns a `Promise<VisitResult>` — terminal branches (HTTP error
-   * redirects, unexpected exceptions) should return a never-settling
-   * promise rather than `undefined` so the chain reflects "the browser is
-   * unloading."
+   * Returns a `Promise<VisitResult | ErrorResult>` — terminal branches
+   * (HTTP error redirects, unexpected exceptions) should return a
+   * never-settling promise rather than `undefined` so the chain reflects
+   * "the browser is unloading."
    */
   (
     input: string | PageKey,
@@ -185,5 +187,5 @@ export interface ApplicationVisit {
         [name: string]: string | undefined
       }
     }
-  ): Promise<VisitResult>
+  ): Promise<VisitResult | ErrorResult>
 }

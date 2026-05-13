@@ -128,8 +128,15 @@ export function useContent<T = JSONMappable>(
             )
           }
         })
-        .catch(() => {
-          // Deepkit not installed - silently skip validation
+        .catch((e) => {
+          // Swallow module-not-found errors (deepkit not installed)
+          if (
+            e &&
+            typeof e.code === 'string' &&
+            e.code.includes('MODULE_NOT_FOUND')
+          )
+            return
+          throw e
         })
     }
 

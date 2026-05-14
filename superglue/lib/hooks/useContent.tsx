@@ -1,5 +1,6 @@
 import { useSelector, useStore } from 'react-redux'
-import { useMemo, useRef } from 'react'
+import { useContext, useMemo, useRef } from 'react'
+import { DeepkitContext } from '../contexts'
 import {
   JSONMappable,
   RootState,
@@ -86,6 +87,7 @@ export function useContent<T = JSONMappable>(
   )
 
   const store = useStore<RootState>()
+  const deepkit = useContext(DeepkitContext)
 
   const proxy = useMemo(() => {
     const proxyCache = new WeakMap()
@@ -101,7 +103,7 @@ export function useContent<T = JSONMappable>(
       proxyCache
     ) as T
 
-    if (process.env.NODE_ENV !== 'production' && __type) {
+    if (process.env.NODE_ENV !== 'production' && __type && deepkit) {
       const proxyForValidation = createProxy(
         sourceData,
         { current: store.getState().fragments },
@@ -109,35 +111,21 @@ export function useContent<T = JSONMappable>(
         new WeakMap()
       ) as T
 
-      import('@deepkit/type')
-        .then(({ resolveReceiveType, validate }) => {
-          // @ts-expect-error - ReceiveType<T> is transformed by Deepkit compiler
-          const resolvedType = resolveReceiveType(__type)
-          const errors = validate(proxyForValidation, resolvedType)
+      const resolvedType = deepkit.resolveReceiveType(__type)
+      const errors = deepkit.validate(proxyForValidation, resolvedType)
 
-          if (errors.length > 0) {
-            const formattedErrors = errors.map((e) => ({
-              path: e.path,
-              message: e.message,
-              code: String(e.code),
-            }))
+      if (errors.length > 0) {
+        const formattedErrors = errors.map((e) => ({
+          path: e.path,
+          message: e.message,
+          code: String(e.code),
+        }))
 
-            console.error(
-              `[Superglue] Content validation failed for ${resolvedPageKey}:`,
-              formattedErrors
-            )
-          }
-        })
-        .catch((e) => {
-          // Swallow module-not-found errors (deepkit not installed)
-          if (
-            e &&
-            typeof e.code === 'string' &&
-            e.code.includes('MODULE_NOT_FOUND')
-          )
-            return
-          throw e
-        })
+        console.error(
+          `[Superglue] Content validation failed for ${resolvedPageKey}:`,
+          formattedErrors
+        )
+      }
     }
 
     return proxy

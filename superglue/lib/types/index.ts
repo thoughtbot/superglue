@@ -705,6 +705,16 @@ export interface CreateAppArgs {
    * Enable Redux DevTools integration. Defaults to `false`.
    */
   devTools?: boolean
+  /**
+   * Optional deepkit type validation for development. Pass
+   * `{ resolveReceiveType, validate }` from `@deepkit/type` to enable
+   * synchronous runtime type checking in `useContent` and `useFragment`.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deepkit?: {
+    resolveReceiveType: (...args: any[]) => any
+    validate: (...args: any[]) => Array<{ path: string; message: string; code: number | string }>
+  }
 }
 
 /**

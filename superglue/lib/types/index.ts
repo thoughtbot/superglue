@@ -19,12 +19,15 @@ export * from './requests'
 export * from './cable'
 
 /**
- * Type marker for Deepkit runtime validation. This allows Deepkit
- * to be an optional peer dependency since Deepkit only checks for
- * the name of the type is ReceiveType.
+ * Options for runtime type validation in `useContent` and `useFragment`.
+ * The `validate` callback is typically injected at build time by a
+ * Superglue unplugin, but can also be passed manually with any
+ * validation library. The callback should report errors via
+ * `console.error` or by throwing.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type ReceiveType<T> = unknown
+export type ValidateOption = {
+  validate?: (data: unknown) => void
+}
 
 /**
  * A PageKey is a combination of a parsed URL's pathname + query string. No hash.
@@ -705,16 +708,6 @@ export interface CreateAppArgs {
    * Enable Redux DevTools integration. Defaults to `false`.
    */
   devTools?: boolean
-  /**
-   * Optional deepkit type validation for development. Pass
-   * `{ resolveReceiveType, validate }` from `@deepkit/type` to enable
-   * synchronous runtime type checking in `useContent` and `useFragment`.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deepkit?: {
-    resolveReceiveType: (...args: any[]) => any
-    validate: (...args: any[]) => Array<{ path: string; message: string; code: number | string }>
-  }
 }
 
 /**

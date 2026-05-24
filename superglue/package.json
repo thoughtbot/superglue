@@ -29,12 +29,8 @@
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/superglue.d.mts",
-      "production": {
-        "import": "./dist/superglue.mjs",
-        "require": "./dist/cjs/superglue.cjs"
-      },
-      "import": "./dist/superglue.development.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/superglue.mjs",
+      "require": "./dist/cjs/superglue.cjs"
     },
     "./deepkit": {
       "types": "./dist/deepkit.d.ts",
@@ -90,7 +86,6 @@
   },
   "peerDependencies": {
     "@anycable/web": "^1",
-    "@deepkit/core": "^1.0.19",
     "@deepkit/type": "^1.0.19",
     "@deepkit/type-compiler": "^1.0.19",
     "@rails/actioncable": "^7 || ^8",
@@ -98,9 +93,6 @@
   },
   "peerDependenciesMeta": {
     "@anycable/web": {
-      "optional": true
-    },
-    "@deepkit/core": {
       "optional": true
     },
     "@deepkit/type": {

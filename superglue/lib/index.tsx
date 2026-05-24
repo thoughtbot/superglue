@@ -31,8 +31,6 @@ export { urlToPageKey }
 export * from './hooks'
 export { unproxy } from './hooks/useContent'
 
-import { DeepkitContext } from './contexts'
-
 const hasWindow = typeof window !== 'undefined'
 
 const createHistory = (): History => {
@@ -88,7 +86,6 @@ export function createApp({
   history,
   cable,
   devTools,
-  deepkit,
   _storeResult,
 }: CreateAppArgs & { _storeResult?: StoreResult }): CreateAppResult {
   const { store, extra } = _storeResult || createStore(devTools)
@@ -138,18 +135,16 @@ export function createApp({
   function Provider({ children }: ProviderProps) {
     return (
       <ReduxProvider store={store}>
-        <DeepkitContext.Provider value={deepkit}>
-          <CableContext.Provider value={{ streamActions, cable: cable ?? null }}>
-            <NavigationProvider
-              ref={navigatorRef}
-              visit={visit}
-              remote={remote}
-              history={resolvedHistory}
-            >
-              {children}
-            </NavigationProvider>
-          </CableContext.Provider>
-        </DeepkitContext.Provider>
+        <CableContext.Provider value={{ streamActions, cable: cable ?? null }}>
+          <NavigationProvider
+            ref={navigatorRef}
+            visit={visit}
+            remote={remote}
+            history={resolvedHistory}
+          >
+            {children}
+          </NavigationProvider>
+        </CableContext.Provider>
       </ReduxProvider>
     )
   }

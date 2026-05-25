@@ -1847,9 +1847,7 @@
 <p>End-to-end typing is a common way to ensure correctness across the frontend
 and backend, but it's not the only way. Tools like Typelizer annotate types in
 Ruby and regenerate them in TypeScript, but now you're learning two different
-type languages and wondering how one maps to the other. TypeScript is just so
-much more expressive. It has union types, mapped types, conditional types, and
-generics that Ruby's type systems can't match.</p>
+type languages and wondering how one maps to the other. </p>
 <p>Superglue takes a different approach, a typescript first approach. Instead of
 end-to-end typing, we use
 <a href="https://martinfowler.com/articles/consumerDrivenContracts.html">contracts</a>.
@@ -1857,72 +1855,79 @@ You write your types in TypeScript and treat them as the UI contract, declaring
 what the component needs (a header, a list of posts, each with a title and
 body) via <code>useContent&lt;T&gt;()</code>. Then you build the props template to fulfill it.
 The UI shape comes first, the business logic follows.</p>
-<p>You can use any runtime type validation library you like. Superglue includes
-experimental support for <a href="https://deepkit.io/">Deepkit</a>, which validates your
-server responses against your TypeScript types during development. Write the
-type, load the page, and the errors will guide you.</p>
+<p>Superglue ships an experimental <a href="https://deepkit.io/">Deepkit</a> plugin that
+validates your server responses against your TypeScript types during
+development. Write the type, load the page, and the errors will guide you.</p>
 <h2 id="getting-started-with-deepkit">Getting started with Deepkit<a class="headerlink" href="#getting-started-with-deepkit" title="Permanent link">&para;</a></h2>
 <p>To get started, run the installation generator with the typescript flag.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>rails g superglue:install --typescript
 </span></code></pre></div>
-<p>The installation generator will add</p>
-<ol>
-<li>a <a href="https://github.com/thoughtbot/superglue_rails/blob/af7edd35d3ed211822663ac21a5c9910abcc6d88/lib/generators/superglue/install/templates/esbuild/plugin.js">esbuild plugin</a> that enables deepkit to work with Superglue</li>
-<li>a <a href="https://github.com/thoughtbot/superglue_rails/blob/af7edd35d3ed211822663ac21a5c9910abcc6d88/lib/generators/superglue/install/templates/ts/build.mjs">build.mjs</a>, a esbuild node script that builds your application.</li>
-<li>And setup deepkit to work with esbuild. If you are using <a href="../recipes/vite/">vite</a> or bun with superglue, please use <a href="https://deepkit.io/en/documentation/package/vite">deepkit/vite</a> or <a href="https://deepkit.io/en/documentation/package/bun">deepkit/bun</a> plugins.</li>
-</ol>
+<p>The installation generator will ask if you'd like to enable Deepkit and set up
+the build plugin for your bundler. If you prefer to set it up manually, add the
+plugin to your build config:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// esbuild</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">esbuild</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">deepkitPlugin</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue/deepkit&#39;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// vite</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">vite</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">deepkitPlugin</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue/deepkit&#39;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">// webpack</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">webpack</span><span class="o">:</span><span class="w"> </span><span class="nx">deepkitPlugin</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@thoughtbot/superglue/deepkit&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Then include it conditionally in your plugins array:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="nx">isDev</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">[</span><span class="nx">deepkitPlugin</span><span class="p">()]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[]</span>
+</span></code></pre></div>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>Deepkit provides runtime type validation during development:</p>
-<ol>
-<li><strong>Build Time</strong>: Deepkit's compiler transforms TypeScript types into runtime validation code</li>
-<li><strong>Development Mode</strong>: <code>useContent()</code> validates server responses against your types</li>
-<li><strong>Production Mode</strong>: Validation code is stripped entirely</li>
-</ol>
+<p>The Superglue Deepkit plugin transforms <code>useContent&lt;T&gt;()</code> and
+<code>useFragment&lt;T&gt;()</code> calls to inject a <code>validate</code> callback via AST
+transformation. Deepkit's compiler generates the runtime type metadata.
+When the page loads, the hooks validate server responses against your
+types and log errors to the console.</p>
 <h2 id="writing-your-types">Writing your types<a class="headerlink" href="#writing-your-types" title="Permanent link">&para;</a></h2>
 <p><code>useContent</code> is the generic hook used to access the props <a href="../shaping/">you
 build</a>. To make use of runtime types, simply pass a type
-describing your page's props as you normally would: </p>
-<p>For example: </p>
-<div class="language-tsx highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useContent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Post</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="kr">type</span><span class="w"> </span><span class="nx">PostShowProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nx">header</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nx">post</span><span class="o">:</span><span class="w"> </span><span class="kt">Post</span><span class="p">;</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">PostShow</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">header</span><span class="p">,</span><span class="w"> </span><span class="nx">post</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">&lt;</span><span class="nt">PostShowProps</span><span class="p">&gt;()</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;{</span><span class="nx">header</span><span class="p">}&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;{</span><span class="nx">post</span><span class="p">.</span><span class="nx">id</span><span class="p">}&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;{</span><span class="nx">post</span><span class="p">.</span><span class="nx">title</span><span class="p">}&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;{</span><span class="nx">post</span><span class="p">.</span><span class="nx">content</span><span class="p">}&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">        </span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="p">}</span>
+describing your page's props as you normally would:</p>
+<p>For example:</p>
+<div class="language-tsx highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useContent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="kd">interface</span><span class="w"> </span><span class="nx">Post</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kr">type</span><span class="w"> </span><span class="nx">PostShowProps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nx">header</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nx">post</span><span class="o">:</span><span class="w"> </span><span class="kt">Post</span><span class="p">;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">PostShow</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">header</span><span class="p">,</span><span class="w"> </span><span class="nx">post</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">&lt;</span><span class="nt">PostShowProps</span><span class="p">&gt;()</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">      </span><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;{</span><span class="nx">header</span><span class="p">}&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">        </span><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;{</span><span class="nx">post</span><span class="p">.</span><span class="nx">id</span><span class="p">}&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;{</span><span class="nx">post</span><span class="p">.</span><span class="nx">title</span><span class="p">}&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">          </span><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;{</span><span class="nx">post</span><span class="p">.</span><span class="nx">content</span><span class="p">}&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">        </span><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">      </span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="p">}</span>
 </span></code></pre></div>
 <p>If the payload from <code>app/views/posts/show.json.props</code> was mishaped in anyway, you'd get an error:</p>
 <p><img alt="error image" src="../images/runtime-types.png" /></p>
 <p>Use that error and feedback loop to build your props:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">json</span><span class="o">.</span><span class="n">header</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">json</span><span class="o">.</span><span class="n">post</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">id</span><span class="w"> </span><span class="mi">100</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">title</span><span class="w"> </span><span class="s2">&quot;This is a title&quot;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">content</span><span class="w"> </span><span class="s2">&quot;This is a body&quot;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">end</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">json</span><span class="o">.</span><span class="n">header</span><span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">json</span><span class="o">.</span><span class="n">post</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">id</span><span class="w"> </span><span class="mi">100</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">title</span><span class="w"> </span><span class="s2">&quot;This is a title&quot;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">content</span><span class="w"> </span><span class="s2">&quot;This is a body&quot;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">end</span>
 </span></code></pre></div>
 
 

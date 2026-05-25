@@ -81,8 +81,7 @@
           <div class="md-banner__inner md-grid md-typeset">
             
             <div class="announcement-bar">
-  <p>🎉 Superglue 2.0 Alpha has been released with Super Turbo Streams! Check out the new docs <a href="../2.0.alpha">here</a>
-</p>
+  <p>🎉 Superglue 2.0 Beta has been released with Super Turbo Streams! Check out the new docs <a href="../2.0.beta">here</a></p>
 </div>
 
           </div>
@@ -1440,7 +1439,7 @@ manually. Better yet, most of the work takes place in Rails land in your views.<
 </div>
 </div>
 </div>
-<p>And that's it! </p>
+<p>And that's it!</p>
 <h3 id="behind-the-scenes">Behind the scenes<a class="headerlink" href="#behind-the-scenes" title="Permanent link">&para;</a></h3>
 <p>When a user lands on a page Superglue will receive</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
@@ -1472,7 +1471,7 @@ then immutably grafts that payload into the <code>/dashboard</code> page at the 
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  ...other
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>}
 </span></code></pre></div>
-<p>Your page component finally recieves the new props and rerenders. For more
+<p>Your page component finally receives the new props and rerenders. For more
 control, you may provide a <code>success_action</code> or <code>fail_action</code>, and Superglue
 will dispatch these actions when the promise resolves successfully or fails.</p>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">json</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span><span class="ss">defer</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="ss">:auto</span><span class="p">,</span><span class="w"> </span><span class="ss">placeholder</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="ss">totalVisitors</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span><span class="w"> </span><span class="ss">success_action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUCCESS&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">fail_action</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">do</span>

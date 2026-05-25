@@ -59,19 +59,8 @@ The parts of your page that have been marked for [deferment](./deferments.md).
 
 ### `assets`
 An `array` of asset fingerprint `string`s. Used by Superglue to detect the need to
-refresh the browser due to new assets. You can control the refresh behavior in
-`application_visit.js`:
-
-```js
-/**
-  * The assets fingerprints changed, instead of transitioning
-  * just go to the URL directly to retrieve new assets
-  */
-if (meta.needsRefresh) {
-  window.location.href = meta.pageKey
-  return meta
-}
-```
+refresh the browser due to new assets. When Superglue detects that the assets have
+changed, it automatically performs a full page reload to retrieve the new assets.
 
 ### `csrfToken`
 The authenticity token that Superglue will use for non-GET request made by using

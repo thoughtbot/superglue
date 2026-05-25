@@ -139,12 +139,13 @@ Change your `application.js` to use `hydrateRoot`:
 
 and change the rest of `application.js` accordingly. For example:
 
-```js
+```jsx
 import React from 'react';
 import { createApp } from '@thoughtbot/superglue';
 import { hydrateRoot } from 'react-dom/client';
 import { buildVisitAndRemote } from './application_visit';
 import { pageIdentifierToPageComponent } from './page_to_page_mapping';
+import { Layout } from './components';
 
 if (typeof window !== "undefined") {
   document.addEventListener("DOMContentLoaded", function () {
@@ -161,7 +162,13 @@ if (typeof window !== "undefined") {
       })
 
       hydrateRoot(appEl,
-        <Provider><Outlet /></Provider>
+        <div onClick={ujs.onClick} onSubmit={ujs.onSubmit}>
+          <Provider>
+            <Layout>
+              <Outlet />
+            </Layout>
+          </Provider>
+        </div>
       );
     }
   });

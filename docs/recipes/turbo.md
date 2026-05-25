@@ -10,14 +10,13 @@ In your `application_visit.js` file:
 
 + import { urlToPageKey } from '@thoughtbot/superglue'
 
-const appVisit = (...args) => {
+  const appVisit = (path, {dataset, ...options} = {}) => {
++   const pageKey = urlToPageKey(path)
++   // attempt to navigate first
++   navigateTo(pageKey)
 
-  const pageKey = urlToPageKey(args[0])
-+ // attempt to navigate first
-+ navigateTo(pageKey)
-
-  return visit(...args)
-    ....
+    return visit(path, options)
+      ....
 ```
 
 This is different from [restore strategy] which controls what happens

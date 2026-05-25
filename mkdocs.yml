@@ -114,7 +114,6 @@ nav:
       - Client-Side updates: client-updates.md
       - Digging: digging.md
       - Deferments: deferments.md
-      - Redux: redux.md
     
     - Navigating:
       - The return of Rails UJS: ujs.md

@@ -14,8 +14,8 @@ And make the following edits to `application_visit.js`
 ````diff
 + import { requestStripe } from 'request-stripe';
 
-export function buildVisitAndRemote({navigateTo, visit, remote}) {
-  const appRemote = (path, {dataset, options} = {}) => {
+export const buildVisitAndRemote = ({navigateTo, visit, remote}) => {
+  const appRemote = (path, {dataset, ...options} = {}) => {
     /**
      * You can make use of `dataset` to add custom UJS options.
      * If you are implementing a progress bar, you can selectively
@@ -31,48 +31,24 @@ export function buildVisitAndRemote({navigateTo, visit, remote}) {
      */
 +   const done = requestStripe()
     return remote(path, options)
-+       .finally(() => done())
++     .finally(() => done())
   }
 
   const appVisit = (path, {dataset, ...options} = {}) => {
 +   const done = requestStripe()
     return visit(path, options)
-      .then((meta) => {
-        if (meta.needsRefresh) {
-          window.location = meta.url
-          return
-        }
-
-        navigateTo(meta.pageKey, {
-          action: meta.navigationAction,
+      .then(result => {
+        const navigationAction = !!dataset?.sgReplace
+          ? "replace"
+          : result.navigationAction
+        navigateTo(result.pageKey, {
+          action: navigationAction,
         })
 
-        return meta
+        return result
       })
       .finally(() => {
 +       done()
-      })
-      .catch((err) => {
-        const response = err.response
-
-        if (!response) {
-          console.error(err)
-          return
-        }
-
-        if (response.ok) {
-          window.location = response.url
-        } else {
-          if (response.status >= 400 && response.status < 500) {
-            window.location = '/400.html'
-            return
-          }
-
-          if (response.status >= 500) {
-            window.location = '/500.html'
-            return
-          }
-        }
       })
   }
 

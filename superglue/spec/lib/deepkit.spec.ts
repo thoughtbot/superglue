@@ -19,9 +19,32 @@ interface MyProps {
 export const result = useContent<MyProps>()
 `
 
+const tsxFixture = `
+import React from 'react'
+
+export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => void }): T {
+  if (options?.validate) { options.validate({}) }
+  return {} as T
+}
+
+interface DevSettings {
+  enableSdkStub: boolean
+}
+
+export function toFragmentRef(name: string): string {
+  return name
+}
+
+export const MyComponent = () => {
+  const devSettings = useFragment<DevSettings, true>(toFragmentRef('devSettings'))
+  return <div>{devSettings.enableSdkStub ? 'stub' : 'real'}</div>
+}
+`
+
 beforeAll(() => {
   tmpDir = mkdtempSync(path.join(os.tmpdir(), 'superglue-unplugin-test-'))
   writeFileSync(path.join(tmpDir, 'input.ts'), fixture)
+  writeFileSync(path.join(tmpDir, 'input.tsx'), tsxFixture)
   writeFileSync(
     path.join(tmpDir, 'tsconfig.json'),
     JSON.stringify({
@@ -72,6 +95,26 @@ describe('deepkit unplugin integration', () => {
 
     const output = result.outputFiles[0].text
     expect(hasDeepkitMetadata(output)).toBe(true)
+    expect(hasValidateInjection(output)).toBe(true)
+  })
+
+  it('esbuild plugin transforms TSX files without JSX parsing errors', async () => {
+    const esbuild = await import('esbuild')
+    const { esbuild: deepkitPlugin } = await import('../../lib/deepkit')
+
+    const result = await esbuild.build({
+      entryPoints: [path.join(tmpDir, 'input.tsx')],
+      bundle: false,
+      write: false,
+      format: 'esm',
+      jsx: 'automatic',
+      plugins: [deepkitPlugin()],
+    })
+
+    expect(result.errors).toHaveLength(0)
+    expect(result.outputFiles).toHaveLength(1)
+
+    const output = result.outputFiles[0].text
     expect(hasValidateInjection(output)).toBe(true)
   })
 

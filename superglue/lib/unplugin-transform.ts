@@ -67,7 +67,7 @@ export function applyHookEdits(
 
   let result = code
   for (const edit of sorted) {
-    const validateExpr = `{ validate: ${validateFnName}<${edit.typeArgText}>() }`
+    const validateExpr = `{ validate: ${validateFnName}<${edit.typeArgText},>() }`
 
     let insertText: string
     if (edit.isUseContent && edit.argCount === 0) {

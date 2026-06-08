@@ -73,7 +73,11 @@ export function applyHookEdits(
     if (edit.isUseContent && edit.argCount === 0) {
       insertText = `undefined, ${validateExpr}`
     } else {
-      insertText = `, ${validateExpr}`
+      const textBeforeParen = result.slice(0, edit.closeParen)
+      const hasTrailingComma = /,\s*$/.test(textBeforeParen)
+      insertText = hasTrailingComma
+        ? ` ${validateExpr}`
+        : `, ${validateExpr}`
     }
 
     result =

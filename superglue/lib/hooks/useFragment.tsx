@@ -14,7 +14,7 @@ import { createProxy } from '../utils/proxy'
 export function toFragmentRef<T, P extends boolean = false>(
   id: string
 ): FragmentRef<T, P> {
-  return { __id: id }
+  return { __ref: true, __id: id }
 }
 
 /**

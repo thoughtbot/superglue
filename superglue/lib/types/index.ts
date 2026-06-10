@@ -329,6 +329,7 @@ export type FragmentPath = {
  */
 
 export type FragmentRef<T = unknown, Present extends boolean = false> = {
+  __ref: true
   __id: string
   __type?: T
   __present?: Present

@@ -69,7 +69,10 @@ beforeAll(() => {
   tmpDir = mkdtempSync(path.join(os.tmpdir(), 'superglue-unplugin-test-'))
   writeFileSync(path.join(tmpDir, 'input.ts'), fixture)
   writeFileSync(path.join(tmpDir, 'input.tsx'), tsxFixture)
-  writeFileSync(path.join(tmpDir, 'input_trailing_comma.tsx'), tsxTrailingCommaFixture)
+  writeFileSync(
+    path.join(tmpDir, 'input_trailing_comma.tsx'),
+    tsxTrailingCommaFixture
+  )
   writeFileSync(
     path.join(tmpDir, 'tsconfig.json'),
     JSON.stringify({

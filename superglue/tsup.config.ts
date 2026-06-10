@@ -31,7 +31,12 @@ export default defineConfig((options) => {
       format: ['esm', 'cjs'],
       dts: true,
       sourcemap: true,
-      external: ['unplugin', '@deepkit/type-compiler', '@deepkit/type', 'typescript'],
+      external: [
+        'unplugin',
+        '@deepkit/type-compiler',
+        '@deepkit/type',
+        'typescript',
+      ],
     },
   ]
 })

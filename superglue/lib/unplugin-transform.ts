@@ -11,9 +11,7 @@ export function findHookCallsToTransform(
   code: string,
   id: string
 ): HookCallEdit[] {
-  const scriptKind = /\.[jt]sx$/.test(id)
-    ? ts.ScriptKind.TSX
-    : ts.ScriptKind.TS
+  const scriptKind = /\.[jt]sx$/.test(id) ? ts.ScriptKind.TSX : ts.ScriptKind.TS
   const sourceFile = ts.createSourceFile(
     id,
     code,
@@ -75,9 +73,7 @@ export function applyHookEdits(
     } else {
       const textBeforeParen = result.slice(0, edit.closeParen)
       const hasTrailingComma = /,\s*$/.test(textBeforeParen)
-      insertText = hasTrailingComma
-        ? ` ${validateExpr}`
-        : `, ${validateExpr}`
+      insertText = hasTrailingComma ? ` ${validateExpr}` : `, ${validateExpr}`
     }
 
     result =

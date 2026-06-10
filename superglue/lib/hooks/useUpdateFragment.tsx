@@ -38,17 +38,6 @@ export function useUpdateFragment() {
   const fragments = useSelector((state: RootState) => state.fragments)
 
   /**
-   * Updates a fragment using a {@link Fragment} object.
-   *
-   * @param fragment - Fragment object from proxied content
-   * @param updater - Immer draft function for mutating fragment data
-   */
-  function setter<T extends Fragment<unknown, true>>(
-    fragment: T,
-    updater: (draft: Unproxy<Unpack<T>>) => void
-  ): void
-
-  /**
    * Updates a fragment using a {@link FragmentRef} object.
    *
    * @param fragmentRef - Fragment reference from unproxied content
@@ -57,6 +46,17 @@ export function useUpdateFragment() {
   function setter<T, P extends boolean>(
     fragmentRef: FragmentRef<T, P>,
     updater: (draft: Unproxy<T>) => void
+  ): void
+
+  /**
+   * Updates a fragment using a {@link Fragment} object.
+   *
+   * @param fragment - Fragment object from proxied content
+   * @param updater - Immer draft function for mutating fragment data
+   */
+  function setter<T extends Fragment<unknown, true>>(
+    fragment: T,
+    updater: (draft: Unproxy<Unpack<T>>) => void
   ): void
 
   function setter(

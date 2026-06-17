@@ -1008,6 +1008,118 @@ describe('action creators', () => {
         })
     })
 
+    it('provides resolved fragment data to beforeSave in remote', async () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/bar',
+          csrfToken: 'token',
+        },
+        pages: {
+          '/bar': {
+            data: {
+              header: { __id: 'header_frag' },
+            },
+            csrfToken: 'token',
+            assets: [],
+            fragments: [{ id: 'header_frag', path: 'data.header' }],
+            componentIdentifier: 'bar',
+          },
+        },
+        fragments: {
+          header_frag: {
+            title: 'Original Title',
+          },
+        },
+      })
+
+      const responseBody = {
+        data: { header: { title: 'New Title' } },
+        csrfToken: 'token',
+        assets: [],
+        fragments: [],
+        componentIdentifier: 'bar',
+        action: 'savePage',
+      }
+
+      fetchMock.mock('https://example.com/bar?format=json', {
+        body: JSON.stringify(responseBody),
+        headers: {
+          'content-type': 'application/json',
+          'content-disposition': 'inline',
+        },
+      })
+
+      let capturedPrevPage = null
+      await store.dispatch(
+        remote('/bar', {
+          pageKey: '/bar',
+          beforeSave: (prevPage, receivedPage) => {
+            capturedPrevPage = JSON.parse(JSON.stringify(prevPage))
+            return receivedPage
+          },
+        })
+      )
+
+      expect(capturedPrevPage.data.header.title).toEqual('Original Title')
+      expect(capturedPrevPage.data.header.__id).toBeUndefined()
+    })
+
+    it('provides resolved fragment data to beforeSave in visit', async () => {
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/bar',
+          csrfToken: 'token',
+          assets: [],
+        },
+        pages: {
+          '/bar': {
+            data: {
+              header: { __id: 'header_frag' },
+            },
+            csrfToken: 'token',
+            assets: [],
+            fragments: [{ id: 'header_frag', path: 'data.header' }],
+            componentIdentifier: 'bar',
+          },
+        },
+        fragments: {
+          header_frag: {
+            title: 'Original Title',
+          },
+        },
+      })
+
+      const responseBody = {
+        data: { header: { title: 'New Title' } },
+        csrfToken: 'token',
+        assets: [],
+        fragments: [],
+        componentIdentifier: 'bar',
+        action: 'savePage',
+      }
+
+      fetchMock.mock('https://example.com/bar?format=json', {
+        body: JSON.stringify(responseBody),
+        headers: {
+          'content-type': 'application/json',
+          'content-disposition': 'inline',
+        },
+      })
+
+      let capturedPrevPage = null
+      await store.dispatch(
+        visit('/bar', {
+          beforeSave: (prevPage, receivedPage) => {
+            capturedPrevPage = JSON.parse(JSON.stringify(prevPage))
+            return receivedPage
+          },
+        })
+      )
+
+      expect(capturedPrevPage.data.header.title).toEqual('Original Title')
+      expect(capturedPrevPage.data.header.__id).toBeUndefined()
+    })
+
     it('defaults to the response url as the pageKey on GET requests', () => {
       const store = buildStore({
         superglue: {

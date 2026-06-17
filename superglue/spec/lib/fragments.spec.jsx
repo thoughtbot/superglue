@@ -89,6 +89,62 @@ describe('fragments', () => {
       })
     })
 
+    it('replaces all sibling fragments with __id stubs', async () => {
+      const page = buildPage({
+        data: {
+          header: {
+            title: 'Welcome',
+          },
+          sidebar: {
+            links: ['home', 'about'],
+          },
+        },
+        fragments: [
+          { id: 'header_fragment', path: 'data.header' },
+          { id: 'sidebar_fragment', path: 'data.sidebar' },
+        ],
+      })
+
+      const store = buildStore(initialState())
+      await store.dispatch(saveAndProcessPage('/foo', page))
+      const state = store.getState()
+
+      expect(state.pages['/foo'].data.header).toEqual({
+        __id: 'header_fragment',
+      })
+      expect(state.pages['/foo'].data.sidebar).toEqual({
+        __id: 'sidebar_fragment',
+      })
+
+      expect(state.fragments.header_fragment).toEqual({ title: 'Welcome' })
+      expect(state.fragments.sidebar_fragment).toEqual({
+        links: ['home', 'about'],
+      })
+    })
+
+    it('preserves earlier fragment replacements when processing multiple fragments', async () => {
+      const page = buildPage({
+        data: {
+          a: { value: 1 },
+          b: { value: 2 },
+          c: { value: 3 },
+        },
+        fragments: [
+          { id: 'frag_a', path: 'data.a' },
+          { id: 'frag_b', path: 'data.b' },
+          { id: 'frag_c', path: 'data.c' },
+        ],
+      })
+
+      const store = buildStore(initialState())
+      await store.dispatch(saveAndProcessPage('/foo', page))
+      const state = store.getState()
+
+      expect(state.pages['/foo'].data.a).toEqual({ __id: 'frag_a' })
+      expect(state.pages['/foo'].data.b).toEqual({ __id: 'frag_b' })
+      expect(state.pages['/foo'].data.c).toEqual({ __id: 'frag_c' })
+    })
+
     describe('grafting', () => {
       it('grafts based on the fragment context the data is in.', async () => {
         const page = buildPage({

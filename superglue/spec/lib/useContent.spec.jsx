@@ -945,6 +945,58 @@ describe('useContent', () => {
       expect(latestPage.user.name).toBe('Updated Name')
     })
 
+    it('reflects fragment updates for all fragments saved via saveAndProcessPage', async () => {
+      const page = {
+        data: {
+          header: { title: 'Header' },
+          sidebar: { label: 'Sidebar' },
+        },
+        csrfToken: 'token',
+        assets: [],
+        fragments: [
+          { id: 'header_frag', path: 'data.header' },
+          { id: 'sidebar_frag', path: 'data.sidebar' },
+        ],
+      }
+
+      const store = buildStore({
+        superglue: {
+          currentPageKey: '/foo',
+          csrfToken: 'token',
+          assets: [],
+        },
+        fragments: {},
+      })
+
+      await store.dispatch(saveAndProcessPage('/foo', page))
+
+      const rendered = []
+      const Component = () => {
+        const content = useContent()
+        rendered.push({
+          header: content.header?.title,
+          sidebar: content.sidebar?.label,
+        })
+        return <div>{content.header?.title}</div>
+      }
+
+      renderWithProvider(<Component />, store)
+
+      expect(rendered[rendered.length - 1].header).toEqual('Header')
+      expect(rendered[rendered.length - 1].sidebar).toEqual('Sidebar')
+
+      act(() => {
+        store.dispatch(
+          saveFragment({
+            fragmentId: 'sidebar_frag',
+            data: { label: 'Updated Sidebar' },
+          })
+        )
+      })
+
+      expect(rendered[rendered.length - 1].sidebar).toEqual('Updated Sidebar')
+    })
+
     it('does not re-render when non-tracked fragments change', () => {
       const store = buildStore({
         superglue: {

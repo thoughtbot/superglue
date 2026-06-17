@@ -310,6 +310,56 @@ describe('useFragment', () => {
     expect(capturedComment.replies[0].author.name).toBe('Reply Author')
   })
 
+  it('reflects updates to nested fragments', () => {
+    const store = buildStore({
+      superglue: {
+        currentPageKey: '/unused',
+        search: {},
+        assets: [],
+      },
+      pages: {},
+      fragments: {
+        cart: {
+          total: 100,
+          items: { __id: 'cart_items' },
+        },
+        cart_items: {
+          list: ['Widget', 'Gadget'],
+        },
+      },
+    })
+
+    const rendered = []
+    const Component = () => {
+      const cart = useFragment({ __id: 'cart' })
+      rendered.push({
+        total: cart.total,
+        items: cart.items?.list,
+      })
+      return <div>{cart.total}</div>
+    }
+
+    renderWithProvider(<Component />, store)
+
+    expect(rendered[rendered.length - 1].total).toBe(100)
+    expect(rendered[rendered.length - 1].items).toEqual(['Widget', 'Gadget'])
+
+    act(() => {
+      store.dispatch(
+        saveFragment({
+          fragmentId: 'cart_items',
+          data: { list: ['Widget', 'Gadget', 'Doohickey'] },
+        })
+      )
+    })
+
+    expect(rendered[rendered.length - 1].items).toEqual([
+      'Widget',
+      'Gadget',
+      'Doohickey',
+    ])
+  })
+
   it('works with array methods in fragment-scoped mode', () => {
     const store = buildStore({
       superglue: {

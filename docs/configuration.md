@@ -17,6 +17,8 @@ const { Provider, Outlet, ujs } = createApp({
   buildVisitAndRemote,
   // Mapping between the page identifier to page component
   mapping: pageIdentifierToPageComponent,
+  // Enable Devtools to see Superglue's internal store and actions.
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 const root = createRoot(appEl);
@@ -36,8 +38,8 @@ root.render(
 !!! info
     Stop by the [tutorial] to learn how to work with this file.
 
-    **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](recipes/vite.md) for more information.
+    This step can be entirely optional if you installed superglue with bun, rollup, or webpack support.
+    If you prefer vite, there's also a [recipe](recipes/vite.md) for more information.
 
 This file exports a mapping between a `componentIdentifier` to an imported page
 component. This gets used in your `application.js` so that superglue knows

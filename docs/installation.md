@@ -3,8 +3,14 @@
 !!! info "Prerequisites"
     To get started with Superglue, you'll need
 
-    - A javascript bundler. We'll assume esbuild with js-bundling, but you can also use vite.
+    - A JavaScript bundler installed via [jsbundling-rails](https://github.com/rails/jsbundling-rails). Supported bundlers: **esbuild**, **bun**, **rollup**, and **webpack**.
     - `yarn`
+
+    If you don't have a bundler yet, install one first:
+
+    ```terminal
+    rails javascript:install:[esbuild|bun|rollup|webpack]
+    ```
 
 Add the following to your Gemfile
 
@@ -18,18 +24,37 @@ Run bundle and the installation generator:
 ```terminal
 bundle
 rails g superglue:install
-
 ```
 
-!!! example ""
-    If you prefer typescript
+The installer will detect your bundler and configure Superglue accordingly. It will:
+
+- Set up the correct bundler configuration for JSX/TSX support
+- Configure automatic page component discovery (for bundlers that support glob imports)
+- Install the necessary dependencies
+
+You can also specify the bundler directly to skip the interactive prompt:
+
+```terminal
+rails g superglue:install --bundler=esbuild
+```
+
+!!! example "TypeScript"
+    If you prefer TypeScript:
 
     ```terminal
     rails g superglue:install --typescript
     ```
 
+    Superglue also includes an optional [deepkit] integration for runtime type
+    validation during development. When enabled, it validates that your server
+    side props matches your TypeScript types.
 
-    See the [working with types](./runtime-types.md) guide for more information.
+    ```terminal
+    rails g superglue:install --typescript --deepkit
+    ```
+
+    This is only available with TypeScript and can be added later. See the
+    [working with types](./runtime-types.md) guide for more information.
 
 The above will generate the following files:
 
@@ -69,3 +94,5 @@ rails g superglue:scaffold post body:string
     ```
 
 or proceed with a [tutorial](./tutorial.md)
+
+[deepkit]: https://github.com/marcj/deepkit

@@ -13,7 +13,7 @@ rails new shopping_list -j esbuild --skip-hotwire
 ```
 
 !!! tip
-    We're using esbuild here, but you can also use [vite](recipes/vite.md)
+    We're using esbuild here, but support for other bundlers is also [available](installation.md). [vite](recipes/vite.md) is also possible.
 
 Then follow the [installation](./installation.md) instructions to setup Superglue.
 
@@ -165,8 +165,8 @@ Next, let's add the views for our shopping list.
 Update your page mapping to include both components:
 
 !!! info
-    **Vite Users** This step can be entirely optional if you're using Vite. See
-    the [recipe](./recipes/vite.md) for more information.
+    This step can be entirely optional if you installed superglue with bun, rollup, or webpack support.
+    If you prefer vite, there's also a [recipe](recipes/vite.md) for more information.
 
 ```js
 // app/javascript/page_to_page_mapping.js

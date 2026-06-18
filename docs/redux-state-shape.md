@@ -1,6 +1,8 @@
 # The store shape
 
-Superglue occupies 4 nodes in the store:
+Behind the scenes Superglue is powered by Redux. When you [enable
+devTools](./configuration.md) you can view the entire state and actions. Roughly,
+it looks like this:
 
 ```javascript
 {

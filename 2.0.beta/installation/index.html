@@ -1805,31 +1805,50 @@
 <p class="admonition-title">Prerequisites</p>
 <p>To get started with Superglue, you'll need</p>
 <ul>
-<li>A javascript bundler. We'll assume esbuild with js-bundling, but you can also use vite.</li>
+<li>A JavaScript bundler installed via <a href="https://github.com/rails/jsbundling-rails">jsbundling-rails</a>. Supported bundlers: <strong>esbuild</strong>, <strong>bun</strong>, <strong>rollup</strong>, and <strong>webpack</strong>.</li>
 <li><code>yarn</code></li>
 </ul>
+<p>If you don't have a bundler yet, install one first:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>rails javascript:install:[esbuild|bun|rollup|webpack]
+</span></code></pre></div>
 </div>
 <p>Add the following to your Gemfile</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Gemfile</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">gem</span><span class="w"> </span><span class="s2">&quot;superglue&quot;</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Gemfile</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">gem</span><span class="w"> </span><span class="s2">&quot;superglue&quot;</span>
 </span></code></pre></div>
 <p>Run bundle and the installation generator:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bundle
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>rails g superglue:install
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>bundle
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rails g superglue:install
+</span></code></pre></div>
+<p>The installer will detect your bundler and configure Superglue accordingly. It will:</p>
+<ul>
+<li>Set up the correct bundler configuration for JSX/TSX support</li>
+<li>Configure automatic page component discovery (for bundlers that support glob imports)</li>
+<li>Install the necessary dependencies</li>
+</ul>
+<p>You can also specify the bundler directly to skip the interactive prompt:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>rails g superglue:install --bundler=esbuild
 </span></code></pre></div>
 <div class="admonition example">
-<p>If you prefer typescript</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rails g superglue:install --typescript
+<p class="admonition-title">TypeScript</p>
+<p>If you prefer TypeScript:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rails g superglue:install --typescript
 </span></code></pre></div>
-<p>See the <a href="../runtime-types/">working with types</a> guide for more information.</p>
+<p>Superglue also includes an optional <a href="https://github.com/marcj/deepkit">deepkit</a> integration for runtime type
+validation during development. When enabled, it validates that your server
+side props matches your TypeScript types.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rails g superglue:install --typescript --deepkit
+</span></code></pre></div>
+<p>This is only available with TypeScript and can be added later. See the
+<a href="../runtime-types/">working with types</a> guide for more information.</p>
 </div>
 <p>The above will generate the following files:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>.
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>└─ app/
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   └─ javascript/
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      ├─ application.js
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      ├─ application_visit.js
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      └─ page_to_page_mapping.js
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>.
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>└─ app/
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>   └─ javascript/
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>      ├─ application.js
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>      ├─ application_visit.js
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>      └─ page_to_page_mapping.js
 </span></code></pre></div>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>We recommend getting familiar with the following files:</p>
@@ -1840,11 +1859,11 @@
 <p>For more information, visit the <a href="../configuration/">configuration</a> section.</p>
 <h2 id="scaffold">Scaffold<a class="headerlink" href="#scaffold" title="Permanent link">&para;</a></h2>
 <p>If you'd like to dive right in, you can start with a scaffold:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rails g superglue:scaffold post body:string
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>rails g superglue:scaffold post body:string
 </span></code></pre></div>
 <div class="admonition example">
 <p>If you prefer typescript</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>rails g superglue:scaffold post body:string --typescript
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>rails g superglue:scaffold post body:string --typescript
 </span></code></pre></div>
 </div>
 <p>or proceed with a <a href="../tutorial/">tutorial</a></p>

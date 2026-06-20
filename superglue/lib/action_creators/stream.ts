@@ -167,10 +167,6 @@ export const handleStreamMessage = (rawMessage: string): StreamHandleThunk => {
       if (nextMessage.handler === 'update') {
         dispatch(streamUpdate(nextMessage.fragmentIds[0], nextMessage.data))
       }
-
-      if (nextMessage.handler === 'noop') {
-        // do nothing
-      }
     }
   }
 }
@@ -209,10 +205,6 @@ export const handleStreamResponse = (
 
       if (message.handler === 'update') {
         dispatch(streamUpdate(message.fragmentIds[0], message.data))
-      }
-
-      if (message.handler === 'noop') {
-        // do nothing
       }
     })
   }

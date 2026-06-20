@@ -284,7 +284,7 @@ export type GraftResponse<T = JSONMappable> = {
 export type StreamMessage = {
   data: JSONMappable
   fragmentIds: string[]
-  handler: 'append' | 'prepend' | 'update' | 'noop'
+  handler: 'append' | 'prepend' | 'update'
   options: Record<string, string>
 }
 

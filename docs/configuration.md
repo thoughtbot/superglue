@@ -17,6 +17,11 @@ const { Provider, Outlet, ujs } = createApp({
   buildVisitAndRemote,
   // Mapping between the page identifier to page component
   mapping: pageIdentifierToPageComponent,
+  // An action cable consumer
+  // import { createConsumer } from '@rails/actioncable'
+  // or if you're using anycable
+  // import { createConsumer } from "@anycable/web";
+  cable: createConsumer()
   // Enable Devtools to see Superglue's internal store and actions.
   devTools: process.env.NODE_ENV !== 'production',
 });

@@ -26,7 +26,7 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * }
  * ```
  *
- * The proxy will lazily and automatically resolve any {@link FragmentRef}s making it
+ * The proxy will lazily and automatically resolve any `FragmentRef`s making it
  * as easy as
  *
  * ```
@@ -37,8 +37,6 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * The hook will also automatically tracks fragment dependencies and triggers
  * re-renders only when accessed fragments change.
  *
- * @param pageKey - Optional page key to access a specific page's data.
- *   When omitted, returns data for the current page.
  * @template T - The data type being accessed (defaults to JSONMappable)
  * @returns Reactive proxy to page data
  *
@@ -52,6 +50,10 @@ import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
  * ```
  */
 export function useContent<T = JSONMappable>(): T
+/**
+ * @param pageKey - Optional page key to access a specific page's data.
+ *   When omitted, returns data for the current page.
+ */
 export function useContent<T = JSONMappable>(pageKey?: PageKey): T | undefined
 export function useContent<T = JSONMappable>(
   pageKey?: PageKey,

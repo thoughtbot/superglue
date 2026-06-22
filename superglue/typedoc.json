@@ -3,6 +3,8 @@
   "plugin": ["typedoc-plugin-markdown"],
   "entryPoints": [
     "./lib/hooks/useContent.tsx",
+    "./lib/hooks/useStreamSource.tsx",
+    "./lib/hooks/useUpdateFragment.tsx",
     "./lib/index.tsx",
     "./lib/types/index.ts",
     "./lib/hooks/index.ts",

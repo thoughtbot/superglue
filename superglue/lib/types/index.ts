@@ -378,7 +378,7 @@ export interface RootState<T = JSONMappable> {
 
 /**
  * The success branch of a `remote` call. Resolved by the `remote` thunk
- * and {@link webRemote}; the `hasError: false` literal acts as the
+ * and `webRemote`; the `hasError: false` literal acts as the
  * discriminant for narrowing against {@link ErrorResult}.
  */
 export interface Result {
@@ -442,6 +442,7 @@ export type RemoteCreator = (
   options?: RemoteProps
 ) => MetaThunk
 
+/** @internal */
 export interface ExtraArgument {
   config: Config
   lastVisitController: { abort: (reason: string) => void }
@@ -613,7 +614,7 @@ export type NavigationOutletProps = {
 }
 
 /**
- * Provide this callback to {@link ApplicationProps} returning a Redux store for
+ * Provide this callback to {@link CreateAppArgs} returning a Redux store for
  * Superglue to use. This would be setup and generated for you in `store.js`. We
  * recommend using using Redux toolkit's `configureStore` to build the store.
  *
@@ -661,7 +662,7 @@ export interface BuildVisitAndRemoteContext {
 }
 
 /**
- * Arguments for {@link createApp}. Combines per-request bootstrap state
+ * Arguments for `createApp`. Combines per-request bootstrap state
  * (`initialPage`, `baseUrl`, `path`) with app-wide config (`mapping`,
  * `history`, `cable`, `buildVisitAndRemote`).
  */
@@ -682,7 +683,7 @@ export interface CreateAppArgs {
   path: string
   /**
    * A mapping between page identifiers and the React components that
-   * render them. The {@link Outlet} returned from {@link createApp} reads
+   * render them. The `Outlet` returned from `createApp` reads
    * this mapping when rendering the current page.
    */
   mapping: Record<string, React.ComponentType>
@@ -712,14 +713,14 @@ export interface CreateAppArgs {
 }
 
 /**
- * Props for the {@link Provider} component returned from {@link createApp}.
+ * Props for the `Provider` component returned from `createApp`.
  */
 export type ProviderProps = {
   children?: React.ReactNode
 }
 
 /**
- * The result of calling {@link createApp}: a `Provider` component that owns
+ * The result of calling `createApp`: a `Provider` component that owns
  * the Superglue React tree, an `Outlet` component that renders the current
  * page from the configured `mapping`, and a `ujs` object containing UJS
  * click/submit handlers the caller can attach wherever they choose.

@@ -12,13 +12,13 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0.beta/recipes/spa-pagination/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0.beta/reference/types.requests/">
       
       
-        <link rel="prev" href="../ssr/">
+        <link rel="prev" href="../types/">
       
       
-        <link rel="next" href="../infinite-scroll/">
+        <link rel="next" href="../types.actions/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Paginate without reloading - Superglue</title>
+        <title>Requests - Superglue</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spa-single-page-application-pagination" class="md-skip">
+        <a href="#interfaces" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Paginate without reloading
+              Requests
             
           </span>
         </div>
@@ -210,13 +210,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../modals/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../recipes/modals/" class="md-tabs__link">
           
   
   
@@ -232,10 +230,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../../rails-utils/" class="md-tabs__link">
           
   
@@ -1096,31 +1096,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -1133,7 +1128,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Recipes
@@ -1147,7 +1142,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../modals/" class="md-nav__link">
+      <a href="../../recipes/modals/" class="md-nav__link">
         
   
   
@@ -1170,7 +1165,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ssr/" class="md-nav__link">
+      <a href="../../recipes/ssr/" class="md-nav__link">
         
   
   
@@ -1190,32 +1185,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Paginate without reloading
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../recipes/spa-pagination/" class="md-nav__link">
         
   
   
@@ -1226,71 +1199,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#starting-point" class="md-nav__link">
-    <span class="md-ellipsis">
-      Starting point
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-gems" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add gems
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-pagination" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add pagination
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#smooth-navigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Smooth navigation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optimize" class="md-nav__link">
-    <span class="md-ellipsis">
-      Optimize!
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1303,7 +1211,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../infinite-scroll/" class="md-nav__link">
+      <a href="../../recipes/infinite-scroll/" class="md-nav__link">
         
   
   
@@ -1326,7 +1234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../progress-bar/" class="md-nav__link">
+      <a href="../../recipes/progress-bar/" class="md-nav__link">
         
   
   
@@ -1349,7 +1257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../turbo/" class="md-nav__link">
+      <a href="../../recipes/turbo/" class="md-nav__link">
         
   
   
@@ -1372,7 +1280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../vite/" class="md-nav__link">
+      <a href="../../recipes/vite/" class="md-nav__link">
         
   
   
@@ -1399,26 +1307,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -1431,7 +1344,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Reference
@@ -1468,7 +1381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/hooks/" class="md-nav__link">
+      <a href="../hooks/" class="md-nav__link">
         
   
   
@@ -1491,7 +1404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/components.Navigation/" class="md-nav__link">
+      <a href="../components.Navigation/" class="md-nav__link">
         
   
   
@@ -1514,7 +1427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1537,7 +1450,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/types/" class="md-nav__link">
+      <a href="../types/" class="md-nav__link">
         
   
   
@@ -1557,10 +1470,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../reference/types.requests/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Requests
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1571,6 +1504,288 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interfaces
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visit()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visit()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visitprops" class="md-nav__link">
+    <span class="md-ellipsis">
+      VisitProps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VisitProps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Remote()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remoteprops" class="md-nav__link">
+    <span class="md-ellipsis">
+      RemoteProps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RemoteProps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extends_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beforesavet" class="md-nav__link">
+    <span class="md-ellipsis">
+      BeforeSave()\&lt;T>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BeforeSave()\&lt;T&gt;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationremote" class="md-nav__link">
+    <span class="md-ellipsis">
+      ApplicationRemote()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ApplicationRemote()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationvisit" class="md-nav__link">
+    <span class="md-ellipsis">
+      ApplicationVisit()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ApplicationVisit()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1583,7 +1798,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/types.actions/" class="md-nav__link">
+      <a href="../types.actions/" class="md-nav__link">
         
   
   
@@ -1769,8 +1984,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1779,47 +1992,266 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#starting-point" class="md-nav__link">
+  <a href="#interfaces" class="md-nav__link">
     <span class="md-ellipsis">
-      Starting point
+      Interfaces
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visit()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visit()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#add-gems" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
     <span class="md-ellipsis">
-      Add gems
+      Returns
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#add-pagination" class="md-nav__link">
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visitprops" class="md-nav__link">
     <span class="md-ellipsis">
-      Add pagination
+      VisitProps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VisitProps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extends" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extends
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#smooth-navigation" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
     <span class="md-ellipsis">
-      Smooth navigation
+      Properties
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#optimize" class="md-nav__link">
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote" class="md-nav__link">
     <span class="md-ellipsis">
-      Optimize!
+      Remote()
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Remote()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remoteprops" class="md-nav__link">
+    <span class="md-ellipsis">
+      RemoteProps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RemoteProps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extends_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#properties_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beforesavet" class="md-nav__link">
+    <span class="md-ellipsis">
+      BeforeSave()\&lt;T>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BeforeSave()\&lt;T&gt;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationremote" class="md-nav__link">
+    <span class="md-ellipsis">
+      ApplicationRemote()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ApplicationRemote()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationvisit" class="md-nav__link">
+    <span class="md-ellipsis">
+      ApplicationVisit()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ApplicationVisit()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1842,235 +2274,377 @@
   
 
 
-<h1 id="spa-single-page-application-pagination">SPA (Single Page Application) Pagination<a class="headerlink" href="#spa-single-page-application-pagination" title="Permanent link">&para;</a></h1>
-<p>In this recipe, we'll be adding pagination that works without reloading the
-page.</p>
-<h2 id="starting-point">Starting point<a class="headerlink" href="#starting-point" title="Permanent link">&para;</a></h2>
-<p>Lets pretend that we're already able to see a list of posts.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="starting-point-posts_controllerrb" name="__tabbed_1" type="radio" /><input id="starting-point-indexjsonprops" name="__tabbed_1" type="radio" /><input id="starting-point-indexjs" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="starting-point-posts_controllerrb"><code>posts_controller.rb</code></label><label for="starting-point-indexjsonprops"><code>index.json.props</code></label><label for="starting-point-indexjs"><code>index.js</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># app/controllers/posts_controller.rb</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">index</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="vi">@posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Post</span><span class="o">.</span><span class="n">all</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">end</span>
-</span></code></pre></div>
+  <h1>Requests</h1>
+
+<h2 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h2>
+<p><a id="visit"></a></p>
+<h3 id="visit">Visit()<a class="headerlink" href="#visit" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L12">types/requests.ts:12</a></p>
+<blockquote>
+<p><strong>Visit</strong>(<code>input</code>: <code>string</code>, <code>options</code>: <a href="#visitprops"><code>VisitProps</code></a>): <code>Promise</code>\&lt;<a href="../types/#visitresult"><code>VisitResult</code></a>&gt;</p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L31">types/requests.ts:31</a></p>
+<p>Use visit to make single page transitions from one page. The function is a
+wrapper around fetch and made to mimic a link click or a form submision. When
+used, a <code>json</code> request will be made for the next page, then Superglue saves
+the response, swap the page component, and change the browser history.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There can be only one <code>visit</code> at a time. If another <code>visit</code> is called from
+elsewhere, the previous visit would be aborted.</p>
 </div>
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>In this example, we have a <code>sleep</code> that we will optimize
-for later</p>
-</div>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># app/views/posts/index.json.props</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">json</span><span class="o">.</span><span class="n">header</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="s2">&quot;bob&quot;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nb">sleep</span><span class="w"> </span><span class="mi">2</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">end</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">json</span><span class="o">.</span><span class="n">posts</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="n">json</span><span class="o">.</span><span class="n">list</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="w"> </span><span class="vi">@posts</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">post</span><span class="o">|</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="n">json</span><span class="o">.</span><span class="n">id</span><span class="w"> </span><span class="n">post</span><span class="o">.</span><span class="n">id</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="n">json</span><span class="o">.</span><span class="n">body</span><span class="w"> </span><span class="n">post</span><span class="o">.</span><span class="n">body</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="n">json</span><span class="o">.</span><span class="n">editPostPath</span><span class="w"> </span><span class="n">edit_post_path</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="k">end</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">end</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Let's assume <code>Header</code> is a simple component that exist.</p>
-</div>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// app/views/posts/index.js</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">useContent</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">import</span><span class="w"> </span><span class="nx">Header</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./Header&#39;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">PostIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nx">posts</span><span class="p">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nx">header</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">()</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="o">&lt;&gt;</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">Header</span><span class="w"> </span><span class="p">{...</span><span class="nx">header</span><span class="p">}</span><span class="o">/&gt;</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">          </span><span class="nx">posts</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">body</span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">            </span><span class="o">&lt;</span><span class="nx">p</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">body</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">          </span><span class="p">))</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">PostList</span><span class="w"> </span><span class="nx">items</span><span class="o">=</span><span class="p">{</span><span class="nx">posts</span><span class="p">}</span><span class="o">&gt;</span>
-</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="o">&lt;</span><span class="err">/&gt;</span>
-</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="p">)</span>
-</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="p">}</span>
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="add-gems">Add gems<a class="headerlink" href="#add-gems" title="Permanent link">&para;</a></h2>
-<p>Lets also add Kaminari to your gem file</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gem &#39;kaminari&#39;
-</span></code></pre></div>
-<p>and <code>bundle</code></p>
-<h2 id="add-pagination">Add pagination<a class="headerlink" href="#add-pagination" title="Permanent link">&para;</a></h2>
-<p>The changes here are almost same with the <code>.erb</code> counterpart. We're using
-<code>path_to_next_page</code> and <code>path_to_prev_page</code> which come with Kaminari, both
-methods return <code>nil</code> if there are no subsequent pages.</p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Some <a href="https://github.com/kaminari/kaminari#the-paginate-helper-method">helpers</a> like <code>paginate</code> output HTML instead of
-JSON, but we can still use more primitives methods.</p>
-</div>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="add-pagination-posts_controllerrb" name="__tabbed_2" type="radio" /><input id="add-pagination-indexjsonprops" name="__tabbed_2" type="radio" /><input id="add-pagination-indexjs" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="add-pagination-posts_controllerrb"><code>posts_controller.rb</code></label><label for="add-pagination-indexjsonprops"><code>index.json.props</code></label><label for="add-pagination-indexjs"><code>index.js</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># app/controllers/posts_controller.rb
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>def index
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w"> </span> @posts = Post.all
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="gi">+   .page(params[:page])</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="gi">+   .per(10)</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="gi">+   .order(created_at: :desc)</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>end
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># app/views/posts/index.json.props
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>json.posts do
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w"> </span> json.list do
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w"> </span>   json.array! @posts do |post|
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w"> </span>     json.id post.id
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w"> </span>     json.body post.body
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w"> </span>     json.editPostPath edit_post_path(post)
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w"> </span>   end
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w"> </span> end
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="gi">+</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="gi">+ json.pathToNextPage path_to_next_page(@posts)</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="gi">+ json.pathToPrevPage path_to_prev_page(@posts)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>end
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>// app/views/posts/index.js
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>import React from &#39;react&#39;
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>import {useContent} from &#39;@thoughtbot/superglue&#39;
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>import Header from &#39;./Header&#39;
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>export default PostIndex = () =&gt; {
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w"> </span> const {
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w"> </span>   posts,
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w"> </span>   header,
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="gi">+   pathToNextPage,</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="gi">+   pathToPrevPage</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w"> </span> } = useContent()
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w"> </span> return (
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w"> </span>   &lt;&gt;
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w"> </span>     &lt;Header {...header}/&gt;
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w"> </span>     &lt;div&gt;
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w"> </span>       {
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w"> </span>         posts.list.map(({id, body}) =&gt; (
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w"> </span>           &lt;p key={id}&gt;{body}&lt;/p&gt;
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w"> </span>         ))
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w"> </span>       }
-</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w"> </span>     &lt;/div&gt;
-</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="gi">+     {pathToPrevPage &amp;&amp; &lt;a href={pathToPrevPage}&gt;Prev Page&lt;/a&gt;}</span>
-</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="gi">+     {pathToNextPage &amp;&amp; &lt;a href={pathToNextPage}&gt;Next Page&lt;/a&gt;}</span>
-</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w"> </span>   &lt;/&gt;
-</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w"> </span> )
-</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>}
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="smooth-navigation">Smooth navigation<a class="headerlink" href="#smooth-navigation" title="Permanent link">&para;</a></h2>
-<p>The above adds pagination, but each click on <strong>Next Page</strong> is
-a new page load.</p>
-<p>Lets navigate without a reload. In this example, we're using the <a href="../../ujs/">UJS</a> helper <code>data-sg-visit</code>,
-which would set the current page's state to the response without changing the URL.</p>
-<p><strong><code>index.js</code></strong></p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>// app/views/posts/index.js
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>import React from &#39;react&#39;
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>import {useContent} from &#39;@thoughtbot/superglue&#39;
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>import PostList from &#39;./PostList&#39;
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>import Header from &#39;./Header&#39;
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>export default PostIndex = () =&gt; {
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w"> </span> const {
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w"> </span>   posts,
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w"> </span>   header,
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w"> </span>   pathToNextPage,
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w"> </span>   pathToPrevPage
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w"> </span> } = useContent()
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w"> </span> return (
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w"> </span>   &lt;&gt;
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w"> </span>     &lt;Header {...header}/&gt;
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w"> </span>     &lt;div&gt;
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w"> </span>       {
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w"> </span>         posts.list.map(({id, body}) =&gt; (
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w"> </span>           &lt;p key={id}&gt;{body}&lt;/p&gt;
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w"> </span>         ))
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w"> </span>       }
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w"> </span>     &lt;/div&gt;
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="gd">-     {pathToPrevPage &amp;&amp; &lt;a href={pathToPrevPage}&gt;Prev Page&lt;/a&gt;}</span>
-</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="gi">+     {pathToPrevPage &amp;&amp; &lt;a href={pathToPrevPage} data-sg-visit&gt;Prev Page&lt;/a&gt;}</span>
-</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="gd">-     {pathToNextPage &amp;&amp; &lt;a href={pathToNextPage}&gt;Next Page&lt;/a&gt;}</span>
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="gi">+     {pathToNextPage &amp;&amp; &lt;a href={pathToNextPage} data-sg-visit&gt;Next Page&lt;/a&gt;}</span>
-</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w"> </span>   &lt;/&gt;
-</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w"> </span> )
-</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>}
-</span></code></pre></div>
-<h2 id="optimize">Optimize!<a class="headerlink" href="#optimize" title="Permanent link">&para;</a></h2>
-<p>Let's skip <code>data.header</code> when navigating and dig for <code>data.posts</code>. For the
-user, only the posts list changes, but the header stays the same.</p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>In effect, this achieves the same functionality as <a href="https://turbo.hotwired.dev/handbook/frames">Turbo Frames</a>, but
-Superglue leans more on Unobtrusive Javascript for better ergonomics.</p>
-</div>
-<p><strong><code>index.json.props</code></strong></p>
-<p>Recall how <a href="../../tutorial/#digging-with-props_at">digging</a> for content works. We'll add a <code>props_at</code> that digs for
-the <code>json.posts</code> while skipping other content on that page.</p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># app/views/posts/index.json.props
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>json.header do
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w"> </span> ...
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>end
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>json.posts do
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w"> </span> json.list do
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w"> </span>   json.array! @posts do |post|
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w"> </span>     json.id post.id
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w"> </span>     json.body post.body
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w"> </span>     json.editPostPath edit_post_path(post)
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w"> </span>   end
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w"> </span> end
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="gd">- json.pathToNextPage path_to_next_page(@posts)</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="gi">+ json.pathToNextPage path_to_next_page(@posts, props_at: &#39;data.posts&#39;)</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="gd">- json.pathToPrevPage path_to_prev_page(@posts)</span>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="gi">+ json.pathToPrevPage path_to_prev_page(@posts, props_at: &#39;data.posts&#39;)</span>
-</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>end
-</span></code></pre></div>
-<div class="grid cards">
+<p>You must provide the implentation and pass it back to Superglue in
+<code>application.js</code>. Superglue will then pass it to your page components and use
+it for UJS navigation. This is usually generated for you in
+<code>application_visit.js</code> where you can customize its behavior globally.</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input</code></td>
+<td><code>string</code></td>
+<td>The first argument to Fetch</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td><a href="#visitprops"><code>VisitProps</code></a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
+<p><code>Promise</code>\&lt;<a href="../types/#visitresult"><code>VisitResult</code></a>&gt;</p>
+<hr />
+<p><a id="visitprops"></a></p>
+<h3 id="visitprops">VisitProps<a class="headerlink" href="#visitprops" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L39">types/requests.ts:39</a></p>
+<p>Options for Visit</p>
+<h4 id="extends">Extends<a class="headerlink" href="#extends" title="Permanent link">&para;</a></h4>
 <ul>
-<li><a href="../infinite-scroll/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Interested in infinite-scroll?</a>
-     for <code>visit</code></li>
+<li><code>Omit</code>\&lt;<code>BaseProps</code>, <code>"signal"</code>&gt;</li>
 </ul>
-</div>
+<h4 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+<th>Inherited from</th>
+<th>Defined in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a id="placeholderkey"></a> <code>placeholderKey?</code></td>
+<td><code>string</code></td>
+<td>Defaults to the currentPageKey. When present, Superglue will use the page state located at that pageKey and optimistally navigates to it as the next page's state while the requests resolves.</td>
+<td>-</td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L45">types/requests.ts:45</a></td>
+</tr>
+<tr>
+<td><a id="revisit"></a> <code>revisit?</code></td>
+<td><code>boolean</code></td>
+<td>When <code>true</code> and the request method is a GET, changes the <code>suggestionAction</code> of the Result object to <code>none</code> so that Superglue does nothing to window.history. When the GET response was redirected, changes <code>navigationAction</code> to <code>replace</code></td>
+<td>-</td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L52">types/requests.ts:52</a></td>
+</tr>
+<tr>
+<td><a id="method"></a> <code>method?</code></td>
+<td><code>string</code></td>
+<td>The HTTP method</td>
+<td><a href="#remoteprops"><code>RemoteProps</code></a>.<a href="#method-1"><code>method</code></a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L77">types/requests.ts:77</a></td>
+</tr>
+<tr>
+<td><a id="body"></a> <code>body?</code></td>
+<td><code>BodyInit</code></td>
+<td>The HTTP body</td>
+<td><a href="#remoteprops"><code>RemoteProps</code></a>.<a href="#body-1"><code>body</code></a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L79">types/requests.ts:79</a></td>
+</tr>
+<tr>
+<td><a id="headers"></a> <code>headers?</code></td>
+<td>{[<code>key</code>: <code>string</code>]: <code>string</code>; }</td>
+<td>The HTTP headers</td>
+<td><code>Omit.headers</code></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L81">types/requests.ts:81</a></td>
+</tr>
+<tr>
+<td><a id="beforesave"></a> <code>beforeSave?</code></td>
+<td><a href="#beforesave-2"><code>BeforeSave</code></a>\&lt;<a href="../types/#jsonmappable"><code>JSONMappable</code></a>&gt;</td>
+<td>-</td>
+<td><a href="#remoteprops"><code>RemoteProps</code></a>.<a href="#beforesave-1"><code>beforeSave</code></a></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L84">types/requests.ts:84</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><a id="remote"></a></p>
+<h3 id="remote">Remote()<a class="headerlink" href="#remote" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L55">types/requests.ts:55</a></p>
+<blockquote>
+<p><strong>Remote</strong>(<code>input</code>: <code>string</code>, <code>options</code>: <a href="#remoteprops"><code>RemoteProps</code></a>): <code>Promise</code>\&lt;<a href="../types/#result"><code>Result</code></a>&gt;</p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L69">types/requests.ts:69</a></p>
+<p>Remote is a wrapper around fetch. It's used to make a request and mutate the
+store. Remote does not navigate, and it does not change the browser history.
+There can be multiple Remote requests running concurrently.</p>
+<p>This function is to be wrapped by a developer as a <a href="#applicationremote">ApplicationRemote</a>
+and returned to superglue.  This is usually generated as
+<code>application_visit.js</code> where you can make minimum edits to affect its
+global usage.</p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input</code></td>
+<td><code>string</code></td>
+<td>The first argument to Fetch</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td><a href="#remoteprops"><code>RemoteProps</code></a></td>
+<td>The fetch RequestInit with additional options</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h4>
+<p><code>Promise</code>\&lt;<a href="../types/#result"><code>Result</code></a>&gt;</p>
+<hr />
+<p><a id="remoteprops"></a></p>
+<h3 id="remoteprops">RemoteProps<a class="headerlink" href="#remoteprops" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L90">types/requests.ts:90</a></p>
+<p>Options for Visit</p>
+<h4 id="extends_1">Extends<a class="headerlink" href="#extends_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>BaseProps</code></li>
+</ul>
+<h4 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+<th>Inherited from</th>
+<th>Defined in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a id="method-1"></a> <code>method?</code></td>
+<td><code>string</code></td>
+<td>The HTTP method</td>
+<td><code>BaseProps.method</code></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L77">types/requests.ts:77</a></td>
+</tr>
+<tr>
+<td><a id="body-1"></a> <code>body?</code></td>
+<td><code>BodyInit</code></td>
+<td>The HTTP body</td>
+<td><code>BaseProps.body</code></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L79">types/requests.ts:79</a></td>
+</tr>
+<tr>
+<td><a id="headers-1"></a> <code>headers?</code></td>
+<td>{[<code>key</code>: <code>string</code>]: <code>string</code>; }</td>
+<td>The HTTP headers</td>
+<td><code>BaseProps.headers</code></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L81">types/requests.ts:81</a></td>
+</tr>
+<tr>
+<td><a id="beforesave-1"></a> <code>beforeSave?</code></td>
+<td><a href="#beforesave-2"><code>BeforeSave</code></a>\&lt;<a href="../types/#jsonmappable"><code>JSONMappable</code></a>&gt;</td>
+<td>-</td>
+<td><code>BaseProps.beforeSave</code></td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L84">types/requests.ts:84</a></td>
+</tr>
+<tr>
+<td><a id="pagekey"></a> <code>pageKey?</code></td>
+<td><code>string</code></td>
+<td>Specifies where to store the remote payload, if not provided <a href="#remote">Remote</a> will derive a key from the response's url.</td>
+<td>-</td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L95">types/requests.ts:95</a></td>
+</tr>
+<tr>
+<td><a id="force"></a> <code>force?</code></td>
+<td><code>boolean</code></td>
+<td>By default, remote <a href="#remote">Remote</a> disallows grafting a page response using props_at if the target pageKey provided has a different componentIdentifier. Setting <code>force: true</code> will ignore this limitation. This can be useful if you are absolutely sure that the page your grafting onto has a compatible shape with the response received with using props_at. A good example of this is a shared global header.</td>
+<td>-</td>
+<td><a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L105">types/requests.ts:105</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><a id="beforesave-2"></a></p>
+<h3 id="beforesavet">BeforeSave()\&lt;T&gt;<a class="headerlink" href="#beforesavet" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L108">types/requests.ts:108</a></p>
+<h4 id="type-parameters">Type Parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Type Parameter</th>
+<th>Default type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td><a href="../types/#jsonmappable"><code>JSONMappable</code></a></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>BeforeSave</strong>\&lt;<code>U</code>&gt;(<code>prevPage</code>: <code>undefined</code> | <a href="../types/#page"><code>Page</code></a>\&lt;<code>T</code>&gt;, <code>nextPage</code>: <code>U</code>): <code>U</code></p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L133">types/requests.ts:133</a></p>
+<p>A callback that fires in between recieving a payload and saving a
+payload. Use this callback to modify the payload before it gets saved. Its
+useful for appending, prepending, shuffeling, etc. recieved data to
+existing data.</p>
+<p><code>prevPage</code> is <code>undefined</code> when there is no existing page in the store
+(e.g. on a first visit).</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>const beforeSave = (prevPage, nextPage) =&gt; {
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  const prevMessages = prevPage?.data?.messages ?? []
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  nextPage.data.messages = [
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ...prevMessages,
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ...nextPage.data.messages
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ]
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  return nextPage
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>}
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>remote(&quot;/posts&quot;, {beforeSave})
+</span></code></pre></div>
+<h4 id="type-parameters_1">Type Parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Type Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>U</code> <em>extends</em> <a href="../types/#saveresponse"><code>SaveResponse</code></a>\&lt;<code>T</code>&gt; | <a href="../types/#graftresponse"><code>GraftResponse</code></a>\&lt;<code>T</code>&gt;</td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prevPage</code></td>
+<td><code>undefined</code> | <a href="../types/#page"><code>Page</code></a>\&lt;<code>T</code>&gt;</td>
+</tr>
+<tr>
+<td><code>nextPage</code></td>
+<td><code>U</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h4>
+<p><code>U</code></p>
+<hr />
+<p><a id="applicationremote"></a></p>
+<h3 id="applicationremote">ApplicationRemote()<a class="headerlink" href="#applicationremote" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L139">types/requests.ts:139</a></p>
+<blockquote>
+<p><strong>ApplicationRemote</strong>(<code>input</code>: <code>string</code>, <code>options?</code>: <a href="#remoteprops"><code>RemoteProps</code></a> &amp; { <code>dataset?</code>: {[<code>name</code>: <code>string</code>]: <code>undefined</code> | <code>string</code>; }; }): <code>Promise</code>\&lt;<a href="../types/#result"><code>Result</code></a> | <a href="../types/#errorresult"><code>ErrorResult</code></a>&gt;</p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L156">types/requests.ts:156</a></p>
+<p>ApplicationRemote is the developer provided wrapper around <a href="#remote">Remote</a>.</p>
+<p>It contains custom functionality, but is bound by the interface that
+Superglue uses to make a <code>remote</code> call. See <a href="#remote">Remote</a> for more details.</p>
+<p>The only difference between the two interfaces is ApplicationRemote will also
+be passed a dataset as an option. This is because Superglue UJS uses
+ApplicationRemote and will pass the dataset of the HTML element where UJS is
+enabled on.</p>
+<p>Returns a <code>Promise&lt;Result | ErrorResult&gt;</code> — terminal branches (HTTP
+error redirects, unexpected exceptions) should return a never-settling
+promise rather than <code>undefined</code> so the chain reflects "the browser is
+unloading."</p>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input</code></td>
+<td><code>string</code></td>
+</tr>
+<tr>
+<td><code>options?</code></td>
+<td><a href="#remoteprops"><code>RemoteProps</code></a> &amp; { <code>dataset?</code>: {[<code>name</code>: <code>string</code>]: <code>undefined</code> | <code>string</code>; }; }</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h4>
+<p><code>Promise</code>\&lt;<a href="../types/#result"><code>Result</code></a> | <a href="../types/#errorresult"><code>ErrorResult</code></a>&gt;</p>
+<hr />
+<p><a id="applicationvisit"></a></p>
+<h3 id="applicationvisit">ApplicationVisit()<a class="headerlink" href="#applicationvisit" title="Permanent link">&para;</a></h3>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L166">types/requests.ts:166</a></p>
+<blockquote>
+<p><strong>ApplicationVisit</strong>(<code>input</code>: <code>string</code>, <code>options?</code>: <a href="#visitprops"><code>VisitProps</code></a> &amp; { <code>dataset?</code>: {[<code>name</code>: <code>string</code>]: <code>undefined</code> | <code>string</code>; }; }): <code>Promise</code>\&lt;<a href="../types/#visitresult"><code>VisitResult</code></a> | <a href="../types/#errorresult"><code>ErrorResult</code></a>&gt;</p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L183">types/requests.ts:183</a></p>
+<p>ApplicationVisit is the developer provided wrapper around <a href="#remote">Remote</a>.</p>
+<p>It contains custom functionality, but is bound by the interface that
+Superglue uses to make a <code>visit</code> call. See <a href="#remote">Remote</a> for more details.</p>
+<p>The only difference between the two interfaces is ApplicationVisit will also
+be passed a dataset as an option. This is because Superglue UJS uses
+ApplicationVisit and will pass the dataset of the HTML element where UJS is
+enabled on.</p>
+<p>Returns a <code>Promise&lt;VisitResult | ErrorResult&gt;</code> — terminal branches
+(HTTP error redirects, unexpected exceptions) should return a
+never-settling promise rather than <code>undefined</code> so the chain reflects
+"the browser is unloading."</p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input</code></td>
+<td><code>string</code></td>
+</tr>
+<tr>
+<td><code>options?</code></td>
+<td><a href="#visitprops"><code>VisitProps</code></a> &amp; { <code>dataset?</code>: {[<code>name</code>: <code>string</code>]: <code>undefined</code> | <code>string</code>; }; }</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h4>
+<p><code>Promise</code>\&lt;<a href="../types/#visitresult"><code>VisitResult</code></a> | <a href="../types/#errorresult"><code>ErrorResult</code></a>&gt;</p>
 
 
 
@@ -2106,7 +2680,7 @@ the <code>json.posts</code> while skipping other content on that page.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../ssr/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Server Side Rendering">
+          <a href="../types/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Types">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2116,20 +2690,20 @@ the <code>json.posts</code> while skipping other content on that page.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Server Side Rendering
+                Types
               </div>
             </div>
           </a>
         
         
           
-          <a href="../infinite-scroll/" class="md-footer__link md-footer__link--next" aria-label="Next: Infinite Scroll">
+          <a href="../types.actions/" class="md-footer__link md-footer__link--next" aria-label="Next: Actions">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Infinite Scroll
+                Actions
               </div>
             </div>
             <div class="md-footer__button md-icon">

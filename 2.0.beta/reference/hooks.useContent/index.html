@@ -12,13 +12,9 @@
         <meta name="author" content="Johny Ho">
       
       
-        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0.beta/recipes/modals/">
+        <link rel="canonical" href="https://thoughtbot.github.io/superglue/2.0.beta/reference/hooks.useContent/">
       
       
-        <link rel="prev" href="../../redux-state-shape/">
-      
-      
-        <link rel="next" href="../ssr/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +22,7 @@
     
     
       
-        <title>Modals - Superglue</title>
+        <title>hooks.useContent - Superglue</title>
       
     
     
@@ -70,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#modals" class="md-skip">
+        <a href="#functions" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Modals
+              hooks.useContent
             
           </span>
         </div>
@@ -210,13 +206,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../recipes/modals/" class="md-tabs__link">
           
   
   
@@ -1096,31 +1090,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -1133,7 +1122,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Recipes
@@ -1144,32 +1133,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Modals
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../recipes/modals/" class="md-nav__link">
         
   
   
@@ -1180,110 +1147,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      The setup
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-a-link-to-postsnew" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add a link to /posts/new
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-modal" class="md-nav__link">
-    <span class="md-ellipsis">
-      The modal
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#too-many-modals" class="md-nav__link">
-    <span class="md-ellipsis">
-      Too many modals
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#finish" class="md-nav__link">
-    <span class="md-ellipsis">
-      Finish!
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Finish!">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#postsindexjs" class="md-nav__link">
-    <span class="md-ellipsis">
-      posts/index.js
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Optimization
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Optimization">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#indexjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      index.json
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1296,7 +1159,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ssr/" class="md-nav__link">
+      <a href="../../recipes/ssr/" class="md-nav__link">
         
   
   
@@ -1319,7 +1182,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../spa-pagination/" class="md-nav__link">
+      <a href="../../recipes/spa-pagination/" class="md-nav__link">
         
   
   
@@ -1342,7 +1205,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../infinite-scroll/" class="md-nav__link">
+      <a href="../../recipes/infinite-scroll/" class="md-nav__link">
         
   
   
@@ -1365,7 +1228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../progress-bar/" class="md-nav__link">
+      <a href="../../recipes/progress-bar/" class="md-nav__link">
         
   
   
@@ -1388,7 +1251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../turbo/" class="md-nav__link">
+      <a href="../../recipes/turbo/" class="md-nav__link">
         
   
   
@@ -1411,7 +1274,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../vite/" class="md-nav__link">
+      <a href="../../recipes/vite/" class="md-nav__link">
         
   
   
@@ -1507,7 +1370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/hooks/" class="md-nav__link">
+      <a href="../hooks/" class="md-nav__link">
         
   
   
@@ -1530,7 +1393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/components.Navigation/" class="md-nav__link">
+      <a href="../components.Navigation/" class="md-nav__link">
         
   
   
@@ -1553,7 +1416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1576,7 +1439,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/types/" class="md-nav__link">
+      <a href="../types/" class="md-nav__link">
         
   
   
@@ -1599,7 +1462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/types.requests/" class="md-nav__link">
+      <a href="../types.requests/" class="md-nav__link">
         
   
   
@@ -1622,7 +1485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/types.actions/" class="md-nav__link">
+      <a href="../types.actions/" class="md-nav__link">
         
   
   
@@ -1808,8 +1671,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1818,55 +1679,57 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-setup" class="md-nav__link">
+  <a href="#functions" class="md-nav__link">
     <span class="md-ellipsis">
-      The setup
+      Functions
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-a-link-to-postsnew" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add a link to /posts/new
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-modal" class="md-nav__link">
-    <span class="md-ellipsis">
-      The modal
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#too-many-modals" class="md-nav__link">
-    <span class="md-ellipsis">
-      Too many modals
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#finish" class="md-nav__link">
-    <span class="md-ellipsis">
-      Finish!
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Finish!">
+    <nav class="md-nav" aria-label="Functions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#postsindexjs" class="md-nav__link">
+  <a href="#usecontent" class="md-nav__link">
     <span class="md-ellipsis">
-      posts/index.js
+      useContent()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="useContent()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#call-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      Call Signature
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Call Signature">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
     </span>
   </a>
   
@@ -1876,23 +1739,93 @@
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#optimization" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#call-signature_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Optimization
+      Call Signature
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Optimization">
+    <nav class="md-nav" aria-label="Call Signature">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#indexjson" class="md-nav__link">
+  <a href="#type-parameters_1" class="md-nav__link">
     <span class="md-ellipsis">
-      index.json
+      Type Parameters
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unproxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      unproxy()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="unproxy()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1920,271 +1853,139 @@
   
 
 
-<h1 id="modals">Modals<a class="headerlink" href="#modals" title="Permanent link">&para;</a></h1>
-<p>Modals are easy. Lets imagine a scenario where we have two urls:</p>
-<ol>
-<li><code>/posts</code></li>
-<li><code>/posts/new</code></li>
-</ol>
-<p>When a user visits <code>/posts/new</code> from <code>/posts</code>, we want a modal to appear
-overlaying the existing list of posts. The overlay should work if a user
-chooses instead to directly visit <code>/posts/new</code>.</p>
-<h2 id="the-setup">The setup<a class="headerlink" href="#the-setup" title="Permanent link">&para;</a></h2>
-<p>Both urls render a list of posts. Lets set up the controller and the
-<code>page_to_page_mapping.js</code> the same way.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="the-setup-posts_controllerrb" name="__tabbed_1" type="radio" /><input id="the-setup-page_to_page_mappingjs" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="the-setup-posts_controllerrb"><code>posts_controller.rb</code></label><label for="the-setup-page_to_page_mappingjs"><code>page_to_page_mapping.js</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Same template different action</p>
-<p>Notice that we're rendering the <code>index</code> for the <code>new</code> action. While the
-content is the same, the <code>componentIdentifier</code> is different as that has
-been setup to use the controller and action name.</p>
-</div>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># app/controllers/posts_controller.rb</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">index</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="vi">@posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Post</span><span class="o">.</span><span class="n">all</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">end</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">new</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="vi">@posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Post</span><span class="o">.</span><span class="n">all</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="n">render</span><span class="w"> </span><span class="ss">:index</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">end</span>
+  <h1>hooks.useContent</h1>
+
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
+<p><a id="usecontent"></a></p>
+<h3 id="usecontent">useContent()<a class="headerlink" href="#usecontent" title="Permanent link">&para;</a></h3>
+<h4 id="call-signature">Call Signature<a class="headerlink" href="#call-signature" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>useContent</strong>\&lt;<code>T</code>&gt;(): <code>T</code></p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/useContent.tsx#L52">hooks/useContent.tsx:52</a></p>
+<p>Returns a proxy for accessing your page's content e.g, <code>index.json.props</code>,
+<code>show.json.props</code>, etc.</p>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nx">cart</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">__id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user_cart&#39;</span><span class="p">}</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">   </span><span class="nx">footer</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;welcome&quot;</span><span class="p">}},</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nx">fragments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">user_cart</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">}}</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Similarly, we tie the <code>componentIdentifier</code> to the same page component.</p>
-<p><strong>Vite Users</strong> This step can be entirely optional if you're using Vite. See
-the <a href="../vite/">recipe</a> for more information.</p>
-</div>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">PostIndex</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../views/posts/index&#39;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">pageIdentifierToPageComponent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="s1">&#39;posts/index&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">PostIndex</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s1">&#39;posts/new&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">PostIndex</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">};</span>
+<p>The proxy will lazily and automatically resolve any <code>FragmentRef</code>s making it
+as easy as</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>const data = useContent()
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>const total = data.body.cart.total
 </span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="add-a-link-to-postsnew">Add a link to <code>/posts/new</code><a class="headerlink" href="#add-a-link-to-postsnew" title="Permanent link">&para;</a></h2>
-<p>Imagine a list of posts, lets add a button somewhere on the index page to
-direct the user to <code>/posts/new</code>. As seen previously, both <code>/posts</code> and
-<code>/posts/new</code> render the same thing.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="add-a-link-to-postsnew-postsindexjsonprops" name="__tabbed_2" type="radio" /><input id="add-a-link-to-postsnew-postsindexjs" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="add-a-link-to-postsnew-postsindexjsonprops"><code>posts/index.json.props</code></label><label for="add-a-link-to-postsnew-postsindexjs"><code>posts/index.js</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># app/views/posts/index.json.props</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">...</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">json</span><span class="o">.</span><span class="n">newPostPath</span><span class="w"> </span><span class="n">new_post_path</span>
+<p>The hook will also automatically tracks fragment dependencies and triggers
+re-renders only when accessed fragments change.</p>
+<h5 id="type-parameters">Type Parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Type Parameter</th>
+<th>Default type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td><a href="../types/#jsonmappable"><code>JSONMappable</code></a></td>
+<td>The data type being accessed (defaults to JSONMappable)</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h5>
+<p><code>T</code></p>
+<p>Reactive proxy to page data</p>
+<h5 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h5>
+<div class="language-tsx highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Access current page data</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">()</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">// Access a specific page&#39;s data by key</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">(</span><span class="s1">&#39;/posts&#39;</span><span class="p">)</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-js highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useContent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@thoughtbot/superglue&#39;</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">PostIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nx">newPostPath</span><span class="p">,</span><span class="w"> </span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">...</span><span class="nx">rest</span><span class="w"> </span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useContent</span><span class="p">()</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">...</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">a</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">      </span><span class="nx">href</span><span class="o">=</span><span class="p">{</span><span class="nx">newPostPath</span><span class="p">}</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="o">&gt;</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="nx">New</span><span class="w"> </span><span class="nx">Post</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="o">&lt;</span><span class="err">/a&gt;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="p">...</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="p">)</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">}</span>
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="the-modal">The modal<a class="headerlink" href="#the-modal" title="Permanent link">&para;</a></h2>
-<p>The link appears and we're able to navigate to <code>/posts/new</code>, but
-<code>/posts/new</code> is missing a modal. Not surprising as both routes are
-rendering the same content.</p>
-<p>Lets add a modal.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="the-modal-postsindexjsonprops" name="__tabbed_3" type="radio" /><input id="the-modal-indexjs" name="__tabbed_3" type="radio" /><input id="the-modal-modaljs" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="the-modal-postsindexjsonprops"><code>posts/index.json.props</code></label><label for="the-modal-indexjs"><code>index.js</code></label><label for="the-modal-modaljs"><code>Modal.js</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>For simplicity, we'll use a "Hello World" as the modal contents</p>
-</div>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># app/views/posts/index.json
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>...
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>json.newPostPath new_post_path
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="gi">+ json.createPostModal do</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="gi">+   json.greeting &quot;Hello World&quot;</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="gi">+ end</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gi">+ import Modal from &#39;./Modal&#39;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>export default PostIndex = () =&gt; {
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w"> </span> const { 
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w"> </span>   newPostPath, 
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="gi">+    createPostModal, </span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w"> </span>   ...rest 
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w"> </span> } = useContent()
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w"> </span> return (
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w"> </span>   ...
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w"> </span>   &lt;a
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w"> </span>     href={newPostPath}
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w"> </span>   &gt;
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w"> </span>     New Post
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w"> </span>   &lt;/a&gt;
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="gi">+   &lt;Modal {...createPostModal} /&gt;</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w"> </span>   ...
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w"> </span> )
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>}
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>This is a simplified modal, in practice you'll use this with <code>&lt;Dialog&gt;</code> or
-other modal library.</p>
-</div>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./Modal&#39;</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">Modal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">({</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">greeting</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;my-modal&quot;</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">greeting</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">)</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="too-many-modals">Too many modals<a class="headerlink" href="#too-many-modals" title="Permanent link">&para;</a></h2>
-<p>Unfortunately, now BOTH routes have modals! Lets fix that by adding
-a conditional render.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="too-many-modals-indexjsonprops" name="__tabbed_4" type="radio" /><input id="too-many-modals-posts_controllerrb" name="__tabbed_4" type="radio" /><input id="too-many-modals-modaljs" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="too-many-modals-indexjsonprops"><code>index.json.props</code></label><label for="too-many-modals-posts_controllerrb"><code>posts_controller.rb</code></label><label for="too-many-modals-modaljs"><code>Modal.js</code></label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># app/views/posts/index.json.props
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>...
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>json.newPostPath new_post_path
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>json.createPostModal do
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w"> </span> json.greeting &quot;Hello World&quot;
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="gi">+ json.showModal @show_modal</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>end
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># app/controllers/posts_controller.rb
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>def index
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w"> </span> @posts = Post.all
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="gi">+ @show_modal = false</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>end
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>def new
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w"> </span> @posts = Post.all
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="gi">+ @show_modal = true</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w"> </span> render :index
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>end
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>import Modal from &#39;./Modal&#39;
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>export default Modal = ({
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w"> </span> greeting,
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gi">+  showModal</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>}) =&gt; {
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w"> </span> return (
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="gd">-   &lt;div className=&quot;my-modal&quot;&gt;{greeting}&lt;/div&gt;</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="gi">+   {showModal &amp;&amp; &lt;div className=&quot;my-modal&quot;&gt;{greeting}&lt;/div&gt;}</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w"> </span> )
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>}
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="finish">Finish!<a class="headerlink" href="#finish" title="Permanent link">&para;</a></h2>
-<p>Awesome! We have modals! Unfortunately, clicking <code>&lt;a href={newPostPath}&gt;New Post&lt;/a&gt;</code>
-will cause a new page load. We can remove the page load by adding
-<code>data-sg-visit</code> to the link. With <code>data-sg-visit</code>, Superglue will navigate to the next
-page without reloading the page, just like Turbo.</p>
-<h3 id="postsindexjs"><strong><code>posts/index.js</code></strong><a class="headerlink" href="#postsindexjs" title="Permanent link">&para;</a></h3>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>import Modal from &#39;./Modal&#39;
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>import { useContent } from &#39;@thoughtbot/superglue&#39;
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>export default PostIndex = () =&gt; {
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w"> </span> const {
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w"> </span>   newPostPath,
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w"> </span>   createPostModal,
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w"> </span>   ...rest
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w"> </span> } = useContent()
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w"> </span> return (
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w"> </span>   ...
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w"> </span>   &lt;a
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w"> </span>     href={newPostPath}
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="gi">+     data-sg-visit</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w"> </span>   &gt;
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w"> </span>     New Post
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w"> </span>   &lt;/a&gt;
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w"> </span>   &lt;Modal {...createPostModal} /&gt;
-</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w"> </span>   ...
-</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w"> </span> )
-</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>}
-</span></code></pre></div>
-<h2 id="optimization">Optimization<a class="headerlink" href="#optimization" title="Permanent link">&para;</a></h2>
-<p>With the above, a click on <strong>New Post</strong> while on <code>/posts</code> will</p>
-<ol>
-<li>Fetch <code>/posts/new</code> with
-<code>format=json</code></li>
-<li>Save the page to the store</li>
-<li>Swap the page components</li>
-<li>Change the url</li>
-</ol>
-<p>Unfortunately, step 1 is still a full page load. Commonly, we
-just want to load the modal without loading the entire page.</p>
-<p>Lets fix that!</p>
-<h3 id="indexjson"><strong><code>index.json</code></strong><a class="headerlink" href="#indexjson" title="Permanent link">&para;</a></h3>
-<p>Recall how <a href="../../tutorial/#digging-with-props_at">digging</a> for content works. We'll add a <code>props_at</code> that digs for
-the modal on <code>/posts/new</code> while skipping other content on that page.</p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># app/views/posts/index.json
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>...
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="gd">- json.newPostPath new_post_path</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="gi">+ json.newPostPath new_post_path(props_at: `data.createPostModal`)</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>json.createPostModal do
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w"> </span> json.greeting &quot;Hello World&quot;
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w"> </span> json.showModal @show_modal
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>end
-</span></code></pre></div>
-<p>With that change, the sequence becomes:</p>
-<ol>
-<li>Copy the state in <code>/posts</code> to <code>/posts/new</code> in the store.</li>
-<li>Fetch <code>/posts/new?props_at=data.createPostModal</code></li>
-<li>Graft the result to the store at <code>/posts/new</code></li>
-<li>Swap the page components</li>
-<li>Change the url</li>
-</ol>
+<h4 id="call-signature_1">Call Signature<a class="headerlink" href="#call-signature_1" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>useContent</strong>\&lt;<code>T</code>&gt;(<code>pageKey?</code>: <code>string</code>): <code>undefined</code> | <code>T</code></p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/useContent.tsx#L57">hooks/useContent.tsx:57</a></p>
+<h5 id="type-parameters_1">Type Parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Type Parameter</th>
+<th>Default type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td><a href="../types/#jsonmappable"><code>JSONMappable</code></a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pageKey?</code></td>
+<td><code>string</code></td>
+<td>Optional page key to access a specific page's data. When omitted, returns data for the current page.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h5>
+<p><code>undefined</code> | <code>T</code></p>
+<hr />
+<p><a id="unproxy"></a></p>
+<h3 id="unproxy">unproxy()<a class="headerlink" href="#unproxy" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>unproxy</strong>\&lt;<code>T</code>&gt;(<code>proxy</code>: <code>T</code>): <a href="../types/#unproxy"><code>Unproxy</code></a>\&lt;<code>T</code>&gt;</p>
+</blockquote>
+<p>Defined in: <a href="https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/useContent.tsx#L127">hooks/useContent.tsx:127</a></p>
+<p>Extracts the underlying state from an <a href="#usecontent">useContent</a> proxy</p>
+<h4 id="type-parameters_2">Type Parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Type Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>proxy</code></td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h4>
+<p><a href="../types/#unproxy"><code>Unproxy</code></a>\&lt;<code>T</code>&gt;</p>
 
 
 
@@ -2215,44 +2016,6 @@ the modal on <code>/posts/new</code> while skipping other content on that page.<
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../../redux-state-shape/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Store shape">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Store shape
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../ssr/" class="md-footer__link md-footer__link--next" aria-label="Next: Server Side Rendering">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Server Side Rendering
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">

@@ -1,6 +1,6 @@
 import { createUnplugin } from 'unplugin'
 import { DeepkitLoader } from '@deepkit/type-compiler'
-import { findHookCallsToTransform, applyHookEdits } from './unplugin-transform'
+import { transformHooks } from './unplugin-transform'
 
 const VALIDATE_FN = '__supergluePropsValidator'
 
@@ -30,17 +30,12 @@ export const superglueDeepkit = createUnplugin(() => {
       return /\.[jt]sx?$/.test(id) && !id.includes('node_modules')
     },
     transform(code: string, id: string) {
-      let transformed = code
       const hasHooks =
         code.includes('useContent') || code.includes('useFragment')
 
-      if (hasHooks) {
-        const edits = findHookCallsToTransform(code, id)
-        if (edits.length > 0) {
-          transformed = applyHookEdits(transformed, edits, VALIDATE_FN)
-          transformed = VALIDATE_HELPER + transformed
-        }
-      }
+      let transformed = hasHooks
+        ? transformHooks(code, id, VALIDATE_FN, VALIDATE_HELPER)
+        : code
 
       // Run DeepkitLoader after our transform so it injects __type
       // metadata into our generated validate calls

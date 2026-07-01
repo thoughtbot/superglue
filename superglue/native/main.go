@@ -31,6 +31,59 @@ var (
 	stderr io.Writer = os.Stderr
 )
 
+// valueFlags lists host flags that take a separate value argument (space-form).
+// Used by filterHostArgs to skip the value when stripping an unknown flag.
+var valueFlags = map[string]bool{
+	"--cwd":         true,
+	"--tsconfig":    true,
+	"--outDir":      true,
+	"--plugins-json": true,
+	"--checkers":    true,
+	"--tsgo-args":   true,
+}
+
+// filterHostArgs drops flags the FlagSet does not know, keeping known flags
+// (and their separately-passed values) intact for fs.Parse. This prevents
+// exit 2 when ttsc passes flags our plugin doesn't handle (--diagnostics,
+// --singleThreaded, etc.). Follows the pattern from the ttsc end-to-end
+// walkthrough docs.
+func filterHostArgs(args []string, fs *flag.FlagSet) []string {
+	out := make([]string, 0, len(args))
+	for i := 0; i < len(args); i++ {
+		a := args[i]
+		if !strings.HasPrefix(a, "-") {
+			out = append(out, a)
+			continue
+		}
+		name, _, hasEq := strings.Cut(a, "=")
+		if fs.Lookup(strings.TrimLeft(name, "-")) != nil {
+			out = append(out, a)
+			if !hasEq && valueFlags[name] && i+1 < len(args) {
+				out = append(out, args[i+1])
+				i++
+			}
+			continue
+		}
+		// Unknown flag: skip it and (if it's a known value-flag) its value.
+		if !hasEq && valueFlags[name] && i+1 < len(args) {
+			i++
+		}
+	}
+	return out
+}
+
+// resolveCwd resolves the --cwd flag to an absolute path. Falls back to
+// os.Getwd() when cwd is empty.
+func resolveCwd(cwd string) (string, error) {
+	if cwd == "" {
+		return os.Getwd()
+	}
+	if !filepath.IsAbs(cwd) {
+		return filepath.Abs(cwd)
+	}
+	return filepath.Clean(cwd), nil
+}
+
 func main() {
 	os.Exit(run(os.Args[1:]))
 }
@@ -62,7 +115,7 @@ func runCheck(args []string) int {
 	_ = fs.String("cwd", "", "project directory")
 	_ = fs.String("tsconfig", "", "tsconfig")
 	_ = fs.String("plugins-json", "", "ordered plugin descriptors")
-	if err := fs.Parse(args); err != nil {
+	if err := fs.Parse(filterHostArgs(args, fs)); err != nil {
 		return 2
 	}
 	return 0
@@ -78,19 +131,16 @@ func runBuild(args []string) int {
 	_ = fs.String("plugins-json", "", "ordered plugin descriptors")
 	_ = fs.Bool("emit", false, "emit")
 	_ = fs.Bool("quiet", false, "quiet")
+	_ = fs.Bool("verbose", false, "verbose")
 	_ = fs.Bool("noEmit", false, "noEmit")
 	_ = fs.String("outDir", "", "output directory")
-	if err := fs.Parse(args); err != nil {
+	if err := fs.Parse(filterHostArgs(args, fs)); err != nil {
 		return 2
 	}
-	root := *cwd
-	if root == "" {
-		var err error
-		root, err = os.Getwd()
-		if err != nil {
-			fmt.Fprintln(stderr, err)
-			return 2
-		}
+	root, err := resolveCwd(*cwd)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 2
 	}
 
 	prog, diags, err := driver.LoadProgram(root, *tsconfigPath, driver.LoadProgramOptions{
@@ -137,17 +187,13 @@ func runTransform(args []string) int {
 	cwd := fs.String("cwd", "", "project directory")
 	tsconfigPath := fs.String("tsconfig", "tsconfig.json", "tsconfig")
 	_ = fs.String("plugins-json", "", "ordered plugin descriptors")
-	if err := fs.Parse(args); err != nil {
+	if err := fs.Parse(filterHostArgs(args, fs)); err != nil {
 		return 2
 	}
-	root := *cwd
-	if root == "" {
-		var err error
-		root, err = os.Getwd()
-		if err != nil {
-			fmt.Fprintf(stderr, "use-content-validator: cwd: %v\n", err)
-			return 2
-		}
+	root, err := resolveCwd(*cwd)
+	if err != nil {
+		fmt.Fprintf(stderr, "use-content-validator: cwd: %v\n", err)
+		return 2
 	}
 
 	prog, diags, err := driver.LoadProgram(root, *tsconfigPath, driver.LoadProgramOptions{

@@ -38,5 +38,17 @@ export default defineConfig((options) => {
         'typescript',
       ],
     },
+
+    // Typia ttsc plugin + unplugin
+    {
+      entry: { typia: 'lib/typia.ts' },
+      format: ['esm', 'cjs'],
+      dts: true,
+      sourcemap: true,
+      external: [
+        '@ttsc/unplugin',
+        'ttsc',
+      ],
+    },
   ]
 })

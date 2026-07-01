@@ -36,6 +36,11 @@
       "types": "./dist/deepkit.d.ts",
       "import": "./dist/deepkit.mjs",
       "require": "./dist/deepkit.cjs"
+    },
+    "./typia": {
+      "types": "./dist/typia.d.ts",
+      "import": "./dist/typia.mjs",
+      "require": "./dist/typia.cjs"
     }
   },
   "license": "MIT",
@@ -52,6 +57,7 @@
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
+    "@ttsc/unplugin": "file:../../../typia_workspace/ttsc/packages/unplugin",
     "@types/node": "^22.10.1",
     "@types/rails__actioncable": "^6.1.11",
     "@types/react": "^19.1.8",
@@ -77,10 +83,12 @@
     "redux-thunk": "^3.1.0",
     "rollup": "4.52.5",
     "tsup": "^8.1.0",
+    "ttsc": "file:../../../typia_workspace/ttsc/packages/ttsc",
     "typedoc": "^0.28.10",
     "typedoc-plugin-markdown": "^4.8.1",
     "typedoc-plugin-missing-exports": "~4.1.0",
     "typescript": "^5.5.3",
+    "typia": "file:../../../typia_workspace/typia/packages/typia",
     "unplugin": "^3.0.0",
     "vitest": "^2.0.2"
   },
@@ -89,7 +97,10 @@
     "@deepkit/type": "^1.0.19",
     "@deepkit/type-compiler": "^1.0.19",
     "@rails/actioncable": "^7 || ^8",
-    "react": "^18 || ^19"
+    "@ttsc/unplugin": ">=0.11.0",
+    "react": "^18 || ^19",
+    "ttsc": ">=0.11.0",
+    "typia": ">=1.0.0"
   },
   "peerDependenciesMeta": {
     "@anycable/web": {
@@ -102,6 +113,15 @@
       "optional": true
     },
     "@rails/actioncable": {
+      "optional": true
+    },
+    "@ttsc/unplugin": {
+      "optional": true
+    },
+    "ttsc": {
+      "optional": true
+    },
+    "typia": {
       "optional": true
     }
   },

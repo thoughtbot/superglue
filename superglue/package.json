@@ -75,7 +75,7 @@
     "react-redux": "^9.1.2",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^3.1.0",
-    "rollup": "4.52.5",
+    "rollup": "4.59.0",
     "tsup": "^8.1.0",
     "typedoc": "^0.28.10",
     "typedoc-plugin-markdown": "^4.8.1",

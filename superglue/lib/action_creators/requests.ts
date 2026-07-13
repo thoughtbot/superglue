@@ -15,7 +15,7 @@ import {
   superglueError,
   receiveResponse,
 } from '../actions'
-import { saveAndProcessPage, preparePageForSave } from './index'
+import { saveAndProcessPage, preparePageForSave } from './page'
 import {
   FetchArgs,
   PageResponse,

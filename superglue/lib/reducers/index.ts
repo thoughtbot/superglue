@@ -1,10 +1,5 @@
-import { parsePageKey } from '../utils'
 import type { Action } from '@reduxjs/toolkit'
 import {
-  saveResponse,
-  historyChange,
-  setCSRFToken,
-  setActivePage,
   handleFragmentGraft,
   saveFragment,
   updateFragment,
@@ -18,7 +13,6 @@ import {
   flash,
 } from '../actions'
 import {
-  SuperglueState,
   JSONMappable,
   AllFragments,
   FlashState,
@@ -29,8 +23,10 @@ import {
   appendReceivedFragmentsOntoPage,
   graftNodeOntoTarget,
 } from './pageReducer'
+import { superglueReducer } from './superglueReducer'
 
 export { pageReducer, appendReceivedFragmentsOntoPage, graftNodeOntoTarget }
+export { superglueReducer }
 
 function handleFragmentGraftResponse(
   state: AllFragments,
@@ -48,58 +44,6 @@ function handleFragmentGraftResponse(
   const { data: receivedNode, path: pathToNode } = response
 
   return graftNodeOntoTarget(state, key, receivedNode, pathToNode)
-}
-
-const initialSuperglueState: SuperglueState = {
-  currentPageKey: '',
-  search: {},
-  assets: [],
-}
-
-export function superglueReducer(
-  state: SuperglueState = initialSuperglueState,
-  action: Action
-): SuperglueState {
-  if (action.type === resetStore.type) {
-    return initialSuperglueState
-  }
-
-  if (setCSRFToken.match(action)) {
-    const { csrfToken } = action.payload
-    return { ...state, csrfToken: csrfToken }
-  }
-
-  if (setActivePage.match(action)) {
-    const { pageKey } = action.payload
-    const { search } = parsePageKey(pageKey)
-
-    return {
-      ...state,
-      search,
-      currentPageKey: pageKey,
-    }
-  }
-
-  if (historyChange.match(action)) {
-    const { pageKey } = action.payload
-    const { search } = parsePageKey(pageKey)
-
-    return {
-      ...state,
-      currentPageKey: pageKey,
-      search,
-    }
-  }
-
-  if (saveResponse.match(action)) {
-    const {
-      page: { csrfToken, assets },
-    } = action.payload
-
-    return { ...state, csrfToken, assets }
-  }
-
-  return state
 }
 
 function upsertFragmentArray(

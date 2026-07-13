@@ -1,69 +1,16 @@
-import type { Action } from '@reduxjs/toolkit'
-import {
-  resetStore,
-  beforeVisit,
-  receiveResponse,
-  clearFlash,
-  flash,
-} from '../actions'
-import { FlashState } from '../types'
-import {
+import { superglueReducer } from './superglueReducer'
+import { pageReducer } from './pageReducer'
+import { fragmentReducer } from './fragmentReducer'
+import { flashReducer } from './flashReducer'
+
+export {
   pageReducer,
   appendReceivedFragmentsOntoPage,
   graftNodeOntoTarget,
 } from './pageReducer'
-import { superglueReducer } from './superglueReducer'
-import { fragmentReducer } from './fragmentReducer'
-
-export { pageReducer, appendReceivedFragmentsOntoPage, graftNodeOntoTarget }
-export { superglueReducer }
-export { fragmentReducer }
-
-export function flashReducer(
-  state: FlashState = {},
-  action: Action
-): FlashState {
-  if (action.type === resetStore.type) {
-    return {}
-  }
-
-  if (beforeVisit.match(action)) {
-    return {}
-  }
-
-  if (clearFlash.match(action)) {
-    const { key } = action.payload
-    if (!key) {
-      return {}
-    }
-
-    const next = { ...state }
-    delete next[key]
-    return next
-  }
-
-  if (flash.match(action)) {
-    return {
-      ...state,
-      ...action.payload.flash,
-    }
-  }
-
-  if (receiveResponse.match(action)) {
-    const { response } = action.payload
-
-    if (response.flash) {
-      return {
-        ...state,
-        ...response.flash,
-      }
-    }
-
-    return state
-  }
-
-  return state
-}
+export { superglueReducer } from './superglueReducer'
+export { fragmentReducer } from './fragmentReducer'
+export { flashReducer } from './flashReducer'
 
 export const rootReducer = {
   superglue: superglueReducer,

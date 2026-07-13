@@ -1,20 +1,16 @@
-import { setIn, urlToPageKey, parsePageKey } from '../utils'
+import { parsePageKey } from '../utils'
 import type { Action } from '@reduxjs/toolkit'
 import {
   saveResponse,
-  handleGraft,
   historyChange,
-  copyPage,
   setCSRFToken,
   setActivePage,
-  removePage,
   handleFragmentGraft,
   saveFragment,
   updateFragment,
   removeFragments,
   appendToFragment,
   prependToFragment,
-  updateContent,
   resetStore,
   beforeVisit,
   receiveResponse,
@@ -22,88 +18,19 @@ import {
   flash,
 } from '../actions'
 import {
-  AllPages,
-  Page,
-  SaveResponse,
-  FragmentPath,
-  GraftResponse,
   SuperglueState,
   JSONMappable,
   AllFragments,
   FlashState,
+  GraftResponse,
 } from '../types'
+import {
+  pageReducer,
+  appendReceivedFragmentsOntoPage,
+  graftNodeOntoTarget,
+} from './pageReducer'
 
-function handleSaveResponse(
-  state: AllPages,
-  pageKey: string,
-  page: SaveResponse
-): AllPages {
-  state = { ...state }
-
-  const nextPage: Page = {
-    ...page,
-    savedAt: Date.now(),
-  }
-  state[pageKey] = nextPage
-
-  return state
-}
-
-export function appendReceivedFragmentsOntoPage(
-  state: AllPages,
-  pageKey: string,
-  receivedFragments: FragmentPath[]
-): AllPages {
-  if (!pageKey) {
-    return state
-  }
-
-  if (receivedFragments.length === 0) {
-    return state
-  }
-
-  const currentPage = state[pageKey]
-  const { fragments: prevFragments = [] } = currentPage
-  const nextFragments = [...prevFragments]
-  const existingKeys: Record<string, boolean> = {}
-  prevFragments.forEach((frag) => (existingKeys[frag.path] = true))
-
-  receivedFragments.forEach((frag) => {
-    if (!existingKeys[frag.path]) {
-      nextFragments.push(frag)
-    }
-  })
-
-  const nextPage = {
-    ...currentPage,
-    fragments: nextFragments,
-  }
-
-  const nextState = { ...state }
-  nextState[pageKey] = nextPage
-
-  return nextState
-}
-
-export function graftNodeOntoTarget<T extends JSONMappable>(
-  state: T,
-  pageKey: string,
-  node: JSONMappable,
-  pathToNode: string
-): T {
-  if (!node) {
-    console.warn(
-      'There was no node returned in the response. Do you have the correct key path in your props_at?'
-    )
-    return state
-  }
-
-  if (!pathToNode || !pageKey) {
-    return state
-  }
-  const fullPathToNode = [pageKey, pathToNode].join('.')
-  return setIn(state, fullPathToNode, node)
-}
+export { pageReducer, appendReceivedFragmentsOntoPage, graftNodeOntoTarget }
 
 function handleFragmentGraftResponse(
   state: AllFragments,
@@ -121,83 +48,6 @@ function handleFragmentGraftResponse(
   const { data: receivedNode, path: pathToNode } = response
 
   return graftNodeOntoTarget(state, key, receivedNode, pathToNode)
-}
-
-function handleGraftResponse(
-  state: AllPages,
-  pageKey: string,
-  page: GraftResponse
-): AllPages {
-  const currentPage = state[pageKey]
-  if (!currentPage) {
-    const error = new Error(
-      `Superglue was looking for ${pageKey} in your state, but could not find it in your mapping. Did you forget to pass in a valid pageKey to this.props.remote or this.props.visit?`
-    )
-    throw error
-  }
-  const {
-    data: receivedNode,
-    path: pathToNode,
-    fragments: receivedFragments = [],
-  } = page
-
-  return [
-    (nextState: AllPages) =>
-      graftNodeOntoTarget(nextState, pageKey, receivedNode, pathToNode),
-    (nextState: AllPages) =>
-      appendReceivedFragmentsOntoPage(nextState, pageKey, receivedFragments),
-  ].reduce((memo, fn) => fn(memo), state)
-}
-
-export function pageReducer(state: AllPages = {}, action: Action): AllPages {
-  if (action.type === resetStore.type) {
-    return {}
-  }
-
-  if (removePage.match(action)) {
-    const { pageKey } = action.payload
-    const nextState = { ...state }
-    delete nextState[pageKey]
-
-    return nextState
-  }
-
-  if (copyPage.match(action)) {
-    const nextState = { ...state }
-    const { from, to } = action.payload
-
-    nextState[urlToPageKey(to)] = JSON.parse(JSON.stringify(nextState[from]))
-
-    return nextState
-  }
-
-  if (handleGraft.match(action)) {
-    const { pageKey, page } = action.payload
-
-    return handleGraftResponse(state, pageKey, page)
-  }
-
-  if (saveResponse.match(action)) {
-    const { pageKey, page } = action.payload
-    const nextState = handleSaveResponse(state, pageKey, page)
-    return nextState
-  }
-
-  if (updateContent.match(action)) {
-    const { pageKey, data } = action.payload
-    const currentPage = state[pageKey]
-    if (!currentPage) return state
-
-    return {
-      ...state,
-      [pageKey]: {
-        ...currentPage,
-        data,
-      },
-    }
-  }
-
-  return state
 }
 
 const initialSuperglueState: SuperglueState = {

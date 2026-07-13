@@ -1,5 +1,3 @@
-import type { Action } from '@reduxjs/toolkit'
-import { ThunkAction } from '@reduxjs/toolkit'
 import {
   VisitProps,
   RemoteProps,
@@ -21,7 +19,6 @@ import {
 } from './page'
 import {
   RootState,
-  ExtraArgument,
   SuperglueState,
   SuperglueStore,
 } from './store'
@@ -35,26 +32,9 @@ export * from './json'
 export * from './page'
 export * from './fragment'
 export * from './store'
+export * from './thunks'
 
 // I can do Visit['props'] or better yet Visit['options']
-
-/**
- * VisitCreator is a Redux action creator that returns a thunk. Use this to build
- * the {@link Visit} function. Typically it's already generated in `application_visit.js`
- */
-export type VisitCreator = (
-  input: string | PageKey,
-  options?: VisitProps
-) => VisitMetaThunk
-
-/**
- * RemoteCreator is a Redux action creator that returns a thunk. Use this to build
- * the {@link Remote} function. Typically it's already generated in `application_visit.js`
- */
-export type RemoteCreator = (
-  input: string | PageKey,
-  options?: RemoteProps
-) => MetaThunk
 
 export interface Handlers {
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
@@ -88,33 +68,6 @@ export interface HistoryState {
   /** The scroll position Y of the page*/
   posY: number
 }
-
-export type SaveAndProcessPageThunk = ThunkAction<
-  Promise<void>,
-  RootState,
-  ExtraArgument,
-  Action
->
-
-export type MetaThunk = ThunkAction<
-  Promise<Result | ErrorResult>,
-  RootState,
-  ExtraArgument,
-  Action
->
-export type VisitMetaThunk = ThunkAction<
-  Promise<VisitResult | ErrorResult>,
-  RootState,
-  ExtraArgument,
-  Action
->
-
-export type DefermentThunk = ThunkAction<
-  Promise<void[]>,
-  RootState,
-  ExtraArgument,
-  Action
->
 
 /**
  * Passed to every page component and also available as part of a NavigationContext:

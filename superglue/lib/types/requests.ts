@@ -1,13 +1,14 @@
 import {
-  Result,
-  ErrorResult,
-  VisitResult,
   PageKey,
+  PageResponse,
+  ComponentIdentifier,
+  NavigationAction,
   SaveResponse,
   GraftResponse,
   Page,
-  JSONMappable,
-} from '.'
+} from './page'
+import { JSONMappable } from './json'
+import { FetchArgs } from './actions'
 
 export interface Visit {
   /**
@@ -188,4 +189,50 @@ export interface ApplicationVisit {
       }
     }
   ): Promise<VisitResult | ErrorResult>
+}
+
+/**
+ * The success branch of a `remote` call. Resolved by the `remote` thunk
+ * and `webRemote`; the `hasError: false` literal acts as the
+ * discriminant for narrowing against {@link ErrorResult}.
+ */
+export interface Result {
+  hasError: false
+  /**
+   * The URL of the response converted to a pageKey. Superglue uses this to
+   * persist the {@link SaveResponse} to store, when that happens.
+   */
+  pageKey: PageKey
+  /** The {@link SaveResponse} of the page */
+  page: PageResponse
+  /** Indicates if response was redirected */
+  redirected: boolean
+  /** The original response object*/
+  rsp: Response
+  /** The original args passed to fetch.*/
+  fetchArgs: FetchArgs
+  /** The {@link ComponentIdentifier} extracted from the response.*/
+  componentIdentifier?: ComponentIdentifier
+  /** `true` when assets locally are detected to be out of date */
+  needsRefresh: boolean
+}
+
+/**
+ * The success branch of a `visit` call. Extends {@link Result} with the
+ * computed {@link NavigationAction} for browser-history orchestration.
+ */
+export interface VisitResult extends Result {
+  /** The {@link NavigationAction}. This can be used for navigation.*/
+  navigationAction: NavigationAction
+}
+
+/**
+ * The error branch returned by `visit` and `remote` when the server
+ * responds with a non-2xx status. Non-HTTP failures (network, parse,
+ * abort, programming bugs) propagate as a rejected promise instead.
+ */
+export interface ErrorResult {
+  hasError: true
+  /** The failed HTTP response. */
+  response: Response
 }

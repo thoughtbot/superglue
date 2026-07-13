@@ -1,4 +1,3 @@
-import { FetchArgs } from './actions'
 import type { Action } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import {
@@ -6,6 +5,9 @@ import {
   RemoteProps,
   ApplicationVisit,
   ApplicationRemote,
+  Result,
+  ErrorResult,
+  VisitResult,
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
@@ -16,7 +18,6 @@ import {
   Keypath,
   NavigationAction,
   SaveResponse,
-  PageResponse,
 } from './page'
 import {
   RootState,
@@ -34,52 +35,6 @@ export * from './json'
 export * from './page'
 export * from './fragment'
 export * from './store'
-
-/**
- * The success branch of a `remote` call. Resolved by the `remote` thunk
- * and `webRemote`; the `hasError: false` literal acts as the
- * discriminant for narrowing against {@link ErrorResult}.
- */
-export interface Result {
-  hasError: false
-  /**
-   * The URL of the response converted to a pageKey. Superglue uses this to
-   * persist the {@link SaveResponse} to store, when that happens.
-   */
-  pageKey: PageKey
-  /** The {@link SaveResponse} of the page */
-  page: PageResponse
-  /** Indicates if response was redirected */
-  redirected: boolean
-  /** The original response object*/
-  rsp: Response
-  /** The original args passed to fetch.*/
-  fetchArgs: FetchArgs
-  /** The {@link ComponentIdentifier} extracted from the response.*/
-  componentIdentifier?: ComponentIdentifier
-  /** `true` when assets locally are detected to be out of date */
-  needsRefresh: boolean
-}
-
-/**
- * The success branch of a `visit` call. Extends {@link Result} with the
- * computed {@link NavigationAction} for browser-history orchestration.
- */
-export interface VisitResult extends Result {
-  /** The {@link NavigationAction}. This can be used for navigation.*/
-  navigationAction: NavigationAction
-}
-
-/**
- * The error branch returned by `visit` and `remote` when the server
- * responds with a non-2xx status. Non-HTTP failures (network, parse,
- * abort, programming bugs) propagate as a rejected promise instead.
- */
-export interface ErrorResult {
-  hasError: true
-  /** The failed HTTP response. */
-  response: Response
-}
 
 // I can do Visit['props'] or better yet Visit['options']
 

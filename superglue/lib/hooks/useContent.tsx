@@ -7,7 +7,7 @@ import {
   PageKey,
   ValidateOption,
 } from '../types'
-import { useSuperglue } from './index'
+import { useSuperglue } from './useSuperglue'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 
 /**

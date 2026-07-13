@@ -1,5 +1,5 @@
 import type { Action } from '@reduxjs/toolkit'
-import { BasicRequestInit } from '.'
+import { BasicRequestInit } from './store'
 
 /**
  * Tuple of Fetch arguments that Superglue passes to Fetch.

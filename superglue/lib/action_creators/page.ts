@@ -1,4 +1,10 @@
-import { urlToPageKey, getIn, setIn, propsAtParam } from '../utils'
+import {
+  urlToPageKey,
+  getIn,
+  setIn,
+  propsAtParam,
+  dangerouslyEachIn,
+} from '../utils'
 import {
   saveResponse,
   GRAFTING_ERROR,
@@ -15,6 +21,10 @@ import {
   JSONMappable,
   PageResponse,
   Page,
+  BeforeSave,
+  AllFragments,
+  GraftResponse,
+  SaveResponse,
 } from '../types'
 import { handleStreamResponse } from './stream'
 import { createProxy } from '../utils/proxy'
@@ -158,4 +168,63 @@ export function saveAndProcessPage(
       return Promise.resolve()
     }
   }
+}
+
+export function preparePageForSave<T extends JSONMappable = JSONMappable>(
+  nextPage: GraftResponse<T> | SaveResponse<T>,
+  prevPage: Page<T> | undefined,
+  prevFragments: AllFragments,
+  beforeSave: BeforeSave<T>
+): GraftResponse<T> | SaveResponse<T> {
+  const existingPage = prevPage
+    ? createProxy(
+        prevPage,
+        { current: prevFragments },
+        new Set(),
+        new WeakMap()
+      )
+    : undefined
+
+  nextPage.fragments
+    .slice()
+    .reverse()
+    .forEach((fragment) => {
+      const { path } = fragment
+
+      dangerouslyEachIn(nextPage, path, (child, key, nextKey) => {
+        if (Array.isArray(child) && key && !key.includes('=')) {
+          Object.freeze(child)
+        }
+
+        if (nextKey && !nextKey.includes('=') && parseInt(nextKey)) {
+          if (Array.isArray(child)) {
+            Object.defineProperty(child, nextKey, {
+              writable: false,
+              configurable: false,
+            })
+          }
+
+          if (
+            typeof child === 'object' &&
+            child !== null &&
+            !Array.isArray(child)
+          ) {
+            Object.defineProperty(child, nextKey, {
+              writable: false,
+              configurable: false,
+            })
+          }
+        }
+      })
+    })
+
+  return JSON.parse(
+    JSON.stringify(beforeSave(existingPage, nextPage), (_key, value) => {
+      if (value && typeof value === 'object' && value.__id) {
+        return { __id: value.__id }
+      }
+
+      return value
+    })
+  ) as typeof nextPage
 }

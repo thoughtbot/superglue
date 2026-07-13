@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { preparePageForSave } from '../../lib/action_creators/requests'
+import { preparePageForSave } from '../../lib/action_creators/page'
 
 describe('preparePageForSave', () => {
   it('freezes arrays along fragment paths with numeric indices', () => {

@@ -11,6 +11,7 @@ import {
 } from './requests'
 import { History } from 'history'
 import { rootReducer } from '../reducers'
+import { JSONMappable, JSONValue } from './json'
 
 import { Consumer } from './cable'
 import { Config } from '../config'
@@ -93,33 +94,7 @@ export type ComponentIdentifier = string
 export type Keypath = string
 
 export * from './actions'
-
-/**
- * A JSON Primitive value
- */
-export type JSONPrimitive = string | number | boolean | null | undefined
-
-/**
- * A JSON Object
- */
-export type JSONObject = {
-  [key: string]: JSONValue
-}
-
-/**
- * A JSON Object or an array of values
- */
-export type JSONMappable = JSONValue[] | JSONObject
-
-/**
- * A array of JSON key value objects or a JSON Object
- */
-export type JSONKeyable = JSONObject[] | JSONObject
-
-/**
- * A primitive or a mappable object
- */
-export type JSONValue = JSONPrimitive | JSONMappable
+export * from './json'
 
 export type FlashState = Record<string, JSONValue>
 

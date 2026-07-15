@@ -1152,18 +1152,13 @@ describe('visit', () => {
 
     const store = buildStore(initialState)
 
-    fetchMock.mock(
-      'https://example.com/first?format=json',
-      rsp.visitSuccess()
-    )
+    fetchMock.mock('https://example.com/first?format=json', rsp.visitSuccess())
 
     expect(store.getState().superglue.isVisiting).toEqual(false)
 
-    return store
-      .dispatch(visit('/first'))
-      .then(() => {
-        expect(store.getState().superglue.isVisiting).toEqual(false)
-      })
+    return store.dispatch(visit('/first')).then(() => {
+      expect(store.getState().superglue.isVisiting).toEqual(false)
+    })
   })
 
   it('dispatches beforeVisit and visitEnd actions', () => {
@@ -1177,10 +1172,7 @@ describe('visit', () => {
 
     const store = buildStore(initialState)
 
-    fetchMock.mock(
-      'https://example.com/first?format=json',
-      rsp.visitSuccess()
-    )
+    fetchMock.mock('https://example.com/first?format=json', rsp.visitSuccess())
 
     return store.dispatch(visit('/first')).then(() => {
       const actions = allSuperglueActions(store)

@@ -845,7 +845,4 @@ describe('action creators', () => {
       })
     })
   })
-
-
-
 })

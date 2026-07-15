@@ -1004,6 +1004,10 @@ describe('visit', () => {
           type: '@@superglue/HANDLE_GRAFT',
           payload: expect.any(Object),
         },
+        {
+          type: '@@superglue/VISIT_END',
+          payload: expect.any(Object),
+        },
       ]
 
       store
@@ -1062,6 +1066,10 @@ describe('visit', () => {
         },
         {
           type: '@@superglue/HANDLE_GRAFT',
+          payload: expect.any(Object),
+        },
+        {
+          type: '@@superglue/VISIT_END',
           payload: expect.any(Object),
         },
       ]

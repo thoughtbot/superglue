@@ -8,11 +8,7 @@ import {
   prependToFragment,
   resetStore,
 } from '../actions'
-import {
-  AllFragments,
-  GraftResponse,
-  JSONMappable,
-} from '../types'
+import { AllFragments, GraftResponse, JSONMappable } from '../types'
 import { graftNodeOntoTarget } from './pageReducer'
 
 function handleFragmentGraftResponse(

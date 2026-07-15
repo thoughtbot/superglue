@@ -1,7 +1,13 @@
 import type { Action } from '@reduxjs/toolkit'
 import { ThunkAction } from '@reduxjs/toolkit'
 import { RootState, ExtraArgument } from './store'
-import { Result, ErrorResult, VisitResult, VisitProps, RemoteProps } from './requests'
+import {
+  Result,
+  ErrorResult,
+  VisitResult,
+  VisitProps,
+  RemoteProps,
+} from './requests'
 import { PageKey } from './page'
 
 export type SaveAndProcessPageThunk = ThunkAction<

@@ -133,6 +133,7 @@ the current page.
 | <a id="search"></a> `search` | `Record`\<`string`, `string` \| `undefined`\> | The query string object of the current url. | [types/index.ts:358](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/index.ts#L358) |
 | <a id="csrftoken-3"></a> `csrfToken?` | `string` | The Rails csrfToken that you can use for forms. | [types/index.ts:360](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/index.ts#L360) |
 | <a id="assets-3"></a> `assets` | `string`[] | The tracked asset digests. | [types/index.ts:362](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/index.ts#L362) |
+| <a id="isvisiting"></a> `isVisiting` | `boolean` | Flag indicating if a visit is currently in flight. | [types/index.ts:364](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/index.ts#L364) |
 
 ***
 

@@ -121,6 +121,25 @@ export const beforeVisit = createAction<{
 }>('@@superglue/BEFORE_VISIT')
 
 /**
+ * A redux action called after a `visit` completes. This fires regardless of
+ * success, error, redirect, or abort. You can hook into this event in your redux
+ * slices like this:
+ *
+ * ```
+ * import { visitEnd } from '@thoughtbot/superglue'
+ *
+ * export const exampleSlice = createSlice({
+ *  name: 'Example',
+ *  initialState: {},
+ *  extraReducers: (builder) => {
+ *    builder.addCase(visitEnd, (state, action) => {
+ * ```
+ */
+export const visitEnd = createAction<{
+  fetchArgs: FetchArgs
+}>('@@superglue/VISIT_END')
+
+/**
  * A redux action called before `remote` takes place. You can hook into this event
  * in your redux slices like this:
  *

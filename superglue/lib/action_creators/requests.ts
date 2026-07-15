@@ -14,6 +14,7 @@ import {
   copyPage,
   superglueError,
   receiveResponse,
+  visitEnd,
 } from '../actions'
 import { saveAndProcessPage, preparePageForSave } from './page'
 import {
@@ -278,6 +279,9 @@ to the same page.
         return dispatch(saveAndProcessPage(pageKey, page)).then(() => visitMeta)
       })
       .catch((e) => handleFetchErr(e, fetchArgs, dispatch))
+      .finally(() => {
+        dispatch(visitEnd({ fetchArgs }))
+      })
   }
 }
 

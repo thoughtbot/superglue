@@ -1775,6 +1775,10 @@ describe('action creators', () => {
             type: '@@superglue/HANDLE_GRAFT',
             payload: expect.any(Object),
           },
+          {
+            type: '@@superglue/VISIT_END',
+            payload: expect.any(Object),
+          },
         ]
 
         store
@@ -1833,6 +1837,10 @@ describe('action creators', () => {
           },
           {
             type: '@@superglue/HANDLE_GRAFT',
+            payload: expect.any(Object),
+          },
+          {
+            type: '@@superglue/VISIT_END',
             payload: expect.any(Object),
           },
         ]
@@ -1909,6 +1917,61 @@ describe('action creators', () => {
             navigationAction: 'none',
           })
         )
+      })
+    })
+
+    it('sets isVisiting to true on beforeVisit and false on visitEnd', () => {
+      const initialState = {
+        pages: {},
+        superglue: {
+          assets: [],
+          isVisiting: false,
+        },
+      }
+
+      const store = buildStore(initialState)
+
+      fetchMock.mock(
+        'https://example.com/first?format=json',
+        rsp.visitSuccess()
+      )
+
+      expect(store.getState().superglue.isVisiting).toEqual(false)
+
+      return store
+        .dispatch(visit('/first'))
+        .then(() => {
+          expect(store.getState().superglue.isVisiting).toEqual(false)
+        })
+    })
+
+    it('dispatches beforeVisit and visitEnd actions', () => {
+      const initialState = {
+        pages: {},
+        superglue: {
+          assets: [],
+          isVisiting: false,
+        },
+      }
+
+      const store = buildStore(initialState)
+
+      fetchMock.mock(
+        'https://example.com/first?format=json',
+        rsp.visitSuccess()
+      )
+
+      return store.dispatch(visit('/first')).then(() => {
+        const actions = allSuperglueActions(store)
+        const beforeVisitAction = actions.find(
+          (a) => a.type === '@@superglue/BEFORE_VISIT'
+        )
+        const visitEndAction = actions.find(
+          (a) => a.type === '@@superglue/VISIT_END'
+        )
+
+        expect(beforeVisitAction).toBeDefined()
+        expect(visitEndAction).toBeDefined()
       })
     })
   })

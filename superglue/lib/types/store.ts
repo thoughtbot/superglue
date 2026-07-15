@@ -26,6 +26,8 @@ export interface SuperglueState {
   csrfToken?: string
   /** The tracked asset digests.*/
   assets: string[]
+  /** Flag that says if a visit is currently in flight */
+  isVisiting: boolean
 }
 
 /**

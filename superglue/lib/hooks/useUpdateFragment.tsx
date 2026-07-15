@@ -13,6 +13,10 @@ immer.setAutoFreeze(false)
  */
 export type Unpack<T> = T extends Fragment<infer U, unknown> ? U : never
 
+type chainableUpdate = {
+  reset: () => void
+}
+
 /**
  * Hook for mutating fragments using Immer drafts.
  *
@@ -46,7 +50,7 @@ export function useUpdateFragment() {
   function setter<T, P extends boolean>(
     fragmentRef: FragmentRef<T, P>,
     updater: (draft: Unproxy<T>) => void
-  ): void
+  ): chainableUpdate
 
   /**
    * Updates a fragment using a {@link Fragment} object.
@@ -57,12 +61,12 @@ export function useUpdateFragment() {
   function setter<T extends Fragment<unknown, true>>(
     fragment: T,
     updater: (draft: Unproxy<Unpack<T>>) => void
-  ): void
+  ): chainableUpdate
 
   function setter(
     fragmentRefOrId: Fragment<unknown, true> | FragmentRef<unknown, true>,
     updater: (draft: any) => void // eslint-disable-line @typescript-eslint/no-explicit-any
-  ): void {
+  ): chainableUpdate {
     const fragmentId = fragmentRefOrId.__id
 
     const currentFragment = fragments[fragmentId]
@@ -79,6 +83,19 @@ export function useUpdateFragment() {
         data: updatedFragment,
       })
     )
+
+    function reset(): void {
+      dispatch(
+        updateFragment({
+          fragmentId: fragmentId,
+          data: currentFragment,
+        })
+      )
+    }
+
+    return {
+      reset,
+    }
   }
 
   return setter

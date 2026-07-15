@@ -86,6 +86,7 @@ describe('start', () => {
         search: { some: '123' },
         csrfToken: 'token',
         assets: ['123.js', '123.css'],
+        isVisiting: false,
       },
       pages: {
         '/home?some=123': {

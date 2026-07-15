@@ -124,6 +124,32 @@ sequenceDiagram
     `application_visit.js`. If you need a global customization, e.g, progress
     bars, you can add them there.
 
+## Tracking visit state
+
+The `isVisiting` boolean is available in [SuperglueState](./reference/types.md#supergluestate)
+and indicates whether a visit is currently in flight. This is useful for showing loading 
+indicators, progress bars, or disabling UI elements while navigation is happening.
+
+```jsx
+import { useSuperglue } from '@thoughtbot/superglue'
+
+export function App() {
+  const { isVisiting } = useSuperglue()
+
+  return (
+    <div>
+      {isVisiting && <ProgressBar />}
+      <Outlet />
+    </div>
+  )
+}
+```
+
+!!! note
+    `isVisiting` only tracks explicit `visit` calls. It does not track `remote` requests,
+    which can be many and concurrent. If you need to track loading state for multiple
+    concurrent requests, consider using Redux to track them independently.
+
 
 ## The `beforeSave` callback
 

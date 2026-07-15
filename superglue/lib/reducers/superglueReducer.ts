@@ -6,6 +6,8 @@ import {
   setCSRFToken,
   setActivePage,
   resetStore,
+  beforeVisit,
+  visitEnd,
 } from '../actions'
 import { SuperglueState } from '../types'
 
@@ -13,6 +15,7 @@ const initialSuperglueState: SuperglueState = {
   currentPageKey: '',
   search: {},
   assets: [],
+  isVisiting: false,
 }
 
 export function superglueReducer(
@@ -56,6 +59,14 @@ export function superglueReducer(
     } = action.payload
 
     return { ...state, csrfToken, assets }
+  }
+
+  if (beforeVisit.match(action)) {
+    return { ...state, isVisiting: true }
+  }
+
+  if (visitEnd.match(action)) {
+    return { ...state, isVisiting: false }
   }
 
   return state

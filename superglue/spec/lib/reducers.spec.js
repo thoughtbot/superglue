@@ -61,6 +61,43 @@ describe('reducers', () => {
         })
       })
     })
+
+    describe('SUPERGLUE_BEFORE_VISIT', () => {
+      it('sets isVisiting to true', () => {
+        const prevState = { isVisiting: false, currentPageKey: '/foo' }
+        const action = {
+          type: '@@superglue/BEFORE_VISIT',
+          payload: {
+            currentPageKey: '/foo',
+            fetchArgs: [{}, {}],
+          },
+        }
+        const nextState = superglueReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          isVisiting: true,
+          currentPageKey: '/foo',
+        })
+      })
+    })
+
+    describe('SUPERGLUE_VISIT_END', () => {
+      it('sets isVisiting to false', () => {
+        const prevState = { isVisiting: true, currentPageKey: '/foo' }
+        const action = {
+          type: '@@superglue/VISIT_END',
+          payload: {
+            fetchArgs: [{}, {}],
+          },
+        }
+        const nextState = superglueReducer(prevState, action)
+
+        expect(nextState).toEqual({
+          isVisiting: false,
+          currentPageKey: '/foo',
+        })
+      })
+    })
   })
 
   describe('page reducer', () => {

@@ -392,4 +392,73 @@ describe('useUpdateFragment', () => {
       })
     })
   })
+
+  describe('chainable reset', () => {
+    it('returns an object with a reset property', () => {
+      const initialState = {
+        superglue: { currentPageKey: '/page' },
+        pages: {},
+        fragments: {
+          user_123: {
+            name: 'John',
+          },
+        },
+      }
+
+      const store = buildStore(initialState)
+      const wrapper = ({ children }) => (
+        <Provider store={store}>{children}</Provider>
+      )
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const set = result.current
+
+      let chainable
+      act(() => {
+        chainable = set({ __id: 'user_123' }, (draft) => {
+          draft.name = 'Jane'
+        })
+      })
+
+      expect(chainable).toHaveProperty('reset')
+      expect(typeof chainable.reset).toBe('function')
+    })
+
+    it('resets the fragment to its original state after an update', () => {
+      const initialState = {
+        superglue: { currentPageKey: '/page' },
+        pages: {},
+        fragments: {
+          user_123: {
+            name: 'John',
+            email: 'john@example.com',
+          },
+        },
+      }
+
+      const store = buildStore(initialState)
+      const wrapper = ({ children }) => (
+        <Provider store={store}>{children}</Provider>
+      )
+      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const set = result.current
+
+      let chainable
+      act(() => {
+        chainable = set({ __id: 'user_123' }, (draft) => {
+          draft.name = 'Jane'
+        })
+      })
+
+      expect(store.getState().fragments['user_123'].name).toBe('Jane')
+
+      act(() => {
+        chainable.reset()
+      })
+
+      expect(store.getState().fragments['user_123']).toEqual({
+        name: 'John',
+        email: 'john@example.com',
+      })
+    })
+  })
 })

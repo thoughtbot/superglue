@@ -4,7 +4,6 @@ import { ThunkDispatch } from '@reduxjs/toolkit'
 import { JSONMappable } from './json'
 import { PageKey, FlashState, Page } from './page'
 import { AllFragments } from './fragment'
-import { FetchArgs } from './actions'
 import { Config } from '../config'
 
 /**

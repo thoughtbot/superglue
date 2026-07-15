@@ -1,5 +1,5 @@
 import { History } from 'history'
-import { SaveResponse, PageKey, ComponentIdentifier } from './page'
+import { SaveResponse } from './page'
 import {
   VisitProps,
   RemoteProps,

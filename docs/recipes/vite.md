@@ -13,7 +13,7 @@ Next move your `app/javascript/entrypoints/application.jsx` file to
 !!! info
     When using Superglue's installation generator, a `app/javascript/application.jsx` gets
     generated. `vite_rails` expects this to be put in an `entrypoints` folder. If you're installing
-    `vite_rails` after superglue's installation, the is set by `vite_rails` to be `app/javascript/entrypoints`.
+    `vite_rails` after superglue's installation, this is set by `vite_rails` to be `app/javascript/entrypoints`.
 
 Migrate your `@views`, `@javascript` aliases to `vite.config.mts`
 

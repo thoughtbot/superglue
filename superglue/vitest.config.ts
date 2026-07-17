@@ -6,6 +6,7 @@ export default defineConfig({
   test: {
     clearMocks: true,
     globals: true,
+    environment: 'jsdom',
     setupFiles: ['./spec/helpers/setup.js', './spec/helpers/polyfill.js'],
   },
 })

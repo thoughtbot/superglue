@@ -2,7 +2,13 @@ import fetchMock from 'fetch-mock'
 import { visit, remote } from '../../lib/action_creators'
 import * as rsp from '../../spec/fixtures'
 import { MismatchedComponentError } from '../../lib/action_creators'
-import { buildStore, allSuperglueActions, initialState } from '../support/store'
+import {
+  buildStore,
+  allSuperglueActions,
+  initialState,
+  buildSaveResponse,
+  buildStreamResponse,
+} from '../support/store'
 
 const successfulBody = () => {
   return JSON.stringify({
@@ -15,31 +21,30 @@ const successfulBody = () => {
 }
 
 const successfulStreamResponseBody = () => {
-  return JSON.stringify({
-    data: [
-      {
-        type: 'message',
-        data: {
-          heading: {
-            title: 'hello',
-            comment: { rating: 'great!' },
+  return JSON.stringify(
+    buildStreamResponse({
+      data: [
+        {
+          type: 'message',
+          data: {
+            heading: {
+              title: 'hello',
+              comment: { rating: 'great!' },
+            },
           },
+          fragmentIds: ['top'],
+          action: 'update',
+          options: {},
         },
-        fragmentIds: ['top'],
-        action: 'update',
-        options: {},
-      },
-    ],
-    csrfToken: 'token',
-    assets: [],
-    fragments: [
-      {
-        type: 'comment',
-        path: 'data.0.data.heading.comment',
-      },
-    ],
-    action: 'handleStreamResponse',
-  })
+      ],
+      fragments: [
+        {
+          type: 'comment',
+          path: 'data.0.data.heading.comment',
+        },
+      ],
+    })
+  )
 }
 
 describe('remote', () => {
@@ -228,14 +233,10 @@ describe('remote', () => {
       },
     })
 
-    const responseBody = {
+    const responseBody = buildSaveResponse({
       data: { header: { title: 'New Title' } },
-      csrfToken: 'token',
-      assets: [],
-      fragments: [],
       componentIdentifier: 'bar',
-      action: 'savePage',
-    }
+    })
 
     fetchMock.mock('https://example.com/bar?format=json', {
       body: JSON.stringify(responseBody),
@@ -285,14 +286,10 @@ describe('remote', () => {
       },
     })
 
-    const responseBody = {
+    const responseBody = buildSaveResponse({
       data: { header: { title: 'New Title' } },
-      csrfToken: 'token',
-      assets: [],
-      fragments: [],
       componentIdentifier: 'bar',
-      action: 'savePage',
-    }
+    })
 
     fetchMock.mock('https://example.com/bar?format=json', {
       body: JSON.stringify(responseBody),
@@ -641,17 +638,12 @@ describe('remote', () => {
       },
     })
 
-    const successfulBody = {
-      data: {},
+    const responseBody = buildSaveResponse({
       componentIdentifier: 'foo-id',
-      csrfToken: 'token',
-      assets: [],
-      defers: [],
-      fragments: [],
-    }
+    })
 
     fetchMock.mock('https://example.com/bar?format=json', {
-      body: successfulBody,
+      body: responseBody,
       headers: {
         'content-type': 'application/json',
       },
@@ -676,17 +668,13 @@ describe('remote', () => {
       },
     })
 
-    const successfulBody = {
+    const responseBody = buildSaveResponse({
       data: { greeting: 'hello' },
       componentIdentifier: 'foo-id',
-      csrfToken: 'token',
-      assets: [],
-      defers: [],
-      fragments: [],
-    }
+    })
 
     fetchMock.mock('https://example.com/bar?format=json', {
-      body: successfulBody,
+      body: responseBody,
       headers: {
         'content-type': 'application/json',
       },
@@ -716,17 +704,12 @@ describe('remote', () => {
       },
     })
 
-    const successfulBody = {
-      data: {},
+    const responseBody = buildSaveResponse({
       componentIdentifier: 'ForBar',
-      csrfToken: 'token',
-      assets: [],
-      defers: [],
-      fragments: [],
-    }
+    })
 
     fetchMock.mock('https://example.com/bar?format=json', {
-      body: successfulBody,
+      body: responseBody,
       headers: {
         'content-type': 'application/json',
       },

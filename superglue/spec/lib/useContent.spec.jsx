@@ -8,6 +8,7 @@ import { saveAndProcessPage } from '../../lib/action_creators'
 import { setActivePage, saveFragment } from '../../lib/actions'
 import {
   buildSimpleStore as buildStore,
+  buildSuperglueState,
   renderWithProvider,
 } from '../support/store'
 
@@ -25,13 +26,13 @@ describe('useContent', () => {
 
   it('returns the page content', () => {
     const preloadedState = {
-      superglue: {
+      superglue: buildSuperglueState({
         currentPageKey: '/current?abc=123',
         pathname: '/current',
         search: '?abc=123',
         csrfToken: 'csrf123',
         assets: ['js-asset-123'],
-      },
+      }),
       pages: {
         '/current?abc=123': {
           data: {
@@ -63,11 +64,7 @@ describe('useContent', () => {
   describe('basic functionality', () => {
     it('returns proxied page data for current page', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/posts',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/posts' }),
         pages: {
           '/posts': {
             data: {
@@ -97,11 +94,7 @@ describe('useContent', () => {
 
     it('provides access to nested properties', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/dashboard',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/dashboard' }),
         pages: {
           '/dashboard': {
             data: {
@@ -138,11 +131,7 @@ describe('useContent', () => {
 
     it('handles arrays correctly', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/blog',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/blog' }),
         pages: {
           '/blog': {
             data: {
@@ -178,11 +167,7 @@ describe('useContent', () => {
 
     it('switches page data when currentPageKey changes', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/home',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/home' }),
         pages: {
           '/home': {
             data: {
@@ -231,11 +216,7 @@ describe('useContent', () => {
   describe('fragment resolution', () => {
     it('resolves simple fragment references', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/profile',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/profile' }),
         pages: {
           '/profile': {
             data: {
@@ -271,11 +252,7 @@ describe('useContent', () => {
 
     it('resolves nested fragment properties', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/settings',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/settings' }),
         pages: {
           '/settings': {
             data: {
@@ -318,11 +295,7 @@ describe('useContent', () => {
 
     it('resolves fragment arrays', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/author',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/author' }),
         pages: {
           '/author': {
             data: {
@@ -360,11 +333,7 @@ describe('useContent', () => {
 
     it('resolves fragments within arrays', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/articles',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/articles' }),
         pages: {
           '/articles': {
             data: {
@@ -408,11 +377,7 @@ describe('useContent', () => {
 
     it('resolves chained fragment references', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/post-detail',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/post-detail' }),
         pages: {
           '/post-detail': {
             data: {
@@ -454,11 +419,7 @@ describe('useContent', () => {
 
     it('resolves complex nested fragment chains', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/comments',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/comments' }),
         pages: {
           '/comments': {
             data: {
@@ -508,11 +469,7 @@ describe('useContent', () => {
 
     it('handles mixed fragment and non-fragment arrays', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/category',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/category' }),
         pages: {
           '/category': {
             data: {
@@ -563,11 +520,7 @@ describe('useContent', () => {
   describe('array methods with fragments', () => {
     it('supports array methods on fragment arrays', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/products',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/products' }),
         pages: {
           '/products': {
             data: {
@@ -626,11 +579,7 @@ describe('useContent', () => {
 
     it('supports nested array methods with fragments', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/store',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/store' }),
         pages: {
           '/store': {
             data: {
@@ -672,11 +621,7 @@ describe('useContent', () => {
 
     it('returns proxied arrays from array methods', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/filtered',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/filtered' }),
         pages: {
           '/filtered': {
             data: {
@@ -724,11 +669,7 @@ describe('useContent', () => {
   describe('mutation prevention', () => {
     it('prevents direct property mutations', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/readonly',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/readonly' }),
         pages: {
           '/readonly': {
             data: {
@@ -767,11 +708,7 @@ describe('useContent', () => {
 
     it('prevents nested object mutations', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/nested-readonly',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/nested-readonly' }),
         pages: {
           '/nested-readonly': {
             data: {
@@ -807,11 +744,7 @@ describe('useContent', () => {
 
     it('prevents array mutations', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/array-readonly',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/array-readonly' }),
         pages: {
           '/array-readonly': {
             data: {
@@ -846,11 +779,9 @@ describe('useContent', () => {
 
     it('prevents mutations on resolved fragments', () => {
       const store = buildStore({
-        superglue: {
+        superglue: buildSuperglueState({
           currentPageKey: '/fragment-readonly',
-          search: {},
-          assets: [],
-        },
+        }),
         pages: {
           '/fragment-readonly': {
             data: {
@@ -894,11 +825,7 @@ describe('useContent', () => {
   describe('dependency tracking and reactivity', () => {
     it('tracks fragment dependencies when accessed', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/tracking',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/tracking' }),
         pages: {
           '/tracking': {
             data: {
@@ -930,11 +857,7 @@ describe('useContent', () => {
 
     it('dependency tracking works with automatic re-render', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/deps',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/deps' }),
         pages: {
           '/deps': {
             data: {
@@ -987,11 +910,7 @@ describe('useContent', () => {
       }
 
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/foo',
-          csrfToken: 'token',
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/foo' }),
         fragments: {},
       })
 
@@ -1026,11 +945,7 @@ describe('useContent', () => {
 
     it('does not re-render when non-tracked fragments change', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/selective',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/selective' }),
         pages: {
           '/selective': {
             data: {
@@ -1072,11 +987,7 @@ describe('useContent', () => {
 
     it('re-renders when page data changes', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/reactive',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/reactive' }),
         pages: {
           '/reactive': {
             data: {
@@ -1113,11 +1024,7 @@ describe('useContent', () => {
 
     it('tracks dependencies independently across component instances', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/multi',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/multi' }),
         pages: {
           '/multi': {
             data: {
@@ -1187,11 +1094,7 @@ describe('useContent', () => {
   describe('unproxy functionality', () => {
     it('returns original page data when unproxied', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/unproxy',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/unproxy' }),
         pages: {
           '/unproxy': {
             data: {
@@ -1226,11 +1129,7 @@ describe('useContent', () => {
 
     it('unproxies resolved fragments to their original data', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/unproxy-fragment',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/unproxy-fragment' }),
         pages: {
           '/unproxy-fragment': {
             data: {
@@ -1265,11 +1164,7 @@ describe('useContent', () => {
 
     it('unproxies nested resolved fragments', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/nested-unproxy',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/nested-unproxy' }),
         pages: {
           '/nested-unproxy': {
             data: {
@@ -1308,11 +1203,7 @@ describe('useContent', () => {
 
     it('handles non-proxy values correctly', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/primitives',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/primitives' }),
         pages: {
           '/primitives': {
             data: {
@@ -1350,11 +1241,7 @@ describe('useContent', () => {
   describe('reference equality for React.memo optimization', () => {
     it('enables reference equality using unproxy for different hook instances', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/memo-opt',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/memo-opt' }),
         pages: {
           '/memo-opt': {
             data: {
@@ -1408,11 +1295,7 @@ describe('useContent', () => {
   describe('proxy caching and memory management', () => {
     it('maintains proxy consistency across accesses', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/caching',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/caching' }),
         pages: {
           '/caching': {
             data: {
@@ -1449,11 +1332,7 @@ describe('useContent', () => {
 
     it('maintains separate proxy instances across hook instances', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/instances',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/instances' }),
         pages: {
           '/instances': {
             data: {
@@ -1494,11 +1373,7 @@ describe('useContent', () => {
 
     it('cleans up properly on unmount', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/cleanup',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/cleanup' }),
         pages: {
           '/cleanup': {
             data: { title: 'Cleanup Test' },
@@ -1522,11 +1397,7 @@ describe('useContent', () => {
   describe('React integration and lifecycle', () => {
     it('works with React.memo for optimization', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/memo',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/memo' }),
         pages: {
           '/memo': {
             data: {
@@ -1567,11 +1438,7 @@ describe('useContent', () => {
 
     it('works with useEffect and automatic re-render', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/effect',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/effect' }),
         pages: {
           '/effect': {
             data: {
@@ -1619,11 +1486,7 @@ describe('useContent', () => {
 
     it('handles concurrent mode correctly', async () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/concurrent',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/concurrent' }),
         pages: {
           '/concurrent': {
             data: {
@@ -1668,11 +1531,7 @@ describe('useContent', () => {
   describe('pageKey parameter', () => {
     it('returns data for a specific page when pageKey is provided', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/home',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/home' }),
         pages: {
           '/home': {
             data: {
@@ -1714,11 +1573,7 @@ describe('useContent', () => {
 
     it('resolves fragments when using a specific pageKey', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/home',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/home' }),
         pages: {
           '/home': {
             data: { title: 'Home' },
@@ -1753,11 +1608,7 @@ describe('useContent', () => {
   describe('error handling and edge cases', () => {
     it('missing fragments are undefined and throw', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/missing',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/missing' }),
         pages: {
           '/missing': {
             data: {
@@ -1796,11 +1647,7 @@ describe('useContent', () => {
 
     it('handles empty fragment store', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/empty-fragments',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/empty-fragments' }),
         pages: {
           '/empty-fragments': {
             data: {
@@ -1828,11 +1675,7 @@ describe('useContent', () => {
 
     it('handles page key that does not exist', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/non-existent',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/non-existent' }),
         pages: {},
         fragments: {},
       })
@@ -1855,11 +1698,7 @@ describe('useContent', () => {
 
     it('handles malformed fragment references', () => {
       const store = buildStore({
-        superglue: {
-          currentPageKey: '/malformed',
-          search: {},
-          assets: [],
-        },
+        superglue: buildSuperglueState({ currentPageKey: '/malformed' }),
         pages: {
           '/malformed': {
             data: {

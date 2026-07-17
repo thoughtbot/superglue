@@ -6,17 +6,14 @@ import { useContent, unproxy } from '../../lib/hooks/useContent'
 import { saveFragment } from '../../lib/actions'
 import {
   buildSimpleStore as buildStore,
+  buildSuperglueState,
   renderWithProvider,
 } from '../support/store'
 
 describe('useFragment', () => {
   it('returns undefined and throws error for missing fragments', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {},
     })
@@ -33,11 +30,7 @@ describe('useFragment', () => {
 
   it('works with fragment references', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         scoped_user: {
@@ -66,11 +59,7 @@ describe('useFragment', () => {
 
   it('resolves nested fragments in fragment-scoped mode', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         scoped_post: {
@@ -101,11 +90,7 @@ describe('useFragment', () => {
 
   it('handles arrays in fragment-scoped mode', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         scoped_list: {
@@ -132,11 +117,7 @@ describe('useFragment', () => {
 
   it('throws error for non-existent fragment', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {},
     })
@@ -158,11 +139,7 @@ describe('useFragment', () => {
 
   it('maintains separate dependency tracking for fragment-scoped hooks', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/tracking-test',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/tracking-test' }),
       pages: {
         '/tracking-test': {
           data: {
@@ -220,11 +197,7 @@ describe('useFragment', () => {
 
   it('works with unproxy for component isolation', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/isolation',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/isolation' }),
       pages: {
         '/isolation': {
           data: {
@@ -259,11 +232,7 @@ describe('useFragment', () => {
 
   it('supports nested fragment chains in fragment-scoped mode', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         nested_comment: {
@@ -298,11 +267,7 @@ describe('useFragment', () => {
 
   it('reflects updates to nested fragments', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         cart: {
@@ -348,11 +313,7 @@ describe('useFragment', () => {
 
   it('works with array methods in fragment-scoped mode', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         scoped_collection: {
@@ -395,11 +356,7 @@ describe('useFragment', () => {
 
   it('prevents mutations in fragment-scoped mode', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         readonly_fragment: {
@@ -432,11 +389,7 @@ describe('useFragment', () => {
 
   it('supports unproxy in fragment-scoped mode', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         unproxy_fragment: {
@@ -462,11 +415,7 @@ describe('useFragment', () => {
 
   it('supports getting references in fragment-scoped mode using unproxy', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         parent_fragment: {
@@ -495,11 +444,7 @@ describe('useFragment', () => {
 
   it('maintains proxy caching consistency across different hook modes', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/consistency',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/consistency' }),
       pages: {
         '/consistency': {
           data: {
@@ -543,11 +488,7 @@ describe('useFragment', () => {
 
   it('handles component hierarchies with mixed hook modes', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/hierarchy',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/hierarchy' }),
       pages: {
         '/hierarchy': {
           data: {
@@ -596,11 +537,7 @@ describe('useFragment', () => {
 
   it('handles complex JSX operations on proxy arrays', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/jsx-arrays',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/jsx-arrays' }),
       pages: {
         '/jsx-arrays': {
           data: {
@@ -684,11 +621,7 @@ describe('useFragment', () => {
 
   it('handles complex JSX operations on fragment-scoped proxy arrays', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         jsx_collection: {
@@ -746,11 +679,7 @@ describe('useFragment', () => {
 
   it('handles direct JSX rendering of proxy objects in arrays', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/direct-jsx',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/direct-jsx' }),
       pages: {
         '/direct-jsx': {
           data: {
@@ -816,11 +745,7 @@ describe('useFragment', () => {
 
   it('handles direct JSX rendering of fragment-scoped proxy objects in arrays', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/unused',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/unused' }),
       pages: {},
       fragments: {
         direct_scoped: {
@@ -870,11 +795,7 @@ describe('useFragment', () => {
 
   it('prevents rendering whole proxy objects directly (should throw error)', () => {
     const store = buildStore({
-      superglue: {
-        currentPageKey: '/render-proxy',
-        search: {},
-        assets: [],
-      },
+      superglue: buildSuperglueState({ currentPageKey: '/render-proxy' }),
       pages: {
         '/render-proxy': {
           data: {

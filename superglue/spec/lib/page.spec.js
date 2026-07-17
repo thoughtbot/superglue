@@ -2,7 +2,12 @@ import { describe, expect, afterEach, it } from 'vitest'
 import fetchMock from 'fetch-mock'
 import { saveAndProcessPage } from '../../lib/action_creators'
 import { handleGraft, saveResponse } from '../../lib/actions'
-import { buildStore, allSuperglueActions, initialState } from '../support/store'
+import {
+  buildStore,
+  allSuperglueActions,
+  buildSuperglueState,
+  initialState,
+} from '../support/store'
 
 fetchMock.mock()
 
@@ -102,10 +107,7 @@ describe('page', () => {
               fragments: [],
             },
           },
-          superglue: {
-            currentPageKey: '/bar',
-            csrfToken: 'token',
-          },
+          superglue: buildSuperglueState(),
         }
       }
 
@@ -252,10 +254,7 @@ describe('page', () => {
               header: { text: 'existing header' },
             },
           },
-          superglue: {
-            currentPageKey: '/foo',
-            csrfToken: 'token',
-          },
+          superglue: buildSuperglueState({ currentPageKey: '/foo' }),
         }
       }
 

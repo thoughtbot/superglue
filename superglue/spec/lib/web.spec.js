@@ -3,6 +3,7 @@ import fetchMock from 'fetch-mock'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
 import { webVisit, webRemote } from '../../lib/action_creators/web'
+import { buildSaveResponse } from '../support/store'
 
 const defaultExtra = () => ({
   config: { baseUrl: 'https://example.com', maxPages: 20 },
@@ -28,24 +29,21 @@ const initialState = () => ({
 })
 
 const successBody = () =>
-  JSON.stringify({
-    data: { heading: 'Some heading' },
-    componentIdentifier: 'about',
-    csrfToken: 'token',
-    assets: [],
-    defers: [],
-    fragments: [],
-  })
+  JSON.stringify(
+    buildSaveResponse({
+      data: { heading: 'Some heading' },
+      componentIdentifier: 'about',
+    })
+  )
 
 const staleAssetsBody = () =>
-  JSON.stringify({
-    data: { heading: 'Some heading' },
-    componentIdentifier: 'about',
-    csrfToken: 'token',
-    assets: ['app-NEW.js'],
-    defers: [],
-    fragments: [],
-  })
+  JSON.stringify(
+    buildSaveResponse({
+      data: { heading: 'Some heading' },
+      componentIdentifier: 'about',
+      assets: ['app-NEW.js'],
+    })
+  )
 
 // jsdom's window.location is non-configurable, so we can't intercept the
 // `href` setter directly. We rely on the structural signal instead: when

@@ -41,12 +41,63 @@ export const allSuperglueActions = (store) => {
     .results.filter((action) => !action.type.startsWith('@@redux'))
 }
 
+export const buildSuperglueState = (overrides = {}) => ({
+  currentPageKey: '/bar',
+  search: {},
+  assets: [],
+  isVisiting: false,
+  csrfToken: 'token',
+  ...overrides,
+})
+
+export const buildSaveResponse = (overrides = {}) => ({
+  data: {},
+  componentIdentifier: 'test-component',
+  assets: [],
+  csrfToken: 'token',
+  fragments: [],
+  defers: [],
+  flash: {},
+  action: 'savePage',
+  renderedAt: Date.now(),
+  restoreStrategy: 'fromCacheOnly',
+  ...overrides,
+})
+
+export const buildGraftResponse = (overrides = {}) => ({
+  data: {},
+  componentIdentifier: 'test-component',
+  assets: [],
+  csrfToken: 'token',
+  fragments: [],
+  defers: [],
+  flash: {},
+  action: 'graft',
+  renderedAt: Date.now(),
+  path: '',
+  ...overrides,
+})
+
+export const buildStreamResponse = (overrides = {}) => ({
+  data: [],
+  fragments: [],
+  assets: [],
+  csrfToken: 'token',
+  action: 'handleStreamResponse',
+  renderedAt: Date.now(),
+  flash: {},
+  ...overrides,
+})
+
+export const buildPage = (overrides = {}) => ({
+  ...buildSaveResponse(),
+  savedAt: Date.now(),
+  ...overrides,
+})
+
 export const initialState = () => {
   return {
-    superglue: {
-      currentPageKey: '/bar',
-      csrfToken: 'token',
-    },
+    superglue: buildSuperglueState(),
   }
 }
 

@@ -9,24 +9,13 @@ import {
 } from '../../lib/components/Navigation'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
 import { setActivePage } from '../../lib/actions'
-import { allSuperglueActions } from '../support/store'
-
-const buildStore = (preloadedState) => {
-  let resultsReducer = (state = [], action) => {
-    return state.concat([action])
-  }
-
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-      results: resultsReducer,
-    },
-  })
-}
+import {
+  allSuperglueActions,
+  buildStore,
+  buildPage,
+  buildSuperglueState,
+} from '../support/store'
 
 const Home = () => {
   const { navigateTo } = useContext(NavigationContext)
@@ -59,19 +48,13 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/about': {
-            componentIdentifier: 'about',
-            restoreStrategy: 'fromCacheOnly',
-          },
-          '/home': {
-            componentIdentifier: 'home',
-            restoreStrategy: 'fromCacheOnly',
-          },
+          '/about': buildPage({ componentIdentifier: 'about' }),
+          '/home': buildPage({ componentIdentifier: 'home' }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       render(
@@ -97,15 +80,12 @@ describe('Nav', () => {
       const history = createMemoryHistory({})
       const store = buildStore({
         pages: {
-          '/home': {
-            componentIdentifier: 'home',
-            restoreStrategy: 'fromCacheOnly',
-          },
+          '/home': buildPage({ componentIdentifier: 'home' }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       render(
@@ -136,19 +116,13 @@ describe('Nav', () => {
       })
       const store = buildStore({
         pages: {
-          '/about': {
-            componentIdentifier: 'about',
-            restoreStrategy: 'fromCacheOnly',
-          },
-          '/home': {
-            componentIdentifier: 'home',
-            restoreStrategy: 'fromCacheOnly',
-          },
+          '/about': buildPage({ componentIdentifier: 'about' }),
+          '/home': buildPage({ componentIdentifier: 'home' }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
       const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       render(
@@ -186,19 +160,13 @@ describe('Nav', () => {
       })
       const store = buildStore({
         pages: {
-          '/home': {
-            componentIdentifier: 'home',
-            restoreStrategy: 'fromCacheOnly',
-          },
-          '/about': {
-            componentIdentifier: 'about',
-            restoreStrategy: 'fromCacheOnly',
-          },
+          '/home': buildPage({ componentIdentifier: 'home' }),
+          '/about': buildPage({ componentIdentifier: 'about' }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       let mountTimes = 0
@@ -258,15 +226,12 @@ describe('Nav', () => {
       })
       const store = buildStore({
         pages: {
-          '/home': {
-            componentIdentifier: 'home',
-            restoreStrategy: 'fromCacheOnly',
-          },
+          '/home': buildPage({ componentIdentifier: 'home' }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       const Home = () => {
@@ -314,17 +279,15 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/home': {
+          '/home': buildPage({
             componentIdentifier: 'home',
             data: { greeting: 'hello' },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
+          }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       const HomeWithCopy = () => {
@@ -379,17 +342,15 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/home': {
+          '/home': buildPage({
             componentIdentifier: 'home',
             data: {},
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
+          }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       const HomeWithSelfCopy = () => {
@@ -434,23 +395,19 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/home': {
+          '/home': buildPage({
             componentIdentifier: 'home',
             data: { greeting: 'hello' },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
-          '/about': {
+          }),
+          '/about': buildPage({
             componentIdentifier: 'about',
             data: { greeting: 'world' },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
+          }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       const HomeWithUpdate = () => {
@@ -501,17 +458,15 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/home': {
+          '/home': buildPage({
             componentIdentifier: 'home',
             data: { showModal: false },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
+          }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       const HomeWithReplace = () => {
@@ -560,23 +515,19 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/home': {
+          '/home': buildPage({
             componentIdentifier: 'home',
             data: { greeting: 'hello' },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
-          '/about': {
+          }),
+          '/about': buildPage({
             componentIdentifier: 'about',
             data: { greeting: 'world' },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
+          }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
@@ -630,17 +581,15 @@ describe('Nav', () => {
 
       const store = buildStore({
         pages: {
-          '/home': {
+          '/home': buildPage({
             componentIdentifier: 'home',
             data: { greeting: 'hello' },
-            fragments: [],
-            restoreStrategy: 'fromCacheOnly',
-          },
+          }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       let result
@@ -676,19 +625,13 @@ describe('Nav', () => {
       const history = createMemoryHistory({})
       const store = buildStore({
         pages: {
-          '/home': {
-            componentIdentifier: 'home',
-            restoreStrategy: 'fromCacheOnly',
-          },
-          '/about': {
-            componentIdentifier: 'about',
-            restoreStrategy: 'fromCacheOnly',
-          },
+          '/home': buildPage({ componentIdentifier: 'home' }),
+          '/about': buildPage({ componentIdentifier: 'about' }),
         },
-        superglue: {
+        superglue: buildSuperglueState({
           csrfToken: 'abc',
           currentPageKey: '/home',
-        },
+        }),
       })
 
       let instance
@@ -728,19 +671,19 @@ describe('Nav', () => {
 
         const store = buildStore({
           pages: {
-            '/home': {
+            '/home': buildPage({
               componentIdentifier: 'home',
               restoreStrategy: 'revisitOnly',
-            },
-            '/about': {
+            }),
+            '/about': buildPage({
               componentIdentifier: 'about',
               restoreStrategy: 'revisitOnly',
-            },
+            }),
           },
-          superglue: {
+          superglue: buildSuperglueState({
             csrfToken: 'abc',
             currentPageKey: '/about',
-          },
+          }),
         })
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
@@ -793,23 +736,20 @@ describe('Nav', () => {
 
         const store = buildStore({
           pages: {
-            '/home': {
+            '/home': buildPage({
               componentIdentifier: 'home',
               restoreStrategy: 'revisitOnly',
-            },
-            '/about': {
+            }),
+            '/about': buildPage({
               componentIdentifier: 'about',
               restoreStrategy: 'revisitOnly',
-            },
-            '/login': {
-              componentIdentifier: 'login',
-              restoreStrategy: 'fromCacheOnly',
-            },
+            }),
+            '/login': buildPage({ componentIdentifier: 'login' }),
           },
-          superglue: {
+          superglue: buildSuperglueState({
             csrfToken: 'abc',
             currentPageKey: '/about',
-          },
+          }),
         })
         vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
         const navigationAction = 'replace'
@@ -865,19 +805,13 @@ describe('Nav', () => {
         })
         const store = buildStore({
           pages: {
-            '/home': {
-              componentIdentifier: 'home',
-              restoreStrategy: 'fromCacheOnly',
-            },
-            '/about': {
-              componentIdentifier: 'about',
-              restoreStrategy: 'fromCacheOnly',
-            },
+            '/home': buildPage({ componentIdentifier: 'home' }),
+            '/about': buildPage({ componentIdentifier: 'about' }),
           },
-          superglue: {
+          superglue: buildSuperglueState({
             csrfToken: 'abc',
             currentPageKey: '/home',
-          },
+          }),
         })
         const scrollTo = vi
           .spyOn(window, 'scrollTo')
@@ -918,19 +852,19 @@ describe('Nav', () => {
         })
         const store = buildStore({
           pages: {
-            '/home': {
+            '/home': buildPage({
               componentIdentifier: 'home',
               restoreStrategy: 'fromCacheAndRevisitInBackground',
-            },
-            '/about': {
+            }),
+            '/about': buildPage({
               componentIdentifier: 'about',
               restoreStrategy: 'fromCacheAndRevisitInBackground',
-            },
+            }),
           },
-          superglue: {
+          superglue: buildSuperglueState({
             csrfToken: 'abc',
             currentPageKey: '/home',
-          },
+          }),
         })
         const scrollTo = vi
           .spyOn(window, 'scrollTo')

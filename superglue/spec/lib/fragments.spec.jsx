@@ -1,46 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
 import fetchMock from 'fetch-mock'
 import { describe, expect, afterEach, it } from 'vitest'
 import { saveAndProcessPage } from '../../lib/action_creators'
-
-const buildStore = (preloadedState) => {
-  let resultsReducer = (state = [], action) => {
-    return state.concat([action])
-  }
-
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-      results: resultsReducer,
-    },
-  })
-}
-
-const initialState = () => {
-  return {
-    superglue: {
-      currentPageKey: '/bar',
-      csrfToken: 'token',
-    },
-    fragments: {},
-  }
-}
+import { buildStore, buildSaveResponse, initialState } from '../support/store'
 
 fetchMock.mock()
 
 const buildPage = (attrs) => {
-  const body = {
+  return buildSaveResponse({
     data: {
       foo: 'barb',
     },
-    csrfToken: 'token',
-    assets: [],
-    fragments: [],
     ...attrs,
-  }
-  return body
+  })
 }
 
 describe('fragments', () => {

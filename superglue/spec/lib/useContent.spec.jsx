@@ -1,21 +1,15 @@
 import React, { useEffect } from 'react'
 import { describe, it, expect, vi } from 'vitest'
-import { render, renderHook, act, waitFor } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
 import { useContent, unproxy } from '../../lib/hooks/useContent'
 import { saveAndProcessPage } from '../../lib/action_creators'
 import { setActivePage, saveFragment } from '../../lib/actions'
-
-const buildStore = (preloadedState) => {
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-    },
-  })
-}
+import {
+  buildSimpleStore as buildStore,
+  renderWithProvider,
+} from '../support/store'
 
 describe('useContent', () => {
   const TestComponent = ({ onRender, onMount, children }) => {
@@ -27,10 +21,6 @@ describe('useContent', () => {
 
     onRender?.(page)
     return <div data-testid="test-component">{children || page.title}</div>
-  }
-
-  const renderWithProvider = (component, store) => {
-    return render(<Provider store={store}>{component}</Provider>)
   }
 
   it('returns the page content', () => {

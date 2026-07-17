@@ -2,46 +2,7 @@ import { describe, expect, afterEach, it } from 'vitest'
 import fetchMock from 'fetch-mock'
 import { saveAndProcessPage } from '../../lib/action_creators'
 import { handleGraft, saveResponse } from '../../lib/actions'
-import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
-
-const defaultExtra = () => ({
-  config: { baseUrl: 'https://example.com', maxPages: 20 },
-  lastVisitController: { abort: () => {} },
-})
-
-const buildStore = (preloadedState) => {
-  let resultsReducer = (state = [], action) => {
-    return state.concat([action])
-  }
-
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-      results: resultsReducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        thunk: { extraArgument: defaultExtra() },
-      }),
-  })
-}
-
-const allSuperglueActions = (store) => {
-  return store
-    .getState()
-    .results.filter((action) => !action.type.startsWith('@@redux'))
-}
-
-const initialState = () => {
-  return {
-    superglue: {
-      currentPageKey: '/bar',
-      csrfToken: 'token',
-    },
-  }
-}
+import { buildStore, allSuperglueActions, initialState } from '../support/store'
 
 fetchMock.mock()
 

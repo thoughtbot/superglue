@@ -1,18 +1,10 @@
 import { renderHook, act } from '@testing-library/react'
 import { useUpdateContent } from '../../lib/hooks/useUpdateContent'
 import { describe, it, expect } from 'vitest'
-import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
-
-const buildStore = (preloadedState) => {
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-    },
-  })
-}
+import {
+  buildSimpleStore as buildStore,
+  createProviderWrapper,
+} from '../support/store'
 
 describe('useUpdateContent', () => {
   it('should update page data', () => {
@@ -26,10 +18,9 @@ describe('useUpdateContent', () => {
       fragments: {},
     })
 
-    const wrapper = ({ children }) => (
-      <Provider store={store}>{children}</Provider>
-    )
-    const { result } = renderHook(() => useUpdateContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), {
+      wrapper: createProviderWrapper(store),
+    })
 
     act(() => {
       result.current('/page', (draft) => {
@@ -57,10 +48,9 @@ describe('useUpdateContent', () => {
       fragments: {},
     })
 
-    const wrapper = ({ children }) => (
-      <Provider store={store}>{children}</Provider>
-    )
-    const { result } = renderHook(() => useUpdateContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), {
+      wrapper: createProviderWrapper(store),
+    })
 
     act(() => {
       result.current('/page', (draft) => {
@@ -85,10 +75,9 @@ describe('useUpdateContent', () => {
       fragments: {},
     })
 
-    const wrapper = ({ children }) => (
-      <Provider store={store}>{children}</Provider>
-    )
-    const { result } = renderHook(() => useUpdateContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), {
+      wrapper: createProviderWrapper(store),
+    })
 
     act(() => {
       result.current('/other', (draft) => {
@@ -107,10 +96,9 @@ describe('useUpdateContent', () => {
       fragments: {},
     })
 
-    const wrapper = ({ children }) => (
-      <Provider store={store}>{children}</Provider>
-    )
-    const { result } = renderHook(() => useUpdateContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), {
+      wrapper: createProviderWrapper(store),
+    })
 
     expect(() => {
       act(() => {
@@ -129,10 +117,9 @@ describe('useUpdateContent', () => {
     })
     const dispatchSpy = vi.spyOn(store, 'dispatch')
 
-    const wrapper = ({ children }) => (
-      <Provider store={store}>{children}</Provider>
-    )
-    const { result } = renderHook(() => useUpdateContent(), { wrapper })
+    const { result } = renderHook(() => useUpdateContent(), {
+      wrapper: createProviderWrapper(store),
+    })
 
     act(() => {
       result.current('/page', (draft) => {

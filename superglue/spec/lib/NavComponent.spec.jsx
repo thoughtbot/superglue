@@ -12,6 +12,7 @@ import userEvent from '@testing-library/user-event'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
 import { setActivePage } from '../../lib/actions'
+import { allSuperglueActions } from '../support/store'
 
 const buildStore = (preloadedState) => {
   let resultsReducer = (state = [], action) => {
@@ -25,12 +26,6 @@ const buildStore = (preloadedState) => {
       results: resultsReducer,
     },
   })
-}
-
-const allSuperglueActions = (store) => {
-  return store
-    .getState()
-    .results.filter((action) => !action.type.startsWith('@@redux'))
 }
 
 const Home = () => {

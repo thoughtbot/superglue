@@ -1,19 +1,10 @@
 import { renderHook, act } from '@testing-library/react'
 import { useUpdateFragment } from '../../lib/hooks/useUpdateFragment'
 import { describe, it, expect } from 'vitest'
-import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
-
-// Helper to build store with actual reducer
-const buildStore = (preloadedState) => {
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-    },
-  })
-}
+import {
+  buildSimpleStore as buildStore,
+  createProviderWrapper,
+} from '../support/store'
 
 describe('useUpdateFragment', () => {
   describe('basic functionality', () => {
@@ -39,10 +30,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -77,10 +67,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -124,10 +113,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -153,10 +141,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -194,10 +181,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -229,10 +215,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -258,10 +243,9 @@ describe('useUpdateFragment', () => {
         pages: {},
         fragments: {},
       })
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       expect(() => {
@@ -287,10 +271,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -329,10 +312,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -368,10 +350,9 @@ describe('useUpdateFragment', () => {
       const store = buildStore(initialState)
       const dispatchSpy = vi.spyOn(store, 'dispatch')
 
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       act(() => {
@@ -406,10 +387,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       let chainable
@@ -436,10 +416,9 @@ describe('useUpdateFragment', () => {
       }
 
       const store = buildStore(initialState)
-      const wrapper = ({ children }) => (
-        <Provider store={store}>{children}</Provider>
-      )
-      const { result } = renderHook(() => useUpdateFragment(), { wrapper })
+      const { result } = renderHook(() => useUpdateFragment(), {
+        wrapper: createProviderWrapper(store),
+      })
       const set = result.current
 
       let chainable

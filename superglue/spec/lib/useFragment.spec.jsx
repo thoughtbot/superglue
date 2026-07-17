@@ -1,27 +1,15 @@
 import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
-import { render, act } from '@testing-library/react'
-import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
-import { rootReducer } from '../../lib/reducers'
+import { act } from '@testing-library/react'
 import { useFragment } from '../../lib/hooks/useFragment'
 import { useContent, unproxy } from '../../lib/hooks/useContent'
 import { saveFragment } from '../../lib/actions'
-
-const buildStore = (preloadedState) => {
-  return configureStore({
-    preloadedState,
-    reducer: {
-      ...rootReducer,
-    },
-  })
-}
+import {
+  buildSimpleStore as buildStore,
+  renderWithProvider,
+} from '../support/store'
 
 describe('useFragment', () => {
-  const renderWithProvider = (component, store) => {
-    return render(<Provider store={store}>{component}</Provider>)
-  }
-
   it('returns undefined and throws error for missing fragments', () => {
     const store = buildStore({
       superglue: {

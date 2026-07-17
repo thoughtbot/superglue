@@ -114,7 +114,7 @@ describe('useUpdateContent', () => {
 
     expect(() => {
       act(() => {
-        result.current('/missing', (draft) => {})
+        result.current('/missing', () => {})
       })
     }).toThrow('Page with key "/missing" not found')
   })

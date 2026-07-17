@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import React, { useEffect } from 'react'
+import { describe, it, expect, vi } from 'vitest'
 import { render, renderHook, act, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
@@ -1851,7 +1851,7 @@ describe('useContent', () => {
       console.error = vi.fn()
 
       const Component = () => {
-        const page = useContent()
+        useContent()
         return <div>Should throw before render</div>
       }
 

@@ -1,4 +1,7 @@
-const buildStore = (preloadedState) => {
+import { configureStore } from '@reduxjs/toolkit'
+import { rootReducer } from '../../lib/reducers'
+
+export const buildStore = (preloadedState) => {
   let resultsReducer = (state = [], action) => {
     return state.concat([action])
   }

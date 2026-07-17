@@ -38,6 +38,7 @@ const About = () => {
 // page components, so this stub is a plain passthrough — it does NOT
 // auto-navigate on success. The auto-navigate behavior of a real
 // `application_visit.ts` is exercised in `spec/lib/web.spec.js` instead.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const buildVisitAndRemote = ({ navigateTo: _navigateTo, visit, remote }) => {
   return {
     visit: (path, options) => visit(path, options),
@@ -522,7 +523,7 @@ describe('navigation', () => {
         const storeResult = createStore()
         const { store } = storeResult
 
-        history.listen(({ action, location }) => {
+        history.listen(({ location }) => {
           const { pathname, hash } = location
           if (hash === '#title') {
             const state = store.getState()

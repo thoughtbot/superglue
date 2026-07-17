@@ -584,7 +584,7 @@ describe('Nav', () => {
         },
       })
 
-      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+      vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
 
       const HomeWithUpdate = () => {
         const { navigateTo } = useContext(NavigationContext)
@@ -752,7 +752,7 @@ describe('Nav', () => {
           .mockImplementation(() => {})
         const navigationAction = 'none'
 
-        const fakeVisit = vi.fn((...args) => {
+        const fakeVisit = vi.fn(() => {
           return {
             then: vi.fn((fn) => {
               fn({ navigationAction })
@@ -816,12 +816,10 @@ describe('Nav', () => {
             currentPageKey: '/about',
           },
         })
-        const scrollTo = vi
-          .spyOn(window, 'scrollTo')
-          .mockImplementation(() => {})
+        vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
         const navigationAction = 'replace'
 
-        const fakeVisit = vi.fn((...args) => {
+        const fakeVisit = vi.fn(() => {
           return {
             then: vi.fn((fn) => {
               store.dispatch(setActivePage({ pageKey: '/login' }))
@@ -943,7 +941,7 @@ describe('Nav', () => {
           .spyOn(window, 'scrollTo')
           .mockImplementation(() => {})
 
-        const fakeVisit = vi.fn((...args) => {})
+        const fakeVisit = vi.fn(() => {})
 
         render(
           <Provider store={store}>

@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { render, act, waitFor } from '@testing-library/react'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, act } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { rootReducer } from '../../lib/reducers'
 import { useFragment } from '../../lib/hooks/useFragment'
 import { useContent, unproxy } from '../../lib/hooks/useContent'
-import { saveAndProcessPage } from '../../lib/action_creators'
-import { setActivePage, saveFragment } from '../../lib/actions'
+import { saveFragment } from '../../lib/actions'
 
 const buildStore = (preloadedState) => {
   return configureStore({
@@ -250,11 +249,10 @@ describe('useFragment', () => {
       },
     })
 
-    let parentPage, childUser
+    let childUser
 
     const Parent = () => {
       const page = useContent()
-      parentPage = page
       const userRef = unproxy(page).selectedUser
       return <Child userRef={userRef} />
     }

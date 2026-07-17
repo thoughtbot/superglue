@@ -1,12 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { HandlerBuilder } from '../../../lib/utils/ujs'
-import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk'
-import fetchMock from 'fetch-mock'
-import React from 'react'
 import { JSDOM } from 'jsdom'
-import { render } from 'react-dom'
-import * as helpers from '../../../lib/utils/helpers'
 
 describe('ujs', () => {
   function createFakeLinkTarget(attrs = {}) {
@@ -34,16 +28,6 @@ describe('ujs', () => {
         href: '/foo',
         'data-visit': true,
         ...attrs,
-      }),
-    }
-  }
-
-  function createFakeVisitGraftEvent() {
-    return {
-      preventDefault: () => {},
-      target: createFakeLinkTarget({
-        href: '/foo?props_at=data.hello',
-        'data-visit': 'true',
       }),
     }
   }

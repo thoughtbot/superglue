@@ -74,8 +74,12 @@ describe('pageEvictionMiddleware', () => {
 
       const nextState = store.getState().pages
       expect(Object.keys(nextState).length).toEqual(20)
-      expect(nextState.hasOwnProperty('/foo21')).toEqual(true)
-      expect(nextState.hasOwnProperty('/foo0')).toEqual(false)
+      expect(Object.prototype.hasOwnProperty.call(nextState, '/foo21')).toEqual(
+        true
+      )
+      expect(Object.prototype.hasOwnProperty.call(nextState, '/foo0')).toEqual(
+        false
+      )
     })
   })
 

@@ -20,5 +20,28 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["spec/**/*.{js,jsx,ts,tsx}"],
+      "env": {
+        "node": true
+      },
+      "globals": {
+        "expect": "readonly",
+        "vi": "readonly",
+        "describe": "readonly",
+        "it": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "beforeAll": "readonly",
+        "afterAll": "readonly"
+      },
+      "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react/display-name": "off"
+      }
+    }
+  ]
 }

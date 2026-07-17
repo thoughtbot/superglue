@@ -198,8 +198,6 @@ describe('page reducer', () => {
           data: { foo: 1 },
           fragments: [],
         }
-        const pageKey = '/foo'
-
         const nextState = pageReducer(prevState, {
           type: '@@superglue/HANDLE_GRAFT',
           payload: {
@@ -211,7 +209,6 @@ describe('page reducer', () => {
       })
 
       it('grafts a received node onto the current page', () => {
-        const pageKey = '/foo'
         const prevState = {
           '/foo': {
             data: { a: { b: { c: {} } } },

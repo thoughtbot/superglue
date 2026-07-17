@@ -266,7 +266,7 @@ describe('useUpdateFragment', () => {
 
       expect(() => {
         act(() => {
-          set({ __id: 'non_existent' }, (draft) => {})
+          set({ __id: 'non_existent' }, () => {})
         })
       }).toThrow('Fragment with id "non_existent" not found')
     })

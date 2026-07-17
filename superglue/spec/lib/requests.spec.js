@@ -444,7 +444,7 @@ describe('remote', () => {
         'https://example.com/first?props_at=foo&format=json',
         rsp.visitSuccess()
       )
-      store.dispatch(remote('/first?props_at=foo')).then((meta) => {
+      store.dispatch(remote('/first?props_at=foo')).then(() => {
         done()
       })
     }))
@@ -798,7 +798,7 @@ describe('visit', () => {
         'https://example.com/first?format=json',
         rsp.visitSuccess()
       )
-      store.dispatch(visit('/first?props_at=foo&format=json')).then((meta) => {
+      store.dispatch(visit('/first?props_at=foo&format=json')).then(() => {
         done()
       })
     }))
@@ -922,7 +922,7 @@ describe('visit', () => {
             placeholderKey: '/does-not-exist',
           })
         )
-        .then((meta) => {
+        .then(() => {
           expect(console.warn).toHaveBeenCalledWith(
             'Could not find placeholder with key /does-not-exist in state. The props_at param will be ignored'
           )
@@ -951,7 +951,7 @@ describe('visit', () => {
       const expectedFetchUrl = '/first?props_at=foo&format=json'
       store
         .dispatch(visit(expectedFetchUrl, { placeholderKey: '/does-exist' }))
-        .then((meta) => {
+        .then(() => {
           done()
         })
     }))
@@ -1012,7 +1012,7 @@ describe('visit', () => {
 
       store
         .dispatch(visit('/details?props_at=data.address'))
-        .then((meta) => {
+        .then(() => {
           expect(allSuperglueActions(store)).toEqual(expectedActions)
         })
         .finally(() => {
@@ -1080,7 +1080,7 @@ describe('visit', () => {
             placeholderKey: '/current',
           })
         )
-        .then((meta) => {
+        .then(() => {
           expect(allSuperglueActions(store)).toEqual(expectedActions)
         })
         .finally(() => {

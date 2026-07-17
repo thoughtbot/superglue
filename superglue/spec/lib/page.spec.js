@@ -69,9 +69,6 @@ describe('page', () => {
   describe('handleGraft', () => {
     it('fires HANDLE_GRAFT', () => {
       const pageKey = '/test'
-      const node = { d: 'foo' }
-      const pathToNode = 'a.b'
-      const fragments = [{ foo: ['bar'] }]
       const page = {
         data: {
           d: 'foo',

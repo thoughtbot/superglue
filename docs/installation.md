@@ -1,7 +1,7 @@
 # Installation
 
 !!! info "Prerequisites"
-    To get started with Superglue, you'll need
+To get started with Superglue, you'll need
 
     - A JavaScript bundler installed via [jsbundling-rails](https://github.com/rails/jsbundling-rails). Supported bundlers: **esbuild**, **bun**, **rollup**, and **webpack**.
     - `yarn`
@@ -39,7 +39,7 @@ rails g superglue:install --bundler=esbuild
 ```
 
 !!! example "TypeScript"
-    If you prefer TypeScript:
+If you prefer TypeScript:
 
     ```terminal
     rails g superglue:install --typescript
@@ -87,7 +87,7 @@ rails g superglue:scaffold post body:string
 ```
 
 !!! example ""
-    If you prefer typescript
+If you prefer typescript
 
     ```terminal
     rails g superglue:scaffold post body:string --typescript

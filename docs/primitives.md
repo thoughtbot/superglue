@@ -4,19 +4,19 @@ Superglue's design goal is to stay away from creating user-facing features disgu
 
 ## The Primitives
 
-| | Primitive | What it does |
-|---|---|---|
-| **Read state** | `useContent` | Reactive proxy to the current page's data. Transparently resolves fragment references. |
-| | `useFragment` | Reactive proxy to a single fragment by ID. Re-renders only when that fragment changes. |
-| **Mutate state** | `useUpdateFragment` | Immer-based mutations on a fragment by ID. Ideal for optimistic updates. |
-| | `useUpdateContent` | Immer-based mutations on a page's data by page key. |
-| **Fetch** | `visit` | Full-page navigation. Fetches, saves, swaps the page component, and updates the URL. |
-| | `remote` | Background fetch. Updates the store without swapping the page component or changing the URL. |
-| | `props_at` (digging) | A query parameter that tells the server to return only a branch of the page. Pairs with `remote` for surgical updates. |
-| **Navigate** | `copyTo` | Clone the current page to a new page key. Preserves the original for back-button navigation. |
-| | `navigateTo` | Navigate to an already-cached page without fetching. Accepts `updateContent` to mutate the page during navigation. |
-| **Stream** | `useStreamSource` | Subscribe to an ActionCable channel for real-time updates. |
-| | Stream Actions | Server-side `broadcast_append_to`, `broadcast_prepend_to`, `broadcast_update_to` to push fragment mutations to connected clients. |
+|                  | Primitive            | What it does                                                                                                                      |
+| ---------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Read state**   | `useContent`         | Reactive proxy to the current page's data. Transparently resolves fragment references.                                            |
+|                  | `useFragment`        | Reactive proxy to a single fragment by ID. Re-renders only when that fragment changes.                                            |
+| **Mutate state** | `useUpdateFragment`  | Immer-based mutations on a fragment by ID. Ideal for optimistic updates.                                                          |
+|                  | `useUpdateContent`   | Immer-based mutations on a page's data by page key.                                                                               |
+| **Fetch**        | `visit`              | Full-page navigation. Fetches, saves, swaps the page component, and updates the URL.                                              |
+|                  | `remote`             | Background fetch. Updates the store without swapping the page component or changing the URL.                                      |
+|                  | `props_at` (digging) | A query parameter that tells the server to return only a branch of the page. Pairs with `remote` for surgical updates.            |
+| **Navigate**     | `copyTo`             | Clone the current page to a new page key. Preserves the original for back-button navigation.                                      |
+|                  | `navigateTo`         | Navigate to an already-cached page without fetching. Accepts `updateContent` to mutate the page during navigation.                |
+| **Stream**       | `useStreamSource`    | Subscribe to an ActionCable channel for real-time updates.                                                                        |
+|                  | Stream Actions       | Server-side `broadcast_append_to`, `broadcast_prepend_to`, `broadcast_update_to` to push fragment mutations to connected clients. |
 
 These primitives compose to cover virtually any interactive UI pattern. The rest
 of this page shows how.
@@ -31,8 +31,8 @@ with conditional rendering and digging.
 that branch when the user acts.
 
 === "View"
-    ```ruby
-    # app/views/posts/index.json.props
+
+````ruby # app/views/posts/index.json.props
 
     json.posts do
       json.array! @posts do |post|
@@ -50,8 +50,7 @@ that branch when the user acts.
     ```
 
 === "Controller"
-    ```ruby
-    # app/controllers/posts_controller.rb
+```ruby # app/controllers/posts_controller.rb
 
     def index
       @posts = Post.all
@@ -66,9 +65,9 @@ that branch when the user acts.
     ```
 
 === "Component"
-    ```jsx
-    // app/views/posts/index.jsx
-    import { useContent } from '@thoughtbot/superglue'
+```jsx
+// app/views/posts/index.jsx
+import { useContent } from '@thoughtbot/superglue'
 
     export default function PostsIndex() {
       const { posts, editModal } = useContent()
@@ -94,19 +93,21 @@ the modal. Add `props_at` to dig for just that node:
 
 ```ruby
 json.newPostPath new_post_path(props_at: "data.editModal")
-```
+````
 
 ```jsx
-<a href={newPostPath} data-sg-remote>New Post</a>
+<a href={newPostPath} data-sg-remote>
+  New Post
+</a>
 ```
 
 Now Superglue fetches only `data.editModal` and grafts it into the current
 page. The rest of the page is untouched.
 
 !!! tip
-    This same pattern works for tabs, drawers, and any content you want to
-    load on demand. See the full [Modals recipe](./recipes/modals.md) for a
-    step-by-step walkthrough.
+This same pattern works for tabs, drawers, and any content you want to
+load on demand. See the full [Modals recipe](./recipes/modals.md) for a
+step-by-step walkthrough.
 
 ## Deferred Loading
 
@@ -115,8 +116,8 @@ with analytics, a recommendations panel. Rather than blocking the whole
 page, defer it.
 
 === "View"
-    ```ruby
-    # app/views/dashboard/show.json.props
+
+````ruby # app/views/dashboard/show.json.props
 
     json.header do
       json.title "Dashboard"
@@ -129,8 +130,8 @@ page, defer it.
     ```
 
 === "Component"
-    ```jsx
-    import { useContent } from '@thoughtbot/superglue'
+```jsx
+import { useContent } from '@thoughtbot/superglue'
 
     export default function DashboardShow() {
       const { header, metrics } = useContent()
@@ -156,7 +157,7 @@ example, loading tab content only when the user clicks:
 json.tabContent(defer: [:manual, placeholder: {}]) do
   json.details "Expensive content here"
 end
-```
+````
 
 ```jsx
 const { remote } = useContext(NavigationContext)
@@ -167,8 +168,8 @@ const { remote } = useContext(NavigationContext)
 ```
 
 !!! info
-    See the full [Deferments](./deferments.md) docs for `success_action`,
-    `fail_action`, and other options.
+See the full [Deferments](./deferments.md) docs for `success_action`,
+`fail_action`, and other options.
 
 ## List Manipulation
 
@@ -198,8 +199,20 @@ end
 ```
 
 ```jsx
-{pathToNextPage && <a href={pathToNextPage} data-sg-visit>Next Page</a>}
-{pathToPrevPage && <a href={pathToPrevPage} data-sg-visit>Prev Page</a>}
+{
+  pathToNextPage && (
+    <a href={pathToNextPage} data-sg-visit>
+      Next Page
+    </a>
+  )
+}
+{
+  pathToPrevPage && (
+    <a href={pathToPrevPage} data-sg-visit>
+      Prev Page
+    </a>
+  )
+}
 ```
 
 Because `props_at` targets `data.posts`, the rest of the page (header,
@@ -216,7 +229,7 @@ const { remote, pageKey } = useContext(NavigationContext)
 const beforeSave = (prevPage, receivedPage) => {
   receivedPage.data.posts.list = [
     ...prevPage.data.posts.list,
-    ...receivedPage.data.posts.list
+    ...receivedPage.data.posts.list,
   ]
   return receivedPage
 }
@@ -231,8 +244,8 @@ This composes naturally with any React infinite scroll library —
 observer. Superglue handles the data; you pick the UI.
 
 !!! tip
-    See the full [Infinite Scroll recipe](./recipes/infinite-scroll.md) and
-    [Pagination recipe](./recipes/spa-pagination.md) for complete examples.
+See the full [Infinite Scroll recipe](./recipes/infinite-scroll.md) and
+[Pagination recipe](./recipes/spa-pagination.md) for complete examples.
 
 ## Optimistic Updates
 
@@ -247,7 +260,11 @@ end
 ```
 
 ```jsx
-import { useContent, useUpdateFragment, NavigationContext } from '@thoughtbot/superglue'
+import {
+  useContent,
+  useUpdateFragment,
+  NavigationContext,
+} from '@thoughtbot/superglue'
 
 function LikeButton({ postId }) {
   const { post } = useContent()
@@ -288,9 +305,8 @@ everywhere the fragment appears — across pages, in the header cart count,
 in a sidebar summary — without any extra wiring.
 
 !!! info
-    See [Client-Side Updates](./client-updates.md) for more on
-    `useUpdateFragment` and `useUpdateContent`.
-
+See [Client-Side Updates](./client-updates.md) for more on
+`useUpdateFragment` and `useUpdateContent`.
 
 ## Real-Time Updates
 
@@ -298,8 +314,8 @@ Push updates from the server to all connected clients using Super Turbo
 Streams. This builds on ActionCable and Rails' broadcasting conventions.
 
 === "View"
-    ```ruby
-    # app/views/messages/index.json.props
+
+````ruby # app/views/messages/index.json.props
 
     json.streamFromMessages stream_from_props("messages")
 
@@ -312,8 +328,8 @@ Streams. This builds on ActionCable and Rails' broadcasting conventions.
     ```
 
 === "Component"
-    ```jsx
-    import { useContent, useStreamSource } from '@thoughtbot/superglue'
+```jsx
+import { useContent, useStreamSource } from '@thoughtbot/superglue'
 
     export default function MessagesIndex() {
       const { streamFromMessages, messages } = useContent()
@@ -331,12 +347,12 @@ Streams. This builds on ActionCable and Rails' broadcasting conventions.
     ```
 
 === "Broadcasting"
-    ```ruby
+`ruby
     # In a controller, model callback, or background job
     @message.broadcast_append_to "messages"
     @message.broadcast_update_to "messages"
     @message.broadcast_prepend_to "messages"
-    ```
+    `
 
 Stream Actions operate on fragments. When you `broadcast_append_to
 "messages"`, the rendered partial is appended to the `"messages"` fragment
@@ -344,9 +360,8 @@ on every connected client. Components using `useContent` or `useFragment`
 that access that fragment will re-render automatically.
 
 !!! tip
-    See [Super Turbo Streams](./super-turbo-streams.md) for stream
-    responses, model-level configuration, `save_as`, and custom channels.
-
+See [Super Turbo Streams](./super-turbo-streams.md) for stream
+responses, model-level configuration, `save_as`, and custom channels.
 
 ## Local State and Faceted Search
 
@@ -377,32 +392,32 @@ export default function PostsIndex() {
   const { navigateTo, copyTo, pageKey, search } = useContext(NavigationContext)
 
   const filterActive = () => {
-    const nextPageKey = pageKey + "?status=active"
+    const nextPageKey = pageKey + '?status=active'
     copyTo(nextPageKey)
     navigateTo(nextPageKey, {
       action: 'push',
       updateContent: (draft) => {
         draft.activeFilter = 'active'
-      }
+      },
     })
   }
 
   const activeFilter = search.status
 
   const filtered = activeFilter
-    ? posts.filter(p => p.status === activeFilter)
+    ? posts.filter((p) => p.status === activeFilter)
     : posts
 
   return (
     <>
       <button onClick={filterActive}>Active Only</button>
-      {filtered.map(post => (
+      {filtered.map((post) => (
         <p key={post.id}>{post.title}</p>
       ))}
     </>
   )
 }
-```
+````
 
 `copyTo` clones the current page to the target key, preserving the
 original for back-button navigation. Then `navigateTo` switches to the
@@ -411,9 +426,8 @@ copy, updates the URL, and optionally mutates it via `updateContent`. The
 logic.
 
 !!! info
-    See [NavigationContext](./navigation-context.md) for `action` options
-    and more on `copyTo`.
-
+See [NavigationContext](./navigation-context.md) for `action` options
+and more on `copyTo`.
 
 ## Composing Patterns
 

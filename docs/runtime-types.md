@@ -3,7 +3,7 @@
 End-to-end typing is a common way to ensure correctness across the frontend
 and backend, but it's not the only way. Tools like Typelizer annotate types in
 Ruby and regenerate them in TypeScript, but now you're learning two different
-type languages and wondering how one maps to the other. 
+type languages and wondering how one maps to the other.
 
 Superglue takes a different approach, a typescript first approach. Instead of
 end-to-end typing, we use
@@ -63,35 +63,35 @@ describing your page's props as you normally would:
 For example:
 
 ```tsx
-  import React from 'react'
-  import { useContent } from '@thoughtbot/superglue'
+import React from 'react'
+import { useContent } from '@thoughtbot/superglue'
 
-  interface Post {
-    id: number
-    title: string
-    content: string
-  }
+interface Post {
+  id: number
+  title: string
+  content: string
+}
 
-  type PostShowProps = {
-    header: string;
-    post: Post;
-  }
+type PostShowProps = {
+  header: string
+  post: Post
+}
 
-  export default function PostShow() {
-    const { header, post} = useContent<PostShowProps>()
+export default function PostShow() {
+  const { header, post } = useContent<PostShowProps>()
 
-    return (
-      <div>
-        <h1>{header}</h1>
+  return (
+    <div>
+      <h1>{header}</h1>
 
-        <ul>
-          <li>{post.id}</li>
-          <li>{post.title}</li>
-          <li>{post.content}</li>
-        </ul>
-      </div>
-    )
-  }
+      <ul>
+        <li>{post.id}</li>
+        <li>{post.title}</li>
+        <li>{post.content}</li>
+      </ul>
+    </div>
+  )
+}
 ```
 
 If the payload from `app/views/posts/show.json.props` was mishaped in anyway, you'd get an error:

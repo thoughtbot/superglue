@@ -1,6 +1,6 @@
 # Fragments
 
-__Rails partials are powerful__
+**Rails partials are powerful**
 
 They're not just about DRY'ing your views - they're also about semantic
 identification. When you extract a `_header.html.erb`, you're declaring "this
@@ -9,7 +9,7 @@ that is often lost when rendered with a view.
 
 Enter fragments:
 
-__A fragment is a rendered partial with frontend referential identity__.
+**A fragment is a rendered partial with frontend referential identity**.
 Its a powerful feature that lets you update client state using an id and have that
 reflected instantly across all pages that use the same fragment.
 
@@ -41,10 +41,10 @@ update(toFragmentRef("userCart"), (cartDraft) => {
 ```
 
 !!! success "Hello Turbo Streams!"
-    Because fragments are just Rails partials, we also ported a fan favorite 
-    that allows you to update [append](./super-turbo-streams.md#append), [prepend](./super-turbo-streams.md#append), [update](./super-turbo-streams.md#update) to mutate them. We call it [Super Turbo
-    Streams](./super-turbo-streams.md).
-    
+Because fragments are just Rails partials, we also ported a fan favorite
+that allows you to update [append](./super-turbo-streams.md#append), [prepend](./super-turbo-streams.md#append), [update](./super-turbo-streams.md#update) to mutate them. We call it [Super Turbo
+Streams](./super-turbo-streams.md).
+
 ## Denormalization
 
 A page response that uses fragments first returns a normalized state. A response
@@ -143,13 +143,12 @@ const content = useContent()
 ```
 
 !!! Info
-    Behind the scenes, the `useContent` hook will track every fragment accessed through the proxy. If any of those fragments gets updated, the React component will rerender. This can be [selectively tuned for performance](./performance.md#frontend).
-
+Behind the scenes, the `useContent` hook will track every fragment accessed through the proxy. If any of those fragments gets updated, the React component will rerender. This can be [selectively tuned for performance](./performance.md#frontend).
 
 ## Mutations
 
 !!! Important
-    Proxies created by `useContent` or `useFragment` can't be mutated directly. This is by design, use `useUpdateFragment` for [mutations](./client-updates.md#useupdatefragment-hook).
+Proxies created by `useContent` or `useFragment` can't be mutated directly. This is by design, use `useUpdateFragment` for [mutations](./client-updates.md#useupdatefragment-hook).
 
 Having an identity makes optimistic updates easy. Superglue offers a `useUpdateFragment` [hook](./client-updates.md#useupdatefragment-hook) that helps with mutations. Here's a more complex example.
 
@@ -160,7 +159,7 @@ update(toFragmentRef('userCart'), (cartDraft) => {
   // carDraft.availableCoupons is a fragment ref in the shape of {__id: 'availableCoupons'}
   // you can use the fragment ref instead of a string
   update(cartDraft.availableCoupons, (couponsDraft) => {
-    couponsDraft[0].title = "super free shipping"
+    couponsDraft[0].title = 'super free shipping'
   })
 })
 ```

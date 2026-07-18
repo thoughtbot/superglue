@@ -2,7 +2,7 @@ Superglue stores your content in memory. If you were to navigate using a normal
 HTML link or form that does a full page reload the state would be destroyed.
 
 !!! tip The History state
-    Superglue does store the following in History.state for convience:
+Superglue does store the following in History.state for convience:
 
     ```
     export interface HistoryState {
@@ -20,9 +20,11 @@ HTML link or form that does a full page reload the state would be destroyed.
 You can use any Rails authentication system; [Devise], [Authentication Zero], etc. Superglue leverages standard Rails patterns - routes, controllers, and views - making it friendly with the Rails ecosystem.
 
 ### Logging out
+
 When implementing a logout button use a normal HTML link or form that does a full page reload. This will clear out Superglue's state in memory.
 
 ✅ Do
+
 ```
   <a href="/users/logout"> Logout </a>
 ```

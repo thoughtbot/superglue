@@ -16,8 +16,8 @@ used, a `json` request will be made for the next page, then Superglue saves
 the response, swap the page component, and change the browser history.
 
 !!! note
-    There can be only one `visit` at a time. If another `visit` is called from
-    elsewhere, the previous visit would be aborted.
+There can be only one `visit` at a time. If another `visit` is called from
+elsewhere, the previous visit would be aborted.
 
 You must provide the implentation and pass it back to Superglue in
 `application.js`. Superglue will then pass it to your page components and use
@@ -26,16 +26,16 @@ it for UJS navigation. This is usually generated for you in
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `input` | `string` | The first argument to Fetch |
-| `options` | [`VisitProps`](#visitprops) |  |
+| Parameter | Type                        | Description                 |
+| --------- | --------------------------- | --------------------------- |
+| `input`   | `string`                    | The first argument to Fetch |
+| `options` | [`VisitProps`](#visitprops) |                             |
 
 #### Returns
 
 `Promise`\<[`VisitResult`](types.md#visitresult)\>
 
-***
+---
 
 <a id="visitprops"></a>
 
@@ -51,16 +51,16 @@ Options for Visit
 
 #### Properties
 
-| Property | Type | Description | Inherited from | Defined in |
-| ------ | ------ | ------ | ------ | ------ |
-| <a id="placeholderkey"></a> `placeholderKey?` | `string` | Defaults to the currentPageKey. When present, Superglue will use the page state located at that pageKey and optimistally navigates to it as the next page's state while the requests resolves. | - | [types/requests.ts:45](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L45) |
-| <a id="revisit"></a> `revisit?` | `boolean` | When `true` and the request method is a GET, changes the `suggestionAction` of the Result object to `none` so that Superglue does nothing to window.history. When the GET response was redirected, changes `navigationAction` to `replace` | - | [types/requests.ts:52](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L52) |
-| <a id="method"></a> `method?` | `string` | The HTTP method | [`RemoteProps`](#remoteprops).[`method`](#method-1) | [types/requests.ts:77](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L77) |
-| <a id="body"></a> `body?` | `BodyInit` | The HTTP body | [`RemoteProps`](#remoteprops).[`body`](#body-1) | [types/requests.ts:79](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L79) |
-| <a id="headers"></a> `headers?` | \{\[`key`: `string`\]: `string`; \} | The HTTP headers | `Omit.headers` | [types/requests.ts:81](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L81) |
-| <a id="beforesave"></a> `beforeSave?` | [`BeforeSave`](#beforesave-2)\<[`JSONMappable`](types.md#jsonmappable)\> | - | [`RemoteProps`](#remoteprops).[`beforeSave`](#beforesave-1) | [types/requests.ts:84](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L84) |
+| Property                                      | Type                                                                     | Description                                                                                                                                                                                                                                | Inherited from                                              | Defined in                                                                                                                                        |
+| --------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <a id="placeholderkey"></a> `placeholderKey?` | `string`                                                                 | Defaults to the currentPageKey. When present, Superglue will use the page state located at that pageKey and optimistally navigates to it as the next page's state while the requests resolves.                                             | -                                                           | [types/requests.ts:45](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L45) |
+| <a id="revisit"></a> `revisit?`               | `boolean`                                                                | When `true` and the request method is a GET, changes the `suggestionAction` of the Result object to `none` so that Superglue does nothing to window.history. When the GET response was redirected, changes `navigationAction` to `replace` | -                                                           | [types/requests.ts:52](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L52) |
+| <a id="method"></a> `method?`                 | `string`                                                                 | The HTTP method                                                                                                                                                                                                                            | [`RemoteProps`](#remoteprops).[`method`](#method-1)         | [types/requests.ts:77](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L77) |
+| <a id="body"></a> `body?`                     | `BodyInit`                                                               | The HTTP body                                                                                                                                                                                                                              | [`RemoteProps`](#remoteprops).[`body`](#body-1)             | [types/requests.ts:79](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L79) |
+| <a id="headers"></a> `headers?`               | \{\[`key`: `string`\]: `string`; \}                                      | The HTTP headers                                                                                                                                                                                                                           | `Omit.headers`                                              | [types/requests.ts:81](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L81) |
+| <a id="beforesave"></a> `beforeSave?`         | [`BeforeSave`](#beforesave-2)\<[`JSONMappable`](types.md#jsonmappable)\> | -                                                                                                                                                                                                                                          | [`RemoteProps`](#remoteprops).[`beforeSave`](#beforesave-1) | [types/requests.ts:84](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L84) |
 
-***
+---
 
 <a id="remote"></a>
 
@@ -77,22 +77,22 @@ store. Remote does not navigate, and it does not change the browser history.
 There can be multiple Remote requests running concurrently.
 
 This function is to be wrapped by a developer as a [ApplicationRemote](#applicationremote)
-and returned to superglue.  This is usually generated as
+and returned to superglue. This is usually generated as
 `application_visit.js` where you can make minimum edits to affect its
 global usage.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `input` | `string` | The first argument to Fetch |
+| Parameter | Type                          | Description                                   |
+| --------- | ----------------------------- | --------------------------------------------- |
+| `input`   | `string`                      | The first argument to Fetch                   |
 | `options` | [`RemoteProps`](#remoteprops) | The fetch RequestInit with additional options |
 
 #### Returns
 
 `Promise`\<[`Result`](types.md#result)\>
 
-***
+---
 
 <a id="remoteprops"></a>
 
@@ -108,16 +108,16 @@ Options for Visit
 
 #### Properties
 
-| Property | Type | Description | Inherited from | Defined in |
-| ------ | ------ | ------ | ------ | ------ |
-| <a id="method-1"></a> `method?` | `string` | The HTTP method | `BaseProps.method` | [types/requests.ts:77](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L77) |
-| <a id="body-1"></a> `body?` | `BodyInit` | The HTTP body | `BaseProps.body` | [types/requests.ts:79](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L79) |
-| <a id="headers-1"></a> `headers?` | \{\[`key`: `string`\]: `string`; \} | The HTTP headers | `BaseProps.headers` | [types/requests.ts:81](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L81) |
-| <a id="beforesave-1"></a> `beforeSave?` | [`BeforeSave`](#beforesave-2)\<[`JSONMappable`](types.md#jsonmappable)\> | - | `BaseProps.beforeSave` | [types/requests.ts:84](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L84) |
-| <a id="pagekey"></a> `pageKey?` | `string` | Specifies where to store the remote payload, if not provided [Remote](#remote) will derive a key from the response's url. | - | [types/requests.ts:95](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L95) |
-| <a id="force"></a> `force?` | `boolean` | By default, remote [Remote](#remote) disallows grafting a page response using props_at if the target pageKey provided has a different componentIdentifier. Setting `force: true` will ignore this limitation. This can be useful if you are absolutely sure that the page your grafting onto has a compatible shape with the response received with using props_at. A good example of this is a shared global header. | - | [types/requests.ts:105](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L105) |
+| Property                                | Type                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                           | Inherited from         | Defined in                                                                                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <a id="method-1"></a> `method?`         | `string`                                                                 | The HTTP method                                                                                                                                                                                                                                                                                                                                                                                                       | `BaseProps.method`     | [types/requests.ts:77](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L77)   |
+| <a id="body-1"></a> `body?`             | `BodyInit`                                                               | The HTTP body                                                                                                                                                                                                                                                                                                                                                                                                         | `BaseProps.body`       | [types/requests.ts:79](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L79)   |
+| <a id="headers-1"></a> `headers?`       | \{\[`key`: `string`\]: `string`; \}                                      | The HTTP headers                                                                                                                                                                                                                                                                                                                                                                                                      | `BaseProps.headers`    | [types/requests.ts:81](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L81)   |
+| <a id="beforesave-1"></a> `beforeSave?` | [`BeforeSave`](#beforesave-2)\<[`JSONMappable`](types.md#jsonmappable)\> | -                                                                                                                                                                                                                                                                                                                                                                                                                     | `BaseProps.beforeSave` | [types/requests.ts:84](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L84)   |
+| <a id="pagekey"></a> `pageKey?`         | `string`                                                                 | Specifies where to store the remote payload, if not provided [Remote](#remote) will derive a key from the response's url.                                                                                                                                                                                                                                                                                             | -                      | [types/requests.ts:95](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L95)   |
+| <a id="force"></a> `force?`             | `boolean`                                                                | By default, remote [Remote](#remote) disallows grafting a page response using props_at if the target pageKey provided has a different componentIdentifier. Setting `force: true` will ignore this limitation. This can be useful if you are absolutely sure that the page your grafting onto has a compatible shape with the response received with using props_at. A good example of this is a shared global header. | -                      | [types/requests.ts:105](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/requests.ts#L105) |
 
-***
+---
 
 <a id="beforesave-2"></a>
 
@@ -127,9 +127,9 @@ Defined in: [types/requests.ts:108](https://github.com/thoughtbot/superglue/blob
 
 #### Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` | [`JSONMappable`](types.md#jsonmappable) |
+| Type Parameter | Default type                            |
+| -------------- | --------------------------------------- |
+| `T`            | [`JSONMappable`](types.md#jsonmappable) |
 
 > **BeforeSave**\<`U`\>(`prevPage`: `undefined` \| [`Page`](types.md#page)\<`T`\>, `nextPage`: `U`): `U`
 
@@ -159,22 +159,22 @@ remote("/posts", {beforeSave})
 
 #### Type Parameters
 
-| Type Parameter |
-| ------ |
-| `U` *extends* [`SaveResponse`](types.md#saveresponse)\<`T`\> \| [`GraftResponse`](types.md#graftresponse)\<`T`\> |
+| Type Parameter                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------- |
+| `U` _extends_ [`SaveResponse`](types.md#saveresponse)\<`T`\> \| [`GraftResponse`](types.md#graftresponse)\<`T`\> |
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter  | Type                                          |
+| ---------- | --------------------------------------------- |
 | `prevPage` | `undefined` \| [`Page`](types.md#page)\<`T`\> |
-| `nextPage` | `U` |
+| `nextPage` | `U`                                           |
 
 #### Returns
 
 `U`
 
-***
+---
 
 <a id="applicationremote"></a>
 
@@ -203,16 +203,16 @@ unloading."
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `input` | `string` |
+| Parameter  | Type                                                                                                   |
+| ---------- | ------------------------------------------------------------------------------------------------------ |
+| `input`    | `string`                                                                                               |
 | `options?` | [`RemoteProps`](#remoteprops) & \{ `dataset?`: \{\[`name`: `string`\]: `undefined` \| `string`; \}; \} |
 
 #### Returns
 
 `Promise`\<[`Result`](types.md#result) \| [`ErrorResult`](types.md#errorresult)\>
 
-***
+---
 
 <a id="applicationvisit"></a>
 
@@ -241,9 +241,9 @@ never-settling promise rather than `undefined` so the chain reflects
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `input` | `string` |
+| Parameter  | Type                                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------------------- |
+| `input`    | `string`                                                                                             |
 | `options?` | [`VisitProps`](#visitprops) & \{ `dataset?`: \{\[`name`: `string`\]: `undefined` \| `string`; \}; \} |
 
 #### Returns

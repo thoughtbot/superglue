@@ -41,7 +41,7 @@ root.render(
 ## `page_to_page_mapping.js`
 
 !!! info
-    Stop by the [tutorial] to learn how to work with this file.
+Stop by the [tutorial] to learn how to work with this file.
 
     This step can be entirely optional if you installed superglue with bun, rollup, or webpack support.
     If you prefer vite, there's also a [recipe](recipes/vite.md) for more information.
@@ -73,7 +73,7 @@ and the UJS attributes [data-sg-visit] and [data-sg-remote].
 The pattern looks like this:
 
 ```js
-export const buildVisitAndRemote = ({navigateTo, visit, remote}) => {
+export const buildVisitAndRemote = ({ navigateTo, visit, remote }) => {
   // Your custom logic here
   return { visit: appVisit, remote: appRemote }
 }
@@ -84,9 +84,9 @@ first custom UJS attribute: data-sg-replace, which allows a link click or form
 submission to replace history instead of the usual push.
 
 ```js
-  const navigationAction = !!dataset?.sgReplace
-    ? "replace"
-    : result.navigationAction
+const navigationAction = !!dataset?.sgReplace
+  ? 'replace'
+  : result.navigationAction
 ```
 
 This is where you'll add [progress bars], error handling, custom UJS attributes,

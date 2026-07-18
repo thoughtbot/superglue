@@ -13,11 +13,11 @@ project codebases, issue trackers, chat-rooms, and mailing lists.
 ### Opening a PR
 
 1. Fork the repo,
-2. Navigate to the `superglue` directory,
 2. Run `npm install` to install the base dependencies,
 3. Run the test suite: `npm run test`,
-4. Make your changes,
-5. Push your fork and open a pull request.
+4. Run the linter: `npm run lint`,
+5. Make your changes,
+6. Push your fork and open a pull request.
 
 A good PR will solve the smallest problem it possibly can and have good test
 coverage.

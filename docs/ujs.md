@@ -32,15 +32,14 @@ Use `data-sg-visit` when you want to navigate to the next page and update the
 address bar without reloading.
 
 ```javascript
-<a href='/posts/new' data-sg-visit />
+<a href="/posts/new" data-sg-visit />
 ```
 
 In the above example, when the link is clicked, Superglue will intercept the click,
 make a request for `/posts/new.json`, swap your page component, and pass the payload.
 
-
 !!! note
-    You are not able to specify the HTTP method used in a UJS link.
+You are not able to specify the HTTP method used in a UJS link.
 
     This is intentional. If you want to create a link that can support `POST`,
     `PUT`, `DELETE` methods, create a form component that looks like a link and
@@ -51,7 +50,7 @@ make a request for `/posts/new.json`, swap your page component, and pass the pay
 You can also use `data-sg-visit` on forms:
 
 ```javascript
-<form action='/some_url' data-sg-visit />
+<form action="/some_url" data-sg-visit />
 ```
 
 ### `data-sg-remote`
@@ -60,9 +59,9 @@ Use `data-sg-remote` when you want to update parts of the **current page** witho
 reloading the screen.
 
 !!! tip "Differences from `remote`"
-    The only difference between `data-sg-remote` and `remote`, is that
-    `data-sg-remote` passes the current page as the target `pageKey` of
-    `remote`.
+The only difference between `data-sg-remote` and `remote`, is that
+`data-sg-remote` passes the current page as the target `pageKey` of
+`remote`.
 
     `remote`, normally would work like a background `visit` that doesn't change
     the url and will use the URL of the response to save the payload.
@@ -94,7 +93,6 @@ The [dataset] of the element enabled with `data-sg-visit` or `data-sg-remote` is
 passed to your [application_visit.js]. You can add your own options to control the
 behavior of the UJS helpers. For example, if you want to selectively show a
 [progress bar] on some links.
-
 
 ### `data-sg-replace`
 

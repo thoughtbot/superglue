@@ -13,10 +13,10 @@ yarn add react-infinite-scroll-hook
 And continue off from our [pagination] recipe.
 
 !!! tip
-    We'll use the `beforeSave` callback to modify the payload before superglue
-    saves it to the store. This callback is an option for both `visit` and
-    `remote` functions. See the
-    [beforeSave reference](../reference/types.requests.md#beforesave-2) for more details.
+We'll use the `beforeSave` callback to modify the payload before superglue
+saves it to the store. This callback is an option for both `visit` and
+`remote` functions. See the
+[beforeSave reference](../reference/types.requests.md#beforesave-2) for more details.
 
 ```diff
 // app/views/posts/index.js

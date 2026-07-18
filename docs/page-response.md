@@ -1,6 +1,6 @@
 # The `PageResponse`
 
-Superglue JSON responses come in 4 varieties. 
+Superglue JSON responses come in 4 varieties.
 
 - `SaveResponse` The main response type used to persist the page state
 - `GraftResponse` Used by [digging](./digging.md) to update an existing page
@@ -34,9 +34,11 @@ used Superglue's generators, this would be all set for you in
 ```
 
 ### `data`
+
 Your page's content. What you create with `index.json.props`, `show.json.props`, etc.
 
 ### `componentIdentifier`
+
 A `string` to instruct Superglue which component to render. The generated
 `application.json.props` will set this to the `active_template_virtual_path`
 (added by [props_template]), but you can customize this to fit your needs.
@@ -55,46 +57,54 @@ You can control which `componentIdentifier` will render which component in the
 </div>
 
 ### `defers`
+
 The parts of your page that have been marked for [deferment](./deferments.md).
 
 ### `assets`
+
 An `array` of asset fingerprint `string`s. Used by Superglue to detect the need to
 refresh the browser due to new assets. When Superglue detects that the assets have
 changed, it automatically performs a full page reload to retrieve the new assets.
 
 ### `csrfToken`
+
 The authenticity token that Superglue will use for non-GET request made by using
 `visit` or `remote` thunks. This includes forms that have the `data-sg-visit`
-or `data-sg-remote` attribute. 
+or `data-sg-remote` attribute.
 
 !!! tip
-    Form's build with [form_props](./forms.md) will also have their own CSRF_TOKEN
-    generated
+Form's build with [form_props](./forms.md) will also have their own CSRF_TOKEN
+generated
 
 ### `action`
+
 Set to `savePage` for `SaveResponse`
 
 ### `renderedAt`
+
 An UNIX timestamp representing the time the response was rendered.
 
 ### `fragments`
+
 An `array` of paths identifying the location of all fragments in `data`. In
 `application.json.props` this is set to `json.fragments!`.
 
 ### `restoreStrategy`
+
 By specifying the restore strategy used (`fromCacheOnly`, `revisitOnly`, or
 `fromCacheAndRevisitInBackground`), you can control what superglue does when
 encountering the page again when pressing the back or forward browser navigation
 buttons.
 
-  - `fromCacheAndRevisitInBackground` will transition to the cached page, then
+- `fromCacheAndRevisitInBackground` will transition to the cached page, then
   issue a visit in the background, redirecting and replacing history if needed.
   This is the option set in `application.json.props` when using the generators.
-  - `revisitOnly` will always issue a visit request in the background before
-  - `fromCacheOnly` will only restore the page from cache
+- `revisitOnly` will always issue a visit request in the background before
+- `fromCacheOnly` will only restore the page from cache
   transitioning
 
 ### `flash`
+
 A key-value object representing Rails flash messages. Superglue automatically
 manages the flash state — clearing it before each visit and merging new flashes
 when a page response is received. Access it using the `useFlash` hook.
@@ -110,35 +120,41 @@ A response for when [digging](./digging.md) is used, i.e, `props_at` is part of 
 [renderedAt](#renderedat)
 
 ### `data`
+
 The found content node from [digging](./digging.md)
 
 ### `path`
-`path` is a keypath to the requested node. It would typically look like this: `data.metrics.pageVisits`. Superglue uses this path to immutably graft a node from the response to the client-side store. 
+
+`path` is a keypath to the requested node. It would typically look like this: `data.metrics.pageVisits`. Superglue uses this path to immutably graft a node from the response to the client-side store.
 
 If a `fragment` is encountered while digging, we reset the path to an empty
 array and populate the `fragmentContext` before continuing.
 
 ### `fragmentContext`
+
 Ultimately, the last id of the fragment that we encountered while digging for
 content. This is because [fragments](./fragments.md) are denormalized.
 
 ### `action`
+
 `action` would be set to `graft` for `GraftResponse`
 
 ## `StreamResponse`
+
 Use for [Super Turbo Stream](./super-turbo-streams.md#stream-responses) responses to update [fragments](./fragments.md). The response is made of the following attributes:
 
 !!! note
-   [Deferments](./deferments.md) are disabled for StreamResponse and StreamMessage
+[Deferments](./deferments.md) are disabled for StreamResponse and StreamMessage
 
 [assets](#assets), [csrfToken](#csrftoken), [fragments](#fragments),
 [renderedAt](#renderedat)
 
-
 ### `data`
+
 An array of [StreamMessage](#streammessage)s to be processed one at a time.
 
 ### `action`
+
 `action` would be set to `handleStreamResponse` for `StreamResponse`
 
 ## `StreamMessage`
@@ -146,9 +162,11 @@ An array of [StreamMessage](#streammessage)s to be processed one at a time.
 The format used for [Super Turbo Stream](./super-turbo-streams.md)s.
 
 ### `data`
+
 The content rendered by a partial.
 
 ### `fragmentIds`
+
 A list of `fragmentIds` that the `data` targets.
 
 ### `handler`

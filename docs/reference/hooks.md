@@ -14,7 +14,7 @@ A lightweight hook that grabs the superglue state from the store.
 
 [`SuperglueState`](types.md#supergluestate)
 
-***
+---
 
 <a id="useflash"></a>
 
@@ -35,15 +35,15 @@ const flash = useFlash<{ notice?: string; alert?: string }>()
 
 #### Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` | [`FlashState`](types.md#flashstate) |
+| Type Parameter | Default type                        |
+| -------------- | ----------------------------------- |
+| `T`            | [`FlashState`](types.md#flashstate) |
 
 #### Returns
 
 `T`
 
-***
+---
 
 <a id="usesetflash"></a>
 
@@ -68,10 +68,10 @@ clearFlash() // clears all
 
 \{ `setFlash`: (`flash`: [`FlashState`](types.md#flashstate)) => `void`; `clearFlash`: (`key?`: `string`) => `void`; \}
 
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| `setFlash()` | (`flash`: [`FlashState`](types.md#flashstate)) => `void` | [hooks/index.ts:64](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/index.ts#L64) |
-| `clearFlash()` | (`key?`: `string`) => `void` | [hooks/index.ts:64](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/index.ts#L64) |
+| Name           | Type                                                     | Defined in                                                                                                                                  |
+| -------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `setFlash()`   | (`flash`: [`FlashState`](types.md#flashstate)) => `void` | [hooks/index.ts:64](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/index.ts#L64) |
+| `clearFlash()` | (`key?`: `string`) => `void`                             | [hooks/index.ts:64](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/index.ts#L64) |
 
 ## References
 
@@ -81,7 +81,7 @@ clearFlash() // clears all
 
 Re-exports [useContent](hooks.useContent.md#usecontent)
 
-***
+---
 
 <a id="unproxy"></a>
 
@@ -89,7 +89,7 @@ Re-exports [useContent](hooks.useContent.md#usecontent)
 
 Re-exports [unproxy](hooks.useContent.md#unproxy)
 
-***
+---
 
 <a id="usefragment"></a>
 
@@ -97,7 +97,7 @@ Re-exports [unproxy](hooks.useContent.md#unproxy)
 
 Re-exports [useFragment](index.md#usefragment)
 
-***
+---
 
 <a id="tofragmentref"></a>
 
@@ -105,7 +105,7 @@ Re-exports [useFragment](index.md#usefragment)
 
 Re-exports [toFragmentRef](index.md#tofragmentref)
 
-***
+---
 
 <a id="useupdatefragment"></a>
 
@@ -113,7 +113,7 @@ Re-exports [toFragmentRef](index.md#tofragmentref)
 
 Re-exports [useUpdateFragment](hooks.useUpdateFragment.md#useupdatefragment)
 
-***
+---
 
 <a id="useupdatecontent"></a>
 
@@ -121,7 +121,7 @@ Re-exports [useUpdateFragment](hooks.useUpdateFragment.md#useupdatefragment)
 
 Re-exports [useUpdateContent](index.md#useupdatecontent)
 
-***
+---
 
 <a id="usestreamsource"></a>
 

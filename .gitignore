@@ -1,15 +1,35 @@
-*.lock
-node_modules
-dist
-pkg/
-vendor/bundle
-test/log/
-tmp/
-.byebug_history
-log
-blade.yml
-breezy/build/**/*.js
-*.gem
-props_template/performance/**/*.png
-testapp/
+# Dependencies
+node_modules/
 
+# Build output
+dist/
+
+# Coverage
+coverage/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Environment
+.env
+
+# OS
+.DS_Store
+tmp/
+
+# Editor
+.eslintcache
+
+# Package
+*.tgz
+package-lock.json
+
+# Documentation site
+site/

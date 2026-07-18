@@ -7,7 +7,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
@@ -20,11 +20,11 @@ jobs:
           node-version: 18
 
       - name: npm install
-        working-directory: ./superglue
+        working-directory: .
         run: npm install
 
       - name: Build typedoc
-        working-directory: ./superglue
+        working-directory: .
         run: npx typedoc
 
       - uses: actions/setup-python@v5

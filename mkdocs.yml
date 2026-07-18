@@ -95,58 +95,58 @@ not_in_nav: |
 
 nav:
   - Home:
-    - Overview: index.md
-    - Installation: installation.md
-    - Tutorial: tutorial.md
-    - Demo: demo.md
-    - Configuration: configuration.md
-    - Primitives: primitives.md
+      - Overview: index.md
+      - Installation: installation.md
+      - Tutorial: tutorial.md
+      - Demo: demo.md
+      - Configuration: configuration.md
+      - Primitives: primitives.md
 
-    - Building:
-      - Shaping state: shaping.md
-      - Rails Forms / React UI kits: forms.md
-      - Shared data: shared-data.md
-      - Fragments: fragments.md
-      - Working with types: runtime-types.md
+      - Building:
+          - Shaping state: shaping.md
+          - Rails Forms / React UI kits: forms.md
+          - Shared data: shared-data.md
+          - Fragments: fragments.md
+          - Working with types: runtime-types.md
 
-    - Updating:
-      - Super Turbo Streams: super-turbo-streams.md
-      - Client-Side updates: client-updates.md
-      - Digging: digging.md
-      - Deferments: deferments.md
-    
-    - Navigating:
-      - The return of Rails UJS: ujs.md
-      - Advanced requests: requests.md
-      - navigateTo: navigation-context.md
+      - Updating:
+          - Super Turbo Streams: super-turbo-streams.md
+          - Client-Side updates: client-updates.md
+          - Digging: digging.md
+          - Deferments: deferments.md
 
-    - Performance : performance.md
-    - Security: securing.md
+      - Navigating:
+          - The return of Rails UJS: ujs.md
+          - Advanced requests: requests.md
+          - navigateTo: navigation-context.md
 
-    - Concepts:
-      - Page: page-response.md
-      - Store shape: redux-state-shape.md
+      - Performance: performance.md
+      - Security: securing.md
+
+      - Concepts:
+          - Page: page-response.md
+          - Store shape: redux-state-shape.md
 
   - Recipes:
-    - Modals: recipes/modals.md
-    - Server Side Rendering: recipes/ssr.md
-    - Paginate without reloading: recipes/spa-pagination.md
-    - Infinite Scroll: recipes/infinite-scroll.md
-    - Progress Bars: recipes/progress-bar.md
-    - Turbo Nav: recipes/turbo.md
-    - Vite: recipes/vite.md
+      - Modals: recipes/modals.md
+      - Server Side Rendering: recipes/ssr.md
+      - Paginate without reloading: recipes/spa-pagination.md
+      - Infinite Scroll: recipes/infinite-scroll.md
+      - Progress Bars: recipes/progress-bar.md
+      - Turbo Nav: recipes/turbo.md
+      - Vite: recipes/vite.md
 
   - Reference:
-    - Rails Utilities: rails-utils.md
-    - Hooks: reference/hooks.md
-    - Navigation: reference/components.Navigation.md
-    - Superglue: reference/index.md
-    - Types: reference/types.md
-    - Requests: reference/types.requests.md
-    - Actions: reference/types.actions.md
-  
+      - Rails Utilities: rails-utils.md
+      - Hooks: reference/hooks.md
+      - Navigation: reference/components.Navigation.md
+      - Superglue: reference/index.md
+      - Types: reference/types.md
+      - Requests: reference/types.requests.md
+      - Actions: reference/types.actions.md
+
   - <span class="outside-project">props_template</span>:
-    - Overview: props-template.md
-  
+      - Overview: props-template.md
+
   - <span class="outside-project">form_props</span>:
-    - Overview: form-props.md
+      - Overview: form-props.md

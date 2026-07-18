@@ -6,9 +6,9 @@ where `useUpdateFragment` and `useUpdateContent` come in.
 
 Common scenarios include:
 
-  - **Optimistic updates** - Update UI immediately, sync with server later
-  - **Form state management** - Handle user input before submission
-  - **UI interactions** - Toggle states, expand/collapse sections
+- **Optimistic updates** - Update UI immediately, sync with server later
+- **Form state management** - Handle user input before submission
+- **UI interactions** - Toggle states, expand/collapse sections
 
 ## useUpdateFragment Hook
 
@@ -29,19 +29,19 @@ function ShoppingCart() {
         id: product.id,
         name: product.name,
         price: product.price,
-        quantity: 1
+        quantity: 1,
       })
       cartDraft.totalCost += product.price
       cartDraft.itemCount += 1
-      })
-    }
+    })
+  }
 
   const cart = content.cart
 
   return (
     <div>
       <h2>Cart ({cart.itemCount} items)</h2>
-      {cart.items.map(item => (
+      {cart.items.map((item) => (
         <CartItem key={item.id} item={item} />
       ))}
       <p>Total: ${cart.totalCost}</p>
@@ -60,7 +60,7 @@ const update = useUpdateFragment()
 
 // Using string ID
 update('userCart', (cartDraft) => {
-cartDraft.totalCost += 10
+  cartDraft.totalCost += 10
 })
 
 // Using fragment reference object
@@ -86,7 +86,7 @@ function PostCard({ postRef }) {
   const markAsRead = () => {
     // postRef is { __id: 'post_123' }
     update(postRef, (postDraft) => {
-        postDraft.read = true
+      postDraft.read = true
     })
   }
 
@@ -103,10 +103,9 @@ receives an Immer draft:
 const update = useUpdateFragment()
 
 update(toFragmentRef('userCart'), (cartDraft) => {
-  cartDraft.items.push(newItem)        // Direct mutation (safe)
+  cartDraft.items.push(newItem) // Direct mutation (safe)
   cartDraft.totalCost += newItem.price // Direct assignment (safe)
 })
-
 ```
 
 Behind the scenes, Superglue takes the updated draft and uses that for the
@@ -119,7 +118,7 @@ need to update a nested fragment, you can update them using nested `update` call
 
 ```jsx
 import React from 'react'
-import { useContent, useUpdateFragment} from '@thoughtbot/superglue'
+import { useContent, useUpdateFragment } from '@thoughtbot/superglue'
 
 function PostList() {
   const content = useContent()
@@ -130,7 +129,7 @@ function PostList() {
     update(content.posts, (draftList) => {
       // draftList[0] is a fragment reference like { __id: 'post_123' }
       update(draftList[0], (firstPostDraft) => {
-        firstPostDraft.title = "Updated Title"
+        firstPostDraft.title = 'Updated Title'
         firstPostDraft.featured = true
       })
     })
@@ -143,10 +142,8 @@ function PostList() {
       {posts.map((postRef, index) => (
         <PostCard key={index} postRef={postRef} />
       ))}
-      <button onClick={updateFirstPost}>
-        Feature First Post
-      </button>
-      </div>
+      <button onClick={updateFirstPost}>Feature First Post</button>
+    </div>
   )
 }
 ```
@@ -163,7 +160,7 @@ function MyComponent() {
 
   const handleClick = () => {
     updateContent('/posts', (draft) => {
-      draft.title = "Updated Title"
+      draft.title = 'Updated Title'
     })
   }
 
@@ -177,7 +174,12 @@ For optimistic updates, combine client-side updates with server requests:
 
 ```jsx
 import React, { useContext } from 'react'
-import { useContent, useUpdateFragment, toFragmentRef, NavigationContext } from '@thoughtbot/superglue'
+import {
+  useContent,
+  useUpdateFragment,
+  toFragmentRef,
+  NavigationContext,
+} from '@thoughtbot/superglue'
 
 function LikeButton({ postId }) {
   const content = useContent()

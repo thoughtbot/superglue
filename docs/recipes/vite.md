@@ -6,14 +6,13 @@ conveniences that make working with Superglue easier.
 To get started, go ahead and follow the instructions to install
 [vite_rails](https://github.com/ElMassimo/vite_ruby?tab=readme-ov-file#installation-)
 
-
 Next move your `app/javascript/entrypoints/application.jsx` file to
 `app/javascript/entrypoints/application.jsx` and update the references.
 
 !!! info
-    When using Superglue's installation generator, a `app/javascript/application.jsx` gets
-    generated. `vite_rails` expects this to be put in an `entrypoints` folder. If you're installing
-    `vite_rails` after superglue's installation, this is set by `vite_rails` to be `app/javascript/entrypoints`.
+When using Superglue's installation generator, a `app/javascript/application.jsx` gets
+generated. `vite_rails` expects this to be put in an `entrypoints` folder. If you're installing
+`vite_rails` after superglue's installation, this is set by `vite_rails` to be `app/javascript/entrypoints`.
 
 Migrate your `@views`, `@javascript` aliases to `vite.config.mts`
 
@@ -42,22 +41,22 @@ Make sure you're using `vite_javascript_tag` in your layout,
 ```
 
 And finally, one of the more manual process of using superglue is the [manual build]
-of your `page_to_page_mapping.js` file. We can improve the developer experience by 
+of your `page_to_page_mapping.js` file. We can improve the developer experience by
 removing that step by using this snippet:
 
 [manual build]: ../configuration.md
 
 ```javascript
 const pageIdentifierToPageComponent = {}
-const pages = import.meta.glob('../views/**/*.jsx', {eager: true})
+const pages = import.meta.glob('../views/**/*.jsx', { eager: true })
 
 for (const key in pages) {
   if (pages.hasOwnProperty(key)) {
-    const identifier = key.replace("../views/", "").split('.')[0];
+    const identifier = key.replace('../views/', '').split('.')[0]
     if (!pages[key].default) {
       throw new Error(`View ${identifier} did not export default component`)
-    } 
-    pageIdentifierToPageComponent[identifier] = pages[key].default;
+    }
+    pageIdentifierToPageComponent[identifier] = pages[key].default
   }
 }
 

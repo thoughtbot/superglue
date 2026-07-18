@@ -8,8 +8,8 @@ page.
 Lets pretend that we're already able to see a list of posts.
 
 === "`posts_controller.rb`"
-    ```ruby
-    # app/controllers/posts_controller.rb
+
+````ruby # app/controllers/posts_controller.rb
 
     def index
       @posts = Post.all
@@ -17,9 +17,9 @@ Lets pretend that we're already able to see a list of posts.
     ```
 
 === "`index.json.props`"
-    !!! info
-        In this example, we have a `sleep` that we will optimize
-        for later
+!!! info
+In this example, we have a `sleep` that we will optimize
+for later
 
     ```ruby
     # app/views/posts/index.json.props
@@ -41,8 +41,8 @@ Lets pretend that we're already able to see a list of posts.
     ```
 
 === "`index.js`"
-    !!! info
-        Let's assume `Header` is a simple component that exist.
+!!! info
+Let's assume `Header` is a simple component that exist.
 
     ```js
     // app/views/posts/index.js
@@ -80,7 +80,7 @@ Lets also add Kaminari to your gem file
 
 ```terminal
 gem 'kaminari'
-```
+````
 
 and `bundle`
 
@@ -91,15 +91,14 @@ The changes here are almost same with the `.erb` counterpart. We're using
 methods return `nil` if there are no subsequent pages.
 
 !!! info
-    Some [helpers] like `paginate` output HTML instead of
-    JSON, but we can still use more primitives methods.
+Some [helpers] like `paginate` output HTML instead of
+JSON, but we can still use more primitives methods.
 
 [helpers]: https://github.com/kaminari/kaminari#the-paginate-helper-method
 
-
 === "`posts_controller.rb`"
-    ```diff
-    # app/controllers/posts_controller.rb
+
+````diff # app/controllers/posts_controller.rb
 
     def index
       @posts = Post.all
@@ -110,8 +109,7 @@ methods return `nil` if there are no subsequent pages.
     ```
 
 === "`index.json.props`"
-    ```diff
-    # app/views/posts/index.json.props
+```diff # app/views/posts/index.json.props
 
     json.posts do
       json.list do
@@ -128,7 +126,6 @@ methods return `nil` if there are no subsequent pages.
     ```
 
 === "`index.js`"
-
 
     ```diff
     // app/views/posts/index.js
@@ -205,7 +202,7 @@ export default PostIndex = () => {
     </>
   )
 }
-```
+````
 
 ## Optimize!
 
@@ -213,8 +210,8 @@ Let's skip `data.header` when navigating and dig for `data.posts`. For the
 user, only the posts list changes, but the header stays the same.
 
 !!! info
-    In effect, this achieves the same functionality as [Turbo Frames], but
-    Superglue leans more on Unobtrusive Javascript for better ergonomics.
+In effect, this achieves the same functionality as [Turbo Frames], but
+Superglue leans more on Unobtrusive Javascript for better ergonomics.
 
 [Turbo Frames]: https://turbo.hotwired.dev/handbook/frames
 
@@ -223,7 +220,7 @@ user, only the posts list changes, but the header stays the same.
 Recall how [digging] for content works. We'll add a `props_at` that digs for
 the `json.posts` while skipping other content on that page.
 
-  [digging]: ../tutorial.md#digging-with-props_at
+[digging]: ../tutorial.md#digging-with-props_at
 
 ```diff
 # app/views/posts/index.json.props

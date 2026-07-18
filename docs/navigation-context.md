@@ -33,9 +33,8 @@ navigateTo('/posts')
 ```
 
 !!! Note
-    The page must exist in the store, or `navigateTo` will throw a error. Use [copyPage]
-    to prepopulate before navigating.
-
+The page must exist in the store, or `navigateTo` will throw a error. Use [copyPage]
+to prepopulate before navigating.
 
 `navigateTo` is especially useful for optimistic navigation like local facted
 search and works best when combined with `search` and `pageKey` from the same

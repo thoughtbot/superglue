@@ -13,7 +13,7 @@ rails new shopping_list -j esbuild --skip-hotwire
 ```
 
 !!! tip
-    We're using esbuild here, but support for other bundlers is also [available](installation.md). [vite](recipes/vite.md) is also possible.
+We're using esbuild here, but support for other bundlers is also [available](installation.md). [vite](recipes/vite.md) is also possible.
 
 Then follow the [installation](./installation.md) instructions to setup Superglue.
 
@@ -24,13 +24,13 @@ Then follow the [installation](./installation.md) instructions to setup Superglu
 Let's begin by creating our models, then adding routes and controllers.
 
 === "Generate models"
-    ```bash
+`bash
     rails generate model Item name:string completed:boolean
     rails db:migrate
-    ```
+    `
 
 === "`routes.rb`"
-    in `config/routes.rb`
+in `config/routes.rb`
 
     ```ruby
     Rails.application.routes.draw do
@@ -41,7 +41,7 @@ Let's begin by creating our models, then adding routes and controllers.
     ```
 
 === "`shopping_lists_controller.rb`"
-    in `app/controllers/shopping_lists_controller.rb`
+in `app/controllers/shopping_lists_controller.rb`
 
     !!! warning "Don't forget! Enable jsx rendering defaults"
         `use_jsx_rendering_defaults` enables Rails to look for `.jsx` files and
@@ -62,7 +62,7 @@ Let's begin by creating our models, then adding routes and controllers.
     ```
 
 === "`items_controller.rb`"
-    in `app/controllers/items_controller.rb`
+in `app/controllers/items_controller.rb`
 
     ```ruby
     class ItemsController < ApplicationController
@@ -77,7 +77,7 @@ Let's begin by creating our models, then adding routes and controllers.
 Next, let's add the views for our shopping list.
 
 === "`show.json.props`"
-    in `app/views/shopping_lists/show.json.props`
+in `app/views/shopping_lists/show.json.props`
 
     ```ruby
     json.header do
@@ -87,7 +87,7 @@ Next, let's add the views for our shopping list.
     json.items do
       json.array! @items do |item|
         json.id item.id
-        json.name item.name  
+        json.name item.name
         json.completed item.completed
         json.detailPath item_path(item)
       end
@@ -95,7 +95,7 @@ Next, let's add the views for our shopping list.
     ```
 
 === "`show.jsx`"
-    in `app/views/shopping_lists/show.jsx`
+in `app/views/shopping_lists/show.jsx`
 
     ```jsx
     import React from 'react'
@@ -107,14 +107,14 @@ Next, let's add the views for our shopping list.
       return (
         <div>
           <h1>{header.title}</h1>
-          
+
           <ul>
             {items.map(item => (
               <li key={item.id}>
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={item.completed}
-                  readOnly 
+                  readOnly
                 />
                 {item.name}
                 <a href={item.detailPath}>Details</a>
@@ -127,7 +127,7 @@ Next, let's add the views for our shopping list.
     ```
 
 === "`items/show.json.props`"
-    in `app/views/items/show.json.props`
+in `app/views/items/show.json.props`
 
     ```ruby
     json.itemDetails do
@@ -140,7 +140,7 @@ Next, let's add the views for our shopping list.
     ```
 
 === "`items/show.jsx`"
-    in `app/views/items/show.jsx`
+in `app/views/items/show.jsx`
 
     ```jsx
     import React from 'react'
@@ -165,8 +165,8 @@ Next, let's add the views for our shopping list.
 Update your page mapping to include both components:
 
 !!! info
-    This step can be entirely optional if you installed superglue with bun, rollup, or webpack support.
-    If you prefer vite, there's also a [recipe](recipes/vite.md) for more information.
+This step can be entirely optional if you installed superglue with bun, rollup, or webpack support.
+If you prefer vite, there's also a [recipe](recipes/vite.md) for more information.
 
 ```js
 // app/javascript/page_to_page_mapping.js
@@ -207,7 +207,7 @@ Now let's add a form to create new items. Superglue provides `form_props` to
 transform Rails form helpers into React-compatible props:
 
 === "`show.json.props`"
-    Update `app/views/shopping_lists/show.json.props`
+Update `app/views/shopping_lists/show.json.props`
 
     ```diff
       json.header do
@@ -217,7 +217,7 @@ transform Rails form helpers into React-compatible props:
     json.items do
       json.array! @items do |item|
         json.id item.id
-        json.name item.name  
+        json.name item.name
         json.completed item.completed
         json.detailPath item_path(item)
       end
@@ -232,7 +232,7 @@ transform Rails form helpers into React-compatible props:
     ```
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx`
+Update `app/views/shopping_lists/show.jsx`
 
     !!! note
         The [installation](./installation.md) will also add vanilla form input components from [candy_wrapper](https://github.com/thoughtbot/candy_wrapper/tree/main/wrappers/ts/vanilla)
@@ -250,14 +250,14 @@ transform Rails form helpers into React-compatible props:
         return (
           <div>
             <h1>{header.title}</h1>
-            
+
             <ul>
               {items.map(item => (
                 <li key={item.id}>
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     checked={item.completed}
-                    readOnly 
+                    readOnly
                   />
                   {item.name}
                   <a href={item.detailPath}>Details</a>
@@ -273,8 +273,9 @@ transform Rails form helpers into React-compatible props:
         )
       }
     ```
+
 === "`routes.rb`"
-    in `config/routes.rb`
+in `config/routes.rb`
 
     ```diff
     Rails.application.routes.draw do
@@ -286,17 +287,17 @@ transform Rails form helpers into React-compatible props:
     ```
 
 === "`items_controller.rb`"
-    Update `app/controllers/items_controller.rb` to handle form submissions
+Update `app/controllers/items_controller.rb` to handle form submissions
 
     ```diff
     class ItemsController < ApplicationController
       def show
         @item = Item.find(params[:id])
       end
-    
+
     + def create
     +   @item = Item.new(item_params.merge(completed: false))
-    +   
+    +
     +   if @item.save
     +     redirect_to root_path, notice: 'Item added successfully!'
     +   else
@@ -313,10 +314,11 @@ transform Rails form helpers into React-compatible props:
     ```
 
 ### Add flash
+
 The `create` action redirects with a notice. Lets make sure these show up in our react app.
 
 !!! tip
-    The flash is built into Superglue and accessible via the `useFlash` hook.
+The flash is built into Superglue and accessible via the `useFlash` hook.
 
 ```diff
   import React from 'react'
@@ -334,14 +336,14 @@ The `create` action redirects with a notice. Lets make sure these show up in our
         <h1>{header.title}</h1>
 +       {flash.notice && <p>{flash.notice}</p>}
 +       {flash.alert && <p>{flash.alert}</p>}
-        
+
         <ul>
           {items.map(item => (
             <li key={item.id}>
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 checked={item.completed}
-                readOnly 
+                readOnly
               />
               {item.name}
               <a href={item.detailPath}>Details</a>
@@ -360,10 +362,10 @@ The `create` action redirects with a notice. Lets make sure these show up in our
 
 ### Add update
 
-Now let's add a form to toggle `completed` on existing items. 
+Now let's add a form to toggle `completed` on existing items.
 
 === "`show.json.props`"
-    Update `app/views/shopping_lists/show.json.props`
+Update `app/views/shopping_lists/show.json.props`
 
     ```diff
       json.header do
@@ -373,7 +375,7 @@ Now let's add a form to toggle `completed` on existing items.
       json.items do
         json.array! @items do |item|
           json.id item.id
-          json.name item.name  
+          json.name item.name
           json.completed item.completed
           json.detailPath item_path(item)
     +     json.toggleForm do
@@ -393,7 +395,7 @@ Now let's add a form to toggle `completed` on existing items.
     ```
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx`
+Update `app/views/shopping_lists/show.jsx`
 
     ```diff
       import React from 'react'
@@ -409,16 +411,16 @@ Now let's add a form to toggle `completed` on existing items.
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>} 
-            
+            {flash.notice && <p>{flash.notice}</p>}
+            {flash.alert && <p>{flash.alert}</p>}
+
             <ul>
               {items.map(item => (
                 <li key={item.id}>
-    -             <input 
-    -               type="checkbox" 
+    -             <input
+    -               type="checkbox"
     -               checked={item.completed}
-    -               readOnly 
+    -               readOnly
     -             />
     +             {item.completed ? "✅"  : "❌"}
     +             <Form {...item.toggleForm.form} extras={item.toggleForm.extras}>
@@ -438,8 +440,9 @@ Now let's add a form to toggle `completed` on existing items.
         )
       }
     ```
+
 === "`routes.rb`"
-    in `config/routes.rb`
+in `config/routes.rb`
 
     ```diff
     Rails.application.routes.draw do
@@ -451,32 +454,32 @@ Now let's add a form to toggle `completed` on existing items.
     ```
 
 === "`items_controller.rb`"
-    Update `app/controllers/items_controller.rb` to handle toggle submissions
+Update `app/controllers/items_controller.rb` to handle toggle submissions
 
     ```diff
     class ItemsController < ApplicationController
       def show
         @item = Item.find(params[:id])
       end
-    
+
       def create
         @item = Item.new(item_params.merge(completed: false))
-        
+
         if @item.save
           redirect_to root_path, notice: 'Item added successfully!'
         else
           redirect_to root_path, alert: 'Failed to add item'
         end
       end
-    
+
     + def update
     +   @item = Item.find(params[:id])
     +   @item.update!(completed: !@item.completed)
     +   redirect_to root_path
     + end
-     
+
       private
-     
+
       def item_params
         params.require(:item).permit(:name)
       end
@@ -484,13 +487,13 @@ Now let's add a form to toggle `completed` on existing items.
     ```
 
 ## UJS Power
-  
+
 What we've built so far is a multi-page application backed by classic Rails
 conventions with a touch of React. Lets progressively add SPA navigation to
 forms and links by bringing back a Rails favorite: [Unobtrusive Javascript](ujs.md)
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx`
+Update `app/views/shopping_lists/show.jsx`
 
     !!! Note
         Setting a HTTP method like `put` on a `<a>` tag is not supported with
@@ -512,8 +515,8 @@ forms and links by bringing back a Rails favorite: [Unobtrusive Javascript](ujs.
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>}  
+            {flash.notice && <p>{flash.notice}</p>}
+            {flash.alert && <p>{flash.alert}</p>}
 
             <ul>
               {items.map(item => (
@@ -541,7 +544,7 @@ forms and links by bringing back a Rails favorite: [Unobtrusive Javascript](ujs.
     ```
 
 === "`items/show.jsx`"
-    Update `app/views/items/show.jsx`
+Update `app/views/items/show.jsx`
 
     ```diff
       import React from 'react'
@@ -574,7 +577,7 @@ In practice, not all applications are as performant as this one. Let's simulate
 a slow running operation:
 
 === "`show.json.props`"
-    Update `app/views/shopping_lists/show.json.props`
+Update `app/views/shopping_lists/show.json.props`
 
     ```diff
       json.header do
@@ -584,7 +587,7 @@ a slow running operation:
       json.items do
         json.array! @items do |item|
           json.id item.id
-          json.name item.name  
+          json.name item.name
           json.completed item.completed
           json.detailPath item_path(item)
           json.toggleForm do
@@ -611,9 +614,9 @@ a slow running operation:
     ```
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to display the cost
+Update `app/views/shopping_lists/show.jsx` to display the cost
 
-    ```diff 
+    ```diff
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
@@ -628,14 +631,14 @@ a slow running operation:
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>} 
+            {flash.notice && <p>{flash.notice}</p>}
+            {flash.alert && <p>{flash.alert}</p>}
 
     +       <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
     +         <h3>Total Cost: {totalCost.amount}</h3>
     +         <small>{totalCost.message}</small>
     +       </div>
-    +       
+    +
             <ul>
               {items.map(item => (
                 <li key={item.id}>
@@ -663,10 +666,10 @@ Now your page takes 3 seconds to load! This is exactly the problem [defer](./def
 ## `defer: auto`
 
 Let's fix the performance issue with `defer: :auto`, which allows us to [skip
-blocks](./deferments.md#defer-auto) and automatically fetch it later. 
+blocks](./deferments.md#defer-auto) and automatically fetch it later.
 
 === "`show.json.props`"
-    Update `app/views/shopping_lists/show.json.props`
+Update `app/views/shopping_lists/show.json.props`
 
     ```diff
       json.header do
@@ -676,7 +679,7 @@ blocks](./deferments.md#defer-auto) and automatically fetch it later.
       json.items do
         json.array! @items do |item|
           json.id item.id
-          json.name item.name  
+          json.name item.name
           json.completed item.completed
           json.detailPath item_path(item)
           json.toggleForm do
@@ -706,10 +709,10 @@ blocks](./deferments.md#defer-auto) and automatically fetch it later.
 Now reload the page, and watch it instantly load with "Calculating...". Wait another 3 seconds and watch real cost appears automatically!
 
 !!! tip
-    You can defer any deeply nested child node and nest deferments. For example:
+You can defer any deeply nested child node and nest deferments. For example:
 
     ```ruby
-    json.metrics do 
+    json.metrics do
       json.visits(defer: :auto) do
         json.total(defer: :auto) do
         end
@@ -718,12 +721,11 @@ Now reload the page, and watch it instantly load with "Calculating...". Wait ano
       end
     end
     ```
-    
+
     Read more about this in [deferments](./deferments.md)
 
-
 !!! tip
-    [There is also](./deferments.md#defer-manual) a `defer: :manual`. Its for cases where we want to be explicit when the deferred content loads. This is useful for modals and tabs.
+[There is also](./deferments.md#defer-manual) a `defer: :manual`. Its for cases where we want to be explicit when the deferred content loads. This is useful for modals and tabs.
 
 **What happens behind the scenes:**
 
@@ -746,20 +748,20 @@ use the same `props_at` pattern with [Unobtrusive Javascript](./ujs.md) via
 Here's how reloading a part of the screen would look like:
 
 === "Manual refresh button"
-    ```jsx
+`jsx
     <button>
       <a href="/shopping_list?props_at=data.totalCost" data-sg-remote>
         Refresh Cost
       </a>
     </button>
-    ```
+    `
 
 === "Update just the items"
-    ```jsx
+`jsx
     <a href="/shopping_list?props_at=data.items" data-sg-remote>
       Refresh List
     </a>
-    ```
+    `
 
 **The power of props_at**: In both cases, we are selectively choosing a block of
 state to fetch from your `props`. This helps us update any part of your page
@@ -774,7 +776,7 @@ lets start with Super Turbo Streaming responses to surgically update
 our list.
 
 === "Update templates with fragments"
-    Update `app/views/shopping_lists/show.json.props` to add fragment IDs:
+Update `app/views/shopping_lists/show.json.props` to add fragment IDs:
 
     !!! tip
         This step declares a fragment with an id of `shopping_list` that we
@@ -789,7 +791,7 @@ our list.
     - json.items do
     -   json.array! @items do |item|
     -     json.id item.id
-    -     json.name item.name  
+    -     json.name item.name
     -     json.completed item.completed
     -     json.detailPath item_path(item)
     -     json.toggleForm do
@@ -804,27 +806,27 @@ our list.
     ```
 
     Create `app/views/shopping_lists/_item_list.json.props`:
-    
+
     !!! tip
         This step declares `n` fragments, 1 for each item in `@items` with
         an id that looks like `item_1`, `item_2`, etc.
 
     ```ruby
     json.array!(
-      @items, 
+      @items,
       partial: ['item', fragment: ->(item){"item_#{item.id}"}]
       ) do |item|
     end
     ```
-    
+
     Create `app/views/shopping_lists/_item.json.props`:
-    
+
     !!! tip
         This step creates the content of the item fragments.
 
     ```ruby
     json.id item.id
-    json.name item.name  
+    json.name item.name
     json.completed item.completed
     json.detailPath item_path(item)
     json.toggleForm do
@@ -834,12 +836,11 @@ our list.
     end
     ```
 
-   
 === "`items_controller.rb`"
-    !!! tip
-        Using fragments [denormalizes](./fragments.md#denormalization) the
-        state, which gets lazily re-normalized with [useContent](./fragments.md#normalization). Before we update the
-        controller, go ahead and reload the page. Everything should still work. 
+!!! tip
+Using fragments [denormalizes](./fragments.md#denormalization) the
+state, which gets lazily re-normalized with [useContent](./fragments.md#normalization). Before we update the
+controller, go ahead and reload the page. Everything should still work.
 
     Update `app/controllers/items_controller.rb` for streaming responses
 
@@ -883,7 +884,7 @@ our list.
     ```
 
 === "`create.json.props`"
-    Create `app/views/items/create.json.props`
+Create `app/views/items/create.json.props`
 
     !!! tip
         The below will create a streaming response that will save the content as
@@ -891,7 +892,7 @@ our list.
 
     ```ruby
     broadcast_append_props(
-      model: @item, 
+      model: @item,
       save_as: "item_#{@item.id}",
       target: "shopping_list",
       partial: "shopping_lists/item"
@@ -899,8 +900,8 @@ our list.
     ```
 
 === "`update.json.props`"
-    Create `app/views/items/update.json.props`
-    
+Create `app/views/items/update.json.props`
+
     !!! tip
         The below will create a streaming response that will save the content as
         fragment `item_1` and override any existing fragment with that id.
@@ -908,7 +909,7 @@ our list.
     ```ruby
     # This will update the item for all connected clients
     broadcast_update_props(
-      model: @item, 
+      model: @item,
       target: "item_#{@item.id}",
       partial: "shopping_lists/item",
     )
@@ -919,7 +920,7 @@ our list.
 Now let's make this truly collaborative. Let's use Super Turbo Streams to update all connected users.
 
 === "Update templates with fragments"
-    Update `app/views/shopping_lists/show.json.props` to create ActionCable subscription props:
+Update `app/views/shopping_lists/show.json.props` to create ActionCable subscription props:
 
     ```diff
       json.header do
@@ -928,7 +929,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
 
     + # Set up streaming subscription
     + json.streamFromShopping stream_from_props("shopping")
-     
+
       json.items(partial: ["item_list", fragment: "shopping_list"]) do
       end
 
@@ -936,7 +937,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
     ```
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to subscribe using those props.
+Update `app/views/shopping_lists/show.jsx` to subscribe using those props.
 
     ```diff
       import React from 'react'
@@ -949,15 +950,15 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
     +   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
         const { form, extras, inputs } = newItemForm
         const flash = useFlash()
-        
+
     +   // Subscribe to real-time updates
     +   const { connected } = useStreamSource(streamFromShopping)
 
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>}  
+            {flash.notice && <p>{flash.notice}</p>}
+            {flash.alert && <p>{flash.alert}</p>}
 
             <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
               <h3>Total Cost: {totalCost.amount}</h3>
@@ -966,7 +967,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
     +           {connected ? '🟢 Live Updates' : '🔴 Connecting...'}
     +         </div>
             </div>
-            
+
             <ul>
               {items.map(item => (
                 <li key={item.id}>
@@ -990,7 +991,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
     ```
 
 === "`item.rb`"
-    Add the `Broadcastable` module to the model.
+Add the `Broadcastable` module to the model.
 
     ```diff
     class Item < ApplicationRecord
@@ -999,7 +1000,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
     ```
 
 === "`items_controller.rb`"
-    And broadcast it from the controller.
+And broadcast it from the controller.
 
     ```diff
     class ItemsController < ApplicationController
@@ -1009,7 +1010,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
 
       def create
         @item = Item.new(item_params.merge(completed: false))
-        
+
         if @item.save
     +      @item.broadcast_append_later_to(
     +        "shopping",
@@ -1064,7 +1065,7 @@ When working with React, it's ideal to minimize re-renders - if one part of the 
 Let's optimize our app:
 
 === "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to use fragment references
+Update `app/views/shopping_lists/show.jsx` to use fragment references
 
     ```diff
       import React from 'react'
@@ -1080,20 +1081,20 @@ Let's optimize our app:
     +   const { header, newItemForm, totalCost, streamFromShopping } = content
         const { form, extras, inputs } = newItemForm
         const flash = useFlash()
-        
+
         // Subscribe to real-time updates
         const { connected } = useStreamSource(streamFromShopping)
-    +   
-    +   // Get the raw content and pass fragment reference for items 
+    +
+    +   // Get the raw content and pass fragment reference for items
     +   // to prevent parent re-renders
     +   const itemsRef = unproxy(content).items
 
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>} 
-            
+            {flash.notice && <p>{flash.notice}</p>}
+            {flash.alert && <p>{flash.alert}</p>}
+
             <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
               <h3>Total Cost: {totalCost.amount}</h3>
               <small>{totalCost.message}</small>
@@ -1101,7 +1102,7 @@ Let's optimize our app:
                 {connected ? '🟢 Live Updates' : '🔴 Connecting...'}
               </div>
             </div>
-            
+
     -       <ul>
     -         {items.map(item => (
     -           <li key={item.id}>
@@ -1126,7 +1127,7 @@ Let's optimize our app:
     ```
 
 === "Component files"
-    Create `app/javascript/components/ItemsList.jsx`
+Create `app/javascript/components/ItemsList.jsx`
 
     !!! note
         Using `useFragment(itemRef)` returns a proxy that keeps track of every fragment used [by the proxy](./fragments.md#normalization). Here, if the item changes at all, then the component will rerender without triggering the parent.
@@ -1143,7 +1144,7 @@ Let's optimize our app:
         detailPath,
         toggleForm,
       } = useFragment(itemRef)
-      
+
       return (
         <li>
           {completed ? "✅"  : "❌"}
@@ -1174,11 +1175,11 @@ Let's optimize our app:
 For the final touch, let's add optimistic updates using `useUpdateFragment`:
 
 !!! Note
-    In this example we'll use `remote`, the [async request helper](./requests.md#remote) that
-    powers Superglue's `data-sg-remote`. Unlike the UJS counterpart, this method allows us to set the HTTP method `PATCH`.
+In this example we'll use `remote`, the [async request helper](./requests.md#remote) that
+powers Superglue's `data-sg-remote`. Unlike the UJS counterpart, this method allows us to set the HTTP method `PATCH`.
 
 === "Optimistic toggle"
-    Update `app/javascript/components/ItemsList.jsx`
+Update `app/javascript/components/ItemsList.jsx`
 
     ```diff
     - import React from 'react'
@@ -1212,7 +1213,7 @@ For the final touch, let's add optimistic updates using `useUpdateFragment`:
     +         })
     +       })
     +   }
-        
+
         return (
           <li>
             {completed ? "✅"  : "❌"}

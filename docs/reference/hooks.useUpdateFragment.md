@@ -4,7 +4,7 @@
 
 ### Unpack\<T\>
 
-> **Unpack**\<`T`\> = `T` *extends* [`Fragment`](types.md#fragment)\<infer U, `unknown`\> ? `U` : `never`
+> **Unpack**\<`T`\> = `T` _extends_ [`Fragment`](types.md#fragment)\<infer U, `unknown`\> ? `U` : `never`
 
 Defined in: [hooks/useUpdateFragment.tsx:14](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/useUpdateFragment.tsx#L14)
 
@@ -13,8 +13,8 @@ Utility type to extract the data type from a Fragment wrapper
 #### Type Parameters
 
 | Type Parameter |
-| ------ |
-| `T` |
+| -------------- |
+| `T`            |
 
 ## Functions
 
@@ -36,17 +36,17 @@ Updates a fragment using a [FragmentRef](types.md#fragmentref) object.
 
 ##### Type Parameters
 
-| Type Parameter |
-| ------ |
-| `T` |
-| `P` *extends* `boolean` |
+| Type Parameter          |
+| ----------------------- |
+| `T`                     |
+| `P` _extends_ `boolean` |
 
 ##### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `fragmentRef` | [`FragmentRef`](types.md#fragmentref)\<`T`, `P`\> | Fragment reference from unproxied content |
-| `updater` | (`draft`: [`Unproxy`](types.md#unproxy)\<`T`\>) => `void` | Immer draft function for mutating fragment data |
+| Parameter     | Type                                                      | Description                                     |
+| ------------- | --------------------------------------------------------- | ----------------------------------------------- |
+| `fragmentRef` | [`FragmentRef`](types.md#fragmentref)\<`T`, `P`\>         | Fragment reference from unproxied content       |
+| `updater`     | (`draft`: [`Unproxy`](types.md#unproxy)\<`T`\>) => `void` | Immer draft function for mutating fragment data |
 
 ##### Returns
 
@@ -58,16 +58,16 @@ Updates a fragment using a [Fragment](types.md#fragment) object.
 
 ##### Type Parameters
 
-| Type Parameter |
-| ------ |
-| `T` *extends* \{ `__id`: `string`; \} |
+| Type Parameter                        |
+| ------------------------------------- |
+| `T` _extends_ \{ `__id`: `string`; \} |
 
 ##### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `fragment` | `T` | Fragment object from proxied content |
-| `updater` | (`draft`: [`Unproxy`](types.md#unproxy)\<[`Unpack`](#unpack)\<`T`\>\>) => `void` | Immer draft function for mutating fragment data |
+| Parameter  | Type                                                                             | Description                                     |
+| ---------- | -------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `fragment` | `T`                                                                              | Fragment object from proxied content            |
+| `updater`  | (`draft`: [`Unproxy`](types.md#unproxy)\<[`Unpack`](#unpack)\<`T`\>\>) => `void` | Immer draft function for mutating fragment data |
 
 ##### Returns
 
@@ -79,13 +79,13 @@ Updates a fragment using a [Fragment](types.md#fragment) object.
 const update = useUpdateFragment()
 
 // Update via fragment reference
-update(userRef, draft => {
-  draft.name = "Updated Name"
-  draft.email = "new@email.com"
+update(userRef, (draft) => {
+  draft.name = 'Updated Name'
+  draft.email = 'new@email.com'
 })
 
 // Update via fragment ID directly
-update('user_123', draft => {
-  draft.profile.bio = "Updated bio"
+update('user_123', (draft) => {
+  draft.profile.bio = 'Updated bio'
 })
 ```

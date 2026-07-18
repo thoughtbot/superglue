@@ -18,7 +18,7 @@ end
 ```
 
 In the above, every page that gets rendered will have `header` as part of
-the [page response]. 
+the [page response].
 
 You can also use partials:
 
@@ -41,25 +41,26 @@ end
 ```
 
 ## Advanced functionality
+
 The above results in duplicate JSON nodes across our `pages`:
 
 ```json
 {
-  pages: {
+  "pages": {
     "/posts": {
-      data: {
-        header: {
-          email: "foo@foo.com"
+      "data": {
+        "header": {
+          "email": "foo@foo.com"
         }
       }
     },
     "/comments": {
-      data: {
-        header: {
-          email: "foo@foo.com"
+      "data": {
+        "header": {
+          "email": "foo@foo.com"
         }
       }
-    },
+    }
   }
 }
 ```

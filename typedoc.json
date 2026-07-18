@@ -31,5 +31,5 @@
   "excludeExternals": true,
   "excludeInternal": true,
   "useHTMLAnchors": true,
-  "out": "../docs/reference"
+  "out": "docs/reference"
 }

@@ -1,12 +1,12 @@
 # Forms
 
 Rails form helpers are by far one of the most valuable tools in a developer's
-arsenal. Working with React doesn't mean we have to abandon this tooling. 
+arsenal. Working with React doesn't mean we have to abandon this tooling.
 
 ## From `form_with` to `form_props`
 
 Superglue comes with `form_props`, a fork of `form_with` made for
-`props_template` and `jbuilder` to output props instead of HTML. 
+`props_template` and `jbuilder` to output props instead of HTML.
 
 Before:
 

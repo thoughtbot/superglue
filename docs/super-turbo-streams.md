@@ -5,7 +5,7 @@
 TurboStreams is an amazing tool from the Hotwire world. It's often associated
 with streaming HTML updates: replacing an element, updating an element,
 appending/prepending an element to another element. If we step back and consider
-what we're sending over the wire, it's less about HTML and more about content. 
+what we're sending over the wire, it's less about HTML and more about content.
 
 When you do `broadcast_append_to :messages, @message`, you're not thinking "send
 some HTML." You're thinking "add this message to the messages collection." The
@@ -47,7 +47,7 @@ end
 
 ```ruby
 # Custom channel with parameters
-json.streamFromRoomMessages stream_from_props("room_#{@room.id}", 
+json.streamFromRoomMessages stream_from_props("room_#{@room.id}",
   channel: RoomChannel,
   room: @room
 )
@@ -69,15 +69,15 @@ import { useContent, useStreamSource } from '@thoughtbot/superglue'
 export default function MessagesIndex() {
   const content = useContent()
   const { streamFromMessages, messages } = content
-  
+
   // Subscribe to real-time updates
   const { connected } = useStreamSource(streamFromMessages)
-  
+
   return (
     <div>
       <h1>Messages {connected ? '🟢' : '🔴'}</h1>
       <div id="messages">
-        {messages().map(message => (
+        {messages().map((message) => (
           <Message key={message.id} {...message} />
         ))}
       </div>
@@ -99,7 +99,9 @@ export default function MessagesIndex() {
 const { connected, subscription } = useStreamSource(streamFromMessages)
 
 // Use connected for UI indicators
-{connected ? '🟢 Live Updates' : '🔴 Connecting...'}
+{
+  connected ? '🟢 Live Updates' : '🔴 Connecting...'
+}
 
 // subscription object is rarely needed (for manual operations)
 ```
@@ -112,6 +114,7 @@ useStreamSource(content.streamFromMessages)
 useStreamSource(content.streamFromNotifications)
 useStreamSource(content.streamFromPresence)
 ```
+
 ## Stream Actions
 
 Lets imagine we have the following partials:
@@ -134,9 +137,9 @@ Appends a rendered `.props` partial to a collection fragment. Equivalent to Turb
 
 # With extended options
 @message.broadcast_append_to(
-  [current_user, "chat_room"], 
-  target: "my_message_list", 
-  save_as: "message-#{@message.id}", 
+  [current_user, "chat_room"],
+  target: "my_message_list",
+  save_as: "message-#{@message.id}",
   options: {}, # options for the js handler if any
   partial: "messages/_another_message",
   locals: {
@@ -170,8 +173,8 @@ Prepends the rendered `.props` partial to the beginning of a collection fragment
 
 # With extended options
 @message.broadcast_prepend_to(
-  [current_user, "chat_room"], 
-  target: "my_message_list", 
+  [current_user, "chat_room"],
+  target: "my_message_list",
   save_as: "message-#{@message.id}",
   options: {}, # options for the js handler if any
   partial: "messages/_another_message",
@@ -311,9 +314,9 @@ The target fragment ID is automatically derived from the model using
 `ActionView::RecordIdentifier.dom_id` unless you specify a `target`.
 
 !!! tip
-    You don't need to update any fragments to use a stream response. If you just
-    need flash messages, leave your `.json.props` template empty. The stream
-    layout always includes the `flash`.
+You don't need to update any fragments to use a stream response. If you just
+need flash messages, leave your `.json.props` template empty. The stream
+layout always includes the `flash`.
 
     ```ruby
     def create
@@ -342,20 +345,20 @@ Configure broadcasting behavior at the model level is also supported:
 ```ruby
 class Message < ApplicationRecord
   include Superglue::Broadcastable
-  
+
   # Default configuration - broadcasts to model name stream
 end
 
 class Article < ApplicationRecord
   include Superglue::Broadcastable
-  
+
   # Custom stream and fragment
   broadcasts "articles_stream", target: "article_list"
 end
 
 class Comment < ApplicationRecord
   include Superglue::Broadcastable
-  
+
   # Dynamic configuration with lambdas
   broadcasts_to ->(comment) { [comment.article, :comments] },
     fragment: ->(comment) { "article_#{comment.article_id}_comments" },

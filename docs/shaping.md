@@ -1,15 +1,15 @@
 # Shaping State
 
-When building `.props` for your pages, it's useful to know that __Superglue
-believes the server generally drives UI state__. If you worked with `erb`
-files then you'll feel right at home. 
+When building `.props` for your pages, it's useful to know that **Superglue
+believes the server generally drives UI state**. If you worked with `erb`
+files then you'll feel right at home.
 
 Let's take a familiar approach to shaping state:
 
 ```erb
 <header>
   Email: <%= current_user.email %>
-  First Name: <%= current_user.first_name.capitalize %> 
+  First Name: <%= current_user.first_name.capitalize %>
 </header>
 
 <div>
@@ -43,20 +43,20 @@ json.postList do
   end
 end
 
-json.menu do 
+json.menu do
   json.homePath root_path
 end
 ```
-!!! note
-    Notice the convention of camelizing vs. non camelizing If you need to
-    transform data, do it on the server side.
 
-    
+!!! note
+Notice the convention of camelizing vs. non camelizing If you need to
+transform data, do it on the server side.
+
     ✅ Do it in ruby land
     ```
     json.title @post.title.upcase
     ```
-    
+
     ❌ Not in JS Land
     ```
     const content = useContent()
@@ -67,7 +67,7 @@ end
 
 Superglue encourages you to shape UI state on the server because
 
-1. Ruby combined with Rails view heleprs is just as good, if not better, than Javascript at shaping state for React components. 
+1. Ruby combined with Rails view heleprs is just as good, if not better, than Javascript at shaping state for React components.
 
 2. UI patterns are universal - headers, footers, a body with a list of items exist in every app. Business logic varies wildly, but these presentational structures remain constant. This creates immediate intuition; a developer can easily guess the shape of the store, and make close-to-correct assumptions on how to update the store without looking at any code.
 
@@ -78,7 +78,7 @@ Superglue encourages you to shape UI state on the server because
 Conventional Rails wisdom discourages excessive view logic, but `.props` templates don't have the usual structural markup that you'd find with ERB templates. Its not uncommon to see more logic in your views.
 
 !!! note
-    You can think of `.props` as a presentational layer for your React components. We keep most of the UI state on the server the simplify the amount of Javascript we need.
+You can think of `.props` as a presentational layer for your React components. We keep most of the UI state on the server the simplify the amount of Javascript we need.
 
 ```ruby
 daily_events = @events
@@ -154,9 +154,9 @@ end
 ```
 
 This allows you to make use of [digging](./digging.md) which allows you to skip
-the execution of longer running blocks. 
+the execution of longer running blocks.
 
-For example: 
+For example:
 
 ```html
 <a href=/posts?props_at=data.bar> Reload me </a>

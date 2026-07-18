@@ -26,7 +26,6 @@ For source-map support, also add
 yarn add source-map-support
 ```
 
-
 ## Configuration
 
 Add an initializer to configure
@@ -90,19 +89,21 @@ end
 ```
 
 If you'd like support for source map support, you will need to
+
 1. Add the following to your entry file, e.g, `server_rendering.js`.
 2. set `config.source_map_path`.
 
 ```javascript
-require("source-map-support").install({
-  retrieveSourceMap: filename => {
+require('source-map-support').install({
+  retrieveSourceMap: (filename) => {
     return {
       url: filename,
-      map: readSourceMap(filename)
-    };
-  }
-});
+      map: readSourceMap(filename),
+    }
+  },
+})
 ```
+
 A [sample] webpack.config is available for reference.
 
 ## The mini_racer environment.
@@ -135,7 +136,9 @@ setHumidRenderer((json) => {
   const initialState = JSON.parse(json)
 
   return ReactDOMServer.renderToString(
-    <Provider><Outlet /></Provider>
+    <Provider>
+      <Outlet />
+    </Provider>
   )
 })
 ```
@@ -170,6 +173,7 @@ end
 ```
 
 ### Server-side libraries that detect node.js envs.
+
 You may need webpacker to create aliases for server friendly libraries that can
 not detect the `mini_racer` environment. For example, in `webpack.config.js`.
 
@@ -184,6 +188,7 @@ not detect the `mini_racer` environment. For example, in `webpack.config.js`.
 ```
 
 ## Writing universal code
+
 [Vue has a resource][vue_ssr] on how to write universal code. Below
 are a few highlights that are important to keep in mind.
 
@@ -220,6 +225,7 @@ It is free software, and may be redistributed under the terms specified in the
 [LICENSE](/LICENSE.md) file.
 
 <!-- START /templates/footer.md -->
+
 ## About thoughtbot
 
 ![thoughtbot](https://thoughtbot.com/thoughtbot-logo-for-readmes.svg)
@@ -233,7 +239,6 @@ We are [available for hire][hire].
 
 [community]: https://thoughtbot.com/community?utm_source=github
 [hire]: https://thoughtbot.com/hire-us?utm_source=github
-
 
 <!-- END /templates/footer.md -->
 

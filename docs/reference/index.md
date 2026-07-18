@@ -22,8 +22,8 @@ Defined in: [utils/request.ts:29](https://github.com/thoughtbot/superglue/blob/3
 
 ###### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter | Type     |
+| --------- | -------- |
 | `message` | `string` |
 
 ###### Returns
@@ -36,8 +36,8 @@ Defined in: [utils/request.ts:29](https://github.com/thoughtbot/superglue/blob/3
 
 #### Properties
 
-| Property | Type | Defined in |
-| ------ | ------ | ------ |
+| Property                         | Type       | Defined in                                                                                                                                      |
+| -------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | <a id="response"></a> `response` | `Response` | [utils/request.ts:27](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/utils/request.ts#L27) |
 
 ## Interfaces
@@ -63,8 +63,8 @@ Defined in: [types/cable.ts:26](https://github.com/thoughtbot/superglue/blob/38e
 
 ###### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter | Type     |
+| --------- | -------- |
 | `message` | `string` |
 
 ###### Returns
@@ -95,7 +95,7 @@ Defined in: [types/cable.ts:28](https://github.com/thoughtbot/superglue/blob/38e
 
 `void`
 
-***
+---
 
 <a id="subscription"></a>
 
@@ -119,7 +119,7 @@ Defined in: [types/cable.ts:39](https://github.com/thoughtbot/superglue/blob/38e
 
 `void`
 
-***
+---
 
 <a id="subscriptions"></a>
 
@@ -141,16 +141,16 @@ Defined in: [types/cable.ts:47](https://github.com/thoughtbot/superglue/blob/38e
 
 ###### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter | Type                                                          |
+| --------- | ------------------------------------------------------------- |
 | `channel` | `string` \| [`ChannelNameWithParams`](#channelnamewithparams) |
-| `mixin` | [`ChannelMixin`](#channelmixin) |
+| `mixin`   | [`ChannelMixin`](#channelmixin)                               |
 
 ###### Returns
 
 [`Subscription`](#subscription)
 
-***
+---
 
 <a id="consumer"></a>
 
@@ -164,8 +164,8 @@ this (e.g. `createConsumer('/cable')` from `@rails/actioncable` or
 
 #### Properties
 
-| Property | Type | Defined in |
-| ------ | ------ | ------ |
+| Property                                     | Type                              | Defined in                                                                                                                                  |
+| -------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | <a id="subscriptions-1"></a> `subscriptions` | [`Subscriptions`](#subscriptions) | [types/cable.ts:60](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/types/cable.ts#L60) |
 
 ## Type Aliases
@@ -203,7 +203,7 @@ Defined in: [types/cable.ts:16](https://github.com/thoughtbot/superglue/blob/38e
 
 > **webVisit**(`store`: [`SuperglueStore`](types.md#supergluestore), `path`: `string`, `options?`: [`VisitProps`](types.requests.md#visitprops)): `Promise`\<[`VisitResult`](types.md#visitresult) \| [`ErrorResult`](types.md#errorresult)\>
 
-Defined in: [action\_creators/web.ts:18](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/action_creators/web.ts#L18)
+Defined in: [action_creators/web.ts:18](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/action_creators/web.ts#L18)
 
 Web specific wrapper around the `visit` thunk adding asset-refresh when the
 response indicates the client bundle is stale.
@@ -213,17 +213,17 @@ the browser unload.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `store` | [`SuperglueStore`](types.md#supergluestore) |
-| `path` | `string` |
+| Parameter  | Type                                         |
+| ---------- | -------------------------------------------- |
+| `store`    | [`SuperglueStore`](types.md#supergluestore)  |
+| `path`     | `string`                                     |
 | `options?` | [`VisitProps`](types.requests.md#visitprops) |
 
 #### Returns
 
 `Promise`\<[`VisitResult`](types.md#visitresult) \| [`ErrorResult`](types.md#errorresult)\>
 
-***
+---
 
 <a id="webremote"></a>
 
@@ -231,23 +231,23 @@ the browser unload.
 
 > **webRemote**(`store`: [`SuperglueStore`](types.md#supergluestore), `path`: `string`, `options?`: [`RemoteProps`](types.requests.md#remoteprops)): `Promise`\<[`Result`](types.md#result) \| [`ErrorResult`](types.md#errorresult)\>
 
-Defined in: [action\_creators/web.ts:39](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/action_creators/web.ts#L39)
+Defined in: [action_creators/web.ts:39](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/action_creators/web.ts#L39)
 
 Web specific wrapper around the `remote` thunk. Just a passthrough.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `store` | [`SuperglueStore`](types.md#supergluestore) |
-| `path` | `string` |
+| Parameter  | Type                                           |
+| ---------- | ---------------------------------------------- |
+| `store`    | [`SuperglueStore`](types.md#supergluestore)    |
+| `path`     | `string`                                       |
 | `options?` | [`RemoteProps`](types.requests.md#remoteprops) |
 
 #### Returns
 
 `Promise`\<[`Result`](types.md#result) \| [`ErrorResult`](types.md#errorresult)\>
 
-***
+---
 
 <a id="tofragmentref"></a>
 
@@ -261,16 +261,16 @@ Converts a string ID to a typed FragmentRef.
 
 #### Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` | - |
-| `P` *extends* `boolean` | `false` |
+| Type Parameter          | Default type |
+| ----------------------- | ------------ |
+| `T`                     | -            |
+| `P` _extends_ `boolean` | `false`      |
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `id` | `string` |
+| Parameter | Type     |
+| --------- | -------- |
+| `id`      | `string` |
 
 #### Returns
 
@@ -279,16 +279,16 @@ Converts a string ID to a typed FragmentRef.
 #### Example
 
 ```tsx
-const author = useFragment(toFragmentRef<Author>("author_123"))
+const author = useFragment(toFragmentRef<Author>('author_123'))
 ```
 
-***
+---
 
 <a id="usefragment"></a>
 
 ### useFragment()
 
-> **useFragment**\<`T`, `P`\>(`fragmentRef`: [`FragmentRef`](types.md#fragmentref)\<`T`, `P`\>, `options?`: [`ValidateOption`](types.md#validateoption)): `P` *extends* `true` ? `T` : `undefined` \| `T`
+> **useFragment**\<`T`, `P`\>(`fragmentRef`: [`FragmentRef`](types.md#fragmentref)\<`T`, `P`\>, `options?`: [`ValidateOption`](types.md#validateoption)): `P` _extends_ `true` ? `T` : `undefined` \| `T`
 
 Defined in: [hooks/useFragment.tsx:62](https://github.com/thoughtbot/superglue/blob/38ea0f22384ca668ffa28ead0054dc09a0f39366/superglue/lib/hooks/useFragment.tsx#L62)
 
@@ -320,21 +320,21 @@ SlidingCart will update only if the fragment referenced by `cartRef` updates.
 
 #### Type Parameters
 
-| Type Parameter | Description |
-| ------ | ------ |
-| `T` | The data type being accessed |
-| `P` *extends* `boolean` | Whether the fragment is guaranteed to be present |
+| Type Parameter          | Description                                      |
+| ----------------------- | ------------------------------------------------ |
+| `T`                     | The data type being accessed                     |
+| `P` _extends_ `boolean` | Whether the fragment is guaranteed to be present |
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter     | Type                                              | Description                |
+| ------------- | ------------------------------------------------- | -------------------------- |
 | `fragmentRef` | [`FragmentRef`](types.md#fragmentref)\<`T`, `P`\> | A typed fragment reference |
-| `options?` | [`ValidateOption`](types.md#validateoption) | - |
+| `options?`    | [`ValidateOption`](types.md#validateoption)       | -                          |
 
 #### Returns
 
-`P` *extends* `true` ? `T` : `undefined` \| `T`
+`P` _extends_ `true` ? `T` : `undefined` \| `T`
 
 Reactive proxy to fragment data. Returns `T` if present, `T | undefined` otherwise.
 
@@ -346,10 +346,10 @@ const rawContent = unproxy(content)
 const user = useFragment(rawContent.user)
 
 // Access fragment via string ID
-const cart = useFragment(toFragmentRef<Cart>("cart_123"))
+const cart = useFragment(toFragmentRef<Cart>('cart_123'))
 ```
 
-***
+---
 
 <a id="useupdatecontent"></a>
 
@@ -366,21 +366,21 @@ Defined in: [hooks/useUpdateContent.tsx:9](https://github.com/thoughtbot/supergl
 ##### Type Parameters
 
 | Type Parameter | Default type |
-| ------ | ------ |
-| `T` | `unknown` |
+| -------------- | ------------ |
+| `T`            | `unknown`    |
 
 ##### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `pageKey` | `string` |
+| Parameter | Type                     |
+| --------- | ------------------------ |
+| `pageKey` | `string`                 |
 | `updater` | (`draft`: `T`) => `void` |
 
 ##### Returns
 
 `void`
 
-***
+---
 
 <a id="createapp"></a>
 
@@ -417,15 +417,15 @@ createRoot(el).render(
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter           | Type                                                                              |
+| ------------------- | --------------------------------------------------------------------------------- |
 | `__namedParameters` | [`CreateAppArgs`](types.md#createappargs) & \{ `_storeResult?`: `StoreResult`; \} |
 
 #### Returns
 
 [`CreateAppResult`](types.md#createappresult)
 
-***
+---
 
 <a id="getin"></a>
 
@@ -439,16 +439,16 @@ Retrieves data from a JSON object using a [Keypath](types.md#keypath)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `node` | [`JSONMappable`](types.md#jsonmappable) |  |
-| `path` | `string` |  |
+| Parameter | Type                                    | Description |
+| --------- | --------------------------------------- | ----------- |
+| `node`    | [`JSONMappable`](types.md#jsonmappable) |             |
+| `path`    | `string`                                |             |
 
 #### Returns
 
 [`JSONValue`](types.md#jsonvalue)
 
-***
+---
 
 <a id="urltopagekey"></a>
 
@@ -462,9 +462,9 @@ Converts a url to a PageKey.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `url` | `string` |  |
+| Parameter | Type     | Description |
+| --------- | -------- | ----------- |
+| `url`     | `string` |             |
 
 #### Returns
 
@@ -478,7 +478,7 @@ Converts a url to a PageKey.
 
 Re-exports [useContent](hooks.useContent.md#usecontent)
 
-***
+---
 
 <a id="useupdatefragment"></a>
 
@@ -486,7 +486,7 @@ Re-exports [useContent](hooks.useContent.md#usecontent)
 
 Re-exports [useUpdateFragment](hooks.useUpdateFragment.md#useupdatefragment)
 
-***
+---
 
 <a id="usestreamsource"></a>
 
@@ -494,7 +494,7 @@ Re-exports [useUpdateFragment](hooks.useUpdateFragment.md#useupdatefragment)
 
 Re-exports [useStreamSource](hooks.useStreamSource.md#usestreamsource)
 
-***
+---
 
 <a id="usesuperglue"></a>
 
@@ -502,7 +502,7 @@ Re-exports [useStreamSource](hooks.useStreamSource.md#usestreamsource)
 
 Re-exports [useSuperglue](hooks.md#usesuperglue)
 
-***
+---
 
 <a id="useflash"></a>
 
@@ -510,7 +510,7 @@ Re-exports [useSuperglue](hooks.md#usesuperglue)
 
 Re-exports [useFlash](hooks.md#useflash)
 
-***
+---
 
 <a id="usesetflash"></a>
 
@@ -518,7 +518,7 @@ Re-exports [useFlash](hooks.md#useflash)
 
 Re-exports [useSetFlash](hooks.md#usesetflash)
 
-***
+---
 
 <a id="navigationprovider"></a>
 
@@ -526,7 +526,7 @@ Re-exports [useSetFlash](hooks.md#usesetflash)
 
 Re-exports [NavigationProvider](components.Navigation.md#navigationprovider)
 
-***
+---
 
 <a id="navigationoutlet"></a>
 
@@ -534,7 +534,7 @@ Re-exports [NavigationProvider](components.Navigation.md#navigationprovider)
 
 Re-exports [NavigationOutlet](components.Navigation.md#navigationoutlet)
 
-***
+---
 
 <a id="navigationcontext"></a>
 
@@ -542,7 +542,7 @@ Re-exports [NavigationOutlet](components.Navigation.md#navigationoutlet)
 
 Re-exports [NavigationContext](components.Navigation.md#navigationcontext)
 
-***
+---
 
 <a id="unproxy"></a>
 
@@ -550,7 +550,7 @@ Re-exports [NavigationContext](components.Navigation.md#navigationcontext)
 
 Re-exports [unproxy](hooks.useContent.md#unproxy)
 
-***
+---
 
 <a id="fetchargs"></a>
 
@@ -558,7 +558,7 @@ Re-exports [unproxy](hooks.useContent.md#unproxy)
 
 Re-exports [FetchArgs](types.actions.md#fetchargs)
 
-***
+---
 
 <a id="graftingsuccessaction"></a>
 
@@ -566,7 +566,7 @@ Re-exports [FetchArgs](types.actions.md#fetchargs)
 
 Re-exports [GraftingSuccessAction](types.actions.md#graftingsuccessaction)
 
-***
+---
 
 <a id="graftingerroraction"></a>
 
@@ -574,7 +574,7 @@ Re-exports [GraftingSuccessAction](types.actions.md#graftingsuccessaction)
 
 Re-exports [GraftingErrorAction](types.actions.md#graftingerroraction)
 
-***
+---
 
 <a id="validateoption"></a>
 
@@ -582,7 +582,7 @@ Re-exports [GraftingErrorAction](types.actions.md#graftingerroraction)
 
 Re-exports [ValidateOption](types.md#validateoption)
 
-***
+---
 
 <a id="pagekey"></a>
 
@@ -590,7 +590,7 @@ Re-exports [ValidateOption](types.md#validateoption)
 
 Re-exports [PageKey](types.md#pagekey)
 
-***
+---
 
 <a id="restorestrategy"></a>
 
@@ -598,7 +598,7 @@ Re-exports [PageKey](types.md#pagekey)
 
 Re-exports [RestoreStrategy](types.md#restorestrategy)
 
-***
+---
 
 <a id="navigationaction"></a>
 
@@ -606,7 +606,7 @@ Re-exports [RestoreStrategy](types.md#restorestrategy)
 
 Re-exports [NavigationAction](types.md#navigationaction)
 
-***
+---
 
 <a id="componentidentifier"></a>
 
@@ -614,7 +614,7 @@ Re-exports [NavigationAction](types.md#navigationaction)
 
 Re-exports [ComponentIdentifier](types.md#componentidentifier)
 
-***
+---
 
 <a id="keypath"></a>
 
@@ -622,7 +622,7 @@ Re-exports [ComponentIdentifier](types.md#componentidentifier)
 
 Re-exports [Keypath](types.md#keypath)
 
-***
+---
 
 <a id="jsonprimitive"></a>
 
@@ -630,7 +630,7 @@ Re-exports [Keypath](types.md#keypath)
 
 Re-exports [JSONPrimitive](types.md#jsonprimitive)
 
-***
+---
 
 <a id="jsonobject"></a>
 
@@ -638,7 +638,7 @@ Re-exports [JSONPrimitive](types.md#jsonprimitive)
 
 Re-exports [JSONObject](types.md#jsonobject)
 
-***
+---
 
 <a id="jsonmappable"></a>
 
@@ -646,7 +646,7 @@ Re-exports [JSONObject](types.md#jsonobject)
 
 Re-exports [JSONMappable](types.md#jsonmappable)
 
-***
+---
 
 <a id="jsonkeyable"></a>
 
@@ -654,7 +654,7 @@ Re-exports [JSONMappable](types.md#jsonmappable)
 
 Re-exports [JSONKeyable](types.md#jsonkeyable)
 
-***
+---
 
 <a id="jsonvalue"></a>
 
@@ -662,7 +662,7 @@ Re-exports [JSONKeyable](types.md#jsonkeyable)
 
 Re-exports [JSONValue](types.md#jsonvalue)
 
-***
+---
 
 <a id="flashstate"></a>
 
@@ -670,7 +670,7 @@ Re-exports [JSONValue](types.md#jsonvalue)
 
 Re-exports [FlashState](types.md#flashstate)
 
-***
+---
 
 <a id="fragment"></a>
 
@@ -678,7 +678,7 @@ Re-exports [FlashState](types.md#flashstate)
 
 Re-exports [Fragment](types.md#fragment)
 
-***
+---
 
 <a id="unproxy-1"></a>
 
@@ -686,7 +686,7 @@ Re-exports [Fragment](types.md#fragment)
 
 Re-exports [Unproxy](types.md#unproxy)
 
-***
+---
 
 <a id="parsedresponse"></a>
 
@@ -694,7 +694,7 @@ Re-exports [Unproxy](types.md#unproxy)
 
 Re-exports [ParsedResponse](types.md#parsedresponse)
 
-***
+---
 
 <a id="defer"></a>
 
@@ -702,7 +702,7 @@ Re-exports [ParsedResponse](types.md#parsedresponse)
 
 Re-exports [Defer](types.md#defer)
 
-***
+---
 
 <a id="saveresponse"></a>
 
@@ -710,7 +710,7 @@ Re-exports [Defer](types.md#defer)
 
 Re-exports [SaveResponse](types.md#saveresponse)
 
-***
+---
 
 <a id="page"></a>
 
@@ -718,7 +718,7 @@ Re-exports [SaveResponse](types.md#saveresponse)
 
 Re-exports [Page](types.md#page)
 
-***
+---
 
 <a id="graftresponse"></a>
 
@@ -726,7 +726,7 @@ Re-exports [Page](types.md#page)
 
 Re-exports [GraftResponse](types.md#graftresponse)
 
-***
+---
 
 <a id="streammessage"></a>
 
@@ -734,7 +734,7 @@ Re-exports [GraftResponse](types.md#graftresponse)
 
 Re-exports [StreamMessage](types.md#streammessage)
 
-***
+---
 
 <a id="streamresponse"></a>
 
@@ -742,7 +742,7 @@ Re-exports [StreamMessage](types.md#streammessage)
 
 Re-exports [StreamResponse](types.md#streamresponse)
 
-***
+---
 
 <a id="pageresponse"></a>
 
@@ -750,7 +750,7 @@ Re-exports [StreamResponse](types.md#streamresponse)
 
 Re-exports [PageResponse](types.md#pageresponse)
 
-***
+---
 
 <a id="fragmentpath"></a>
 
@@ -758,7 +758,7 @@ Re-exports [PageResponse](types.md#pageresponse)
 
 Re-exports [FragmentPath](types.md#fragmentpath)
 
-***
+---
 
 <a id="fragmentref"></a>
 
@@ -766,7 +766,7 @@ Re-exports [FragmentPath](types.md#fragmentpath)
 
 Re-exports [FragmentRef](types.md#fragmentref)
 
-***
+---
 
 <a id="allpages"></a>
 
@@ -774,7 +774,7 @@ Re-exports [FragmentRef](types.md#fragmentref)
 
 Re-exports [AllPages](types.md#allpages)
 
-***
+---
 
 <a id="allfragments"></a>
 
@@ -782,7 +782,7 @@ Re-exports [AllPages](types.md#allpages)
 
 Re-exports [AllFragments](types.md#allfragments)
 
-***
+---
 
 <a id="supergluestate"></a>
 
@@ -790,7 +790,7 @@ Re-exports [AllFragments](types.md#allfragments)
 
 Re-exports [SuperglueState](types.md#supergluestate)
 
-***
+---
 
 <a id="rootstate"></a>
 
@@ -798,7 +798,7 @@ Re-exports [SuperglueState](types.md#supergluestate)
 
 Re-exports [RootState](types.md#rootstate)
 
-***
+---
 
 <a id="result"></a>
 
@@ -806,7 +806,7 @@ Re-exports [RootState](types.md#rootstate)
 
 Re-exports [Result](types.md#result)
 
-***
+---
 
 <a id="visitresult"></a>
 
@@ -814,7 +814,7 @@ Re-exports [Result](types.md#result)
 
 Re-exports [VisitResult](types.md#visitresult)
 
-***
+---
 
 <a id="errorresult"></a>
 
@@ -822,7 +822,7 @@ Re-exports [VisitResult](types.md#visitresult)
 
 Re-exports [ErrorResult](types.md#errorresult)
 
-***
+---
 
 <a id="visitcreator"></a>
 
@@ -830,7 +830,7 @@ Re-exports [ErrorResult](types.md#errorresult)
 
 Re-exports [VisitCreator](types.md#visitcreator)
 
-***
+---
 
 <a id="remotecreator"></a>
 
@@ -838,7 +838,7 @@ Re-exports [VisitCreator](types.md#visitcreator)
 
 Re-exports [RemoteCreator](types.md#remotecreator)
 
-***
+---
 
 <a id="dispatch"></a>
 
@@ -846,7 +846,7 @@ Re-exports [RemoteCreator](types.md#remotecreator)
 
 Re-exports [Dispatch](types.md#dispatch)
 
-***
+---
 
 <a id="supergluestore"></a>
 
@@ -854,7 +854,7 @@ Re-exports [Dispatch](types.md#dispatch)
 
 Re-exports [SuperglueStore](types.md#supergluestore)
 
-***
+---
 
 <a id="handlers"></a>
 
@@ -862,7 +862,7 @@ Re-exports [SuperglueStore](types.md#supergluestore)
 
 Re-exports [Handlers](types.md#handlers)
 
-***
+---
 
 <a id="ujshandlers"></a>
 
@@ -870,7 +870,7 @@ Re-exports [Handlers](types.md#handlers)
 
 Re-exports [UJSHandlers](types.md#ujshandlers)
 
-***
+---
 
 <a id="historystate"></a>
 
@@ -878,7 +878,7 @@ Re-exports [UJSHandlers](types.md#ujshandlers)
 
 Re-exports [HistoryState](types.md#historystate)
 
-***
+---
 
 <a id="saveandprocesspagethunk"></a>
 
@@ -886,7 +886,7 @@ Re-exports [HistoryState](types.md#historystate)
 
 Re-exports [SaveAndProcessPageThunk](types.md#saveandprocesspagethunk)
 
-***
+---
 
 <a id="metathunk"></a>
 
@@ -894,7 +894,7 @@ Re-exports [SaveAndProcessPageThunk](types.md#saveandprocesspagethunk)
 
 Re-exports [MetaThunk](types.md#metathunk)
 
-***
+---
 
 <a id="visitmetathunk"></a>
 
@@ -902,7 +902,7 @@ Re-exports [MetaThunk](types.md#metathunk)
 
 Re-exports [VisitMetaThunk](types.md#visitmetathunk)
 
-***
+---
 
 <a id="defermentthunk"></a>
 
@@ -910,7 +910,7 @@ Re-exports [VisitMetaThunk](types.md#visitmetathunk)
 
 Re-exports [DefermentThunk](types.md#defermentthunk)
 
-***
+---
 
 <a id="basicrequestinit"></a>
 
@@ -918,7 +918,7 @@ Re-exports [DefermentThunk](types.md#defermentthunk)
 
 Re-exports [BasicRequestInit](types.md#basicrequestinit)
 
-***
+---
 
 <a id="navigateto"></a>
 
@@ -926,7 +926,7 @@ Re-exports [BasicRequestInit](types.md#basicrequestinit)
 
 Re-exports [NavigateTo](types.md#navigateto)
 
-***
+---
 
 <a id="copyto"></a>
 
@@ -934,7 +934,7 @@ Re-exports [NavigateTo](types.md#navigateto)
 
 Re-exports [CopyTo](types.md#copyto)
 
-***
+---
 
 <a id="navigationcontextprops"></a>
 
@@ -942,7 +942,7 @@ Re-exports [CopyTo](types.md#copyto)
 
 Re-exports [NavigationContextProps](types.md#navigationcontextprops)
 
-***
+---
 
 <a id="navigationproviderprops"></a>
 
@@ -950,7 +950,7 @@ Re-exports [NavigationContextProps](types.md#navigationcontextprops)
 
 Re-exports [NavigationProviderProps](types.md#navigationproviderprops)
 
-***
+---
 
 <a id="navigationoutletprops"></a>
 
@@ -958,7 +958,7 @@ Re-exports [NavigationProviderProps](types.md#navigationproviderprops)
 
 Re-exports [NavigationOutletProps](types.md#navigationoutletprops)
 
-***
+---
 
 <a id="buildstore"></a>
 
@@ -966,7 +966,7 @@ Re-exports [NavigationOutletProps](types.md#navigationoutletprops)
 
 Re-exports [BuildStore](types.md#buildstore)
 
-***
+---
 
 <a id="buildvisitandremote"></a>
 
@@ -974,7 +974,7 @@ Re-exports [BuildStore](types.md#buildstore)
 
 Re-exports [BuildVisitAndRemote](types.md#buildvisitandremote)
 
-***
+---
 
 <a id="buildvisitandremotecontext"></a>
 
@@ -982,7 +982,7 @@ Re-exports [BuildVisitAndRemote](types.md#buildvisitandremote)
 
 Re-exports [BuildVisitAndRemoteContext](types.md#buildvisitandremotecontext)
 
-***
+---
 
 <a id="createappargs"></a>
 
@@ -990,7 +990,7 @@ Re-exports [BuildVisitAndRemoteContext](types.md#buildvisitandremotecontext)
 
 Re-exports [CreateAppArgs](types.md#createappargs)
 
-***
+---
 
 <a id="providerprops"></a>
 
@@ -998,7 +998,7 @@ Re-exports [CreateAppArgs](types.md#createappargs)
 
 Re-exports [ProviderProps](types.md#providerprops)
 
-***
+---
 
 <a id="createappresult"></a>
 
@@ -1006,7 +1006,7 @@ Re-exports [ProviderProps](types.md#providerprops)
 
 Re-exports [CreateAppResult](types.md#createappresult)
 
-***
+---
 
 <a id="visit"></a>
 
@@ -1014,7 +1014,7 @@ Re-exports [CreateAppResult](types.md#createappresult)
 
 Re-exports [Visit](types.requests.md#visit)
 
-***
+---
 
 <a id="visitprops"></a>
 
@@ -1022,7 +1022,7 @@ Re-exports [Visit](types.requests.md#visit)
 
 Re-exports [VisitProps](types.requests.md#visitprops)
 
-***
+---
 
 <a id="remote"></a>
 
@@ -1030,7 +1030,7 @@ Re-exports [VisitProps](types.requests.md#visitprops)
 
 Re-exports [Remote](types.requests.md#remote)
 
-***
+---
 
 <a id="remoteprops"></a>
 
@@ -1038,7 +1038,7 @@ Re-exports [Remote](types.requests.md#remote)
 
 Re-exports [RemoteProps](types.requests.md#remoteprops)
 
-***
+---
 
 <a id="beforesave"></a>
 
@@ -1046,7 +1046,7 @@ Re-exports [RemoteProps](types.requests.md#remoteprops)
 
 Re-exports [BeforeSave](types.requests.md#beforesave-2)
 
-***
+---
 
 <a id="applicationremote"></a>
 
@@ -1054,7 +1054,7 @@ Re-exports [BeforeSave](types.requests.md#beforesave-2)
 
 Re-exports [ApplicationRemote](types.requests.md#applicationremote)
 
-***
+---
 
 <a id="applicationvisit"></a>
 

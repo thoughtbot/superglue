@@ -121,10 +121,10 @@ with state.
 
 The server response protocol has been renamed for clarity.
 
-| v1                 | v2                 |
-|--------------------|--------------------|
-| `VisitResponse`    | `SaveResponse`     |
-| `PageResponse`     | `PageResponse` (now includes `StreamResponse`) |
+| v1              | v2                                             |
+| --------------- | ---------------------------------------------- |
+| `VisitResponse` | `SaveResponse`                                 |
+| `PageResponse`  | `PageResponse` (now includes `StreamResponse`) |
 
 `SaveResponse` also gains:
 
@@ -153,9 +153,7 @@ normalized data layer.
 
 ```json
 {
-  "fragments": [
-    { "type": "header", "path": "data.header" }
-  ]
+  "fragments": [{ "type": "header", "path": "data.header" }]
 }
 ```
 
@@ -163,9 +161,7 @@ normalized data layer.
 
 ```json
 {
-  "fragments": [
-    { "id": "header-abc123", "path": "data.header" }
-  ]
+  "fragments": [{ "id": "header-abc123", "path": "data.header" }]
 }
 ```
 
@@ -213,14 +209,14 @@ const rawData = unproxy(proxyData)
 
 v2 adds several new hooks:
 
-| Hook                   | Purpose                                           |
-|------------------------|---------------------------------------------------|
-| `useFragment(id)`      | Access a single fragment by ID                    |
-| `useUpdateContent()`   | Immer-based mutations on current page data        |
-| `useUpdateFragment(id)`| Immer-based mutations on a fragment               |
-| `useFlash()`           | Read flash messages from the store                |
-| `useSetFlash()`        | Set or clear flash messages                       |
-| `useStreamSource()`    | Subscribe to ActionCable/AnyCable streams         |
+| Hook                    | Purpose                                    |
+| ----------------------- | ------------------------------------------ |
+| `useFragment(id)`       | Access a single fragment by ID             |
+| `useUpdateContent()`    | Immer-based mutations on current page data |
+| `useUpdateFragment(id)` | Immer-based mutations on a fragment        |
+| `useFlash()`            | Read flash messages from the store         |
+| `useSetFlash()`         | Set or clear flash messages                |
+| `useStreamSource()`     | Subscribe to ActionCable/AnyCable streams  |
 
 The existing hooks remain:
 
@@ -262,8 +258,8 @@ interface RootState {
 interface RootState {
   superglue: SuperglueState
   pages: AllPages
-  fragments: AllFragments  // NEW
-  flash: FlashState        // NEW
+  fragments: AllFragments // NEW
+  flash: FlashState // NEW
 }
 ```
 

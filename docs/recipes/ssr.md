@@ -8,20 +8,20 @@ Follow the [instructions](https://github.com/thoughtbot/humid#installation).
 Then, if you're using esbuild, create a `app/javascript/server_rendering.js`:
 
 ```js
-import React from 'react';
-import { createApp } from '@thoughtbot/superglue';
-import { buildVisitAndRemote } from './application_visit';
-import { pageIdentifierToPageComponent } from './page_to_page_mapping';
-import { renderToString } from 'react-dom/server';
+import React from 'react'
+import { createApp } from '@thoughtbot/superglue'
+import { buildVisitAndRemote } from './application_visit'
+import { pageIdentifierToPageComponent } from './page_to_page_mapping'
+import { renderToString } from 'react-dom/server'
 
-require("source-map-support").install({
-  retrieveSourceMap: filename => {
+require('source-map-support').install({
+  retrieveSourceMap: (filename) => {
     return {
       url: filename,
-      map: readSourceMap(filename)
-    };
-  }
-});
+      map: readSourceMap(filename),
+    }
+  },
+})
 
 setHumidRenderer((json, baseUrl, path) => {
   const initialState = JSON.parse(json)
@@ -34,7 +34,9 @@ setHumidRenderer((json, baseUrl, path) => {
   })
 
   return renderToString(
-    <Provider><Outlet /></Provider>
+    <Provider>
+      <Outlet />
+    </Provider>
   )
 })
 ```
@@ -49,63 +51,62 @@ and add a esbuild build file.
 
 ```js
 import * as esbuild from 'esbuild'
-import { polyfillNode } from "esbuild-plugin-polyfill-node";
-
+import { polyfillNode } from 'esbuild-plugin-polyfill-node'
 
 await esbuild.build({
   entryPoints: ['app/javascript/server_rendering.js'],
   bundle: true,
-  platform: "browser",
+  platform: 'browser',
   define: {
-    "process.env.NODE_ENV": '"production"'
+    'process.env.NODE_ENV': '"production"',
   },
   sourcemap: true,
   outfile: 'app/assets/builds/server_rendering.js',
-  logLevel: "info",
+  logLevel: 'info',
   loader: {
-    ".js": "jsx",
-    ".svg": "dataurl"
+    '.js': 'jsx',
+    '.svg': 'dataurl',
   },
-  inject: ["./shim.js"],
+  inject: ['./shim.js'],
   plugins: [
     polyfillNode({
-      globals: false
+      globals: false,
     }),
-  ]
+  ],
 })
 ```
 
 Add a `shim.js` for the above. We'll need this for the v8 environment that mini-racer runs on.
 
 ```javascript
-export {TextEncoder, TextDecoder} from 'text-encoding'
+export { TextEncoder, TextDecoder } from 'text-encoding'
 export { URL, URLSearchParams } from 'whatwg-url'
 
 export function MessageChannel() {
   this.port1 = {
     postMessage: function (message) {
-      console.log('Message sent from port1:', message);
+      console.log('Message sent from port1:', message)
     },
-  };
+  }
 
   this.port2 = {
     addEventListener: function (event, handler) {
-      console.log(`Event listener added for ${event} on port2`);
-      this._eventHandler = handler;
+      console.log(`Event listener added for ${event} on port2`)
+      this._eventHandler = handler
     },
     removeEventListener: function (event) {
-      console.log(`Event listener removed for ${event} on port2`);
-      this._eventHandler = null;
+      console.log(`Event listener removed for ${event} on port2`)
+      this._eventHandler = null
     },
     simulateMessage: function (data) {
       if (this._eventHandler) {
-        this._eventHandler({ data });
+        this._eventHandler({ data })
       }
     },
-  };
+  }
 }
 
-export const navigator = {language: "en-us"}
+export const navigator = { language: 'en-us' }
 ```
 
 Add a line to your `package.json` like so:
@@ -140,17 +141,17 @@ Change your `application.js` to use `hydrateRoot`:
 and change the rest of `application.js` accordingly. For example:
 
 ```jsx
-import React from 'react';
-import { createApp } from '@thoughtbot/superglue';
-import { hydrateRoot } from 'react-dom/client';
-import { buildVisitAndRemote } from './application_visit';
-import { pageIdentifierToPageComponent } from './page_to_page_mapping';
-import { Layout } from './components';
+import React from 'react'
+import { createApp } from '@thoughtbot/superglue'
+import { hydrateRoot } from 'react-dom/client'
+import { buildVisitAndRemote } from './application_visit'
+import { pageIdentifierToPageComponent } from './page_to_page_mapping'
+import { Layout } from './components'
 
-if (typeof window !== "undefined") {
-  document.addEventListener("DOMContentLoaded", function () {
-    const appEl = document.getElementById("app");
-    const location = window.location;
+if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', function () {
+    const appEl = document.getElementById('app')
+    const location = window.location
 
     if (appEl) {
       const { Provider, Outlet, ujs } = createApp({
@@ -161,7 +162,8 @@ if (typeof window !== "undefined") {
         mapping: pageIdentifierToPageComponent,
       })
 
-      hydrateRoot(appEl,
+      hydrateRoot(
+        appEl,
         <div onClick={ujs.onClick} onSubmit={ujs.onSubmit}>
           <Provider>
             <Layout>
@@ -169,9 +171,9 @@ if (typeof window !== "undefined") {
             </Layout>
           </Provider>
         </div>
-      );
+      )
     }
-  });
+  })
 }
 ```
 

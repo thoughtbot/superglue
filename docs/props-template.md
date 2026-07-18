@@ -78,7 +78,6 @@ want to [dig](#digging) into your templates.
 require 'props_template/core_ext'
 ```
 
-
 And create a file in your `app/views` folder like so:
 
 ```ruby
@@ -112,10 +111,10 @@ end
 
 The inline form defines key and value
 
-| Parameter | Notes |
-| :--- | :--- |
-| key | A json object key|
-| value | A value |
+| Parameter | Notes             |
+| :-------- | :---------------- |
+| key       | A json object key |
+| value     | A value           |
 
 ```ruby
 
@@ -130,11 +129,11 @@ json.firstName 'David'
 
 The block form defines key and structure
 
-| Parameter | Notes |
-| :--- | :--- |
-| key | A json object key|
-| options | Additional [options](#options)|
-| block | Additional `json.set!`s or `json.array!`s|
+| Parameter | Notes                                     |
+| :-------- | :---------------------------------------- |
+| key       | A json object key                         |
+| options   | Additional [options](#options)            |
+| block     | Additional `json.set!`s or `json.array!`s |
 
 ```ruby
 json.set! :details do
@@ -149,13 +148,15 @@ end
 ```
 
 The difference between the block form and inline form is
-  1. The block form is an internal node. Functionality such as Partials,
-  Deferment and other [options](#options) are only available on the
-  block form.
-  2. The inline form is considered a leaf node, and you can only [dig](#digging)
-  for internal nodes.
+
+1. The block form is an internal node. Functionality such as Partials,
+   Deferment and other [options](#options) are only available on the
+   block form.
+2. The inline form is considered a leaf node, and you can only [dig](#digging)
+   for internal nodes.
 
 ### json.extract!
+
 Extracts attributes from object or hash in 1 line
 
 ```ruby
@@ -177,12 +178,13 @@ json.extract! user, :id, [:first_name, :firstName], [:last_name, :lastName]
 
 The inline form defines object and attributes
 
-| Parameter | Notes |
-| :--- | :--- |
-| object | An object |
+| Parameter  | Notes                |
+| :--------- | :------------------- |
+| object     | An object            |
 | attributes | A list of attributes |
 
 ### json.array!
+
 Generates an array of json objects.
 
 ```ruby
@@ -197,10 +199,10 @@ end
 # => {"details": [{"firstName": 'john'}, {"firstName": 'jim'} ]}
 ```
 
-| Parameter | Notes |
-| :--- | :--- |
+| Parameter  | Notes                                                                |
+| :--------- | :------------------------------------------------------------------- |
 | collection | A collection that optionally responds to `member_at` and `member_by` |
-| options | Additional [options](#options)|
+| options    | Additional [options](#options)                                       |
 
 To support [digging](#digging), any list passed
 to `array!` MUST implement `member_at(index)` and `member_by(attr, value)`.
@@ -258,7 +260,7 @@ end
 
 #### **Array core extension**
 
-For convenience, PropsTemplate includes a core\_ext that adds these methods to
+For convenience, PropsTemplate includes a core_ext that adds these methods to
 `Array`. For example:
 
 ```ruby
@@ -281,11 +283,11 @@ by index, but will raise a `NotImplementedError` if you query by attribute. You
 may still need to implement `member_by`.
 
 ### json.deferred!
+
 Returns all deferred nodes used by the [deferment](#deferment) option.
 
 **Note** This is a [SuperglueJS][1] specific functionality and is used in
 `application.json.props` when first running `rails superglue:install:web`
-
 
 ```ruby
 json.deferred json.deferred!
@@ -297,15 +299,17 @@ This method provides metadata about deferred nodes to the frontend ([SuperglueJS
 to fetch missing data in a second round trip.
 
 ### json.fragments!
+
 Returns all fragment nodes used by the [partial fragments](#partial-fragments)
 option.
 
-```ruby json.fragments json.fragments!  ```
+`ruby json.fragments json.fragments!  `
 
 **Note** This is a [SuperglueJS][1] specific functionality and is used in
 `application.json.props` when first running `rails superglue:install:web`
 
 ## Options
+
 Options Functionality such as Partials, Deferments, and Caching can only be
 set on a block. It is normal to see empty blocks.
 
@@ -367,6 +371,7 @@ end
 ```
 
 ### Partial Fragments
+
 **Note** This is a [SuperglueJS][1] specific functionality.
 
 A fragment identifies a partial output across multiple pages. It can be used to
@@ -395,6 +400,7 @@ end
 ```
 
 ### Caching
+
 Caching is supported on internal nodes only. This limitation is what makes it
 possible to for props_template to forgo marshalling/unmarshalling and simply
 use [push_json](http://www.ohler.com/oj/doc/Oj/StringWriter.html#push_json-instance_method).
@@ -489,6 +495,7 @@ json.defers json.deferred!
 ```
 
 #### Working with arrays
+
 The default behavior for deferments is to use the index of the collection to
 identify an element.
 
@@ -498,11 +505,11 @@ generate `?props_at=a.b.c.0.title` for `json.deferred!`.
 If you wish to use an attribute to identify the element. You must:
 
 1. Use the `:key` option on `json.array!`. This key refers to an attribute on
-your collection item, and is used for `defer: :auto` to generate a keypath for
-[SuperglueJS][1]. If you are NOT using SuperglueJS, you do not need to do this.
+   your collection item, and is used for `defer: :auto` to generate a keypath for
+   [SuperglueJS][1]. If you are NOT using SuperglueJS, you do not need to do this.
 
 2. Implement `member_at`, on the [collection](#jsonarray). This will be called
-by PropsTemplate to when [digging](#digging)
+   by PropsTemplate to when [digging](#digging)
 
 For example:
 
@@ -617,6 +624,7 @@ The above will render:
 ```
 
 ## Layouts
+
 A single layout is supported. To use, create an `application.json.props` in
 `app/views/layouts`. Here's an example:
 
@@ -640,7 +648,6 @@ json.flash flash.to_h
 **NOTE** PropsTemplate inverts the usual Rails rendering flow. PropsTemplate
 will render Layout first, then the template when `yield json` is used.
 
-
 ### Layouts in API-only Rails apps
 
 If your controllers inherit from `ActionController::API` (typical in API-only Rails apps),
@@ -663,6 +670,7 @@ end
 Without this, Rails will silently skip the layout, which can be tricky to notice.
 
 ## Change key format
+
 By default, keys are not formatted. This is intentional. By being explicit with your keys,
 it makes your views quicker and more easily diggable when working in JavaScript land.
 
@@ -728,8 +736,8 @@ such as `&` and `<`.
 
 See the [CONTRIBUTING] document. Thank you, [contributors]!
 
-  [CONTRIBUTING]: CONTRIBUTING.md
-  [contributors]: https://github.com/thoughtbot/props_template/graphs/contributors
+[CONTRIBUTING]: CONTRIBUTING.md
+[contributors]: https://github.com/thoughtbot/props_template/graphs/contributors
 
 ## Special Thanks
 

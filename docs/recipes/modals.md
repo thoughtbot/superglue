@@ -14,12 +14,11 @@ chooses instead to directly visit `/posts/new`.
 Both urls render a list of posts. Lets set up the controller and the
 `page_to_page_mapping.js` the same way.
 
-
 === "`posts_controller.rb`"
-    !!! info "Same template different action"
-        Notice that we're rendering the `index` for the `new` action. While the
-        content is the same, the `componentIdentifier` is different as that has
-        been setup to use the controller and action name.
+!!! info "Same template different action"
+Notice that we're rendering the `index` for the `new` action. While the
+content is the same, the `componentIdentifier` is different as that has
+been setup to use the controller and action name.
 
       ```ruby
       # app/controllers/posts_controller.rb
@@ -34,10 +33,9 @@ Both urls render a list of posts. Lets set up the controller and the
       end
       ```
 
-
 === "`page_to_page_mapping.js`"
-    !!! info
-        Similarly, we tie the `componentIdentifier` to the same page component.
+!!! info
+Similarly, we tie the `componentIdentifier` to the same page component.
 
         **Vite Users** This step can be entirely optional if you're using Vite. See
         the [recipe](./vite.md) for more information.
@@ -51,7 +49,6 @@ Both urls render a list of posts. Lets set up the controller and the
     };
     ```
 
-
 ## Add a link to `/posts/new`
 
 Imagine a list of posts, lets add a button somewhere on the index page to
@@ -59,8 +56,8 @@ direct the user to `/posts/new`. As seen previously, both `/posts` and
 `/posts/new` render the same thing.
 
 === "`posts/index.json.props`"
-    ```ruby
-    # app/views/posts/index.json.props
+
+````ruby # app/views/posts/index.json.props
 
     ...
 
@@ -68,13 +65,13 @@ direct the user to `/posts/new`. As seen previously, both `/posts` and
     ```
 
 === "`posts/index.js`"
-    ```js
-    import { useContent } from '@thoughtbot/superglue'
+```js
+import { useContent } from '@thoughtbot/superglue'
 
     export default PostIndex = () => {
-      const { 
-        newPostPath, 
-        ...rest 
+      const {
+        newPostPath,
+        ...rest
       } = useContent()
 
       return (
@@ -90,6 +87,7 @@ direct the user to `/posts/new`. As seen previously, both `/posts` and
     ```
 
 ## The modal
+
 The link appears and we're able to navigate to `/posts/new`, but
 `/posts/new` is missing a modal. Not surprising as both routes are
 rendering the same content.
@@ -97,10 +95,9 @@ rendering the same content.
 Lets add a modal.
 
 === "`posts/index.json.props`"
-    !!! info
-        For simplicity, we'll use a "Hello World" as the modal contents
-    ```diff
-    # app/views/posts/index.json
+!!! info
+For simplicity, we'll use a "Hello World" as the modal contents
+```diff # app/views/posts/index.json
 
     ...
 
@@ -113,14 +110,13 @@ Lets add a modal.
     ```
 
 === "`index.js`"
-    ```diff
-    + import Modal from './Modal'
+```diff + import Modal from './Modal'
 
     export default PostIndex = () => {
-      const { 
-        newPostPath, 
-    +    createPostModal, 
-        ...rest 
+      const {
+        newPostPath,
+    +    createPostModal,
+        ...rest
       } = useContent()
 
       return (
@@ -160,8 +156,7 @@ Unfortunately, now BOTH routes have modals! Lets fix that by adding
 a conditional render.
 
 === "`index.json.props`"
-    ```diff
-    # app/views/posts/index.json.props
+```diff # app/views/posts/index.json.props
 
     ...
 
@@ -174,8 +169,7 @@ a conditional render.
     ```
 
 === "`posts_controller.rb`"
-    ```diff
-    # app/controllers/posts_controller.rb
+```diff # app/controllers/posts_controller.rb
 
     def index
       @posts = Post.all
@@ -190,8 +184,8 @@ a conditional render.
     ```
 
 === "`Modal.js`"
-    ```diff
-    import Modal from './Modal'
+```diff
+import Modal from './Modal'
 
     export default Modal = ({
       greeting,
@@ -211,9 +205,7 @@ will cause a new page load. We can remove the page load by adding
 `data-sg-visit` to the link. With `data-sg-visit`, Superglue will navigate to the next
 page without reloading the page, just like Turbo.
 
-
 ### **`posts/index.js`**
-
 
 ```diff
 import Modal from './Modal'
@@ -238,14 +230,14 @@ export default PostIndex = () => {
     ...
   )
 }
-```
+````
 
 ## Optimization
 
 With the above, a click on **New Post** while on `/posts` will
 
 1. Fetch `/posts/new` with
-`format=json`
+   `format=json`
 2. Save the page to the store
 3. Swap the page components
 4. Change the url
@@ -260,7 +252,7 @@ Lets fix that!
 Recall how [digging] for content works. We'll add a `props_at` that digs for
 the modal on `/posts/new` while skipping other content on that page.
 
-  [digging]: ../tutorial.md#digging-with-props_at
+[digging]: ../tutorial.md#digging-with-props_at
 
 ```diff
 # app/views/posts/index.json

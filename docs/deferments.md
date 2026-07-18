@@ -26,7 +26,7 @@ This option make it easy to defer content in a single setting.
       end
     ```
 
-And that's it! 
+And that's it!
 
 ### Behind the scenes
 
@@ -97,5 +97,3 @@ and manually use `remote`
 ```
 remote("/dashboard?props_at=data.metrics")
 ```
-
-

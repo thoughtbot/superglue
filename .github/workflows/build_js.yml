@@ -18,11 +18,11 @@ jobs:
         with:
           node-version: 22
       - name: Setup project
-        working-directory: ./superglue
+        working-directory: .
         run: npm install
       - name: Lint
-        working-directory: ./superglue
+        working-directory: .
         run: npm run lint
       - name: Test
-        working-directory: ./superglue
+        working-directory: .
         run: npm run test

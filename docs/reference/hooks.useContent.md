@@ -38,9 +38,9 @@ re-renders only when accessed fragments change.
 
 ##### Type Parameters
 
-| Type Parameter | Default type | Description |
-| ------ | ------ | ------ |
-| `T` | [`JSONMappable`](types.md#jsonmappable) | The data type being accessed (defaults to JSONMappable) |
+| Type Parameter | Default type                            | Description                                             |
+| -------------- | --------------------------------------- | ------------------------------------------------------- |
+| `T`            | [`JSONMappable`](types.md#jsonmappable) | The data type being accessed (defaults to JSONMappable) |
 
 ##### Returns
 
@@ -66,21 +66,21 @@ Defined in: [hooks/useContent.tsx:57](https://github.com/thoughtbot/superglue/bl
 
 ##### Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` | [`JSONMappable`](types.md#jsonmappable) |
+| Type Parameter | Default type                            |
+| -------------- | --------------------------------------- |
+| `T`            | [`JSONMappable`](types.md#jsonmappable) |
 
 ##### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter  | Type     | Description                                                                                          |
+| ---------- | -------- | ---------------------------------------------------------------------------------------------------- |
 | `pageKey?` | `string` | Optional page key to access a specific page's data. When omitted, returns data for the current page. |
 
 ##### Returns
 
 `undefined` \| `T`
 
-***
+---
 
 <a id="unproxy"></a>
 
@@ -95,14 +95,14 @@ Extracts the underlying state from an [useContent](#usecontent) proxy
 #### Type Parameters
 
 | Type Parameter |
-| ------ |
-| `T` |
+| -------------- |
+| `T`            |
 
 #### Parameters
 
 | Parameter | Type |
-| ------ | ------ |
-| `proxy` | `T` |
+| --------- | ---- |
+| `proxy`   | `T`  |
 
 #### Returns
 

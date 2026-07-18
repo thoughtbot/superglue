@@ -50,13 +50,13 @@ Digging is normally combined with using [data-sg-remote] or [remote] to update
 content in async fashion.
 
 !!! info
-    `props_at` can be used with `data-sg-visit`
+`props_at` can be used with `data-sg-visit`
 
 [data-sg-remote]: ./ujs.md#data-sg-remote
 [remote]: ./requests.md#remote
 
-
 ## Collections
+
 There are two ways to query collections. Looking at the following example:
 
 ```ruby
@@ -73,6 +73,7 @@ end
 ```
 
 ### Index-based selection
+
 You may use an index-based key to fetch an item in a list like so:
 
 ```js
@@ -89,6 +90,7 @@ While traversing by index works fine, it can lead the wrong post being updated
 if your store state has changed by the time the request comes back.
 
 ### Attribute-based selection
+
 Attribute-based keys for collections look like this:
 
 ```js
@@ -146,13 +148,12 @@ end
 ```
 
 !!! info
-    When querying, Superglue will disable
-    [caching](https://github.com/thoughtbot/props_template#caching) and
-    [deferment](https://github.com/thoughtbot/props_template#deferment) until the
-    target node is reached.
+When querying, Superglue will disable
+[caching](https://github.com/thoughtbot/props_template#caching) and
+[deferment](https://github.com/thoughtbot/props_template#deferment) until the
+target node is reached.
 
 With digging, many modern SPA functionality can be achieved by just a keypath and a
 few lines of code.
 
 [PropsTemplate]: https://github.com/thoughtbot/props_template
-

@@ -7,14 +7,13 @@ offers, Superglue comes with two functions built around `fetch`, `visit` and
 
 [NavigationContext]: reference/types.md#navigationcontextprops
 
-
 !!! tip
-    Superglue does not come with a `<Link>` component. Instead we encourage you to
-    build one that is unique to your projects needs using the functions provided by
-    the [NavigationContext].
+Superglue does not come with a `<Link>` component. Instead we encourage you to
+build one that is unique to your projects needs using the functions provided by
+the [NavigationContext].
 
 ```js
-import { NavigationContext } from '@thoughtbot/superglue';
+import { NavigationContext } from '@thoughtbot/superglue'
 
 const { remote, visit } = useContext(NavigationContext)
 ```
@@ -45,8 +44,8 @@ sequenceDiagram
 ```
 
 !!! hint
-    Its possible to modify the visit payload before it saves
-    to the store. See the [beforeSave](#the-beforesave-callback) callback.
+Its possible to modify the visit payload before it saves
+to the store. See the [beforeSave](#the-beforesave-callback) callback.
 
 <div class="grid cards" markdown>
   -  [:octicons-arrow-right-24: See complete reference](reference/types.requests.md#visit)
@@ -61,8 +60,8 @@ history. Unlike visit, you can fire off as many async `remote` requests
 as you want.
 
 !!! hint
-    Its possible to modify the remote payload before it saves
-    to the store. See the [beforeSave](#the-beforesave-callback) callback.
+Its possible to modify the remote payload before it saves
+to the store. See the [beforeSave](#the-beforesave-callback) callback.
 
 At glance it looks like this:
 
@@ -88,10 +87,10 @@ a different page in the store. If the user is not viewing the target page, they
 will not see an update.
 
 !!! warning
-    The componentIdentifier from the page response **MUST** match the target page, otherwise
-    remote will throw a `MismatchedComponentError` error. You can override this by using the
-    `force: true` option. See the [docs](reference/types.requests.md#remoteprops)
-    for details.
+The componentIdentifier from the page response **MUST** match the target page, otherwise
+remote will throw a `MismatchedComponentError` error. You can override this by using the
+`force: true` option. See the [docs](reference/types.requests.md#remoteprops)
+for details.
 
 ```mermaid
 sequenceDiagram
@@ -120,14 +119,14 @@ sequenceDiagram
 </div>
 
 !!! tip "Customizations"
-    You can modify the behavior of `visit` and `remote` functions globally from
-    `application_visit.js`. If you need a global customization, e.g, progress
-    bars, you can add them there.
+You can modify the behavior of `visit` and `remote` functions globally from
+`application_visit.js`. If you need a global customization, e.g, progress
+bars, you can add them there.
 
 ## Tracking visit state
 
 The `isVisiting` boolean is available in [SuperglueState](./reference/types.md#supergluestate)
-and indicates whether a visit is currently in flight. This is useful for showing loading 
+and indicates whether a visit is currently in flight. This is useful for showing loading
 indicators, progress bars, or disabling UI elements while navigation is happening.
 
 ```jsx
@@ -146,24 +145,23 @@ export function App() {
 ```
 
 !!! note
-    `isVisiting` only tracks explicit `visit` calls. It does not track `remote` requests,
-    which can be many and concurrent. If you need to track loading state for multiple
-    concurrent requests, consider using Redux to track them independently.
-
+`isVisiting` only tracks explicit `visit` calls. It does not track `remote` requests,
+which can be many and concurrent. If you need to track loading state for multiple
+concurrent requests, consider using Redux to track them independently.
 
 ## The `beforeSave` callback
 
 !!! note
-    `beforeSave` is an advanced Superglue feature. Before proceeding please familiarize
-    yourself with:
+`beforeSave` is an advanced Superglue feature. Before proceeding please familiarize
+yourself with:
 
     1. Knowing how [Fragments and FragmentRefs](./fragments.md) work, the first
     parameter passed to `beforeSave` is a proxy that lazily normalizes
     fragments.
     2. Knowing the shape of [savePage or graft](./page-response.md) responses.
-    3. Knowing how [denormaliztion](./fragments.md#denormalization) works 
+    3. Knowing how [denormaliztion](./fragments.md#denormalization) works
 
-Both `visit` and `remote` can be passed a `beforeSave` callback. This is your 
+Both `visit` and `remote` can be passed a `beforeSave` callback. This is your
 opportunity to modify the incoming [savePage or graft](./page-response.md)
 payload before it persists. Its ideal for features like
 [infinite-scroll](./recipes/infinite-scroll.md) where you need to
@@ -173,19 +171,19 @@ concatenate a list of results into an existing list:
 const beforeSave = (prevPageProxy, receivedResponse) => {
   receivedResponse.data.messages = [
     prevPageProxy.data.messages,
-    ... receivedResponse.data.messages
+    ...receivedResponse.data.messages,
   ]
 
-  return receivedResponse 
+  return receivedResponse
 }
 
-remote("/posts", {beforeSave})
+remote('/posts', { beforeSave })
 ```
 
 !!! warning
-    If you are concatenating arrays in a `beforeSave` callback and using nesting
-    [Fragments](./fragments.md) like so:
-    
+If you are concatenating arrays in a `beforeSave` callback and using nesting
+[Fragments](./fragments.md) like so:
+
     `index.json.props`
     ```ruby
       json.posts(partial: ["post_list", fragment: "posts_list"]) do
@@ -208,9 +206,9 @@ remote("/posts", {beforeSave})
     Superglue identify fragments in the concatenated array. Otherwise, any
     index based fragment array's in `receivedResponse` will be frozen to prevent
     mutations.
-    
+
     `_post_list.json.props`
-    
+
     ```diff
     - json.array!(partial: ["post", fragment: ->(post){"post-#{post.id}" }]) do
     + json.array!(partial: ["post", fragment: ->(post){"post-#{post.id}" }, key: :id]) do

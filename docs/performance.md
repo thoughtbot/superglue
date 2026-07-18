@@ -68,9 +68,9 @@ const rawContent = unproxy(content)
 and use `useFragment` in the child component to set up its own dependency tracking:
 
 ```js
-import {useFragment} from '@thoughtbot/superglue'
+import { useFragment } from '@thoughtbot/superglue'
 
-const SlidingCart = ({cartRef}) => {
+const SlidingCart = ({ cartRef }) => {
   const cart = useFragment(cartRef)
 }
 ```
@@ -89,7 +89,7 @@ const rawCart = unproxy(content.cart)
 
 const memoizedValue = useMemo(() => {
   // An expensive calculation
-}, [rawCart]);
+}, [rawCart])
 ```
 
 Its also useful in `useEffect` dependencies
@@ -97,13 +97,13 @@ Its also useful in `useEffect` dependencies
 ```js
 useEffect(() => {
   // side effect
-}, [rawCart]) 
+}, [rawCart])
 ```
 
 ## Backend
 
 On the backend, `props` are shaped with [props_template](./props-template.md).
 Its one of the fastest json builders in the rubyverse and has been used in
-[production] to speed up API rendering times. 
+[production] to speed up API rendering times.
 
 [production]: https://dev.to/yutakusuno/rails-reduced-rendering-time-by-30-in-an-api-response-4ji

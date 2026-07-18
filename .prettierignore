@@ -1,6 +1,9 @@
 # Ignore artifacts:
 dist
 coverage
+tmp
+site
+node_modules
 
 # Ignore all HTML files:
 **/*.html

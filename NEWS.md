@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## 1.0.2
+
 Remove url-parse which was deduping params and replaced it with Browser's own
 URLSearchParams. Users using SSR via Humid should add a shim to export a
 URLSearchParams and URL Polyfill. For example:
@@ -12,32 +13,37 @@ export { URL, URLSearchParams } from 'whatwg-url'
 ```
 
 ## 1.0.1
+
 Fixes for scroll management
 
 ## 1.0.0
+
 Release 1.0.0. Significant backward breaking changes from 0.54.0. To migrate:
 
-1. Run `rails g superglue:install` and manage the diffs. Pay note to 
+1. Run `rails g superglue:install` and manage the diffs. Pay note to
+
 - The Application class. This has been converted to a functional component.
-Its no longer necessary to pass a store factory (buildStore) to the application.
+  Its no longer necessary to pass a store factory (buildStore) to the application.
 - store.js no longer requires a factory function.
+
 2. content is no longer passed as props to the page components. To migrate, use
-the `useContent` hook.
+   the `useContent` hook.
 3. `visit` and `remote` are also no longer passed in the the page component. Instead
-import the `NavigationContext` and combine it with React's `useContext`. See newly
-updated documentation for more information.
+   import the `NavigationContext` and combine it with React's `useContext`. See newly
+   updated documentation for more information.
 4. `navigateTo` no longer accepts a `ownProps` hash.
 5. `data-sg-placeholder` has been removed.
 6. `remote` will, by default, try to determine the pageKey from the response first, and will
-no longer use the current pageKey. To migrate, be explicit about the pageKey and pass 
-accordingly to `remote`.
-
+   no longer use the current pageKey. To migrate, be explicit about the pageKey and pass
+   accordingly to `remote`.
 
 ## 0.54.0
+
 Migrated to typescript and mkdocs. There are no backward incompatible
 changse. This is may be the last release before 1.0.
 
 ## 0.53.4
+
 Remove the need for content-location, but retain the functionality in
 case there is a need for it, and do our best not to break existing
 functionality.
@@ -45,11 +51,13 @@ functionality.
 Better dev experience with new error handling and typescript/eslint
 
 ## 0.53.3
+
 Fixed issue with being able to remotely submit a form that was using
 a GET request. This uncovered another issue with a null content-type
 that was also resolved.
 
 ## 0.53.1
+
 Minor update, removed a helper method `search_path_to_camelized_param`
 that was no longer needed and fixed the existing `param_to_search_path`
 to skip over number as props_template will also do that.
@@ -69,7 +77,6 @@ controller_path and action_name identifier. See
 https://github.com/thoughtbot/props_template/blob/main/NEWS.md#0310-dec-6-2023
 for a migration path.
 
-
 ## 0.51
 
 Backward breaking changes! Superglue now uses props_template 0.30.0 which no
@@ -77,8 +84,8 @@ longer autocamelize keys. See
 https://github.com/thoughtbot/props_template/blob/main/NEWS.md#0300-nov-25-2023
 for details and a migration path.
 
-
 ## 0.50
+
 Updates generators to use redux starter kit. Superglue will also generate
 a few handy slices for use. Generators will also use a new Rails helper
 [form_props](https://github.com/thoughtbot/form_props) to make building
@@ -91,24 +98,29 @@ on how to transition to a slice.
 Readme updated and non-working links fixed.
 
 ## 0.40
+
 Scroll history and cache restore strategies (`fromCacheOnly`, `revisitOnly`,
 `fromCacheAndRevisitInBackground` default) added.
 
 `history` npm package upgraded.
 
 ## 0.30
+
 Project renamed to superglue
 
 ## 0.20
+
 Added back the `props_from_form_with` helper and update to use latest
 html-dom-parser.
 
 ## 0.19
+
 Breezy can now be rendered on SSR using [humid](https://github.com/thoughtbot/humid).
 
 Remove helpers and methods no longer needed.
+
 - `props_from_form_with`
--  Let the browser handle xdomain reqs.
+- Let the browser handle xdomain reqs.
 
 Renamed `master` to `main`
 
@@ -116,6 +128,7 @@ Renamed `master` to `main`
 
 Added more fined grained control over deferments by allowing to specify custom
 success and fail action creators:
+
 ```
 json.inner(defer: [:auto, success_action: 'SUCCESS', fail_action: 'FAIL']) do
   json.greeting do
@@ -136,12 +149,11 @@ fragments: [
 ],
 ```
 
-
 Using the replace action in navigateTo to change the URL will now also
 replace the state in the same location in the store.
 
-
 ## 0.16
+
 Remove reset_encoder! This strategy was not necessary and prevented
 props_template from being used in Puma.
 
@@ -149,6 +161,7 @@ Fix potential memory leak in OJ by dup'ing keys before push_key. This does make
 props_template a tiny bit slower.
 
 ## 0.15
+
 visit and remote can now be customized to place code before and after the thunk
 gets called. These thunks are pre-wrapped with a dispatch and gets passed to the
 NavComponent which then gets passed to the page components as props.
@@ -186,10 +199,11 @@ PropsTemplate now uses a single instance of Oj's StringWriter, be sure to update
 your rails initializer to call `Props.reset_encoder!`
 
 ## v0.14.0
+
 - Add UJS attributes data-bz-remote and data-bz-visit
 - Add copyPage action to allow optimistic updates
 - Allow visit thunks to use urls with bzq by allowing a placeholder option
-- Ensure all requests made by breezy gets a __=0 cache buster retained through redirect
+- Ensure all requests made by breezy gets a \_\_=0 cache buster retained through redirect
 - Remove formik and use Rails forms
 - Add RailsTag component to use Rails innerhtml without a container tag
 - Updated generators
@@ -197,6 +211,7 @@ your rails initializer to call `Props.reset_encoder!`
 - Add redirect_back_with_bzq to redirect back while retaining the bzq param
 
 ## v0.13.0
+
 - Breezy only supports rail 6 and on.
 - BreezyTemplate is now replaced with PropsTemplate. Notable improvements over BreezyTemplate:
   - Support for application layouts, e.g `application.json.props`
@@ -217,6 +232,7 @@ your rails initializer to call `Props.reset_encoder!`
 - Drop pessimistic version constraint
 
 ## v0.11.0
+
 BREAKING CHANGE: partial rendering was passed existing context prefixes when it wasn't supposed to, this broke some parts of caching, and generated the wrong fragment cache key.
 Fix: When using node filtering eg. `_bz=foo.bar.my_node`, caching on the targest ancestors is disabled.
 Fix: Inline partials were not caching properly, it ran and saved the partial in the cache every time.

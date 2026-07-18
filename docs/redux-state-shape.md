@@ -22,10 +22,12 @@ it looks like this:
 ```
 
 ## `superglue`
+
 The `superglue` node contains information about your application that you may
 find useful. You may read from this store using the `useSuperglue` hook, but do not write.
 
 ## `pages`
+
 The `pages` node is where rendered [pages] live. It's a hash where the keys are
 the pathname + query of your url, known throughout the documentation as
 `pageKey`, and the values are received JSON responses.

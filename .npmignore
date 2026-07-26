@@ -12,3 +12,5 @@ tsup.config.ts
 tsconfig.json
 typedoc.json
 mkdocs.yml
+plugins/typia/go/go.work
+plugins/typia/go/go.work.sum

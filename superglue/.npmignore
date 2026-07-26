@@ -9,3 +9,5 @@ yarn.lock
 .eslintignore
 .eslintrc.json
 vitest.config.ts
+plugins/typia/go/go.work
+plugins/typia/go/go.work.sum

@@ -27,7 +27,7 @@ export default defineConfig((options) => {
 
     // Deepkit unplugin
     {
-      entry: { deepkit: 'lib/deepkit.ts' },
+      entry: { deepkit: 'plugins/deepkit/deepkit.ts' },
       format: ['esm', 'cjs'],
       dts: true,
       sourcemap: true,
@@ -36,6 +36,18 @@ export default defineConfig((options) => {
         '@deepkit/type-compiler',
         '@deepkit/type',
         'typescript',
+      ],
+    },
+
+    // Typia ttsc plugin + unplugin
+    {
+      entry: { typia: 'plugins/typia/typia.ts' },
+      format: ['esm', 'cjs'],
+      dts: true,
+      sourcemap: true,
+      external: [
+        '@ttsc/unplugin',
+        'ttsc',
       ],
     },
   ]

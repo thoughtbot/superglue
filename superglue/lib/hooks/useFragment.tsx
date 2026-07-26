@@ -110,7 +110,10 @@ export function useFragment<T, P extends boolean>(
         new WeakMap()
       ) as T
 
-      options.validate(proxyForValidation)
+      const result = options.validate(proxyForValidation)
+      if (!result.success) {
+        console.error('[Superglue] Content validation failed:', result.errors)
+      }
     }
 
     return proxy

@@ -17,6 +17,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
       - name: Setup project
         working-directory: ./superglue
         run: npm install

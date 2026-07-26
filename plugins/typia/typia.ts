@@ -13,13 +13,13 @@ import type { ITtscPlugin, ITtscPluginFactoryContext } from 'ttsc'
  * hoisting or symlink layout.
  */
 export default function createTtscPlugin(
-  context: ITtscPluginFactoryContext,
+  context: ITtscPluginFactoryContext
 ): ITtscPlugin {
   const requireFrom = createRequire(
-    path.join(context.projectRoot, 'package.json'),
+    path.join(context.projectRoot, 'package.json')
   )
   const root: string = path.dirname(
-    requireFrom.resolve('@thoughtbot/superglue/package.json'),
+    requireFrom.resolve('@thoughtbot/superglue/package.json')
   )
   return {
     name: 'superglue-typia',

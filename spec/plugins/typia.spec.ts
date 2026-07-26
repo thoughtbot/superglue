@@ -11,9 +11,18 @@ let generatedGoWork: string
 const nativeDir = path.resolve(__dirname, '..', '..', 'plugins', 'typia', 'go')
 
 const shimPackages = [
-  'shim/ast', 'shim/bundled', 'shim/checker', 'shim/compiler',
-  'shim/core', 'shim/diagnosticwriter', 'shim/printer', 'shim/scanner',
-  'shim/tsoptions', 'shim/tspath', 'shim/vfs', 'shim/vfs/cachedvfs',
+  'shim/ast',
+  'shim/bundled',
+  'shim/checker',
+  'shim/compiler',
+  'shim/core',
+  'shim/diagnosticwriter',
+  'shim/printer',
+  'shim/scanner',
+  'shim/tsoptions',
+  'shim/tspath',
+  'shim/vfs',
+  'shim/vfs/cachedvfs',
   'shim/vfs/osvfs',
 ]
 
@@ -119,20 +128,33 @@ export const content = useContent<MyProps>()
 export const settings = useFragment<WidgetConfig, true>('ref')
 `
 
-function runTransform(fixture: string, fileName: string): Record<string, string> {
+function runTransform(
+  fixture: string,
+  fileName: string
+): Record<string, string> {
   writeFileSync(path.join(tmpDir, fileName), fixture)
 
-  const pluginsJson = JSON.stringify([{ name: 'superglue-typia', stage: 'transform', config: { transform: '@thoughtbot/superglue/typia' } }])
+  const pluginsJson = JSON.stringify([
+    {
+      name: 'superglue-typia',
+      stage: 'transform',
+      config: { transform: '@thoughtbot/superglue/typia' },
+    },
+  ])
 
-  const result = execFileSync(binaryPath, [
-    'transform',
-    `--cwd=${tmpDir}`,
-    `--tsconfig=tsconfig.json`,
-    `--plugins-json=${pluginsJson}`,
-  ], {
-    encoding: 'utf-8',
-    timeout: 60_000,
-  })
+  const result = execFileSync(
+    binaryPath,
+    [
+      'transform',
+      `--cwd=${tmpDir}`,
+      `--tsconfig=tsconfig.json`,
+      `--plugins-json=${pluginsJson}`,
+    ],
+    {
+      encoding: 'utf-8',
+      timeout: 60_000,
+    }
+  )
 
   return JSON.parse(result).typescript
 }
@@ -205,7 +227,9 @@ describe('typia ttsc plugin integration', () => {
     expect(code).toContain('useFragment')
     expect(code).toContain('typeof')
     // Should NOT contain the raw untransformed call
-    expect(code).not.toMatch(/useFragment<WidgetConfig,\s*true>\(toFragmentRef\('devSettings'\)\)(?!\s*;?\s*\n)/)
+    expect(code).not.toMatch(
+      /useFragment<WidgetConfig,\s*true>\(toFragmentRef\('devSettings'\)\)(?!\s*;?\s*\n)/
+    )
     // Should NOT leak typia.createValidate
     expect(code).not.toContain('typia.createValidate')
   })
@@ -276,7 +300,10 @@ interface MyProps { title: string }
 const existingValidator = (data: unknown) => {}
 export const result = useContent<MyProps>(undefined, { validate: existingValidator })
 `
-    const output = runTransform(alreadyTransformedFixture, 'already_transformed.ts')
+    const output = runTransform(
+      alreadyTransformedFixture,
+      'already_transformed.ts'
+    )
     const code = output['already_transformed.ts']
 
     expect(code).toBeDefined()

@@ -108,7 +108,9 @@ function hasValidateInjection(code: string): boolean {
 describe('deepkit unplugin integration', () => {
   it('esbuild plugin transforms code with metadata and validate injection', async () => {
     const esbuild = await import('esbuild')
-    const { esbuild: deepkitPlugin } = await import('../../plugins/deepkit/deepkit')
+    const { esbuild: deepkitPlugin } = await import(
+      '../../plugins/deepkit/deepkit'
+    )
 
     const result = await esbuild.build({
       entryPoints: [path.join(tmpDir, 'input.ts')],
@@ -128,7 +130,9 @@ describe('deepkit unplugin integration', () => {
 
   it('esbuild plugin transforms TSX files without JSX parsing errors', async () => {
     const esbuild = await import('esbuild')
-    const { esbuild: deepkitPlugin } = await import('../../plugins/deepkit/deepkit')
+    const { esbuild: deepkitPlugin } = await import(
+      '../../plugins/deepkit/deepkit'
+    )
 
     const result = await esbuild.build({
       entryPoints: [path.join(tmpDir, 'input.tsx')],
@@ -148,7 +152,9 @@ describe('deepkit unplugin integration', () => {
 
   it('esbuild plugin handles trailing commas in TSX useFragment calls', async () => {
     const esbuild = await import('esbuild')
-    const { esbuild: deepkitPlugin } = await import('../../plugins/deepkit/deepkit')
+    const { esbuild: deepkitPlugin } = await import(
+      '../../plugins/deepkit/deepkit'
+    )
 
     const result = await esbuild.build({
       entryPoints: [path.join(tmpDir, 'input_trailing_comma.tsx')],
@@ -168,7 +174,9 @@ describe('deepkit unplugin integration', () => {
 
   it('vite plugin transforms code with metadata and validate injection', async () => {
     const { build: viteBuild } = await import('vite')
-    const { vite: deepkitPlugin } = await import('../../plugins/deepkit/deepkit')
+    const { vite: deepkitPlugin } = await import(
+      '../../plugins/deepkit/deepkit'
+    )
 
     const result = await viteBuild({
       root: tmpDir,

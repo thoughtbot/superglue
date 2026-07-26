@@ -45,10 +45,7 @@ export default defineConfig((options) => {
       format: ['esm', 'cjs'],
       dts: true,
       sourcemap: true,
-      external: [
-        '@ttsc/unplugin',
-        'ttsc',
-      ],
+      external: ['@ttsc/unplugin', 'ttsc'],
     },
   ]
 })

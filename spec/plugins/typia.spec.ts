@@ -170,7 +170,7 @@ beforeAll(() => {
   execSync(`go build -o ${binaryPath} .`, {
     cwd: nativeDir,
     stdio: 'pipe',
-    timeout: 120_000,
+    timeout: 300_000,
   })
 
   // Create temp fixture directory with tsconfig
@@ -186,7 +186,7 @@ beforeAll(() => {
       },
     })
   )
-}, 120_000)
+}, 300_000)
 
 afterAll(() => {
   if (tmpDir && existsSync(tmpDir)) {

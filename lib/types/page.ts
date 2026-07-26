@@ -1,14 +1,12 @@
 import { JSONMappable, JSONValue } from './json'
 
-/**
- * Options for runtime type validation in `useContent` and `useFragment`.
- * The `validate` callback is typically injected at build time by a
- * Superglue unplugin, but can also be passed manually with any
- * validation library. The callback should report errors via
- * `console.error` or by throwing.
- */
+export type ValidationResult = {
+  success: boolean
+  errors: unknown[]
+}
+
 export type ValidateOption = {
-  validate?: (data: unknown) => void
+  validate?: (data: unknown) => ValidationResult
 }
 
 /**

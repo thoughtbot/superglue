@@ -9,7 +9,9 @@ import ts from 'typescript'
  * transformations were applied, so callers know whether to prepend their
  * validate helper.
  */
-export function createHookTransformer(validateFnName: string): {
+export function createHookTransformer(
+  validateFnName: string
+): {
   factory: ts.TransformerFactory<ts.SourceFile>
   transformed: () => boolean
 } {
@@ -41,17 +43,19 @@ export function createHookTransformer(validateFnName: string): {
             )
 
             const optionsArg = ts.factory.createObjectLiteralExpression([
-              ts.factory.createPropertyAssignment('validate', validateCall),
+              ts.factory.createPropertyAssignment(
+                'validate',
+                validateCall
+              ),
             ])
 
-            const args = [
-              ...node.arguments.map(
-                (a) => ts.visitNode(a, visit) as ts.Expression
-              ),
-            ]
+            const args = [...node.arguments.map((a) => ts.visitNode(a, visit) as ts.Expression)]
 
             if (isUseContent && node.arguments.length === 0) {
-              args.push(ts.factory.createIdentifier('undefined'), optionsArg)
+              args.push(
+                ts.factory.createIdentifier('undefined'),
+                optionsArg
+              )
             } else {
               args.push(optionsArg)
             }
@@ -85,7 +89,9 @@ export function transformHooks(
   validateFnName: string,
   validateHelper: string
 ): string {
-  const scriptKind = /\.[jt]sx$/.test(id) ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+  const scriptKind = /\.[jt]sx$/.test(id)
+    ? ts.ScriptKind.TSX
+    : ts.ScriptKind.TS
   const sourceFile = ts.createSourceFile(
     id,
     code,

@@ -1,6 +1,6 @@
 # Requests
 
-If you prefer to navigate using Javascript, or need more functionality than what UJS
+If you prefer to navigate using JavaScript, or need more functionality than what UJS
 offers, Superglue comes with two functions built around `fetch`, `visit` and
 `remote`. These are wrapped with your own implementation in
 [application_visit.js] and can be accessed via the [NavigationContext].

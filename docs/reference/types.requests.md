@@ -137,7 +137,7 @@ Defined in: [types/requests.ts:133](https://github.com/thoughtbot/superglue/blob
 
 A callback that fires in between recieving a payload and saving a
 payload. Use this callback to modify the payload before it gets saved. Its
-useful for appending, prepending, shuffeling, etc. recieved data to
+useful for appending, prepending, shuffeling, etc. received data to
 existing data.
 
 `prevPage` is `undefined` when there is no existing page in the store

@@ -141,7 +141,7 @@ Fragment auto update is removed as the feature seemed too brittle to use.
 Instead I'm encouraging users do this by themselves on the front using standard
 redux reducers. The fragment functionality has been changed to as a way to
 optionally tag your nodes with information about the partial being used, the
-path where the tag occured and the name you give to it. You can use this information to iterate across all your pages in your own reducer.:
+path where the tag occurred and the name you give to it. You can use this information to iterate across all your pages in your own reducer.:
 
 ```
 fragments: [
@@ -219,14 +219,14 @@ your rails initializer to call `Props.reset_encoder!`
   - `render_collection` like behavior (single lookup for a partial) for `json.array!(partial: 'foobar)'`
   - Explicit control over node traversal via search options e.g `json.foobar(search:'foobar.posts.id=1')`
   - Renders `json` instead of `js`
-- BreezyJS no longer uses Server Generated Javascript Responses. It uses JSON and is now easier to use your favorite JSON browser plugin to see the JSON version of your page, for example: `localhost:3000/posts.json`
+- BreezyJS no longer uses Server Generated JavaScript Responses. It uses JSON and is now easier to use your favorite JSON browser plugin to see the JSON version of your page, for example: `localhost:3000/posts.json`
 - Breezy Rails controller requirements is simplified, no macros needed just plain Rails, be sure to `rails generate scaffold post` or `rails breezy:install:web` to see what changed.
 
 ## v0.12.0
 
 - Update tests for rails 6
 - Remove support for rails 4
-- Update gemspec, removed some unneeded dependancies
+- Update gemspec, removed some unneeded dependencies
 - Use JSON.dump instead of MultiJSON
 - Remove dead comments and methods
 - Drop pessimistic version constraint
@@ -244,7 +244,7 @@ BREAKING CHANGE: Rename `_bz` param to `bzq`
 - BREAKING CHANGE: All keys `json.my_key_here` in BreezyTemplate will `key_format` to camelCase `{"myKeyHere": 'foobar'}`. This makes working with props received via `mapStateToProps` easier to work with.
 - FIX: `remote` now merges joints on graft requests
 - BREAKING CHANGE: `remote` will update all joints before fetching nodes when using deferment. The previous behavior was to update after all deferred fetches were finished, but this caused some issues and confusion around proper behavior. This will be the fix for now.
-- NEW: Breezy now dispatches `@@breezy/GRAFTING_ERROR`. This is a listenable action that you can use to retry deferments that fail due to network errors. You will recieve the `pageKey`, the `url` that failed, and the `keyPath` to the missing node.
+- NEW: Breezy now dispatches `@@breezy/GRAFTING_ERROR`. This is a listenable action that you can use to retry deferments that fail due to network errors. You will receive the `pageKey`, the `url` that failed, and the `keyPath` to the missing node.
 - `remote` now has a fallback `pageKey` if one isn't provided.
 - `ensureSingleVisit`, the function that powers `visit` is now exposed for use. Come in super handy when you want to create your own `visit` function. For example, instaclick functionality.
 - BREAKING CHANGE: Remove immutable helpers. It doesn't seem like good practice to create immutable action creators, probably doing too much work for the user and makes testing more difficult. Instead recommend and document immmer usage and keep getIn (exported for traversing), and setIn (for internal use) around.

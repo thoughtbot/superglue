@@ -67,7 +67,7 @@ transform data, do it on the server side.
 
 Superglue encourages you to shape UI state on the server because
 
-1. Ruby combined with Rails view heleprs is just as good, if not better, than Javascript at shaping state for React components.
+1. Ruby combined with Rails view heleprs is just as good, if not better, than JavaScript at shaping state for React components.
 
 2. UI patterns are universal - headers, footers, a body with a list of items exist in every app. Business logic varies wildly, but these presentational structures remain constant. This creates immediate intuition; a developer can easily guess the shape of the store, and make close-to-correct assumptions on how to update the store without looking at any code.
 
@@ -78,7 +78,7 @@ Superglue encourages you to shape UI state on the server because
 Conventional Rails wisdom discourages excessive view logic, but `.props` templates don't have the usual structural markup that you'd find with ERB templates. Its not uncommon to see more logic in your views.
 
 !!! note
-You can think of `.props` as a presentational layer for your React components. We keep most of the UI state on the server the simplify the amount of Javascript we need.
+You can think of `.props` as a presentational layer for your React components. We keep most of the UI state on the server the simplify the amount of JavaScript we need.
 
 ```ruby
 daily_events = @events

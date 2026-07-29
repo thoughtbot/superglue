@@ -490,14 +490,14 @@ Update `app/controllers/items_controller.rb` to handle toggle submissions
 
 What we've built so far is a multi-page application backed by classic Rails
 conventions with a touch of React. Lets progressively add SPA navigation to
-forms and links by bringing back a Rails favorite: [Unobtrusive Javascript](ujs.md)
+forms and links by bringing back a Rails favorite: [Unobtrusive JavaScript](ujs.md)
 
 === "`show.jsx`"
 Update `app/views/shopping_lists/show.jsx`
 
     !!! Note
         Setting a HTTP method like `put` on a `<a>` tag is not supported with
-        Unobtrusive Javascript. This is by design. Instead, create a form that
+        Unobtrusive JavaScript. This is by design. Instead, create a form that
         looks like a link. This is inspired by
         [link_to](https://apidock.com/rails/ActionView/Helpers/UrlHelper/link_to).
 
@@ -742,7 +742,7 @@ GET /shopping_list?props_at=data.totalCost
 ## Digging with `props_at`
 
 The second step behind the scenes is called [digging](./digging.md). You can
-use the same `props_at` pattern with [Unobtrusive Javascript](./ujs.md) via
+use the same `props_at` pattern with [Unobtrusive JavaScript](./ujs.md) via
 `data-sg-remote` or with [requests](./requests.md).
 
 Here's how reloading a part of the screen would look like:
@@ -856,7 +856,7 @@ controller, go ahead and reload the page. Everything should still work.
           if @item.save
     -       redirect_to root_path, notice: 'Item added successfully!'
     +       respond_to do |format|
-    +         flash[:notice] = "Item added succesfully"
+    +         flash[:notice] = "Item added successfully"
     +         format.html { redirect_to root_path }
     +         format.json { render layout: "stream" }
     +       end
@@ -1020,7 +1020,7 @@ And broadcast it from the controller.
     +      )
 
           respond_to do |format|
-            flash[:notice] = "Item added succesfully"
+            flash[:notice] = "Item added successfully"
             format.html { redirect_to root_path }
             format.json { render layout: "stream" }
           end

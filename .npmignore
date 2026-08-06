@@ -3,6 +3,11 @@
 /scripts
 /docs
 /coverage
+/tmp
+/npm
+/.claude
+/.github
+*.tgz
 .eslintignore
 .eslintrc.json
 .prettierignore

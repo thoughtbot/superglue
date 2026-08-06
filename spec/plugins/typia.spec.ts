@@ -10,6 +10,7 @@ let tmpDir: string
 let binaryPath: string
 let generatedGoWork: string
 const nativeDir = path.resolve(__dirname, '..', '..', 'plugins', 'typia', 'go')
+const pluginDir = path.join(nativeDir, 'plugin')
 
 const shimPackages = [
   'shim/ast',
@@ -30,8 +31,6 @@ const shimPackages = [
 function buildGoWork(): string {
   const require_ = createRequire(path.join(nativeDir, 'package.json'))
   const ttscRoot = path.dirname(require_.resolve('ttsc/package.json'))
-  const typiaRoot = path.dirname(require_.resolve('typia/package.json'))
-  const typiaNative = path.join(typiaRoot, 'native')
 
   const lines = [
     'go 1.26',
@@ -40,11 +39,9 @@ function buildGoWork(): string {
     '\t.',
     `\t${ttscRoot}`,
     ...shimPackages.map((pkg) => `\t${path.join(ttscRoot, pkg)}`),
-    `\t${typiaNative}`,
     ')',
     '',
     `replace github.com/samchon/ttsc/packages/ttsc v0.0.0 => ${ttscRoot}`,
-    `replace github.com/samchon/typia/packages/typia/native v0.0.0 => ${typiaNative}`,
     '',
   ]
   return lines.join('\n')
@@ -165,10 +162,10 @@ beforeAll(() => {
   generatedGoWork = path.join(nativeDir, 'go.work')
   writeFileSync(generatedGoWork, buildGoWork())
 
-  // Build the Go binary
+  // Build the Go binary from plugin/ (standalone sidecar)
   binaryPath = path.join(nativeDir, 'superglue-typia-plugin')
   execSync(`go build -o ${binaryPath} .`, {
-    cwd: nativeDir,
+    cwd: pluginDir,
     stdio: 'pipe',
     timeout: 300_000,
   })
@@ -205,34 +202,26 @@ afterAll(() => {
 })
 
 describe('typia ttsc plugin integration', () => {
-  it('transforms useContent with inline validation', () => {
+  it('transforms useContent with typia.createValidate', () => {
     const output = runTransform(useContentFixture, 'input.ts')
     const code = output['input.ts']
 
     expect(code).toBeDefined()
     expect(code).toContain('validate')
     expect(code).toContain('useContent')
-    expect(code).toContain('typeof')
+    expect(code).toContain('typia.createValidate<MyProps>()')
     // Should NOT contain the raw untransformed call
     expect(code).not.toContain('useContent<MyProps>()')
-    // Should NOT leak typia.createValidate as a bare call
-    expect(code).not.toContain('typia.createValidate')
   })
 
-  it('transforms useFragment with inline validation', () => {
+  it('transforms useFragment with typia.createValidate', () => {
     const output = runTransform(useFragmentFixture, 'input_fragment.ts')
     const code = output['input_fragment.ts']
 
     expect(code).toBeDefined()
     expect(code).toContain('validate')
     expect(code).toContain('useFragment')
-    expect(code).toContain('typeof')
-    // Should NOT contain the raw untransformed call
-    expect(code).not.toMatch(
-      /useFragment<WidgetConfig,\s*true>\(toFragmentRef\('devSettings'\)\)(?!\s*;?\s*\n)/
-    )
-    // Should NOT leak typia.createValidate
-    expect(code).not.toContain('typia.createValidate')
+    expect(code).toContain('typia.createValidate<WidgetConfig>()')
   })
 
   it('handles trailing commas in useFragment calls', () => {
@@ -242,8 +231,7 @@ describe('typia ttsc plugin integration', () => {
     expect(code).toBeDefined()
     expect(code).toContain('validate')
     expect(code).toContain('useFragment')
-    // Should NOT leak typia.createValidate
-    expect(code).not.toContain('typia.createValidate')
+    expect(code).toContain('typia.createValidate<WidgetConfig>()')
   })
 
   it('transforms both useContent and useFragment in the same file', () => {
@@ -251,17 +239,12 @@ describe('typia ttsc plugin integration', () => {
     const code = output['input_mixed.ts']
 
     expect(code).toBeDefined()
-    // Both hooks should have validation injected
     expect(code).toContain('useContent')
     expect(code).toContain('useFragment')
-    expect(code).toContain('validate')
-    // Should have type checks for both MyProps and WidgetConfig
-    expect(code).toContain('title')
-    expect(code).toContain('color')
+    expect(code).toContain('typia.createValidate<MyProps>()')
+    expect(code).toContain('typia.createValidate<WidgetConfig>()')
     // Should NOT contain raw untransformed calls
     expect(code).not.toContain('useContent<MyProps>()')
-    // Should NOT leak internal codegen names into user-facing output
-    expect(code).not.toContain('typia.createValidate')
   })
 
   it('does not transform files without hooks', () => {
@@ -273,7 +256,6 @@ describe('typia ttsc plugin integration', () => {
     expect(code).not.toContain('validate')
     expect(code).not.toContain('typia')
     expect(code).not.toContain('createValidate')
-    expect(code).not.toContain('typeof input')
   })
 
   it('does not transform hooks without type arguments', () => {
@@ -287,7 +269,6 @@ export const result = useContent()
     const code = output['no_type_arg.ts']
 
     expect(code).toBeDefined()
-    // Should NOT inject validate when there's no type argument
     expect(code).not.toContain('{ validate')
     expect(code).toContain('useContent()')
   })
@@ -308,9 +289,7 @@ export const result = useContent<MyProps>(undefined, { validate: existingValidat
     const code = output['already_transformed.ts']
 
     expect(code).toBeDefined()
-    // Should preserve the existing validator, not replace it
     expect(code).toContain('existingValidator')
-    // Should NOT add a second validate injection
-    expect(code).not.toContain('typeof input')
+    expect(code).not.toContain('typia.createValidate')
   })
 })

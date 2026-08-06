@@ -23,7 +23,7 @@ export default function createTtscPlugin(
   )
   return {
     name: 'superglue-typia',
-    source: path.resolve(root, 'native'),
+    source: path.resolve(root, 'plugins', 'typia', 'go', 'driver'),
   }
 }
 

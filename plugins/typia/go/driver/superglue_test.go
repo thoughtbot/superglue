@@ -1,4 +1,4 @@
-package plugin
+package driver
 
 import (
 	"strings"
@@ -20,7 +20,7 @@ func parseAndTransform(t *testing.T, source string) string {
 	}
 	shimast.SetParentInChildren(sf.AsNode())
 	ec := shimprinter.NewEmitContext()
-	RewriteFile(ec, sf, nil)
+	RewriteFile(ec, sf)
 	shimast.SetParentInChildrenUnset(sf.AsNode())
 	writer := shimprinter.NewTextWriter("\n", 0)
 	printer := shimprinter.NewPrinter(

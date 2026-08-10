@@ -211,7 +211,7 @@ user, only the posts list changes, but the header stays the same.
 
 !!! info
 In effect, this achieves the same functionality as [Turbo Frames], but
-Superglue leans more on Unobtrusive Javascript for better ergonomics.
+Superglue leans more on Unobtrusive JavaScript for better ergonomics.
 
 [Turbo Frames]: https://turbo.hotwired.dev/handbook/frames
 

@@ -164,4 +164,4 @@ update(toFragmentRef('userCart'), (cartDraft) => {
 })
 ```
 
-In the example, you recieve an immer draft of the fragment and you can mutate it however you want.
+In the example, you receive an immer draft of the fragment and you can mutate it however you want.

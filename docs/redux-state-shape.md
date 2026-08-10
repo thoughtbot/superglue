@@ -42,7 +42,7 @@ both as `/posts`.
 ### `fragments`
 
 [Fragments](./fragments.md) are rendered Rails partials with an identity. They're created when a
-response is recieved. Superglue takes the payload and [denormalizes](./fragments.md#denormalization) it into
+response is received. Superglue takes the payload and [denormalizes](./fragments.md#denormalization) it into
 fragments and fragment refs.
 
 ```js

@@ -26,7 +26,7 @@ And of course, batteries are included:
   Turbo Streams [ported](./super-turbo-streams.md) for Superglue and React. Use `broadcast_append_to`
   and more to easily update your UI.
 
-- **Unobtrusive Javascript (UJS)**
+- **Unobtrusive JavaScript (UJS)**
 
   [Bringing back](ujs.md) a classic to make developing SPA features easy and familiar
 

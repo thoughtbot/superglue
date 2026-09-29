@@ -35,13 +35,13 @@
     "./deepkit": {
       "types": "./dist/deepkit.d.ts",
       "import": "./dist/deepkit.mjs",
-      "require": "./dist/deepkit.cjs"
+      "require": "./dist/deepkit.js"
     },
     "./typia": {
       "ttsc": "./dist/typia.mjs",
       "types": "./dist/typia.d.ts",
       "import": "./dist/typia.mjs",
-      "require": "./dist/typia.cjs"
+      "require": "./dist/typia.js"
     }
   },
   "license": "MIT",

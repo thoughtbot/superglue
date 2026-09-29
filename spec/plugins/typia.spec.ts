@@ -2,15 +2,23 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { createRequire } from 'module'
 import { execSync, execFileSync } from 'child_process'
-import { mkdtempSync, writeFileSync, rmSync, existsSync } from 'fs'
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  readFileSync,
+  rmSync,
+  existsSync,
+} from 'fs'
 import path from 'path'
-import os from 'os'
 
 let tmpDir: string
 let binaryPath: string
 let generatedGoWork: string
-const nativeDir = path.resolve(__dirname, '..', '..', 'plugins', 'typia', 'go')
+const repoRoot = path.resolve(__dirname, '..', '..')
+const nativeDir = path.join(repoRoot, 'plugins', 'typia', 'go')
 const pluginDir = path.join(nativeDir, 'plugin')
+const driverDir = path.join(nativeDir, 'driver')
 
 const shimPackages = [
   'shim/ast',
@@ -170,8 +178,11 @@ beforeAll(() => {
     timeout: 300_000,
   })
 
-  // Create temp fixture directory with tsconfig
-  tmpDir = mkdtempSync(path.join(os.tmpdir(), 'superglue-ttsc-test-'))
+  // Create temp fixture directory with tsconfig. It lives under the repo's
+  // tmp/ so the preamble's `import ... from "typia"` resolves.
+  const repoTmpDir = path.join(repoRoot, 'tmp')
+  mkdirSync(repoTmpDir, { recursive: true })
+  tmpDir = mkdtempSync(path.join(repoTmpDir, 'superglue-ttsc-test-'))
   writeFileSync(
     path.join(tmpDir, 'tsconfig.json'),
     JSON.stringify({
@@ -209,7 +220,7 @@ describe('typia ttsc plugin integration', () => {
     expect(code).toBeDefined()
     expect(code).toContain('validate')
     expect(code).toContain('useContent')
-    expect(code).toContain('typia.createValidate<MyProps>()')
+    expect(code).toContain('__superglueTypia.createValidate<MyProps>()')
     // Should NOT contain the raw untransformed call
     expect(code).not.toContain('useContent<MyProps>()')
   })
@@ -221,7 +232,7 @@ describe('typia ttsc plugin integration', () => {
     expect(code).toBeDefined()
     expect(code).toContain('validate')
     expect(code).toContain('useFragment')
-    expect(code).toContain('typia.createValidate<WidgetConfig>()')
+    expect(code).toContain('__superglueTypia.createValidate<WidgetConfig>()')
   })
 
   it('handles trailing commas in useFragment calls', () => {
@@ -231,7 +242,7 @@ describe('typia ttsc plugin integration', () => {
     expect(code).toBeDefined()
     expect(code).toContain('validate')
     expect(code).toContain('useFragment')
-    expect(code).toContain('typia.createValidate<WidgetConfig>()')
+    expect(code).toContain('__superglueTypia.createValidate<WidgetConfig>()')
   })
 
   it('transforms both useContent and useFragment in the same file', () => {
@@ -241,8 +252,8 @@ describe('typia ttsc plugin integration', () => {
     expect(code).toBeDefined()
     expect(code).toContain('useContent')
     expect(code).toContain('useFragment')
-    expect(code).toContain('typia.createValidate<MyProps>()')
-    expect(code).toContain('typia.createValidate<WidgetConfig>()')
+    expect(code).toContain('__superglueTypia.createValidate<MyProps>()')
+    expect(code).toContain('__superglueTypia.createValidate<WidgetConfig>()')
     // Should NOT contain raw untransformed calls
     expect(code).not.toContain('useContent<MyProps>()')
   })
@@ -254,7 +265,6 @@ describe('typia ttsc plugin integration', () => {
 
     expect(code).toBeDefined()
     expect(code).not.toContain('validate')
-    expect(code).not.toContain('typia')
     expect(code).not.toContain('createValidate')
   })
 
@@ -290,6 +300,131 @@ export const result = useContent<MyProps>(undefined, { validate: existingValidat
 
     expect(code).toBeDefined()
     expect(code).toContain('existingValidator')
-    expect(code).not.toContain('typia.createValidate')
+    expect(code).not.toContain('createValidate')
   })
+})
+
+// ttsc needs the native TypeScript 7 compiler, while the rest of the repo
+// (tsup, eslint, lint:types) stays on TypeScript 5. @typescript/native-preview
+// ships TS7 as `tsgo` so it doesn't clash with TS5's `tsc` bin; point ttsc at
+// its platform binary directly.
+function resolveNativeTsc(): string {
+  const requireFromRepo = createRequire(path.join(repoRoot, 'package.json'))
+  const nativePreviewPackageJson = requireFromRepo.resolve(
+    '@typescript/native-preview/package.json'
+  )
+  const platformPackage = `@typescript/native-preview-${process.platform}-${process.arch}`
+  const platformPackageJson = createRequire(nativePreviewPackageJson).resolve(
+    `${platformPackage}/package.json`
+  )
+  const binaryName = process.platform === 'win32' ? 'tsgo.exe' : 'tsgo'
+
+  return path.join(path.dirname(platformPackageJson), 'lib', binaryName)
+}
+
+// Compiles a fixture through the real ttsc pipeline: typia's executable hosts
+// the build and the superglue driver is linked into it, the same way a
+// consuming app runs both plugins. The project lives under the repo's tmp/ so
+// `typia` resolves from this repo's node_modules.
+function compileWithTtsc(fixture: string): string {
+  const repoTmpDir = path.join(repoRoot, 'tmp')
+  mkdirSync(repoTmpDir, { recursive: true })
+  const projectDir = mkdtempSync(path.join(repoTmpDir, 'superglue-typia-e2e-'))
+
+  try {
+    mkdirSync(path.join(projectDir, 'src'))
+    writeFileSync(path.join(projectDir, 'src', 'page.ts'), fixture)
+    writeFileSync(
+      path.join(projectDir, 'superglue-typia.cjs'),
+      `module.exports = { name: 'superglue-typia', source: ${JSON.stringify(
+        driverDir
+      )} }\n`
+    )
+    writeFileSync(
+      path.join(projectDir, 'tsconfig.json'),
+      JSON.stringify({
+        compilerOptions: {
+          target: 'ES2021',
+          module: 'ESNext',
+          moduleResolution: 'bundler',
+          strict: true,
+          skipLibCheck: true,
+          rootDir: 'src',
+          outDir: 'out',
+          plugins: [
+            { transform: './superglue-typia.cjs' },
+            { transform: 'typia/lib/transform' },
+          ],
+        },
+        include: ['src'],
+      })
+    )
+
+    execFileSync(
+      path.join(repoRoot, 'node_modules', '.bin', 'ttsc'),
+      ['-p', 'tsconfig.json'],
+      {
+        cwd: projectDir,
+        encoding: 'utf-8',
+        env: { ...process.env, TTSC_TSGO_BINARY: resolveNativeTsc() },
+        stdio: 'pipe',
+        timeout: 600_000,
+      }
+    )
+
+    return readFileSync(path.join(projectDir, 'out', 'page.js'), 'utf-8')
+  } finally {
+    rmSync(projectDir, { recursive: true, force: true })
+  }
+}
+
+describe('typia ttsc plugin end-to-end with typia transform', () => {
+  it('expands hand-written typia calls', () => {
+    const code = compileWithTtsc(`
+import typia from 'typia'
+
+interface MyProps {
+  title: string
+}
+
+export const validate = typia.createValidate<MyProps>()
+`)
+
+    expect(code).not.toContain('createValidate')
+    expect(code).toContain('"string" === typeof input.title')
+  }, 600_000)
+
+  it('expands the validator injected into useContent', () => {
+    const code = compileWithTtsc(`
+export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => unknown }): T | undefined {
+  return undefined
+}
+
+interface MyProps {
+  title: string
+}
+
+export const content = useContent<MyProps>()
+`)
+
+    expect(code).not.toContain('createValidate')
+    expect(code).toContain('"string" === typeof input.title')
+  }, 600_000)
+
+  it('expands the validator injected into useFragment', () => {
+    const code = compileWithTtsc(`
+export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => unknown }): T {
+  return {} as T
+}
+
+interface WidgetConfig {
+  color: string
+}
+
+export const settings = useFragment<WidgetConfig, true>('ref')
+`)
+
+    expect(code).not.toContain('createValidate')
+    expect(code).toContain('"string" === typeof input.color')
+  }, 600_000)
 })

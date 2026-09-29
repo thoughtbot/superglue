@@ -7,14 +7,14 @@ const VALIDATE_FN = '__supergluePropsValidator'
 const VALIDATE_HELPER = `
 import { resolveReceiveType as __sgResolveReceiveType, validate as __sgDkValidate } from '@deepkit/type';
 type ReceiveType<T> = unknown;
-function ${VALIDATE_FN}<T>(__type?: ReceiveType<T>): (data: unknown) => { success: boolean; errors: { path: string; message: string }[] } {
+function ${VALIDATE_FN}<T>(__type?: ReceiveType<T>): (data: unknown) => { success: boolean; errors: { path: string; message: string; value?: unknown }[] } {
   return function(data: unknown) {
     var resolved = __sgResolveReceiveType(__type);
     var errors = __sgDkValidate(data, resolved);
     return {
       success: errors.length === 0,
       errors: errors.map(function(e: any) {
-        return { path: e.path, message: e.message };
+        return { path: e.path, message: e.message, value: e.value };
       })
     };
   };

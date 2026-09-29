@@ -828,4 +828,50 @@ describe('useFragment', () => {
 
     console.error = originalError
   })
+
+  describe('validation', () => {
+    it('renders when validation passes', () => {
+      const store = buildWidgetStore({ color: 'red' })
+      const validate = () => ({ success: true, errors: [] })
+
+      const Component = () => {
+        const widget = useFragment({ __id: 'widget' }, { validate })
+        return <div>{widget.color}</div>
+      }
+
+      const { container } = renderWithProvider(<Component />, store)
+
+      expect(container.textContent).toBe('red')
+    })
+
+    it('throws ContentValidationError when validation fails', () => {
+      const store = buildWidgetStore({ color: 1 })
+      const validate = () => ({
+        success: false,
+        errors: [{ path: 'color', message: 'Not a string', value: 1 }],
+      })
+
+      const Component = () => {
+        const widget = useFragment({ __id: 'widget' }, { validate })
+        return <div>{widget.color}</div>
+      }
+
+      const originalError = console.error
+      console.error = vi.fn()
+
+      expect(() => renderWithProvider(<Component />, store)).toThrow(
+        '[Superglue] Content validation failed\n  color: Not a string, got 1'
+      )
+
+      console.error = originalError
+    })
+
+    function buildWidgetStore(widget) {
+      return buildStore({
+        superglue: buildSuperglueState({ currentPageKey: '/unused' }),
+        pages: {},
+        fragments: { widget },
+      })
+    }
+  })
 })

@@ -1733,4 +1733,69 @@ describe('useContent', () => {
       expect(getByTestId('invalid3')).toHaveTextContent('true')
     })
   })
+
+  describe('validation', () => {
+    it('renders when validation passes', () => {
+      const store = buildPostsStore({ greeting: 'hi' })
+      const validate = () => ({ success: true, errors: [] })
+
+      const Component = () => {
+        const page = useContent(undefined, { validate })
+        return <div>{page.greeting}</div>
+      }
+
+      const { container } = renderWithProvider(<Component />, store)
+
+      expect(container.textContent).toBe('hi')
+    })
+
+    it('passes the page content to the validator', () => {
+      const store = buildPostsStore({ greeting: 'hi' })
+      let validatedGreeting
+      const validate = (data) => {
+        validatedGreeting = data.greeting
+        return { success: true, errors: [] }
+      }
+
+      const Component = () => {
+        const page = useContent(undefined, { validate })
+        return <div>{page.greeting}</div>
+      }
+
+      renderWithProvider(<Component />, store)
+
+      expect(validatedGreeting).toBe('hi')
+    })
+
+    it('throws ContentValidationError when validation fails', () => {
+      const store = buildPostsStore({ greeting: 1 })
+      const validate = () => ({
+        success: false,
+        errors: [{ path: '$input.greeting', expected: 'string', value: 1 }],
+      })
+
+      const Component = () => {
+        const page = useContent(undefined, { validate })
+        return <div>{page.greeting}</div>
+      }
+
+      const originalError = console.error
+      console.error = vi.fn()
+
+      expect(() => renderWithProvider(<Component />, store)).toThrow(
+        '[Superglue] Content validation failed\n' +
+          '  $input.greeting: expected string, got 1'
+      )
+
+      console.error = originalError
+    })
+
+    function buildPostsStore(data) {
+      return buildStore({
+        superglue: buildSuperglueState({ currentPageKey: '/posts' }),
+        pages: { '/posts': { data } },
+        fragments: {},
+      })
+    }
+  })
 })

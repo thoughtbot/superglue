@@ -2,6 +2,7 @@ import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
 import { RootState, FragmentRef, ValidateOption } from '../types'
 import { createProxy } from '../utils/proxy'
+import { raiseOnInvalidContent } from '../utils/validation'
 
 /**
  * Converts a string ID to a typed FragmentRef.
@@ -110,10 +111,7 @@ export function useFragment<T, P extends boolean>(
         new WeakMap()
       ) as T
 
-      const result = options.validate(proxyForValidation)
-      if (!result.success) {
-        console.error('[Superglue] Content validation failed:', result.errors)
-      }
+      raiseOnInvalidContent(options.validate(proxyForValidation))
     }
 
     return proxy

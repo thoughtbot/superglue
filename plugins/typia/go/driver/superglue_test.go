@@ -8,6 +8,7 @@ import (
 	shimcore "github.com/microsoft/typescript-go/shim/core"
 	shimparser "github.com/microsoft/typescript-go/shim/parser"
 	shimprinter "github.com/microsoft/typescript-go/shim/printer"
+	"github.com/samchon/ttsc/packages/ttsc/driver"
 )
 
 func parseAndTransform(t *testing.T, source string) string {
@@ -19,14 +20,12 @@ func parseAndTransform(t *testing.T, source string) string {
 		t.Fatal("failed to parse source file")
 	}
 	shimast.SetParentInChildren(sf.AsNode())
-	ec := shimprinter.NewEmitContext()
-	RewriteFile(ec, sf)
-	shimast.SetParentInChildrenUnset(sf.AsNode())
+	RewriteFile(sf)
 	writer := shimprinter.NewTextWriter("\n", 0)
 	printer := shimprinter.NewPrinter(
 		shimprinter.PrinterOptions{},
 		shimprinter.PrintHandlers{},
-		ec,
+		shimprinter.NewEmitContext(),
 	)
 	printer.Write(sf.AsNode(), sf, writer, nil)
 	return writer.String()
@@ -39,7 +38,7 @@ func TestTransformAST_NoTransformWhenNoHooks(t *testing.T) {
 console.log(x)`
 
 	got := parseAndTransform(t, input)
-	if strings.Contains(got, "typia") || strings.Contains(got, "validate") {
+	if strings.Contains(got, "createValidate") || strings.Contains(got, "validate") {
 		t.Errorf("file without hooks should not be modified:\n%s", got)
 	}
 }
@@ -48,7 +47,7 @@ func TestTransformAST_NoTypeArg(t *testing.T) {
 	input := `const content = useContent()`
 
 	got := parseAndTransform(t, input)
-	if strings.Contains(got, "typia.createValidate") {
+	if strings.Contains(got, "createValidate") {
 		t.Errorf("should not rewrite call without type arg:\n%s", got)
 	}
 	if !strings.Contains(got, "useContent()") {
@@ -60,7 +59,7 @@ func TestTransformAST_UseFragmentNoTypeArg(t *testing.T) {
 	input := `const settings = useFragment(fragmentRef)`
 
 	got := parseAndTransform(t, input)
-	if strings.Contains(got, "typia.createValidate") {
+	if strings.Contains(got, "createValidate") {
 		t.Errorf("should not rewrite useFragment without type args:\n%s", got)
 	}
 }
@@ -73,7 +72,7 @@ const b = useContent<MyProps>()`
 	if !strings.Contains(got, "useState<number>(0)") {
 		t.Errorf("useState should not be modified:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
 		t.Errorf("useContent should be rewritten:\n%s", got)
 	}
 }
@@ -82,7 +81,7 @@ func TestTransformAST_UseContentAlreadyRewritten(t *testing.T) {
 	input := `const content = useContent<MyProps>("/posts", { validate: existingValidator })`
 
 	got := parseAndTransform(t, input)
-	if strings.Contains(got, "typia.createValidate") {
+	if strings.Contains(got, "createValidate") {
 		t.Errorf("should not rewrite useContent that already has validate:\n%s", got)
 	}
 	if !strings.Contains(got, "existingValidator") {
@@ -94,7 +93,7 @@ func TestTransformAST_UseFragmentAlreadyRewritten(t *testing.T) {
 	input := `const settings = useFragment<WidgetConfig, true>(fragmentRef, { validate: fn() })`
 
 	got := parseAndTransform(t, input)
-	if strings.Contains(got, "typia.createValidate") {
+	if strings.Contains(got, "createValidate") {
 		t.Errorf("should not rewrite useFragment that already has validate:\n%s", got)
 	}
 }
@@ -111,8 +110,8 @@ const content = useContent<MyProps>()`
 	if !strings.Contains(got, "useContent<MyProps>(undefined, { validate:") {
 		t.Errorf("expected rewritten useContent call with validate option:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
-		t.Errorf("expected typia.createValidate call:\n%s", got)
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
+		t.Errorf("expected __superglueTypia.createValidate call:\n%s", got)
 	}
 }
 
@@ -123,8 +122,8 @@ func TestTransformAST_WithExistingArg(t *testing.T) {
 	if !strings.Contains(got, "useContent<MyProps>(initialValue, { validate:") {
 		t.Errorf("expected rewritten useContent call with preserved first arg:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
-		t.Errorf("expected typia.createValidate inside wrapper:\n%s", got)
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
+		t.Errorf("expected __superglueTypia.createValidate inside wrapper:\n%s", got)
 	}
 }
 
@@ -135,8 +134,8 @@ func TestTransformAST_WithPageKey(t *testing.T) {
 	if !strings.Contains(got, `useContent<MyProps>("/posts", { validate:`) {
 		t.Errorf("expected pageKey preserved as first arg:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
-		t.Errorf("expected typia.createValidate inside wrapper:\n%s", got)
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
+		t.Errorf("expected __superglueTypia.createValidate inside wrapper:\n%s", got)
 	}
 }
 
@@ -145,10 +144,10 @@ func TestTransformAST_MultipleCallsInFile(t *testing.T) {
 const b = useContent<Bar>()`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<Foo>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<Foo>()") {
 		t.Errorf("expected first call rewritten with Foo validator:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<Bar>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<Bar>()") {
 		t.Errorf("expected second call rewritten with Bar validator:\n%s", got)
 	}
 }
@@ -160,8 +159,8 @@ func TestTransformAST_UseFragmentWithRef(t *testing.T) {
 	if !strings.Contains(got, "useFragment<WidgetConfig, true>(fragmentRef, { validate:") {
 		t.Errorf("expected useFragment rewritten with validate appended after ref:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<WidgetConfig>()") {
-		t.Errorf("expected typia.createValidate inside wrapper:\n%s", got)
+	if !strings.Contains(got, "__superglueTypia.createValidate<WidgetConfig>()") {
+		t.Errorf("expected __superglueTypia.createValidate inside wrapper:\n%s", got)
 	}
 }
 
@@ -171,7 +170,7 @@ func TestTransformAST_UseFragmentTrailingComma(t *testing.T) {
 )`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<WidgetConfig>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<WidgetConfig>()") {
 		t.Errorf("trailing comma useFragment should be rewritten:\n%s", got)
 	}
 }
@@ -181,10 +180,10 @@ func TestTransformAST_MixedContentAndFragment(t *testing.T) {
 const settings = useFragment<WidgetConfig, true>(fragmentRef)`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
 		t.Errorf("useContent should be rewritten with MyProps validator:\n%s", got)
 	}
-	if !strings.Contains(got, "typia.createValidate<WidgetConfig>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<WidgetConfig>()") {
 		t.Errorf("useFragment should be rewritten with WidgetConfig validator:\n%s", got)
 	}
 }
@@ -205,7 +204,7 @@ export function MyComponent() {
 }`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
 		t.Errorf("expected rewritten useContent call:\n%s", got)
 	}
 	if !strings.Contains(got, `"@lib/content"`) {
@@ -226,7 +225,7 @@ func TestTransformAST_UseFragmentInComponent(t *testing.T) {
 }`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<WidgetConfig>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<WidgetConfig>()") {
 		t.Errorf("useFragment inside component should be rewritten:\n%s", got)
 	}
 	if !strings.Contains(got, "devSettings.color") {
@@ -248,7 +247,7 @@ interface MyProps {
 export const result = useContent<MyProps>()`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
 		t.Errorf("useContent call should be rewritten:\n%s", got)
 	}
 }
@@ -261,7 +260,7 @@ func TestTransformAST_MultiPropertyInterface(t *testing.T) {
 const result = useContent<MyProps>()`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "typia.createValidate<MyProps>()") {
+	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
 		t.Errorf("multi-property interface useContent should be rewritten:\n%s", got)
 	}
 	if !strings.Contains(got, "title: string") {
@@ -269,5 +268,17 @@ const result = useContent<MyProps>()`
 	}
 	if !strings.Contains(got, "count: number") {
 		t.Errorf("interface properties should be preserved:\n%s", got)
+	}
+}
+
+// --- Preamble: the binding the injected callee resolves through ---
+
+func TestSourcePreamble_ImportsTypiaBinding(t *testing.T) {
+	got, err := supergluePlugin{}.SourcePreamble(driver.PluginContext{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if got != "import __superglueTypia from \"typia\";\n" {
+		t.Errorf("unexpected preamble: %q", got)
 	}
 }

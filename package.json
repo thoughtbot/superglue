@@ -35,13 +35,13 @@
     "./deepkit": {
       "types": "./dist/deepkit.d.ts",
       "import": "./dist/deepkit.mjs",
-      "require": "./dist/deepkit.cjs"
+      "require": "./dist/deepkit.js"
     },
     "./typia": {
       "ttsc": "./dist/typia.mjs",
       "types": "./dist/typia.d.ts",
       "import": "./dist/typia.mjs",
-      "require": "./dist/typia.cjs"
+      "require": "./dist/typia.js"
     }
   },
   "license": "MIT",
@@ -64,6 +64,7 @@
     "@types/react": "^19.1.8",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-v8": "^2.0.2",
     "abortcontroller-polyfill": "^1.7.3",

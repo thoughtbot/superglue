@@ -18,6 +18,7 @@ export {
 } from './components/Navigation'
 export { webVisit, webRemote } from './action_creators/web'
 export { SuperglueResponseError } from './utils/request'
+export { ContentValidationError } from './utils/validation'
 export * from './types'
 
 import {

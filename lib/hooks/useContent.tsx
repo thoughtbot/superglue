@@ -9,6 +9,7 @@ import {
 } from '../types'
 import { useSuperglue } from './useSuperglue'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
+import { raiseOnInvalidContent } from '../utils/validation'
 
 /**
  * Returns a proxy for accessing your page's content e.g, `index.json.props`,
@@ -111,10 +112,7 @@ export function useContent<T = JSONMappable>(
         new WeakMap()
       ) as T
 
-      const result = options.validate(proxyForValidation)
-      if (!result.success) {
-        console.error('[Superglue] Content validation failed:', result.errors)
-      }
+      raiseOnInvalidContent(options.validate(proxyForValidation))
     }
 
     return proxy

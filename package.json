@@ -102,7 +102,8 @@
     "@ttsc/unplugin": ">=0.19.2",
     "react": "^18 || ^19",
     "ttsc": ">=0.19.2",
-    "typia": ">=13.1.0"
+    "typia": ">=13.1.0",
+    "unplugin": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@anycable/web": {
@@ -124,6 +125,9 @@
       "optional": true
     },
     "typia": {
+      "optional": true
+    },
+    "unplugin": {
       "optional": true
     }
   },

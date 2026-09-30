@@ -322,44 +322,52 @@ function resolveNativeTsc(): string {
   return path.join(path.dirname(platformPackageJson), 'lib', binaryName)
 }
 
-// Compiles a fixture through the real ttsc pipeline: typia's executable hosts
-// the build and the superglue driver is linked into it, the same way a
-// consuming app runs both plugins. The project lives under the repo's tmp/ so
-// `typia` resolves from this repo's node_modules.
-function compileWithTtsc(fixture: string): string {
+// A fixture project with the superglue driver and typia's transform enabled.
+// It lives under the repo's tmp/ so `typia` resolves from this repo's
+// node_modules. Callers remove it when done.
+function createFixtureProject(fixture: string, prefix: string): string {
   const repoTmpDir = path.join(repoRoot, 'tmp')
   mkdirSync(repoTmpDir, { recursive: true })
-  const projectDir = mkdtempSync(path.join(repoTmpDir, 'superglue-typia-e2e-'))
+  const projectDir = mkdtempSync(path.join(repoTmpDir, prefix))
+
+  mkdirSync(path.join(projectDir, 'src'))
+  writeFileSync(path.join(projectDir, 'src', 'page.ts'), fixture)
+  writeFileSync(
+    path.join(projectDir, 'superglue-typia.cjs'),
+    `module.exports = { name: 'superglue-typia', source: ${JSON.stringify(
+      driverDir
+    )} }\n`
+  )
+  writeFileSync(
+    path.join(projectDir, 'tsconfig.json'),
+    JSON.stringify({
+      compilerOptions: {
+        target: 'ES2021',
+        module: 'ESNext',
+        moduleResolution: 'bundler',
+        strict: true,
+        skipLibCheck: true,
+        rootDir: 'src',
+        outDir: 'out',
+        plugins: [
+          { transform: './superglue-typia.cjs' },
+          { transform: 'typia/lib/transform' },
+        ],
+      },
+      include: ['src'],
+    })
+  )
+
+  return projectDir
+}
+
+// Compiles a fixture through the real ttsc pipeline: typia's executable hosts
+// the build and the superglue driver is linked into it, the same way a
+// consuming app runs both plugins.
+function compileWithTtsc(fixture: string): string {
+  const projectDir = createFixtureProject(fixture, 'superglue-typia-e2e-')
 
   try {
-    mkdirSync(path.join(projectDir, 'src'))
-    writeFileSync(path.join(projectDir, 'src', 'page.ts'), fixture)
-    writeFileSync(
-      path.join(projectDir, 'superglue-typia.cjs'),
-      `module.exports = { name: 'superglue-typia', source: ${JSON.stringify(
-        driverDir
-      )} }\n`
-    )
-    writeFileSync(
-      path.join(projectDir, 'tsconfig.json'),
-      JSON.stringify({
-        compilerOptions: {
-          target: 'ES2021',
-          module: 'ESNext',
-          moduleResolution: 'bundler',
-          strict: true,
-          skipLibCheck: true,
-          rootDir: 'src',
-          outDir: 'out',
-          plugins: [
-            { transform: './superglue-typia.cjs' },
-            { transform: 'typia/lib/transform' },
-          ],
-        },
-        include: ['src'],
-      })
-    )
-
     execFileSync(
       path.join(repoRoot, 'node_modules', '.bin', 'ttsc'),
       ['-p', 'tsconfig.json'],
@@ -374,6 +382,48 @@ function compileWithTtsc(fixture: string): string {
 
     return readFileSync(path.join(projectDir, 'out', 'page.js'), 'utf-8')
   } finally {
+    rmSync(projectDir, { recursive: true, force: true })
+  }
+}
+
+type TtscUnpluginApi = {
+  transformTtsc: (
+    id: string,
+    source: string,
+    options: unknown
+  ) => Promise<{ code: string } | undefined>
+  resolveOptions: (options: { project: string }) => unknown
+}
+
+// Transforms a fixture the way bundlers run ttsc: through @ttsc/unplugin's
+// source-to-source transform, which its esbuild, vite, rollup, webpack and bun
+// adapters call. Checker crashes on code the superglue driver injects only
+// showed up on this path; `ttsc -p` builds of the same code passed.
+async function transformWithUnplugin(fixture: string): Promise<string> {
+  const projectDir = createFixtureProject(fixture, 'superglue-typia-unplugin-')
+  const previousTsgoBinary = process.env.TTSC_TSGO_BINARY
+  process.env.TTSC_TSGO_BINARY = resolveNativeTsc()
+
+  try {
+    const requireFromRepo = createRequire(path.join(repoRoot, 'package.json'))
+    const { transformTtsc, resolveOptions } = requireFromRepo(
+      '@ttsc/unplugin/api'
+    ) as TtscUnpluginApi
+    const file = path.join(projectDir, 'src', 'page.ts')
+    const project = path.join(projectDir, 'tsconfig.json')
+    const result = await transformTtsc(
+      file,
+      readFileSync(file, 'utf-8'),
+      resolveOptions({ project })
+    )
+
+    return result?.code ?? ''
+  } finally {
+    if (previousTsgoBinary === undefined) {
+      delete process.env.TTSC_TSGO_BINARY
+    } else {
+      process.env.TTSC_TSGO_BINARY = previousTsgoBinary
+    }
     rmSync(projectDir, { recursive: true, force: true })
   }
 }
@@ -426,5 +476,44 @@ export const settings = useFragment<WidgetConfig, true>('ref')
 
     expect(code).not.toContain('createValidate')
     expect(code).toContain('"string" === typeof input.color')
+  }, 600_000)
+})
+
+// The fixture hooks accept a validator as their second argument, like the
+// real hooks, so the injected call matches their arity and the checker
+// type-checks the injected argument.
+describe('typia ttsc plugin through @ttsc/unplugin', () => {
+  it('expands the validator injected into useFragment', async () => {
+    const code = await transformWithUnplugin(`
+export function useFragment<T>(ref: string, validate?: (data: unknown) => unknown): T {
+  return {} as T
+}
+
+interface Widget {
+  color: string
+}
+
+export const widget = useFragment<Widget>('widget')
+`)
+
+    expect(code).not.toContain('createValidate')
+    expect(code).toContain('"string" === typeof input.color')
+  }, 600_000)
+
+  it('expands the validator injected into useContent', async () => {
+    const code = await transformWithUnplugin(`
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => unknown): T | undefined {
+  return undefined
+}
+
+interface PageProps {
+  greeting: string
+}
+
+export const content = useContent<PageProps>()
+`)
+
+    expect(code).not.toContain('createValidate')
+    expect(code).toContain('"string" === typeof input.greeting')
   }, 600_000)
 })

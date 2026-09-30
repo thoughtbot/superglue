@@ -835,7 +835,7 @@ describe('useFragment', () => {
       const validate = () => ({ success: true, errors: [] })
 
       const Component = () => {
-        const widget = useFragment({ __id: 'widget' }, { validate })
+        const widget = useFragment({ __id: 'widget' }, validate)
         return <div>{widget.color}</div>
       }
 
@@ -852,7 +852,7 @@ describe('useFragment', () => {
       })
 
       const Component = () => {
-        const widget = useFragment({ __id: 'widget' }, { validate })
+        const widget = useFragment({ __id: 'widget' }, validate)
         return <div>{widget.color}</div>
       }
 

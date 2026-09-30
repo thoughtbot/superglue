@@ -1,7 +1,7 @@
 // Package driver registers the superglue-typia linked plugin.
 //
-// Rewrites useContent<T>() and useFragment<T>(ref) calls to inject a
-// { validate: typia.createValidate<T>() } options argument, which typia's
+// Rewrites useContent<T>() and useFragment<T>(ref) calls to pass
+// typia.createValidate<T>() as the hook's validator argument, which typia's
 // own plugin then expands into inline validation code.
 //
 // Typia only expands calls the checker resolves to typia's declarations, so
@@ -12,6 +12,11 @@
 //   - ApplyProgram mutates each hook call in place rather than rebuilding
 //     its ancestors, so the injected nodes hang off the original, bound
 //     parse tree the checker resolves names through.
+//
+// The injected argument must not contain declarations (e.g. an object
+// literal's properties). They are created after binding, so they have no
+// symbols, and the checker dereferences a nil symbol when it type-checks
+// them against a hook overload that accepts a second argument.
 package driver
 
 import (
@@ -67,8 +72,7 @@ func RewriteFile(sf *shimast.SourceFile) {
 }
 
 // rewriteHookCall rewrites useContent<T>() or useFragment<T>(ref) in place
-// to pass a { validate: __superglueTypia.createValidate<T>() } options
-// argument.
+// to pass __superglueTypia.createValidate<T>() as the validator argument.
 func rewriteHookCall(
 	f *shimast.NodeFactory,
 	call *shimast.CallExpression,
@@ -104,15 +108,10 @@ func rewriteHookCall(
 	callee := f.NewPropertyAccessExpression(f.NewIdentifier(TypiaBinding), nil, f.NewIdentifier("createValidate"), shimast.NodeFlagsNone)
 	callee.Loc = expr.Loc
 
+	// Build: __superglueTypia.createValidate<T>()
 	validateExpr := f.NewCallExpression(
 		callee,
 		nil, f.NewNodeList([]*shimast.Node{typeArgNode}), f.NewNodeList([]*shimast.Node{}), shimast.NodeFlagsNone)
-
-	// Build: { validate: __superglueTypia.createValidate<T>() }
-	optionsObj := f.NewObjectLiteralExpression(
-		f.NewNodeList([]*shimast.Node{
-			f.NewPropertyAssignment(nil, f.NewIdentifier("validate"), nil, nil, validateExpr),
-		}), false)
 
 	var args []*shimast.Node
 	if call.Arguments != nil && len(call.Arguments.Nodes) > 0 {
@@ -120,7 +119,7 @@ func rewriteHookCall(
 	} else if isUseContent {
 		args = append(args, f.NewIdentifier("undefined"))
 	}
-	args = append(args, optionsObj)
+	args = append(args, validateExpr)
 
 	// Attach the new arguments to the original call so the checker can
 	// resolve the injected callee through the file's bound scopes.

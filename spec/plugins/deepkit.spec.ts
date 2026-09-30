@@ -7,8 +7,8 @@ import os from 'os'
 let tmpDir: string
 
 const fixture = `
-export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => void }): T | undefined {
-  if (options?.validate) { options.validate({}) }
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => void): T | undefined {
+  if (validate) { validate({}) }
   return undefined
 }
 
@@ -23,8 +23,8 @@ export const result = useContent<MyProps>()
 const tsxFixture = `
 import React from 'react'
 
-export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => void }): T {
-  if (options?.validate) { options.validate({}) }
+export function useFragment<T, K extends boolean = false>(ref: string, validate?: (data: unknown) => void): T {
+  if (validate) { validate({}) }
   return {} as T
 }
 
@@ -45,8 +45,8 @@ export const MyComponent = () => {
 const tsxTrailingCommaFixture = `
 import React from 'react'
 
-export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => void }): T {
-  if (options?.validate) { options.validate({}) }
+export function useFragment<T, K extends boolean = false>(ref: string, validate?: (data: unknown) => void): T {
+  if (validate) { validate({}) }
   return {} as T
 }
 

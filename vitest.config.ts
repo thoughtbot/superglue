@@ -8,5 +8,12 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./spec/helpers/setup.js', './spec/helpers/polyfill.js'],
+    typecheck: {
+      enabled: true,
+      include: ['spec/**/*.test-d.ts'],
+      // The root tsconfig only covers lib/, so point tsc at one that also
+      // includes the type tests.
+      tsconfig: './tsconfig.spec.json',
+    },
   },
 })

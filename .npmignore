@@ -15,6 +15,7 @@
 vitest.config.ts
 tsup.config.ts
 tsconfig.json
+tsconfig.spec.json
 typedoc.json
 mkdocs.yml
 plugins/typia/go/go.work

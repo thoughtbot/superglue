@@ -2,8 +2,8 @@ import ts from 'typescript'
 
 /**
  * Creates a TypeScript transformer that rewrites `useContent<T>()` and
- * `useFragment<T>(ref)` calls to inject a `{ validate: validatorFn<T>() }`
- * options argument.
+ * `useFragment<T>(ref)` calls to pass `validatorFn<T>()` as the hook's
+ * validator argument.
  *
  * Returns the transformer factory and a flag indicating whether any
  * transformations were applied, so callers know whether to prepend their
@@ -40,10 +40,6 @@ export function createHookTransformer(validateFnName: string): {
               []
             )
 
-            const optionsArg = ts.factory.createObjectLiteralExpression([
-              ts.factory.createPropertyAssignment('validate', validateCall),
-            ])
-
             const args = [
               ...node.arguments.map(
                 (a) => ts.visitNode(a, visit) as ts.Expression
@@ -51,9 +47,9 @@ export function createHookTransformer(validateFnName: string): {
             ]
 
             if (isUseContent && node.arguments.length === 0) {
-              args.push(ts.factory.createIdentifier('undefined'), optionsArg)
+              args.push(ts.factory.createIdentifier('undefined'), validateCall)
             } else {
-              args.push(optionsArg)
+              args.push(validateCall)
             }
 
             return ts.factory.updateCallExpression(

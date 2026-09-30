@@ -1,6 +1,6 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import { RootState, FragmentRef, ValidateOption } from '../types'
+import { RootState, FragmentRef, Validator } from '../types'
 import { createProxy } from '../utils/proxy'
 import { raiseOnInvalidContent } from '../utils/validation'
 
@@ -46,6 +46,9 @@ export function toFragmentRef<T, P extends boolean = false>(
  * SlidingCart will update only if the fragment referenced by `cartRef` updates.
  *
  * @param fragmentRef - A typed fragment reference
+ * @param validate - Optional validator. Checks the fragment whenever it
+ *   changes and throws a `ContentValidationError` when validation fails. The
+ *   typia and deepkit plugins inject this for you.
  * @template T - The data type being accessed
  * @template P - Whether the fragment is guaranteed to be present
  * @returns Reactive proxy to fragment data. Returns `T` if present, `T | undefined` otherwise.
@@ -62,7 +65,7 @@ export function toFragmentRef<T, P extends boolean = false>(
  */
 export function useFragment<T, P extends boolean>(
   fragmentRef: FragmentRef<T, P>,
-  options?: ValidateOption
+  validate?: Validator
 ): P extends true ? T : T | undefined {
   const dependencies = useRef<Set<string>>(new Set())
 
@@ -103,7 +106,7 @@ export function useFragment<T, P extends boolean>(
       proxyCache
     ) as T
 
-    if (options?.validate) {
+    if (validate) {
       const proxyForValidation = createProxy(
         sourceData,
         { current: store.getState().fragments },
@@ -111,7 +114,7 @@ export function useFragment<T, P extends boolean>(
         new WeakMap()
       ) as T
 
-      raiseOnInvalidContent(options.validate(proxyForValidation))
+      raiseOnInvalidContent(validate(proxyForValidation))
     }
 
     return proxy

@@ -1740,7 +1740,7 @@ describe('useContent', () => {
       const validate = () => ({ success: true, errors: [] })
 
       const Component = () => {
-        const page = useContent(undefined, { validate })
+        const page = useContent(undefined, validate)
         return <div>{page.greeting}</div>
       }
 
@@ -1758,7 +1758,7 @@ describe('useContent', () => {
       }
 
       const Component = () => {
-        const page = useContent(undefined, { validate })
+        const page = useContent(undefined, validate)
         return <div>{page.greeting}</div>
       }
 
@@ -1775,7 +1775,7 @@ describe('useContent', () => {
       })
 
       const Component = () => {
-        const page = useContent(undefined, { validate })
+        const page = useContent(undefined, validate)
         return <div>{page.greeting}</div>
       }
 

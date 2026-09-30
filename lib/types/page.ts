@@ -5,9 +5,12 @@ export type ValidationResult = {
   errors: unknown[]
 }
 
-export type ValidateOption = {
-  validate?: (data: unknown) => ValidationResult
-}
+/**
+ * Checks page or fragment data. Passed as the second argument to
+ * `useContent` and `useFragment`; the typia and deepkit plugins generate one
+ * from the hook's type argument.
+ */
+export type Validator = (data: unknown) => ValidationResult
 
 /**
  * A PageKey is a combination of a parsed URL's pathname + query string. No hash.

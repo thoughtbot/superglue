@@ -56,8 +56,8 @@ function buildGoWork(): string {
 }
 
 const useContentFixture = `
-export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => void }): T | undefined {
-  if (options?.validate) { options.validate({}) }
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => void): T | undefined {
+  if (validate) { validate({}) }
   return undefined
 }
 
@@ -70,8 +70,8 @@ export const result = useContent<MyProps>()
 `
 
 const useFragmentFixture = `
-export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => void }): T {
-  if (options?.validate) { options.validate({}) }
+export function useFragment<T, K extends boolean = false>(ref: string, validate?: (data: unknown) => void): T {
+  if (validate) { validate({}) }
   return {} as T
 }
 
@@ -90,8 +90,8 @@ export const MyComponent = () => {
 `
 
 const trailingCommaFixture = `
-export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => void }): T {
-  if (options?.validate) { options.validate({}) }
+export function useFragment<T, K extends boolean = false>(ref: string, validate?: (data: unknown) => void): T {
+  if (validate) { validate({}) }
   return {} as T
 }
 
@@ -112,13 +112,13 @@ export const MyComponent = () => {
 `
 
 const mixedFixture = `
-export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => void }): T | undefined {
-  if (options?.validate) { options.validate({}) }
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => void): T | undefined {
+  if (validate) { validate({}) }
   return undefined
 }
 
-export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => void }): T {
-  if (options?.validate) { options.validate({}) }
+export function useFragment<T, K extends boolean = false>(ref: string, validate?: (data: unknown) => void): T {
+  if (validate) { validate({}) }
   return {} as T
 }
 
@@ -270,7 +270,7 @@ describe('typia ttsc plugin integration', () => {
 
   it('does not transform hooks without type arguments', () => {
     const noTypeArgFixture = `
-export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => void }): T | undefined {
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => void): T | undefined {
   return undefined
 }
 export const result = useContent()
@@ -285,12 +285,12 @@ export const result = useContent()
 
   it('does not double-transform hooks that already have two arguments', () => {
     const alreadyTransformedFixture = `
-export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => void }): T | undefined {
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => void): T | undefined {
   return undefined
 }
 interface MyProps { title: string }
 const existingValidator = (data: unknown) => {}
-export const result = useContent<MyProps>(undefined, { validate: existingValidator })
+export const result = useContent<MyProps>(undefined, existingValidator)
 `
     const output = runTransform(
       alreadyTransformedFixture,
@@ -396,7 +396,7 @@ export const validate = typia.createValidate<MyProps>()
 
   it('expands the validator injected into useContent', () => {
     const code = compileWithTtsc(`
-export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => unknown }): T | undefined {
+export function useContent<T>(pageKey?: string, validate?: (data: unknown) => unknown): T | undefined {
   return undefined
 }
 
@@ -413,7 +413,7 @@ export const content = useContent<MyProps>()
 
   it('expands the validator injected into useFragment', () => {
     const code = compileWithTtsc(`
-export function useFragment<T, K extends boolean = false>(ref: string, options?: { validate?: (data: unknown) => unknown }): T {
+export function useFragment<T, K extends boolean = false>(ref: string, validate?: (data: unknown) => unknown): T {
   return {} as T
 }
 

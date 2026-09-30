@@ -78,11 +78,11 @@ const b = useContent<MyProps>()`
 }
 
 func TestTransformAST_UseContentAlreadyRewritten(t *testing.T) {
-	input := `const content = useContent<MyProps>("/posts", { validate: existingValidator })`
+	input := `const content = useContent<MyProps>("/posts", existingValidator)`
 
 	got := parseAndTransform(t, input)
 	if strings.Contains(got, "createValidate") {
-		t.Errorf("should not rewrite useContent that already has validate:\n%s", got)
+		t.Errorf("should not rewrite useContent that already has a validator:\n%s", got)
 	}
 	if !strings.Contains(got, "existingValidator") {
 		t.Errorf("should preserve existing validator:\n%s", got)
@@ -90,11 +90,11 @@ func TestTransformAST_UseContentAlreadyRewritten(t *testing.T) {
 }
 
 func TestTransformAST_UseFragmentAlreadyRewritten(t *testing.T) {
-	input := `const settings = useFragment<WidgetConfig, true>(fragmentRef, { validate: fn() })`
+	input := `const settings = useFragment<WidgetConfig, true>(fragmentRef, fn())`
 
 	got := parseAndTransform(t, input)
 	if strings.Contains(got, "createValidate") {
-		t.Errorf("should not rewrite useFragment that already has validate:\n%s", got)
+		t.Errorf("should not rewrite useFragment that already has a validator:\n%s", got)
 	}
 }
 
@@ -107,8 +107,8 @@ func TestTransformAST_BasicCall(t *testing.T) {
 const content = useContent<MyProps>()`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "useContent<MyProps>(undefined, { validate:") {
-		t.Errorf("expected rewritten useContent call with validate option:\n%s", got)
+	if !strings.Contains(got, "useContent<MyProps>(undefined, __superglueTypia.createValidate<MyProps>())") {
+		t.Errorf("expected rewritten useContent call with a validator argument:\n%s", got)
 	}
 	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
 		t.Errorf("expected __superglueTypia.createValidate call:\n%s", got)
@@ -119,11 +119,11 @@ func TestTransformAST_WithExistingArg(t *testing.T) {
 	input := `const content = useContent<MyProps>(initialValue)`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "useContent<MyProps>(initialValue, { validate:") {
+	if !strings.Contains(got, "useContent<MyProps>(initialValue, __superglueTypia.createValidate<MyProps>())") {
 		t.Errorf("expected rewritten useContent call with preserved first arg:\n%s", got)
 	}
 	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
-		t.Errorf("expected __superglueTypia.createValidate inside wrapper:\n%s", got)
+		t.Errorf("expected __superglueTypia.createValidate argument:\n%s", got)
 	}
 }
 
@@ -131,11 +131,11 @@ func TestTransformAST_WithPageKey(t *testing.T) {
 	input := `const content = useContent<MyProps>("/posts")`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, `useContent<MyProps>("/posts", { validate:`) {
+	if !strings.Contains(got, `useContent<MyProps>("/posts", __superglueTypia.createValidate<MyProps>())`) {
 		t.Errorf("expected pageKey preserved as first arg:\n%s", got)
 	}
 	if !strings.Contains(got, "__superglueTypia.createValidate<MyProps>()") {
-		t.Errorf("expected __superglueTypia.createValidate inside wrapper:\n%s", got)
+		t.Errorf("expected __superglueTypia.createValidate argument:\n%s", got)
 	}
 }
 
@@ -156,11 +156,11 @@ func TestTransformAST_UseFragmentWithRef(t *testing.T) {
 	input := `const settings = useFragment<WidgetConfig, true>(fragmentRef)`
 
 	got := parseAndTransform(t, input)
-	if !strings.Contains(got, "useFragment<WidgetConfig, true>(fragmentRef, { validate:") {
-		t.Errorf("expected useFragment rewritten with validate appended after ref:\n%s", got)
+	if !strings.Contains(got, "useFragment<WidgetConfig, true>(fragmentRef, __superglueTypia.createValidate<WidgetConfig>())") {
+		t.Errorf("expected useFragment rewritten with a validator appended after ref:\n%s", got)
 	}
 	if !strings.Contains(got, "__superglueTypia.createValidate<WidgetConfig>()") {
-		t.Errorf("expected __superglueTypia.createValidate inside wrapper:\n%s", got)
+		t.Errorf("expected __superglueTypia.createValidate argument:\n%s", got)
 	}
 }
 
@@ -234,8 +234,8 @@ func TestTransformAST_UseFragmentInComponent(t *testing.T) {
 }
 
 func TestTransformAST_UseContentWithDeclaration(t *testing.T) {
-	input := `export function useContent<T>(pageKey?: string, options?: { validate?: (data: unknown) => void }): T | undefined {
-  if (options?.validate) { options.validate({}) }
+	input := `export function useContent<T>(pageKey?: string, validate?: (data: unknown) => void): T | undefined {
+  if (validate) { validate({}) }
   return undefined
 }
 

@@ -1,12 +1,6 @@
 import { useSelector, useStore } from 'react-redux'
 import { useMemo, useRef } from 'react'
-import {
-  JSONMappable,
-  RootState,
-  Unproxy,
-  PageKey,
-  ValidateOption,
-} from '../types'
+import { JSONMappable, RootState, Unproxy, PageKey, Validator } from '../types'
 import { useSuperglue } from './useSuperglue'
 import { createProxy, unproxy as unproxyUtil } from '../utils/proxy'
 import { raiseOnInvalidContent } from '../utils/validation'
@@ -52,13 +46,27 @@ import { raiseOnInvalidContent } from '../utils/validation'
  */
 export function useContent<T = JSONMappable>(): T
 /**
+ * @param pageKey - `undefined` to access the current page's data.
+ * @param validate - Checks the data whenever it changes and throws a
+ *   `ContentValidationError` when validation fails. The typia and deepkit
+ *   plugins inject this for you.
+ */
+export function useContent<T = JSONMappable>(
+  pageKey: undefined,
+  validate: Validator
+): T
+/**
  * @param pageKey - Optional page key to access a specific page's data.
  *   When omitted, returns data for the current page.
+ * @param validate - Optional validator for the data, see above.
  */
-export function useContent<T = JSONMappable>(pageKey?: PageKey): T | undefined
 export function useContent<T = JSONMappable>(
   pageKey?: PageKey,
-  options?: ValidateOption
+  validate?: Validator
+): T | undefined
+export function useContent<T = JSONMappable>(
+  pageKey?: PageKey,
+  validate?: Validator
 ): T | undefined {
   const superglueState = useSuperglue()
   const resolvedPageKey = pageKey || superglueState.currentPageKey
@@ -104,7 +112,7 @@ export function useContent<T = JSONMappable>(
       proxyCache
     ) as T
 
-    if (options?.validate) {
+    if (validate) {
       const proxyForValidation = createProxy(
         sourceData,
         { current: store.getState().fragments },
@@ -112,7 +120,7 @@ export function useContent<T = JSONMappable>(
         new WeakMap()
       ) as T
 
-      raiseOnInvalidContent(options.validate(proxyForValidation))
+      raiseOnInvalidContent(validate(proxyForValidation))
     }
 
     return proxy

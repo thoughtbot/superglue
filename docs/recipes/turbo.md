@@ -23,3 +23,4 @@ This is different from [restore strategy] which controls what happens
 when the browser's `history` object pops.
 
 [restore strategy]: ../page-response.md#restorestrategy
+

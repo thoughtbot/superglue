@@ -1,6 +1,6 @@
 # Overview
 
-**Superglue is The Rails Way of building React Rails applications.**
+__Superglue is The Rails Way of building React Rails applications.__
 Refreshingly familiar. No APIs. No client-side routing.
 
 ## Why Superglue?
@@ -14,53 +14,54 @@ this with a small set of primitives that compose well with any React
 library you want.
 
 !!! tip "Primitives and Patterns"
-See [Primitives and Patterns](./primitives.md) for how these tools compose
-to build modals, infinite scroll, optimistic updates, and more.
+    See [Primitives and Patterns](./primitives.md) for how these tools compose
+    to build modals, infinite scroll, optimistic updates, and more.
 
 And of course, batteries are included:
 
 <div class="grid cards" markdown>
 
-- **Super Turbo Streams**
+-   __Super Turbo Streams__
 
-  Turbo Streams [ported](./super-turbo-streams.md) for Superglue and React. Use `broadcast_append_to`
-  and more to easily update your UI.
+    Turbo Streams [ported](./super-turbo-streams.md) for Superglue and React. Use `broadcast_append_to`
+    and more to easily update your UI.
 
-- **Unobtrusive JavaScript (UJS)**
+-   __Unobtrusive JavaScript (UJS)__
 
-  [Bringing back](ujs.md) a classic to make developing SPA features easy and familiar
+    [Bringing back](ujs.md) a classic to make developing SPA features easy and familiar
 
-- **Fragments**
+-   __Fragments__
 
-  Giving Rails partials [identity and super powers](./fragments.md) on the frontend.
+    Giving Rails partials [identity and super powers](./fragments.md) on the frontend.
 
-- **Deferment**
+-   __Deferment__
 
-  Easily [defer](./deferments.md) any part of your page. Great for modals, tabs, and more!
+    Easily [defer](./deferments.md) any part of your page. Great for modals, tabs, and more!
 
-- `props_template`
 
-  [A very fast JSON builder](./props-template.md) inspired by Jbuilder to [shape](./shaping.md) backend
-  state. The secret sauce that give UJS superpowers.
+-   `props_template`
 
-- `form_props`
+    [A very fast JSON builder](./props-template.md) inspired by Jbuilder to [shape](./shaping.md) backend
+    state. The secret sauce that give UJS superpowers.
 
-  A `form_with` [FormBuilder](./form-props.md) that lets you use Rails forms with React.
+-   `form_props`
 
-- `candy_wrapper`
+    A `form_with` [FormBuilder](./form-props.md) that lets you use Rails forms with React.
 
-  [Lightweight wrapper components](./candy-wrapper.md) around popular React UI libraries made to work with
-  FormProps.
+-   `candy_wrapper`
 
-- `humid`
+    [Lightweight wrapper components](./candy-wrapper.md) around popular React UI libraries made to work with
+    FormProps.
 
-  [Server Side Rendering](./humid.md) using MiniRacer and V8 isolates.
+-   `humid`
+
+    [Server Side Rendering](./humid.md) using MiniRacer and V8 isolates.
 
 </div>
 
 ## Who is it for?
 
-Superglue is built from the ground up for **Rails developers** who want to use the
+Superglue is built from the ground up for **Rails developers** who want to use the 
 concepts they already know to: turbo streams, controllers, server-side
 routing, views, form helpers, and more — to create seamless, interactive React
 applications.
@@ -68,7 +69,7 @@ applications.
 **It's for large teams** seeking a way out of JavaScript complexity without losing the
 investment in React components.
 
-**Its for nimble teams** wanting to move fast with the speed of Rails development
+**Its for nimble teams** wanting to move fast with the speed of Rails development 
 and React's vast ecosystem of prebuilt UI libraries.
 
 ## Refreshingly familiar
@@ -76,12 +77,12 @@ and React's vast ecosystem of prebuilt UI libraries.
 Here's how basic functionality looks:
 
 === "`routes`"
-`ruby
+    ```ruby
     resource :posts
-    `
+    ```
 
 === "`controller`"
-in `app/config/routes.rb`
+    in `app/config/routes.rb`
 
     ```ruby
     class PostsController < ApplicationController
@@ -135,7 +136,7 @@ in `app/config/routes.rb`
     }
     ```
 
-## Respecting Rails favorites
+## Respecting Rails favorites 
 
 Beyond the basics, Rails is already effective at building world class apps.
 Instead of ignoring the toolset, Superglue adapts it for React.

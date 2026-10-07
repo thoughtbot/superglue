@@ -7,3 +7,5 @@ node_modules
 
 # Ignore all HTML files:
 **/*.html
+# mkdocs admonitions and tabs need indentation prettier strips
+docs

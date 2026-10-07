@@ -1,5 +1,6 @@
 # Rails utils
 
+
 ## Rendering defaults
 
 Superglue typically requires 3 templates.
@@ -27,9 +28,9 @@ end
 ```
 
 !!! warning
-The `file`, `partial`, `body`, `plain`, `html`, `inline` will not work with
-`render` when using `before_action :use_jsx_rendering_defaults` callback. Make use of
-`:only` and `:except` to narrow down its usage.
+    The `file`, `partial`, `body`, `plain`, `html`, `inline` will not work with
+    `render` when using `before_action :use_jsx_rendering_defaults` callback. Make use of
+    `:only` and `:except` to narrow down its usage.
 
 Which will allow you to deduplicate the files:
 
@@ -66,6 +67,7 @@ def create
 end
 ```
 
+
 ## Setting the content location
 
 You can override the URL Superglue uses to display on the address bar and
@@ -84,3 +86,5 @@ def create
   end
 end
 ```
+
+

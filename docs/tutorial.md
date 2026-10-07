@@ -15,7 +15,14 @@ rails new shopping_list -j esbuild --skip-hotwire
 !!! tip
     We're using esbuild here, but support for other bundlers is also [available](installation.md). [vite](recipes/vite.md) is also possible.
 
-Then follow the [installation](./installation.md) instructions to setup Superglue.
+Then follow the [installation](./installation.md) instructions to setup
+Superglue. This tutorial uses JavaScript, so pass `--no-typescript` to the
+installer:
+
+```bash
+bundle add superglue
+rails g superglue:install --no-typescript
+```
 
 ## Hello World
 
@@ -43,16 +50,6 @@ Let's begin by creating our models, then adding routes and controllers.
 === "`shopping_lists_controller.rb`"
     in `app/controllers/shopping_lists_controller.rb`
 
-    !!! warning "Don't forget! Enable jsx rendering defaults"
-        `use_jsx_rendering_defaults` enables Rails to look for `.jsx` files and
-        pairs with `.props` files.
-
-        ```ruby
-        class ApplicationController < ActionController::Base
-          before_action :use_jsx_rendering_defaults
-        end
-        ```
-
     ```ruby
     class ShoppingListsController < ApplicationController
       def show
@@ -74,7 +71,9 @@ Let's begin by creating our models, then adding routes and controllers.
 
 ### Add the views
 
-Next, let's add the views for our shopping list.
+Next, let's add the views for our shopping list. Each page is a pair of
+templates: a `.json.props` file that builds the page's content, and a
+`.html.jsx` file with the page component that renders it.
 
 === "`show.json.props`"
     in `app/views/shopping_lists/show.json.props`
@@ -94,8 +93,8 @@ Next, let's add the views for our shopping list.
     end
     ```
 
-=== "`show.jsx`"
-    in `app/views/shopping_lists/show.jsx`
+=== "`show.html.jsx`"
+    in `app/views/shopping_lists/show.html.jsx`
 
     ```jsx
     import React from 'react'
@@ -139,8 +138,8 @@ Next, let's add the views for our shopping list.
     json.backPath root_path
     ```
 
-=== "`items/show.jsx`"
-    in `app/views/items/show.jsx`
+=== "`items/show.html.jsx`"
+    in `app/views/items/show.html.jsx`
 
     ```jsx
     import React from 'react'
@@ -162,22 +161,14 @@ Next, let's add the views for our shopping list.
 
 ### Connect the dots
 
-Update your page mapping to include both components:
+Superglue needs to know which component to render for each page. The
+installer generated `app/javascript/page_to_page_mapping.js`, which uses a glob
+import to find every `.jsx` and `.tsx` file in `app/views`. It pairs
+`shopping_lists/show.html.jsx` with the `shopping_lists/show` identifier,
+and `items/show.html.jsx` with `items/show`, so there's nothing to do here.
 
 !!! info
-    This step can be entirely optional if you installed superglue with bun, rollup, or webpack support.
     If you prefer vite, there's also a [recipe](recipes/vite.md) for more information.
-
-```js
-// app/javascript/page_to_page_mapping.js
-import ShoppingListsShow from '../views/shopping_lists/show'
-import ItemsShow from '../views/items/show'
-
-export const pageIdentifierToPageComponent = {
-  'shopping_lists/show': ShoppingListsShow,
-  'items/show': ItemsShow,
-}
-```
 
 ### See it in action
 
@@ -231,8 +222,8 @@ transform Rails form helpers into React-compatible props:
     + end
     ```
 
-=== "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx`
+=== "`show.html.jsx`"
+    Update `app/views/shopping_lists/show.html.jsx`
 
     !!! note
         The [installation](./installation.md) will also add vanilla form input components from [candy_wrapper](https://github.com/thoughtbot/candy_wrapper/tree/main/wrappers/ts/vanilla)
@@ -313,46 +304,28 @@ transform Rails form helpers into React-compatible props:
     ```
 
 ### Add flash
-The `create` action redirects with a notice. Lets make sure these show up in our react app.
+The `create` action redirects with a `notice` or an `alert`. Let's make sure
+these show up in our React app.
 
-!!! tip
-    The flash is built into Superglue and accessible via the `useFlash` hook.
+The installer generated a `Layout` component that wraps every page and
+renders flash messages with the `useFlash` hook. It already renders `notice`,
+so let's add `alert`:
 
 ```diff
-  import React from 'react'
-  import { useContent } from '@thoughtbot/superglue'
-  import { Form, TextField, SubmitButton } from '@javascript/components'
-+ import { useFlash } from '@thoughtbot/superglue'
+  // app/javascript/components/Layout.jsx
+  import { useAppFlash } from '@javascript/flash'
 
-  export default function ShoppingListsShow() {
-    const { header, items, newItemForm } = useContent()
-    const { form, extras, inputs } = newItemForm
-+   const flash = useFlash()
+  export const Layout = ({children, onClick, onSubmit}) => {
+    const flash = useAppFlash()
 
     return (
-      <div>
-        <h1>{header.title}</h1>
-+       {flash.notice && <p>{flash.notice}</p>}
+      <div onClick={onClick} onSubmit={onSubmit}>
+        {flash.success && <p>{flash.success}</p>}
+        {flash.notice && <p>{flash.notice}</p>}
+        {flash.error && <p>{flash.error}</p>}
 +       {flash.alert && <p>{flash.alert}</p>}
-        
-        <ul>
-          {items.map(item => (
-            <li key={item.id}>
-              <input 
-                type="checkbox" 
-                checked={item.completed}
-                readOnly 
-              />
-              {item.name}
-              <a href={item.detailPath}>Details</a>
-            </li>
-          ))}
-        </ul>
 
-        <Form {...form} extras={extras}>
-          <TextField {...inputs.name} />
-          <SubmitButton {...inputs.submit} />
-        </Form>
+        {children}
       </div>
     )
   }
@@ -392,25 +365,21 @@ Now let's add a form to toggle `completed` on existing items.
       end
     ```
 
-=== "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx`
+=== "`show.html.jsx`"
+    Update `app/views/shopping_lists/show.html.jsx`
 
     ```diff
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
         const { header, items, newItemForm } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useFlash()
 
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>} 
             
             <ul>
               {items.map(item => (
@@ -489,8 +458,8 @@ What we've built so far is a multi-page application backed by classic Rails
 conventions with a touch of React. Lets progressively add SPA navigation to
 forms and links by bringing back a Rails favorite: [Unobtrusive JavaScript](ujs.md)
 
-=== "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx`
+=== "`show.html.jsx`"
+    Update `app/views/shopping_lists/show.html.jsx`
 
     !!! Note
         Setting a HTTP method like `put` on a `<a>` tag is not supported with
@@ -502,18 +471,14 @@ forms and links by bringing back a Rails favorite: [Unobtrusive JavaScript](ujs.
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
         const { header, items, newItemForm } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useFlash()
 
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>}  
 
             <ul>
               {items.map(item => (
@@ -540,8 +505,8 @@ forms and links by bringing back a Rails favorite: [Unobtrusive JavaScript](ujs.
       }
     ```
 
-=== "`items/show.jsx`"
-    Update `app/views/items/show.jsx`
+=== "`items/show.html.jsx`"
+    Update `app/views/items/show.html.jsx`
 
     ```diff
       import React from 'react'
@@ -610,26 +575,22 @@ a slow running operation:
       end
     ```
 
-=== "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to display the cost
+=== "`show.html.jsx`"
+    Update `app/views/shopping_lists/show.html.jsx` to display the cost
 
     ```diff 
       import React from 'react'
       import { useContent } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm } = useContent()
     +   const { header, items, newItemForm, totalCost } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useFlash()
 
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>} 
 
     +       <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
     +         <h3>Total Cost: {totalCost.amount}</h3>
@@ -734,8 +695,12 @@ Now reload the page, and watch it instantly load with "Calculating...". Wait ano
 This is what the requests in step 2 looks like:
 
 ```
-GET /shopping_list?props_at=data.totalCost
+GET /?props_at=data.totalCost
 ```
+
+The deferred request is made to the current URL, so visiting
+`/shopping_list` would request `/shopping_list?props_at=data.totalCost`
+instead.
 
 ## Digging with `props_at`
 
@@ -892,7 +857,7 @@ our list.
     ```ruby
     broadcast_append_props(
       model: @item, 
-      save_as: "item_#{@item.id}",
+      save_target: @item,
       target: "shopping_list",
       partial: "shopping_lists/item"
     )
@@ -906,7 +871,7 @@ our list.
         fragment `item_1` and override any existing fragment with that id.
 
     ```ruby
-    # This will update the item for all connected clients
+    # This will update the item for the client that made the request
     broadcast_update_props(
       model: @item, 
       target: "item_#{@item.id}",
@@ -917,6 +882,36 @@ our list.
 ## Super Turbo Stream: Subscriptions
 
 Now let's make this truly collaborative. Let's use Super Turbo Streams to update all connected users.
+
+=== "`application.jsx`"
+    Subscriptions use ActionCable. Install the client:
+
+    ```bash
+    yarn add @rails/actioncable
+    ```
+
+    Then pass a consumer to `createApp` in `app/javascript/application.jsx`.
+    Without it, `useStreamSource` does nothing.
+
+    ```diff
+      import { createRoot, hydrateRoot } from "react-dom/client"
+      import { createApp } from "@thoughtbot/superglue"
+    + import { createConsumer } from "@rails/actioncable"
+      import { buildVisitAndRemote } from "./application_visit"
+      import { pageIdentifierToPageComponent } from "./page_to_page_mapping"
+      import { Layout } from "./components"
+
+      ...
+
+          const { Provider, Outlet, ujs } = createApp({
+            baseUrl: location.origin,
+            initialPage: window.SUPERGLUE_INITIAL_PAGE_STATE,
+            path: location.pathname + location.search + location.hash,
+            buildVisitAndRemote,
+            mapping: pageIdentifierToPageComponent,
+    +       cable: createConsumer(),
+          })
+    ```
 
 === "Update templates with fragments"
     Update `app/views/shopping_lists/show.json.props` to create ActionCable subscription props:
@@ -935,20 +930,18 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
       # ... rest remains the same
     ```
 
-=== "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to subscribe using those props.
+=== "`show.html.jsx`"
+    Update `app/views/shopping_lists/show.html.jsx` to subscribe using those props.
 
     ```diff
       import React from 'react'
     - import { useContent } from '@thoughtbot/superglue'
     + import { useContent, useStreamSource } from '@thoughtbot/superglue'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useFlash } from '@thoughtbot/superglue'
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm, totalCost } = useContent()
     +   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
         const { form, extras, inputs } = newItemForm
-        const flash = useFlash()
         
     +   // Subscribe to real-time updates
     +   const { connected } = useStreamSource(streamFromShopping)
@@ -956,8 +949,6 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>}  
 
             <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
               <h3>Total Cost: {totalCost.amount}</h3>
@@ -1013,7 +1004,7 @@ Now let's make this truly collaborative. Let's use Super Turbo Streams to update
         if @item.save
     +      @item.broadcast_append_later_to(
     +        "shopping",
-    +        save_as: "item_#{@item.id}",
+    +        save_target: @item,
     +        target: "shopping_list",
     +        partial: "shopping_lists/item"
     +      )
@@ -1063,8 +1054,8 @@ When working with React, it's ideal to minimize re-renders - if one part of the 
 
 Let's optimize our app:
 
-=== "`show.jsx`"
-    Update `app/views/shopping_lists/show.jsx` to use fragment references
+=== "`show.html.jsx`"
+    Update `app/views/shopping_lists/show.html.jsx` to use fragment references
 
     ```diff
       import React from 'react'
@@ -1072,14 +1063,12 @@ Let's optimize our app:
     + import { useContent, useStreamSource, unproxy } from '@thoughtbot/superglue'
     + import ItemsList from '@javascript/components/ItemsList'
       import { Form, TextField, SubmitButton } from '@javascript/components'
-      import { useFlash } from '@thoughtbot/superglue'
 
       export default function ShoppingListsShow() {
     -   const { header, items, newItemForm, totalCost, streamFromShopping } = useContent()
     +   const content = useContent()
     +   const { header, newItemForm, totalCost, streamFromShopping } = content
         const { form, extras, inputs } = newItemForm
-        const flash = useFlash()
         
         // Subscribe to real-time updates
         const { connected } = useStreamSource(streamFromShopping)
@@ -1091,8 +1080,6 @@ Let's optimize our app:
         return (
           <div>
             <h1>{header.title}</h1>
-            {flash.notice && <p>{flash.notice}</p>} 
-            {flash.alert && <p>{flash.alert}</p>} 
             
             <div style={{border: '1px solid #ccc', padding: '10px', margin: '10px 0'}}>
               <h3>Total Cost: {totalCost.amount}</h3>
@@ -1133,7 +1120,7 @@ Let's optimize our app:
 
     ```jsx
     import React from 'react'
-    import { useContent, useFragment, unproxy } from '@thoughtbot/superglue'
+    import { useFragment, unproxy } from '@thoughtbot/superglue'
     import { Form, SubmitButton } from '@javascript/components'
 
     const Item = ({ itemRef }) => {
@@ -1180,15 +1167,22 @@ For the final touch, let's add optimistic updates using `useUpdateFragment`:
 === "Optimistic toggle"
     Update `app/javascript/components/ItemsList.jsx`
 
+    !!! note
+        The setter returned by `useUpdateFragment` returns a `reset` function
+        that restores the fragment to what it was before the update. `remote`
+        resolves with `hasError: true` when the server responds with an error
+        status, and rejects when the request itself fails, so we reset in
+        both cases.
+
     ```diff
     - import React from 'react'
     + import React, { useContext } from 'react'
-    - import { useContent, useFragment, unproxy } from '@thoughtbot/superglue'
-    + import { useContent, useFragment, useUpdateFragment, unproxy, NavigationContext } from '@thoughtbot/superglue'
+    - import { useFragment, unproxy } from '@thoughtbot/superglue'
+    + import { useFragment, useUpdateFragment, unproxy, NavigationContext } from '@thoughtbot/superglue'
 
       const Item = ({ itemRef }) => {
         const {
-          id,
+    +     id,
           name,
           completed,
           detailPath,
@@ -1199,18 +1193,18 @@ For the final touch, let's add optimistic updates using `useUpdateFragment`:
     +
     +   const handleToggle = (currentState) => {
     +     // Optimistic update - immediate UI feedback on specific item fragment
-    +     update(`item_${id}`, (draft) => {
+    +     const { reset } = update(itemRef, (draft) => {
     +       draft.completed = !currentState
     +     })
     +
     +     // Sync with server (this would trigger streaming to other users)
     +     remote(`/items/${id}`, { method: 'PATCH' })
-    +       .catch(() => {
-    +         // Revert on error
-    +         set(`item_${id}`, (draft) => {
-    +           draft.completed = currentState
-    +         })
+    +       .then((result) => {
+    +         // Revert when the server responds with an error
+    +         if (result.hasError) reset()
     +       })
+    +       // Revert when the request itself fails, e.g, the network is down
+    +       .catch(reset)
     +   }
         
         return (

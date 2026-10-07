@@ -3,6 +3,7 @@
 !!! info "Prerequisites"
     To get started with Superglue, you'll need
 
+    - Rails 8 or later
     - A JavaScript bundler installed via [jsbundling-rails](https://github.com/rails/jsbundling-rails). Supported bundlers: **esbuild**, **bun**, **rollup**, and **webpack**.
     - `yarn`
 
@@ -26,53 +27,93 @@ bundle
 rails g superglue:install
 ```
 
-The installer will detect your bundler and configure Superglue accordingly. It will:
-
-- Set up the correct bundler configuration for JSX/TSX support
-- Configure automatic page component discovery (for bundlers that support glob imports)
-- Install the necessary dependencies
-
-You can also specify the bundler directly to skip the interactive prompt:
+The installer detects your bundler and configures Superglue accordingly. It
+prints the choices it made before it starts:
 
 ```terminal
-rails g superglue:install --bundler=esbuild
+Installing Superglue with:
+  Bundler:    esbuild (detected; change with --bundler)
+  TypeScript: yes (will install typescript@^7; --no-typescript for JavaScript)
+  Validator:  typia (will install typescript@^7; change with --validator=deepkit|typia or --no-validator)
+  SVGR:       yes (--no-svgr to disable)
 ```
 
-!!! example "TypeScript"
-    If you prefer TypeScript:
+## Options
 
-    ```terminal
-    rails g superglue:install --typescript
-    ```
+| Option | Default | Description |
+| ------ | ------- | ----------- |
+| `--bundler=esbuild\|bun\|rollup\|webpack` | detected | Overrides bundler detection. The generator raises if no bundler is found. |
+| `--no-typescript` | TypeScript on | Generate JavaScript (`.jsx`) files instead of TypeScript (`.tsx`). |
+| `--validator=deepkit\|typia` | `auto` | Runtime type validation during development. `auto` picks typia on TypeScript 7 or later (or when TypeScript is not installed yet) and deepkit on TypeScript 6 or earlier. Pass `--no-validator` to skip it. Requires TypeScript. |
+| `--no-svgr` | SVGR on | Skip configuring [SVGR] to import SVGs as React components. |
 
-    Superglue also includes an optional [deepkit] integration for runtime type
-    validation during development. When enabled, it validates that your server
-    side props matches your TypeScript types.
+For example, to install with JavaScript and esbuild:
 
-    ```terminal
-    rails g superglue:install --typescript --deepkit
-    ```
+```terminal
+rails g superglue:install --bundler=esbuild --no-typescript
+```
 
-    This is only available with TypeScript and can be added later. See the
-    [working with types](./runtime-types.md) guide for more information.
+See the [working with types](./runtime-types.md) guide for more information
+on runtime validation.
 
-The above will generate the following files:
+## Generated files
+
+With the default TypeScript install, the generator creates:
 
 ```terminal
 .
-└─ app/
-   └─ javascript/
-      ├─ application.js
-      ├─ application_visit.js
-      └─ page_to_page_mapping.js
+├─ app/
+│  ├─ javascript/
+│  │  ├─ application.tsx
+│  │  ├─ application_visit.ts
+│  │  ├─ page_to_page_mapping.ts
+│  │  ├─ flash.ts
+│  │  ├─ server_rendering.tsx
+│  │  └─ components/
+│  │     ├─ index.ts
+│  │     ├─ Inputs.tsx
+│  │     └─ Layout.tsx
+│  └─ views/
+│     └─ layouts/
+│        ├─ application.json.props
+│        └─ stream.json.props
+├─ config/
+│  └─ initializers/
+│     ├─ superglue.rb
+│     └─ humid.rb
+├─ shim.js
+├─ tsconfig.json
+├─ <bundler config>    # build.mjs, bun.config.js, rollup.config.js, or webpack.config.js
+└─ <SSR build config>  # build_ssr.mjs, build_ssr.js, rollup.config.ssr.js, or webpack.config.ssr.js
 ```
+
+With `--no-typescript`, the files use `.jsx`/`.js` extensions and a
+`jsconfig.json` replaces `tsconfig.json`.
+
+The generator also modifies a few existing files:
+
+- `app/views/layouts/application.html.erb` gets a script tag that sets
+  `window.SUPERGLUE_INITIAL_PAGE_STATE` from `render_props`, and `<%= yield %>`
+  is wrapped in `<div id="app">`. Your layout needs a `javascript_include_tag`
+  and a `<%= yield %>` for these to be injected.
+- `ApplicationController` gets an `ssr_context` block to enable server side
+  rendering with [Humid](./humid.md).
+- `ApplicationRecord` gets `member_at` and `member_by` class methods, which
+  enable [digging](./digging.md#collections) into collections.
+- `config/puma.rb` gets a MiniRacer context per worker for server side
+  rendering in production.
+- `package.json` gets `build`, `build:web`, `build:ssr`, and `build:prod`
+  scripts. `build` runs the client and server builds in parallel.
 
 ## Configuration
 
 We recommend getting familiar with the following files:
 
-- `application_visit.js` - Add custom functionality to Superglue navigation, e.g, progress bars.
-- `page_to_page_mapping.js` - Pairs your `props` files with your page components.
+- `application_visit.ts` - Add custom functionality to Superglue navigation, e.g, progress bars.
+- `page_to_page_mapping.ts` - Pairs your `props` files with your page components.
+  This is generated with a glob import, so new pages are picked up automatically.
+- `components/Layout.tsx` - Wraps every page. Renders flash messages and
+  attaches the UJS handlers.
 
 For more information, visit the [configuration] section.
 
@@ -86,13 +127,9 @@ If you'd like to dive right in, you can start with a scaffold:
 rails g superglue:scaffold post body:string
 ```
 
-!!! example ""
-    If you prefer typescript
-
-    ```terminal
-    rails g superglue:scaffold post body:string --typescript
-    ```
+The scaffold generates TypeScript when a `tsconfig.json` exists, and
+JavaScript otherwise. Pass `--typescript` or `--no-typescript` to override.
 
 or proceed with a [tutorial](./tutorial.md)
 
-[deepkit]: https://github.com/marcj/deepkit
+[SVGR]: https://react-svgr.com/

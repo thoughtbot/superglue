@@ -166,7 +166,7 @@ normalized data layer.
 ```json
 {
   "fragments": [
-    { "id": "header-abc123", "path": "data.header" }
+    { "id": "header", "path": "data.header" }
   ]
 }
 ```
@@ -189,15 +189,24 @@ The v1 `updateFragments` action has been removed.
 ### New fragment hooks
 
 ```ts
+import { useFragment, useUpdateFragment, toFragmentRef } from '@thoughtbot/superglue'
+
 // Access a single fragment's data
-const fragment = useFragment<MyType>('header-abc123')
+const headerRef = toFragmentRef<MyType>('header')
+const header = useFragment(headerRef)
 
 // Update a fragment with an Immer producer
-const updateFragment = useUpdateFragment('header-abc123')
-updateFragment((draft) => {
+const update = useUpdateFragment()
+const { reset } = update(headerRef, (draft) => {
   draft.title = 'New title'
 })
+
+// Revert the update
+reset()
 ```
+
+Fragment IDs are the names you give with the `fragment` option in your
+props templates, e.g., `json.header(partial: ["header", fragment: "header"])`.
 
 ### Proxy system
 
@@ -215,14 +224,14 @@ const rawData = unproxy(proxyData)
 
 v2 adds several new hooks:
 
-| Hook                   | Purpose                                           |
-|------------------------|---------------------------------------------------|
-| `useFragment(id)`      | Access a single fragment by ID                    |
-| `useUpdateContent()`   | Immer-based mutations on current page data        |
-| `useUpdateFragment(id)`| Immer-based mutations on a fragment               |
-| `useFlash()`           | Read flash messages from the store                |
-| `useSetFlash()`        | Set or clear flash messages                       |
-| `useStreamSource()`    | Subscribe to ActionCable/AnyCable streams         |
+| Hook                     | Purpose                                           |
+|--------------------------|---------------------------------------------------|
+| `useFragment(ref)`       | Access a single fragment by reference             |
+| `useUpdateContent()`     | Immer-based mutations on a page's data by page key |
+| `useUpdateFragment()`    | Immer-based mutations on a fragment               |
+| `useFlash()`             | Read flash messages from the store                |
+| `useSetFlash()`          | Set or clear flash messages                       |
+| `useStreamSource(props)` | Subscribe to ActionCable/AnyCable streams         |
 
 The existing hooks remain:
 
@@ -241,9 +250,10 @@ Flash is now built into the core instead of being a user-managed Redux slice.
 // Reading flash
 const flash = useFlash<{ notice?: string; alert?: string }>()
 
-// Setting flash
-const setFlash = useSetFlash()
+// Setting and clearing flash
+const { setFlash, clearFlash } = useSetFlash()
 setFlash({ notice: 'Saved!' })
+clearFlash()
 ```
 
 Flash state lives at `state.flash` in the Redux store and is automatically
@@ -285,14 +295,23 @@ const { Provider, Outlet, ujs } = createApp({
 
 In your page components, subscribe to streams:
 
+```ruby
+# app/views/chats/show.json.props
+json.chatStream stream_from_props("chat")
+```
+
 ```tsx
-import { useStreamSource } from '@thoughtbot/superglue'
+import { useContent, useStreamSource } from '@thoughtbot/superglue'
 
 function ChatPage() {
-  useStreamSource('ChatChannel', { room: 'general' })
+  const { chatStream } = useContent()
+  const { connected } = useStreamSource(chatStream)
   // Content updates automatically via fragments
 }
 ```
+
+`useStreamSource` requires a `cable` consumer passed to `createApp`. Without
+it, the hook does nothing.
 
 Server-side stream responses use the new `StreamResponse` type with
 `append`, `prepend`, and `update` actions.

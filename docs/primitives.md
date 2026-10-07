@@ -7,8 +7,8 @@ Superglue's design goal is to stay away from creating user-facing features disgu
 | | Primitive | What it does |
 |---|---|---|
 | **Read state** | `useContent` | Reactive proxy to the current page's data. Transparently resolves fragment references. |
-| | `useFragment` | Reactive proxy to a single fragment by ID. Re-renders only when that fragment changes. |
-| **Mutate state** | `useUpdateFragment` | Immer-based mutations on a fragment by ID. Ideal for optimistic updates. |
+| | `useFragment` | Reactive proxy to a single fragment by reference. Re-renders only when that fragment changes. |
+| **Mutate state** | `useUpdateFragment` | Immer-based mutations on a fragment by reference. Ideal for optimistic updates. |
 | | `useUpdateContent` | Immer-based mutations on a page's data by page key. |
 | **Fetch** | `visit` | Full-page navigation. Fetches, saves, swaps the page component, and updates the URL. |
 | | `remote` | Background fetch. Updates the store without swapping the page component or changing the URL. |
@@ -247,6 +247,7 @@ end
 ```
 
 ```jsx
+import { useContext } from 'react'
 import { useContent, useUpdateFragment, NavigationContext } from '@thoughtbot/superglue'
 
 function LikeButton({ postId }) {
@@ -255,23 +256,22 @@ function LikeButton({ postId }) {
   const { remote } = useContext(NavigationContext)
 
   const toggleLike = async () => {
-    const previouslyLiked = post.liked
-    const previousCount = post.likeCount
-
     // Optimistic: update immediately
-    update(`post_${postId}`, (draft) => {
+    const { reset } = update(post, (draft) => {
       draft.liked = !draft.liked
       draft.likeCount += draft.liked ? 1 : -1
     })
 
     try {
-      await remote(`/posts/${postId}/toggle_like`, { method: 'POST' })
+      const result = await remote(`/posts/${postId}/toggle_like`, { method: 'POST' })
+
+      // Revert when the server responds with an error
+      if (result.hasError) {
+        reset()
+      }
     } catch {
-      // Revert on failure
-      update(`post_${postId}`, (draft) => {
-        draft.liked = previouslyLiked
-        draft.likeCount = previousCount
-      })
+      // Revert when the request fails, e.g., a network error
+      reset()
     }
   }
 

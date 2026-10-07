@@ -166,3 +166,7 @@ update(toFragmentRef('userCart'), (cartDraft) => {
 ```
 
 In the example, you receive an immer draft of the fragment and you can mutate it however you want.
+
+Each `update` returns a `reset` function that restores the fragment, which
+is handy for rolling back an optimistic update when a request fails. See
+[reverting an update](./client-updates.md#reverting-an-update).

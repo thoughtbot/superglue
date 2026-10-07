@@ -13,7 +13,7 @@ Common scenarios include:
 ## useUpdateFragment Hook
 
 The `useUpdateFragment` hook returns a setter function that lets you update any
-fragment by its ID:
+fragment:
 
 ```jsx
 import React from 'react'
@@ -52,25 +52,32 @@ function ShoppingCart() {
 
 ## Fragment References
 
-The update function's first parameter can be either a string ID or a fragment
-reference object:
+The update function's first parameter is a fragment from your content, or a
+fragment reference. If you only have the fragment's ID, use `toFragmentRef` to
+create a reference:
 
 ```jsx
+import { useContent, useUpdateFragment, toFragmentRef } from '@thoughtbot/superglue'
+
+const content = useContent()
 const update = useUpdateFragment()
 
-// Using string ID
-update('userCart', (cartDraft) => {
-cartDraft.totalCost += 10
+// Using a fragment from your content
+update(content.cart, (cartDraft) => {
+  cartDraft.totalCost += 10
 })
 
-// Using fragment reference object
-const cartRef = { __id: 'userCart' }
-update(cartRef, (cartDraft) => {
+// Using a fragment reference created from an ID
+update(toFragmentRef('userCart'), (cartDraft) => {
   cartDraft.totalCost += 10
 })
 
 // Both approaches update the same fragment
 ```
+
+!!! warning
+    Passing a plain string ID, e.g., `update('userCart', ...)`, will not work.
+    The setter throws an error if the fragment does not exist.
 
 This flexibility is especially useful when working with [fragment
 references](./performance.md#preventing-over-rendering-with-fragment-refs) passed
@@ -96,8 +103,8 @@ function PostCard({ postRef }) {
 
 ## Immutable updates with Immer
 
-The `update` function takes a fragment identifier and an updater function that
-receives an Immer draft:
+The `update` function takes a fragment or fragment reference and an updater
+function that receives an Immer draft:
 
 ```jsx
 const update = useUpdateFragment()
@@ -106,7 +113,6 @@ update(toFragmentRef('userCart'), (cartDraft) => {
   cartDraft.items.push(newItem)        // Direct mutation (safe)
   cartDraft.totalCost += newItem.price // Direct assignment (safe)
 })
-
 ```
 
 Behind the scenes, Superglue takes the updated draft and uses that for the
@@ -125,7 +131,7 @@ function PostList() {
   const content = useContent()
   const update = useUpdateFragment()
 
-  const updateFirstPost = (content) => {
+  const updateFirstPost = () => {
     // content.posts is a fragment reference like {__id: 'postList'}
     update(content.posts, (draftList) => {
       // draftList[0] is a fragment reference like { __id: 'post_123' }
@@ -136,7 +142,7 @@ function PostList() {
     })
   }
 
-  const posts = content.posts()
+  const posts = content.posts
 
   return (
     <div>
@@ -150,6 +156,26 @@ function PostList() {
   )
 }
 ```
+
+## Reverting an update
+
+The setter returns an object with a `reset` function. Calling it restores the
+fragment to the state it was in before the update:
+
+```jsx
+const update = useUpdateFragment()
+
+const { reset } = update(content.cart, (cartDraft) => {
+  cartDraft.totalCost += 10
+})
+
+// Later, undo the change
+reset()
+```
+
+`reset` restores a snapshot taken when `update` was called, so any changes
+made to the fragment after that, including ones from the server, are
+overwritten.
 
 ## useUpdateContent Hook
 
@@ -173,7 +199,11 @@ function MyComponent() {
 
 ## Optimistic Updates with Server Sync
 
-For optimistic updates, combine client-side updates with server requests:
+For optimistic updates, combine client-side updates with server requests, and
+use `reset` to revert if the request fails. Note that `remote` resolves with
+`hasError: true` when the server responds with an error status, and only
+rejects when the request itself fails, for example on a network error. See
+[results and errors](./requests.md#results-and-errors) for more.
 
 ```jsx
 import React, { useContext } from 'react'
@@ -186,20 +216,20 @@ function LikeButton({ postId }) {
 
   const toggleLike = async () => {
     // Optimistic update
-    update(toFragmentRef(`post_${postId}`), (postDraft) => {
+    const { reset } = update(toFragmentRef(`post_${postId}`), (postDraft) => {
       postDraft.liked = !postDraft.liked
       postDraft.likeCount += postDraft.liked ? 1 : -1
     })
 
     try {
       // Sync with server
-      await remote(`/posts/${postId}/toggle_like`, { method: 'POST' })
+      const result = await remote(`/posts/${postId}/toggle_like`, { method: 'POST' })
+
+      if (result.hasError) {
+        reset()
+      }
     } catch (error) {
-      // Revert on error
-      update(`post_${postId}`, (postDraft) => {
-        postDraft.liked = !postDraft.liked
-        postDraft.likeCount += postDraft.liked ? 1 : -1
-      })
+      reset()
     }
   }
 

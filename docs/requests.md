@@ -124,6 +124,46 @@ sequenceDiagram
     `application_visit.js`. If you need a global customization, e.g, progress
     bars, you can add them there.
 
+## Results and errors
+
+`visit` and `remote` return a promise that resolves with a result object. Use
+`hasError` to tell success and failure apart:
+
+```js
+const result = await remote('/posts?props_at=data.header')
+
+if (result.hasError) {
+  // result.response is the failed `Response`
+  console.log(result.response.status)
+} else {
+  // result.pageKey, result.page, result.redirected, etc.
+}
+```
+
+On success, the result includes the `pageKey` the response was saved to, the
+`page` response, whether the request was `redirected`, the
+`componentIdentifier`, and `needsRefresh`, which is `true` when your assets are
+out of date. `visit` results also include the `navigationAction` to pass to
+`navigateTo`. See the [reference](reference/types.md#result) for the
+full shape.
+
+How a request fails determines what you get back:
+
+| Failure | Outcome |
+| ------- | ------- |
+| The server responds with a `4xx` or `5xx` status | Resolves with `{ hasError: true, response }` |
+| The server responds with a `422` | Treated as a success. This lets you re-render a form with validation errors. |
+| The response is not JSON, e.g., a file download or an HTML page | Resolves with `{ hasError: true, response }` |
+| The request itself fails, e.g., a network error | Rejects |
+| A `visit` is superseded by another `visit` | The first `visit` rejects. There can only be one `visit` at a time. |
+
+The generated `application_visit.js` redirects to `/400.html` or `/500.html`
+when a result has an error. Customize it to handle errors differently.
+
+!!! warning
+    Because HTTP errors resolve instead of reject, a `try/catch` or `.catch`
+    alone will not catch them. Check `result.hasError` as well.
+
 ## Tracking visit state
 
 The `isVisiting` boolean is available in [SuperglueState](./reference/types.md#supergluestate)

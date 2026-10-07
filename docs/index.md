@@ -193,7 +193,7 @@ end
 ```jsx
 const update = useUpdateFragment()
 
-update('userCart', (cartDraft) => {
+update(toFragmentRef('userCart'), (cartDraft) => {
   cartDraft.lineItems[0].qty += 1
 })
 ```

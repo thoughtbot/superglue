@@ -18,7 +18,9 @@ type chainableUpdate = {
 }
 
 /**
- * Hook for mutating fragments using Immer drafts.
+ * Hook for mutating fragments using Immer drafts. The setter returns an
+ * object with a `reset` function that restores the fragment to its state
+ * before the update.
  *
  * @example
  * ```tsx
@@ -30,10 +32,13 @@ type chainableUpdate = {
  *   draft.email = "new@email.com"
  * })
  *
- * // Update via fragment ID directly
- * update('user_123', draft => {
+ * // Update via fragment ID, converted to a reference
+ * const { reset } = update(toFragmentRef('user_123'), draft => {
  *   draft.profile.bio = "Updated bio"
  * })
+ *
+ * // Revert the change
+ * reset()
  * ```
  *
  */

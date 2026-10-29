@@ -1,184 +1,133 @@
 # Server-Side Rendering
 
-Superglue's generators does not include Server Side Rendering, but we
-can add support using [Humid](https://github.com/thoughtbot/humid), a SSR library
-built for Superglue.
+Superglue server side renders your pages out of the box using
+[Humid](../humid.md), a small wrapper around [mini_racer]. The installation
+generator sets everything up, so there's nothing to add. This recipe explains
+how the pieces fit together and how to customize them.
 
-Follow the [instructions](https://github.com/thoughtbot/humid#installation).
-Then, if you're using esbuild, create a `app/javascript/server_rendering.js`:
+## What the generator sets up
 
-```js
-import React from 'react';
-import { createApp } from '@thoughtbot/superglue';
-import { buildVisitAndRemote } from './application_visit';
-import { pageIdentifierToPageComponent } from './page_to_page_mapping';
-import { renderToString } from 'react-dom/server';
+`rails g superglue:install` creates or modifies the following:
 
-require("source-map-support").install({
-  retrieveSourceMap: filename => {
-    return {
-      url: filename,
-      map: readSourceMap(filename)
-    };
-  }
-});
+| File | Purpose |
+| ---- | ------- |
+| `app/javascript/server_rendering.jsx` | The SSR entry point. Registers a renderer with `setHumidRenderer`. |
+| `build_ssr.mjs` | Builds `server_rendering.jsx` into `app/assets/builds/server_rendering.js`. Named `build_ssr.js`, `rollup.config.ssr.js`, or `webpack.config.ssr.js` depending on your bundler. |
+| `shim.js` | Provides globals that bare V8 is missing, like `TextEncoder`, `URL`, and `MessageChannel`. |
+| `config/initializers/humid.rb` | Configures Humid and creates a MiniRacer context for development and test. |
+| `config/puma.rb` | Creates a MiniRacer context per worker in production. |
+| `app/controllers/application_controller.rb` | Adds an `ssr_context` block. |
+| `package.json` | Adds a `build:ssr` script. `build` runs `build:web` and `build:ssr` in parallel. |
 
-setHumidRenderer((json, baseUrl, path) => {
-  const initialState = JSON.parse(json)
-  const { Provider, Outlet } = createApp({
-    baseUrl,
-    initialPage: initialState,
-    path,
-    buildVisitAndRemote,
-    mapping: pageIdentifierToPageComponent,
-  })
+With TypeScript, the entry point is `server_rendering.tsx`.
 
-  return renderToString(
-    <Provider><Outlet /></Provider>
-  )
-})
-```
+## How it works
 
-Next
+When a browser requests a page, for example `/posts`:
 
-```terminal
-yarn add esbuild-plugin-polyfill-node text-encoding whatwg-url
-```
+1. Rails renders `app/views/posts/index.html.jsx` with your
+   `application.html.erb` layout. Superglue registers `.jsx` and `.tsx` as
+   template handlers.
+2. The template handler calls your controller's `ssr_context` block. If it
+   returns a context, the handler renders the page with
+   `Humid.render(ssr_context, render_props, base_url, request.fullpath)`, and
+   the response includes an `X-Superglue-SSR: 1` header.
+3. Humid calls the renderer you registered in `server_rendering.jsx` with the
+   page's JSON, the base URL, and the path:
 
-and add a esbuild build file.
-
-```js
-import * as esbuild from 'esbuild'
-import { polyfillNode } from "esbuild-plugin-polyfill-node";
-
-
-await esbuild.build({
-  entryPoints: ['app/javascript/server_rendering.js'],
-  bundle: true,
-  platform: "browser",
-  define: {
-    "process.env.NODE_ENV": '"production"'
-  },
-  sourcemap: true,
-  outfile: 'app/assets/builds/server_rendering.js',
-  logLevel: "info",
-  loader: {
-    ".js": "jsx",
-    ".svg": "dataurl"
-  },
-  inject: ["./shim.js"],
-  plugins: [
-    polyfillNode({
-      globals: false
-    }),
-  ]
-})
-```
-
-Add a `shim.js` for the above. We'll need this for the v8 environment that mini-racer runs on.
-
-```javascript
-export {TextEncoder, TextDecoder} from 'text-encoding'
-export { URL, URLSearchParams } from 'whatwg-url'
-
-export function MessageChannel() {
-  this.port1 = {
-    postMessage: function (message) {
-      console.log('Message sent from port1:', message);
-    },
-  };
-
-  this.port2 = {
-    addEventListener: function (event, handler) {
-      console.log(`Event listener added for ${event} on port2`);
-      this._eventHandler = handler;
-    },
-    removeEventListener: function (event) {
-      console.log(`Event listener removed for ${event} on port2`);
-      this._eventHandler = null;
-    },
-    simulateMessage: function (data) {
-      if (this._eventHandler) {
-        this._eventHandler({ data });
-      }
-    },
-  };
-}
-
-export const navigator = {language: "en-us"}
-```
-
-Add a line to your `package.json` like so:
-
-```diff
-   "scripts": {
-+    "build:ssr": "node ./build-ssr.mjs"
-```
-
-Use `Humid.render` in all your `html` templates, e.g., `index.html.erb` or `superglue.html.erb`:
-
-```diff
-  <script type="text/javascript">
--   window.SUPERGLUE_INITIAL_PAGE_STATE=<%= render_props %>;<%# erblint:disable ErbSafety %>
-+   <% initial_state = render_props %>
-+   window.SUPERGLUE_INITIAL_PAGE_STATE=<%= initial_state %>;<%# erblint:disable ErbSafety %>
-  </script>
-- <div id="app"></div>
-+ <div id="app"><%= Humid.render(initial_state, request.scheme + '://' + request.host_with_port, request.fullpath).html_safe %></div>
-```
-
-!> Do not render spacing inside of `<div id="app">`. If you do, React will not hydrate properly and
-warn `Hydration failed because the initial UI does not match what was rendered on the server`
-
-Change your `application.js` to use `hydrateRoot`:
-
-```diff
-- import { createRoot } from 'react-dom/client';
-+ import { hydrateRoot } from 'react-dom/client';
-```
-
-and change the rest of `application.js` accordingly. For example:
-
-```jsx
-import React from 'react';
-import { createApp } from '@thoughtbot/superglue';
-import { hydrateRoot } from 'react-dom/client';
-import { buildVisitAndRemote } from './application_visit';
-import { pageIdentifierToPageComponent } from './page_to_page_mapping';
-import { Layout } from './components';
-
-if (typeof window !== "undefined") {
-  document.addEventListener("DOMContentLoaded", function () {
-    const appEl = document.getElementById("app");
-    const location = window.location;
-
-    if (appEl) {
+    ```jsx
+    setHumidRenderer((json, baseUrl, path) => {
+      const initialState = JSON.parse(json)
       const { Provider, Outlet, ujs } = createApp({
-        baseUrl: location.origin,
-        initialPage: window.SUPERGLUE_INITIAL_PAGE_STATE,
-        path: location.pathname + location.search + location.hash,
+        baseUrl,
+        initialPage: initialState,
+        path,
         buildVisitAndRemote,
         mapping: pageIdentifierToPageComponent,
       })
 
-      hydrateRoot(appEl,
-        <div onClick={ujs.onClick} onSubmit={ujs.onSubmit}>
-          <Provider>
-            <Layout>
-              <Outlet />
-            </Layout>
-          </Provider>
-        </div>
-      );
-    }
-  });
-}
+      return renderToString(
+        <Provider>
+          <Layout onClick={ujs.onClick} onSubmit={ujs.onSubmit}>
+            <Outlet />
+          </Layout>
+        </Provider>
+      )
+    })
+    ```
+
+4. The rendered HTML is placed inside `<div id="app">` in your layout.
+5. On the client, `application.jsx` sees that `#app` already has content and
+   calls `hydrateRoot` instead of `createRoot`.
+
+!!! warning
+    The tree rendered in `server_rendering.jsx` must match the one in
+    `application.jsx`, or hydration will fail. If you change one, for
+    example to add a provider, change the other.
+
+## The context
+
+`ssr_context` is a controller class method. Its block returns a prepared
+MiniRacer context, or `nil` to skip SSR. The generator adds this to your
+`ApplicationController`:
+
+```ruby
+class ApplicationController < ActionController::Base
+  ssr_context { Humid.prepare(MINI_RACER_SSR[:context]) if defined?(MINI_RACER_SSR) }
+end
 ```
 
-and add build script your `package.json` to build both the client and server js bundles. For example:
+`MINI_RACER_SSR` is defined in two places:
 
+- In development and test, `config/initializers/humid.rb` creates the context
+  and recreates it whenever `server_rendering.js` is rebuilt.
+- In production, `config/puma.rb` creates one context per puma worker on boot.
+  MiniRacer is thread safe, but not fork safe, so a context must never be
+  created in the puma master process.
+
+`Humid.prepare` loads `shim.js` and your SSR bundle into the context the first
+time it's called. After that, it returns the context as is, so calling it on
+every request is cheap.
+
+## Turning SSR off
+
+To turn off SSR for a controller, return `nil` from the block:
+
+```ruby
+class DashboardController < ApplicationController
+  ssr_context { nil }
+end
 ```
-   "build": "yarn run build:web && yarn run build:ssr",
-   "build:web": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --loader:.js=jsx --loader:.svg=dataurl --public-path=/assets",
-   "build:ssr": "node ./build-ssr.mjs",
+
+Those pages render on the client only. In development, Superglue logs a
+warning for each page rendered without SSR as a reminder.
+
+To turn off SSR entirely, remove the `ssr_context` block from
+`ApplicationController`.
+
+## Writing SSR friendly components
+
+Your SSR bundle runs in bare V8, not Node or a browser. `window`, `document`,
+`setTimeout`, and friends are not available. Keep browser-only code in
+`useEffect`, which doesn't run during SSR:
+
+```jsx
+useEffect(() => {
+  const svgPanZoom = require('svg-pan-zoom')
+  //...
+}, [])
 ```
+
+See [Humid](../humid.md#writing-universal-code) for more tips, including how
+to alias libraries that detect Node or browser environments.
+
+## Debugging
+
+- In development, `raise_render_errors` is on, so a failing render raises a
+  `Humid::RenderError` with the JavaScript stack trace. The shim includes
+  source map support, so the trace points to your original files.
+- `console.log` in your components is sent to the Rails log in development.
+- Check for the `X-Superglue-SSR` response header to confirm a page was
+  server side rendered.
+
+[mini_racer]: https://github.com/rubyjs/mini_racer

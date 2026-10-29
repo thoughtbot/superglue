@@ -150,3 +150,6 @@ nav:
 
   - <span class="outside-project">form_props</span>:
       - Overview: form-props.md
+
+  - <span class="outside-project">humid</span>:
+      - Overview: humid.md

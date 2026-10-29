@@ -2,7 +2,13 @@ import React, { RefObject } from 'react'
 import { urlToPageKey, ujsHandlers, argsForHistory } from './utils'
 import { saveAndProcessPage } from './action_creators'
 import { webVisit, webRemote } from './action_creators/web'
-import { historyChange, setCSRFToken, receiveResponse } from './actions'
+import {
+  historyChange,
+  setCSRFToken,
+  receiveResponse,
+  flash,
+  clearFlash,
+} from './actions'
 import { createStore, StoreResult } from './store'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -110,6 +116,8 @@ export function createApp({
     navigateTo,
     visit: (path, options) => webVisit(store, path, options),
     remote: (path, options) => webRemote(store, path, options),
+    setFlash: (flashState) => store.dispatch(flash({ flash: flashState })),
+    clearFlash: (key) => store.dispatch(clearFlash({ key })),
   })
 
   const resolvedHistory = history || createHistory()

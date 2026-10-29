@@ -98,6 +98,8 @@ The context object provides:
 - `navigateTo` — navigate from cache without a fetch
 - `visit` — pre-wired visit thunk (replaces manually dispatching to the store)
 - `remote` — pre-wired remote thunk
+- `setFlash` / `clearFlash` — set or clear flash messages from outside React, e.g.
+  to flash an error when a request fails
 
 ## Store and reducers are no longer exported
 

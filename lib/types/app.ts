@@ -1,5 +1,5 @@
 import { History } from 'history'
-import { SaveResponse } from './page'
+import { SaveResponse, FlashState } from './page'
 import {
   VisitProps,
   RemoteProps,
@@ -77,6 +77,16 @@ export interface BuildVisitAndRemoteContext {
   ) => Promise<VisitResult | ErrorResult>
   /** Pre-bound remote. Returns a discriminated result. */
   remote: (path: string, options?: RemoteProps) => Promise<Result | ErrorResult>
+  /**
+   * Sets flash messages. Bound to the createApp store, so it can be called
+   * outside of React, e.g. to flash an error when a request fails.
+   */
+  setFlash: (flash: FlashState) => void
+  /**
+   * Clears the flash message for `key`, or all flash messages when no key
+   * is given. Bound to the createApp store.
+   */
+  clearFlash: (key?: string) => void
 }
 
 /**

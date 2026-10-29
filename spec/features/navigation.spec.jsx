@@ -696,3 +696,66 @@ describe('navigation', () => {
     })
   })
 })
+
+describe('buildVisitAndRemote context', () => {
+  const setup = () => {
+    const initialPage = {
+      data: { heading: 'this is page 1' },
+      componentIdentifier: 'home',
+      assets: ['123.js', '123.css'],
+      fragments: [],
+      csrfToken: 'token',
+    }
+    const storeResult = createStore()
+    const { store } = storeResult
+    let context
+
+    createApp({
+      initialPage,
+      baseUrl: 'http://example.com',
+      path: '/home',
+      mapping: { home: Home },
+      history: createMemoryHistory({ initialEntries: ['/home'] }),
+      buildVisitAndRemote: (ctx) => {
+        context = ctx
+        return { visit: ctx.visit, remote: ctx.remote }
+      },
+      _storeResult: storeResult,
+    })
+
+    return { store, context }
+  }
+
+  it('setFlash sets flash on the store before the Provider mounts', () => {
+    const { store, context } = setup()
+
+    context.setFlash({ alert: { title: 'Woops', body: 'Something broke' } })
+
+    expect(store.getState().flash).toEqual({
+      alert: { title: 'Woops', body: 'Something broke' },
+    })
+  })
+
+  it('setFlash merges with existing flash', () => {
+    const { store, context } = setup()
+
+    context.setFlash({ notice: 'Saved!' })
+    context.setFlash({ alert: 'Error!' })
+
+    expect(store.getState().flash).toEqual({
+      notice: 'Saved!',
+      alert: 'Error!',
+    })
+  })
+
+  it('clearFlash clears one key or all keys', () => {
+    const { store, context } = setup()
+
+    context.setFlash({ notice: 'Saved!', alert: 'Error!' })
+    context.clearFlash('notice')
+    expect(store.getState().flash).toEqual({ alert: 'Error!' })
+
+    context.clearFlash()
+    expect(store.getState().flash).toEqual({})
+  })
+})
